@@ -21,8 +21,7 @@ import consulo.content.library.*;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -46,7 +45,7 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
     }
 
     @Override
-    public boolean processProperties(@Nonnull List<VirtualFile> files, @Nonnull LibraryPropertiesProcessor processor) {
+    public boolean processProperties(List<VirtualFile> files, LibraryPropertiesProcessor processor) {
         for (Pair<LibraryKind, LibraryProperties> pair : getOrComputeKinds(files)) {
             //noinspection unchecked
             if (!processor.processProperties(pair.getFirst(), pair.getSecond())) {
@@ -58,7 +57,7 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
 
     @Nullable
     @Override
-    public Pair<LibraryType<?>, LibraryProperties<?>> detectType(@Nonnull List<VirtualFile> files) {
+    public Pair<LibraryType<?>, LibraryProperties<?>> detectType(List<VirtualFile> files) {
         Pair<LibraryType<?>, LibraryProperties<?>> result = null;
         for (LibraryType<?> type : myApplication.getExtensionPoint(LibraryType.class).getExtensionList()) {
             LibraryProperties<?> properties = type.detect(files);

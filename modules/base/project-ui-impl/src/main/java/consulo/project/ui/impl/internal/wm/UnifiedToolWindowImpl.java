@@ -23,8 +23,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,7 +38,7 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
     }
 
     @Override
-    public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    public AsyncResult<Void> getReady(Object requestor) {
         return AsyncResult.resolved(null);
     }
 
@@ -58,7 +57,7 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
         myComponent = contentManager.getUIComponent();
     }
 
-    @Nonnull
+    
     @Override
     public Component getUIComponent() {
         return myComponent;
@@ -75,7 +74,7 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
     }
 
     @Override
-    public void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+    public void setTabDoubleClickActions(AnAction... actions) {
 
     }
 }

@@ -31,7 +31,6 @@ import consulo.language.psi.stub.StubBuilder;
 import consulo.language.util.CharTable;
 import consulo.util.lang.StackOverflowPreventedException;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +54,12 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Su
     }
 
     @Override
-    @Nonnull
+    
     public CharTable getCharTable() {
         return myCharTable;
     }
 
-    @Nonnull
+    
     @Override
     public LighterAST getLighterAST() {
         IElementType contentType = getElementType();
@@ -70,7 +69,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Su
         return new TreeBackedLighterAST(this);
     }
 
-    public FileElement(@Nonnull IElementType type, CharSequence text) {
+    public FileElement(IElementType type, CharSequence text) {
         super(type, text);
     }
 
@@ -96,7 +95,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Su
         return psiElementCopy.getTreeElement();
     }
 
-    public void setCharTable(@Nonnull CharTable table) {
+    public void setCharTable(CharTable table) {
         myCharTable = table;
     }
 
@@ -111,7 +110,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Su
         myStubbedSpine = null;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public final AstSpine getStubbedSpine() {
         AstSpine result = myStubbedSpine;

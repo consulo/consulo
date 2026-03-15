@@ -32,7 +32,6 @@ import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
 import consulo.versionControlSystem.VcsToolWindow;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -42,7 +41,7 @@ import java.util.List;
  */
 @ExtensionImpl
 public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
-    @Nonnull
+    
     @Override
     public String getId() {
         return VcsToolWindow.ID;
@@ -50,7 +49,7 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
 
         ChangesViewContentManager manager = (ChangesViewContentManager) ChangesViewContentManager.getInstance(project);
@@ -78,7 +77,7 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
     }
 
     @Override
-    public boolean shouldBeAvailable(@Nonnull Project project) {
+    public boolean shouldBeAvailable(Project project) {
         ChangesViewContentManager manager = (ChangesViewContentManager) project.getInstanceIfCreated(ChangesViewContentI.class);
         if (manager != null) {
             Trinity<Image, LocalizeValue, Boolean> alreadyLoadedState = manager.getAlreadyLoadedState();
@@ -87,19 +86,19 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.BOTTOM;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowchanges();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Version Control");

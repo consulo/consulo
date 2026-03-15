@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.versionControlSystem.change.CommitContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author irengrig
@@ -31,7 +30,7 @@ import jakarta.annotation.Nullable;
 public interface PatchEP {
     ExtensionPointName<PatchEP> EP_NAME = ExtensionPointName.create(PatchEP.class);
 
-    @Nonnull
+    
     String getName();
 
     /**
@@ -39,21 +38,21 @@ public interface PatchEP {
      * @param commitContext context of the commit
      */
     @Nullable
-    CharSequence provideContent(@Nonnull String path, CommitContext commitContext);
+    CharSequence provideContent(String path, CommitContext commitContext);
 
     /**
      * @param path          before path, if exist, otherwise after path
      * @param commitContext context of the commit
      */
-    void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext);
+    void consumeContent(String path, CharSequence content, CommitContext commitContext);
 
     /**
      * @param path          before path, if exist, otherwise after path
      * @param commitContext context of the commit
      */
     void consumeContentBeforePatchApplied(
-        @Nonnull String path,
-        @Nonnull CharSequence content,
+        String path,
+        CharSequence content,
         CommitContext commitContext
     );
 }

@@ -18,8 +18,7 @@ package consulo.language.editor;
 import consulo.document.util.TextRange;
 import consulo.util.lang.Couple;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -37,7 +36,7 @@ public interface CustomUncommenter {
    * @return commented block (including comment prefix and suffix!) or null if text does not contain any  commented blocks.
    */
   @Nullable
-  TextRange findMaximumCommentedRange(@Nonnull CharSequence text);
+  TextRange findMaximumCommentedRange(CharSequence text);
 
 
   /**
@@ -48,6 +47,6 @@ public interface CustomUncommenter {
    * @param text text with comments
    * @return list of couples: [commentPrefix-start,commentPrefix-end], [commentSuffix-start,commentSuffix-end]
    */
-  @Nonnull
-  Collection<? extends Couple<TextRange>> getCommentRangesToDelete(@Nonnull CharSequence text);
+  
+  Collection<? extends Couple<TextRange>> getCommentRangesToDelete(CharSequence text);
 }

@@ -18,7 +18,6 @@ package consulo.language.editor.impl.internal.markup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.GridBag;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
@@ -40,32 +39,32 @@ public interface UIController {
    * Contains all possible actions in the settings menu. The <code>List</code> is wrapped
    * in ActionGroup at the UI creation level in <code>EditorMarkupModelImpl</code>
    */
-  @Nonnull
+  
   List<AnAction> getActions();
 
   /**
    * Lists possible <code>InspectionLevel</code>s for the particular file.
    */
-  @Nonnull
+  
   List<InspectionsLevel> getAvailableLevels();
 
   /**
    * Lists highlight levels for the particular file per language if the file
    * contains several languages.
    */
-  @Nonnull
+  
   List<LanguageHighlightLevel> getHighlightLevels();
 
   /**
    * Saves the <code>LanguageHighlightLevel</code> for the file.
    */
-  void setHighLightLevel(@Nonnull LanguageHighlightLevel newLevels);
+  void setHighLightLevel(LanguageHighlightLevel newLevels);
 
   /**
    * Adds panels coming from <code>com.intellij.hectorComponentProvider</code> EP providers to
    * the inspection widget popup.
    */
-  void fillHectorPanels(@Nonnull Container container, @Nonnull GridBag bag);
+  void fillHectorPanels(Container container, GridBag bag);
 
   /**
    * Can the inspection widget popup be closed. Might be necessary to complete some

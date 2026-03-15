@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**

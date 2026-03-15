@@ -25,23 +25,22 @@ import consulo.ui.ex.awt.JBCheckBox;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
 
-  @Nonnull
+  
   private final VcsConfiguration myConfiguration;
 
-  @Nonnull
+  
   private final MySpinnerConfigurable mySpinnerConfigurable;
-  @Nonnull
+  
   private final JBCheckBox myWrapCheckbox;
 
-  public VcsCommitMessageMarginConfigurable(@Nonnull Project project, @Nonnull VcsConfiguration vcsConfiguration) {
+  public VcsCommitMessageMarginConfigurable(Project project, VcsConfiguration vcsConfiguration) {
     myConfiguration = vcsConfiguration;
     mySpinnerConfigurable = new MySpinnerConfigurable(project);
     myWrapCheckbox = new JBCheckBox(ApplicationLocalize.checkboxWrapTypingOnRightMargin().get(), false);
@@ -50,7 +49,7 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     JComponent spinnerComponent = mySpinnerConfigurable.createComponent(uiDisposable);
     mySpinnerConfigurable.myHighlightRecentlyChanged.addActionListener(e -> myWrapCheckbox.setEnabled(mySpinnerConfigurable.myHighlightRecentlyChanged.isSelected()));
 

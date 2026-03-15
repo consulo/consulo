@@ -32,8 +32,7 @@ import consulo.versionControlSystem.internal.DefaultVcsRootPolicy;
 import consulo.versionControlSystem.internal.VcsMapping;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -59,8 +58,8 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     }
 
     @Override
-    @Nonnull
-    public Collection<VirtualFile> getDefaultVcsRoots(@Nonnull VcsMapping mappingList, @Nonnull String vcsName) {
+    
+    public Collection<VirtualFile> getDefaultVcsRoots(VcsMapping mappingList, String vcsName) {
         Set<VirtualFile> result = new HashSet<>();
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
         if (myBaseDir != null && vcsName.equals(mappingList.getVcsFor(myBaseDir))) {
@@ -96,7 +95,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     }
 
     @Override
-    public boolean matchesDefaultMapping(@Nonnull VirtualFile file, Object matchContext) {
+    public boolean matchesDefaultMapping(VirtualFile file, Object matchContext) {
         return matchContext != null || myBaseDir != null && VirtualFileUtil.isAncestor(myBaseDir, file, false);
     }
 
@@ -108,7 +107,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
 
     @Override
     @Nullable
-    public VirtualFile getVcsRootFor(@Nonnull VirtualFile file) {
+    public VirtualFile getVcsRootFor(VirtualFile file) {
         if (myBaseDir != null && VirtualFileUtil.isAncestor(myBaseDir, file, false)) {
             return myBaseDir;
         }

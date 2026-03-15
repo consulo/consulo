@@ -50,11 +50,9 @@ import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -334,7 +332,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   @Nullable
   public List<CommittedChangeList> getChanges(ChangeBrowserSettings settings,
                                               VirtualFile file,
-                                              @Nonnull AbstractVcs vcs,
+                                              AbstractVcs vcs,
                                               int maxCount,
                                               boolean cacheOnly,
                                               CommittedChangesProvider provider,
@@ -435,7 +433,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     final Ref<Boolean> resultRef = new Ref<>(Boolean.FALSE);
     myCachesHolder.iterateAllCaches(new Function<>() {
       @Override
-      @Nonnull
+      
       public Boolean apply(ChangesCacheFile changesCacheFile) {
         try {
           if (changesCacheFile.isEmpty() == emptiness) {
@@ -597,7 +595,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     return newLists;
   }
 
-  private static void debug(@NonNls String message) {
+  private static void debug(String message) {
     LOG.debug(message);
   }
 

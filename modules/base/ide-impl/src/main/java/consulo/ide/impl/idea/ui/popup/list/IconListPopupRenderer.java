@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.ui.popup.list;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public interface IconListPopupRenderer {
 
-  boolean isIconAt(@Nonnull Point point);
+  boolean isIconAt(Point point);
 }

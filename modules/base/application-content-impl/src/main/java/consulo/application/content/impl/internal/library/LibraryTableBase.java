@@ -33,8 +33,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public abstract class LibraryTableBase implements PersistentStateComponent<Element>, LibraryTable, Disposable {
@@ -80,19 +79,19 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
   }
 
   @Override
-  @Nonnull
+  
   public Library[] getLibraries() {
     return myModel.getLibraries();
   }
 
   @Override
-  @Nonnull
+  
   public Iterator<Library> getLibraryIterator() {
     return myModel.getLibraryIterator();
   }
 
   @Override
-  public Library getLibraryByName(@Nonnull String name) {
+  public Library getLibraryByName(String name) {
     return myModel.getLibraryByName(name);
   }
 
@@ -138,7 +137,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     return createLibrary(null);
   }
 
-  public void fireLibraryRenamed(@Nonnull Library library) {
+  public void fireLibraryRenamed(Library library) {
     myDispatcher.getMulticaster().afterLibraryRenamed(library);
   }
 
@@ -151,7 +150,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
   }
 
   @Override
-  public void removeLibrary(@Nonnull Library library) {
+  public void removeLibrary(Library library) {
     ModifiableModel modifiableModel = getModifiableModel();
     modifiableModel.removeLibrary(library);
     modifiableModel.commit();
@@ -192,7 +191,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     myModel.writeExternal(element);
   }
 
-  @Nonnull
+  
   protected abstract LibraryOwner getLibraryOwner();
 
   @Deprecated
@@ -220,14 +219,14 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     @Override
-    @Nonnull
+    
     public Iterator<Library> getLibraryIterator() {
       return Collections.unmodifiableList(myLibraries).iterator();
     }
 
     @Override
     @Nullable
-    public Library getLibraryByName(@Nonnull String name) {
+    public Library getLibraryByName(String name) {
       for (Library myLibrary : myLibraries) {
         LibraryImpl library = (LibraryImpl)myLibrary;
         if (Comparing.equal(name, library.getName())) return library;
@@ -244,7 +243,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
 
 
     @Override
-    @Nonnull
+    
     public Library[] getLibraries() {
       return myLibraries.toArray(new Library[myLibraries.size()]);
     }
@@ -262,7 +261,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     @Override
-    public void removeLibrary(@Nonnull Library library) {
+    public void removeLibrary(Library library) {
       assertWritable();
       myLibraries.remove(library);
     }

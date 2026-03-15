@@ -23,8 +23,7 @@ import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * When enabled the checkbox behaves like the ordinary checkbox
@@ -56,7 +55,7 @@ public final class StateRestoringCheckBoxWrapper {
         myCheckBox.setValue(value);
     }
 
-    @Nonnull
+    
     public Component getComponent() {
         return myCheckBox;
     }
@@ -67,7 +66,7 @@ public final class StateRestoringCheckBoxWrapper {
     }
 
     public Disposable addValueListener(
-        @Nonnull ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> valueListener
+        ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> valueListener
     ) {
         return myCheckBox.addValueListener(valueListener);
     }

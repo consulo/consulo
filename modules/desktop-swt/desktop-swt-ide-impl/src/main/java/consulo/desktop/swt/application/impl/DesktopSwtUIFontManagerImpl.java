@@ -23,7 +23,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class DesktopSwtUIFontManagerImpl extends UIFontManagerImpl {
-  @Nonnull
+  
   @Override
   protected Pair<String, Integer> resolveSystemFontData() {
     Display current = Display.getCurrent();

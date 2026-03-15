@@ -19,7 +19,6 @@ import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -27,7 +26,7 @@ public final class TodoFileNode extends PsiFileNode {
   private final TodoTreeBuilder myBuilder;
   private final boolean mySingleFileMode;
 
-  public TodoFileNode(Project project, @Nonnull PsiFile file, TodoTreeBuilder treeBuilder, boolean singleFileMode) {
+  public TodoFileNode(Project project, PsiFile file, TodoTreeBuilder treeBuilder, boolean singleFileMode) {
     super(project, file, ViewSettings.DEFAULT);
     myBuilder = treeBuilder;
     mySingleFileMode = singleFileMode;
@@ -133,7 +132,7 @@ public final class TodoFileNode extends PsiFileNode {
   }
 
   @Override
-  protected void updateImpl(@Nonnull PresentationData data) {
+  protected void updateImpl(PresentationData data) {
     super.updateImpl(data);
     String newName;
     if (myBuilder.getTodoTreeStructure().isPackagesShown()) {

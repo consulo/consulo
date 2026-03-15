@@ -26,16 +26,15 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.concurrent.ResultConsumer;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 public class XDebuggerTreeCreator implements DebuggerTreeCreator<Pair<XValue,String>> {
-  @Nonnull
+  
   private final Project myProject;
   private final XDebuggerEditorsProvider myProvider;
   private final XSourcePosition myPosition;
   private final XValueMarkers<?, ?> myMarkers;
 
-  public XDebuggerTreeCreator(@Nonnull Project project, XDebuggerEditorsProvider editorsProvider, XSourcePosition sourcePosition,
+  public XDebuggerTreeCreator(Project project, XDebuggerEditorsProvider editorsProvider, XSourcePosition sourcePosition,
                               XValueMarkers<?, ?> markers) {
     myProject = project;
     myProvider = editorsProvider;
@@ -43,17 +42,17 @@ public class XDebuggerTreeCreator implements DebuggerTreeCreator<Pair<XValue,Str
     myMarkers = markers;
   }
 
-  @Nonnull
+  
   @Override
-  public Tree createTree(@Nonnull Pair<XValue, String> descriptor) {
+  public Tree createTree(Pair<XValue, String> descriptor) {
     XDebuggerTree tree = new XDebuggerTree(myProject, myProvider, myPosition, XDebuggerActions.INSPECT_TREE_POPUP_GROUP, myMarkers);
     tree.setRoot(new XValueNodeImpl(tree, null, descriptor.getSecond(), descriptor.getFirst()), true);
     return tree;
   }
 
-  @Nonnull
+  
   @Override
-  public String getTitle(@Nonnull Pair<XValue, String> descriptor) {
+  public String getTitle(Pair<XValue, String> descriptor) {
     return descriptor.getSecond();
   }
 

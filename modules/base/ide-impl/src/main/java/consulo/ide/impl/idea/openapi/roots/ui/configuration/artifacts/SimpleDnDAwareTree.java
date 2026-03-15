@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +44,7 @@ public class SimpleDnDAwareTree extends SimpleTree implements DnDAware {
   }
 
   @Override
-  @Nonnull
+  
   public JComponent getComponent() {
     return this;
   }

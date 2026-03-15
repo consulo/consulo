@@ -17,7 +17,6 @@ package consulo.application.progress;
 
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -27,14 +26,14 @@ import java.util.function.Function;
  * @since 2025-05-06
  */
 public interface ProgressBuilder {
-    @Nonnull
+    
     ProgressBuilder cancelable();
 
-    @Nonnull
+    
     ProgressBuilder modal();
 
-    @Nonnull
-    <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess,
-                                     @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
+    
+    <V> CompletableFuture<V> execute(UIAccess uiAccess,
+                                     Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
 
 }

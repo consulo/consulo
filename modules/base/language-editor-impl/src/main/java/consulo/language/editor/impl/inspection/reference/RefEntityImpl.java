@@ -25,8 +25,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,24 +39,24 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   protected long myFlags; // guarded by this
   protected final RefManagerImpl myManager;
 
-  protected RefEntityImpl(@Nonnull String name, @Nonnull RefManager manager) {
+  protected RefEntityImpl(String name, RefManager manager) {
     myManager = (RefManagerImpl)manager;
     myName = myManager.internName(name);
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myName;
   }
 
-  @Nonnull
+  
   @Override
   public String getQualifiedName() {
     return myName;
   }
 
-  @Nonnull
+  
   @Override
   public synchronized List<RefEntity> getChildren() {
     return ObjectUtil.notNull(myChildren, List.of());
@@ -74,7 +73,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   }
 
   @Override
-  public synchronized void add(@Nonnull RefEntity child) {
+  public synchronized void add(RefEntity child) {
     List<RefEntity> children = myChildren;
     if (children == null) {
       myChildren = children = new ArrayList<>(1);
@@ -84,7 +83,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   }
 
   @Override
-  public synchronized void removeChild(@Nonnull RefEntity child) {
+  public synchronized void removeChild(RefEntity child) {
     if (myChildren != null) {
       myChildren.remove(child);
       ((WritableRefEntity)child).setOwner(null);
@@ -97,7 +96,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
 
   @Override
   @Nullable
-  public <T> T getUserData(@Nonnull Key<T> key) {
+  public <T> T getUserData(Key<T> key) {
     synchronized (this) {
       if (myUserMap == null) return null;
       //noinspection unchecked
@@ -106,12 +105,12 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   }
 
   @Override
-  public void accept(@Nonnull RefVisitor refVisitor) {
+  public void accept(RefVisitor refVisitor) {
     ApplicationManager.getApplication().runReadAction(() -> refVisitor.visitElement(this));
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, T value) {
+  public <T> void putUserData(Key<T> key, T value) {
     synchronized (this) {
       Map<Key, Object> userMap = myUserMap;
       if (userMap == null) {
@@ -143,7 +142,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
     return myName;
   }
 
-  @Nonnull
+  
   @Override
   public RefManagerImpl getRefManager() {
     return myManager;

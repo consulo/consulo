@@ -23,28 +23,27 @@ import consulo.language.psi.search.IndexPatternProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class TodoCacheManager {
-  @Nonnull
-  public static TodoCacheManager getInstance(@Nonnull Project project) {
+  
+  public static TodoCacheManager getInstance(Project project) {
     return project.getInstance(TodoCacheManager.class);
   }
 
   /**
    * @return all files that contains todoitems under project
    */
-  @Nonnull
+  
   public abstract PsiFile[] getFilesWithTodoItems();
 
   /**
    * @return -1 if it's not known
    */
-  public abstract int getTodoCount(@Nonnull VirtualFile file, IndexPatternProvider patternProvider);
+  public abstract int getTodoCount(VirtualFile file, IndexPatternProvider patternProvider);
 
   /**
    * @return -1 if it's not known
    */
-  public abstract int getTodoCount(@Nonnull VirtualFile file, IndexPattern pattern);
+  public abstract int getTodoCount(VirtualFile file, IndexPattern pattern);
 }

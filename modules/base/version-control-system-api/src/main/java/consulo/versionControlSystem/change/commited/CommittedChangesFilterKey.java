@@ -15,17 +15,16 @@
  */
 package consulo.versionControlSystem.change.commited;
 
-import jakarta.annotation.Nonnull;
 
 /**
 * @author irengrig
 */
 public class CommittedChangesFilterKey implements Comparable<CommittedChangesFilterKey> {
   private final CommittedChangesFilterPriority myPriority;
-  @Nonnull
+  
   private final String myId;
 
-  public CommittedChangesFilterKey(@Nonnull String id, CommittedChangesFilterPriority priority) {
+  public CommittedChangesFilterKey(String id, CommittedChangesFilterPriority priority) {
     myId = id;
     myPriority = priority;
   }

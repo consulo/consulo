@@ -1,7 +1,6 @@
 package consulo.versionControlSystem.log.ui;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -15,8 +14,8 @@ public interface VcsLogColorManager {
   /**
    * Returns the color assigned to the given repository root.
    */
-  @Nonnull
-  Color getRootColor(@Nonnull VirtualFile root);
+  
+  Color getRootColor(VirtualFile root);
 
   /**
    * Tells if there are several repositories currently shown in the log.

@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.change.patch;
 
-import jakarta.annotation.Nonnull;
 
 class StaticPathDescription implements PathDescription {
   private final String myPath;
@@ -29,7 +28,7 @@ class StaticPathDescription implements PathDescription {
   }
 
   @Override
-  @Nonnull
+  
   public String getPath() {
     return myPath;
   }

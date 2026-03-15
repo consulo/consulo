@@ -29,8 +29,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -128,7 +127,7 @@ public class CompilerPaths {
         return new File(systemPath, "compiler");
     }
 
-    @Nonnull
+    
     public static String getGenerationOutputPath(IntermediateOutputCompiler compiler, Module module, boolean forTestSources) {
         String generatedCompilerDirectoryPath = getGeneratedDataDirectory(module.getProject(), compiler).getPath();
         String moduleHash;
@@ -182,7 +181,7 @@ public class CompilerPaths {
      */
     @Nullable
     @Deprecated
-    public static String getModuleOutputPath(@Nonnull Module module, boolean forTestClasses) {
+    public static String getModuleOutputPath(Module module, boolean forTestClasses) {
         Application application = module.getApplication();
         ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
 
@@ -202,7 +201,7 @@ public class CompilerPaths {
     }
 
     @Nullable
-    public static String getModuleOutputPath(@Nonnull Module module, ContentFolderTypeProvider contentFolderType) {
+    public static String getModuleOutputPath(Module module, ContentFolderTypeProvider contentFolderType) {
         Application application = module.getApplication();
         ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
 

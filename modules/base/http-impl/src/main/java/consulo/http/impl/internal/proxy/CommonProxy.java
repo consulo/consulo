@@ -24,8 +24,7 @@ import consulo.util.io.NetUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.*;
@@ -133,21 +132,21 @@ public class CommonProxy extends ProxySelector {
         Authenticator.setDefault(myAuthenticator);
     }
 
-    public void noProxy(@Nonnull String protocol, @Nonnull String host, int port) {
+    public void noProxy(String protocol, String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy added: " + protocol + "://" + host + ":" + port);
             myNoProxy.add(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
         }
     }
 
-    public void removeNoProxy(@Nonnull String protocol, @Nonnull String host, int port) {
+    public void removeNoProxy(String protocol, String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy removed: " + protocol + "://" + host + ":" + port);
             myNoProxy.remove(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
         }
     }
 
-    public void noAuthentication(@Nonnull String protocol, @Nonnull String host, int port) {
+    public void noAuthentication(String protocol, String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy added: " + protocol + "://" + host + ":" + port);
             myNoProxy.add(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
@@ -155,42 +154,42 @@ public class CommonProxy extends ProxySelector {
     }
 
     @SuppressWarnings("unused")
-    public void removeNoAuthentication(@Nonnull String protocol, @Nonnull String host, int port) {
+    public void removeNoAuthentication(String protocol, String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy removed: " + protocol + "://" + host + ":" + port);
             myNoProxy.remove(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
         }
     }
 
-    public void setCustom(@Nonnull String key, @Nonnull ProxySelector proxySelector) {
+    public void setCustom(String key, ProxySelector proxySelector) {
         synchronized (myLock) {
             LOG.debug("custom set: " + key + ", " + proxySelector.toString());
             myCustom.put(key, proxySelector);
         }
     }
 
-    public void setCustomAuth(@Nonnull String key, NonStaticAuthenticator authenticator) {
+    public void setCustomAuth(String key, NonStaticAuthenticator authenticator) {
         synchronized (myLock) {
             LOG.debug("custom auth set: " + key + ", " + authenticator.toString());
             myCustomAuth.put(key, authenticator);
         }
     }
 
-    public void removeCustomAuth(@Nonnull String key) {
+    public void removeCustomAuth(String key) {
         synchronized (myLock) {
             LOG.debug("custom auth removed: " + key);
             myCustomAuth.remove(key);
         }
     }
 
-    public void removeCustom(@Nonnull String key) {
+    public void removeCustom(String key) {
         synchronized (myLock) {
             LOG.debug("custom set: " + key);
             myCustom.remove(key);
         }
     }
 
-    public List<Proxy> select(@Nonnull URL url) {
+    public List<Proxy> select(URL url) {
         return select(createUri(url));
     }
 
@@ -235,7 +234,7 @@ public class CommonProxy extends ProxySelector {
         }
     }
 
-    private static int correctPortByProtocol(@Nonnull URI uri) {
+    private static int correctPortByProtocol(URI uri) {
         if (uri.getPort() == -1) {
             if ("http".equals(uri.getScheme())) {
                 return ProtocolDefaultPorts.HTTP;
@@ -345,7 +344,7 @@ public class CommonProxy extends ProxySelector {
         public final String myHost;
         public final int myPort;
 
-        public HostInfo(@Nullable String protocol, @Nonnull String host, int port) {
+        public HostInfo(@Nullable String protocol, String host, int port) {
             myPort = port;
             myHost = host;
             myProtocol = protocol;

@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,7 +37,7 @@ public class DesktopWelcomeFrameManager extends WelcomeFrameManager {
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public IdeFrame createFrame() {
     return new DesktopWelcomeIdeFrame(myApplication, this::frameClosed);

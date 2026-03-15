@@ -62,8 +62,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.*;
@@ -80,7 +79,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         private final String[] myGroups;
         private final Element myElement;
 
-        public ModuleLoadItem(@Nonnull String name, @Nullable String dirUrl, @Nonnull Element element) {
+        public ModuleLoadItem(String name, @Nullable String dirUrl, Element element) {
             myDirUrl = dirUrl;
             myElement = element;
 
@@ -106,12 +105,12 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return myDirUrl;
         }
 
-        @Nonnull
+        
         public String getName() {
             return myName;
         }
 
-        @Nonnull
+        
         public Element getElement() {
             return myElement;
         }
@@ -269,7 +268,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     }
 
     @Nullable
-    private ModuleLoadItem findModuleByUrl(@Nonnull String name, @Nullable String url) {
+    private ModuleLoadItem findModuleByUrl(String name, @Nullable String url) {
         if (url == null) {
             for (ModuleLoadItem item : myModuleLoadItems) {
                 if (item.getName().equals(name) && item.getDirUrl() == null) {
@@ -404,11 +403,11 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         ProjectLoadingErrorsNotifier.getInstance(myProject).registerErrors(errors);
     }
 
-    public void removeFailedModulePath(@Nonnull ModuleManagerImpl.ModuleLoadItem modulePath) {
+    public void removeFailedModulePath(ModuleManagerImpl.ModuleLoadItem modulePath) {
         myFailedModulePaths.remove(modulePath);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public ModifiableModuleModel getModifiableModel() {
@@ -466,10 +465,10 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredWriteAction
-    public Module newModule(@Nonnull String name, @Nonnull String dirPath) {
+    public Module newModule(String name, String dirPath) {
         myModificationCount++;
         ModifiableModuleModel modifiableModel = getModifiableModel();
         Module module = modifiableModel.newModule(name, dirPath);
@@ -479,13 +478,13 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @Override
     @RequiredWriteAction
-    public void disposeModule(@Nonnull Module module) {
+    public void disposeModule(Module module) {
         ModifiableModuleModel modifiableModel = getModifiableModel();
         modifiableModel.disposeModule(module);
         modifiableModel.commit();
     }
 
-    @Nonnull
+    
     @Override
     public Module[] getModules() {
         if (!myReady) {
@@ -507,7 +506,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private Module[] myCachedSortedModules = null;
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Module[] getSortedModules() {
@@ -526,7 +525,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @Override
     @RequiredReadAction
-    public Module findModuleByName(@Nonnull String name) {
+    public Module findModuleByName(String name) {
         if (!myReady) {
             throw new IllegalArgumentException("Modules not initialized at current moment");
         }
@@ -537,7 +536,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private Comparator<Module> myCachedModuleComparator = null;
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Comparator<Module> moduleDependencyComparator() {
@@ -552,14 +551,14 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     protected void deliverPendingEvents() {
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Graph<Module> moduleGraph() {
         return moduleGraph(true);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Graph<Module> moduleGraph(boolean includeTests) {
@@ -569,15 +568,15 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @RequiredReadAction
     @Override
-    @Nonnull
-    public List<Module> getModuleDependentModules(@Nonnull Module module) {
+    
+    public List<Module> getModuleDependentModules(Module module) {
         myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.getModuleDependentModules(module);
     }
 
     @Override
     @RequiredReadAction
-    public boolean isModuleDependent(@Nonnull Module module, @Nonnull Module onModule) {
+    public boolean isModuleDependent(Module module, Module onModule) {
         myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.isModuleDependent(module, onModule);
     }
@@ -607,13 +606,13 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         ((ModuleModelImpl) model).commitWithRunnable(runnable);
     }
 
-    @Nonnull
-    protected abstract ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
+    
+    protected abstract ModuleEx createModule(String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
 
-    @Nonnull
+    
     protected ModuleEx createAndLoadModule(
-        @Nonnull ModuleLoadItem moduleLoadItem,
-        @Nonnull ModuleModelImpl moduleModel,
+        ModuleLoadItem moduleLoadItem,
+        ModuleModelImpl moduleModel,
         @Nullable ProgressIndicator progressIndicator
     ) {
         ModuleEx module = createModule(moduleLoadItem.getName(), moduleLoadItem.getDirUrl(), progressIndicator);
@@ -641,7 +640,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             myIsWritable = false;
         }
 
-        ModuleModelImpl(@Nonnull ModuleModelImpl that) {
+        ModuleModelImpl(ModuleModelImpl that) {
             myModules.addAll(that.myModules);
             Map<Module, String[]> groupPath = that.myModuleGroupPath;
             if (groupPath != null) {
@@ -656,7 +655,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Override
-        @Nonnull
+        
         public Module[] getModules() {
             if (myModulesCache == null) {
                 myModulesCache = ContainerUtil.toArray(myModules, Module.ARRAY_FACTORY);
@@ -671,7 +670,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Override
-        public void renameModule(@Nonnull Module module, @Nonnull String newName) throws ModuleWithNameAlreadyExistsException {
+        public void renameModule(Module module, String newName) throws ModuleWithNameAlreadyExistsException {
             Module oldModule = getModuleByNewName(newName);
             myNewNameToModule.remove(myModuleToNewName.get(module));
             if (module.getName().equals(newName)) { // if renaming to itself, forget it altogether
@@ -689,7 +688,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Override
-        public Module getModuleToBeRenamed(@Nonnull String newName) {
+        public Module getModuleToBeRenamed(String newName) {
             return myNewNameToModule.get(newName);
         }
 
@@ -704,13 +703,13 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Override
-        public String getNewName(@Nonnull Module module) {
+        public String getNewName(Module module) {
             return myModuleToNewName.get(module);
         }
 
-        @Nonnull
+        
         @Override
-        public Module newModule(@Nonnull String name, @Nullable String dirPath) {
+        public Module newModule(String name, @Nullable String dirPath) {
             assertWritable();
 
             String dirUrl = dirPath == null ? null : VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
@@ -728,7 +727,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Nullable
-        private ModuleEx getModuleByDirUrl(@Nonnull String dirUrl) {
+        private ModuleEx getModuleByDirUrl(String dirUrl) {
             for (Module module : myModules) {
                 if (FileUtil.pathsEqual(dirUrl, module.getModuleDirUrl())) {
                     return (ModuleEx) module;
@@ -738,7 +737,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Nullable
-        private Module removeModuleByDirUrl(@Nonnull String dirUrl) {
+        private Module removeModuleByDirUrl(String dirUrl) {
             Module toRemove = null;
             for (Module module : myModules) {
                 if (FileUtil.pathsEqual(dirUrl, module.getModuleDirUrl())) {
@@ -749,9 +748,9 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return toRemove;
         }
 
-        @Nonnull
+        
         @RequiredUIAccess
-        private Module loadModuleInternal(@Nonnull ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
+        private Module loadModuleInternal(ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
             throws ModuleWithNameAlreadyExistsException, ModuleDirIsNotExistsException, StateStorageException {
 
             String moduleName = item.getName();
@@ -807,7 +806,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Override
-        public void disposeModule(@Nonnull Module module) {
+        public void disposeModule(Module module) {
             assertWritable();
             myModulesCache = null;
             if (myModules.contains(module)) {
@@ -820,7 +819,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Override
-        public Module findModuleByName(@Nonnull String name) {
+        public Module findModuleByName(String name) {
             for (Module module : myModules) {
                 if (!module.isDisposed() && module.getName().equals(name)) {
                     return module;
@@ -849,8 +848,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             }));
         }
 
-        @Nonnull
-        private List<Module> getModuleDependentModules(@Nonnull Module module) {
+        
+        private List<Module> getModuleDependentModules(Module module) {
             List<Module> result = new ArrayList<>();
             for (Module aModule : myModules) {
                 if (isModuleDependent(aModule, module)) {
@@ -1015,11 +1014,11 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @Override
     @RequiredReadAction
-    public String[] getModuleGroupPath(@Nonnull Module module) {
+    public String[] getModuleGroupPath(Module module) {
         return myModuleModel.getModuleGroupPath(module);
     }
 
-    @Nonnull
+    
     @Override
     public Image getModuleIcon(@Nullable Module module) {
         if (module == null) {

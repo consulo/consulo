@@ -32,7 +32,6 @@ import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.usage.rule.UsageFilteringRuleProvider;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -48,8 +47,8 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
   private final ReadWriteState myReadWriteState = new ReadWriteState();
 
   @Override
-  @Nonnull
-  public UsageFilteringRule[] getActiveRules(@Nonnull Project project) {
+  
+  public UsageFilteringRule[] getActiveRules(Project project) {
     List<UsageFilteringRule> rules = new ArrayList<>();
 
     if (!myReadWriteState.isShowReadAccess()) {
@@ -62,8 +61,8 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
   }
 
   @Override
-  @Nonnull
-  public AnAction[] createFilteringActions(@Nonnull UsageView view) {
+  
+  public AnAction[] createFilteringActions(UsageView view) {
     if (!view.getPresentation().isCodeUsages()) {
       return AnAction.EMPTY_ARRAY;
     }
@@ -110,13 +109,13 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
       return myReadWriteState.isShowReadAccess();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
       myReadWriteState.setShowReadAccess(state);
       Project project = e.getData(Project.KEY);
       if (project == null) return;
@@ -130,13 +129,13 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
       return myReadWriteState.isShowWriteAccess();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
       myReadWriteState.setShowWriteAccess(state);
       Project project = e.getData(Project.KEY);
       if (project == null) return;

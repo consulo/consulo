@@ -29,8 +29,7 @@ import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -43,8 +42,8 @@ public interface LineMarkerProvider extends LanguageExtension {
   ExtensionPointCacheKey<LineMarkerProvider, ByLanguageValue<List<LineMarkerProvider>>> KEY =
     ExtensionPointCacheKey.create("LineMarkerProvider", LanguageOneToMany.build(true));
 
-  @Nonnull
-  static List<LineMarkerProvider> forLanguage(@Nonnull Language language) {
+  
+  static List<LineMarkerProvider> forLanguage(Language language) {
     return Application.get().getExtensionPoint(LineMarkerProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -53,7 +52,7 @@ public interface LineMarkerProvider extends LanguageExtension {
    *
    * For example some line-markers require module extensions, and without it no sense generate line-markers
    */
-  default boolean isAvailable(@Nonnull PsiFile file) {
+  default boolean isAvailable(PsiFile file) {
     return true;
   }
 
@@ -83,11 +82,11 @@ public interface LineMarkerProvider extends LanguageExtension {
    */
   @Nullable
   @RequiredReadAction
-  LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element);
+  LineMarkerInfo getLineMarkerInfo(PsiElement element);
 
   @RequiredReadAction
   @Deprecated
   @DeprecationInfo(value = "Use #getLineMarkerInfo(PsiElement)")
-  default void collectSlowLineMarkers(@Nonnull List<PsiElement> elements, @Nonnull Collection<LineMarkerInfo> result) {
+  default void collectSlowLineMarkers(List<PsiElement> elements, Collection<LineMarkerInfo> result) {
   }
 }

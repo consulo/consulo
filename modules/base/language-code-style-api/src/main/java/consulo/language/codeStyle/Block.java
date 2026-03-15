@@ -17,8 +17,7 @@ package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public interface Block {
      *
      * @return the text range.
      */
-    @Nonnull
+    
     TextRange getTextRange();
 
     /**
@@ -44,7 +43,7 @@ public interface Block {
      * @return the child block list.
      * @see #isLeaf()
      */
-    @Nonnull
+    
     List<Block> getSubBlocks();
 
     /**
@@ -93,7 +92,7 @@ public interface Block {
      * @see Spacing#getReadOnlySpacing()
      */
     @Nullable
-    Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2);
+    Spacing getSpacing(@Nullable Block child1, Block child2);
 
     /**
      * Returns the alignment and indent attributes which are applied to a new block inserted at
@@ -103,7 +102,7 @@ public interface Block {
      * @param newChildIndex the index where a new child is inserted.
      * @return the object containing the indent and alignment settings for the new child.
      */
-    @Nonnull
+    
     ChildAttributes getChildAttributes(int newChildIndex);
 
     /**

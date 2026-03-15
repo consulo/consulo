@@ -23,8 +23,7 @@ import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanel;
 import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl
 public class DesktopAwtNewErrorTreeViewPanelFactoryImpl implements NewErrorTreeViewPanelFactory {
-  @Nonnull
+  
   @Override
   public NewErrorTreeViewPanel createPanel(ComponentManager project, String helpId, boolean createExitAction, boolean createToolbar, @Nullable Runnable rerunAction) {
     return new NewErrorTreeViewPanelImpl((Project)project, helpId, createExitAction, createToolbar, rerunAction);

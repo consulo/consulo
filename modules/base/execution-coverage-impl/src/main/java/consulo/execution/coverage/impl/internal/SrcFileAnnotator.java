@@ -55,8 +55,7 @@ import consulo.virtualFileSystem.internal.LoadTextUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -125,14 +124,14 @@ public class SrcFileAnnotator implements Disposable {
     }
 
     private static
-    @Nonnull
-    String[] getCoveredLines(@Nonnull byte[] oldContent, VirtualFile vFile) {
+    
+    String[] getCoveredLines(byte[] oldContent, VirtualFile vFile) {
         String text = LoadTextUtil.getTextByBinaryPresentation(oldContent, vFile, false, false).toString();
         return LineTokenizer.tokenize(text, false);
     }
 
     private
-    @Nonnull
+    
     String[] getUpToDateLines() {
         SimpleReference<String[]> linesRef = new SimpleReference<>();
         Runnable runnable = () -> {
@@ -463,7 +462,7 @@ public class SrcFileAnnotator implements Disposable {
         @Nullable String className,
         int line,
         int lineNumberInCurrent,
-        @Nonnull CoverageSuitesBundle coverageSuite,
+        CoverageSuitesBundle coverageSuite,
         Object[] lines
     ) {
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -517,7 +516,7 @@ public class SrcFileAnnotator implements Disposable {
         return highlighter;
     }
 
-    private void showEditorWarningMessage(@Nonnull LocalizeValue message) {
+    private void showEditorWarningMessage(LocalizeValue message) {
         EditorNotificationBuilderFactory factory = myProject.getApplication().getInstance(EditorNotificationBuilderFactory.class);
 
         myProject.getApplication().invokeLater(() -> {

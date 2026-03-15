@@ -24,7 +24,6 @@ import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class DelegatePsiTarget implements PsiTarget {
   private final PsiElement myElement;
 
-  public DelegatePsiTarget(@Nonnull PsiElement element) {
+  public DelegatePsiTarget(PsiElement element) {
     myElement = element.getNavigationElement();
   }
 
@@ -67,7 +66,7 @@ public class DelegatePsiTarget implements PsiTarget {
   }
 
   @Override
-  @Nonnull
+  
   public final PsiElement getNavigationElement() {
     return myElement;
   }

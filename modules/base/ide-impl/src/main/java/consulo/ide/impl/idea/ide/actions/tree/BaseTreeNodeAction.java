@@ -22,19 +22,18 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.tree.table.TreeTable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 abstract class BaseTreeNodeAction extends AnAction implements DumbAware {
-    protected BaseTreeNodeAction(@Nonnull LocalizeValue text) {
+    protected BaseTreeNodeAction(LocalizeValue text) {
         super(text);
         setEnabledInModalContext(true);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Object sourceComponent = getSourceComponent(e);
         if (sourceComponent instanceof JTree tree) {
             performOn(tree);

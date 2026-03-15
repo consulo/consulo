@@ -22,15 +22,14 @@ import consulo.application.util.matcher.NameUtilCore;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TypePresentationService {
-  @Nonnull
+  
   public static TypePresentationService getInstance() {
     return Application.get().getInstance(TypePresentationService.class);
   }
@@ -47,7 +46,7 @@ public abstract class TypePresentationService {
   @Nullable
   public abstract String getTypeName(Object o);
 
-  @Nonnull
+  
   public String getTypeNameOrStub(Object o) {
     String typeName = getTypeName(o);
     return typeName != null ? typeName : getDefaultTypeName(o.getClass());

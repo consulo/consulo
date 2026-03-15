@@ -25,8 +25,7 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -43,19 +42,19 @@ import java.util.Map;
  */
 public class ArrangementGroupingRulesControl extends JBTable {
 
-  @Nonnull
+  
   public static final Key<ArrangementGroupingRulesControl> KEY = Key.create("Arrangement.Rule.Group.Control");
 
-  @Nonnull
+  
   private final Map<ArrangementSettingsToken, ArrangementGroupingComponent> myComponents = new HashMap<>();
 
-  @Nonnull
+  
   private final ArrangementStandardSettingsManager mySettingsManager;
 
   private int myRowUnderMouse = -1;
 
-  public ArrangementGroupingRulesControl(@Nonnull ArrangementStandardSettingsManager settingsManager,
-                                         @Nonnull ArrangementColorsProvider colorsProvider)
+  public ArrangementGroupingRulesControl(ArrangementStandardSettingsManager settingsManager,
+                                         ArrangementColorsProvider colorsProvider)
   {
     super(new DefaultTableModel(0, 1));
     mySettingsManager = settingsManager;
@@ -110,7 +109,7 @@ public class ArrangementGroupingRulesControl extends JBTable {
     }
   }
 
-  @Nonnull
+  
   public List<ArrangementGroupingRule> getRules() {
     List<ArrangementGroupingRule> result = new ArrayList<ArrangementGroupingRule>();
     DefaultTableModel model = getModel();

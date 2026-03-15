@@ -46,8 +46,7 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -80,7 +79,7 @@ public class ModuleUtilCore {
     }
   }
 
-  public static String getModuleNameInReadAction(@Nonnull Module module) {
+  public static String getModuleNameInReadAction(Module module) {
     return AccessRule.read(module::getName);
   }
 
@@ -99,24 +98,24 @@ public class ModuleUtilCore {
   @Nullable
   @RequiredReadAction
   @Deprecated
-  public static Module findModuleForFile(@Nonnull PsiFile file) {
+  public static Module findModuleForFile(PsiFile file) {
     return file.getModule();
   }
 
   @Nullable
-  public static Module findModuleForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public static Module findModuleForFile(VirtualFile file, Project project) {
     return ModuleContentUtil.findModuleForFile(file, project);
   }
 
   @Nullable
   @RequiredReadAction
   @Deprecated
-  public static Module findModuleForPsiElement(@Nonnull PsiElement element) {
+  public static Module findModuleForPsiElement(PsiElement element) {
     return element.getModule();
   }
 
   //ignores export flag
-  public static void getDependencies(@Nonnull Module module, Set<Module> modules) {
+  public static void getDependencies(Module module, Set<Module> modules) {
     if (modules.contains(module)) return;
     modules.add(module);
     Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
@@ -133,13 +132,13 @@ public class ModuleUtilCore {
    */
   @RequiredReadAction
   @Deprecated
-  public static void collectModulesDependsOn(@Nonnull Module module, Set<Module> result) {
+  public static void collectModulesDependsOn(Module module, Set<Module> result) {
     ModuleContentUtil.collectModulesDependsOn(module, result);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static List<Module> getAllDependentModules(@Nonnull Module module) {
+  public static List<Module> getAllDependentModules(Module module) {
     ArrayList<Module> list = new ArrayList<Module>();
     Graph<Module> graph = ModuleManager.getInstance(module.getProject()).moduleGraph();
     for (Iterator<Module> i = graph.getOut(module); i.hasNext(); ) {
@@ -149,7 +148,7 @@ public class ModuleUtilCore {
   }
 
   @RequiredReadAction
-  public static boolean visitMeAndDependentModules(@Nonnull Module module, Processor<Module> visitor) {
+  public static boolean visitMeAndDependentModules(Module module, Processor<Module> visitor) {
     if (!visitor.process(module)) {
       return false;
     }
@@ -162,7 +161,7 @@ public class ModuleUtilCore {
     return true;
   }
 
-  public static boolean moduleContainsFile(@Nonnull Module module, VirtualFile file, boolean isLibraryElement) {
+  public static boolean moduleContainsFile(Module module, VirtualFile file, boolean isLibraryElement) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     if (isLibraryElement) {
       OrderEntry orderEntry = moduleRootManager.getFileIndex().getOrderEntryForFile(file);
@@ -174,24 +173,24 @@ public class ModuleUtilCore {
   }
 
   @RequiredReadAction
-  @Nonnull
-  public static List<ContentFolder> getContentFolders(@Nonnull Project project) {
+  
+  public static List<ContentFolder> getContentFolders(Project project) {
     return ModuleContentUtil.getContentFolders(project);
   }
 
   @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Module module, @Nonnull Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> E getExtension(Module module, Class<E> extensionClass) {
     return module.getExtension(extensionClass);
   }
 
   @Nullable
-  public static ModuleExtension<?> getExtension(@Nonnull Module module, @Nonnull String key) {
+  public static ModuleExtension<?> getExtension(Module module, String key) {
     return module.getExtension(key);
   }
 
   @Nullable
   @RequiredReadAction
-  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull PsiElement element, @Nonnull Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> E getExtension(PsiElement element, Class<E> extensionClass) {
     if (!element.isValid())  {
       return null;
     }
@@ -204,18 +203,18 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> E getExtension(Project project, VirtualFile virtualFile, Class<E> extensionClass) {
     return ModuleContentUtil.getExtension(project, virtualFile, extensionClass);
   }
 
   @Nullable
-  public static Sdk getSdk(@Nonnull Module module, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static Sdk getSdk(Module module, Class<? extends ModuleExtensionWithSdk> extensionClass) {
     return ModuleContentUtil.getSdk(module, extensionClass);
   }
 
   @Nullable
   @RequiredReadAction
-  public static Sdk getSdk(@Nonnull PsiElement element, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static Sdk getSdk(PsiElement element, Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {
       return null;
@@ -224,7 +223,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static Sdk getSdk(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static Sdk getSdk(Project project, VirtualFile virtualFile, Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForFile(virtualFile, project);
     if (moduleForPsiElement == null) {
       return null;
@@ -232,24 +231,24 @@ public class ModuleUtilCore {
     return getSdk(moduleForPsiElement, extensionClass);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static NamedPointer<Module> createPointer(@Nonnull Module module) {
+  public static NamedPointer<Module> createPointer(Module module) {
     return ModulePointerManager.getInstance(module.getProject()).create(module);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static NamedPointer<Module> createPointer(@Nonnull Project project, @Nonnull String name) {
+  public static NamedPointer<Module> createPointer(Project project, String name) {
     return ModulePointerManager.getInstance(project).create(name);
   }
 
-  public static boolean hasTestSourceRoots(@Nonnull Project project) {
+  public static boolean hasTestSourceRoots(Project project) {
     return CachedValuesManager.getManager(project)
                               .getParameterizedCachedValue(project, HAS_TEST_ROOTS_KEY, HAS_TEST_ROOTS_PROVIDER, false, project);
   }
 
-  public static boolean hasModuleExtension(@Nonnull ModulesProvider modulesProvider, @Nonnull Class<? extends ModuleExtension> clazz) {
+  public static boolean hasModuleExtension(ModulesProvider modulesProvider, Class<? extends ModuleExtension> clazz) {
     for (Module module : modulesProvider.getModules()) {
       ModuleRootModel rootModel = modulesProvider.getRootModel(module);
       if (rootModel == null) {

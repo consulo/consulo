@@ -48,9 +48,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -128,7 +126,7 @@ public class VcsUtil {
      * File is considered to be a valid vcs file if it resides under the content
      * root controlled by the given vcs.
      */
-    public static boolean isFileForVcs(@Nonnull VirtualFile file, Project project, AbstractVcs host) {
+    public static boolean isFileForVcs(VirtualFile file, Project project, AbstractVcs host) {
         return getVcsFor(project, file) == host;
     }
 
@@ -144,7 +142,7 @@ public class VcsUtil {
     }
 
     @Nullable
-    public static AbstractVcs getVcsFor(@Nonnull final Project project, final FilePath file) {
+    public static AbstractVcs getVcsFor(final Project project, final FilePath file) {
         final AbstractVcs[] vcss = new AbstractVcs[1];
         ApplicationManager.getApplication().runReadAction(new Runnable() {
             @Override
@@ -161,7 +159,7 @@ public class VcsUtil {
     }
 
     @Nullable
-    public static AbstractVcs getVcsFor(final Project project, @Nonnull final VirtualFile file) {
+    public static AbstractVcs getVcsFor(final Project project, final VirtualFile file) {
         final AbstractVcs[] vcss = new AbstractVcs[1];
 
         ApplicationManager.getApplication().runReadAction(new Runnable() {
@@ -313,7 +311,7 @@ public class VcsUtil {
     }
 
     @Nullable
-    public static byte[] getFileByteContent(@Nonnull File file) {
+    public static byte[] getFileByteContent(File file) {
         try {
             return RawFileLoader.getInstance().loadFileBytes(file);
         }
@@ -327,15 +325,15 @@ public class VcsUtil {
         return getFilePath(new File(path));
     }
 
-    public static FilePath getFilePath(@Nonnull VirtualFile file) {
+    public static FilePath getFilePath(VirtualFile file) {
         return VcsContextFactory.getInstance().createFilePathOn(file);
     }
 
-    public static FilePath getFilePath(@Nonnull File file) {
+    public static FilePath getFilePath(File file) {
         return VcsContextFactory.getInstance().createFilePathOn(file);
     }
 
-    public static FilePath getFilePath(@Nonnull String path, boolean isDirectory) {
+    public static FilePath getFilePath(String path, boolean isDirectory) {
         return VcsContextFactory.getInstance().createFilePath(path, isDirectory);
     }
 
@@ -343,21 +341,21 @@ public class VcsUtil {
         return VcsContextFactory.getInstance().createFilePathOnNonLocal(path, isDirectory);
     }
 
-    public static FilePath getFilePath(@Nonnull File file, boolean isDirectory) {
+    public static FilePath getFilePath(File file, boolean isDirectory) {
         return VcsContextFactory.getInstance().createFilePathOn(file, isDirectory);
     }
 
-    public static FilePath getFilePathForDeletedFile(@Nonnull String path, boolean isDirectory) {
+    public static FilePath getFilePathForDeletedFile(String path, boolean isDirectory) {
         return VcsContextFactory.getInstance().createFilePathOnDeleted(new File(path), isDirectory);
     }
 
-    @Nonnull
-    public static FilePath getFilePath(@Nonnull VirtualFile parent, @Nonnull String name) {
+    
+    public static FilePath getFilePath(VirtualFile parent, String name) {
         return VcsContextFactory.getInstance().createFilePathOn(parent, name);
     }
 
-    @Nonnull
-    public static FilePath getFilePath(@Nonnull VirtualFile parent, @Nonnull String fileName, boolean isDirectory) {
+    
+    public static FilePath getFilePath(VirtualFile parent, String fileName, boolean isDirectory) {
         return VcsContextFactory.getInstance().createFilePath(parent, fileName, isDirectory);
     }
 
@@ -428,7 +426,7 @@ public class VcsUtil {
     private static FilePath[] sortPaths(FilePath[] files, final int sign) {
         Arrays.sort(files, new Comparator<FilePath>() {
             @Override
-            public int compare(@Nonnull FilePath o1, @Nonnull FilePath o2) {
+            public int compare(FilePath o1, FilePath o2) {
                 return sign * o1.getPath().compareTo(o2.getPath());
             }
         });
@@ -468,7 +466,7 @@ public class VcsUtil {
 
         VirtualFileUtil.visitChildrenRecursively(dir, new VirtualFileVisitor() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (file.isDirectory()) {
                     if (addDirectories) {
                         files.add(file);
@@ -621,12 +619,12 @@ public class VcsUtil {
         return idx > 0;
     }
 
-    public static String getPathForProgressPresentation(@Nonnull File file) {
+    public static String getPathForProgressPresentation(File file) {
         return file.getName() + " (" + file.getParent() + ")";
     }
 
-    @Nonnull
-    public static Collection<VcsDirectoryMapping> findRoots(@Nonnull VirtualFile rootDir, @Nonnull Project project) throws IllegalArgumentException {
+    
+    public static Collection<VcsDirectoryMapping> findRoots(VirtualFile rootDir, Project project) throws IllegalArgumentException {
         if (!rootDir.isDirectory()) {
             throw new IllegalArgumentException("Can't find VCS at the target file system path. Reason: expected to find a directory there but it's not. The path: " + rootDir.getParent());
         }
@@ -642,13 +640,13 @@ public class VcsUtil {
         return result;
     }
 
-    @Nonnull
-    public static List<VcsDirectoryMapping> addMapping(@Nonnull List<? extends VcsDirectoryMapping> existingMappings, @Nonnull @NonNls String path, @Nonnull @NonNls String vcs) {
+    
+    public static List<VcsDirectoryMapping> addMapping(List<? extends VcsDirectoryMapping> existingMappings, String path, String vcs) {
         return addMapping(existingMappings, new VcsDirectoryMapping(path, vcs));
     }
 
-    @Nonnull
-    public static List<VcsDirectoryMapping> addMapping(@Nonnull List<? extends VcsDirectoryMapping> existingMappings, @Nonnull VcsDirectoryMapping newMapping) {
+    
+    public static List<VcsDirectoryMapping> addMapping(List<? extends VcsDirectoryMapping> existingMappings, VcsDirectoryMapping newMapping) {
         List<VcsDirectoryMapping> mappings = new ArrayList<>(existingMappings);
         for (Iterator<VcsDirectoryMapping> iterator = mappings.iterator(); iterator.hasNext(); ) {
             VcsDirectoryMapping mapping = iterator.next();
@@ -679,12 +677,12 @@ public class VcsUtil {
         return items == null || !items.findAny().isPresent();
     }
 
-    @Nonnull
+    
     public static <T> Stream<T> notNullize(@Nullable Stream<T> items) {
         return ObjectUtil.notNull(items, Stream.empty());
     }
 
-    @Nonnull
+    
     public static <T> Stream<T> toStream(@Nullable T... items) {
         return items == null ? Stream.empty() : Stream.of(items);
     }
@@ -695,13 +693,13 @@ public class VcsUtil {
      * <p>
      * Also see {@link Stream#concat(Stream, Stream)} documentation for other possible issues of concatenating large number of streams.
      */
-    @Nonnull
-    public static <T> Stream<T> concat(@Nonnull Stream<T>... streams) {
+    
+    public static <T> Stream<T> concat(Stream<T>... streams) {
         return toStream(streams).reduce(Stream.empty(), Stream::concat);
     }
 
-    @Nonnull
-    public static String trimCommitMessageToSaneSize(@Nonnull String message) {
+    
+    public static String trimCommitMessageToSaneSize(String message) {
         int nthLine = nthIndexOf(message, '\n', MAX_COMMIT_MESSAGE_LINES);
         if (nthLine != -1 && nthLine < MAX_COMMIT_MESSAGE_LENGTH) {
             return trimCommitMessageAt(message, nthLine);
@@ -712,14 +710,14 @@ public class VcsUtil {
         return message;
     }
 
-    @Nonnull
-    public static VirtualFile resolveSymlinkIfNeeded(@Nonnull Project project, @Nonnull VirtualFile file) {
+    
+    public static VirtualFile resolveSymlinkIfNeeded(Project project, VirtualFile file) {
         VirtualFile symlink = resolveSymlink(project, file);
         return symlink != null ? symlink : file;
     }
 
     @Nullable
-    public static VirtualFile resolveSymlink(@Nonnull Project project, @Nullable VirtualFile file) {
+    public static VirtualFile resolveSymlink(Project project, @Nullable VirtualFile file) {
         if (file == null) {
             return null;
         }
@@ -734,11 +732,11 @@ public class VcsUtil {
         return null;
     }
 
-    private static String trimCommitMessageAt(@Nonnull String message, int index) {
+    private static String trimCommitMessageAt(String message, int index) {
         return String.format("%s\n\n... Commit message is too long and was truncated by %s ...", message.substring(0, index), Application.get().getName().get());
     }
 
-    private static int nthIndexOf(@Nonnull String text, char c, int n) {
+    private static int nthIndexOf(String text, char c, int n) {
         assert n > 0;
         int length = text.length();
         int count = 0;
@@ -766,8 +764,8 @@ public class VcsUtil {
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(task, null, project);
     }
 
-    @Nonnull
-    public static String getShortVcsRootName(@Nonnull Project project, @Nonnull VirtualFile root) {
+    
+    public static String getShortVcsRootName(Project project, VirtualFile root) {
         VirtualFile projectDir = project.getBaseDir();
 
         String repositoryPath = root.getPresentableUrl();
@@ -781,8 +779,8 @@ public class VcsUtil {
         return repositoryPath.isEmpty() ? root.getName() : repositoryPath;
     }
 
-    @Nonnull
-    public static List<Change> createChangesWithCurrentContentForFile(@Nonnull FilePath filePath,
+    
+    public static List<Change> createChangesWithCurrentContentForFile(FilePath filePath,
                                                                       @Nullable ContentRevision beforeContentRevision) {
         return Collections.singletonList(new Change(beforeContentRevision, CurrentContentRevision.create(filePath)));
     }

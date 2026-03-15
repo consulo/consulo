@@ -19,9 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.content.scope.NamedScope;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CustomScopesFilter {
-    boolean excludeScope(@Nonnull NamedScope scope);
+    boolean excludeScope(NamedScope scope);
 }

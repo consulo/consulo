@@ -21,8 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -32,5 +31,5 @@ public abstract class ResolveScopeProvider {
   public static final ExtensionPointName<ResolveScopeProvider> EP_NAME = ExtensionPointName.create(ResolveScopeProvider.class);
 
   @Nullable
-  public abstract GlobalSearchScope getResolveScope(@Nonnull VirtualFile file, Project project);
+  public abstract GlobalSearchScope getResolveScope(VirtualFile file, Project project);
 }

@@ -17,8 +17,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -30,7 +29,7 @@ public class AuthDialogImpl extends DialogWrapper {
    * On the other hand, if password saving is disabled, the checkbox is not shown.
    * In other cases, {@code rememberByDefault} is used.
    */
-  public AuthDialogImpl(@Nonnull Project project, @Nonnull String title, @Nullable String description, @Nullable String login, @Nullable String password, boolean rememberByDefault) {
+  public AuthDialogImpl(Project project, String title, @Nullable String description, @Nullable String login, @Nullable String password, boolean rememberByDefault) {
     super(project, false);
     setTitle(title);
     boolean rememberPassword = decideOnShowRememberPasswordOption(password, rememberByDefault);

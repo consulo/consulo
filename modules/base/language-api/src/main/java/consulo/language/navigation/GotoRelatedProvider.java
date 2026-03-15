@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,13 +34,13 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class GotoRelatedProvider {
-    @Nonnull
-    public List<? extends GotoRelatedItem> getItems(@Nonnull PsiElement psiElement) {
+    
+    public List<? extends GotoRelatedItem> getItems(PsiElement psiElement) {
         return Collections.emptyList();
     }
 
-    @Nonnull
-    public List<? extends GotoRelatedItem> getItems(@Nonnull DataContext context) {
+    
+    public List<? extends GotoRelatedItem> getItems(DataContext context) {
         return Collections.emptyList();
     }
 }

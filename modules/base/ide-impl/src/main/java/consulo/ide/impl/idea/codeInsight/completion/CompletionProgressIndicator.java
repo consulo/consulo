@@ -61,8 +61,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
 
@@ -80,7 +79,7 @@ import java.util.function.Supplier;
 public class CompletionProgressIndicator extends ProgressIndicatorBase implements CompletionProcessEx, Disposable {
     private static final Logger LOG = Logger.getInstance(CompletionProgressIndicator.class);
     private final Editor myEditor;
-    @Nonnull
+    
     private final Caret myCaret;
     @Nullable
     private CompletionParameters myParameters;
@@ -102,13 +101,13 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     };
     private final Semaphore myFreezeSemaphore = new Semaphore(1);
     private final Semaphore myFinishSemaphore = new Semaphore(1);
-    @Nonnull
+    
     private final OffsetMap myOffsetMap;
     private final Set<Pair<Integer, ElementPattern<String>>> myRestartingPrefixConditions = ContainerUtil.newConcurrentSet();
     private final LookupListener myLookupListener = new LookupListener() {
         @Override
         @RequiredUIAccess
-        public void lookupCanceled(@Nonnull LookupEvent event) {
+        public void lookupCanceled(LookupEvent event) {
             finishCompletionProcess(true);
         }
     };
@@ -133,13 +132,13 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     @RequiredUIAccess
     CompletionProgressIndicator(
         Editor editor,
-        @Nonnull Caret caret,
+        Caret caret,
         int invocationCount,
         CodeCompletionHandlerBase handler,
-        @Nonnull OffsetMap offsetMap,
-        @Nonnull OffsetsInFile hostOffsets,
+        OffsetMap offsetMap,
+        OffsetsInFile hostOffsets,
         boolean hasModifiers,
-        @Nonnull LookupEx lookup
+        LookupEx lookup
     ) {
         myEditor = editor;
         myCaret = caret;
@@ -199,13 +198,13 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
 
     @Override
-    @Nonnull
+    
     @SuppressWarnings("WeakerAccess")
     public OffsetMap getOffsetMap() {
         return myOffsetMap;
     }
 
-    @Nonnull
+    
     @Override
     public OffsetsInFile getHostOffsets() {
         return myHostOffsets;
@@ -379,12 +378,12 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
 
     @Override
-    public void setParameters(@Nonnull CompletionParameters parameters) {
+    public void setParameters(CompletionParameters parameters) {
         myParameters = parameters;
     }
 
     @Override
-    @Nonnull
+    
     public LookupEx getLookup() {
         return myLookup;
     }
@@ -573,7 +572,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
 
     @Override
-    public void registerChildDisposable(@Nonnull Supplier<? extends Disposable> child) {
+    public void registerChildDisposable(Supplier<? extends Disposable> child) {
         synchronized (myLock) {
             // avoid registering stuff on an indicator being disposed concurrently
             checkCanceled();
@@ -700,7 +699,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
 
     @RequiredUIAccess
-    void restorePrefix(@Nonnull Runnable customRestore) {
+    void restorePrefix(Runnable customRestore) {
         CommandProcessor.getInstance().newCommand()
             .project(getProject())
             .inWriteAction()
@@ -715,13 +714,13 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
 
     @Override
-    @Nonnull
+    
     public Editor getEditor() {
         return myEditor;
     }
 
     @Override
-    @Nonnull
+    
     public Caret getCaret() {
         return myCaret;
     }
@@ -741,7 +740,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return ObjectUtil.assertNotNull(myEditor.getProject());
     }
@@ -896,13 +895,13 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         ProgressManager.checkCanceled();
     }
 
-    @Nonnull
+    
     CompletionThreadingBase getCompletionThreading() {
         return myThreading;
     }
 
     @Override
-    public void addAdvertisement(@Nonnull String text, @Nullable Image icon) {
+    public void addAdvertisement(String text, @Nullable Image icon) {
         myAdvertiserChanges.offer(() -> myLookup.addAdvertisement(text, icon));
 
         myQueue.queue(myUpdate);

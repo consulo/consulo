@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -28,8 +27,8 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class PsiTodoSearchHelper {
-  @Nonnull
-  public static PsiTodoSearchHelper getInstance(@Nonnull Project project) {
+  
+  public static PsiTodoSearchHelper getInstance(Project project) {
     return project.getInstance(PsiTodoSearchHelper.class);
   }
 
@@ -38,7 +37,7 @@ public abstract class PsiTodoSearchHelper {
    *
    * @return the list of files with to do items.
    */
-  @Nonnull
+  
   public abstract PsiFile[] findFilesWithTodoItems();
 
   /**
@@ -47,8 +46,8 @@ public abstract class PsiTodoSearchHelper {
    * @param file the file to search for to do items.
    * @return the array of found items.
    */
-  @Nonnull
-  public abstract TodoItem[] findTodoItems(@Nonnull PsiFile file);
+  
+  public abstract TodoItem[] findTodoItems(PsiFile file);
 
   /**
    * Searches the specified range of text in the specified file for to do items.
@@ -58,13 +57,13 @@ public abstract class PsiTodoSearchHelper {
    * @param endOffset   the end offset of the text range to search to do items in.
    * @return the array of found items.
    */
-  @Nonnull
-  public abstract TodoItem[] findTodoItems(@Nonnull PsiFile file, int startOffset, int endOffset);
+  
+  public abstract TodoItem[] findTodoItems(PsiFile file, int startOffset, int endOffset);
 
-  @Nonnull
-  public abstract TodoItem[] findTodoItemsLight(@Nonnull PsiFile file);
-  @Nonnull
-  public abstract TodoItem[] findTodoItemsLight(@Nonnull PsiFile file, int startOffset, int endOffset);
+  
+  public abstract TodoItem[] findTodoItemsLight(PsiFile file);
+  
+  public abstract TodoItem[] findTodoItemsLight(PsiFile file, int startOffset, int endOffset);
 
   /**
    * Returns the number of to do items in the specified file.
@@ -72,7 +71,7 @@ public abstract class PsiTodoSearchHelper {
    * @param file the file to return the to do count for.
    * @return the count of to do items in the file.
    */
-  public abstract int getTodoItemsCount(@Nonnull PsiFile file);
+  public abstract int getTodoItemsCount(PsiFile file);
 
   /**
    * Returns the number of to do items matching the specified pattern in the specified file.
@@ -81,7 +80,7 @@ public abstract class PsiTodoSearchHelper {
    * @param pattern the pattern of to do items to find.
    * @return the count of to do items in the file.
    */
-  public abstract int getTodoItemsCount(@Nonnull PsiFile file, @Nonnull TodoPattern pattern);
+  public abstract int getTodoItemsCount(PsiFile file, TodoPattern pattern);
 
 
   /**
@@ -90,7 +89,7 @@ public abstract class PsiTodoSearchHelper {
    * @param file the file to return the to do count for.
    * @return if td items should be highlighted in editor. True by default
    */
-  public boolean shouldHighlightInEditor(@Nonnull PsiFile file) {
+  public boolean shouldHighlightInEditor(PsiFile file) {
     return true;
   }
 }

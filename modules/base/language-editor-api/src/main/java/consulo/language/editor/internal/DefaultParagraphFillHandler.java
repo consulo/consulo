@@ -18,7 +18,6 @@ package consulo.language.editor.internal;
 import consulo.language.Language;
 import consulo.language.editor.action.ParagraphFillHandler;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DefaultParagraphFillHandler extends ParagraphFillHandler {
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

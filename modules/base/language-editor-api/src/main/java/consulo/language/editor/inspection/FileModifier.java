@@ -20,8 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,7 +48,7 @@ public interface FileModifier extends WriteActionAware {
    * @param currentFile the same file where intention would be invoked (for {@link consulo.ide.impl.idea.codeInspection.LocalQuickFix} it would be the containing file of {@link consulo.ide.impl.idea.codeInspection.ProblemDescriptor#getPsiElement})
    */
   @Nullable
-  default PsiElement getElementToMakeWritable(@Nonnull PsiFile currentFile) {
+  default PsiElement getElementToMakeWritable(PsiFile currentFile) {
     return startInWriteAction() ? currentFile : null;
   }
 
@@ -63,7 +62,7 @@ public interface FileModifier extends WriteActionAware {
    * Returns null if operation is not supported.
    */
   @Nullable
-  default FileModifier getFileModifierForPreview(@Nonnull PsiFile target) {
+  default FileModifier getFileModifierForPreview(PsiFile target) {
     if (!startInWriteAction()) return null;
 
     Field targetField = ReflectionUtil.processFields(((Object)this).getClass(), field -> {

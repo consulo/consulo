@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.facade;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -24,6 +24,5 @@ import jakarta.annotation.Nullable;
  * Internal class, don't use it in plugins
  */
 public interface ToSwingWindowWrapper {
-  @Nullable
-  java.awt.Window toAWTWindow();
+  java.awt.@Nullable Window toAWTWindow();
 }

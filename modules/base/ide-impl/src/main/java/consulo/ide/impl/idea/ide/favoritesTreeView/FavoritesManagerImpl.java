@@ -55,8 +55,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.TreeItem;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -94,7 +93,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     }
 
     @RequiredUIAccess
-    public void renameList(Project project, @Nonnull String listName) {
+    public void renameList(Project project, String listName) {
         String newName = Messages.showInputDialog(
             project,
             IdeLocalize.promptInputFavoritesListNewName(listName).get(),
@@ -138,7 +137,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     }
 
     @Override
-    public void addFavoritesListener(FavoritesListener listener, @Nonnull Disposable parent) {
+    public void addFavoritesListener(FavoritesListener listener, Disposable parent) {
         myListeners.addListener(listener, parent);
         listener.rootsChanged();
     }
@@ -174,7 +173,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         myProject = project;
     }
 
-    @Nonnull
+    
     private Map<String, FavoritesListProvider> getProviders() {
         if (myProviders != null) {
             return myProviders;
@@ -193,19 +192,19 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return myProviders;
     }
 
-    @Nonnull
+    
     public List<String> getAvailableFavoritesListNames() {
         return new ArrayList<>(myName2FavoritesRoots.keySet());
     }
 
-    public synchronized void createNewList(@Nonnull String listName) {
+    public synchronized void createNewList(String listName) {
         myListOrder.add(listName);
         myName2FavoritesRoots.put(listName, new ArrayList<>());
         listAdded(listName);
     }
 
     @Override
-    public synchronized void fireListeners(@Nonnull String listName) {
+    public synchronized void fireListeners(String listName) {
         rootsChanged();
     }
 
@@ -214,7 +213,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return myViewSettings;
     }
 
-    public synchronized boolean removeFavoritesList(@Nonnull String name) {
+    public synchronized boolean removeFavoritesList(String name) {
         boolean result = myName2FavoritesRoots.remove(name) != null;
         myListOrder.remove(name);
         myDescriptions.remove(name);
@@ -223,20 +222,20 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     }
 
     @Override
-    @Nonnull
-    public List<TreeItem<Pair<AbstractUrl, String>>> getFavoritesListRootUrls(@Nonnull String name) {
+    
+    public List<TreeItem<Pair<AbstractUrl, String>>> getFavoritesListRootUrls(String name) {
         List<TreeItem<Pair<AbstractUrl, String>>> pairs = myName2FavoritesRoots.get(name);
         return pairs == null ? new ArrayList<>() : pairs;
     }
 
     @RequiredWriteAction
-    public synchronized boolean addRoots(@Nonnull String name, Module moduleContext, @Nonnull Object elements) {
+    public synchronized boolean addRoots(String name, Module moduleContext, Object elements) {
         Collection<AbstractTreeNode> nodes =
             AddToFavoritesAction.createNodes(myProject, moduleContext, elements, true, getViewSettings());
         return !nodes.isEmpty() && addRoots(name, nodes);
     }
 
-    public synchronized Comparator<FavoritesTreeNodeDescriptor> getCustomComparator(@Nonnull String name) {
+    public synchronized Comparator<FavoritesTreeNodeDescriptor> getCustomComparator(String name) {
         return getProviders().get(name);
     }
 
@@ -284,8 +283,8 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
 
     @RequiredReadAction
     public synchronized boolean addRoot(
-        @Nonnull String name,
-        @Nonnull List<AbstractTreeNode> parentElements,
+        String name,
+        List<AbstractTreeNode> parentElements,
         AbstractTreeNode newElement,
         @Nullable AbstractTreeNode sibling
     ) {
@@ -362,8 +361,8 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     }
 
     private <T> boolean findListToRemoveFrom(
-        @Nonnull String name,
-        @Nonnull List<T> elements,
+        String name,
+        List<T> elements,
         Function<T, AbstractUrl> convertor
     ) {
         Collection<TreeItem<Pair<AbstractUrl, String>>> list = getFavoritesListRootUrls(name);
@@ -399,7 +398,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return false;
     }
 
-    public synchronized boolean removeRoot(@Nonnull String name, @Nonnull List<AbstractTreeNode> elements) {
+    public synchronized boolean removeRoot(String name, List<AbstractTreeNode> elements) {
         @RequiredReadAction
         Function<AbstractTreeNode, AbstractUrl> convertor = obj -> createUrlByElement(obj.getValue(), myProject);
         boolean result = true;
@@ -419,7 +418,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return null;
     }
 
-    private boolean renameFavoritesList(@Nonnull String oldName, @Nonnull String newName) {
+    private boolean renameFavoritesList(String oldName, String newName) {
         List<TreeItem<Pair<AbstractUrl, String>>> list = myName2FavoritesRoots.remove(oldName);
         if (list != null && newName.length() > 0) {
             int index = myListOrder.indexOf(oldName);
@@ -577,7 +576,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     }
 
     @RequiredReadAction
-    public String getFavoriteListName(@Nullable String currentSubId, @Nonnull VirtualFile vFile) {
+    public String getFavoriteListName(@Nullable String currentSubId, VirtualFile vFile) {
         if (currentSubId != null && contains(currentSubId, vFile)) {
             return currentSubId;
         }
@@ -591,7 +590,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
 
     // currently only one level here..
     @RequiredReadAction
-    public boolean contains(@Nonnull String name, @Nonnull VirtualFile vFile) {
+    public boolean contains(String name, VirtualFile vFile) {
         ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
         Set<Boolean> find = new HashSet<>();
         ContentIterator contentIterator = fileOrDir -> {
@@ -696,7 +695,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     private class MyRootsChangeAdapter extends PsiTreeChangeAdapter {
         @Override
         @RequiredReadAction
-        public void beforeChildMovement(@Nonnull PsiTreeChangeEvent event) {
+        public void beforeChildMovement(PsiTreeChangeEvent event) {
             PsiElement oldParent = event.getOldParent();
             PsiElement newParent = event.getNewParent();
             PsiElement child = event.getChild();
@@ -744,7 +743,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
 
         @Override
         @RequiredReadAction
-        public void beforePropertyChange(@Nonnull PsiTreeChangeEvent event) {
+        public void beforePropertyChange(PsiTreeChangeEvent event) {
             if (event.getPropertyName().equals(PsiTreeChangeEvent.PROP_FILE_NAME)
                 || event.getPropertyName().equals(PsiTreeChangeEvent.PROP_DIRECTORY_NAME)) {
                 PsiElement psiElement = event.getChild();

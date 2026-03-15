@@ -17,18 +17,17 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 
 import consulo.versionControlSystem.log.graph.*;
 import consulo.versionControlSystem.log.impl.internal.util.UnsignedBitSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class CollapsedController extends CascadeController {
-  @Nonnull
+  
   private CollapsedGraph myCollapsedGraph;
 
-  public CollapsedController(@Nonnull CascadeController delegateLinearGraphController,
-                             @Nonnull PermanentGraphInfo<?> permanentGraphInfo,
+  public CollapsedController(CascadeController delegateLinearGraphController,
+                             PermanentGraphInfo<?> permanentGraphInfo,
                              @Nullable Set<Integer> idsOfVisibleBranches) {
     super(delegateLinearGraphController, permanentGraphInfo);
     UnsignedBitSet initVisibility =
@@ -36,9 +35,9 @@ public class CollapsedController extends CascadeController {
     myCollapsedGraph = CollapsedGraph.newInstance(getDelegateController().getCompiledGraph(), initVisibility);
   }
 
-  @Nonnull
+  
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(LinearGraphAnswer delegateAnswer) {
     if (delegateAnswer.getGraphChanges() != null) {
       LinearGraph delegateGraph = getDelegateController().getCompiledGraph();
       myCollapsedGraph = CollapsedGraph.updateInstance(myCollapsedGraph, delegateGraph);
@@ -85,29 +84,29 @@ public class CollapsedController extends CascadeController {
 
   @Nullable
   @Override
-  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(LinearGraphAction action) {
     return CollapsedActionManager.performAction(this, action);
   }
 
-  @Nonnull
+  
   @Override
   public LinearGraph getCompiledGraph() {
     return myCollapsedGraph.getCompiledGraph();
   }
 
-  @Nonnull
+  
   protected CollapsedGraph getCollapsedGraph() {
     return myCollapsedGraph;
   }
 
   @Nullable
   @Override
-  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(GraphElement graphElement) {
     return convertToDelegate(graphElement, myCollapsedGraph);
   }
 
   @Nullable
-  public static GraphElement convertToDelegate(@Nonnull GraphElement graphElement, CollapsedGraph collapsedGraph) {
+  public static GraphElement convertToDelegate(GraphElement graphElement, CollapsedGraph collapsedGraph) {
     if (graphElement instanceof GraphEdge edge) {
       Integer upIndex = edge.getUpNodeIndex();
       Integer downIndex = edge.getDownNodeIndex();

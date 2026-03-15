@@ -21,8 +21,7 @@ import consulo.language.editor.FileHighlightingSetting;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
 * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
 public class DiffFileHighlightingSettingProvider extends DefaultHighlightingSettingProvider {
   @Nullable
   @Override
-  public FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file) {
     if (!DiffPsiFileSupport.isDiffFile(file)) return null;
     return FileHighlightingSetting.SKIP_INSPECTION;
   }

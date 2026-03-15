@@ -44,8 +44,7 @@ import consulo.usage.UsageViewUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -58,13 +57,13 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     private RangeMarker mySubstitutedRange;
 
     @RequiredReadAction
-    public MemberInplaceRenamer(@Nonnull PsiNamedElement elementToRename, PsiElement substituted, Editor editor) {
+    public MemberInplaceRenamer(PsiNamedElement elementToRename, PsiElement substituted, Editor editor) {
         this(elementToRename, substituted, editor, elementToRename.getName(), elementToRename.getName());
     }
 
     @RequiredReadAction
     public MemberInplaceRenamer(
-        @Nonnull PsiNamedElement elementToRename,
+        PsiNamedElement elementToRename,
         PsiElement substituted,
         Editor editor,
         String initialName,
@@ -149,7 +148,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     }
 
     @Override
-    protected boolean notSameFile(@Nullable VirtualFile file, @Nonnull PsiFile containingFile) {
+    protected boolean notSameFile(@Nullable VirtualFile file, PsiFile containingFile) {
         PsiFile currentFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myEditor.getDocument());
         if (currentFile == null) {
             return true;

@@ -22,7 +22,6 @@ import consulo.language.codeStyle.internal.IndentData;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * {@link BlockAlignmentProcessor} implementation for {@link Alignment} that
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class LeftEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor {
 
   @Override
-  protected IndentData calculateAlignmentAnchorIndent(@Nonnull Context context) {
+  protected IndentData calculateAlignmentAnchorIndent(Context context) {
     LeafBlockWrapper offsetResponsibleBlock = context.alignment.getOffsetRespBlockBefore(context.targetBlock);
     if (offsetResponsibleBlock == null) {
       return null;
@@ -63,14 +62,14 @@ public class LeftEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor 
   }
 
   @Override
-  protected boolean applyIndentToTheFirstBlockOnLine(@Nonnull IndentData alignmentAnchorIndent, @Nonnull Context context) {
+  protected boolean applyIndentToTheFirstBlockOnLine(IndentData alignmentAnchorIndent, Context context) {
     WhiteSpace whiteSpace = context.targetBlock.getWhiteSpace();
     whiteSpace.setSpaces(alignmentAnchorIndent.getSpaces(), alignmentAnchorIndent.getIndentSpaces());
     return true;
   }
 
   @Override
-  protected int getAlignmentIndentDiff(@Nonnull IndentData alignmentAnchorIndent, @Nonnull Context context) {
+  protected int getAlignmentIndentDiff(IndentData alignmentAnchorIndent, Context context) {
     IndentData indentBeforeBlock = context.targetBlock.getNumberOfSymbolsBeforeBlock();
     return alignmentAnchorIndent.getTotalSpaces() - indentBeforeBlock.getTotalSpaces();
   }

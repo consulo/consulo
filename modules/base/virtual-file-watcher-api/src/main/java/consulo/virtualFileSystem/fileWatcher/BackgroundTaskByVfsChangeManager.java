@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -30,34 +29,34 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class BackgroundTaskByVfsChangeManager {
-  @Nonnull
-  public static BackgroundTaskByVfsChangeManager getInstance(@Nonnull Project project) {
+  
+  public static BackgroundTaskByVfsChangeManager getInstance(Project project) {
     return project.getInstance(BackgroundTaskByVfsChangeManager.class);
   }
 
   /**
    * Create task without adding to list
    */
-  @Nonnull
-  public abstract BackgroundTaskByVfsChangeTask createTask(@Nonnull BackgroundTaskByVfsChangeProvider provider,
-                                                           @Nonnull VirtualFile virtualFile,
-                                                           @Nonnull String name);
+  
+  public abstract BackgroundTaskByVfsChangeTask createTask(BackgroundTaskByVfsChangeProvider provider,
+                                                           VirtualFile virtualFile,
+                                                           String name);
 
   @RequiredUIAccess
-  public abstract void openManageDialog(@Nonnull VirtualFile virtualFile);
+  public abstract void openManageDialog(VirtualFile virtualFile);
 
-  @Nonnull
-  public abstract List<BackgroundTaskByVfsChangeTask> findTasks(@Nonnull VirtualFile virtualFile);
+  
+  public abstract List<BackgroundTaskByVfsChangeTask> findTasks(VirtualFile virtualFile);
 
-  @Nonnull
-  public abstract List<BackgroundTaskByVfsChangeTask> findEnabledTasks(@Nonnull VirtualFile virtualFile);
+  
+  public abstract List<BackgroundTaskByVfsChangeTask> findEnabledTasks(VirtualFile virtualFile);
 
-  @Nonnull
+  
   public abstract BackgroundTaskByVfsChangeTask[] getTasks();
 
-  public abstract void runTasks(@Nonnull VirtualFile virtualFile);
+  public abstract void runTasks(VirtualFile virtualFile);
 
-  public abstract boolean removeTask(@Nonnull BackgroundTaskByVfsChangeTask task);
+  public abstract boolean removeTask(BackgroundTaskByVfsChangeTask task);
 
-  public abstract void registerTask(@Nonnull BackgroundTaskByVfsChangeTask task);
+  public abstract void registerTask(BackgroundTaskByVfsChangeTask task);
 }

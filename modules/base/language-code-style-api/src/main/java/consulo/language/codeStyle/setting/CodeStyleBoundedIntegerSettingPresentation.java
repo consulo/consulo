@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.setting;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Shein
@@ -28,8 +27,8 @@ public class CodeStyleBoundedIntegerSettingPresentation extends CodeStyleSetting
     protected String myDefaultValueUiName;
 
     public CodeStyleBoundedIntegerSettingPresentation(
-        @Nonnull String fieldName,
-        @Nonnull String uiName,
+        String fieldName,
+        String uiName,
         int lowerBound,
         int upperBound,
         int defaultValue,
@@ -54,9 +53,9 @@ public class CodeStyleBoundedIntegerSettingPresentation extends CodeStyleSetting
         return myDefaultValue;
     }
 
-    @Nonnull
+    
     @Override
-    public String getValueUiName(@Nonnull Object value) {
+    public String getValueUiName(Object value) {
         if (value instanceof Integer intValue) {
             return intValue == myDefaultValue ? myDefaultValueUiName : super.getValueUiName(value);
         }

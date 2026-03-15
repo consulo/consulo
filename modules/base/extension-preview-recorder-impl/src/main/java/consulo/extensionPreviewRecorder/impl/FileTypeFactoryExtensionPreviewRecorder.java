@@ -22,7 +22,6 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -39,7 +38,7 @@ public class FileTypeFactoryExtensionPreviewRecorder implements ExtensionPreview
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+  public void analyze(Consumer<ExtensionPreview> recorder) {
 
     myApplication.getExtensionPoint(FileTypeFactory.class).forEachExtensionSafe(it -> {
       PreviewFileTypeConsumerImpl consumer = new PreviewFileTypeConsumerImpl(it, recorder);

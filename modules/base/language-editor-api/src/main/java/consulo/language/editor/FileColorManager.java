@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -33,7 +32,7 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface FileColorManager {
-    static FileColorManager getInstance(@Nonnull Project project) {
+    static FileColorManager getInstance(Project project) {
         return project.getInstance(FileColorManager.class);
     }
 
@@ -46,24 +45,24 @@ public interface FileColorManager {
     boolean isEnabledForProjectView();
 
     @Nullable
-    Color getColor(@Nonnull String name);
+    Color getColor(String name);
 
     Collection<String> getColorNames();
 
     @Deprecated
-    Color getFileColor(@Nonnull VirtualFile file);
+    Color getFileColor(VirtualFile file);
 
     @Nullable
-    default ColorValue getFileColorValue(@Nonnull VirtualFile file) {
+    default ColorValue getFileColorValue(VirtualFile file) {
         return TargetAWT.from(getFileColor(file));
     }
 
     @Nullable
-    Color getScopeColor(@Nonnull String scopeName);
+    Color getScopeColor(String scopeName);
 
-    boolean isShared(@Nonnull String scopeName);
+    boolean isShared(String scopeName);
 
-    boolean isColored(@Nonnull String scopeName, boolean shared);
+    boolean isColored(String scopeName, boolean shared);
 
     @Nullable
     Color getRendererBackground(VirtualFile file);

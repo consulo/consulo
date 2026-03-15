@@ -16,7 +16,7 @@
 package consulo.logging.internal;
 
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author kir

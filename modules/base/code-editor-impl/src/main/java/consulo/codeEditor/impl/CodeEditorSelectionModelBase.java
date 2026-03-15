@@ -15,8 +15,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public abstract class CodeEditorSelectionModelBase implements SelectionModel {
     return myEditor.getCaretModel().getCurrentCaret().getSelectionStart();
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getSelectionStartPosition() {
     return myEditor.getCaretModel().getCurrentCaret().getSelectionStartPosition();
@@ -67,7 +66,7 @@ public abstract class CodeEditorSelectionModelBase implements SelectionModel {
     return myEditor.getCaretModel().getCurrentCaret().getSelectionEnd();
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getSelectionEndPosition() {
     return myEditor.getCaretModel().getCurrentCaret().getSelectionEndPosition();
@@ -158,13 +157,13 @@ public abstract class CodeEditorSelectionModelBase implements SelectionModel {
   }
 
   @Override
-  public void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
+  public void setBlockSelection(LogicalPosition blockStart, LogicalPosition blockEnd) {
     List<CaretState> caretStates = EditorModificationUtil.calcBlockSelectionState(myEditor, blockStart, blockEnd);
     myEditor.getCaretModel().setCaretsAndSelections(caretStates);
   }
 
   @Override
-  @Nonnull
+  
   public int[] getBlockSelectionStarts() {
     Collection<Caret> carets = myEditor.getCaretModel().getAllCarets();
     int[] result = new int[carets.size()];
@@ -176,7 +175,7 @@ public abstract class CodeEditorSelectionModelBase implements SelectionModel {
   }
 
   @Override
-  @Nonnull
+  
   public int[] getBlockSelectionEnds() {
     Collection<Caret> carets = myEditor.getCaretModel().getAllCarets();
     int[] result = new int[carets.size()];
@@ -188,12 +187,12 @@ public abstract class CodeEditorSelectionModelBase implements SelectionModel {
   }
 
   @Override
-  public void addSelectionListener(@Nonnull SelectionListener listener) {
+  public void addSelectionListener(SelectionListener listener) {
     mySelectionListeners.add(listener);
   }
 
   @Override
-  public void removeSelectionListener(@Nonnull SelectionListener listener) {
+  public void removeSelectionListener(SelectionListener listener) {
     boolean success = mySelectionListeners.remove(listener);
     LOG.assertTrue(success);
   }
@@ -250,7 +249,7 @@ public abstract class CodeEditorSelectionModelBase implements SelectionModel {
     return myEditor.getCaretModel().getCurrentCaret().getLeadSelectionOffset();
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getLeadSelectionPosition() {
     return myEditor.getCaretModel().getCurrentCaret().getLeadSelectionPosition();

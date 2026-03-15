@@ -47,8 +47,7 @@ import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEnumerator;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -75,20 +74,20 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     myOrderRootsCache = new OrderRootsCache(module);
   }
 
-  @Nonnull
+  
   @Override
   public Project getProject() {
     return myModule.getProject();
   }
 
   @Override
-  @Nonnull
+  
   public Module getModule() {
     return myModule;
   }
 
   @Override
-  @Nonnull
+  
   public ModuleFileIndex getFileIndex() {
     return myModule.getInstance(ModuleFileIndex.class);
   }
@@ -113,13 +112,13 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
 
 
   @Override
-  @Nonnull
+  
   @RequiredReadAction
   public ModifiableRootModel getModifiableModel() {
     return getModifiableModel(new RootConfigurationAccessor());
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   public ModifiableRootModel getModifiableModel(final RootConfigurationAccessor accessor) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
@@ -138,7 +137,7 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     return model;
   }
 
-  public void makeRootsChange(@RequiredReadAction @Nonnull Runnable runnable) {
+  public void makeRootsChange(@RequiredReadAction Runnable runnable) {
     ProjectRootManagerEx projectRootManagerEx = (ProjectRootManagerEx)ProjectRootManager.getInstance(myModule.getProject());
     // IMPORTANT: should be the first listener!
     projectRootManagerEx.makeRootsChange(runnable, false, isModuleAdded);
@@ -154,12 +153,12 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
   }
 
   @Override
-  public boolean iterateContentEntries(@Nonnull Predicate<ContentEntry> processor) {
+  public boolean iterateContentEntries(Predicate<ContentEntry> processor) {
     return myRootModel.iterateContentEntries(processor);
   }
 
   @Override
-  @Nonnull
+  
   public OrderEntry[] getOrderEntries() {
     return myRootModel.getOrderEntries();
   }
@@ -175,24 +174,24 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
   }
 
   @Override
-  @Nonnull
+  
   public Module[] getDependencies() {
     return myRootModel.getModuleDependencies();
   }
 
-  @Nonnull
+  
   @Override
   public Module[] getDependencies(boolean includeTests) {
     return myRootModel.getModuleDependencies(includeTests);
   }
 
-  @Nonnull
+  
   @Override
   public Module[] getModuleDependencies() {
     return myRootModel.getModuleDependencies();
   }
 
-  @Nonnull
+  
   @Override
   public Module[] getModuleDependencies(boolean includeTests) {
     return myRootModel.getModuleDependencies(includeTests);
@@ -204,7 +203,7 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
   }
 
   @Override
-  @Nonnull
+  
   public String[] getDependencyModuleNames() {
     return myRootModel.getDependencyModuleNames();
   }
@@ -216,7 +215,7 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
   }
 
   @Override
-  public <T extends ModuleExtension> T getExtension(@Nonnull String key) {
+  public <T extends ModuleExtension> T getExtension(String key) {
     return myRootModel.getExtension(key);
   }
 
@@ -228,11 +227,11 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
 
   @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtensionWithoutCheck(@Nonnull String key) {
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(String key) {
     return myRootModel.getExtensionWithoutCheck(key);
   }
 
-  @Nonnull
+  
   @Override
   public List<ModuleExtension> getExtensions() {
     return myRootModel.getExtensions();
@@ -244,7 +243,7 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     return myRootModel.processOrder(policy, initialValue);
   }
 
-  @Nonnull
+  
   @Override
   public OrderEnumerator orderEntries() {
     return new ModuleOrderEnumerator(myRootModel, myOrderRootsCache);
@@ -254,7 +253,7 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     return getEnumeratorForType(type, module).usingCache();
   }
 
-  @Nonnull
+  
   private static OrderRootsEnumerator getEnumeratorForType(OrderRootType type, Module module) {
     OrderEnumerator base = OrderEnumerator.orderEntries(module);
     if (type == BinariesOrderRootType.getInstance()) {
@@ -267,61 +266,61 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile[] getContentRoots() {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentRoots();
   }
 
   @Override
-  @Nonnull
+  
   public String[] getContentRootUrls() {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentRootUrls();
   }
 
-  @Nonnull
+  
   @Override
-  public String[] getContentFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+  public String[] getContentFolderUrls(Predicate<ContentFolderTypeProvider> predicate) {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolderUrls(predicate);
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFile[] getContentFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+  public VirtualFile[] getContentFolderFiles(Predicate<ContentFolderTypeProvider> predicate) {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolderFiles(predicate);
   }
 
-  @Nonnull
+  
   @Override
-  public ContentFolder[] getContentFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+  public ContentFolder[] getContentFolders(Predicate<ContentFolderTypeProvider> predicate) {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolders(predicate);
   }
 
   @Override
-  @Nonnull
+  
   public String[] getExcludeRootUrls() {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getExcludeRootUrls();
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile[] getExcludeRoots() {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getExcludeRoots();
   }
 
   @Override
-  @Nonnull
+  
   public String[] getSourceRootUrls() {
     return getSourceRootUrls(true);
   }
 
-  @Nonnull
+  
   @Override
   public String[] getSourceRootUrls(boolean includingTests) {
     LOG.assertTrue(!myIsDisposed);
@@ -329,25 +328,25 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile[] getSourceRoots() {
     return getSourceRoots(true);
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile[] getSourceRoots(boolean includingTests) {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getSourceRoots(includingTests);
   }
 
-  @Nonnull
+  
   @Override
   public ModuleRootLayer getCurrentLayer() {
     return myRootModel.getCurrentLayer();
   }
 
-  @Nonnull
+  
   @Override
   public String getCurrentLayerName() {
     return myRootModel.getCurrentLayerName();
@@ -355,12 +354,12 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
 
   @Nullable
   @Override
-  public ModuleRootLayer findLayerByName(@Nonnull String name) {
+  public ModuleRootLayer findLayerByName(String name) {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.findLayerByName(name);
   }
 
-  @Nonnull
+  
   @Override
   public Map<String, ModuleRootLayer> getLayers() {
     LOG.assertTrue(!myIsDisposed);

@@ -25,15 +25,14 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonEditSourceAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public class EditSourceForDialogAction extends CommonEditSourceAction {
-    @Nonnull
+    
     private final Component mySourceComponent;
 
-    public EditSourceForDialogAction(@Nonnull Component component) {
+    public EditSourceForDialogAction(Component component) {
         super();
         Presentation presentation = getTemplatePresentation();
         presentation.setTextValue(ActionLocalize.actionEditsourceText());
@@ -44,7 +43,7 @@ public class EditSourceForDialogAction extends CommonEditSourceAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
         if (navigatableArray != null && navigatableArray.length > 0) {
             Application.get().invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));

@@ -3,20 +3,19 @@ package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.resolve.ResolvedStreamChain;
 import consulo.execution.debug.stream.wrapper.StreamChain;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface ResolvedTracingResult {
-  @Nonnull
+  
   ResolvedStreamChain getResolvedChain();
 
-  @Nonnull
+  
   StreamChain getSourceChain();
 
   boolean exceptionThrown();
 
-  @Nonnull
+  
   TraceElement getResult();
 }

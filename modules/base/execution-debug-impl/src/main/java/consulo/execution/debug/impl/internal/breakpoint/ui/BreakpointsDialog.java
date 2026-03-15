@@ -42,15 +42,14 @@ import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.*;
 
 public class BreakpointsDialog extends WholeWestDialogWrapper {
-    @Nonnull
+    
     private Project myProject;
 
     private Object myInitialBreakpoint;
@@ -87,7 +86,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         return (XBreakpointManagerImpl) XDebuggerManager.getInstance(myProject).getBreakpointManager();
     }
 
-    protected BreakpointsDialog(@Nonnull Project project, Object breakpoint, @Nonnull List<BreakpointPanelProvider> providers) {
+    protected BreakpointsDialog(Project project, Object breakpoint, List<BreakpointPanelProvider> providers) {
         super(project);
         myProject = project;
         myBreakpointsPanelProviders = providers;
@@ -105,14 +104,14 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         myTitlelessDecorator.install(getWindow());
     }
 
-    @Nonnull
+    
     @Override
     public String getSplitterKey() {
         return getDimensionServiceKey() + ".splitter";
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         return Couple.of(createMasterView(), createDetailView());
@@ -153,7 +152,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         return new Size2D(910, 400);
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getHelpAction()};
@@ -220,11 +219,11 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         PopupHandler.installPopupHandler(
             tree,
             new ActionGroup() {
-                @Nonnull
+                
                 @Override
                 public AnAction[] getChildren(@Nullable AnActionEvent e) {
                     ActionGroup group = new ActionGroup("Move to group", true) {
-                        @Nonnull
+                        
                         @Override
                         public AnAction[] getChildren(@Nullable AnActionEvent e) {
                             Set<String> groups = getBreakpointManager().getAllGroups();
@@ -249,7 +248,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         new AnAction("BreakpointDialog.GoToSource") {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 navigate(true);
                 close(OK_EXIT_CODE);
             }
@@ -258,7 +257,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         new AnAction("BreakpointDialog.ShowSource") {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 navigate(true);
                 close(OK_EXIT_CODE);
             }
@@ -405,7 +404,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             saveCurrentItem();
             XBreakpoint<?> breakpoint = myType.addBreakpoint(myProject, null);
             if (breakpoint != null) {
@@ -442,7 +441,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             String groupName = myGroup;
             if (myNewGroup) {
                 groupName = Messages.showInputDialog("New group name", "New Group", PlatformIconGroup.actionsNewfolder());

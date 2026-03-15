@@ -24,7 +24,6 @@ import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
 import consulo.usage.localize.UsageLocalize;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -59,11 +58,11 @@ public class UnknownUsagesInUnloadedModules extends UsageAdapter implements Usag
         myExplanationText = UsageLocalize.messageThereMayBeUsagesIn0LoadAllModulesAndRepeat(modulesText);
     }
 
-    @Nonnull
+    
     @Override
     public UsagePresentation getPresentation() {
         return new UsagePresentation() {
-            @Nonnull
+            
             @Override
             public TextChunk[] getText() {
                 return new TextChunk[]{new TextChunk(
@@ -72,7 +71,7 @@ public class UnknownUsagesInUnloadedModules extends UsageAdapter implements Usag
                 )};
             }
 
-            @Nonnull
+            
             @Override
             public String getPlainText() {
                 return myExplanationText.get();

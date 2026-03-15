@@ -34,8 +34,7 @@ import consulo.ui.style.StyleManager;
 import consulo.util.io.ResourceUtil;
 import consulo.util.lang.Pair;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -55,13 +54,13 @@ public class TipUIUtil {
     private TipUIUtil() {
     }
 
-    @Nonnull
-    public static String getPoweredByTextByLocalize(@Nonnull Pair<LocalizeValue, PluginDescriptor> tipInfo) {
+    
+    public static String getPoweredByTextByLocalize(Pair<LocalizeValue, PluginDescriptor> tipInfo) {
         PluginDescriptor descriptor = tipInfo.getSecond();
         return !PluginIds.isPlatformPlugin(descriptor.getPluginId()) ? descriptor.getName() : "";
     }
 
-    public static void openTipInBrowserByLocalize(@Nonnull Pair<LocalizeValue, PluginDescriptor> tipInfo, JEditorPane browser) {
+    public static void openTipInBrowserByLocalize(Pair<LocalizeValue, PluginDescriptor> tipInfo, JEditorPane browser) {
         try {
             StringBuilder text = new StringBuilder(tipInfo.getFirst().get());
             updateShortcuts(text);
@@ -132,7 +131,7 @@ public class TipUIUtil {
         return null;
     }
 
-    @Nonnull
+    
     public static JEditorPane createTipBrowser() {
         JEditorPane browser = new JEditorPane();
         browser.setEditable(false);

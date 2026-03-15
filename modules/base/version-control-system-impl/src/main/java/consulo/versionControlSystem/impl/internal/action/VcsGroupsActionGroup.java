@@ -26,7 +26,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 // from kotlin
 @ActionImpl(
@@ -44,7 +43,7 @@ public class VcsGroupsActionGroup extends DefaultActionGroup implements DumbAwar
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
             e.getPresentation().setTextValue(project.getInstance(ProjectLevelVcsManager.class).getConsolidatedVcsName());

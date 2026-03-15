@@ -16,8 +16,7 @@
 package consulo.dataContext;
 
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -34,7 +33,7 @@ public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
 
   @Override
   @Nullable
-  public synchronized Object getData(@Nonnull Key<?> dataId) {
+  public synchronized Object getData(Key<?> dataId) {
     myValue = null;
     myLastKey = dataId;
     myProvider.calcData(myLastKey, this);

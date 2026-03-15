@@ -23,12 +23,11 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 
 public class LineMover extends StatementUpDownMover {
 
   @Override
-  public boolean checkAvailable(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull MoveInfo info, boolean down) {
+  public boolean checkAvailable(Editor editor, PsiFile file, MoveInfo info, boolean down) {
     LineRange range = StatementUpDownMover.getLineRangeFromSelection(editor);
 
     LogicalPosition maxLinePos = editor.offsetToLogicalPosition(editor.getDocument().getTextLength());

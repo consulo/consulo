@@ -11,7 +11,6 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class CommentLanguageInjector implements MultiHostInjector {
 
   private final LanguageInjectionSupport[] mySupports;
   private final LanguageInjectionSupport myInjectorSupport = new AbstractLanguageInjectionSupport() {
-    @Nonnull
+    
     @Override
     public String getId() {
       return "comment";
@@ -36,7 +35,7 @@ public class CommentLanguageInjector implements MultiHostInjector {
       return true;
     }
 
-    @Nonnull
+    
     @Override
     public Class[] getPatternClasses() {
       return ArrayUtil.EMPTY_CLASS_ARRAY;
@@ -50,14 +49,14 @@ public class CommentLanguageInjector implements MultiHostInjector {
     mySupports = ArrayUtil.toObjectArray(supports, LanguageInjectionSupport.class);
   }
 
-  @Nonnull
+  
   @Override
   public Class<? extends PsiElement> getElementClass() {
     return PsiLanguageInjectionHost.class;
   }
 
   @Override
-  public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context) {
+  public void injectLanguages(MultiHostRegistrar registrar, PsiElement context) {
     if (!(context instanceof PsiLanguageInjectionHost) || context instanceof PsiComment) return;
     if (!((PsiLanguageInjectionHost)context).isValidHost()) return;
     PsiLanguageInjectionHost host = (PsiLanguageInjectionHost)context;

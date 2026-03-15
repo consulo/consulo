@@ -36,8 +36,7 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkListener;
 
@@ -52,10 +51,10 @@ import javax.swing.event.HyperlinkListener;
 public interface XDebugSession extends AbstractDebuggerSession {
     Key<XDebugSession> DATA_KEY = Key.create("XDebugSessionTab.XDebugSession");
 
-    @Nonnull
+    
     Project getProject();
 
-    @Nonnull
+    
     XDebugProcess getDebugProcess();
 
     boolean isSuspended();
@@ -85,7 +84,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     void forceStepInto();
 
-    void runToPosition(@Nonnull XSourcePosition position, boolean ignoreBreakpoints);
+    void runToPosition(XSourcePosition position, boolean ignoreBreakpoints);
 
     void pause();
 
@@ -95,9 +94,9 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     void showExecutionPoint();
 
-    void setCurrentStackFrame(@Nonnull XExecutionStack executionStack, @Nonnull XStackFrame frame, boolean isTopFrame);
+    void setCurrentStackFrame(XExecutionStack executionStack, XStackFrame frame, boolean isTopFrame);
 
-    default void setCurrentStackFrame(@Nonnull XExecutionStack executionStack, @Nonnull XStackFrame frame) {
+    default void setCurrentStackFrame(XExecutionStack executionStack, XStackFrame frame) {
         setCurrentStackFrame(executionStack, frame, frame.equals(executionStack.getTopFrame()));
     }
 
@@ -108,17 +107,17 @@ public interface XDebugSession extends AbstractDebuggerSession {
      * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link consulo.execution.debug.icon.ExecutionDebugIconGroup}
      * @param errorMessage an error message if breakpoint isn't successfully registered
      */
-    void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
+    void updateBreakpointPresentation(XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
 
     /**
      * Marks the provide breakpoint as verified in the current session
      */
-    void setBreakpointVerified(@Nonnull XLineBreakpoint<?> breakpoint);
+    void setBreakpointVerified(XLineBreakpoint<?> breakpoint);
 
     /**
      * Marks the provide breakpoint as invalid in the current session
      */
-    void setBreakpointInvalid(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable String errorMessage);
+    void setBreakpointInvalid(XLineBreakpoint<?> breakpoint, @Nullable String errorMessage);
 
     /**
      * Call this method when a breakpoint is reached if its condition ({@link XBreakpoint#getCondition()}) evaluates to {@code true}.
@@ -130,21 +129,21 @@ public interface XDebugSession extends AbstractDebuggerSession {
      * @param suspendContext         context
      * @return <code>true</code> if the debug process should be suspended
      */
-    boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nullable String evaluatedLogExpression, @Nonnull XSuspendContext suspendContext);
+    boolean breakpointReached(XBreakpoint<?> breakpoint, @Nullable String evaluatedLogExpression, XSuspendContext suspendContext);
 
-    void breakpointReachedNoProcessing(@Nonnull XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
+    void breakpointReachedNoProcessing(XBreakpoint<?> breakpoint, XSuspendContext suspendContext);
 
     /**
      * @deprecated use {@link #breakpointReached(XBreakpoint, String, XSuspendContext)} instead
      */
-    boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
+    boolean breakpointReached(XBreakpoint<?> breakpoint, XSuspendContext suspendContext);
 
     /**
      * Call this method when position is reached (e.g. after "Run to cursor" or "Step over" command)
      *
      * @param suspendContext context
      */
-    default void positionReached(@Nonnull XSuspendContext suspendContext) {
+    default void positionReached(XSuspendContext suspendContext) {
         positionReached(suspendContext, false);
     }
 
@@ -154,7 +153,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
      * @param suspendContext context
      * @param attract        attract to debugger panel, and active breakpoint panel if setting enable
      */
-    void positionReached(@Nonnull XSuspendContext suspendContext, boolean attract);
+    void positionReached(XSuspendContext suspendContext, boolean attract);
 
     /**
      * Call this method when session resumed because of some external event, e.g. from the debugger console
@@ -167,26 +166,26 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     boolean areBreakpointsMuted();
 
-    void addSessionListener(@Nonnull XDebugSessionListener listener, @Nonnull Disposable parentDisposable);
+    void addSessionListener(XDebugSessionListener listener, Disposable parentDisposable);
 
-    void addSessionListener(@Nonnull XDebugSessionListener listener);
+    void addSessionListener(XDebugSessionListener listener);
 
-    void removeSessionListener(@Nonnull XDebugSessionListener listener);
+    void removeSessionListener(XDebugSessionListener listener);
 
-    default void reportError(@Nonnull String message) {
+    default void reportError(String message) {
         reportMessage(message, NotificationType.ERROR);
     }
 
-    default void reportMessage(@Nonnull String message, @Nonnull NotificationType type) {
+    default void reportMessage(String message, NotificationType type) {
         reportMessage(message, type, null);
     }
 
-    void reportMessage(@Nonnull String message, @Nonnull NotificationType type, @Nullable HyperlinkListener listener);
+    void reportMessage(String message, NotificationType type, @Nullable HyperlinkListener listener);
 
-    @Nonnull
+    
     String getSessionName();
 
-    @Nonnull
+    
     RunContentDescriptor getRunContentDescriptor();
 
     @Nullable
@@ -221,10 +220,10 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     void setReadOnly(boolean readOnly);
 
-    boolean isBreakpointActive(@Nonnull XBreakpoint<?> b);
+    boolean isBreakpointActive(XBreakpoint<?> b);
 
-    void processDependencies(@Nonnull XBreakpoint<?> breakpoint);
+    void processDependencies(XBreakpoint<?> breakpoint);
 
-    @Nonnull
+    
     XDebugSessionData getSessionData();
 }

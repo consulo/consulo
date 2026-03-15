@@ -19,8 +19,7 @@ import consulo.ide.impl.idea.designer.model.PropertiesContainer;
 import consulo.ide.impl.idea.designer.model.PropertyContext;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyRenderer;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyTable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -29,7 +28,7 @@ import javax.swing.*;
  * @author Vladimir Kondratyev
  */
 public class BooleanRenderer extends JCheckBox implements PropertyRenderer {
-  @Nonnull
+  
   public JComponent getComponent(@Nullable PropertiesContainer container,
                                  PropertyContext context,
                                  @Nullable Object value,

@@ -17,7 +17,7 @@ package consulo.fileEditor.structureView.tree;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The presentation information for a grouping, sorting or filtering action displayed in

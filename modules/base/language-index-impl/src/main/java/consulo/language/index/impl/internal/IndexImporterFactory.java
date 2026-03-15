@@ -5,13 +5,12 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.IndexExtension;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IndexImporterFactory {
     ExtensionPointName<IndexImporterFactory> EP_NAME = ExtensionPointName.create(IndexImporterFactory.class);
 
     @Nullable
-    <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input> createImporter(@Nonnull IndexExtension<Key, Value, Input> extension);
+    <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input> createImporter(IndexExtension<Key, Value, Input> extension);
 }

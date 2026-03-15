@@ -54,8 +54,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -89,9 +88,9 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     initFileOpenedListener(application.getMessageBus());
   }
 
-  @Nonnull
+  
   @Override
-  public String getRootPath(@Nonnull RootType rootId) {
+  public String getRootPath(RootType rootId) {
     return getRootPath() + "/" + rootId.getId();
   }
 
@@ -107,7 +106,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   private void initFileOpenedListener(MessageBus messageBus) {
     final FileEditorManagerAdapter editorListener = new FileEditorManagerAdapter() {
       @Override
-      public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+      public void fileOpened(FileEditorManager source, VirtualFile file) {
         if (!isEditable(file)) return;
         RootType rootType = getRootType(file);
         if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
@@ -116,7 +115,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       }
 
       @Override
-      public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+      public void fileClosed(FileEditorManager source, VirtualFile file) {
         if (Boolean.TRUE.equals(file.getUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN))) return;
         if (!isEditable(file)) return;
 
@@ -126,13 +125,13 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         }
       }
 
-      boolean isEditable(@Nonnull VirtualFile file) {
+      boolean isEditable(VirtualFile file) {
         return FileDocumentManager.getInstance().getDocument(file) != null;
       }
     };
     ProjectManagerListener projectListener = new ProjectManagerListener() {
       @Override
-      public void projectOpened(Project project, @Nonnull UIAccess uiAccess) {
+      public void projectOpened(Project project, UIAccess uiAccess) {
         project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.class, editorListener);
         FileEditorManager editorManager = FileEditorManager.getInstance(project);
         for (VirtualFile virtualFile : editorManager.getOpenFiles()) {
@@ -146,12 +145,12 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     messageBus.connect().subscribe(ProjectManagerListener.class, projectListener);
   }
 
-  @Nonnull
+  
   protected String getRootPath() {
     return FileUtil.toSystemIndependentName(ContainerPathManager.get().getScratchPath());
   }
 
-  @Nonnull
+  
   @Override
   public PerFileMappings<Language> getScratchesMapping() {
     return new PerFileMappings<>() {
@@ -185,7 +184,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
 
   private static class MyLanguages extends PerFileMappingsBase<String> {
     @Override
-    @Nonnull
+    
     public List<String> getAvailableValues() {
       return ContainerUtil.map(LanguageUtil.getFileLanguages(), Language::getID);
     }
@@ -204,7 +203,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   }
 
   @Override
-  public VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException {
+  public VirtualFile findFile(RootType rootType, String pathName, Option option) throws IOException {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     String fullPath = getRootPath(rootType) + "/" + pathName;

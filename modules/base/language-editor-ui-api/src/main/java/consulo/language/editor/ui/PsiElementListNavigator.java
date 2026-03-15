@@ -13,8 +13,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -69,7 +68,7 @@ public class PsiElementListNavigator {
   /**
    * @see #navigateOrCreatePopup(NavigatablePsiElement[], String, String, ListCellRenderer, BackgroundUpdaterTask, Consumer)
    */
-  private static void runActionAndListUpdaterTask(@Nonnull Runnable action, @Nonnull BackgroundUpdaterTask listUpdaterTask) {
+  private static void runActionAndListUpdaterTask(Runnable action, BackgroundUpdaterTask listUpdaterTask) {
     action.run();
     ProgressManager.getInstance().run(listUpdaterTask);
   }
@@ -94,28 +93,28 @@ public class PsiElementListNavigator {
    * listUpdaterTask should be started after alarm is initialized so one-item popup won't blink
    */
   @Nullable
-  public static JBPopup navigateOrCreatePopup(@Nonnull NavigatablePsiElement[] targets,
+  public static JBPopup navigateOrCreatePopup(NavigatablePsiElement[] targets,
                                               String title,
                                               String findUsagesTitle,
                                               ListCellRenderer listRenderer,
                                               @Nullable BackgroundUpdaterTask listUpdaterTask,
-                                              @Nonnull Consumer<Object[]> consumer) {
+                                              Consumer<Object[]> consumer) {
     return builder(targets, title).setFindUsagesTitle(findUsagesTitle).setListRenderer(listRenderer).setListUpdaterTask(listUpdaterTask).setTargetsConsumer(consumer).build();
   }
 
-  private static NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title) {
+  private static NavigateOrPopupBuilder builder(NavigatablePsiElement[] targets, String title) {
     return LanguageEditorPopupFactory.getInstance().builder(targets, title);
   }
 
   // Helper makes it easier to customize shown popup.
   public static abstract class NavigateOrPopupBuilder {
 
-    @Nonnull
+    
     protected final NavigatablePsiElement[] myTargets;
 
     protected final String myTitle;
 
-    @Nonnull
+    
     protected Consumer<Object[]> myTargetsConsumer;
 
     @Nullable
@@ -130,7 +129,7 @@ public class PsiElementListNavigator {
     @Nullable
     protected Project myProject;
 
-    public NavigateOrPopupBuilder(@Nonnull NavigatablePsiElement[] targets, String title) {
+    public NavigateOrPopupBuilder(NavigatablePsiElement[] targets, String title) {
       myTargets = targets;
       myTitle = title;
       myTargetsConsumer = selectedElements -> {
@@ -143,31 +142,31 @@ public class PsiElementListNavigator {
       };
     }
 
-    @Nonnull
+    
     public NavigateOrPopupBuilder setFindUsagesTitle(@Nullable String findUsagesTitle) {
       myFindUsagesTitle = findUsagesTitle;
       return this;
     }
 
-    @Nonnull
+    
     public NavigateOrPopupBuilder setListRenderer(@Nullable ListCellRenderer listRenderer) {
       myListRenderer = listRenderer;
       return this;
     }
 
-    @Nonnull
+    
     public NavigateOrPopupBuilder setListUpdaterTask(@Nullable BackgroundUpdaterTask listUpdaterTask) {
       myListUpdaterTask = listUpdaterTask;
       return this;
     }
 
-    @Nonnull
-    public NavigateOrPopupBuilder setTargetsConsumer(@Nonnull Consumer<Object[]> targetsConsumer) {
+    
+    public NavigateOrPopupBuilder setTargetsConsumer(Consumer<Object[]> targetsConsumer) {
       myTargetsConsumer = targetsConsumer;
       return this;
     }
 
-    @Nonnull
+    
     public NavigateOrPopupBuilder setProject(@Nullable Project project) {
       myProject = project;
       return this;
@@ -176,7 +175,7 @@ public class PsiElementListNavigator {
     @Nullable
     public abstract JBPopup build();
 
-    @Nonnull
+    
     public Project getProject() {
       if (myProject != null) {
         return myProject;
@@ -189,7 +188,7 @@ public class PsiElementListNavigator {
       return false;
     }
 
-    protected void afterPopupBuilderCreated(@Nonnull IPopupChooserBuilder<NavigatablePsiElement> builder) {
+    protected void afterPopupBuilderCreated(IPopupChooserBuilder<NavigatablePsiElement> builder) {
       // Do nothing by default
     }
   }

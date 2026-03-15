@@ -17,7 +17,6 @@ package consulo.desktop.awt.internal.diff.util;
 
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -26,18 +25,18 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class CopyableLabel extends JTextArea {
-  @Nonnull
+  
   private JLabel ELLIPSIS_LABEL = new JLabel("...");
 
-  @Nonnull
-  public static JComponent create(@Nonnull String text) {
+  
+  public static JComponent create(String text) {
     if (text.isEmpty()) text = " ";
     text = text.replace('\r', ' ').replace('\n', ' ');
 
     return new CopyableLabel(text);
   }
 
-  private CopyableLabel(@Nonnull String text) {
+  private CopyableLabel(String text) {
     addFocusListener(new FocusAdapter() {
       @Override
       public void focusLost(FocusEvent e) {

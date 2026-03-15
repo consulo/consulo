@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.dataContext.BaseDataManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -37,14 +36,14 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ModuleRule implements GetDataRule<Module> {
-  @Nonnull
+  
   @Override
   public Key<Module> getKey() {
     return Module.KEY;
   }
 
   @Override
-  public Module getData(@Nonnull DataProvider dataProvider) {
+  public Module getData(DataProvider dataProvider) {
     Module moduleContext = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
     if (moduleContext != null) {
       return moduleContext;

@@ -40,8 +40,7 @@ import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -65,12 +64,12 @@ public class InjectorUtils {
     }
 
     @Nullable
-    public static Language getLanguage(@Nonnull BaseInjection injection) {
+    public static Language getLanguage(BaseInjection injection) {
         return getLanguageByString(injection.getInjectedLanguageId());
     }
 
     @Nullable
-    public static Language getLanguageByString(@Nonnull String languageId) {
+    public static Language getLanguageByString(String languageId) {
         Language language = InjectedLanguage.findLanguageById(languageId);
         if (language != null) {
             return language;
@@ -96,10 +95,10 @@ public class InjectorUtils {
         return null;
     }
 
-    public static boolean registerInjectionSimple(@Nonnull PsiLanguageInjectionHost host,
-                                                  @Nonnull BaseInjection injection,
+    public static boolean registerInjectionSimple(PsiLanguageInjectionHost host,
+                                                  BaseInjection injection,
                                                   @Nullable LanguageInjectionSupport support,
-                                                  @Nonnull MultiHostRegistrar registrar) {
+                                                  MultiHostRegistrar registrar) {
         Language language = getLanguage(injection);
         if (language == null) {
             return false;
@@ -167,7 +166,7 @@ public class InjectorUtils {
         }
     }
 
-    @Nonnull
+    
     public static Collection<String> getActiveInjectionSupportIds() {
         return LanguageSupportCache.getInstance().getAllSupportIds();
     }
@@ -181,20 +180,20 @@ public class InjectorUtils {
         return LanguageSupportCache.getInstance().getSupport(id);
     }
 
-    @Nonnull
+    
     public static Class[] getPatternClasses(String supportId) {
         LanguageInjectionSupport support = findInjectionSupport(supportId);
         return support == null ? ArrayUtil.EMPTY_CLASS_ARRAY : support.getPatternClasses();
     }
 
-    @Nonnull
+    
     public static LanguageInjectionSupport findNotNullInjectionSupport(String id) {
         LanguageInjectionSupport result = findInjectionSupport(id);
         assert result != null : id + " injector not found";
         return result;
     }
 
-    public static StringBuilder appendStringPattern(@Nonnull StringBuilder sb, @Nonnull String prefix, @Nonnull String text, @Nonnull String suffix) {
+    public static StringBuilder appendStringPattern(StringBuilder sb, String prefix, String text, String suffix) {
         sb.append(prefix).append("string().");
         String[] parts = text.split("[,|\\s]+");
         boolean useMatches = false;
@@ -249,14 +248,14 @@ public class InjectorUtils {
         return false;
     }
 
-    public static void registerSupport(@Nonnull LanguageInjectionSupport support, boolean settingsAvailable, @Nonnull PsiElement element, @Nonnull Language language) {
+    public static void registerSupport(LanguageInjectionSupport support, boolean settingsAvailable, PsiElement element, Language language) {
         putInjectedFileUserData(element, language, LanguageInjectionSupport.INJECTOR_SUPPORT, support);
         if (settingsAvailable) {
             putInjectedFileUserData(element, language, LanguageInjectionSupport.SETTINGS_EDITOR, support);
         }
     }
 
-    public static <T> void putInjectedFileUserData(@Nonnull PsiElement element, @Nonnull Language language, @Nonnull Key<T> key, @Nullable T value) {
+    public static <T> void putInjectedFileUserData(PsiElement element, Language language, Key<T> key, @Nullable T value) {
         InjectedLanguageManagerInternal manager = (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(element.getProject());
         manager.putInjectedFileUserData(element, language, key, value);
     }

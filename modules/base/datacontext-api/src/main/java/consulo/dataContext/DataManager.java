@@ -24,12 +24,11 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DataManager {
-  @Nonnull
+ 
   public static DataManager getInstance() {
     return RootComponentHolder.getRootComponent().getInstance(DataManager.class);
   }
@@ -38,33 +37,33 @@ public interface DataManager {
    * @return {@link DataContext} constructed by the current focused component
    * @deprecated use either {@link #getDataContext(consulo.ui.Component)} or {@link #getDataContextFromFocus()}
    */
-  @Nonnull
+ 
   DataContext getDataContext();
 
-  @Nonnull
-  AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext);
+ 
+  AsyncDataContext createAsyncDataContext(DataContext dataContext);
 
   /**
    * @return {@link DataContext} constructed by the currently focused component.
    */
-  @Nonnull
+ 
   Promise<DataContext> getDataContextFromFocusAsync();
 
-  @Nonnull
+ 
   AsyncResult<DataContext> getDataContextFromFocus();
 
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
-  @Nonnull
-  DataContext getDataContext(@Nullable consulo.ui.Component component);
+ 
+  DataContext getDataContext(consulo.ui.@Nullable Component component);
 
   /**
    * @param dataContext should be instance of {@link UserDataHolder}
    * @param dataKey     key to store value
    * @param data        value to store
    */
-  <T> void saveInDataContext(@Nullable DataContext dataContext, @Nonnull Key<T> dataKey, @Nullable T data);
+  <T> void saveInDataContext(@Nullable DataContext dataContext, Key<T> dataKey, @Nullable T data);
 
   /**
    * @param dataContext find by key if instance of {@link UserDataHolder}
@@ -72,7 +71,7 @@ public interface DataManager {
    * @return value stored by {@link #saveInDataContext(DataContext, Key, Object)}
    */
   @Nullable
-  <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey);
+  <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey);
 
   // TODO [VISTALL] region AWT & Swing dependency
 
@@ -85,29 +84,28 @@ public interface DataManager {
    * @throws java.lang.IllegalArgumentException if point <code>(x, y)</code> is not inside
    *                                            component's bounds
    */
-  default DataContext getDataContext(@Nonnull java.awt.Component component, int x, int y) {
+  default DataContext getDataContext(java.awt.Component component, int x, int y) {
     throw new UnsupportedOperationException();
   }
 
   public static final String CLIENT_PROPERTY_DATA_PROVIDER = "DataProvider";
 
-  public static void registerDataProvider(@Nonnull javax.swing.JComponent component, @Nonnull DataProvider provider) {
+  public static void registerDataProvider(javax.swing.JComponent component, DataProvider provider) {
     component.putClientProperty(CLIENT_PROPERTY_DATA_PROVIDER, provider);
   }
 
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
-  default DataContext getDataContext(@Nullable java.awt.Component component) {
+  default DataContext getDataContext(java.awt.@Nullable Component component) {
     throw new UnsupportedOperationException();
   }
 
-  @Nullable
-  public static DataProvider getDataProvider(@Nonnull javax.swing.JComponent component) {
+  public static DataProvider getDataProvider(javax.swing.@Nullable JComponent component) {
     return (DataProvider)component.getClientProperty(CLIENT_PROPERTY_DATA_PROVIDER);
   }
 
-  public static void removeDataProvider(@Nonnull javax.swing.JComponent component) {
+  public static void removeDataProvider(javax.swing.JComponent component) {
     component.putClientProperty(CLIENT_PROPERTY_DATA_PROVIDER, null);
   }
   // endregion

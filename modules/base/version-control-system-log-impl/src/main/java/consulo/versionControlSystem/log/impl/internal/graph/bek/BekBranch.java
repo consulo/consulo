@@ -17,8 +17,7 @@ package consulo.versionControlSystem.log.impl.internal.graph.bek;
 
 import consulo.versionControlSystem.log.graph.LinearGraph;
 import consulo.versionControlSystem.log.graph.TimestampGetter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -31,22 +30,22 @@ class BekBranch {
   private static final int SMALL_DELTA_TIME = 60 * 60 * 4 * 1000;
 
 
-  @Nonnull
+  
   private final LinearGraph myPermanentGraph;
-  @Nonnull
+  
   private final List<Integer> myNodeIndexes;
 
   private int myNoInsertSize;
 
   @Nullable private List<Integer> myPrepareForInsertPart = null;
 
-  public BekBranch(@Nonnull LinearGraph permanentGraph, @Nonnull List<Integer> nodeIndexes) {
+  public BekBranch(LinearGraph permanentGraph, List<Integer> nodeIndexes) {
     myPermanentGraph = permanentGraph;
     myNodeIndexes = nodeIndexes;
     myNoInsertSize = myNodeIndexes.size();
   }
 
-  public void updatePrepareForInsertPart(@Nonnull TimestampGetter timestampGetter, @Nonnull BekEdgeRestrictions edgeRestrictions) {
+  public void updatePrepareForInsertPart(TimestampGetter timestampGetter, BekEdgeRestrictions edgeRestrictions) {
     assert myPrepareForInsertPart == null;
     int currentNode = myNodeIndexes.get(myNoInsertSize - 1);
 
@@ -79,7 +78,7 @@ class BekBranch {
     myPrepareForInsertPart = myNodeIndexes.subList(prevIndex, myNoInsertSize);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public List<Integer> getPrepareForInsertPart() {
     return myPrepareForInsertPart;
   }

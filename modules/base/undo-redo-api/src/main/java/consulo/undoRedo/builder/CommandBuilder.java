@@ -21,14 +21,13 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoConfirmationPolicy;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
  * @since 2024-10-21
  */
 public interface CommandBuilder<THIS extends CommandBuilder<THIS>> {
-    THIS name(@Nonnull LocalizeValue name);
+    THIS name(LocalizeValue name);
 
     THIS groupId(Object groupId);
 
@@ -36,11 +35,11 @@ public interface CommandBuilder<THIS extends CommandBuilder<THIS>> {
 
     THIS document(Document document);
 
-    THIS undoConfirmationPolicy(@Nonnull UndoConfirmationPolicy undoConfirmationPolicy);
+    THIS undoConfirmationPolicy(UndoConfirmationPolicy undoConfirmationPolicy);
 
     THIS shouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument);
 
     /* Finishing methods */
 
-    CommandDescriptor build(@RequiredUIAccess @Nonnull Runnable command);
+    CommandDescriptor build(@RequiredUIAccess Runnable command);
 }

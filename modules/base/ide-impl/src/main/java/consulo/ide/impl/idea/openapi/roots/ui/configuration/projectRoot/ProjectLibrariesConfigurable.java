@@ -29,8 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.awt.MasterDetailsStateService;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -60,7 +59,7 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
         return "ProjectLibrariesConfigurable.UI";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Libraries");
@@ -73,7 +72,7 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return ID;
     }

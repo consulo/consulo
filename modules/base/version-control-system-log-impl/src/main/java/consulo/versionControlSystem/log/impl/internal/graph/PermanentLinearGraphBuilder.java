@@ -21,31 +21,30 @@ import consulo.util.collection.SmartList;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.log.impl.internal.util.BitSetFlags;
 import consulo.versionControlSystem.log.impl.internal.util.Flags;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
 
 public class PermanentLinearGraphBuilder<CommitId> {
 
-  @Nonnull
+  
   private final List<? extends GraphCommit<CommitId>> myCommits;
-  @Nonnull
+  
   private final Flags mySimpleNodes;
 
   private final int myNodesCount;
 
-  @Nonnull
+  
   private final int[] myNodeToEdgeIndex;
-  @Nonnull
+  
   private final int[] myLongEdges;
   // downCommitId -> List of upNodeIndex
-  @Nonnull
+  
   private final Map<CommitId, List<Integer>> upAdjacentNodes = new HashMap<>();
 
-  private PermanentLinearGraphBuilder(@Nonnull List<? extends GraphCommit<CommitId>> commits,
-                                      @Nonnull Flags simpleNodes,
+  private PermanentLinearGraphBuilder(List<? extends GraphCommit<CommitId>> commits,
+                                      Flags simpleNodes,
                                       int longEdgesCount) {
     myCommits = commits;
     mySimpleNodes = simpleNodes;
@@ -56,8 +55,8 @@ public class PermanentLinearGraphBuilder<CommitId> {
     myLongEdges = new int[2 * longEdgesCount];
   }
 
-  @Nonnull
-  public static <CommitId> PermanentLinearGraphBuilder<CommitId> newInstance(@Nonnull List<? extends GraphCommit<CommitId>> graphCommits) {
+  
+  public static <CommitId> PermanentLinearGraphBuilder<CommitId> newInstance(List<? extends GraphCommit<CommitId>> graphCommits) {
     graphCommits = DuplicateParentFixer.fixDuplicateParentCommits(graphCommits);
     Flags simpleNodes = new BitSetFlags(graphCommits.size());
 
@@ -153,7 +152,7 @@ public class PermanentLinearGraphBuilder<CommitId> {
     throw new IllegalStateException("Not found underdone edge to not load commit for node: " + upNodeIndex);
   }
 
-  private void fixUnderdoneEdges(@Nonnull Function<CommitId, Integer> notLoadedCommitToId) {
+  private void fixUnderdoneEdges(Function<CommitId, Integer> notLoadedCommitToId) {
     List<CommitId> commitIds = new ArrayList<CommitId>(upAdjacentNodes.keySet());
     ContainerUtil.sort(commitIds, (o1, o2) -> Collections.min(upAdjacentNodes.get(o1)) - Collections.min(upAdjacentNodes.get(o2)));
     for (CommitId notLoadCommit : commitIds) {
@@ -165,8 +164,8 @@ public class PermanentLinearGraphBuilder<CommitId> {
   }
 
   // id's must be less that -2
-  @Nonnull
-  public PermanentLinearGraphImpl build(@Nonnull Function<CommitId, Integer> notLoadedCommitToId) {
+  
+  public PermanentLinearGraphImpl build(Function<CommitId, Integer> notLoadedCommitToId) {
     for (int nodeIndex = 0; nodeIndex < myNodesCount; nodeIndex++) {
       doStep(nodeIndex);
     }
@@ -176,7 +175,7 @@ public class PermanentLinearGraphBuilder<CommitId> {
     return new PermanentLinearGraphImpl(mySimpleNodes, myNodeToEdgeIndex, myLongEdges);
   }
 
-  @Nonnull
+  
   public PermanentLinearGraphImpl build() {
     return build(dom -> Integer.MIN_VALUE);
   }

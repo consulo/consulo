@@ -17,12 +17,11 @@ package consulo.versionControlSystem.distributed.ui.awt;
 
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public class PushLogTreeUtil {
-    public static SimpleTextAttributes addTransparencyIfNeeded(@Nonnull SimpleTextAttributes baseStyle, boolean isActive) {
+    public static SimpleTextAttributes addTransparencyIfNeeded(SimpleTextAttributes baseStyle, boolean isActive) {
         if (isActive) {
             return baseStyle;
         }

@@ -48,8 +48,7 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -73,12 +72,12 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     private List<Library> myResult;
     private final Map<Object, Object> myParentsMap = new HashMap<>();
 
-    protected ChooseLibrariesDialogBase(JComponent parentComponent, @Nonnull LocalizeValue title) {
+    protected ChooseLibrariesDialogBase(JComponent parentComponent, LocalizeValue title) {
         super(parentComponent, false);
         setTitle(title);
     }
 
-    protected ChooseLibrariesDialogBase(Project project, @Nonnull LocalizeValue title) {
+    protected ChooseLibrariesDialogBase(Project project, LocalizeValue title) {
         super(project, false);
         setTitle(title);
     }
@@ -98,11 +97,11 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         return "#consulo.ide.impl.idea.util.ui.classpath.ChooseLibrariesDialog";
     }
 
-    protected int getLibraryTableWeight(@Nonnull LibraryTable libraryTable) {
+    protected int getLibraryTableWeight(LibraryTable libraryTable) {
         return 0;
     }
 
-    protected boolean isAutoExpandLibraryTable(@Nonnull LibraryTable libraryTable) {
+    protected boolean isAutoExpandLibraryTable(LibraryTable libraryTable) {
         return false;
     }
 
@@ -122,12 +121,12 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         return myTree;
     }
 
-    @Nonnull
+    
     public List<Library> getSelectedLibraries() {
         return myResult == null ? Collections.<Library>emptyList() : myResult;
     }
 
-    protected void queueUpdateAndSelect(@Nonnull Library library) {
+    protected void queueUpdateAndSelect(Library library) {
         myBuilder.queueUpdate().doWhenDone(() -> myBuilder.select(library));
     }
 
@@ -183,7 +182,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         return pane;
     }
 
-    @Nonnull
+    
     protected Project getProject() {
         return ProjectManager.getInstance().getDefaultProject();
     }
@@ -241,7 +240,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
             return 0;
         }
 
-        @Nonnull
+        
         @Override
         public Object[] getEqualityObjects() {
             return new Object[]{myElement};
@@ -341,16 +340,16 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
             myProject = project;
         }
 
-        @Nonnull
+        
         @Override
         public Object getRootElement() {
             return ApplicationManager.getApplication();
         }
 
-        @Nonnull
+        
         @Override
         @RequiredReadAction
-        public Object[] getChildElements(@Nonnull Object element) {
+        public Object[] getChildElements(Object element) {
             List<Object> result = new ArrayList<>();
             collectChildren(element, result);
             Iterator<Object> it = result.iterator();
@@ -366,7 +365,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         }
 
         @Override
-        public Object getParentElement(@Nonnull Object element) {
+        public Object getParentElement(Object element) {
             return switch (element) {
                 case Application a -> null;
                 case Project p -> ApplicationManager.getApplication();
@@ -377,9 +376,9 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
             };
         }
 
-        @Nonnull
+        
         @Override
-        public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+        public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
             return switch (element) {
                 case Application a -> new RootDescriptor(myProject);
                 case Project p -> new ProjectDescriptor(myProject, p);

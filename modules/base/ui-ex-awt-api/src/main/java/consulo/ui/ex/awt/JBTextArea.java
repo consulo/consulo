@@ -5,7 +5,6 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.Document;
@@ -67,7 +66,7 @@ public class JBTextArea extends JTextArea implements ComponentWithEmptyText {
 
     getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
-      protected void textChanged(@Nonnull DocumentEvent e) {
+      protected void textChanged(DocumentEvent e) {
         invalidate();
         revalidate();
         repaint();
@@ -98,7 +97,7 @@ public class JBTextArea extends JTextArea implements ComponentWithEmptyText {
     }
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;

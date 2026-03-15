@@ -39,8 +39,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.BitUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.InputEvent;
 import java.io.File;
@@ -63,7 +62,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     public ReopenProjectAction(String projectPath,
                                String projectName,
                                String displayName,
-                               @Nonnull List<String> extensions,
+                               List<String> extensions,
                                @Nullable IdeFrameState frameState,
                                boolean opened) {
         myProjectPath = projectPath;
@@ -84,7 +83,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         if (myOpened) {
             presentation.setEnabled(false);
@@ -97,7 +96,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         //Force move focus to IdeFrame
         IdeEventQueueProxy.getInstance().closeAllPopups();
 
@@ -141,7 +140,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         return myIsRemoved;
     }
 
-    @Nonnull
+    
     public Image getExtensionIcon() {
         List<String> extensions = getExtensions();
         Image moduleMainIcon = Image.empty(Image.DEFAULT_ICON_SIZE);
@@ -157,7 +156,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         return moduleMainIcon;
     }
 
-    @Nonnull
+    
     public List<String> getExtensions() {
         return myExtensions;
     }

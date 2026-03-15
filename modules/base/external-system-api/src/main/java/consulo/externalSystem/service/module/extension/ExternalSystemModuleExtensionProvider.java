@@ -23,7 +23,6 @@ import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public abstract class ExternalSystemModuleExtensionProvider implements ModuleExt
         myProjectSystemId = projectSystemId;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myProjectSystemId.getId();
@@ -48,27 +47,27 @@ public abstract class ExternalSystemModuleExtensionProvider implements ModuleExt
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return myProjectSystemId.getDisplayName();
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return myProjectSystemId.getIcon();
     }
 
-    @Nonnull
+    
     @Override
-    public ModuleExtension<ExternalSystemModuleExtensionImpl> createImmutableExtension(@Nonnull ModuleRootLayer moduleRootLayer) {
+    public ModuleExtension<ExternalSystemModuleExtensionImpl> createImmutableExtension(ModuleRootLayer moduleRootLayer) {
         return new ExternalSystemModuleExtensionImpl(getId(), moduleRootLayer, myProjectSystemId);
     }
 
-    @Nonnull
+    
     @Override
-    public MutableModuleExtension<ExternalSystemModuleExtensionImpl> createMutableExtension(@Nonnull ModuleRootLayer moduleRootLayer) {
+    public MutableModuleExtension<ExternalSystemModuleExtensionImpl> createMutableExtension(ModuleRootLayer moduleRootLayer) {
         return new ExternalSystemMutableModuleExtensionImpl(getId(), moduleRootLayer, myProjectSystemId);
     }
 }

@@ -5,17 +5,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface ProblemListener {
 
-  default void problemsAppeared(@Nonnull VirtualFile file) {
+  default void problemsAppeared(VirtualFile file) {
   }
 
-  default void problemsChanged(@Nonnull VirtualFile file) {
+  default void problemsChanged(VirtualFile file) {
   }
 
-  default void problemsDisappeared(@Nonnull VirtualFile file) {
+  default void problemsDisappeared(VirtualFile file) {
   }
 }

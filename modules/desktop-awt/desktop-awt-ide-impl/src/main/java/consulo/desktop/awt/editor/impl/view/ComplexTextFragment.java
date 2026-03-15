@@ -6,8 +6,7 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.FontLayoutService;
 import consulo.logging.Logger;
 import consulo.util.lang.BitUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.font.GlyphVector;
@@ -22,14 +21,14 @@ public final class ComplexTextFragment extends TextFragment {
     private static final Logger LOG = Logger.getInstance(ComplexTextFragment.class);
     private static final double CLIP_MARGIN = 1e4;
 
-    private final @Nonnull GlyphVector myGlyphVector;
+    private final GlyphVector myGlyphVector;
     @Nullable
     private final short[] myCodePoint2Offset; // Start offset of each Unicode code point in the fragment
     // (null if each code point takes one char).
     // We expect no more than 1025 chars in a fragment, so 'short' should be enough.
 
     @VisibleForTesting
-    public ComplexTextFragment(@Nonnull char[] lineChars, int start, int end, boolean isRtl, @Nonnull FontInfo fontInfo, @Nullable EditorViewImpl view) {
+    public ComplexTextFragment(char[] lineChars, int start, int end, boolean isRtl, FontInfo fontInfo, @Nullable EditorViewImpl view) {
         super(end - start, view);
         assert start >= 0 : assertMessage(lineChars, start, end, isRtl, fontInfo);
         assert end <= lineChars.length : assertMessage(lineChars, start, end, isRtl, fontInfo);
@@ -310,7 +309,7 @@ public final class ComplexTextFragment extends TextFragment {
         }
     }
 
-    private @Nonnull String assertMessage(@Nonnull char[] lineChars, int start, int end, boolean isRtl, @Nonnull FontInfo fontInfo) {
+    private String assertMessage(char[] lineChars, int start, int end, boolean isRtl, FontInfo fontInfo) {
         return String.join(
             ", ",
             "lineChars: '" + new String(lineChars) + "'",
@@ -323,7 +322,7 @@ public final class ComplexTextFragment extends TextFragment {
         );
     }
 
-    private @Nonnull String assertMessage(float x, float y, int startColumn, int endColumn) {
+    private String assertMessage(float x, float y, int startColumn, int endColumn) {
         return String.join(
             ", ",
             "x: " + x,

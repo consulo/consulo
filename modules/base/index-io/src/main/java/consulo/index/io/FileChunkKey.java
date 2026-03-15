@@ -16,7 +16,6 @@
 package consulo.index.io;
 
 import consulo.util.collection.ShareableKey;
-import jakarta.annotation.Nonnull;
 
 class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, ShareableKey {
   private OwnerType owner;
@@ -51,7 +50,7 @@ class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, Sh
   }
 
   @Override
-  public int compareTo(@Nonnull FileChunkKey<OwnerType> o) {
+  public int compareTo(FileChunkKey<OwnerType> o) {
     if (owner != o.owner) {
       return owner.hashCode() - o.owner.hashCode();
     }

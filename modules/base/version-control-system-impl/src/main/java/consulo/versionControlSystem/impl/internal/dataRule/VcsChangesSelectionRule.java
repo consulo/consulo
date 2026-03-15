@@ -23,15 +23,14 @@ import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesSelection;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 @ExtensionImpl
 public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
-  @Nonnull
+  
   @Override
   public Key<ChangesSelection> getKey() {
     return VcsDataKeys.CHANGES_SELECTION;
@@ -39,12 +38,12 @@ public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
 
   @Nullable
   @Override
-  public ChangesSelection getData(@Nonnull DataProvider dataProvider) {
+  public ChangesSelection getData(DataProvider dataProvider) {
     return getChangesSelection(dataProvider);
   }
 
   @Nullable
-  public ChangesSelection getChangesSelection(@Nonnull DataProvider dataProvider) {
+  public ChangesSelection getChangesSelection(DataProvider dataProvider) {
     Change currentChange = dataProvider.getDataUnchecked(VcsDataKeys.CURRENT_CHANGE);
 
     Change[] selectedChanges = dataProvider.getDataUnchecked(VcsDataKeys.SELECTED_CHANGES);

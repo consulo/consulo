@@ -33,7 +33,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
@@ -53,7 +52,7 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
     private boolean myTestingStatistics;
 
     @Override
-    public int getUseCount(@Nonnull StatisticsInfo info) {
+    public int getUseCount(StatisticsInfo info) {
         if (info == StatisticsInfo.EMPTY) {
             return 0;
         }
@@ -77,7 +76,7 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
     }
 
     @Override
-    public int getLastUseRecency(@Nonnull StatisticsInfo info) {
+    public int getLastUseRecency(StatisticsInfo info) {
         if (info == StatisticsInfo.EMPTY) {
             return 0;
         }
@@ -100,7 +99,7 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
 
     @Override
     @RequiredUIAccess
-    public void incUseCount(@Nonnull StatisticsInfo info) {
+    public void incUseCount(StatisticsInfo info) {
         if (info == StatisticsInfo.EMPTY) {
             return;
         }
@@ -126,7 +125,7 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
     }
 
     @Override
-    public StatisticsInfo[] getAllValues(@Nonnull String context) {
+    public StatisticsInfo[] getAllValues(String context) {
         String[] strings;
         synchronized (LOCK) {
             strings = getUnit(getUnitNumber(context)).getKeys2(context);
@@ -224,7 +223,7 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
     }
 
     @TestOnly
-    public void enableStatistics(@Nonnull Disposable parentDisposable) {
+    public void enableStatistics(Disposable parentDisposable) {
         myTestingStatistics = true;
         Disposer.register(
             parentDisposable,

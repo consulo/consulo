@@ -31,7 +31,7 @@ import consulo.project.ui.view.tree.PackageNodeUtil;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 

@@ -23,8 +23,7 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -34,13 +33,13 @@ import java.awt.*;
  */
 @ExtensionImpl
 public class MacFileChooseDialogProvider implements FileChooseDialogProvider {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "mac-native";
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "system";
@@ -51,15 +50,15 @@ public class MacFileChooseDialogProvider implements FileChooseDialogProvider {
     return Platform.current().os().isMac();
   }
 
-  @Nonnull
+  
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return new MacPathChooserDialog(descriptor, parent, (Project)project);
   }
 
-  @Nonnull
+  
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return new MacPathChooserDialog(descriptor, parent, (Project)project);
   }
 }

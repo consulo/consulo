@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
 import consulo.ui.NotificationType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ public interface StorageNotificationService {
     return RootComponentHolder.getRootComponent().getInstance(StorageNotificationService.class);
   }
 
-  void notify(@Nonnull NotificationType notificationType, @Nonnull String title, @Nonnull String text, @Nullable ComponentManager project);
+  void notify(NotificationType notificationType, String title, String text, @Nullable ComponentManager project);
 
-  void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor, @Nonnull ComponentManager project, @Nullable String componentName);
+  void notifyUnknownMacros(TrackingPathMacroSubstitutor substitutor, ComponentManager project, @Nullable String componentName);
 }

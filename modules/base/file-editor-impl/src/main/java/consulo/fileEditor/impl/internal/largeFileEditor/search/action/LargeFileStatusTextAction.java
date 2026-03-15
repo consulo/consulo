@@ -5,7 +5,6 @@ import consulo.fileEditor.impl.internal.search.StatusTextAction;
 import consulo.fileEditor.internal.largeFileEditor.LfeSearchManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -18,7 +17,7 @@ public final class LargeFileStatusTextAction extends StatusTextAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         searchManager.updateStatusText();
         String statusText = searchManager.getStatusText();
 

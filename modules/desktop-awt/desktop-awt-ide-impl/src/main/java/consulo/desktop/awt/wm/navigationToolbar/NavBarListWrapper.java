@@ -22,10 +22,8 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.UIUtil;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -72,7 +70,7 @@ class NavBarListWrapper extends JBScrollPane implements DataProvider {
 
   @Override
   @Nullable
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     if (PlatformDataKeys.SELECTED_ITEM == dataId){
       return myList.getSelectedValue();
     }

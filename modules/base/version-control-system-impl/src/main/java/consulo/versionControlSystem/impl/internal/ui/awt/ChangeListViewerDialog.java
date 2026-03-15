@@ -35,9 +35,7 @@ import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,7 +106,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     myCommitMessageArea = new JEditorPane(UIUtil.HTML_MIME, "");
     myCommitMessageArea.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     myCommitMessageArea.setEditable(false);
-    @NonNls String text = IssueLinkHtmlRenderer.formatTextIntoHtml(project, changeList.getComment().trim());
+    String text = IssueLinkHtmlRenderer.formatTextIntoHtml(project, changeList.getComment().trim());
     myCommitMessageArea.setBackground(UIUtil.getComboBoxDisabledBackground());
     myCommitMessageArea.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
     commitMessageScroll = ScrollPaneFactory.createScrollPane(myCommitMessageArea);
@@ -121,7 +119,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return "VCS.ChangeListViewerDialog";
   }
 
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     if (VcsDataKeys.CHANGES == dataId) {
       return myChanges;
     }
@@ -152,7 +150,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
-      public Object getData(@Nonnull Key dataId) {
+      public Object getData(Key dataId) {
         Object data = super.getData(dataId);
         if (data != null) {
           return data;
@@ -203,7 +201,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     super.dispose();
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     Action cancelAction = getCancelAction();

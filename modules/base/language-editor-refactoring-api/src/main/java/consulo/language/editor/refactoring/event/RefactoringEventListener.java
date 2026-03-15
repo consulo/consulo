@@ -18,8 +18,7 @@ package consulo.language.editor.refactoring.event;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Listener to get high level notifications about performed refactorings in the selected project.
@@ -32,21 +31,21 @@ public interface RefactoringEventListener {
   /**
    * Is fired when refactoring enters its write phase (find usages, conflict detection phases are passed already)
    */
-  void refactoringStarted(@Nonnull String refactoringId, @Nullable RefactoringEventData beforeData);
+  void refactoringStarted(String refactoringId, @Nullable RefactoringEventData beforeData);
 
   /**
    * Is fired when refactoring is completed, probably with conflicts.
    */
-  void refactoringDone(@Nonnull String refactoringId, @Nullable RefactoringEventData afterData);
+  void refactoringDone(String refactoringId, @Nullable RefactoringEventData afterData);
 
   /**
    * Is fired when conflicts are detected. If the next event comes from the same refactoring then conflicts were ignored.
    * @param conflictsData should contain string representation of the conflicts
    */
-  void conflictsDetected(@Nonnull String refactoringId, @Nonnull RefactoringEventData conflictsData);
+  void conflictsDetected(String refactoringId, RefactoringEventData conflictsData);
 
   /**
    * Is fired when undoable action created on refactoring execution is undone.
    */
-  void undoRefactoring(@Nonnull String refactoringId);
+  void undoRefactoring(String refactoringId);
 }

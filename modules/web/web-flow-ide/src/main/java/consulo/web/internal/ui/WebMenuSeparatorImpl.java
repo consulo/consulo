@@ -22,8 +22,7 @@ import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.SimpleComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,12 +39,12 @@ public class WebMenuSeparatorImpl extends VaadinComponentDelegate<WebMenuSeparat
   }
 
   @Override
-  @Nonnull
+  
   public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     throw new UnsupportedOperationException();

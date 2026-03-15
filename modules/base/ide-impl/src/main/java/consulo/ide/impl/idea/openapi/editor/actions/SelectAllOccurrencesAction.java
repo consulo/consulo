@@ -29,8 +29,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "SelectAllOccurrences")
 public class SelectAllOccurrencesAction extends EditorAction {
@@ -45,7 +44,7 @@ public class SelectAllOccurrencesAction extends EditorAction {
         }
 
         @Override
-        public void doExecute(@Nonnull Editor editor, @Nullable Caret c, DataContext dataContext) {
+        public void doExecute(Editor editor, @Nullable Caret c, DataContext dataContext) {
             Caret caret = c == null ? editor.getCaretModel().getPrimaryCaret() : c;
 
             if (!caret.hasSelection()) {

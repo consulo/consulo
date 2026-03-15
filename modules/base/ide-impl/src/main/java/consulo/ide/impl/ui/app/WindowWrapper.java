@@ -28,8 +28,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -47,13 +46,13 @@ public abstract class WindowWrapper {
 
   private AsyncResult<Void> myResult;
 
-  public WindowWrapper(@Nonnull String title) {
+  public WindowWrapper(String title) {
     myTitle = title;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
-  protected abstract Component createCenterComponent(@Nonnull Disposable uiDisposable);
+  protected abstract Component createCenterComponent(Disposable uiDisposable);
 
   @Nullable
   protected Size2D getDefaultSize() {
@@ -85,7 +84,7 @@ public abstract class WindowWrapper {
     return myResult;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   protected Layout buildRootLayout(Disposable uiDisposable) {
     DockLayout rootLayout = DockLayout.create();
@@ -94,7 +93,7 @@ public abstract class WindowWrapper {
     return rootLayout;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   protected Layout buildButtonsLayout() {
     DockLayout dockLayout = DockLayout.create();

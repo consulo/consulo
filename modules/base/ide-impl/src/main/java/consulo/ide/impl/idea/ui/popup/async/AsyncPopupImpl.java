@@ -12,8 +12,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.AsyncPopupStep;
 import consulo.ui.ex.popup.PopupStep;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,7 +31,7 @@ public class AsyncPopupImpl extends WizardPopup implements Runnable {
     private final Alarm myAlarm;
     private JPanel myPanel;
 
-    public AsyncPopupImpl(@Nullable Project project, @Nullable WizardPopup parent, @Nonnull AsyncPopupStep<Object> step, @Nullable Object parentValue) {
+    public AsyncPopupImpl(@Nullable Project project, @Nullable WizardPopup parent, AsyncPopupStep<Object> step, @Nullable Object parentValue) {
         super(project, parent, step);
 
         if (!(parent instanceof NextStepHandler)) {

@@ -22,7 +22,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,7 +38,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
     private boolean myCbPreviewResults;
     protected final Project myProject;
 
-    protected RefactoringDialog(@Nonnull Project project, boolean canBeParent) {
+    protected RefactoringDialog(Project project, boolean canBeParent) {
         super(project, canBeParent);
         myCbPreviewResults = true;
         myProject = project;
@@ -128,7 +127,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>();
         actions.add(getRefactorAction());

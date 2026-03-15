@@ -16,16 +16,15 @@
 
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class GraphEdge implements GraphElement {
-  public static GraphEdge createNormalEdge(int nodeIndex1, int nodeIndex2, @Nonnull GraphEdgeType type) {
+  public static GraphEdge createNormalEdge(int nodeIndex1, int nodeIndex2, GraphEdgeType type) {
     assert type.isNormalEdge() : "Unexpected edge type: " + type;
     return new GraphEdge(Math.min(nodeIndex1, nodeIndex2), Math.max(nodeIndex1, nodeIndex2), null, type);
   }
 
-  public static GraphEdge createEdgeWithTargetId(int nodeIndex, @Nullable Integer targetId, @Nonnull GraphEdgeType type) {
+  public static GraphEdge createEdgeWithTargetId(int nodeIndex, @Nullable Integer targetId, GraphEdgeType type) {
     switch (type) {
       case DOTTED_ARROW_UP:
         return new GraphEdge(null, nodeIndex, targetId, type);
@@ -44,13 +43,13 @@ public final class GraphEdge implements GraphElement {
   private final Integer myDownNodeIndex;
   @Nullable
   private final Integer myTargetId;
-  @Nonnull
+  
   private final GraphEdgeType myType;
 
   public GraphEdge(@Nullable Integer upNodeIndex,
                    @Nullable Integer downNodeIndex,
                    @Nullable Integer targetId,
-                   @Nonnull GraphEdgeType type) {
+                   GraphEdgeType type) {
     myUpNodeIndex = upNodeIndex;
     myDownNodeIndex = downNodeIndex;
     myTargetId = targetId;
@@ -72,7 +71,7 @@ public final class GraphEdge implements GraphElement {
     return myTargetId;
   }
 
-  @Nonnull
+  
   public GraphEdgeType getType() {
     return myType;
   }

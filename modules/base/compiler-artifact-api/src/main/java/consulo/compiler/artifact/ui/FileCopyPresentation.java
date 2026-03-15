@@ -24,7 +24,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -60,7 +59,7 @@ public class FileCopyPresentation extends PackagingElementPresentation {
     return myOutputFileName;
   }
 
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     if (myFile != null && !myFile.isDirectory()) {
       presentationData.setIcon(VirtualFilePresentation.getIcon(myFile));
       presentationData.addText(myOutputFileName, mainAttributes);

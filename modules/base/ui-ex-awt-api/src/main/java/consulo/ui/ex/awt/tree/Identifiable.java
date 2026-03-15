@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 
@@ -33,5 +32,5 @@ public interface Identifiable {
    * @return an unique identifier for the specified path, or {@code null} if not applicable
    * @see Searchable#getTreePath
    */
-  Object getUniqueID(@Nonnull TreePath path);
+  Object getUniqueID(TreePath path);
 }

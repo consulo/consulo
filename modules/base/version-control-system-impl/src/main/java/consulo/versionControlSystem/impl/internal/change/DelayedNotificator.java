@@ -21,7 +21,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.impl.internal.change.local.ChangeListCommand;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -31,8 +30,8 @@ public class DelayedNotificator implements ChangeListListener {
   private final EventDispatcher<ChangeListListener> myDispatcher;
   private final ChangeListScheduler myScheduler;
 
-  public DelayedNotificator(@Nonnull EventDispatcher<ChangeListListener> dispatcher,
-                            @Nonnull ChangeListScheduler scheduler) {
+  public DelayedNotificator(EventDispatcher<ChangeListListener> dispatcher,
+                            ChangeListScheduler scheduler) {
     myDispatcher = dispatcher;
     myScheduler = scheduler;
   }

@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.util.interner.Interner;
 import consulo.versionControlSystem.log.VcsUser;
 import consulo.versionControlSystem.log.VcsUserRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,18 +51,18 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
   private static final PersistentEnumeratorBase.DataFilter ACCEPT_ALL_DATA_FILTER = id -> true;
 
   @Nullable private final PersistentEnumeratorBase<VcsUser> myPersistentEnumerator;
-  @Nonnull
+  
   private final Interner<VcsUser> myInterner;
 
   @Inject
-  VcsUserRegistryImpl(@Nonnull Project project) {
+  VcsUserRegistryImpl(Project project) {
     File mapFile = new File(USER_CACHE_APP_DIR, project.getLocationHash() + "." + STORAGE_VERSION);
     myPersistentEnumerator = initEnumerator(mapFile);
     myInterner = Interner.createConcurrentHashInterner();
   }
 
   @Nullable
-  private PersistentEnumeratorBase<VcsUser> initEnumerator(@Nonnull File mapFile) {
+  private PersistentEnumeratorBase<VcsUser> initEnumerator(File mapFile) {
     try {
       return IOUtil.openCleanOrResetBroken(() -> new PersistentBTreeEnumerator<>(mapFile, new MyDescriptor(), Page.PAGE_SIZE, null,
                                                                                  STORAGE_VERSION), mapFile);
@@ -74,15 +73,15 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
     }
   }
 
-  @Nonnull
+  
   @Override
-  public VcsUser createUser(@Nonnull String name, @Nonnull String email) {
+  public VcsUser createUser(String name, String email) {
     synchronized (myInterner) {
       return myInterner.intern(new VcsUserImpl(name, email));
     }
   }
 
-  public void addUser(@Nonnull VcsUser user) {
+  public void addUser(VcsUser user) {
     try {
       if (myPersistentEnumerator != null) {
         myPersistentEnumerator.enumerate(user);
@@ -93,14 +92,14 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
     }
   }
 
-  public void addUsers(@Nonnull Collection<VcsUser> users) {
+  public void addUsers(Collection<VcsUser> users) {
     for (VcsUser user : users) {
       addUser(user);
     }
   }
 
   @Override
-  @Nonnull
+  
   public Set<VcsUser> getUsers() {
     try {
       Collection<VcsUser> users = myPersistentEnumerator != null ?
@@ -132,7 +131,7 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
     }
   }
 
-  public int getUserId(@Nonnull VcsUser user) throws IOException {
+  public int getUserId(VcsUser user) throws IOException {
     return myPersistentEnumerator.enumerate(user);
   }
 
@@ -143,13 +142,13 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
 
   private class MyDescriptor implements KeyDescriptor<VcsUser> {
     @Override
-    public void save(@Nonnull DataOutput out, VcsUser value) throws IOException {
+    public void save(DataOutput out, VcsUser value) throws IOException {
       IOUtil.writeUTF(out, value.getName());
       IOUtil.writeUTF(out, value.getEmail());
     }
 
     @Override
-    public VcsUser read(@Nonnull DataInput in) throws IOException {
+    public VcsUser read(DataInput in) throws IOException {
       String name = IOUtil.readUTF(in);
       String email = IOUtil.readUTF(in);
       return createUser(name, email);

@@ -25,8 +25,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.util.ColorGenerator;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class AnnotationsSettings {
 
   static final List<EditorColorKey> ANCHOR_COLOR_KEYS = createColorKeys(ANCHORS_COUNT);
 
-  @Nonnull
+  
   private static List<EditorColorKey> createColorKeys(int count) {
     List<EditorColorKey> keys = new ArrayList<>();
     for (int i = 0; i < count; i++) {
@@ -55,7 +54,7 @@ public class AnnotationsSettings {
     return Application.get().getService(AnnotationsSettings.class);
   }
 
-  @Nonnull
+  
   public List<ColorValue> getAuthorsColors(@Nullable EditorColorsScheme scheme) {
     if (scheme == null) scheme = EditorColorsManager.getInstance().getGlobalScheme();
     List<ColorValue> colors = getOrderedColors(scheme);
@@ -71,7 +70,7 @@ public class AnnotationsSettings {
     return authorColors;
   }
 
-  @Nonnull
+  
   public List<ColorValue> getOrderedColors(@Nullable EditorColorsScheme scheme) {
     if (scheme == null) scheme = EditorColorsManager.getInstance().getGlobalScheme();
 
@@ -83,7 +82,7 @@ public class AnnotationsSettings {
     return ColorGenerator.generateLinearColorSequence(anchorColors, COLORS_BETWEEN_ANCHORS);
   }
 
-  @Nonnull
+  
   List<Integer> getAnchorIndexes(@Nullable EditorColorsScheme scheme) {
     if (scheme == null) scheme = EditorColorsManager.getInstance().getGlobalScheme();
 

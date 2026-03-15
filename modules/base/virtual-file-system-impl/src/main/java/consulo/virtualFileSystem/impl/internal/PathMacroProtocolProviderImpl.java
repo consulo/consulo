@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class PathMacroProtocolProviderImpl implements PathMacroProtocolProvider 
     myApplication = application;
   }
 
-  @Nonnull
+  
   @Override
   public List<String> getSupportedProtocols() {
     return myApplication.getExtensionPoint(VirtualFileSystem.class).getOrBuildCache(PROTOCOLS);

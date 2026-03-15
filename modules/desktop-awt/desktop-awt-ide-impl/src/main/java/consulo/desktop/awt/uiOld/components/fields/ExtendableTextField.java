@@ -13,8 +13,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -121,7 +120,7 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
     }
 
     @Override
-    public void addExtension(@Nonnull Extension extension) {
+    public void addExtension(Extension extension) {
         if (!getExtensions().contains(extension)) {
             List<Extension> extensions = new ArrayList<>(getExtensions());
             extensions.add(extension);
@@ -130,14 +129,14 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
     }
 
     @Override
-    public void removeExtension(@Nonnull Extension extension) {
+    public void removeExtension(Extension extension) {
         ArrayList<Extension> extensions = new ArrayList<>(getExtensions());
         if (extensions.remove(extension)) {
             setExtensions(extensions);
         }
     }
 
-    public ExtendableTextField addBrowseExtension(@Nonnull Runnable action, @Nullable Disposable parentDisposable) {
+    public ExtendableTextField addBrowseExtension(Runnable action, @Nullable Disposable parentDisposable) {
         KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK);
         String tooltip = UIBundle.message("component.with.browse.button.browse.button.tooltip.text") + " (" + KeymapUtil.getKeystrokeText(keyStroke) + ")";
 
@@ -145,7 +144,7 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
 
         new DumbAwareAction() {
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 action.run();
             }
         }.registerCustomShortcutSet(new CustomShortcutSet(keyStroke), this, parentDisposable);

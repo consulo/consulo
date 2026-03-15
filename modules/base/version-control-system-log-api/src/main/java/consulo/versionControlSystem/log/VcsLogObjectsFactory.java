@@ -6,7 +6,6 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,54 +17,54 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface VcsLogObjectsFactory {
 
-  @Nonnull
-  Hash createHash(@Nonnull String stringHash);
+  
+  Hash createHash(String stringHash);
 
-  @Nonnull
-  TimedVcsCommit createTimedCommit(@Nonnull Hash hash, @Nonnull List<Hash> parents, long timeStamp);
+  
+  TimedVcsCommit createTimedCommit(Hash hash, List<Hash> parents, long timeStamp);
 
-  @Nonnull
-  VcsShortCommitDetails createShortDetails(@Nonnull Hash hash,
-                                           @Nonnull List<Hash> parents,
+  
+  VcsShortCommitDetails createShortDetails(Hash hash,
+                                           List<Hash> parents,
                                            long commitTime,
                                            VirtualFile root,
-                                           @Nonnull String subject,
-                                           @Nonnull String authorName,
+                                           String subject,
+                                           String authorName,
                                            String authorEmail,
-                                           @Nonnull String committerName,
-                                           @Nonnull String committerEmail,
+                                           String committerName,
+                                           String committerEmail,
                                            long authorTime);
 
-  @Nonnull
-  VcsCommitMetadata createCommitMetadata(@Nonnull Hash hash,
-                                         @Nonnull List<Hash> parents,
+  
+  VcsCommitMetadata createCommitMetadata(Hash hash,
+                                         List<Hash> parents,
                                          long commitTime,
                                          VirtualFile root,
-                                         @Nonnull String subject,
-                                         @Nonnull String authorName,
-                                         @Nonnull String authorEmail,
-                                         @Nonnull String message,
-                                         @Nonnull String committerName,
-                                         @Nonnull String committerEmail,
+                                         String subject,
+                                         String authorName,
+                                         String authorEmail,
+                                         String message,
+                                         String committerName,
+                                         String committerEmail,
                                          long authorTime);
 
-  @Nonnull
-  VcsFullCommitDetails createFullDetails(@Nonnull Hash hash,
-                                         @Nonnull List<Hash> parents,
+  
+  VcsFullCommitDetails createFullDetails(Hash hash,
+                                         List<Hash> parents,
                                          long commitTime,
                                          VirtualFile root,
-                                         @Nonnull String subject,
-                                         @Nonnull String authorName,
-                                         @Nonnull String authorEmail,
-                                         @Nonnull String message,
-                                         @Nonnull String committerName,
-                                         @Nonnull String committerEmail,
+                                         String subject,
+                                         String authorName,
+                                         String authorEmail,
+                                         String message,
+                                         String committerName,
+                                         String committerEmail,
                                          long authorTime,
-                                         @Nonnull ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter);
+                                         ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter);
 
-  @Nonnull
-  VcsUser createUser(@Nonnull String name, @Nonnull String email);
+  
+  VcsUser createUser(String name, String email);
 
-  @Nonnull
-  VcsRef createRef(@Nonnull Hash commitHash, @Nonnull String name, @Nonnull VcsRefType type, @Nonnull VirtualFile root);
+  
+  VcsRef createRef(Hash commitHash, String name, VcsRefType type, VirtualFile root);
 }

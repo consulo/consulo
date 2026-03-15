@@ -33,11 +33,10 @@ import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class RunTab implements DataProvider, Disposable {
-  @Nonnull
+  
   protected final RunnerLayoutUi myUi;
   private LogFilesManager myManager;
   protected RunContentDescriptor myRunContentDescriptor;
@@ -48,7 +47,7 @@ public abstract class RunTab implements DataProvider, Disposable {
 
   private LogConsoleManagerBase logConsoleManager;
 
-  protected RunTab(@Nonnull ExecutionEnvironment environment, @Nonnull String runnerType) {
+  protected RunTab(ExecutionEnvironment environment, String runnerType) {
     this(
       environment.getProject(),
       ExecutionSearchScopeProvider.createSearchScope(environment.getProject(), environment.getRunProfile()),
@@ -68,11 +67,11 @@ public abstract class RunTab implements DataProvider, Disposable {
   }
 
   protected RunTab(
-    @Nonnull Project project,
-    @Nonnull SearchScope searchScope,
-    @Nonnull String runnerType,
-    @Nonnull String runnerTitle,
-    @Nonnull String sessionName
+    Project project,
+    SearchScope searchScope,
+    String runnerType,
+    String runnerTitle,
+    String sessionName
   ) {
     myProject = project;
     mySearchScope = searchScope;
@@ -83,7 +82,7 @@ public abstract class RunTab implements DataProvider, Disposable {
 
   @Nullable
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     if (RunProfile.KEY == dataId) {
       return myEnvironment == null ? null : myEnvironment.getRunProfile();
     }
@@ -96,7 +95,7 @@ public abstract class RunTab implements DataProvider, Disposable {
     return null;
   }
 
-  @Nonnull
+  
   public LogConsoleManagerBase getLogConsoleManager() {
     if (logConsoleManager == null) {
       logConsoleManager = new LogConsoleManagerBase(myProject, mySearchScope) {
@@ -120,8 +119,8 @@ public abstract class RunTab implements DataProvider, Disposable {
   }
 
   protected final void initLogConsoles(
-    @Nonnull RunProfile runConfiguration,
-    @Nonnull RunContentDescriptor contentDescriptor,
+    RunProfile runConfiguration,
+    RunContentDescriptor contentDescriptor,
     @Nullable ExecutionConsole console
   ) {
     ProcessHandler processHandler = contentDescriptor.getProcessHandler();

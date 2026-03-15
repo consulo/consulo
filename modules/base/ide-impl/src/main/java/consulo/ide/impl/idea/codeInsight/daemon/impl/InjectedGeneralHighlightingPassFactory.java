@@ -32,8 +32,7 @@ import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
@@ -41,13 +40,13 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class InjectedGeneralHighlightingPassFactory implements MainHighlightingPassFactory {
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.UPDATE_ALL}, false, -1);
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     Project project = file.getProject();
     TextRange textRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.UPDATE_ALL);
     if (textRange == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(project, editor.getDocument());
@@ -57,9 +56,9 @@ public class InjectedGeneralHighlightingPassFactory implements MainHighlightingP
   }
 
   @Override
-  public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
-                                                               @Nonnull Document document,
-                                                               @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
+  public TextEditorHighlightingPass createMainHighlightingPass(PsiFile file,
+                                                               Document document,
+                                                               HighlightInfoProcessor highlightInfoProcessor) {
     Project project = file.getProject();
     return new InjectedGeneralHighlightingPass(project, file, document, 0, document.getTextLength(), true, new ProperTextRange(0,document.getTextLength()), null,
                                                highlightInfoProcessor);

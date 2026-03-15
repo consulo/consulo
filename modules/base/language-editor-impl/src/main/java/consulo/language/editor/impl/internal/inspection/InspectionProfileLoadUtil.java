@@ -22,11 +22,9 @@ import consulo.language.editor.inspection.scheme.ProfileManager;
 import consulo.util.io.FileUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.InvalidDataException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,32 +35,32 @@ public class InspectionProfileLoadUtil {
   private static final String PROFILE_NAME_TAG = "profile_name";
   public static final String PROFILE_TAG = "profile";
 
-  private static String getProfileName(@Nonnull File file, @Nonnull Element element) {
+  private static String getProfileName(File file, Element element) {
     String name = getRootElementAttribute(PROFILE_NAME_TAG, element);
     return name != null ? name : FileUtil.getNameWithoutExtension(file);
   }
 
-  private static String getRootElementAttribute(@Nonnull Element element, @NonNls String name) {
+  private static String getRootElementAttribute(Element element, String name) {
     return element.getAttributeValue(name);
   }
 
   @Nullable
-  private static String getRootElementAttribute(@NonNls String name, @Nonnull Element element) {
+  private static String getRootElementAttribute(String name, Element element) {
     return getRootElementAttribute(element, name);
   }
 
-  @Nonnull
-  public static String getProfileName(@Nonnull Element element) {
+  
+  public static String getProfileName(Element element) {
     String name = getRootElementAttribute(element, PROFILE_NAME_TAG);
     if (name != null) return name;
     return "unnamed";
   }
 
-  @Nonnull
+  
   public static Profile load(
-    @Nonnull File file,
-    @Nonnull Supplier<Collection<InspectionToolWrapper<?>>> registrar,
-    @Nonnull ProfileManager profileManager
+    File file,
+    Supplier<Collection<InspectionToolWrapper<?>>> registrar,
+    ProfileManager profileManager
   ) throws JDOMException, IOException, InvalidDataException {
     Element element = JDOMUtil.loadDocument(file).getRootElement();
     InspectionProfileImpl profile = new InspectionProfileImpl(getProfileName(file, element), registrar, profileManager);

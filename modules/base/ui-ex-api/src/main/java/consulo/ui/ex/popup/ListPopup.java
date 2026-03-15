@@ -17,7 +17,6 @@
 package consulo.ui.ex.popup;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.InputEvent;
@@ -58,7 +57,7 @@ public interface ListPopup extends JBPopup {
     @DeprecationInfo("Use addSelectionListener")
     void addListSelectionListener(ListSelectionListener listSelectionListener);
 
-    void addSelectionListener(@Nonnull Consumer<Object> selectionListener);
+    void addSelectionListener(Consumer<Object> selectionListener);
 
     default boolean isShowSubmenuOnHover() {
         return false;

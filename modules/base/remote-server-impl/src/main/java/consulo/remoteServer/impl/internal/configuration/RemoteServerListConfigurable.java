@@ -21,8 +21,7 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -43,21 +42,21 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     private boolean isTreeInitialized;
 
     @Inject
-    public RemoteServerListConfigurable(@Nonnull Application application, @Nonnull RemoteServersManager manager) {
+    public RemoteServerListConfigurable(Application application, RemoteServersManager manager) {
         this(manager, application.getExtensionList(ServerType.class), null);
     }
 
     private RemoteServerListConfigurable(
-        @Nonnull RemoteServersManager manager,
-        @Nonnull ServerType<?> type,
+        RemoteServersManager manager,
+        ServerType<?> type,
         @Nullable String initialSelectedName
     ) {
         this(manager, Collections.singletonList(type), initialSelectedName);
     }
 
     protected RemoteServerListConfigurable(
-        @Nonnull RemoteServersManager manager,
-        @Nonnull List<ServerType> displayedServerTypes,
+        RemoteServersManager manager,
+        List<ServerType> displayedServerTypes,
         @Nullable String initialSelectedName
     ) {
         super(() -> null);
@@ -73,10 +72,10 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    public JComponent createComponent(Disposable uiDisposable) {
         if (!isTreeInitialized) {
             initTree();
             isTreeInitialized = true;
@@ -90,7 +89,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         return serverTypes.size() == 1 ? serverTypes.get(0) : null;
     }
 
-    public @Nonnull List<ServerType> getDisplayedServerTypes() {
+    public List<ServerType> getDisplayedServerTypes() {
         // `myDisplayedServerTypes` might be `null` here because overridden `reInitWholePanelIfNeeded()`
         // is executed from `super()` before `myDisplayedServerTypes` is initialized
         return myDisplayedServerTypes != null ? myDisplayedServerTypes : Collections.emptyList();
@@ -107,15 +106,15 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         return null;
     }
 
-    public static RemoteServerListConfigurable createConfigurable(@Nonnull ServerType<?> type) {
+    public static RemoteServerListConfigurable createConfigurable(ServerType<?> type) {
         return createConfigurable(type, null);
     }
 
-    public static RemoteServerListConfigurable createConfigurable(@Nonnull ServerType<?> type, @Nullable String nameToSelect) {
+    public static RemoteServerListConfigurable createConfigurable(ServerType<?> type, @Nullable String nameToSelect) {
         return new RemoteServerListConfigurable(RemoteServersManager.getInstance(), type, nameToSelect);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return RemoteServerLocalize.configurableDisplayNameClouds();
@@ -134,7 +133,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         }
     }
 
-    private @Nonnull List<? extends RemoteServer<?>> getServers() {
+    private List<? extends RemoteServer<?>> getServers() {
         return ContainerUtil.filter(myServersManager.getServers(), s -> myDisplayedServerTypes.contains(s.getType()));
     }
 
@@ -145,7 +144,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return ID;
     }
@@ -261,7 +260,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         }
 
         @Override
-        @Nonnull
+        
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             List<ServerType> serverTypes = getDisplayedServerTypes();
             AnAction[] actions = new AnAction[serverTypes.size()];
@@ -287,7 +286,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             String name = UniqueNameGenerator.generateUniqueName(
                 myServerType.getPresentableName().get(),
                 s -> {

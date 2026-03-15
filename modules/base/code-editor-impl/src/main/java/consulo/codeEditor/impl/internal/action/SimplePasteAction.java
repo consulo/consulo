@@ -21,7 +21,6 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -34,7 +33,7 @@ public class SimplePasteAction extends EditorAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         if (ActionPlaces.isPopupPlace(e.getPlace())) {
             Presentation presentation = e.getPresentation();

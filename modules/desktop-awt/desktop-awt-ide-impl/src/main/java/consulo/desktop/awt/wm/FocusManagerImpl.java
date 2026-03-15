@@ -30,8 +30,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.collection.Maps;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -55,7 +54,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
   private final Map<IdeFrame, Component> myLastFocused = Maps.newWeakValueHashMap();
   private final Map<IdeFrame, Component> myLastFocusedAtDeactivation = Maps.newWeakValueHashMap();
-  @Nonnull
+  
   private final Application myApplication;
 
   private DataContext myRunContext;
@@ -123,7 +122,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
-  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable ComponentManager project) {
+  public AsyncResult<Void> requestFocusInProject(Component c, @Nullable ComponentManager project) {
     if (myApplication.isActive() || !Registry.is("suppress.focus.stealing")) {
       c.requestFocus();
     }
@@ -134,20 +133,20 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
-  @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
+  
+  public AsyncResult<Void> requestFocus(Component c, boolean forced) {
     c.requestFocus();
     return AsyncResult.resolved();
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+  public AsyncResult<Void> requestFocus(consulo.ui.Component c, boolean forced) {
     requestFocus(TargetAWT.to(c), forced);
     return AsyncResult.resolved();
   }
 
-  @Nonnull
+  
   public List<FocusRequestInfo> getRequests() {
     return myRequests;
   }
@@ -157,17 +156,17 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable) {
+  public void doWhenFocusSettlesDown(ExpirableRunnable runnable) {
     doWhenFocusSettlesDown((Runnable)runnable);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
+  public void doWhenFocusSettlesDown(Runnable runnable) {
     myQueue.executeWhenAllFocusEventsLeftTheQueue(runnable);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality) {
+  public void doWhenFocusSettlesDown(Runnable runnable, ModalityState modality) {
     AtomicBoolean immediate = new AtomicBoolean(true);
     doWhenFocusSettlesDown(() -> {
       if (immediate.get()) {
@@ -215,7 +214,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
   @Override
   @RequiredUIAccess
-  public void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable) {
+  public void runOnOwnContext(DataContext context, Runnable runnable) {
     UIAccess.assertIsUIThread();
 
     myRunContext = context;
@@ -235,7 +234,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     return myLastFocused.get(frame);
   }
 
-  public void setLastFocusedAtDeactivation(@Nonnull IdeFrame frame, @Nonnull Component c) {
+  public void setLastFocusedAtDeactivation(IdeFrame frame, Component c) {
     myLastFocusedAtDeactivation.put(frame, c);
   }
 
@@ -264,7 +263,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   private class AppListener implements ApplicationActivationListener {
 
     @Override
-    public void delayedApplicationDeactivated(@Nonnull IdeFrame ideFrame) {
+    public void delayedApplicationDeactivated(IdeFrame ideFrame) {
       Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
       Component parent = UIUtil.findUltimateParent(owner);
 
@@ -275,7 +274,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
-  public JComponent getFocusTargetFor(@Nonnull JComponent comp) {
+  public JComponent getFocusTargetFor(JComponent comp) {
     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(comp);
   }
 
@@ -294,7 +293,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
     Component toFocus = null;
@@ -340,8 +339,8 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
-  @Nonnull
-  public IdeFocusManager findInstanceByComponent(@Nonnull Component c) {
+  
+  public IdeFocusManager findInstanceByComponent(Component c) {
     IdeFocusManager instance = findByComponent(c);
     return instance != null ? instance : findInstanceByContext(null);
   }
@@ -362,7 +361,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
-  @Nonnull
+  
   public IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
     IdeFocusManager instance = null;
     if (context != null) {
@@ -380,7 +379,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     return instance;
   }
 
-  @Nonnull
+  
   @Override
   public IdeFocusManager getInstanceForProject(@Nullable ComponentManager componentManager) {
     if (!(componentManager instanceof Project)) {

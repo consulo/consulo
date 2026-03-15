@@ -22,7 +22,6 @@ import consulo.task.BaseRepositoryType;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,25 +29,25 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SandRepositoryType extends BaseRepositoryType<SandTaskRepository> {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "Sand";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getPresentableName() {
     return LocalizeValue.of("Sand");
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return PlatformIconGroup.toolbarUnknown();
   }
 
-  @Nonnull
+  
   @Override
   public TaskRepository createRepository() {
     SandTaskRepository repository = new SandTaskRepository();

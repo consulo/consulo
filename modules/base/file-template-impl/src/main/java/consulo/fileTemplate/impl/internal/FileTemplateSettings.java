@@ -26,8 +26,7 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Exportable part of file template settings. User-specific (local) settings are handled by FileTemplateManagerImpl.
@@ -40,7 +39,7 @@ import jakarta.annotation.Nullable;
 @State(name = "ExportableFileTemplateSettings", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE))
 public class FileTemplateSettings extends FileTemplateSettingsBase  {
   @Inject
-  public FileTemplateSettings(@Nonnull FileTypeManager typeManager, @Nullable Project project) {
+  public FileTemplateSettings(FileTypeManager typeManager, @Nullable Project project) {
     super(typeManager, project);
   }
 }

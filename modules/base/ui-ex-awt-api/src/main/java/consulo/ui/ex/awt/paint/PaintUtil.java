@@ -5,8 +5,7 @@ import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -97,7 +96,7 @@ public class PaintUtil {
   /**
    * @see #getParityMode(double, ScaleContext, RoundingMode)
    */
-  public static ParityMode getParityMode(double usrValue, @Nonnull Graphics2D g) {
+  public static ParityMode getParityMode(double usrValue, Graphics2D g) {
     return getParityMode(usrValue, JBUI.ScaleContext.create(g), null);
   }
 
@@ -109,7 +108,7 @@ public class PaintUtil {
    * @param rm       the rounding mode to apply
    * @return the parity of the value in the device space
    */
-  public static ParityMode getParityMode(double usrValue, @Nonnull JBUI.ScaleContext ctx, @Nullable RoundingMode rm) {
+  public static ParityMode getParityMode(double usrValue, JBUI.ScaleContext ctx, @Nullable RoundingMode rm) {
     int devValue = devValue(usrValue, getScale(ctx), rm == null ? ROUND : rm);
     return ParityMode.of(devValue);
   }
@@ -117,21 +116,21 @@ public class PaintUtil {
   /**
    * @see #alignToInt(double, ScaleContext, RoundingMode, ParityMode)
    */
-  public static double alignToInt(double usrValue, @Nonnull Graphics2D g) {
+  public static double alignToInt(double usrValue, Graphics2D g) {
     return alignToInt(usrValue, JBUI.ScaleContext.create(g), null, null);
   }
 
   /**
    * @see #alignToInt(double, ScaleContext, RoundingMode, ParityMode)
    */
-  public static double alignToInt(double usrValue, @Nonnull Graphics2D g, @Nullable RoundingMode rm) {
+  public static double alignToInt(double usrValue, Graphics2D g, @Nullable RoundingMode rm) {
     return alignToInt(usrValue, JBUI.ScaleContext.create(g), rm, null);
   }
 
   /**
    * @see #alignToInt(double, ScaleContext, RoundingMode, ParityMode)
    */
-  public static double alignToInt(double usrValue, @Nonnull Graphics2D g, @Nullable ParityMode pm) {
+  public static double alignToInt(double usrValue, Graphics2D g, @Nullable ParityMode pm) {
     return alignToInt(usrValue, JBUI.ScaleContext.create(g), null, pm);
   }
 
@@ -148,7 +147,7 @@ public class PaintUtil {
    * @param pm       the parity mode to apply (ignored if null)
    * @return the aligned value, in the user space
    */
-  public static double alignToInt(double usrValue, @Nonnull JBUI.ScaleContext ctx, @Nullable RoundingMode rm, @Nullable ParityMode pm) {
+  public static double alignToInt(double usrValue, JBUI.ScaleContext ctx, @Nullable RoundingMode rm, @Nullable ParityMode pm) {
     if (rm == null) rm = ROUND;
     double scale = getScale(ctx);
     if (scale == 0) return 0;
@@ -163,7 +162,7 @@ public class PaintUtil {
   /**
    * @see #alignToInt(double, ScaleContext, RoundingMode, ParityMode)
    */
-  public static double alignToInt(double usrValue, @Nonnull JBUI.ScaleContext ctx) {
+  public static double alignToInt(double usrValue, JBUI.ScaleContext ctx) {
     return alignToInt(usrValue, ctx, null, null);
   }
 
@@ -174,14 +173,14 @@ public class PaintUtil {
    * @param g        the graphics
    * @return the converted value
    */
-  public static double devValue(double usrValue, @Nonnull Graphics2D g) {
+  public static double devValue(double usrValue, Graphics2D g) {
     return devValue(usrValue, JBUI.ScaleContext.create(g));
   }
 
   /**
    * @see #devValue(double, Graphics2D)
    */
-  public static double devValue(double usrValue, @Nonnull JBUI.ScaleContext ctx) {
+  public static double devValue(double usrValue, JBUI.ScaleContext ctx) {
     return usrValue * getScale(ctx);
   }
 
@@ -220,7 +219,7 @@ public class PaintUtil {
    * @return the original graphics transform when aligned, otherwise null
    */
   @Nullable
-  public static AffineTransform alignTxToInt(@Nonnull Graphics2D g, @Nullable Point2D offset, boolean alignX, boolean alignY, RoundingMode rm) {
+  public static AffineTransform alignTxToInt(Graphics2D g, @Nullable Point2D offset, boolean alignX, boolean alignY, RoundingMode rm) {
     try {
       AffineTransform tx = g.getTransform();
       if (isFractionalScale(tx)) {
@@ -261,7 +260,7 @@ public class PaintUtil {
    * @return the original graphics clip when aligned, otherwise null
    */
   @Nullable
-  public static Shape alignClipToInt(@Nonnull Graphics2D g, boolean alignH, boolean alignV, RoundingMode xyRM, RoundingMode whRM) {
+  public static Shape alignClipToInt(Graphics2D g, boolean alignH, boolean alignV, RoundingMode xyRM, RoundingMode whRM) {
     Shape clip = g.getClip();
     if (clip instanceof Rectangle2D && isFractionalScale(g.getTransform())) {
       Rectangle2D rect = (Rectangle2D)clip;
@@ -310,8 +309,8 @@ public class PaintUtil {
    * }
    * </pre>
    */
-  @Nonnull
-  public static Point2D getFractOffsetInRootPane(@Nonnull JComponent comp) {
+  
+  public static Point2D getFractOffsetInRootPane(JComponent comp) {
     if (!comp.isShowing() || !isFractionalScale(comp.getGraphicsConfiguration().getDefaultTransform())) return new Point2D.Double();
     int x = 0;
     int y = 0;
@@ -329,15 +328,15 @@ public class PaintUtil {
   /**
    * Returns negated Point2D instance.
    */
-  @Nonnull
-  public static Point2D negate(@Nonnull Point2D pt) {
+  
+  public static Point2D negate(Point2D pt) {
     return new Point2D.Double(-pt.getX(), -pt.getY());
   }
 
   /**
    * Returns true if the transform matrix contains fractional scale element.
    */
-  public static boolean isFractionalScale(@Nonnull AffineTransform tx) {
+  public static boolean isFractionalScale(AffineTransform tx) {
     double scaleX = tx.getScaleX();
     double scaleY = tx.getScaleY();
     return scaleX != (int)scaleX || scaleY != (int)scaleY;
@@ -350,7 +349,7 @@ public class PaintUtil {
    * @param valueAA a value for the {@link RenderingHints#KEY_ANTIALIASING} key
    * @param paint   the paint action
    */
-  public static void paintWithAA(@Nonnull Graphics2D g, @Nonnull Object valueAA, @Nonnull Runnable paint) {
+  public static void paintWithAA(Graphics2D g, Object valueAA, Runnable paint) {
     if (valueAA == RenderingHints.VALUE_ANTIALIAS_DEFAULT) {
       paint.run();
       return;
@@ -365,7 +364,7 @@ public class PaintUtil {
     }
   }
 
-  @Nonnull
+  
   public static Point2D insets2offset(@Nullable Insets in) {
     return in == null ? new Point2D.Double(0, 0) : new Point2D.Double(in.left, in.top);
   }

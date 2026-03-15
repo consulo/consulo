@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -67,10 +66,10 @@ class PingEDT {
     };
 
     public PingEDT(
-        @Nonnull String name,
-        @Nonnull Predicate<?> shutUpCondition,
+        String name,
+        Predicate<?> shutUpCondition,
         int maxUnitOfWorkThresholdMs,
-        @Nonnull Runnable pingAction
+        Runnable pingAction
     ) {
         myName = name;
         myShutUpCondition = shutUpCondition;

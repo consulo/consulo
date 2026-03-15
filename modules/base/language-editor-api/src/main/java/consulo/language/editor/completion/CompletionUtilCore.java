@@ -39,8 +39,7 @@ import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.project.Project;
 import consulo.util.collection.UnmodifiableIterator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
@@ -74,19 +73,19 @@ public class CompletionUtilCore {
   }
 
   @Nullable
-  public static <T extends PsiElement> T getOriginalElement(@Nonnull T psi) {
+  public static <T extends PsiElement> T getOriginalElement(T psi) {
     PsiFile file = psi.getContainingFile();
     return getOriginalElement(psi, file);
   }
 
-  @Nonnull
-  public static <T extends PsiElement> T getOriginalOrSelf(@Nonnull T psi) {
+  
+  public static <T extends PsiElement> T getOriginalOrSelf(T psi) {
     T element = getOriginalElement(psi);
     return element == null ? psi : element;
   }
 
   @RequiredReadAction
-  public static <T extends PsiElement> T getOriginalElement(@Nonnull T psi, PsiFile containingFile) {
+  public static <T extends PsiElement> T getOriginalElement(T psi, PsiFile containingFile) {
     if (containingFile != null && containingFile != containingFile.getOriginalFile() && psi.getTextRange() != null) {
       TextRange range = psi.getTextRange();
       Integer start = range.getStartOffset();
@@ -121,9 +120,9 @@ public class CompletionUtilCore {
     return psi;
   }
 
-  public static Iterable<String> iterateLookupStrings(@Nonnull final CompositeStringHolder element) {
+  public static Iterable<String> iterateLookupStrings(final CompositeStringHolder element) {
     return new Iterable<String>() {
-      @Nonnull
+      
       @Override
       public Iterator<String> iterator() {
         final Iterator<String> original = element.getAllStrings().iterator();
@@ -266,12 +265,12 @@ public class CompletionUtilCore {
     return findInText(offset, startOffset, idPart, idStart, insertedElement.getNode().getChars());
   }
 
-  public static String findIdentifierPrefix(@Nonnull Document document, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
+  public static String findIdentifierPrefix(Document document, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
     String text = document.getText();
     return findInText(offset, 0, idPart, idStart, text);
   }
 
-  @Nonnull
+  
   private static String findInText(int offset, int startOffset, ElementPattern<Character> idPart, ElementPattern<Character> idStart, CharSequence text) {
     int offsetInElement = offset - startOffset;
     int start = offsetInElement - 1;

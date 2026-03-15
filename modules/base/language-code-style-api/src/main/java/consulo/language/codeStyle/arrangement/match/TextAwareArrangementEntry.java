@@ -17,7 +17,7 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Stands for the {@link ArrangementEntry} which provides information about its text.

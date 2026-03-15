@@ -26,8 +26,7 @@ import consulo.component.persist.StoragePathMacros;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -46,7 +45,7 @@ public class RecentsManager implements PersistentStateComponent<Element> {
   private static final String RECENT_ELEMENT_NAME = "recent";
   protected static final String NAME_ATTR = "name";
 
-  @Nonnull
+  
   public static RecentsManager getInstance(ComponentManager project) {
     return project.getInstance(RecentsManager.class);
   }

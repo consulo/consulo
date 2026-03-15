@@ -19,8 +19,7 @@ import consulo.desktop.awt.ui.impl.image.DesktopImageOverIconImpl;
 import consulo.platform.Platform;
 import consulo.platform.impl.PlatformFileSystemImpl;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -38,7 +37,7 @@ class DesktopAWTFileSystemImpl extends PlatformFileSystemImpl {
 
     @Nullable
     @Override
-    public Image getImage(@Nonnull File file) {
+    public Image getImage(File file) {
         Icon systemIcon = FileSystemView.getFileSystemView().getSystemIcon(file);
         return systemIcon == null ? null : new DesktopImageOverIconImpl(systemIcon);
     }

@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -62,18 +61,18 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    @Nonnull
+    
     public Set<VirtualFile> getTestOutputDirectories() {
         return myDelegate.getTestOutputDirectories();
     }
 
     @Override
-    public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
+    public boolean isInTestSourceContent(VirtualFile fileOrDir) {
         return myDelegate.isInTestSourceContent(fileOrDir);
     }
 
     @Override
-    public boolean isInSourceContent(@Nonnull VirtualFile fileOrDir) {
+    public boolean isInSourceContent(VirtualFile fileOrDir) {
         return myDelegate.isInSourceContent(fileOrDir);
     }
 
@@ -110,7 +109,7 @@ public class CompileContextExDelegate implements CompileContextEx {
         return myDelegate.getMessageCount(category);
     }
 
-    @Nonnull
+    
     @Override
     public ProgressIndicator getProgressIndicator() {
         return myDelegate.getProgressIndicator();
@@ -173,12 +172,12 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return myDelegate.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, T value) {
+    public <T> void putUserData(Key<T> key, T value) {
         myDelegate.putUserData(key, value);
     }
 
@@ -203,7 +202,7 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, Compiler compiler) {
+    public void assignModule(VirtualFile root, Module module, boolean isTestSource, Compiler compiler) {
         myDelegate.assignModule(root, module, isTestSource, compiler);
     }
 }

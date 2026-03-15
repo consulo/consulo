@@ -11,8 +11,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -28,7 +27,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
     }
 
     @Nullable
-    private static String getSingleLineSelection(@Nonnull Editor editor) {
+    private static String getSingleLineSelection(Editor editor) {
         SelectionModel model = editor.getSelectionModel();
         Document document = editor.getDocument();
         if (!model.hasSelection()) {
@@ -55,7 +54,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Editor editor = e.getData(Editor.KEY);
         e.getPresentation().setEnabledAndVisible(e.hasData(ConsoleView.KEY) && editor != null && getSingleLineSelection(editor) != null);
     }

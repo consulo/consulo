@@ -15,8 +15,7 @@
  */
 package consulo.builtinWebServer.http;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.HttpURLConnection;
 
 /**
@@ -25,27 +24,27 @@ import java.net.HttpURLConnection;
  * @since 13-Sep-22
  */
 public final class HttpResponse {
-  @Nonnull
+  
   public static HttpResponse ok() {
     return create(HttpURLConnection.HTTP_OK, null, null);
   }
 
-  @Nonnull
-  public static HttpResponse ok(@Nonnull String contentType, @Nonnull byte[] content) {
+  
+  public static HttpResponse ok(String contentType, byte[] content) {
     return create(HttpURLConnection.HTTP_OK, contentType, content);
   }
 
-  @Nonnull
+  
   public static HttpResponse notFound() {
     return create(HttpURLConnection.HTTP_NOT_FOUND, null, null);
   }
 
-  @Nonnull
+  
   public static HttpResponse badRequest() {
     return create(HttpURLConnection.HTTP_BAD_REQUEST, null, null);
   }
 
-  @Nonnull
+  
   public static HttpResponse create(int code, @Nullable String contentType, @Nullable byte[] content) {
     return new HttpResponse(code, contentType, content);
   }

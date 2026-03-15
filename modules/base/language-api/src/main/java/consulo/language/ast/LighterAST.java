@@ -17,8 +17,7 @@ package consulo.language.ast;
 
 import consulo.language.util.CharTable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -27,21 +26,21 @@ import java.util.List;
 public abstract class LighterAST {
   private final CharTable myCharTable;
 
-  public LighterAST(@Nonnull CharTable charTable) {
+  public LighterAST(CharTable charTable) {
     myCharTable = charTable;
   }
 
-  @Nonnull
+  
   public CharTable getCharTable() {
     return myCharTable;
   }
 
-  @Nonnull
+  
   public abstract LighterASTNode getRoot();
 
   @Nullable
-  public abstract LighterASTNode getParent(@Nonnull LighterASTNode node);
+  public abstract LighterASTNode getParent(LighterASTNode node);
 
-  @Nonnull
-  public abstract List<LighterASTNode> getChildren(@Nonnull LighterASTNode parent);
+  
+  public abstract List<LighterASTNode> getChildren(LighterASTNode parent);
 }

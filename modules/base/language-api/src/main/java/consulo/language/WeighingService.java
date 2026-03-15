@@ -16,8 +16,7 @@
 package consulo.language;
 
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -29,14 +28,14 @@ public class WeighingService {
   private WeighingService() {
   }
 
-  @Nonnull
+  
   public static <T, Loc> WeighingComparable<T, Loc> weigh(Key<? extends Weigher<T, Loc>> key,
                                                           T element,
                                                           @Nullable Loc location) {
     return weigh(key, (Supplier<T>)() -> element, location);
   }
 
-  @Nonnull
+  
   public static <T, Loc> WeighingComparable<T, Loc> weigh(Key<? extends Weigher<T, Loc>> key,
                                                           Supplier<T> element,
                                                           @Nullable Loc location) {

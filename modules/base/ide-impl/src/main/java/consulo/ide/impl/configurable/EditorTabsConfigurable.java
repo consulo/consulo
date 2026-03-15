@@ -32,8 +32,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -47,7 +46,7 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     MOST_RECENT
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "editor.preferences.tabs";
@@ -59,16 +58,16 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Tabs");
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
     UISettings uiSettings = UISettings.getInstance();
 
     VerticalLayout layout = VerticalLayout.create();

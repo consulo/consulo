@@ -16,18 +16,17 @@
 package consulo.logging.internal;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-09-05
  */
 public interface LoggerFactory {
-    @Nonnull
-    Logger getLoggerInstance(@Nonnull String category);
+    
+    Logger getLoggerInstance(String category);
 
-    @Nonnull
-    default Logger getLoggerInstance(@Nonnull Class<?> clazz) {
+    
+    default Logger getLoggerInstance(Class<?> clazz) {
         return getLoggerInstance(clazz.getName());
     }
 

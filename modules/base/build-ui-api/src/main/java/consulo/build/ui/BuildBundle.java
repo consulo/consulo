@@ -8,7 +8,6 @@ import consulo.build.ui.localize.BuildLocalize;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use BuildLocalize")
@@ -21,8 +20,8 @@ public final class BuildBundle extends AbstractBundle {
     super(BUNDLE);
   }
 
-  @Nonnull
-  public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
+  
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return INSTANCE.getMessage(key, params);
   }
 }

@@ -25,7 +25,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -45,11 +44,11 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
     private final AnnotatorStatisticsCollector myAnnotatorStatisticsCollector = new AnnotatorStatisticsCollector();
 
     @Inject
-    DefaultHighlightVisitor(@Nonnull Project project) {
+    DefaultHighlightVisitor(Project project) {
         this(project, true, true, false);
     }
 
-    public DefaultHighlightVisitor(@Nonnull Project project, boolean highlightErrorElements, boolean runAnnotators, boolean batchMode) {
+    public DefaultHighlightVisitor(Project project, boolean highlightErrorElements, boolean runAnnotators, boolean batchMode) {
         myProject = project;
         myHighlightErrorElements = highlightErrorElements;
         myRunAnnotators = runAnnotators;
@@ -59,7 +58,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
 
     @Override
     @RequiredReadAction
-    public boolean analyze(@Nonnull PsiFile file, boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action) {
+    public boolean analyze(PsiFile file, boolean updateWholeFile, HighlightInfoHolder holder, Runnable action) {
         myDumb = myDumbService.isDumb();
         myHolder = holder;
 
@@ -93,7 +92,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
 
     @Override
     @RequiredReadAction
-    public void visit(@Nonnull PsiElement element) {
+    public void visit(PsiElement element) {
         if (myRunAnnotators) {
             runAnnotators(element);
         }
@@ -103,7 +102,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
     }
 
     @RequiredReadAction
-    private void runAnnotators(@Nonnull PsiElement element) {
+    private void runAnnotators(PsiElement element) {
         Language language = element.getLanguage();
         List<Annotator> annotators = myAnnotators.get(language);
         if (!annotators.isEmpty()) {
@@ -126,7 +125,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
     }
 
     @RequiredReadAction
-    private void visitErrorElement(@Nonnull PsiErrorElement element) {
+    private void visitErrorElement(PsiErrorElement element) {
         if (HighlightErrorFilter.EP_NAME.findFirstSafe(myProject, filter -> !filter.shouldHighlightErrorElement(element)) != null) {
             return;
         }
@@ -135,7 +134,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
     }
 
     @RequiredReadAction
-    private static HighlightInfo createErrorElementInfo(@Nonnull PsiErrorElement element) {
+    private static HighlightInfo createErrorElementInfo(PsiErrorElement element) {
         HighlightInfo.Builder builder = createInfoWithoutFixes(element);
         element.getProject().getExtensionPoint(ErrorQuickFixProvider.class)
             .forEach(it -> it.registerErrorQuickFix(element, builder));
@@ -143,9 +142,9 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
         return builder.createUnconditionally();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static HighlightInfo.Builder createInfoWithoutFixes(@Nonnull PsiErrorElement element) {
+    private static HighlightInfo.Builder createInfoWithoutFixes(PsiErrorElement element) {
         TextRange range = element.getTextRange();
         LocalizeValue errorDescription = element.getErrorDescriptionValue();
         if (!range.isEmpty()) {
@@ -178,8 +177,8 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
         return builder;
     }
 
-    @Nonnull
-    private List<Annotator> createAnnotators(@Nonnull Language language) {
+    
+    private List<Annotator> createAnnotators(Language language) {
         List<AnnotatorFactory> annotatorFactories = AnnotatorFactory.forLanguage(myProject, language);
         if (annotatorFactories.isEmpty()) {
             return List.of();

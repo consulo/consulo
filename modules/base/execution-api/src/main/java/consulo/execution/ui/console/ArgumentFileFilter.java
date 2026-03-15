@@ -1,8 +1,7 @@
 package consulo.execution.ui.console;
 
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +29,7 @@ public class ArgumentFileFilter implements Filter {
 
   @Nullable
   @Override
-  public Result applyFilter(@Nonnull String line, int entireLength) {
+  public Result applyFilter(String line, int entireLength) {
     if(!myTriggred) {
       String path = myFilePath;
       String text = myFileText;

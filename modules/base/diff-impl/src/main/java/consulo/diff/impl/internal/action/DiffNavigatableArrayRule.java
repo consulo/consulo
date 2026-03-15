@@ -21,18 +21,17 @@ import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DiffNavigatableArrayRule implements GetDataRule<Navigatable[]> {
-  @Nonnull
+  
   @Override
   public Key<Navigatable[]> getKey() {
     return DiffDataKeys.NAVIGATABLE_ARRAY;
   }
 
   @Override
-  public Navigatable[] getData(@Nonnull DataProvider dataProvider) {
+  public Navigatable[] getData(DataProvider dataProvider) {
     Navigatable element = dataProvider.getDataUnchecked(DiffDataKeys.NAVIGATABLE);
     if (element == null) {
       return null;

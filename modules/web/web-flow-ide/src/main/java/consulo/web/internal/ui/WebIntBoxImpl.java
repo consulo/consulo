@@ -23,8 +23,7 @@ import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -44,7 +43,7 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
         setValue(value, false);
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
@@ -70,9 +69,9 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
     public void setRange(int min, int max) {
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addValidator(@Nonnull Validator<Integer> validator) {
+    public Disposable addValidator(Validator<Integer> validator) {
         return () -> {
         };
     }

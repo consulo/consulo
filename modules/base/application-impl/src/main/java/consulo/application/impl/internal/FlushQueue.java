@@ -9,11 +9,9 @@ import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.lang.ExceptionUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -27,14 +25,14 @@ public final class FlushQueue {
 
   private final ArrayDeque<RunnableInfo> myQueue = new ArrayDeque<>(); //protected by LOCK
   private final
-  @Nonnull
+  
   Consumer<? super Runnable> myRunnableExecutor;
 
   private volatile boolean myMayHaveItems;
 
   private RunnableInfo myLastInfo;
 
-  FlushQueue(@Nonnull Consumer<? super Runnable> executor) {
+  FlushQueue(Consumer<? super Runnable> executor) {
     myRunnableExecutor = executor;
   }
 
@@ -59,7 +57,7 @@ public final class FlushQueue {
     LaterInvocator.requestFlush();
   }
 
-  public void push(@Nonnull RunnableInfo runnableInfo) {
+  public void push(RunnableInfo runnableInfo) {
     synchronized (LOCK) {
       myQueue.add(runnableInfo);
       myMayHaveItems = true;
@@ -71,7 +69,7 @@ public final class FlushQueue {
   }
 
   @TestOnly
-  @Nonnull
+  
   Collection<RunnableInfo> getQueue() {
     synchronized (LOCK) {
       // used by leak hunter as root, so we must not copy it here to another list
@@ -81,7 +79,7 @@ public final class FlushQueue {
   }
 
   // Extracted to have a capture point
-  private static void doRun(@Nonnull RunnableInfo info) {
+  private static void doRun(RunnableInfo info) {
     if (ClientId.Companion.getPropagateAcrossThreads()) {
       ClientId.withClientId(info.clientId, info.runnable);
     }
@@ -196,11 +194,11 @@ public final class FlushQueue {
   }
 
   final static class RunnableInfo {
-    @Nonnull
+    
     private final Runnable runnable;
-    @Nonnull
+    
     private final ModalityState modalityState;
-    @Nonnull
+    
     private final BooleanSupplier expired;
     @Nullable
     private final ActionCallback callback;
@@ -208,7 +206,7 @@ public final class FlushQueue {
     private final ClientId clientId;
 
     //@Async.Schedule
-    RunnableInfo(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired, @Nullable ActionCallback callback) {
+    RunnableInfo(Runnable runnable, ModalityState modalityState, BooleanSupplier expired, @Nullable ActionCallback callback) {
       this.runnable = runnable;
       this.modalityState = modalityState;
       this.expired = expired;
@@ -221,7 +219,7 @@ public final class FlushQueue {
     }
 
     @Override
-    @NonNls
+    
     public String toString() {
       return "[runnable: " + runnable + "; state=" + modalityState + (expired.getAsBoolean() ? "; expired" : "") + "] ";
     }

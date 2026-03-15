@@ -23,7 +23,6 @@ import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -34,7 +33,7 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@Nonnull final ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(final ArtifactEditorContext context) {
     return new PackagingElementPresentation() {
       @Override
       public String getPresentableName() {
@@ -42,7 +41,7 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
       }
 
       @Override
-      public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+      public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
                          SimpleTextAttributes commentAttributes) {
         presentationData.setIcon(context.getArtifactType().getIcon());
         presentationData.addText(getPresentableName(), mainAttributes);
@@ -70,13 +69,13 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
   }
 
   @Override
-  public void rename(@Nonnull String newName) {
+  public void rename(String newName) {
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType) {
     computeChildrenInstructions(creator, resolvingContext, compilerContext, artifactType);
   }
 

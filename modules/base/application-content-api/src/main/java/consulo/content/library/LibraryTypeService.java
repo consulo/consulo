@@ -22,8 +22,7 @@ import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -36,8 +35,8 @@ public abstract class LibraryTypeService {
   }
 
   @Nullable
-  public abstract NewLibraryConfiguration createLibraryFromFiles(@Nonnull LibraryRootsComponentDescriptor descriptor,
-                                                                 @Nonnull JComponent parentComponent,
+  public abstract NewLibraryConfiguration createLibraryFromFiles(LibraryRootsComponentDescriptor descriptor,
+                                                                 JComponent parentComponent,
                                                                  @Nullable VirtualFile contextDirectory,
                                                                  @Nullable LibraryType<?> type,
                                                                  @Nullable Project project);

@@ -20,29 +20,28 @@ import consulo.diff.util.MergeRange;
 import consulo.diff.util.Range;
 import consulo.diff.util.Side;
 import consulo.application.progress.ProgressIndicator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class ComparisonMergeUtil {
-  @Nonnull
-  public static List<MergeRange> buildFair(@Nonnull FairDiffIterable fragments1,
-                                           @Nonnull FairDiffIterable fragments2,
-                                           @Nonnull ProgressIndicator indicator) {
+  
+  public static List<MergeRange> buildFair(FairDiffIterable fragments1,
+                                           FairDiffIterable fragments2,
+                                           ProgressIndicator indicator) {
     assert fragments1.getLength1() == fragments2.getLength1();
     return new FairMergeBuilder().execute(fragments1, fragments2);
   }
 
   private static class FairMergeBuilder {
-    @Nonnull
+    
     private final ChangeBuilder myChangesBuilder = new ChangeBuilder();
 
-    @Nonnull
-    public List<MergeRange> execute(@Nonnull FairDiffIterable fragments1,
-                                    @Nonnull FairDiffIterable fragments2) {
+    
+    public List<MergeRange> execute(FairDiffIterable fragments1,
+                                    FairDiffIterable fragments2) {
       PeekIterator<Range> unchanged1 = new PeekIterator<>(fragments1.unchanged());
       PeekIterator<Range> unchanged2 = new PeekIterator<>(fragments2.unchanged());
 
@@ -53,8 +52,8 @@ public class ComparisonMergeUtil {
       return finish(fragments1, fragments2);
     }
 
-    @Nonnull
-    private Side add(@Nonnull Range range1, @Nonnull Range range2) {
+    
+    private Side add(Range range1, Range range2) {
       int start1 = range1.start1;
       int end1 = range1.end1;
 
@@ -82,8 +81,8 @@ public class ComparisonMergeUtil {
       return Side.fromLeft(end1 <= end2);
     }
 
-    @Nonnull
-    private List<MergeRange> finish(@Nonnull FairDiffIterable fragments1, @Nonnull FairDiffIterable fragments2) {
+    
+    private List<MergeRange> finish(FairDiffIterable fragments1, FairDiffIterable fragments2) {
       int length1 = fragments1.getLength2();
       int length2 = fragments1.getLength1();
       int length3 = fragments2.getLength2();
@@ -93,7 +92,7 @@ public class ComparisonMergeUtil {
   }
 
   private static class ChangeBuilder {
-    @Nonnull
+    
     private final List<MergeRange> myChanges = new ArrayList<>();
 
     private int myIndex1 = 0;
@@ -120,7 +119,7 @@ public class ComparisonMergeUtil {
       myIndex3 = end3;
     }
 
-    @Nonnull
+    
     public List<MergeRange> finish(int length1, int length2, int length3) {
       assert myIndex1 <= length1;
       assert myIndex2 <= length2;
@@ -133,11 +132,11 @@ public class ComparisonMergeUtil {
   }
 
   private static class PeekIterator<T> {
-    @Nonnull
+    
     private final Iterator<T> myIterator;
     private T myValue = null;
 
-    public PeekIterator(@Nonnull Iterator<T> iterator) {
+    public PeekIterator(Iterator<T> iterator) {
       myIterator = iterator;
       advance();
     }
@@ -160,9 +159,9 @@ public class ComparisonMergeUtil {
   }
 
   @Nullable
-  public static CharSequence tryResolveConflict(@Nonnull CharSequence leftText,
-                                                @Nonnull CharSequence baseText,
-                                                @Nonnull CharSequence rightText) {
+  public static CharSequence tryResolveConflict(CharSequence leftText,
+                                                CharSequence baseText,
+                                                CharSequence rightText) {
     return MergeResolveUtil.tryResolveConflict(leftText, baseText, rightText);
   }
 }

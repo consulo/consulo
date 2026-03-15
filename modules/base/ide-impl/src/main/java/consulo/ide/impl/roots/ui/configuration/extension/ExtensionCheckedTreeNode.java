@@ -26,8 +26,7 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeNode;
 import java.util.Collections;
@@ -43,14 +42,14 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
         Comparator.comparing(tn -> ((ExtensionCheckedTreeNode) tn).myProvider.getName(), LocalizeValue.comparator());
 
     private final ModuleExtensionProvider myProvider;
-    @Nonnull
+    
     private final ModuleConfigurationState myState;
     private final ExtensionEditor myExtensionEditor;
     private MutableModuleExtension<?> myExtension;
 
     public ExtensionCheckedTreeNode(
         @Nullable ModuleExtensionProvider moduleExtensionProvider,
-        @Nonnull ModuleConfigurationState state,
+        ModuleConfigurationState state,
         ExtensionEditor extensionEditor
     ) {
         super(null);
@@ -136,7 +135,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
         });
     }
 
-    @Nonnull
+    
     private static ModuleExtensionProvider findParentWithoutParent(String id) {
         ModuleExtensionProvider provider = Application.get().getExtensionPoint(ModuleExtensionProvider.class).computeSafeIfAny(ep -> {
             if (!ep.getId().equals(id)) {

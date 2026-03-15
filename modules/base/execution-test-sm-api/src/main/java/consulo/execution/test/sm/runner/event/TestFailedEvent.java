@@ -18,8 +18,7 @@ package consulo.execution.test.sm.runner.event;
 import consulo.util.lang.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.TestFailed;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,16 +37,16 @@ public class TestFailedEvent extends TreeNodeEvent {
     private boolean myExpectedFileTemp;
     private boolean myActualFileTemp;
 
-    public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError) {
+    public TestFailedEvent(TestFailed testFailed, boolean testError) {
         this(testFailed, testError, null);
     }
 
-    public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError, @Nullable String expectedFilePath) {
+    public TestFailedEvent(TestFailed testFailed, boolean testError, @Nullable String expectedFilePath) {
         this(testFailed, testError, expectedFilePath, null);
     }
 
     public TestFailedEvent(
-        @Nonnull TestFailed testFailed,
+        TestFailed testFailed,
         boolean testError,
         @Nullable String expectedFilePath,
         @Nullable String actualFilePath
@@ -108,8 +107,8 @@ public class TestFailedEvent extends TreeNodeEvent {
     }
 
     public TestFailedEvent(
-        @Nonnull String testName,
-        @Nonnull String localizedFailureMessage,
+        String testName,
+        String localizedFailureMessage,
         @Nullable String stackTrace,
         boolean testError,
         @Nullable String comparisonFailureActualText,
@@ -134,7 +133,7 @@ public class TestFailedEvent extends TreeNodeEvent {
     public TestFailedEvent(
         @Nullable String testName,
         @Nullable String id,
-        @Nonnull String localizedFailureMessage,
+        String localizedFailureMessage,
         @Nullable String stackTrace,
         boolean testError,
         @Nullable String comparisonFailureActualText,
@@ -166,7 +165,7 @@ public class TestFailedEvent extends TreeNodeEvent {
         myActualFileTemp = actualFileTemp;
     }
 
-    @Nonnull
+    
     public String getLocalizedFailureMessage() {
         return myLocalizedFailureMessage;
     }
@@ -191,7 +190,7 @@ public class TestFailedEvent extends TreeNodeEvent {
     }
 
     @Override
-    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+    protected void appendToStringInfo(StringBuilder buf) {
         TreeNodeEvent.append(buf, "localizedFailureMessage", myLocalizedFailureMessage);
         TreeNodeEvent.append(buf, "stacktrace", myStacktrace);
         TreeNodeEvent.append(buf, "isTestError", myTestError);

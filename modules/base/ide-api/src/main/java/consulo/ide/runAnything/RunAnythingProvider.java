@@ -9,8 +9,7 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -64,7 +63,7 @@ public interface RunAnythingProvider<V> {
      * @param pattern     input string
      */
     @Nullable
-    V findMatchingValue(@Nonnull DataContext dataContext, @Nonnull String pattern);
+    V findMatchingValue(DataContext dataContext, String pattern);
 
     /**
      * Gets completions variants for input command prefix. E.g. "rvm use" provider should return list of sdk versions.
@@ -72,8 +71,8 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      * @param pattern     input string, use it to provide specific variants for the input command if needed, e.g. for command arguments completion
      */
-    @Nonnull
-    Collection<V> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern);
+    
+    Collection<V> getValues(DataContext dataContext, String pattern);
 
     /**
      * Execute actual matched {@link #findMatchingValue(DataContext, String)} value.
@@ -81,7 +80,7 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      * @param value       matched value
      */
-    void execute(@Nonnull DataContext dataContext, @Nonnull V value);
+    void execute(DataContext dataContext, V value);
 
     /**
      * A value specific icon is painted it in the search field and used by value presentation wrapper.
@@ -90,15 +89,15 @@ public interface RunAnythingProvider<V> {
      * @param value matching value
      */
     @Nullable
-    Image getIcon(@Nonnull V value);
+    Image getIcon(V value);
 
     /**
      * If select a value in the list this command will be inserted into the search field.
      *
      * @param value matching value
      */
-    @Nonnull
-    String getCommand(@Nonnull V value);
+    
+    String getCommand(V value);
 
     /**
      * Returns text that is painted on the popup bottom and changed according to the list selection.
@@ -113,8 +112,8 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      * @param value       matching value
      */
-    @Nonnull
-    RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull V value);
+    
+    RunAnythingItem getMainListItem(DataContext dataContext, V value);
 
     /**
      * Returns help group title this provider belongs to
@@ -132,7 +131,7 @@ public interface RunAnythingProvider<V> {
      */
 
     @Nullable
-    RunAnythingItem getHelpItem(@Nonnull DataContext dataContext);
+    RunAnythingItem getHelpItem(DataContext dataContext);
 
     /**
      * Returns completion group.
@@ -146,7 +145,7 @@ public interface RunAnythingProvider<V> {
      * @param pattern     to build matcher
      */
     @Nullable
-    Matcher getMatcher(@Nonnull DataContext dataContext, @Nonnull String pattern);
+    Matcher getMatcher(DataContext dataContext, String pattern);
 
     /**
      * Provides context types that can be chosen as execution contexts:
@@ -156,8 +155,8 @@ public interface RunAnythingProvider<V> {
      * <p>
      * The first context will be chosen as default context.
      */
-    @Nonnull
-    List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext);
+    
+    List<RunAnythingContext> getExecutionContexts(DataContext dataContext);
 
     /**
      * Finds provider that matches {@code pattern}
@@ -166,7 +165,7 @@ public interface RunAnythingProvider<V> {
      * @param pattern     input string
      */
     @Nullable
-    static RunAnythingProvider findMatchedProvider(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    static RunAnythingProvider findMatchedProvider(DataContext dataContext, String pattern) {
         return Application.get().getExtensionPoint(RunAnythingProvider.class)
             .findFirstSafe(provider -> provider.findMatchingValue(dataContext, pattern) != null);
     }

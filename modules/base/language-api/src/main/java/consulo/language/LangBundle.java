@@ -22,7 +22,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.language.localize.LanguageLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -46,8 +45,8 @@ public class LangBundle extends AbstractBundle{
     return ourInstance.getMessage(key, params);
   }
 
-  @Nonnull
-  public static Supplier<String> messagePointer(@Nonnull String key) {
+  
+  public static Supplier<String> messagePointer(String key) {
     return () -> message(key);
   }
 }

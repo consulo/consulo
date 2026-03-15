@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -37,24 +36,24 @@ public abstract class EditorHighlighterFactory {
     return Application.get().getInstance(EditorHighlighterFactory.class);
   }
 
-  @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(SyntaxHighlighter syntaxHighlighter, @Nonnull EditorColorsScheme colors);
+  
+  public abstract EditorHighlighter createEditorHighlighter(SyntaxHighlighter syntaxHighlighter, EditorColorsScheme colors);
 
-  @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(@Nonnull FileType fileType, @Nonnull EditorColorsScheme settings, Project project);
+  
+  public abstract EditorHighlighter createEditorHighlighter(FileType fileType, EditorColorsScheme settings, Project project);
 
-  @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(Project project, @Nonnull FileType fileType);
+  
+  public abstract EditorHighlighter createEditorHighlighter(Project project, FileType fileType);
 
-  @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(@Nonnull VirtualFile file, @Nonnull EditorColorsScheme globalScheme, @Nullable Project project);
+  
+  public abstract EditorHighlighter createEditorHighlighter(VirtualFile file, EditorColorsScheme globalScheme, @Nullable Project project);
 
-  @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(Project project, @Nonnull VirtualFile file);
+  
+  public abstract EditorHighlighter createEditorHighlighter(Project project, VirtualFile file);
 
-  @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(Project project, @Nonnull String fileName);
+  
+  public abstract EditorHighlighter createEditorHighlighter(Project project, String fileName);
 
-  @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(@Nonnull EditorColorsScheme settings, @Nonnull String fileName, @Nullable Project project);
+  
+  public abstract EditorHighlighter createEditorHighlighter(EditorColorsScheme settings, String fileName, @Nullable Project project);
 }

@@ -21,8 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.event.JBLoadingPanelListener;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,11 +36,11 @@ public class JBLoadingPanel extends JPanel {
     final LoadingDecorator myDecorator;
     private final Collection<JBLoadingPanelListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-    public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent) {
+    public JBLoadingPanel(@Nullable LayoutManager manager, Disposable parent) {
         this(manager, parent, -1);
     }
 
-    public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent, int startDelayMs) {
+    public JBLoadingPanel(@Nullable LayoutManager manager, Disposable parent, int startDelayMs) {
         this(
             manager,
             panel -> new LoadingDecorator(panel, parent, startDelayMs) {
@@ -57,7 +56,7 @@ public class JBLoadingPanel extends JPanel {
 
     public JBLoadingPanel(
         @Nullable LayoutManager manager,
-        @Nonnull Function<? super JPanel, ? extends LoadingDecorator> createLoadingDecorator
+        Function<? super JPanel, ? extends LoadingDecorator> createLoadingDecorator
     ) {
         super(new BorderLayout());
         myPanel = manager == null ? new JPanel() : new JPanel(manager);
@@ -112,11 +111,11 @@ public class JBLoadingPanel extends JPanel {
         }
     }
 
-    public void addListener(@Nonnull JBLoadingPanelListener listener) {
+    public void addListener(JBLoadingPanelListener listener) {
         myListeners.add(listener);
     }
 
-    public boolean removeListener(@Nonnull JBLoadingPanelListener listener) {
+    public boolean removeListener(JBLoadingPanelListener listener) {
         return myListeners.remove(listener);
     }
 

@@ -6,7 +6,6 @@ import consulo.container.plugin.PluginManager;
 import consulo.platform.Platform;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -19,7 +18,7 @@ public final class NativeFileLoader {
    * @param systemLoad must be referenced to System::load, this need for fixing caller from stacktrace
    *                   (from target classloader, not NativeLibraryLoader classloader)
    */
-  public static void loadLibrary(@Nonnull String libName, Consumer<String> systemLoad) {
+  public static void loadLibrary(String libName, Consumer<String> systemLoad) {
     Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
 
     PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
@@ -43,8 +42,8 @@ public final class NativeFileLoader {
     systemLoad.accept(libPath);
   }
 
-  @Nonnull
-  public static File findExecutable(@Nonnull String fileName) {
+  
+  public static File findExecutable(String fileName) {
     Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
 
     PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
@@ -57,8 +56,8 @@ public final class NativeFileLoader {
     return new File(nativePluginDirectory, fileName);
   }
 
-  @Nonnull
-  public static Path findExecutablePath(@Nonnull String fileName) {
+  
+  public static Path findExecutablePath(String fileName) {
     Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
 
     PluginDescriptor plugin = PluginManager.getPlugin(callerClass);

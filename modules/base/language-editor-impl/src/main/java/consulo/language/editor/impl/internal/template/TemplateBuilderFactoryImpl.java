@@ -23,7 +23,6 @@ import consulo.language.editor.template.TemplateBuilderFactory;
 import consulo.language.psi.PsiElement;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -32,17 +31,17 @@ import jakarta.annotation.Nonnull;
 @ServiceImpl
 public class TemplateBuilderFactoryImpl extends TemplateBuilderFactory {
   @Override
-  public TemplateBuilder createTemplateBuilder(@Nonnull PsiElement element) {
+  public TemplateBuilder createTemplateBuilder(PsiElement element) {
     return new TemplateBuilderImpl(element);
   }
 
   @Override
-  public Template createRawTemplate(@Nonnull String key, String group) {
+  public Template createRawTemplate(String key, String group) {
     return new TemplateImpl(key, group);
   }
 
   @Override
-  public Template createRawTemplate(@Nonnull String key, String group, String text) {
+  public Template createRawTemplate(String key, String group, String text) {
     return new TemplateImpl(key, text, group);
   }
 }

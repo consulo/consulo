@@ -33,8 +33,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.PathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -190,7 +189,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
     }
 
     @Nullable
-    protected String fromTextField(@Nonnull TextAccessor textAccessor, @Nonnull CommonProgramRunConfigurationParameters configuration) {
+    protected String fromTextField(TextAccessor textAccessor, CommonProgramRunConfigurationParameters configuration) {
         return textAccessor.getText();
     }
 

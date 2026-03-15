@@ -22,7 +22,6 @@ import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.disposer.Disposable;
 import consulo.test.light.impl.LightApplication;
 import consulo.test.light.impl.LightExtensionRegistrator;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,13 +31,13 @@ public class LightApplicationBuilder {
   public static class DefaultRegistrator extends LightExtensionRegistrator {
   }
 
-  @Nonnull
-  public static LightApplicationBuilder create(@Nonnull Disposable rootDisposable) {
+  
+  public static LightApplicationBuilder create(Disposable rootDisposable) {
     return create(rootDisposable, new DefaultRegistrator());
   }
 
-  @Nonnull
-  public static LightApplicationBuilder create(@Nonnull Disposable rootDisposable, @Nonnull DefaultRegistrator registrator) {
+  
+  public static LightApplicationBuilder create(Disposable rootDisposable, DefaultRegistrator registrator) {
     return new LightApplicationBuilder(rootDisposable, registrator);
   }
 
@@ -50,7 +49,7 @@ public class LightApplicationBuilder {
     myRegistrator = registrator;
   }
 
-  @Nonnull
+  
   public Application build() {
     InjectingBindingLoader bindingLoader = new InjectingBindingLoader();
     bindingLoader.analyzeBindings();

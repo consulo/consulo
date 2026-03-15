@@ -17,7 +17,6 @@ package consulo.test.light.impl;
 
 import consulo.platform.impl.PlatformBase;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.net.URL;
@@ -32,22 +31,22 @@ public class LightPlatform extends PlatformBase {
     super(LOCAL, LOCAL, Map.of("os.name", "light", "os.version", "1", "user.home", "", "user.name", "light"));
   }
 
-  public LightPlatform(@Nonnull String id, @Nonnull String name, @Nonnull Map<String, String> jvmProperties) {
+  public LightPlatform(String id, String name, Map<String, String> jvmProperties) {
     super(id, name, jvmProperties);
   }
 
   @Override
-  public void openInBrowser(@Nonnull URL url) {
+  public void openInBrowser(URL url) {
 
   }
 
   @Override
-  public void openFileInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
+  public void openFileInFileManager(File file, UIAccess uiAccess) {
 
   }
 
   @Override
-  public void openDirectoryInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
+  public void openDirectoryInFileManager(File file, UIAccess uiAccess) {
 
   }
 }

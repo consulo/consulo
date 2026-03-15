@@ -26,8 +26,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.Stack;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,9 +44,9 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
     private static final ThreadLocal<Set<ASTNode>> ourCustomRegionElements = new ThreadLocal<>();
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public final FoldingDescriptor[] buildFoldRegions(@Nonnull PsiElement root, @Nonnull Document document, boolean quick) {
+    public final FoldingDescriptor[] buildFoldRegions(PsiElement root, Document document, boolean quick) {
         List<FoldingDescriptor> descriptors = new ArrayList<>();
         ourCustomRegionElements.set(new HashSet<>());
         try {
@@ -67,9 +66,9 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public final FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document) {
+    public final FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document) {
         return buildFoldRegions(node.getPsi(), document, false);
     }
 
@@ -84,17 +83,17 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
      */
     @RequiredReadAction
     protected abstract void buildLanguageFoldRegions(
-        @Nonnull List<FoldingDescriptor> descriptors,
-        @Nonnull PsiElement root,
-        @Nonnull Document document,
+        List<FoldingDescriptor> descriptors,
+        PsiElement root,
+        Document document,
         boolean quick
     );
 
     @RequiredReadAction
     private void addCustomFoldingRegionsRecursively(
-        @Nonnull FoldingStack foldingStack,
-        @Nonnull ASTNode node,
-        @Nonnull List<FoldingDescriptor> descriptors,
+        FoldingStack foldingStack,
+        ASTNode node,
+        List<FoldingDescriptor> descriptors,
         int currDepth
     ) {
         FoldingStack localFoldingStack = isCustomFoldingRoot(node) ? new FoldingStack(node) : foldingStack;
@@ -123,7 +122,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
 
     @RequiredReadAction
     @Override
-    public final String getPlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range) {
+    public final String getPlaceholderText(ASTNode node, TextRange range) {
         if (isCustomFoldingCandidate(node)) {
             String elementText = node.getText();
             CustomFoldingProvider defaultProvider = getDefaultProvider(elementText);
@@ -134,19 +133,19 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
         return getLanguagePlaceholderText(node, range);
     }
 
-    protected abstract String getLanguagePlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range);
+    protected abstract String getLanguagePlaceholderText(ASTNode node, TextRange range);
 
 
     @RequiredReadAction
     @Override
-    public final String getPlaceholderText(@Nonnull ASTNode node) {
+    public final String getPlaceholderText(ASTNode node) {
         return "...";
     }
 
 
     @RequiredReadAction
     @Override
-    public final boolean isCollapsedByDefault(@Nonnull ASTNode node) {
+    public final boolean isCollapsedByDefault(ASTNode node) {
         if (isCustomRegionStart(node)) {
             String childText = node.getText();
             CustomFoldingProvider defaultProvider = getDefaultProvider(childText);
@@ -161,7 +160,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
      * @param node the node for which the collapsed state is requested.
      * @return true if the region is collapsed by default, false otherwise.
      */
-    protected abstract boolean isRegionCollapsedByDefault(@Nonnull ASTNode node);
+    protected abstract boolean isRegionCollapsedByDefault(ASTNode node);
 
     /**
      * Returns true if the node corresponds to custom region start. The node must be a custom folding candidate and match custom folding
@@ -223,7 +222,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
         return node.getPsi() instanceof PsiComment;
     }
 
-    public final boolean isCustomFoldingCandidate(@Nonnull PsiElement element) {
+    public final boolean isCustomFoldingCandidate(PsiElement element) {
         ASTNode node = element.getNode();
         return node != null && isCustomFoldingCandidate(node);
     }
@@ -243,12 +242,12 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
     private static class FoldingStack extends Stack<ASTNode> {
         private final ASTNode owner;
 
-        public FoldingStack(@Nonnull ASTNode owner) {
+        public FoldingStack(ASTNode owner) {
             super(1);
             this.owner = owner;
         }
 
-        @Nonnull
+        
         public ASTNode getOwner() {
             return owner;
         }

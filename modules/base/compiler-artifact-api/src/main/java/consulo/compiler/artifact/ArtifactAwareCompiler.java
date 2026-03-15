@@ -16,7 +16,6 @@
 package consulo.compiler.artifact;
 
 import consulo.compiler.Compiler;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -24,5 +23,5 @@ import java.util.Collection;
  * @author nik
  */
 public interface ArtifactAwareCompiler extends Compiler  {
-  boolean shouldRun(@Nonnull Collection<? extends Artifact> changedArtifacts);
+  boolean shouldRun(Collection<? extends Artifact> changedArtifacts);
 }

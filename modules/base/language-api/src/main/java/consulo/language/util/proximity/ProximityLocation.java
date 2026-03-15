@@ -21,8 +21,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -58,12 +57,12 @@ public class ProximityLocation implements UserDataHolder {
   }
 
   @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
+  public <T> T getUserData(Key<T> key) {
     return myContext.get(key);
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(Key<T> key, @Nullable T value) {
     myContext.put(key, value);
   }
 }

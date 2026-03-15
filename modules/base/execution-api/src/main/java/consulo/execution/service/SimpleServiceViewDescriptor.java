@@ -4,29 +4,28 @@ package consulo.execution.service;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class SimpleServiceViewDescriptor implements ServiceViewDescriptor {
   private final ItemPresentation myPresentation;
   private final String myId;
 
-  public SimpleServiceViewDescriptor(@Nonnull String name, @Nullable Image icon) {
+  public SimpleServiceViewDescriptor(String name, @Nullable Image icon) {
     this(name, icon, name);
   }
 
-  public SimpleServiceViewDescriptor(@Nonnull String name, @Nullable Image icon, @Nonnull String id) {
+  public SimpleServiceViewDescriptor(String name, @Nullable Image icon, String id) {
     myPresentation = new PresentationData(name, null, icon, null);
     myId = id;
   }
 
   @Override
-  public @Nonnull ItemPresentation getPresentation() {
+  public ItemPresentation getPresentation() {
     return myPresentation;
   }
 
   @Override
-  public @Nonnull String getId() {
+  public String getId() {
     return myId;
   }
 }

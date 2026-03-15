@@ -32,8 +32,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,7 +51,7 @@ public class ProblemsViewImpl extends ProblemsView {
 
     private static class TempMessage {
         final int type;
-        @Nonnull
+        
         final String[] text;
         @Nullable
         final String groupName;
@@ -65,7 +64,7 @@ public class ProblemsViewImpl extends ProblemsView {
 
         private TempMessage(
             int type,
-            @Nonnull String[] text,
+            String[] text,
             @Nullable String groupName,
             @Nullable Navigatable navigatable,
             @Nullable String exportTextPrefix,
@@ -112,7 +111,7 @@ public class ProblemsViewImpl extends ProblemsView {
     @Override
     public void addMessage(
         int type,
-        @Nonnull String[] text,
+        String[] text,
         @Nullable String groupName,
         @Nullable Navigatable navigatable,
         @Nullable String exportTextPrefix,

@@ -14,7 +14,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationService;
-import jakarta.annotation.Nonnull;
 
 import java.io.Closeable;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +59,7 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
     }
 
     @Override
-    public Credentials get(@Nonnull CredentialAttributes attributes) {
+    public Credentials get(CredentialAttributes attributes) {
         // Check postponed credentials first.
         Credentials postponed = postponedCredentials.get(attributes);
         if (postponed != null) {
@@ -92,7 +91,7 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
     }
 
     @Override
-    public void set(@Nonnull CredentialAttributes attributes, Credentials credentials) {
+    public void set(CredentialAttributes attributes, Credentials credentials) {
         if (isFallbackStoreInitialized()) {
             getFallbackStore().set(attributes, credentials);
             return;

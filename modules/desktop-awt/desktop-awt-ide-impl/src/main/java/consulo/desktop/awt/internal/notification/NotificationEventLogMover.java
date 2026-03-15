@@ -21,7 +21,6 @@ import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -32,7 +31,7 @@ import java.util.ArrayList;
 @ExtensionImpl
 public class NotificationEventLogMover implements BackgroundStartupActivity {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         EventLog applicationComponent = EventLog.getApplicationComponent();
 
         ArrayList<Notification> notifications = applicationComponent.myModel.getNotifications();

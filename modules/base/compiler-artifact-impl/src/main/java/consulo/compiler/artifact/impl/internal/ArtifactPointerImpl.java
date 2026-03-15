@@ -19,7 +19,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactModel;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.component.util.pointer.NamedPointerImpl;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -29,13 +28,13 @@ public class ArtifactPointerImpl extends NamedPointerImpl<Artifact> implements A
     super(value);
   }
 
-  public ArtifactPointerImpl(@Nonnull String name) {
+  public ArtifactPointerImpl(String name) {
     super(name);
   }
 
   @Override
-  @Nonnull
-  public String getArtifactName(@Nonnull ArtifactModel artifactModel) {
+  
+  public String getArtifactName(ArtifactModel artifactModel) {
     Artifact artifact = get();
     if (artifact != null) {
       return artifactModel.getArtifactByOriginal(artifact).getName();
@@ -44,7 +43,7 @@ public class ArtifactPointerImpl extends NamedPointerImpl<Artifact> implements A
   }
 
   @Override
-  public Artifact findArtifact(@Nonnull ArtifactModel artifactModel) {
+  public Artifact findArtifact(ArtifactModel artifactModel) {
     Artifact artifact = get();
     if (artifact != null) {
       return artifactModel.getArtifactByOriginal(artifact);

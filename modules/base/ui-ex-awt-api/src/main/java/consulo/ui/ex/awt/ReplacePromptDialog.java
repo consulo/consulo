@@ -22,8 +22,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +58,7 @@ public class ReplacePromptDialog extends DialogWrapper {
         init();
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         DoAction replaceAction = new DoAction(UILocalize.replacePromptReplaceButton(), PromptResult.OK);
@@ -123,7 +122,7 @@ public class ReplacePromptDialog extends DialogWrapper {
         return "ReplaceDuplicatesPrompt";
     }
 
-    @Nonnull
+    
     public PromptResult getPromptResult() {
         return PromptResult.VALUES[getExitCode()];
     }

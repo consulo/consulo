@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopeProvider;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -42,18 +41,18 @@ public class LightProjectScopeProvider implements ProjectScopeProvider {
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getEverythingScope() {
     return new EverythingGlobalScope(myProject);
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getLibrariesScope() {
     return new GlobalSearchScope() {
       @Override
-      public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+      public boolean isSearchInModuleContent(Module aModule) {
         return false;
       }
 
@@ -63,25 +62,25 @@ public class LightProjectScopeProvider implements ProjectScopeProvider {
       }
 
       @Override
-      public boolean contains(@Nonnull VirtualFile file) {
+      public boolean contains(VirtualFile file) {
         return false;
       }
     };
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getAllScope() {
     return new EverythingGlobalScope(myProject);
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getProjectScope() {
     return new EverythingGlobalScope(myProject);
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getContentScope() {
     return new EverythingGlobalScope(myProject);

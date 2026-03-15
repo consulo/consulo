@@ -24,7 +24,6 @@ import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -37,18 +36,18 @@ public abstract class TextEditorHighlightingPassManager {
     return project.getInstance(TextEditorHighlightingPassManager.class);
   }
 
-  @Nonnull
-  public abstract List<TextEditorHighlightingPass> instantiatePasses(@Nonnull PsiFile psiFile, @Nonnull Editor editor, @Nonnull int[] passesToIgnore);
+  
+  public abstract List<TextEditorHighlightingPass> instantiatePasses(PsiFile psiFile, Editor editor, int[] passesToIgnore);
 
   /**
    * Same as {@link #instantiateMainPasses(PsiFile, Document, HighlightInfoProcessor)} but with default process
    */
-  @Nonnull
-  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document);
+  
+  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(PsiFile psiFile, Document document);
 
-  @Nonnull
-  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull HighlightInfoProcessor highlightInfoProcessor);
+  
+  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(PsiFile psiFile, Document document, HighlightInfoProcessor highlightInfoProcessor);
 
-  @Nonnull
+  
   public abstract List<DirtyScopeTrackingHighlightingPassFactory> getDirtyScopeTrackingFactories();
 }

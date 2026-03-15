@@ -5,8 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +30,7 @@ public interface SearchEverywhereClassifier {
         }
 
         @Nullable
-        public static VirtualFile getVirtualFile(@Nonnull Object o) {
+        public static VirtualFile getVirtualFile(Object o) {
             return Application.get().getExtensionPoint(SearchEverywhereClassifier.class)
                 .computeSafeIfAny(classifier -> classifier.getVirtualFile(o));
         }
@@ -54,7 +53,7 @@ public interface SearchEverywhereClassifier {
     boolean isSymbol(@Nullable Object o);
 
     @Nullable
-    VirtualFile getVirtualFile(@Nonnull Object o);
+    VirtualFile getVirtualFile(Object o);
 
     @Nullable
     Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus);

@@ -21,7 +21,6 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class ArtifactCompilerCompileItem extends VirtualFileCompileItem<Artifact
         return myDestinations;
     }
 
-    @Nonnull
+    
     @Override
     public ArtifactPackagingItemOutputState computeOutputState() {
         List<Pair<String, Long>> pairs = new SmartList<>();
@@ -58,7 +57,7 @@ public class ArtifactCompilerCompileItem extends VirtualFileCompileItem<Artifact
     }
 
     @Override
-    public boolean isOutputUpToDate(@Nonnull ArtifactPackagingItemOutputState state) {
+    public boolean isOutputUpToDate(ArtifactPackagingItemOutputState state) {
         List<Pair<String, Long>> cachedDestinations = state.myDestinations;
         if (cachedDestinations.size() != myDestinations.size()) {
             return false;

@@ -27,7 +27,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -38,8 +37,8 @@ public abstract class CompletionConfidence implements LanguageExtension {
   private static final ExtensionPointCacheKey<CompletionConfidence, ByLanguageValue<List<CompletionConfidence>>> KEY =
           ExtensionPointCacheKey.create("CompletionConfidence", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<CompletionConfidence> forLanguage(@Nonnull Language language) {
+  
+  public static List<CompletionConfidence> forLanguage(Language language) {
     return Application.get().getExtensionPoint(CompletionConfidence.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -47,8 +46,8 @@ public abstract class CompletionConfidence implements LanguageExtension {
    * This method is invoked first when a completion autopopup is scheduled. Extensions are able to cancel this completion process based on location.
    * For example, in string literals or comments completion autopopup may do more harm than good.
    */
-  @Nonnull
-  public ThreeState shouldSkipAutopopup(@Nonnull PsiElement contextElement, @Nonnull PsiFile psiFile, int offset) {
+  
+  public ThreeState shouldSkipAutopopup(PsiElement contextElement, PsiFile psiFile, int offset) {
     return ThreeState.UNSURE;
   }
 }

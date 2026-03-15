@@ -2,8 +2,7 @@ package consulo.task;
 
 import consulo.util.xml.serializer.annotation.Attribute;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Mikhail Golubev
@@ -21,7 +20,7 @@ public class CustomTaskState
 	{
 	}
 
-	public CustomTaskState(@Nonnull String id, @Nonnull String name)
+	public CustomTaskState(String id, String name)
 	{
 		myId = id;
 		myPresentableName = name;
@@ -34,7 +33,7 @@ public class CustomTaskState
 	 * @see TaskRepository#setTaskState(Task, CustomTaskState)
 	 */
 	@Attribute("id")
-	@Nonnull
+	
 	public String getId()
 	{
 		return myId;
@@ -43,7 +42,7 @@ public class CustomTaskState
 	/**
 	 * For serialization purposes only.
 	 */
-	public void setId(@Nonnull String id)
+	public void setId(String id)
 	{
 		myId = id;
 	}
@@ -52,7 +51,7 @@ public class CustomTaskState
 	 * Text that describes this state and will be shown to user in UI (unlike ID it's not necessarily unique).
 	 */
 	@Attribute("name")
-	@Nonnull
+	
 	public String getPresentableName()
 	{
 		return myPresentableName;
@@ -61,7 +60,7 @@ public class CustomTaskState
 	/**
 	 * For serialization purposes only.
 	 */
-	public void setPresentableName(@Nonnull String name)
+	public void setPresentableName(String name)
 	{
 		myPresentableName = name;
 	}
@@ -99,8 +98,8 @@ public class CustomTaskState
 	 * @see #isPredefined()
 	 * @see TaskRepository#getAvailableTaskStates(Task)
 	 */
-	@Nonnull
-	public static CustomTaskState fromPredefined(@Nonnull TaskState state)
+	
+	public static CustomTaskState fromPredefined(TaskState state)
 	{
 		CustomTaskState result = new CustomTaskState(state.name(), state.getPresentableName());
 		result.setPredefined(true);

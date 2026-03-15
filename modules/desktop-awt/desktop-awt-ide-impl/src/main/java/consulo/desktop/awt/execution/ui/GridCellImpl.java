@@ -46,8 +46,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.util.collection.MutualMap;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +68,7 @@ public class GridCellImpl implements GridCell {
     private final ViewContextEx myContext;
     private JBPopup myPopup;
 
-    public GridCellImpl(ViewContextEx context, @Nonnull GridImpl container, GridImpl.Placeholder placeholder, PlaceInGrid placeInGrid) {
+    public GridCellImpl(ViewContextEx context, GridImpl container, GridImpl.Placeholder placeholder, PlaceInGrid placeInGrid) {
         myContext = context;
         myContainer = container;
 
@@ -113,7 +112,7 @@ public class GridCellImpl implements GridCell {
         }.setDataProvider(new DataProvider() {
             @Override
             @Nullable
-            public Object getData(@Nonnull Key dataId) {
+            public Object getData(Key dataId) {
                 if (ViewContext.CONTENT_KEY == dataId) {
                     TabInfo target = myTabs.getTargetInfo();
                     if (target != null) {
@@ -301,7 +300,7 @@ public class GridCellImpl implements GridCell {
 
         @Override
         @Nullable
-        public Object getData(@Nonnull Key dataId) {
+        public Object getData(Key dataId) {
             if (ViewContext.CONTENT_KEY == dataId) {
                 return new Content[]{myContent};
             }
@@ -317,7 +316,7 @@ public class GridCellImpl implements GridCell {
         return myContents.getValue(content);
     }
 
-    @Nonnull
+    
     private Content getContentFor(TabInfo tab) {
         return myContents.getKey(tab);
     }

@@ -22,7 +22,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class InitToolWindowsActivity implements PostStartupActivity, DumbAware {
     @RequiredUIAccess
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         UIAccess.assetIsNotUIThread();
 
         ToolWindowManagerBase manager = (ToolWindowManagerBase) ToolWindowManager.getInstance(project);

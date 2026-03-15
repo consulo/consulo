@@ -6,8 +6,7 @@ import consulo.codeEditor.*;
 import consulo.util.dataholder.Key;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class InjectedCaret implements CaretDelegate {
   private final EditorWindow myEditorWindow;
@@ -18,13 +17,13 @@ public class InjectedCaret implements CaretDelegate {
     myDelegate = delegate;
   }
 
-  @Nonnull
+  
   @Override
   public Editor getEditor() {
     return myEditorWindow;
   }
 
-  @Nonnull
+  
   @Override
   public CaretModel getCaretModel() {
     return myEditorWindow.getCaretModel();
@@ -46,13 +45,13 @@ public class InjectedCaret implements CaretDelegate {
   }
 
   @Override
-  public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
+  public void moveToLogicalPosition(LogicalPosition pos) {
     LogicalPosition hostPos = myEditorWindow.injectedToHost(pos);
     myDelegate.moveToLogicalPosition(hostPos);
   }
 
   @Override
-  public void moveToVisualPosition(@Nonnull VisualPosition pos) {
+  public void moveToVisualPosition(VisualPosition pos) {
     LogicalPosition hostPos = myEditorWindow.injectedToHost(myEditorWindow.visualToLogicalPosition(pos));
     myDelegate.moveToLogicalPosition(hostPos);
   }
@@ -73,14 +72,14 @@ public class InjectedCaret implements CaretDelegate {
     return myDelegate.isUpToDate();
   }
 
-  @Nonnull
+  
   @Override
   public LogicalPosition getLogicalPosition() {
     LogicalPosition hostPos = myDelegate.getLogicalPosition();
     return myEditorWindow.hostToInjected(hostPos);
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getVisualPosition() {
     LogicalPosition logicalPosition = getLogicalPosition();
@@ -107,7 +106,7 @@ public class InjectedCaret implements CaretDelegate {
     return myEditorWindow.getDocument().hostToInjected(myDelegate.getSelectionStart());
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getSelectionStartPosition() {
     return myDelegate.getSelectionStartPosition();
@@ -118,7 +117,7 @@ public class InjectedCaret implements CaretDelegate {
     return myEditorWindow.getDocument().hostToInjected(myDelegate.getSelectionEnd());
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getSelectionEndPosition() {
     return myDelegate.getSelectionEndPosition();
@@ -135,7 +134,7 @@ public class InjectedCaret implements CaretDelegate {
     return myEditorWindow.getDocument().hostToInjected(myDelegate.getLeadSelectionOffset());
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getLeadSelectionPosition() {
     return myDelegate.getLeadSelectionPosition();
@@ -204,25 +203,25 @@ public class InjectedCaret implements CaretDelegate {
     myDelegate.dispose();
   }
 
-  @Nonnull
+  
   @Override
-  public <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value) {
+  public <T> T putUserDataIfAbsent(Key<T> key, T value) {
     return myDelegate.putUserDataIfAbsent(key, value);
   }
 
   @Override
-  public <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
+  public <T> boolean replace(Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
     return myDelegate.replace(key, oldValue, newValue);
   }
 
   @Nullable
   @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
+  public <T> T getUserData(Key<T> key) {
     return myDelegate.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(Key<T> key, @Nullable T value) {
     myDelegate.putUserData(key, value);
   }
 
@@ -236,14 +235,14 @@ public class InjectedCaret implements CaretDelegate {
     return myDelegate.isAtBidiRunBoundary();
   }
 
-  @Nonnull
+  
   @Override
   public CaretVisualAttributes getVisualAttributes() {
     return myDelegate.getVisualAttributes();
   }
 
   @Override
-  public void setVisualAttributes(@Nonnull CaretVisualAttributes attributes) {
+  public void setVisualAttributes(CaretVisualAttributes attributes) {
     myDelegate.setVisualAttributes(attributes);
   }
 }

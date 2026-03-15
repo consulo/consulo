@@ -42,8 +42,7 @@ import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.change.ChangesViewContentFactory;
 import consulo.versionControlSystem.change.ChangesViewContentProvider;
 import consulo.versionControlSystem.internal.ChangesViewContentI;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -67,9 +66,9 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     private static final Key<ChangesViewContentFactory> ourEpKey = Key.create(ChangesViewContentFactory.class);
 
     private final List<Content> myAddedContents = new ArrayList<>();
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final ContentFactory myContentFactory;
 
     private ToolWindow myToolWindow;
@@ -80,14 +79,14 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
 
     @RequiredUIAccess
     @Inject
-    public ChangesViewContentManager(@Nonnull Project project, @Nonnull ContentFactory contentFactory) {
+    public ChangesViewContentManager(Project project, ContentFactory contentFactory) {
         myProject = project;
         myContentFactory = contentFactory;
         project.getMessageBus().connect().subscribe(VcsMappingListener.class, this::update);
     }
 
-    @Nonnull
-    public List<Content> setContentManager(@Nonnull ToolWindow toolWindow, @Nonnull ContentManager contentManager) {
+    
+    public List<Content> setContentManager(ToolWindow toolWindow, ContentManager contentManager) {
         if (myToolWindow != null) {
             throw new IllegalArgumentException();
         }
@@ -233,7 +232,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     @Override
-    public boolean isContentSelected(@Nonnull String contentName) {
+    public boolean isContentSelected(String contentName) {
         Content selectedContent = myContentManager.getSelectedContent();
         if (selectedContent == null) {
             return false;
@@ -242,7 +241,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     @Override
-    public void selectContent(@Nonnull String tabName, boolean requestFocus) {
+    public void selectContent(String tabName, boolean requestFocus) {
         for (Content content : myContentManager.getContents()) {
             if (content.getDisplayName().equals(tabName)) {
                 myContentManager.setSelectedContent(content, requestFocus);

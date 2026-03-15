@@ -20,12 +20,11 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataValidator;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class PsiElementDataValidator implements DataValidator<PsiElement> {
-  @Nonnull
+  
   @Override
   public Key<PsiElement> getKey() {
     return PsiElement.KEY;

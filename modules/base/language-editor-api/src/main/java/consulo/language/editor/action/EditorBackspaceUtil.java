@@ -24,8 +24,7 @@ import consulo.language.editor.inject.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public final class EditorBackspaceUtil {
@@ -73,7 +72,7 @@ public final class EditorBackspaceUtil {
     return new LogicalPosition(caretPos.line, column);
   }
 
-  public static void deleteToTargetPosition(@Nonnull Editor editor, @Nonnull LogicalPosition pos) {
+  public static void deleteToTargetPosition(Editor editor, LogicalPosition pos) {
     int offset = editor.getCaretModel().getOffset();
     int targetOffset = editor.logicalPositionToOffset(pos);
     editor.getSelectionModel().setSelection(targetOffset, offset);

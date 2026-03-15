@@ -40,15 +40,14 @@ import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     @Override
-    protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+    protected void perform(XDebugSession session, DataContext dataContext) {
         XDebuggerEditorsProvider editorsProvider = session.getDebugProcess().getEditorsProvider();
         XStackFrame stackFrame = session.getCurrentStackFrame();
         XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
@@ -93,12 +92,12 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
         showDialog(session, file, editorsProvider, stackFrame, evaluator, expression);
     }
 
-    private static void showDialog(@Nonnull XDebugSession session,
+    private static void showDialog(XDebugSession session,
                                    VirtualFile file,
                                    XDebuggerEditorsProvider editorsProvider,
                                    XStackFrame stackFrame,
                                    XDebuggerEvaluator evaluator,
-                                   @Nonnull XExpression expression) {
+                                   XExpression expression) {
         if (expression.getLanguage() == null) {
             Language language = null;
             if (stackFrame != null) {
@@ -116,7 +115,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     }
 
     @Nullable
-    public static String getExpressionText(@Nullable XDebuggerEvaluator evaluator, @Nullable Project project, @Nonnull Editor editor) {
+    public static String getExpressionText(@Nullable XDebuggerEvaluator evaluator, @Nullable Project project, Editor editor) {
         if (project == null || evaluator == null) {
             return null;
         }
@@ -126,7 +125,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     }
 
     @Nullable
-    public static String getExpressionText(@Nullable ExpressionInfo expressionInfo, @Nonnull Document document) {
+    public static String getExpressionText(@Nullable ExpressionInfo expressionInfo, Document document) {
         if (expressionInfo == null) {
             return null;
         }
@@ -135,7 +134,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     }
 
     @Nullable
-    public static String getDisplayText(@Nullable ExpressionInfo expressionInfo, @Nonnull Document document) {
+    public static String getDisplayText(@Nullable ExpressionInfo expressionInfo, Document document) {
         if (expressionInfo == null) {
             return null;
         }
@@ -144,12 +143,12 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+    protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
         return session.getDebugProcess().getEvaluator() != null;
     }
 
     @Override
-    public boolean isHidden(@Nonnull Project project, AnActionEvent event) {
+    public boolean isHidden(Project project, AnActionEvent event) {
         XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
         if (session != null && session.getDebugProcess().getEditorsProvider() == UnsupportedDebuggerEditorsProvider.INSTANCE) {
             return false;

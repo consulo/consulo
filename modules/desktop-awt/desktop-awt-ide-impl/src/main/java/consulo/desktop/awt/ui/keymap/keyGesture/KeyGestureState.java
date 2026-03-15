@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.keymap.keyGesture;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.KeyboardGestureAction;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -55,7 +54,7 @@ abstract class KeyGestureState {
         || event.getKeyCode() == KeyEvent.VK_META;
   }
 
-  @Nonnull
+  
   public AnActionEvent createActionEvent() {
     throw new IllegalStateException(getClass().getName());
   }

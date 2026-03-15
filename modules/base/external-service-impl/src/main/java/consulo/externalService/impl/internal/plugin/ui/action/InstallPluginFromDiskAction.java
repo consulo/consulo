@@ -32,7 +32,6 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class InstallPluginFromDiskAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, false, true, true, false, false) {
             @RequiredUIAccess
             @Override

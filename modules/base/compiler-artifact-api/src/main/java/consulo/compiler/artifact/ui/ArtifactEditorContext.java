@@ -28,8 +28,7 @@ import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -39,40 +38,40 @@ import java.util.List;
 public interface ArtifactEditorContext extends PackagingElementResolvingContext {
     void queueValidation();
 
-    @Nonnull
+    
     ArtifactType getArtifactType();
 
-    @Nonnull
+    
     ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
     @Nullable
     ModifiableModuleModel getModifiableModuleModel();
 
-    @Nonnull
-    ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module);
+    
+    ModifiableRootModel getOrCreateModifiableRootModel(Module module);
 
-    CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact);
+    CompositePackagingElement<?> getRootElement(Artifact artifact);
 
-    void editLayout(@Nonnull Artifact artifact, Runnable runnable);
+    void editLayout(Artifact artifact, Runnable runnable);
 
     ArtifactEditor getOrCreateEditor(Artifact originalArtifact);
 
     ArtifactEditor getThisArtifactEditor();
 
-    void selectArtifact(@Nonnull Artifact artifact);
+    void selectArtifact(Artifact artifact);
 
-    void selectModule(@Nonnull Module module);
+    void selectModule(Module module);
 
-    void selectLibrary(@Nonnull Library library);
-
-    @RequiredUIAccess
-    List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, @Nonnull LocalizeValue title);
+    void selectLibrary(Library library);
 
     @RequiredUIAccess
-    List<Module> chooseModules(List<Module> modules, @Nonnull LocalizeValue title);
+    List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, LocalizeValue title);
 
     @RequiredUIAccess
-    List<Library> chooseLibraries(@Nonnull LocalizeValue title);
+    List<Module> chooseModules(List<Module> modules, LocalizeValue title);
+
+    @RequiredUIAccess
+    List<Library> chooseLibraries(LocalizeValue title);
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")

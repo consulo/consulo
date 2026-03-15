@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.index.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -15,14 +14,14 @@ public class InputData<Key, Value> {
     return EMPTY;
   }
 
-  @Nonnull
+  
   private final Map<Key, Value> myKeyValues;
 
-  protected InputData(@Nonnull Map<Key, Value> values) {
+  protected InputData(Map<Key, Value> values) {
     myKeyValues = values;
   }
 
-  @Nonnull
+  
   public Map<Key, Value> getKeyValues() {
     return myKeyValues;
   }

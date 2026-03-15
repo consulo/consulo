@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awt.TitlelessDecorator;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -48,12 +47,12 @@ public class WelcomeNewProjectAction extends NewProjectAction {
         return true;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public JComponent createSlide(
-        @Nonnull Disposable parentDisposable,
-        @Nonnull WelcomeScreenSlider owner,
-        @Nonnull TitlelessDecorator titlelessDecorator
+        Disposable parentDisposable,
+        WelcomeScreenSlider owner,
+        TitlelessDecorator titlelessDecorator
     ) {
         owner.setTitle(IdeLocalize.titleNewProject().get());
 
@@ -62,7 +61,7 @@ public class WelcomeNewProjectAction extends NewProjectAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         WelcomeScreenSlider slider = e.getRequiredData(WelcomeScreenSlider.KEY);
         TitlelessDecorator titlelessDecorator = slider.getTitlelessDecorator();
 

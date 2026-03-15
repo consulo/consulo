@@ -20,8 +20,7 @@ package consulo.ui.ex.awt;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -100,7 +99,7 @@ public class DetailsComponent {
         myComponent.repaint();
     }
 
-    public void setFullContent(@Nonnull JComponent c, Consumer<JComponent> bannerLabelSetter) {
+    public void setFullContent(JComponent c, Consumer<JComponent> bannerLabelSetter) {
         myBanner.setVisible(false);
 
         myBanner.remove(myBannerLabel);

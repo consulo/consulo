@@ -16,8 +16,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Function;
@@ -27,7 +26,7 @@ import java.util.function.Function;
  * @since 11-Jul-2006
  */
 public class ComboboxSpeedSearch extends SpeedSearchBase<JComboBox> {
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public static <T> void installSpeedSearch(JComboBox<T> comboBox, Function<? super T, String> textGetter) {
         ComboboxSpeedSearch search = new ComboboxSpeedSearch(comboBox, null) {
@@ -39,8 +38,8 @@ public class ComboboxSpeedSearch extends SpeedSearchBase<JComboBox> {
         search.setupListeners();
     }
 
-    @Nonnull
-    public static ComboboxSpeedSearch installOn(@Nonnull JComboBox<?> comboBox) {
+    
+    public static ComboboxSpeedSearch installOn(JComboBox<?> comboBox) {
         ComboboxSpeedSearch search = new ComboboxSpeedSearch(comboBox, null);
         search.setupListeners();
         return search;
@@ -58,7 +57,7 @@ public class ComboboxSpeedSearch extends SpeedSearchBase<JComboBox> {
      * Also, note that non-deprecated constructor is side effect free, and you should call for {@link ComboboxSpeedSearch#setupListeners()}
      * method to enable speed search
      */
-    public ComboboxSpeedSearch(@Nonnull JComboBox comboBox) {
+    public ComboboxSpeedSearch(JComboBox comboBox) {
         super(comboBox);
         removeKeyStroke(comboBox.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT), KeyStroke.getKeyStroke(' ', 0));
     }
@@ -87,7 +86,7 @@ public class ComboboxSpeedSearch extends SpeedSearchBase<JComboBox> {
         return myComponent.getSelectedIndex();
     }
 
-    @Nonnull
+    
     @Override
     protected Object[] getAllElements() {
         ListModel model = myComponent.getModel();

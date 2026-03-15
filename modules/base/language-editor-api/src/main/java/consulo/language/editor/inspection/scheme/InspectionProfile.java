@@ -25,8 +25,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -37,31 +36,31 @@ import java.util.function.Consumer;
  */
 public interface InspectionProfile extends Profile {
 
-  HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey inspectionToolKey, PsiElement element);
+  HighlightDisplayLevel getErrorLevel(HighlightDisplayKey inspectionToolKey, PsiElement element);
 
   /**
    * If you need to modify tool's settings, please use {@link #modifyToolSettings}
    */
-  InspectionToolWrapper getInspectionTool(@Nonnull String shortName, @Nonnull PsiElement element);
+  InspectionToolWrapper getInspectionTool(String shortName, PsiElement element);
 
   @Nullable
-  InspectionToolWrapper getInspectionTool(@Nonnull String shortName, Project project);
+  InspectionToolWrapper getInspectionTool(String shortName, Project project);
 
   @Nullable
-  InspectionToolWrapper getToolById(@Nonnull String id, @Nonnull PsiElement element);
+  InspectionToolWrapper getToolById(String id, PsiElement element);
 
   /**
    * @return tool by shortName and scope
    */
-  <T extends InspectionTool> T getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
+  <T extends InspectionTool> T getUnwrappedTool(String shortName, PsiElement element);
 
   /**
    * @return nullable if tool by shortName not found
    */
   @Nullable
-  <S> S getToolState(@Nonnull String shortName, @Nonnull PsiElement element);
+  <S> S getToolState(String shortName, PsiElement element);
 
-  void modifyProfile(@Nonnull Consumer<ModifiableModel> modelConsumer);
+  void modifyProfile(Consumer<ModifiableModel> modelConsumer);
 
   /**
    * Allows a plugin to modify the settings of the inspection tool with the specified ID programmatically, without going through
@@ -72,21 +71,21 @@ public interface InspectionProfile extends Profile {
    * @param toolConsumer the callback that receives the tool.
    * @since 12.1
    */
-  <T extends InspectionTool, S> void modifyToolSettings(@Nonnull String shortName, @Nonnull PsiElement psiElement, @Nonnull BiConsumer<T, S> toolConsumer);
+  <T extends InspectionTool, S> void modifyToolSettings(String shortName, PsiElement psiElement, BiConsumer<T, S> toolConsumer);
 
   /**
    * @param element context element
    * @return all (both enabled and disabled) tools
    */
-  @Nonnull
+  
   InspectionToolWrapper[] getInspectionTools(@Nullable PsiElement element);
 
-  void cleanup(@Nonnull Project project);
+  void cleanup(Project project);
 
   /**
    * @see #modifyProfile(Consumer)
    */
-  @Nonnull
+  
   ModifiableModel getModifiableModel();
 
   boolean isToolEnabled(HighlightDisplayKey key, PsiElement element);
@@ -97,23 +96,23 @@ public interface InspectionProfile extends Profile {
 
   boolean isEditable();
 
-  @Nonnull
+  
   String getDisplayName();
 
   void scopesChanged();
 
-  @Nonnull
+  
   List<Tools> getAllEnabledInspectionTools(Project project);
 
   @Deprecated
   @DeprecationInfo("internal impl")
-  HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey ky, NamedScope scope, Project project);
+  HighlightDisplayLevel getErrorLevel(HighlightDisplayKey ky, NamedScope scope, Project project);
 
   @Deprecated
   @DeprecationInfo("internal impl")
-  ScopeToolState addScope(@Nonnull InspectionToolWrapper toolWrapper, NamedScope scope, @Nonnull HighlightDisplayLevel level, boolean enabled, Project project);
+  ScopeToolState addScope(InspectionToolWrapper toolWrapper, NamedScope scope, HighlightDisplayLevel level, boolean enabled, Project project);
 
   @Deprecated
   @DeprecationInfo("internal impl")
-  void removeScope(@Nonnull String toolId, @Nonnull String scopeName, Project project);
+  void removeScope(String toolId, String scopeName, Project project);
 }

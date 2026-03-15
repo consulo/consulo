@@ -76,8 +76,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -100,7 +99,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     public DesktopApplicationImpl(
         ComponentBinding componentBinding,
         boolean isHeadless,
-        @Nonnull SimpleReference<? extends StartupProgress> splashRef
+        SimpleReference<? extends StartupProgress> splashRef
     ) {
         super(componentBinding, splashRef);
 
@@ -171,7 +170,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
     }
 
@@ -220,38 +219,38 @@ public class DesktopApplicationImpl extends BaseApplication {
         return myHeadlessMode;
     }
 
-    @Nonnull
+    
     public ModalityInvokator getInvokator() {
         return myInvokator;
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable) {
+    public void invokeLater(Runnable runnable) {
         invokeLater(runnable, getDisposed());
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
+    public void invokeLater(Runnable runnable, BooleanSupplier expired) {
         invokeLater(runnable, IdeaModalityState.defaultModalityState(), expired);
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+    public void invokeLater(Runnable runnable, ModalityState state) {
         invokeLater(runnable, state, getDisposed());
     }
 
     @Override
     public void invokeLater(
-        @Nonnull Runnable runnable,
-        @Nonnull ModalityState state,
-        @Nonnull BooleanSupplier expired
+        Runnable runnable,
+        ModalityState state,
+        BooleanSupplier expired
     ) {
         LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(runnable), state, expired, null);
     }
 
     @RequiredUIAccess
     @Override
-    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+    public void invokeAndWait(Runnable runnable, ModalityState modalityState) {
         if (isDispatchThread()) {
             runnable.run();
             return;
@@ -269,14 +268,14 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    @Nonnull
+    
     public ModalityState getCurrentModalityState() {
         return LaterInvocator.getCurrentModalityState();
     }
 
     @Override
-    @Nonnull
-    public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+    
+    public ModalityState getModalityStateForComponent(Component c) {
         if (!isDispatchThread()) {
             LOG.debug("please, use application dispatch thread to get a modality state");
         }
@@ -288,7 +287,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    @Nonnull
+    
     public ModalityState getDefaultModalityState() {
         return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
     }
@@ -423,7 +422,7 @@ public class DesktopApplicationImpl extends BaseApplication {
                 return false;
             }
 
-            @Nonnull
+            
             @Override
             public LocalizeValue getDoNotShowMessage() {
                 return LocalizeValue.localizeTODO("Do not ask me again");
@@ -450,30 +449,30 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public boolean runWriteActionWithNonCancellableProgressInDispatchThread(
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nonnull Consumer<? super ProgressIndicator> action
+        Consumer<? super ProgressIndicator> action
     ) {
         return runEdtProgressWriteAction(title, project, parentComponent, LocalizeValue.empty(), action);
     }
 
     @Override
     public boolean runWriteActionWithCancellableProgressInDispatchThread(
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nonnull Consumer<? super ProgressIndicator> action
+        Consumer<? super ProgressIndicator> action
     ) {
         return runEdtProgressWriteAction(title, project, parentComponent, IdeLocalize.actionStop(), action);
     }
 
     private boolean runEdtProgressWriteAction(
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nonnull LocalizeValue cancelText,
-        @Nonnull Consumer<? super ProgressIndicator> action
+        LocalizeValue cancelText,
+        Consumer<? super ProgressIndicator> action
     ) {
         // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
         return runWriteActionWithClass(action.getClass(), () -> {
@@ -520,7 +519,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         assertIsDispatchThread("Access is allowed from event dispatch thread only.");
     }
 
-    private void assertIsDispatchThread(@Nonnull String message) {
+    private void assertIsDispatchThread(String message) {
         if (isDispatchThread()) {
             return;
         }
@@ -548,7 +547,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         assertIsIsWriteThread("Access is allowed from write thread only.");
     }
 
-    private void assertIsIsWriteThread(@Nonnull String message) {
+    private void assertIsIsWriteThread(String message) {
         if (isWriteThread()) {
             return;
         }
@@ -573,7 +572,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         LOG.assertTrue(!isDispatchThread(), "This operation is time consuming and must not be called on EDT");
     }
 
-    @Nonnull
+    
     @Override
     public UIAccess getLastUIAccess() {
         return AWTUIAccessImpl.ourInstance;

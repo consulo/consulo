@@ -3,7 +3,6 @@ package consulo.language.lexer;
 
 import consulo.document.event.DocumentEvent;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * This interface is suitable for providing even distribution for restartable states in highlighting lexer implementation.
@@ -44,5 +43,5 @@ public interface RestartableLexer {
      * @param initialState  state to start lexing with
      * @param tokenIterator iterator for getting info from preceding tokens
      */
-    void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState, TokenIterator tokenIterator);
+    void start(CharSequence buffer, int startOffset, int endOffset, int initialState, TokenIterator tokenIterator);
 }

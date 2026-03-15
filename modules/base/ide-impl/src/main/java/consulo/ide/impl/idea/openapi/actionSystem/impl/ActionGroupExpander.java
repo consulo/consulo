@@ -22,7 +22,6 @@ import consulo.dataContext.DataManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +39,11 @@ public class ActionGroupExpander {
      * @return actions from the given and nested non-popup groups that are visible after updating
      */
     @RequiredUIAccess
-    public static List<AnAction> expandActionGroup(@Nonnull ActionGroup group,
+    public static List<AnAction> expandActionGroup(ActionGroup group,
                                                    PresentationFactory presentationFactory,
-                                                   @Nonnull DataContext context,
-                                                   @Nonnull String place,
-                                                   @Nonnull Predicate<AnAction> filter) {
+                                                   DataContext context,
+                                                   String place,
+                                                   Predicate<AnAction> filter) {
         List<AnAction> actions = new ActionUpdater(ActionManager.getInstance(),
             presentationFactory,
             context,
@@ -85,10 +84,10 @@ public class ActionGroupExpander {
         return actions;
     }
 
-    @Nonnull
-    public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(@Nonnull ActionGroup group,
+    
+    public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group,
                                                                                      PresentationFactory presentationFactory,
-                                                                                     @Nonnull DataContext context,
+                                                                                     DataContext context,
                                                                                      String place) {
         if (!(context instanceof AsyncDataContext)) {
             context = DataManager.getInstance().createAsyncDataContext(context);

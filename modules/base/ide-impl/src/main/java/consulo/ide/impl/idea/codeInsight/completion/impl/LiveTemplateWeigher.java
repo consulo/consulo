@@ -5,8 +5,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.language.editor.template.LiveTemplateLookupElement;
 import consulo.application.util.registry.Registry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -18,7 +17,7 @@ public class LiveTemplateWeigher extends LookupElementWeigher {
 
   @Nullable
   @Override
-  public Comparable weigh(@Nonnull LookupElement element) {
+  public Comparable weigh(LookupElement element) {
     return element instanceof LiveTemplateLookupElement;
   }
 }

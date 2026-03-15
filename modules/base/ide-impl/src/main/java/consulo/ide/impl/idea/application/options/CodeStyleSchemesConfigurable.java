@@ -34,8 +34,7 @@ import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -75,7 +74,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    public JComponent createComponent(Disposable uiDisposable) {
         myModel = ensureModel();
 
         if (myRootConfigurable != null) {
@@ -232,18 +231,18 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     }
 
     @Nullable
-    public SearchableConfigurable findSubConfigurable(@Nonnull LocalizeValue name) {
+    public SearchableConfigurable findSubConfigurable(LocalizeValue name) {
         return findSubConfigurable(this, name);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @Nullable
-    public SearchableConfigurable findSubConfigurable(@Nonnull String name) {
+    public SearchableConfigurable findSubConfigurable(String name) {
         return findSubConfigurable(this, LocalizeValue.of(name));
     }
 
-    private static SearchableConfigurable findSubConfigurable(SearchableConfigurable.Parent topConfigurable, @Nonnull LocalizeValue name) {
+    private static SearchableConfigurable findSubConfigurable(SearchableConfigurable.Parent topConfigurable, LocalizeValue name) {
         for (Configurable configurable : topConfigurable.getConfigurables()) {
             if (configurable instanceof SearchableConfigurable searchableConfigurable) {
                 if (name.equals(searchableConfigurable.getDisplayName())) {
@@ -318,7 +317,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         return myModel;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return CodeStyleLocalize.configurableSchemesDisplayName();
@@ -339,13 +338,13 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return CONFIGURABLE_ID;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public Set<String> processListOptions() {
@@ -362,13 +361,13 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         private final CodeStyleSettingsProvider myProvider;
         private final CodeStyleSettingsPanelFactory myFactory;
 
-        public CodeStyleConfigurableWrapper(@Nonnull CodeStyleSettingsProvider provider, @Nonnull CodeStyleSettingsPanelFactory factory) {
+        public CodeStyleConfigurableWrapper(CodeStyleSettingsProvider provider, CodeStyleSettingsPanelFactory factory) {
             myProvider = provider;
             myFactory = factory;
             myInitialResetInvoked = false;
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
         public LocalizeValue getDisplayName() {
@@ -396,7 +395,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         @Override
         @RequiredUIAccess
-        public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+        public JComponent createComponent(Disposable uiDisposable) {
             return ensurePanel();
         }
 
@@ -445,7 +444,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
             }
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
         public String getId() {
@@ -462,7 +461,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         }
 
         @RequiredUIAccess
-        public void selectTab(@Nonnull LocalizeValue tabName) {
+        public void selectTab(LocalizeValue tabName) {
             assert myPanel != null;
             myPanel.showTabOnCurrentPanel(tabName.get());
         }
@@ -470,7 +469,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
         @RequiredUIAccess
-        public void selectTab(@Nonnull String tab) {
+        public void selectTab(String tab) {
             assert myPanel != null;
             myPanel.showTabOnCurrentPanel(tab);
         }

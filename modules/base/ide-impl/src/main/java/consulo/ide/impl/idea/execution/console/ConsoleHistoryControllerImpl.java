@@ -57,8 +57,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -88,24 +87,24 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
     private long myLastSaveStamp;
 
     @Deprecated
-    public ConsoleHistoryControllerImpl(@Nonnull String type, @Nullable String persistenceId, @Nonnull LanguageConsoleView console) {
+    public ConsoleHistoryControllerImpl(String type, @Nullable String persistenceId, LanguageConsoleView console) {
         this(new ConsoleRootType(type, null) {
         }, persistenceId, console);
     }
 
     public ConsoleHistoryControllerImpl(
-        @Nonnull ConsoleRootType rootType,
+        ConsoleRootType rootType,
         @Nullable String persistenceId,
-        @Nonnull LanguageConsoleView console
+        LanguageConsoleView console
     ) {
         this(rootType, persistenceId, console, ourModels.get(getHistoryName(rootType, fixNullPersistenceId(persistenceId, console))));
     }
 
     private ConsoleHistoryControllerImpl(
-        @Nonnull ConsoleRootType rootType,
+        ConsoleRootType rootType,
         @Nullable String persistenceId,
-        @Nonnull LanguageConsoleView console,
-        @Nonnull ConsoleHistoryModel model
+        LanguageConsoleView console,
+        ConsoleHistoryModel model
     ) {
         myHelper = new ModelHelper(rootType, fixNullPersistenceId(persistenceId, console), model.copy());
         myConsole = console;
@@ -120,8 +119,8 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         return !getModel().isEmpty();
     }
 
-    @Nonnull
-    private static String fixNullPersistenceId(@Nullable String persistenceId, @Nonnull LanguageConsoleView console) {
+    
+    private static String fixNullPersistenceId(@Nullable String persistenceId, LanguageConsoleView console) {
         if (StringUtil.isNotEmpty(persistenceId)) {
             return persistenceId;
         }
@@ -147,7 +146,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         class Listener implements ProjectExListener, FileDocumentManagerListener {
             @Override
             @RequiredUIAccess
-            public void beforeDocumentSaving(@Nonnull Document document) {
+            public void beforeDocumentSaving(Document document) {
                 if (document == myConsole.getEditorDocument()) {
                     saveHistory();
                 }
@@ -155,7 +154,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
 
             @Override
             @RequiredUIAccess
-            public void saved(@Nonnull Project project) {
+            public void saved(Project project) {
                 saveHistory();
             }
         }
@@ -293,10 +292,10 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
     private class MyAction extends DumbAwareAction {
         private final boolean myNext;
 
-        @Nonnull
+        
         private final Collection<KeyStroke> myUpDownKeystrokes;
 
-        public MyAction(boolean next, @Nonnull Collection<KeyStroke> upDownKeystrokes) {
+        public MyAction(boolean next, Collection<KeyStroke> upDownKeystrokes) {
             myNext = next;
             myUpDownKeystrokes = upDownKeystrokes;
             getTemplatePresentation().setVisible(false);
@@ -304,7 +303,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             String command;
             if (myNext) {
                 command = getModel().getHistoryNext();
@@ -320,7 +319,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             boolean enabled = myMultiline || !isUpDownKey(e) || canMoveInEditor(myNext);
             //enabled &= getModel().hasHistory(myNext);
@@ -354,14 +353,14 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
 
     private class MyBrowseAction extends DumbAwareAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             boolean enabled = hasHistory();
             e.getPresentation().setEnabled(enabled);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             String s1 = KeymapUtil.getFirstKeyboardShortcutText(myHistoryNext);
             String s2 = KeymapUtil.getFirstKeyboardShortcutText(myHistoryPrev);
             String title = myConsole.getTitle() + " History" +
@@ -453,7 +452,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
             return myContent;
         }
 
-        @Nonnull
+        
         private String getOldHistoryFilePath(String id) {
             String pathName = myRootType.getConsoleTypeId() + Long.toHexString(StringHash.calc(id));
             return ContainerPathManager.get().getSystemPath() + File.separator + "userHistory" + File.separator + pathName + ".hist.xml";
@@ -599,16 +598,16 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         }
     }
 
-    @Nonnull
-    private static String getHistoryName(@Nonnull ConsoleRootType rootType, @Nonnull String id) {
+    
+    private static String getHistoryName(ConsoleRootType rootType, String id) {
         return rootType.getConsoleTypeId() + "/" +
             PathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
     }
 
     @Nullable
     public static VirtualFile getContentFile(
-        @Nonnull ConsoleRootType rootType,
-        @Nonnull String id,
+        ConsoleRootType rootType,
+        String id,
         ScratchFileService.Option option
     ) {
         String pathName = PathUtil.makeFileName(rootType.getContentPathName(id), rootType.getDefaultFileExtension());
@@ -640,7 +639,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         return new CustomShortcutSet(KeyStroke.getKeyStroke(isUp ? KeyEvent.VK_UP : KeyEvent.VK_DOWN, 0));
     }
 
-    private static void addShortcuts(@Nonnull AnAction action, @Nonnull ShortcutSet newShortcuts) {
+    private static void addShortcuts(AnAction action, ShortcutSet newShortcuts) {
         if (action.getShortcutSet().getShortcuts().length == 0) {
             action.registerCustomShortcutSet(newShortcuts, null);
         }

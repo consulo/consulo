@@ -17,7 +17,7 @@ package consulo.versionControlSystem.versionBrowser;
 
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * For classes that are capable to return {@link VcsRevisionNumber}.

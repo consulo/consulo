@@ -24,8 +24,7 @@ import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesCommitExecutor;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -40,21 +39,21 @@ public class ShelveChangesAction extends AbstractCommitChangesAction {
         );
     }
 
-    @Nonnull
+    
     @Override
-    protected LocalizeValue getActionName(@Nonnull VcsContext dataContext) {
+    protected LocalizeValue getActionName(VcsContext dataContext) {
         return VcsLocalize.shelveChangesAction();
     }
 
-    @Nonnull
+    
     @Override
-    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+    protected LocalizeValue getMnemonicsFreeActionName(VcsContext context) {
         return getActionName(context);
     }
 
     @Nullable
     @Override
-    protected CommitExecutor getExecutor(@Nonnull Project project) {
+    protected CommitExecutor getExecutor(Project project) {
         return new ShelveChangesCommitExecutor(project);
     }
 }

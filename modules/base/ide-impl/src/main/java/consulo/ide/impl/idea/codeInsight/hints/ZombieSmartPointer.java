@@ -7,7 +7,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -33,7 +32,7 @@ public final class ZombieSmartPointer implements SmartPsiElementPointer<PsiEleme
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return projectSupp.get();

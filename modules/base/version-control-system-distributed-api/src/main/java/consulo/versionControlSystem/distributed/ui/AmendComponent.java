@@ -34,8 +34,7 @@ import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,13 +50,13 @@ import java.util.stream.Collectors;
 public abstract class AmendComponent {
     private static final Logger LOG = Logger.getInstance(AmendComponent.class);
 
-    @Nonnull
+    
     private final RepositoryManager<? extends Repository> myRepoManager;
-    @Nonnull
+    
     private final CheckinProjectPanel myCheckinPanel;
-    @Nonnull
+    
     private final JCheckBox myAmend;
-    @Nonnull
+    
     private final String myPreviousMessage;
 
     @Nullable
@@ -66,18 +65,18 @@ public abstract class AmendComponent {
     private String myAmendedMessage;
 
     public AmendComponent(
-        @Nonnull Project project,
-        @Nonnull RepositoryManager<? extends Repository> repoManager,
-        @Nonnull CheckinProjectPanel panel
+        Project project,
+        RepositoryManager<? extends Repository> repoManager,
+        CheckinProjectPanel panel
     ) {
         this(project, repoManager, panel, DistributedVcsLocalize.commitAmend().get());
     }
 
     public AmendComponent(
-        @Nonnull Project project,
-        @Nonnull RepositoryManager<? extends Repository> repoManager,
-        @Nonnull CheckinProjectPanel panel,
-        @Nonnull String title
+        Project project,
+        RepositoryManager<? extends Repository> repoManager,
+        CheckinProjectPanel panel,
+        String title
     ) {
         myRepoManager = repoManager;
         myCheckinPanel = panel;
@@ -125,18 +124,18 @@ public abstract class AmendComponent {
         myAmend.setSelected(false);
     }
 
-    @Nonnull
+    
     public Component getComponent() {
         return myAmend;
     }
 
-    @Nonnull
+    
     public JCheckBox getCheckBox() {
         return myAmend;
     }
 
     @RequiredUIAccess
-    private void loadMessagesInModalTask(@Nonnull Project project) {
+    private void loadMessagesInModalTask(Project project) {
         try {
             myMessagesForRoots = ProgressManager.getInstance().runProcessWithProgressSynchronously(
                 this::getLastCommitMessages,
@@ -155,14 +154,14 @@ public abstract class AmendComponent {
         }
     }
 
-    private void substituteCommitMessage(@Nonnull String newMessage) {
+    private void substituteCommitMessage(String newMessage) {
         if (!StringUtil.equalsIgnoreWhitespaces(myPreviousMessage, newMessage)) {
             VcsConfiguration.getInstance(myCheckinPanel.getProject()).saveCommitMessage(myPreviousMessage);
             myCheckinPanel.setCommitMessage(newMessage);
         }
     }
 
-    @Nonnull
+    
     private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
         Map<VirtualFile, String> messagesForRoots = new HashMap<>();
         // load all vcs roots visible in the commit dialog (not only selected ones), to avoid another loading task if selection changes
@@ -173,7 +172,7 @@ public abstract class AmendComponent {
         return messagesForRoots;
     }
 
-    @Nonnull
+    
     protected Collection<VirtualFile> getAffectedRoots() {
         return myRepoManager.getRepositories().stream().
             filter(repo -> !repo.isFresh()).
@@ -182,16 +181,16 @@ public abstract class AmendComponent {
             collect(Collectors.toList());
     }
 
-    @Nonnull
+    
     private List<FilePath> getSelectedFilePaths() {
         return ContainerUtil.map(myCheckinPanel.getFiles(), VcsUtil::getFilePath);
     }
 
-    @Nonnull
-    protected abstract Set<VirtualFile> getVcsRoots(@Nonnull Collection<FilePath> files);
+    
+    protected abstract Set<VirtualFile> getVcsRoots(Collection<FilePath> files);
 
     @Nullable
-    protected abstract String getLastCommitMessage(@Nonnull VirtualFile repo) throws VcsException;
+    protected abstract String getLastCommitMessage(VirtualFile repo) throws VcsException;
 
     public boolean isAmend() {
         return myAmend.isSelected();

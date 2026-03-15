@@ -18,7 +18,7 @@ package consulo.compiler.impl.internal;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;

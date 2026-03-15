@@ -18,18 +18,17 @@ package consulo.desktop.swt.editor.impl;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
 public class DesktopSwtCodeEditorCaretModelImpl extends CodeEditorCaretModelBase<DesktopSwtCaretImpl> {
-  public DesktopSwtCodeEditorCaretModelImpl(@Nonnull CodeEditorBase editor) {
+  public DesktopSwtCodeEditorCaretModelImpl(CodeEditorBase editor) {
     super(editor);
   }
 
-  @Nonnull
+  
   @Override
   protected DesktopSwtCaretImpl createCaret(CodeEditorBase editor, CodeEditorCaretModelBase<DesktopSwtCaretImpl> model) {
     return new DesktopSwtCaretImpl(editor, model);

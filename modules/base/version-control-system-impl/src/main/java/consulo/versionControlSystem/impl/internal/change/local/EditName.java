@@ -19,17 +19,16 @@ import consulo.proxy.EventDispatcher;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.ChangeListWorker;
-import jakarta.annotation.Nonnull;
 
 public class EditName implements ChangeListCommand {
-  @Nonnull
+  
   private final String myFromName;
-  @Nonnull
+  
   private final String myToName;
   private boolean myResult;
   private LocalChangeList myListCopy;
 
-  public EditName(@Nonnull String fromName, @Nonnull String toName) {
+  public EditName(String fromName, String toName) {
     myFromName = fromName;
     myToName = toName;
   }

@@ -22,7 +22,6 @@ import consulo.compiler.ModuleAdditionalOutputDirectory;
 import consulo.module.Module;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +32,15 @@ import java.util.List;
  */
 @ExtensionImpl
 public class OldModuleAdditionalOutputDirectoriesProvider implements ModuleAdditionalOutputDirectoriesProvider {
-    @Nonnull
+    
     private final Module myModule;
 
     @Inject
-    public OldModuleAdditionalOutputDirectoriesProvider(@Nonnull Module module) {
+    public OldModuleAdditionalOutputDirectoriesProvider(Module module) {
         myModule = module;
     }
 
-    @Nonnull
+    
     @Override
     public List<ModuleAdditionalOutputDirectory> getOutputDirectories() {
         List<ModuleAdditionalOutputDirectory> result = new ArrayList<>();

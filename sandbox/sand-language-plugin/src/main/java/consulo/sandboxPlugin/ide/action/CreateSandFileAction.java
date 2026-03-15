@@ -25,7 +25,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -43,7 +42,7 @@ public class CreateSandFileAction extends CreateFileFromTemplateAction {
     }
 
     @Override
-    @Nonnull
+    
     protected LocalizeValue getActionName(PsiDirectory directory, String newName, String templateName) {
         return LocalizeValue.localizeTODO("Sand File");
     }

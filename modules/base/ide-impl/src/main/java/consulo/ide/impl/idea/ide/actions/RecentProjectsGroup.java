@@ -24,8 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -43,7 +42,7 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
         myRecentProjectsManager = recentProjectsManager;
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return myRecentProjectsManager.get().getRecentProjectsActions(RecentProjectsManager.RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU);

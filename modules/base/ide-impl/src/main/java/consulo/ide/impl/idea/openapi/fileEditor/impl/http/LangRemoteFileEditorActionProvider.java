@@ -19,16 +19,15 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @ExtensionImpl
 public class LangRemoteFileEditorActionProvider extends RemoteFileEditorActionProvider {
-  @Nonnull
+  
   @Override
-  public AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file) {
+  public AnAction[] createToolbarActions(Project project, HttpVirtualFile file) {
     return new AnAction[] {new JumpFromRemoteFileToLocalAction(file, project)};
   }
 }

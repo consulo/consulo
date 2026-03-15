@@ -24,8 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * the following binding uses 'first' order to make sure it captures raw text before any other processor modifies it
@@ -46,7 +45,7 @@ public final class TextWithMarkupRawTextSetter implements CopyPastePreProcessor 
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
         return text;

@@ -17,7 +17,6 @@ package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,14 +31,14 @@ public class TextTokenSplitter extends BaseTokenSplitter {
     private static final Pattern EXTENDED_WORD_AND_SPECIAL = Pattern.compile("([&#]|0x[0-9]*)?\\p{L}+'?\\p{L}[_\\p{L}]*");
 
     @Override
-    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+    public void split(SplitContext context, TextRange range) {
         if (context.isEmpty()) {
             return;
         }
         doSplit(context, range);
     }
 
-    protected void doSplit(@Nonnull SplitContext context, @Nonnull TextRange range) {
+    protected void doSplit(SplitContext context, TextRange range) {
         WordTokenSplitter ws = WordTokenSplitter.getInstance();
         Matcher matcher = EXTENDED_WORD_AND_SPECIAL.matcher(context.getText());
         matcher.region(range.getStartOffset(), range.getEndOffset());

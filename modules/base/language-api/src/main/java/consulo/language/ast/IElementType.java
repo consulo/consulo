@@ -21,8 +21,7 @@ import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,8 +58,8 @@ public class IElementType {
         push(init);
     }
 
-    @Nonnull
-    static IElementType[] push(@Nonnull IElementType[] types) {
+    
+    static IElementType[] push(IElementType[] types) {
         synchronized (lock) {
             IElementType[] oldRegistry = ourRegistry;
             ourRegistry = types;
@@ -70,9 +69,9 @@ public class IElementType {
     }
 
     private final short myIndex;
-    @Nonnull
+    
     private final String myDebugName;
-    @Nonnull
+    
     private final Language myLanguage;
 
     /**
@@ -81,11 +80,11 @@ public class IElementType {
      * @param debugName the name of the element type, used for debugging purposes.
      * @param language  the language with which the element type is associated.
      */
-    public IElementType(@Nonnull String debugName, @Nullable Language language) {
+    public IElementType(String debugName, @Nullable Language language) {
         this(debugName, language, true);
     }
 
-    protected IElementType(@Nonnull String debugName, @Nullable Language language, boolean register) {
+    protected IElementType(String debugName, @Nullable Language language, boolean register) {
         myDebugName = debugName;
         myLanguage = language == null ? Language.ANY : language;
         if (register) {
@@ -109,7 +108,7 @@ public class IElementType {
      *
      * @return the associated language.
      */
-    @Nonnull
+    
     public final Language getLanguage() {
         return myLanguage;
     }
@@ -183,8 +182,8 @@ public class IElementType {
      * @param p the predicate which should be matched by the element types.
      * @return the array of matching element types.
      */
-    @Nonnull
-    public static IElementType[] enumerate(@Nonnull Predicate<IElementType> p) {
+    
+    public static IElementType[] enumerate(Predicate<IElementType> p) {
         List<IElementType> matches = new ArrayList<>();
         for (IElementType value : ourRegistry) {
             if (value != null && p.test(value)) {

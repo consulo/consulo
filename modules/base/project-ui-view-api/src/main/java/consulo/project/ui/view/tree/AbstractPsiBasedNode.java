@@ -31,8 +31,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +47,7 @@ import java.util.Objects;
 public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value> implements ValidateableNode, StatePreservingNavigatable {
     private static final Logger LOG = Logger.getInstance(AbstractPsiBasedNode.class);
 
-    protected AbstractPsiBasedNode(Project project, @Nonnull Value value, ViewSettings viewSettings) {
+    protected AbstractPsiBasedNode(Project project, Value value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
@@ -58,16 +57,16 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     @Nullable
     protected abstract Collection<AbstractTreeNode> getChildrenImpl();
 
-    protected abstract void updateImpl(@Nonnull PresentationData data);
+    protected abstract void updateImpl(PresentationData data);
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public final Collection<? extends AbstractTreeNode> getChildren() {
         return ProjectViewInternalHelper.getInstance().disallowTreeLoading(this::doGetChildren);
     }
 
-    @Nonnull
+    
     private Collection<? extends AbstractTreeNode> doGetChildren() {
         PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null) {
@@ -101,13 +100,13 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         return parentValue instanceof PsiDirectory || parentValue instanceof Module;
     }
 
-    @Nonnull
+    
     @Override
     public FileStatus getFileStatus() {
         return computeFileStatus(getVirtualFileForValue(), Objects.requireNonNull(getProject()));
     }
 
-    protected static FileStatus computeFileStatus(@Nullable VirtualFile virtualFile, @Nonnull Project project) {
+    protected static FileStatus computeFileStatus(@Nullable VirtualFile virtualFile, Project project) {
         if (virtualFile == null) {
             return FileStatus.NOT_CHANGED;
         }
@@ -126,11 +125,11 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     // Should be called in atomic action
 
     @Override
-    public void update(@Nonnull PresentationData data) {
+    public void update(PresentationData data) {
         ProjectViewInternalHelper.getInstance().disallowTreeLoading(() -> doUpdate(data));
     }
 
-    private void doUpdate(@Nonnull PresentationData data) {
+    private void doUpdate(PresentationData data) {
         Application.get().runReadAction(() -> {
             if (!validate()) {
                 return;
@@ -167,7 +166,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Nullable
-    public static Image patchIcon(@Nonnull Project project, @Nullable Image original, @Nullable VirtualFile file) {
+    public static Image patchIcon(Project project, @Nullable Image original, @Nullable VirtualFile file) {
         if (file == null || original == null) {
             return original;
         }
@@ -204,7 +203,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null || !psiElement.isValid()) {
             return false;

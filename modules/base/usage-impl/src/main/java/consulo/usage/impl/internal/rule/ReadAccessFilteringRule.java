@@ -19,7 +19,6 @@ import consulo.usage.ReadWriteAccessUsage;
 import consulo.usage.Usage;
 import consulo.usage.UsageTarget;
 import consulo.usage.rule.UsageFilteringRule;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 public class ReadAccessFilteringRule implements UsageFilteringRule{
   @Override
-  public boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+  public boolean isVisible(Usage usage, UsageTarget[] targets) {
     if (usage instanceof ReadWriteAccessUsage) {
       ReadWriteAccessUsage readWriteAccessUsage = (ReadWriteAccessUsage)usage;
       boolean isForReadingOnly = readWriteAccessUsage.isAccessedForReading() && !readWriteAccessUsage.isAccessedForWriting();

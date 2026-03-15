@@ -26,7 +26,6 @@ package consulo.language.ignore.psi;
 
 import consulo.language.ignore.Syntax;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Jakub Chrzanowski <jakub@hsz.mobi>
@@ -45,7 +44,7 @@ public interface IgnoreEntryBase extends PsiElement {
      *
      * @return current syntax
      */
-    @Nonnull
+    
     Syntax getSyntax();
 
     /**
@@ -53,6 +52,6 @@ public interface IgnoreEntryBase extends PsiElement {
      *
      * @return value
      */
-    @Nonnull
+    
     String getValue();
 }

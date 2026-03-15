@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
         myTodoFilterConsumer = todoFilterConsumer;
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         TodoFilter[] filters = TodoConfiguration.getInstance().getTodoFilters();
@@ -83,7 +82,7 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
             ) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, TodoConfigurable.class);
                 }
             }

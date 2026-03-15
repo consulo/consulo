@@ -22,8 +22,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -37,41 +36,41 @@ public interface Library extends JDOMExternalizable, Disposable {
   @Nullable
   String getName();
 
-  @Nonnull
-  String[] getUrls(@Nonnull OrderRootType rootType);
+  
+  String[] getUrls(OrderRootType rootType);
 
-  @Nonnull
-  VirtualFile[] getFiles(@Nonnull OrderRootType rootType);
+  
+  VirtualFile[] getFiles(OrderRootType rootType);
 
   /**
    * As soon as you obtaining modifiable model you will have to commit it or call Disposer.dispose(model)!
    */
-  @Nonnull
+  
   ModifiableModel getModifiableModel();
 
   LibraryTable getTable();
 
-  @Nonnull
+  
   RootProvider getRootProvider();
 
-  boolean isJarDirectory(@Nonnull String url);
+  boolean isJarDirectory(String url);
 
-  boolean isJarDirectory(@Nonnull String url, @Nonnull OrderRootType rootType);
+  boolean isJarDirectory(String url, OrderRootType rootType);
 
-  boolean isValid(@Nonnull String url, @Nonnull OrderRootType rootType);
+  boolean isValid(String url, OrderRootType rootType);
 
   @Nullable
   PersistentLibraryKind<?> getKind();
 
   LibraryProperties getProperties();
 
-  @Nonnull
+  
   String[] getExcludedRootUrls();
 
-  @Nonnull
+  
   VirtualFile[] getExcludedRoots();
 
-  @Nonnull
+  
   List<String> getInvalidRootUrls(OrderRootType type);
 
   default boolean isDisposed() {
@@ -79,43 +78,43 @@ public interface Library extends JDOMExternalizable, Disposable {
   }
 
   interface ModifiableModel extends Disposable {
-    @Nonnull
-    String[] getUrls(@Nonnull OrderRootType rootType);
+    
+    String[] getUrls(OrderRootType rootType);
 
     void setName(String name);
 
     String getName();
 
-    void addRoot(@Nonnull String url, @Nonnull OrderRootType rootType);
+    void addRoot(String url, OrderRootType rootType);
 
-    void addJarDirectory(@Nonnull String url, boolean recursive);
+    void addJarDirectory(String url, boolean recursive);
 
-    void addJarDirectory(@Nonnull String url, boolean recursive, @Nonnull OrderRootType rootType);
+    void addJarDirectory(String url, boolean recursive, OrderRootType rootType);
 
-    void addRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType rootType);
+    void addRoot(VirtualFile file, OrderRootType rootType);
 
-    void addJarDirectory(@Nonnull VirtualFile file, boolean recursive);
+    void addJarDirectory(VirtualFile file, boolean recursive);
 
-    void addJarDirectory(@Nonnull VirtualFile file, boolean recursive, @Nonnull OrderRootType rootType);
+    void addJarDirectory(VirtualFile file, boolean recursive, OrderRootType rootType);
 
-    void moveRootUp(@Nonnull String url, @Nonnull OrderRootType rootType);
+    void moveRootUp(String url, OrderRootType rootType);
 
-    void moveRootDown(@Nonnull String url, @Nonnull OrderRootType rootType);
+    void moveRootDown(String url, OrderRootType rootType);
 
-    boolean removeRoot(@Nonnull String url, @Nonnull OrderRootType rootType);
+    boolean removeRoot(String url, OrderRootType rootType);
 
     void commit();
 
-    @Nonnull
-    VirtualFile[] getFiles(@Nonnull OrderRootType rootType);
+    
+    VirtualFile[] getFiles(OrderRootType rootType);
 
     boolean isChanged();
 
-    boolean isJarDirectory(@Nonnull String url);
+    boolean isJarDirectory(String url);
 
-    boolean isJarDirectory(@Nonnull String url, @Nonnull OrderRootType rootType);
+    boolean isJarDirectory(String url, OrderRootType rootType);
 
-    boolean isValid(@Nonnull String url, @Nonnull OrderRootType rootType);
+    boolean isValid(String url, OrderRootType rootType);
 
     void setProperties(LibraryProperties properties);
 
@@ -125,11 +124,11 @@ public interface Library extends JDOMExternalizable, Disposable {
 
     PersistentLibraryKind<?> getKind();
 
-    void addExcludedRoot(@Nonnull String url);
+    void addExcludedRoot(String url);
 
-    boolean removeExcludedRoot(@Nonnull String url);
+    boolean removeExcludedRoot(String url);
 
-    @Nonnull
+    
     String[] getExcludedRootUrls();
   }
 }

@@ -26,8 +26,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.image.Image;
 import consulo.usage.UsageView;
 import consulo.usage.internal.UsageViewEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -44,14 +43,14 @@ public class RerunSearchAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (e.getData(UsageView.USAGE_VIEW_KEY) instanceof UsageViewEx usageView) {
             usageView.refreshUsages();
         }
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean enabled = e.getData(UsageView.USAGE_VIEW_KEY) instanceof UsageViewEx usageView
             && Objects.equals(ReadAction.compute(usageView::canPerformReRun), Boolean.TRUE);
         e.getPresentation().setEnabled(enabled);

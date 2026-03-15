@@ -22,8 +22,7 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -62,7 +61,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
   }
 
   @Override
-  public int getIndex(@Nonnull TreeNode node) {
+  public int getIndex(TreeNode node) {
     if (isLeaf()) return -1;
     return getChildren().indexOf(node);
   }
@@ -85,7 +84,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
     return Collections.enumeration(getChildren());
   }
 
-  @Nonnull
+  
   public abstract List<? extends TreeNode> getChildren();
 
   protected void setIcon(Image icon) {
@@ -101,7 +100,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
     return null;
   }
 
-  @Nonnull
+  
   public SimpleColoredText getText() {
     return myText;
   }
@@ -173,12 +172,12 @@ public abstract class XDebuggerTreeNode implements TreeNode {
     return myPath;
   }
 
-  @Nonnull
+  
   public abstract List<? extends XDebuggerTreeNode> getLoadedChildren();
 
   public abstract void clearChildren();
 
-  public void appendToComponent(@Nonnull ColoredTextContainer component) {
+  public void appendToComponent(ColoredTextContainer component) {
     getText().appendToComponent(component);
 
     XDebuggerTreeNodeHyperlink link = getLink();

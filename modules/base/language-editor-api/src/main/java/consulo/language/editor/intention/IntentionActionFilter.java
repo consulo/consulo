@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IntentionActionFilter {
@@ -30,6 +29,6 @@ public interface IntentionActionFilter {
   /**
    * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of action in ANY file
    */
-  boolean accept(@Nonnull IntentionAction intentionAction, @Nullable PsiFile file);
+  boolean accept(IntentionAction intentionAction, @Nullable PsiFile file);
 }
 

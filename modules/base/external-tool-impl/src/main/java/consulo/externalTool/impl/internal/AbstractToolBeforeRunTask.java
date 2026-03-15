@@ -25,8 +25,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -74,7 +73,7 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
     return myToolActionId != null;
   }
 
-  @Nonnull
+  
   public AsyncResult<Void> execute(UIAccess uiAccess, DataContext context, long executionId) {
     AsyncResult<Void> result = AsyncResult.undefined();
     uiAccess.give(() -> {

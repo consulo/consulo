@@ -17,7 +17,6 @@ package consulo.execution.ui.console.language;
 
 import consulo.execution.ui.console.ConsoleExecuteAction;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class BaseConsoleExecuteActionHandler extends ConsoleExecuteActionHandler {
   public BaseConsoleExecuteActionHandler(boolean preserveMarkup) {
@@ -25,11 +24,11 @@ public abstract class BaseConsoleExecuteActionHandler extends ConsoleExecuteActi
   }
 
   @Override
-  public final void doExecute(@Nonnull String text, @Nonnull LanguageConsoleView consoleView) {
+  public final void doExecute(String text, LanguageConsoleView consoleView) {
     execute(text, consoleView);
   }
 
-  protected void execute(@Nonnull String text, @Nonnull LanguageConsoleView console) {
+  protected void execute(String text, LanguageConsoleView console) {
   }
 
   public String getEmptyExecuteAction() {

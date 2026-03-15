@@ -2,8 +2,7 @@
 package consulo.desktop.awt.editor.impl.view;
 
 import consulo.codeEditor.impl.FontInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -13,14 +12,14 @@ import java.util.function.Consumer;
  * Fragment of text for which complex layout is not required. Rendering is the same as if each character would be rendered on its own.
  */
 final class SimpleTextFragment extends TextFragment {
-    @Nonnull
+    
     private final char[] myText;
-    @Nonnull
+    
     private final Font myFont;
     @Nullable
     private float[] myCharAlignment = null;
 
-    SimpleTextFragment(@Nonnull char[] lineChars, int start, int end, @Nonnull FontInfo fontInfo, @Nullable EditorViewImpl view) {
+    SimpleTextFragment(char[] lineChars, int start, int end, FontInfo fontInfo, @Nullable EditorViewImpl view) {
         super(end - start, view);
         myText = Arrays.copyOfRange(lineChars, start, end);
         myFont = fontInfo.getFont();

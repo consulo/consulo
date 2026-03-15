@@ -8,7 +8,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import jakarta.annotation.Nonnull;
 
 import static consulo.execution.impl.internal.service.ServiceViewActionProvider.getSelectedView;
 
@@ -29,7 +28,7 @@ public final class AddServiceActionGroup extends DefaultActionGroup implements D
 //    }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(getSelectedView(e) != null);
     }
 }

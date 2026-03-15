@@ -30,7 +30,6 @@ import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Map;
@@ -55,12 +54,12 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
     protected abstract boolean isInterface(PsiElement psiElement);
 
-    protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, String typeHierarchyActionGroupName) {
+    protected void createTreeAndSetupCommonActions(Map<String, JTree> trees, String typeHierarchyActionGroupName) {
         ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(typeHierarchyActionGroupName);
         createTreeAndSetupCommonActions(trees, group);
     }
 
-    protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, ActionGroup group) {
+    protected void createTreeAndSetupCommonActions(Map<String, JTree> trees, ActionGroup group) {
         BaseOnThisTypeAction baseOnThisTypeAction = createBaseOnThisAction();
         JTree tree1 = createTree(true);
         PopupHandler.installPopupHandler(tree1, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
@@ -81,7 +80,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         trees.put(SUBTYPES_HIERARCHY_TYPE, tree3);
     }
 
-    @Nonnull
+    
     protected BaseOnThisTypeAction createBaseOnThisAction() {
         return new BaseOnThisTypeAction();
     }
@@ -95,7 +94,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    protected void setHierarchyBase(@Nonnull PsiElement element) {
+    protected void setHierarchyBase(PsiElement element) {
         super.setHierarchyBase(element);
         myIsInterface = isInterface(element);
     }
@@ -109,32 +108,32 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    @Nonnull
+    
     protected Key getBrowserDataKey() {
         return DATA_KEY;
     }
 
     @Override
-    @Nonnull
+    
     protected String getActionPlace() {
         return ActionPlaces.TYPE_HIERARCHY_VIEW_TOOLBAR;
     }
 
     @Override
-    public final Object getData(@Nonnull Key<?> dataId) {
+    public final Object getData(Key<?> dataId) {
         if (DeleteProvider.KEY == dataId) {
             return myDeleteElementProvider;
         }
         return super.getData(dataId);
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getPrevOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyTypePrevOccurenceName();
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getNextOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyTypeNextOccurenceName();
@@ -143,7 +142,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     private final class MyDeleteProvider implements DeleteProvider {
         @Override
         @RequiredUIAccess
-        public final void deleteElement(@Nonnull DataContext dataContext) {
+        public final void deleteElement(DataContext dataContext) {
             PsiElement aClass = getSelectedElement();
             if (!canBeDeleted(aClass)) {
                 return;
@@ -160,7 +159,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         }
 
         @Override
-        public final boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public final boolean canDeleteElement(DataContext dataContext) {
             PsiElement aClass = getSelectedElement();
             if (!canBeDeleted(aClass)) {
                 return false;
@@ -183,9 +182,9 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
             return viewType;
         }
 
-        @Nonnull
+        
         @Override
-        protected LocalizeValue getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
+        protected LocalizeValue getNonDefaultText(HierarchyBrowserBaseEx browser, PsiElement element) {
             return ((TypeHierarchyBrowserBase)browser).isInterface(element)
                 ? IdeLocalize.actionBaseOnThisInterface()
                 : IdeLocalize.actionBaseOnThisClass();

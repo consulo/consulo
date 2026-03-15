@@ -24,8 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -43,7 +42,7 @@ public class LanguageCachedValueUtil {
      *
      * @return The cached value
      */
-    public static <T> T getCachedValue(@Nonnull PsiElement context, @Nonnull CachedValueProvider<T> provider) {
+    public static <T> T getCachedValue(PsiElement context, CachedValueProvider<T> provider) {
         return getCachedValue(context, CachedValueManagerHelper.getKeyForClass(provider.getClass()), provider);
     }
 
@@ -56,8 +55,8 @@ public class LanguageCachedValueUtil {
      * @return The cached value
      */
     public static <E extends PsiElement, T> T getProjectPsiDependentCache(
-        @Nonnull E context,
-        @Nonnull Function<? super E, ? extends T> provider
+        E context,
+        Function<? super E, ? extends T> provider
     ) {
         return getCachedValue(
             context,
@@ -80,9 +79,9 @@ public class LanguageCachedValueUtil {
      * @return The cached value
      */
     public static <T> T getCachedValue(
-        final @Nonnull PsiElement context,
-        @Nonnull Key<CachedValue<T>> key,
-        final @Nonnull CachedValueProvider<T> provider
+        final PsiElement context,
+        Key<CachedValue<T>> key,
+        final CachedValueProvider<T> provider
     ) {
         CachedValue<T> value = context.getUserData(key);
         if (value != null) {

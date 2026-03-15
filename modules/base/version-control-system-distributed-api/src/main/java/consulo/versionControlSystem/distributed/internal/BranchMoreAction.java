@@ -24,26 +24,25 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.KeepingPopupOpenAction;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
 
 public class BranchMoreAction extends DumbAwareAction implements KeepingPopupOpenAction {
-    @Nonnull
+    
     private final Project myProject;
     @Nullable
     private final String mySettingName;
     private final boolean myDefaultExpandValue;
     private boolean myIsExpanded;
-    @Nonnull
+    
     private final String myToCollapseText;
-    @Nonnull
+    
     private final String myToExpandText;
 
     public BranchMoreAction(
-        @Nonnull Project project,
+        Project project,
         int numberOfHiddenNodes,
         @Nullable String settingName,
         boolean defaultExpandValue,
@@ -65,7 +64,7 @@ public class BranchMoreAction extends DumbAwareAction implements KeepingPopupOpe
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         setExpanded(!myIsExpanded);
         InputEvent event = e.getInputEvent();
         if (event != null && event.getSource() instanceof JComponent) {

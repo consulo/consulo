@@ -31,8 +31,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   public static final Key<OpenInEditorAction> KEY = Key.create("DiffOpenInEditorAction");
@@ -45,7 +44,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     if (!e.isFromActionToolbar()) {
       e.getPresentation().setEnabledAndVisible(true);
       return;
@@ -76,7 +75,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) return;
 
@@ -86,11 +85,11 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     openEditor(project, navigatables);
   }
 
-  public void openEditor(@Nonnull Project project, @Nonnull Navigatable navigatable) {
+  public void openEditor(Project project, Navigatable navigatable) {
     openEditor(project, new Navigatable[]{navigatable});
   }
 
-  public void openEditor(@Nonnull Project project, @Nonnull Navigatable[] navigatables) {
+  public void openEditor(Project project, Navigatable[] navigatables) {
     boolean success = false;
     for (Navigatable navigatable : navigatables) {
       if (navigatable.canNavigate()) {

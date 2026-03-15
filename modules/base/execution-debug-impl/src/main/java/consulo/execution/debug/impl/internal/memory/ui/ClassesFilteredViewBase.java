@@ -24,8 +24,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -41,7 +40,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
     protected static final int DEFAULT_BATCH_SIZE = Integer.MAX_VALUE;
     private static final int INITIAL_TIME = 0;
 
-    @Nonnull
+    
     protected final Project myProject;
     protected final SingleAlarmWithMutableDelay mySingleAlarm;
 
@@ -59,7 +58,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
      */
     protected volatile boolean myIsActive;
 
-    public ClassesFilteredViewBase(@Nonnull XDebugSession debugSession) {
+    public ClassesFilteredViewBase(XDebugSession debugSession) {
         myProject = debugSession.getProject();
 
         debugSession.addSessionListener(new XDebugSessionListener() {
@@ -122,7 +121,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
 
         myFilterTextField.addDocumentListener(new DocumentAdapter() {
             @Override
-            protected void textChanged(@Nonnull DocumentEvent e) {
+            protected void textChanged(DocumentEvent e) {
                 myTable.setFilterPattern(myFilterTextField.getText());
             }
         });
@@ -173,7 +172,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         return myFilterTextField;
     }
 
-    @Nonnull
+    
     protected ClassesTable createClassesTable(MemoryViewManagerState memoryViewManagerState) {
         return new ClassesTable(myProject, this, memoryViewManagerState.isShowWithDiffOnly,
             memoryViewManagerState.isShowWithInstancesOnly, memoryViewManagerState.isShowTrackedOnly
@@ -183,7 +182,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
     protected abstract void scheduleUpdateClassesCommand(XSuspendContext context);
 
     @Nullable
-    protected TrackerForNewInstancesBase getStrategy(@Nonnull TypeInfo ref) {
+    protected TrackerForNewInstancesBase getStrategy(TypeInfo ref) {
         return null;
     }
 
@@ -203,7 +202,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         }
     }
 
-    protected abstract InstancesWindowBase getInstancesWindow(@Nonnull TypeInfo ref, XDebugSession debugSession);
+    protected abstract InstancesWindowBase getInstancesWindow(TypeInfo ref, XDebugSession debugSession);
 
     protected void updateClassesAndCounts(boolean immediate) {
         myProject.getApplication().invokeLater(
@@ -271,7 +270,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         return null;
     }
 

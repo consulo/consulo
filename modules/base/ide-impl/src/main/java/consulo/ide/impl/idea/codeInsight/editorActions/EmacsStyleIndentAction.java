@@ -39,14 +39,13 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "EmacsStyleIndent")
 public class EmacsStyleIndentAction extends BaseCodeInsightAction implements DumbAware {
     private static class MyHandler implements CodeInsightActionHandler {
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        public void invoke(Project project, Editor editor, PsiFile file) {
             if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) {
                 return;
             }
@@ -97,7 +96,7 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
         super(ActionLocalize.actionEmacsstyleindentText(), LocalizeValue.empty());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new MyHandler();
@@ -105,7 +104,7 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
 
     @Override
     @RequiredReadAction
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         PsiElement context = file.findElementAt(editor.getCaretModel().getOffset());
         return context != null && FormattingModelBuilder.forContext(context) != null;
     }

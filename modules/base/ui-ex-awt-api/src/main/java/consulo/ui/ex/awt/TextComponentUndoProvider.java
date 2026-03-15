@@ -20,7 +20,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -50,28 +49,28 @@ public class TextComponentUndoProvider implements Disposable {
 
         AnAction undoAction = new AnAction() {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 super.update(e);
                 e.getPresentation().setEnabled(canUndo());
             }
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 undo();
             }
         };
 
         AnAction redoAction = new AnAction() {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 super.update(e);
                 e.getPresentation().setEnabled(canRedo());
             }
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 redo();
             }
         };

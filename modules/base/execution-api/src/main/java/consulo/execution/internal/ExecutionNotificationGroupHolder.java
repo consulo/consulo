@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 import consulo.project.ui.wm.ToolWindowId;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -48,7 +47,7 @@ public class ExecutionNotificationGroupHolder implements NotificationGroupContri
     );
 
     @Override
-    public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+    public void contribute(Consumer<NotificationGroup> registrator) {
         registrator.accept(BASE);
         registrator.accept(EXTERNAL);
     }

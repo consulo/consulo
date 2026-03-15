@@ -25,7 +25,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 public class CloseAction extends AnAction implements DumbAware {
     private RunContentDescriptor myContentDescriptor;
@@ -45,7 +44,7 @@ public class CloseAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         RunContentDescriptor contentDescriptor = getContentDescriptor();
         if (contentDescriptor == null) {
             return;

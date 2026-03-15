@@ -24,7 +24,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
@@ -37,7 +36,7 @@ public class RefCardAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         String helpId;
 
         if (Platform.current().os().isMac()) {

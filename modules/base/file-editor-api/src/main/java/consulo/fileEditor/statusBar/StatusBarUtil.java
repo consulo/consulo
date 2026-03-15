@@ -27,10 +27,8 @@ import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Kirill Likhodedov
@@ -89,7 +87,7 @@ public class StatusBarUtil {
     return null;
   }
 
-  private static boolean ensureValidEditorFile(@Nonnull Editor editor, @Nullable FileEditor fileEditor) {
+  private static boolean ensureValidEditorFile(Editor editor, @Nullable FileEditor fileEditor) {
     Document document = editor.getDocument();
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file != null && !file.isValid()) {

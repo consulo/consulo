@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -48,29 +47,29 @@ public abstract class UpdateCopyrightsProvider<T extends CopyrightFileConfig> {
         return map.get(fileType);
     }
 
-    public static boolean hasExtension(@Nonnull PsiFile psiFile) {
+    public static boolean hasExtension(PsiFile psiFile) {
         VirtualFile virtualFile = psiFile.getVirtualFile();
         return virtualFile != null && hasExtension(virtualFile);
     }
 
-    public static boolean hasExtension(@Nonnull VirtualFile virtualFile) {
+    public static boolean hasExtension(VirtualFile virtualFile) {
         return forFileType(virtualFile.getFileType()) != null;
     }
 
-    @Nonnull
+    
     public abstract FileType getFileType();
 
-    @Nonnull
-    public abstract UpdatePsiFileCopyright<T> createInstance(@Nonnull PsiFile file, @Nonnull CopyrightProfile copyrightProfile);
+    
+    public abstract UpdatePsiFileCopyright<T> createInstance(PsiFile file, CopyrightProfile copyrightProfile);
 
-    @Nonnull
+    
     public abstract T createDefaultOptions();
 
-    @Nonnull
+    
     public abstract TemplateCommentPanel createConfigurable(
-        @Nonnull Project project,
-        @Nonnull TemplateCommentPanel parentPane,
-        @Nonnull FileType fileType
+        Project project,
+        TemplateCommentPanel parentPane,
+        FileType fileType
     );
 
     public boolean isAllowSeparator() {

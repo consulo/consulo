@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEd
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.ui.ex.awt.tree.SimpleTree;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.InputEvent;
 import java.util.Collections;
@@ -36,7 +35,7 @@ public class SourceItemNode extends SourceItemNodeBase {
     mySourceItem = sourceItem;
   }
 
-  @Nonnull
+  
   @Override
   public Object[] getEqualityObjects() {
     return new Object[]{mySourceItem};

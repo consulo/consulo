@@ -22,10 +22,8 @@ import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CompletionUtil {
 
@@ -40,7 +38,7 @@ public class CompletionUtil {
   public static final String DUMMY_IDENTIFIER_TRIMMED = DUMMY_IDENTIFIER.trim();
 
   @Nullable
-  public static CompletionData getCompletionDataByElement(@Nullable PsiElement position, @Nonnull PsiFile originalFile) {
+  public static CompletionData getCompletionDataByElement(@Nullable PsiElement position, PsiFile originalFile) {
     if (position == null) return null;
 
     PsiElement parent = position.getParent();
@@ -63,11 +61,11 @@ public class CompletionUtil {
     return null;
   }
 
-  public static boolean shouldShowFeature(CompletionParameters parameters, @NonNls String id) {
+  public static boolean shouldShowFeature(CompletionParameters parameters, String id) {
     return CompletionUtilCore.shouldShowFeature(parameters, id);
   }
 
-  public static boolean shouldShowFeature(Project project, @NonNls String id) {
+  public static boolean shouldShowFeature(Project project, String id) {
     return CompletionUtilCore.shouldShowFeature(project, id);
   }
 
@@ -92,7 +90,7 @@ public class CompletionUtil {
   }
 
   @SuppressWarnings("unused") // used in Rider
-  public static String findIdentifierPrefix(@Nonnull Document document, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
+  public static String findIdentifierPrefix(Document document, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
     return CompletionUtilCore.findIdentifierPrefix(document, offset, idPart, idStart);
   }
 
@@ -127,16 +125,16 @@ public class CompletionUtil {
   }
 
   @Nullable
-  public static <T extends PsiElement> T getOriginalElement(@Nonnull T psi) {
+  public static <T extends PsiElement> T getOriginalElement(T psi) {
     return CompletionUtilCore.getOriginalElement(psi);
   }
 
-  @Nonnull
-  public static <T extends PsiElement> T getOriginalOrSelf(@Nonnull T psi) {
+  
+  public static <T extends PsiElement> T getOriginalOrSelf(T psi) {
     return CompletionUtilCore.getOriginalOrSelf(psi);
   }
 
-  public static Iterable<String> iterateLookupStrings(@Nonnull LookupElement element) {
+  public static Iterable<String> iterateLookupStrings(LookupElement element) {
     return CompletionUtilCore.iterateLookupStrings(element);
   }
 
@@ -144,8 +142,8 @@ public class CompletionUtil {
    * @return String representation of action shortcut. Useful while advertising something
    * @see #advertise(CompletionParameters)
    */
-  @Nonnull
-  public static String getActionShortcut(@NonNls @Nonnull String actionId) {
+  
+  public static String getActionShortcut(String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(actionId));
   }
 }

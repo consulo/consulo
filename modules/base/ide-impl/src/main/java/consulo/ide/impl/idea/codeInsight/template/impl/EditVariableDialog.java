@@ -31,7 +31,6 @@ import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -60,7 +59,7 @@ class EditVariableDialog extends DialogWrapper {
         setOKButtonText(CommonLocalize.buttonOk());
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};

@@ -17,8 +17,7 @@ package consulo.language.codeStyle.arrangement;
 
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Identifies a strategy that can tweak default {@link ArrangementSettings arrangement settings} (de)serialization mechanism.
@@ -41,7 +40,7 @@ public interface ArrangementSettingsSerializer {
    * @return         settings de-serialized from the given element
    */
   @Nullable
-  ArrangementSettings deserialize(@Nonnull Element element);
+  ArrangementSettings deserialize(Element element);
 
   /**
    * Allows to provide custom settings serialization logic. This method is expected to be consistent with {@link #deserialize(Element)}.
@@ -52,5 +51,5 @@ public interface ArrangementSettingsSerializer {
    * @param settings  settings to serialize
    * @param holder    element to hold serialized settings
    */
-  void serialize(@Nonnull ArrangementSettings settings, @Nonnull Element holder);
+  void serialize(ArrangementSettings settings, Element holder);
 }

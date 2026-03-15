@@ -24,8 +24,7 @@ import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
   @RequiredReadAction
   @Nullable
   @Override
-  public PsiElement createElement(@Nonnull ASTNode node) {
+  public PsiElement createElement(ASTNode node) {
     IElementType elementType = node.getElementType();
     if(elementType instanceof IElementTypeAsPsiFactory) {
       return ((IElementTypeAsPsiFactory)elementType).createElement(node);
@@ -50,7 +49,7 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
   }
 
   @Override
-  public boolean test(@Nonnull IElementType type) {
+  public boolean test(IElementType type) {
     return true;
   }
 }

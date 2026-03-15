@@ -1,8 +1,7 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.desktop.awt.editor.impl.view;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -11,7 +10,7 @@ import java.util.function.Consumer;
  * Fragment of text using a common font
  */
 public abstract class TextFragment implements LineFragment {
-    @Nonnull
+    
     final float[] myCharPositions; // i-th value is the x coordinate of right edge of i-th character (counted in visual order)
     final @Nullable EditorViewImpl myView;
 
@@ -29,7 +28,7 @@ public abstract class TextFragment implements LineFragment {
     abstract boolean isRtl();
 
     @Override
-    public @Nonnull LineFragment subFragment(int startOffset, int endOffset) {
+    public LineFragment subFragment(int startOffset, int endOffset) {
         assert startOffset >= 0;
         assert endOffset <= myCharPositions.length;
         assert startOffset < endOffset;
@@ -166,7 +165,7 @@ public abstract class TextFragment implements LineFragment {
         }
 
         @Override
-        public @Nonnull LineFragment subFragment(int startOffset, int endOffset) {
+        public LineFragment subFragment(int startOffset, int endOffset) {
             return TextFragment.this.subFragment(startOffset + myStartOffset, endOffset + myStartOffset);
         }
     }

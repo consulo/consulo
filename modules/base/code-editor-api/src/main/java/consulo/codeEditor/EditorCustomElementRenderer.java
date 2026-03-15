@@ -17,8 +17,7 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.colorScheme.TextAttributes;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -38,7 +37,7 @@ public interface EditorCustomElementRenderer {
      * {@link #paint(Inlay, Graphics, Rectangle, TextAttributes)} method. For inline and after-line-end elements it should always be
      * a positive value.
      */
-    int calcWidthInPixels(@Nonnull Inlay<?> inlay);
+    int calcWidthInPixels(Inlay<?> inlay);
 
     /**
      * Block element's renderer implementation can override this method to defines the height of element (in pixels). If not overridden,
@@ -46,7 +45,7 @@ public interface EditorCustomElementRenderer {
      * the height of {@code targetRegion} parameter passed to renderer's {@link #paint(Inlay, Graphics, Rectangle, TextAttributes)} method.
      * Returned value is currently not used for inline elements.
      */
-    default int calcHeightInPixels(@Nonnull Inlay<?> inlay) {
+    default int calcHeightInPixels(Inlay<?> inlay) {
         return inlay.getEditor().getLineHeight();
     }
 
@@ -62,7 +61,7 @@ public interface EditorCustomElementRenderer {
      *                       as provided by {@link #calcWidthInPixels(Inlay)} and {@link #calcHeightInPixels(Inlay)}.
      * @param textAttributes attributes of the surrounding text
      */
-    default void paint(@Nonnull Inlay<?> inlay, @Nonnull Graphics g, @Nonnull Rectangle targetRegion, @Nonnull TextAttributes textAttributes) {
+    default void paint(Inlay<?> inlay, Graphics g, Rectangle targetRegion, TextAttributes textAttributes) {
     }
 
     /**
@@ -77,10 +76,10 @@ public interface EditorCustomElementRenderer {
      *                       they can differ somewhat due to rounding to integer device pixels
      * @param textAttributes attributes of the surrounding text
      */
-    default void paint(@Nonnull Inlay<?> inlay,
-                       @Nonnull Graphics2D g,
-                       @Nonnull Rectangle2D targetRegion,
-                       @Nonnull TextAttributes textAttributes) {
+    default void paint(Inlay<?> inlay,
+                       Graphics2D g,
+                       Rectangle2D targetRegion,
+                       TextAttributes textAttributes) {
         Rectangle region =
             new Rectangle((int) targetRegion.getX(), (int) targetRegion.getY(), inlay.getWidthInPixels(), inlay.getHeightInPixels());
         paint(inlay, (Graphics) g, region, textAttributes);
@@ -91,7 +90,7 @@ public interface EditorCustomElementRenderer {
      * If {@code null} is returned, standard editor's context menu will be displayed upon corresponding mouse event.
      */
     @Nullable
-    default String getContextMenuGroupId(@Nonnull Inlay<?> inlay) {
+    default String getContextMenuGroupId(Inlay<?> inlay) {
         return null;
     }
 
@@ -103,7 +102,7 @@ public interface EditorCustomElementRenderer {
      * as {@link Inlay#update()} only updates the inlay's provider
      * if the returned instance is not equal to the previously defined one.
      */
-    default @Nullable GutterIconRenderer calcGutterIconRenderer(@Nonnull Inlay<?> inlay) {
+    default @Nullable GutterIconRenderer calcGutterIconRenderer(Inlay<?> inlay) {
         return null;
     }
 }

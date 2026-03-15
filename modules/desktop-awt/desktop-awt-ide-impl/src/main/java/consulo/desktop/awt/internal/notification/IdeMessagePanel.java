@@ -22,8 +22,7 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +34,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     private final IdeFrame myFrame;
     private final MessagePool myMessagePool;
     private final Project myProject;
-    @Nonnull
+    
     private final StatusBarWidgetFactory myFactory;
 
     private Balloon myBalloon;
@@ -45,9 +44,9 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
 
     public IdeMessagePanel(
         Project project,
-        @Nonnull StatusBarWidgetFactory factory,
+        StatusBarWidgetFactory factory,
         @Nullable IdeFrame frame,
-        @Nonnull MessagePool messagePool
+        MessagePool messagePool
     ) {
         super(new BorderLayout());
         myProject = project;
@@ -59,7 +58,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
         new ClickListener() {
             @Override
             @RequiredUIAccess
-            public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
+            public boolean onClick(MouseEvent event, int clickCount) {
                 openErrorsDialog(null);
                 return true;
             }
@@ -73,7 +72,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
         updateIconAndNotify();
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myFactory.getId();
@@ -91,10 +90,10 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return this;
@@ -201,7 +200,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
         return frame.isActive();
     }
 
-    private void showErrorNotification(@Nonnull Project project) {
+    private void showErrorNotification(Project project) {
         Notification notification = NotificationService.getInstance()
             .newError(ReportMessages.GROUP)
             .icon(PlatformIconGroup.ideFatalerror())

@@ -34,7 +34,6 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(
     id = "UpdateCopyright",
@@ -55,7 +54,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         boolean enabled = isEnabled(event);
         event.getPresentation().setEnabled(enabled);
         if (ActionPlaces.isPopupPlace(event.getPlace())) {
@@ -63,7 +62,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
         }
     }
 
-    private static boolean isEnabled(@Nonnull AnActionEvent e) {
+    private static boolean isEnabled(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return false;
@@ -119,7 +118,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     }
 
     @Override
-    protected void analyze(@Nonnull final Project project, @Nonnull AnalysisScope scope) {
+    protected void analyze(final Project project, AnalysisScope scope) {
         if (scope.checkScopeWritable(project)) {
             return;
         }

@@ -42,8 +42,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.io.File;
@@ -52,13 +51,13 @@ import java.util.StringTokenizer;
 public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final PsiDirectory myDirectory;
-    @Nonnull
+    
     private final CreateDirectoryOrPackageType myType;
     @Nullable
     private PsiFileSystemItem myCreatedElement = null;
-    @Nonnull
+    
     private final String myDelimiters;
     @Nullable
     private final Component myDialogParent;
@@ -66,18 +65,18 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
 
     public CreateDirectoryOrPackageHandler(
         @Nullable Project project,
-        @Nonnull PsiDirectory directory,
+        PsiDirectory directory,
         CreateDirectoryOrPackageType type,
-        @Nonnull String delimiters
+        String delimiters
     ) {
         this(project, directory, type, delimiters, null);
     }
 
     public CreateDirectoryOrPackageHandler(
         @Nullable Project project,
-        @Nonnull PsiDirectory directory,
-        @Nonnull CreateDirectoryOrPackageType type,
-        @Nonnull String delimiters,
+        PsiDirectory directory,
+        CreateDirectoryOrPackageType type,
+        String delimiters,
         @Nullable Component dialogParent
     ) {
         myProject = project;

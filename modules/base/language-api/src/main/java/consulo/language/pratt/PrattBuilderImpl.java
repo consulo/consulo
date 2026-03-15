@@ -22,8 +22,7 @@ import consulo.language.parser.ITokenTypeRemapper;
 import consulo.language.parser.PsiBuilder;
 import consulo.util.lang.Trinity;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -159,13 +158,13 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  public void reduce(@Nonnull IElementType type) {
+  public void reduce(IElementType type) {
     myStartMarker.finish(type);
     myStartMarker = myStartMarker.precede();
   }
 
   @Override
-  @Nonnull
+  
   public List<IElementType> getResultTypes() {
     checkParsed();
     return myLeftSiblings;

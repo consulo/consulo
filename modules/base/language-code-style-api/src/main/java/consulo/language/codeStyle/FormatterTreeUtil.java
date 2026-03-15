@@ -19,7 +19,7 @@ package consulo.language.codeStyle;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenType;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * from kotlin

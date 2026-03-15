@@ -9,7 +9,6 @@ import consulo.execution.configuration.RunConfigurationExtensionsManager;
 import consulo.execution.configuration.RunProfile;
 import consulo.remoteServer.configuration.deployment.DeployToServerRunConfigurationExtension;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -28,7 +27,7 @@ public class DeployToServerRunConfigurationExtensionsManager
         return Application.get().getInstance(DeployToServerRunConfigurationExtensionsManager.class);
     }
 
-    public void patchDeploymentTask(@Nonnull DeploymentTask<?> deploymentTask) {
+    public void patchDeploymentTask(DeploymentTask<?> deploymentTask) {
         RunProfile runProfile = deploymentTask.getExecutionEnvironment().getRunProfile();
         if (runProfile instanceof DeployToServerRunConfiguration<?, ?> runConfiguration) {
             processApplicableExtensions(runConfiguration, next -> {

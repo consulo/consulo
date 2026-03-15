@@ -15,19 +15,18 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class VcsError {
-  @Nonnull
+  
   String myErrorText;
   @Nullable private final VcsErrorHandler myErrorHandleListener;
 
-  public VcsError(@Nonnull String text) {
+  public VcsError(String text) {
     this(text, null);
   }
 
-  public VcsError(@Nonnull String text, @Nullable VcsErrorHandler listener) {
+  public VcsError(String text, @Nullable VcsErrorHandler listener) {
     myErrorText = text;
     myErrorHandleListener = listener;
   }
@@ -36,13 +35,13 @@ public class VcsError {
     return myErrorText;
   }
 
-  public void handleError(@Nonnull CommitLoader loader) {
+  public void handleError(CommitLoader loader) {
     if (myErrorHandleListener != null) {
       myErrorHandleListener.handleError(loader);
     }
   }
 
-  public static VcsError createEmptyTargetError(@Nonnull String name) {
+  public static VcsError createEmptyTargetError(String name) {
     return new VcsError("Please, specify not empty remote push path for repository " + name + ".");
   }
 }

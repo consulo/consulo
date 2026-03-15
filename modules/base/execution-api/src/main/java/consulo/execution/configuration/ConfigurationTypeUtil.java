@@ -17,8 +17,7 @@
 package consulo.execution.configuration;
 
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -27,12 +26,12 @@ public class ConfigurationTypeUtil {
     private ConfigurationTypeUtil() {
     }
 
-    @Nonnull
-    public static <T extends ConfigurationType> T findConfigurationType(@Nonnull Class<T> configurationTypeClass) {
+    
+    public static <T extends ConfigurationType> T findConfigurationType(Class<T> configurationTypeClass) {
         return Application.get().getExtensionPoint(ConfigurationType.class).findExtensionOrFail(configurationTypeClass);
     }
 
-    public static boolean equals(@Nonnull ConfigurationType type1, @Nonnull ConfigurationType type2) {
+    public static boolean equals(ConfigurationType type1, ConfigurationType type2) {
         return type1.getId().equals(type2.getId());
     }
 

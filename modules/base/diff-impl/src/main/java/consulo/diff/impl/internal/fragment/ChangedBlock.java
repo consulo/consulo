@@ -17,25 +17,24 @@ package consulo.diff.impl.internal.fragment;
 
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.util.LineRange;
-import jakarta.annotation.Nonnull;
 
 public class ChangedBlock {
   private final int myLine1;
   private final int myLine2;
 
-  @Nonnull
+  
   private final LineRange myRange1;
-  @Nonnull
+  
   private final LineRange myRange2;
 
-  @Nonnull
+  
   private final LineFragment myLineFragment;
 
   public ChangedBlock(int line1,
                       int line2,
-                      @Nonnull LineRange range1,
-                      @Nonnull LineRange range2,
-                      @Nonnull LineFragment lineFragment) {
+                      LineRange range1,
+                      LineRange range2,
+                      LineFragment lineFragment) {
     myLine1 = line1;
     myLine2 = line2;
     myRange1 = range1;
@@ -43,12 +42,12 @@ public class ChangedBlock {
     myLineFragment = lineFragment;
   }
 
-  @Nonnull
+  
   public LineRange getRange1() {
     return myRange1;
   }
 
-  @Nonnull
+  
   public LineRange getRange2() {
     return myRange2;
   }
@@ -61,7 +60,7 @@ public class ChangedBlock {
     return myLine2;
   }
 
-  @Nonnull
+  
   public LineFragment getLineFragment() {
     return myLineFragment;
   }

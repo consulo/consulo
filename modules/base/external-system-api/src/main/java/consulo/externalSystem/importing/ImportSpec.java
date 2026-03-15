@@ -18,46 +18,45 @@ package consulo.externalSystem.importing;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
  * @since 2014-05-29
  */
 public class ImportSpec {
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
-  @Nonnull
+  
   private ProgressExecutionMode myProgressExecutionMode;
   private boolean forceWhenUptodate;
   private boolean whenAutoImportEnabled;
   //private boolean isPreviewMode;
   //private boolean isReportRefreshError;
 
-  public ImportSpec(@Nonnull Project project, @Nonnull ProjectSystemId id) {
+  public ImportSpec(Project project, ProjectSystemId id) {
     myProject = project;
     myExternalSystemId = id;
     myProgressExecutionMode = ProgressExecutionMode.MODAL_SYNC;
   }
 
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
 
-  @Nonnull
+  
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
   }
 
-  @Nonnull
+  
   public ProgressExecutionMode getProgressExecutionMode() {
     return myProgressExecutionMode;
   }
 
-  public void setProgressExecutionMode(@Nonnull ProgressExecutionMode progressExecutionMode) {
+  public void setProgressExecutionMode(ProgressExecutionMode progressExecutionMode) {
     myProgressExecutionMode = progressExecutionMode;
   }
 

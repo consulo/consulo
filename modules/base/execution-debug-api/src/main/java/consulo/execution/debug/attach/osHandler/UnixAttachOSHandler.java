@@ -5,7 +5,6 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.logging.Logger;
 import consulo.execution.debug.attach.EnvironmentAwareHost;
-import jakarta.annotation.Nonnull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +22,7 @@ public abstract class UnixAttachOSHandler extends AttachOSHandler {
 
   private static final Logger LOGGER = Logger.getInstance(UnixAttachOSHandler.class);
 
-  public UnixAttachOSHandler(@Nonnull EnvironmentAwareHost host, @Nonnull OSType osType) {
+  public UnixAttachOSHandler(EnvironmentAwareHost host, OSType osType) {
     super(host, osType);
   }
 

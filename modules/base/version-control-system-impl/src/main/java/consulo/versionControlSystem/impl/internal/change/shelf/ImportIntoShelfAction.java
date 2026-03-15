@@ -34,7 +34,6 @@ import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesMana
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +56,7 @@ public class ImportIntoShelfAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true);
         FileChooser.chooseFiles(descriptor, project, null).doWhenDone(files -> {

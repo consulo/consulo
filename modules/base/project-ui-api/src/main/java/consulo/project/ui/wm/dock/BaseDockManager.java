@@ -22,7 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.util.TraverseUtil;
 import consulo.util.collection.MutualMap;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.*;

@@ -60,8 +60,7 @@ import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -131,7 +130,7 @@ public class IdeEventQueue extends EventQueue {
 
     private final Queue<AWTEvent> focusEventsList = new ConcurrentLinkedQueue<>();
 
-    public void executeWhenAllFocusEventsLeftTheQueue(@Nonnull Runnable runnable) {
+    public void executeWhenAllFocusEventsLeftTheQueue(Runnable runnable) {
         ifFocusEventsInTheQueue(e -> {
             List<Runnable> runnables = myRunnablesWaitingFocusChange.get(e);
             if (runnables != null) {
@@ -148,7 +147,7 @@ public class IdeEventQueue extends EventQueue {
         }, runnable);
     }
 
-    @Nonnull
+    
     public String runnablesWaitingForFocusChangeState() {
         return StringUtil.join(
             focusEventsList,
@@ -157,7 +156,7 @@ public class IdeEventQueue extends EventQueue {
         );
     }
 
-    private void ifFocusEventsInTheQueue(@Nonnull Consumer<? super AWTEvent> yes, @Nonnull Runnable no) {
+    private void ifFocusEventsInTheQueue(Consumer<? super AWTEvent> yes, Runnable no) {
         if (!focusEventsList.isEmpty()) {
             if (FOCUS_AWARE_RUNNABLES_LOG.isDebugEnabled()) {
                 FOCUS_AWARE_RUNNABLES_LOG.debug("Focus event list (trying to execute runnable): " + runnablesWaitingForFocusChangeState());
@@ -254,46 +253,46 @@ public class IdeEventQueue extends EventQueue {
         myWindowManager = windowManager;
     }
 
-    public void addIdleListener(@Nonnull Runnable runnable, int timeoutMillis) {
+    public void addIdleListener(Runnable runnable, int timeoutMillis) {
         myIdleHolder.addIdleListener(runnable, timeoutMillis);
     }
 
-    public void removeIdleListener(@Nonnull Runnable runnable) {
+    public void removeIdleListener(Runnable runnable) {
         myIdleHolder.removeIdleListener(runnable);
     }
 
-    public void addActivityListener(@Nonnull Runnable runnable, Disposable parentDisposable) {
+    public void addActivityListener(Runnable runnable, Disposable parentDisposable) {
         DisposerUtil.add(runnable, myActivityListeners, parentDisposable);
     }
 
-    public void removeActivityListener(@Nonnull Runnable runnable) {
+    public void removeActivityListener(Runnable runnable) {
         myActivityListeners.remove(runnable);
     }
 
-    public void addDispatcher(@Nonnull Predicate<AWTEvent> dispatcher, Disposable parent) {
+    public void addDispatcher(Predicate<AWTEvent> dispatcher, Disposable parent) {
         _addProcessor(dispatcher, parent, myDispatchers);
     }
 
-    public void removeDispatcher(@Nonnull Predicate<AWTEvent> dispatcher) {
+    public void removeDispatcher(Predicate<AWTEvent> dispatcher) {
         myDispatchers.remove(dispatcher);
     }
 
-    public boolean containsDispatcher(@Nonnull Predicate<AWTEvent> dispatcher) {
+    public boolean containsDispatcher(Predicate<AWTEvent> dispatcher) {
         return myDispatchers.contains(dispatcher);
     }
 
-    public void addPostprocessor(@Nonnull Predicate<AWTEvent> dispatcher, @Nullable Disposable parent) {
+    public void addPostprocessor(Predicate<AWTEvent> dispatcher, @Nullable Disposable parent) {
         _addProcessor(dispatcher, parent, myPostProcessors);
     }
 
-    public void removePostprocessor(@Nonnull Predicate<AWTEvent> dispatcher) {
+    public void removePostprocessor(Predicate<AWTEvent> dispatcher) {
         myPostProcessors.remove(dispatcher);
     }
 
     private static void _addProcessor(
-        @Nonnull Predicate<AWTEvent> dispatcher,
+        Predicate<AWTEvent> dispatcher,
         Disposable parent,
-        @Nonnull Collection<Predicate<AWTEvent>> set
+        Collection<Predicate<AWTEvent>> set
     ) {
         set.add(dispatcher);
         if (parent != null) {
@@ -332,7 +331,7 @@ public class IdeEventQueue extends EventQueue {
     }
 
     @Override
-    public void dispatchEvent(@Nonnull AWTEvent e) {
+    public void dispatchEvent(AWTEvent e) {
         // DO NOT ADD ANYTHING BEFORE fixNestedSequenceEvent is called
 
         fixNestedSequenceEvent(e);
@@ -444,7 +443,7 @@ public class IdeEventQueue extends EventQueue {
     }
 
     // Fixes IDEA-218430: nested sequence events cause deadlock
-    private void fixNestedSequenceEvent(@Nonnull AWTEvent e) {
+    private void fixNestedSequenceEvent(AWTEvent e) {
         if (e.getClass() == SequencedEventNestedFieldHolder.SEQUENCED_EVENT_CLASS) {
             if (myCurrentSequencedEvent != null) {
                 AWTEvent sequenceEventToDispose = myCurrentSequencedEvent;
@@ -464,7 +463,7 @@ public class IdeEventQueue extends EventQueue {
         myLastEventTime = now;
     }
 
-    private static boolean isInputEvent(@Nonnull AWTEvent e) {
+    private static boolean isInputEvent(AWTEvent e) {
         return e instanceof InputEvent || e instanceof InputMethodEvent || e instanceof WindowEvent || e instanceof ActionEvent;
     }
 
@@ -481,7 +480,7 @@ public class IdeEventQueue extends EventQueue {
     }
 
     @Override
-    @Nonnull
+    
     public AWTEvent getNextEvent() throws InterruptedException {
         AWTEvent event = appIsLoaded()
             ? ((ApplicationWithIntentWriteLock) Application.get()).runUnlockingIntendedWrite(() -> super.getNextEvent())
@@ -494,16 +493,16 @@ public class IdeEventQueue extends EventQueue {
     }
 
     @Nullable
-    static AccessToken startActivity(@Nonnull AWTEvent e) {
+    static AccessToken startActivity(AWTEvent e) {
         return AccessToken.EMPTY_ACCESS_TOKEN;
     }
 
-    private void processException(@Nonnull Throwable t) {
+    private void processException(Throwable t) {
         ApplicationStarter.processException(() -> LOG, t);
     }
 
-    @Nonnull
-    private static AWTEvent fixNonEnglishKeyboardLayouts(@Nonnull AWTEvent e) {
+    
+    private static AWTEvent fixNonEnglishKeyboardLayouts(AWTEvent e) {
         if (!(e instanceof KeyEvent)) {
             return e;
         }
@@ -559,12 +558,12 @@ public class IdeEventQueue extends EventQueue {
         return ke;
     }
 
-    @Nonnull
-    private static AWTEvent mapEvent(@Nonnull AWTEvent e) {
+    
+    private static AWTEvent mapEvent(AWTEvent e) {
         return Platform.current().os().isXWindow() && e instanceof MouseEvent me && me.getButton() > 3 ? mapXWindowMouseEvent(me) : e;
     }
 
-    @Nonnull
+    
     private static AWTEvent mapXWindowMouseEvent(MouseEvent src) {
         if (src.getButton() < 6) {
             // Convert these events(buttons 4&5 in are produced by touchpad, they must be converted to horizontal scrolling events
@@ -609,7 +608,7 @@ public class IdeEventQueue extends EventQueue {
      * Note: As side-effect this method tracks special flag for 'Windows' key state that is valuable on itself
      */
     @Nullable
-    private AWTEvent mapMetaState(@Nonnull AWTEvent e) {
+    private AWTEvent mapMetaState(AWTEvent e) {
         if (myWinMetaPressed) {
             Application app = ApplicationManager.getApplication();
 
@@ -662,7 +661,7 @@ public class IdeEventQueue extends EventQueue {
     }
 
     @RequiredUIAccess
-    public void _dispatchEvent(@Nonnull AWTEvent e) {
+    public void _dispatchEvent(AWTEvent e) {
         if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
             DnDManagerImpl dndManager = (DnDManagerImpl) DnDManager.getInstance();
             dndManager.setLastDropHandler(null);
@@ -760,7 +759,7 @@ public class IdeEventQueue extends EventQueue {
         }
     }
 
-    private boolean dispatchByCustomDispatchers(@Nonnull AWTEvent e) {
+    private boolean dispatchByCustomDispatchers(AWTEvent e) {
         for (Predicate<AWTEvent> eachDispatcher : myDispatchers) {
             if (eachDispatcher.test(e)) {
                 return true;
@@ -769,7 +768,7 @@ public class IdeEventQueue extends EventQueue {
         return false;
     }
 
-    private static void fixStickyWindow(@Nonnull KeyboardFocusManager mgr, Window wnd, @Nonnull String resetMethod) {
+    private static void fixStickyWindow(KeyboardFocusManager mgr, Window wnd, String resetMethod) {
         if (wnd != null && !wnd.isShowing()) {
             Window showingWindow = wnd;
             while (showingWindow != null) {
@@ -815,7 +814,7 @@ public class IdeEventQueue extends EventQueue {
             || queue.peekEvent(MouseEvent.MOUSE_CLICKED) != null;
     }
 
-    private static boolean processAppActivationEvents(@Nonnull AWTEvent e) {
+    private static boolean processAppActivationEvents(AWTEvent e) {
         if (e instanceof WindowEvent we) {
             ApplicationActivationStateManager.updateState(we);
 
@@ -825,7 +824,7 @@ public class IdeEventQueue extends EventQueue {
         return false;
     }
 
-    private static void storeLastFocusedComponent(@Nonnull WindowEvent we) {
+    private static void storeLastFocusedComponent(WindowEvent we) {
         Window eventWindow = we.getWindow();
 
         if (we.getID() == WindowEvent.WINDOW_DEACTIVATED || we.getID() == WindowEvent.WINDOW_LOST_FOCUS) {
@@ -844,7 +843,7 @@ public class IdeEventQueue extends EventQueue {
         }
     }
 
-    private void defaultDispatchEvent(@Nonnull AWTEvent e) {
+    private void defaultDispatchEvent(AWTEvent e) {
         try {
             maybeReady();
 
@@ -872,9 +871,9 @@ public class IdeEventQueue extends EventQueue {
     }
 
     public void pumpEventsForHierarchy(
-        @Nonnull Component modalComponent,
-        @Nonnull Future<?> exitCondition,
-        @Nonnull Predicate<? super AWTEvent> isCancelEvent
+        Component modalComponent,
+        Future<?> exitCondition,
+        Predicate<? super AWTEvent> isCancelEvent
     ) {
         assert EventQueue.isDispatchThread();
         if (LOG.isDebugEnabled()) {
@@ -901,7 +900,7 @@ public class IdeEventQueue extends EventQueue {
     }
 
     // return true if consumed
-    private static boolean consumeUnrelatedEvent(@Nonnull Component modalComponent, @Nonnull AWTEvent event) {
+    private static boolean consumeUnrelatedEvent(Component modalComponent, AWTEvent event) {
         boolean consumed = false;
         if (event instanceof InputEvent ie && event.getSource() instanceof Component c) {
             Window modalWindow = SwingUtilities.windowForComponent(modalComponent);
@@ -921,12 +920,12 @@ public class IdeEventQueue extends EventQueue {
         return myIdleHolder.getIdleTime();
     }
 
-    @Nonnull
+    
     public IdePopupManager getPopupManager() {
         return myPopupManager;
     }
 
-    @Nonnull
+    
     public IdeKeyEventDispatcher getKeyEventDispatcher() {
         return myKeyEventDispatcher;
     }
@@ -934,7 +933,7 @@ public class IdeEventQueue extends EventQueue {
     /**
      * Same as {@link #blockNextEvents(MouseEvent, IdeEventQueue.BlockMode)} with {@code blockMode} equal to {@code COMPLETE}.
      */
-    public void blockNextEvents(@Nonnull MouseEvent e) {
+    public void blockNextEvents(MouseEvent e) {
         blockNextEvents(e, BlockMode.COMPLETE);
     }
 
@@ -942,7 +941,7 @@ public class IdeEventQueue extends EventQueue {
      * When {@code blockMode} is {@code COMPLETE}, blocks following related mouse events completely, when {@code blockMode} is
      * {@code ACTIONS} only blocks performing actions bound to corresponding mouse shortcuts.
      */
-    public void blockNextEvents(@Nonnull MouseEvent e, @Nonnull BlockMode blockMode) {
+    public void blockNextEvents(MouseEvent e, BlockMode blockMode) {
         myMouseEventDispatcher.blockNextEvents(e, blockMode);
     }
 
@@ -967,7 +966,7 @@ public class IdeEventQueue extends EventQueue {
         }
     }
 
-    public void doWhenReady(@Nonnull Runnable runnable) {
+    public void doWhenReady(Runnable runnable) {
         if (EventQueue.isDispatchThread()) {
             myReady.add(runnable);
             maybeReady();
@@ -990,7 +989,7 @@ public class IdeEventQueue extends EventQueue {
         private Robot myRobot;
 
         @Override
-        public boolean test(@Nonnull AWTEvent e) {
+        public boolean test(AWTEvent e) {
             boolean dispatch = true;
             if (e instanceof KeyEvent ke) {
                 Component component = ke.getComponent();
@@ -1047,7 +1046,7 @@ public class IdeEventQueue extends EventQueue {
     //We have to stop editing with <ESC> (if any) and consume the event to prevent any further processing (dialog closing etc.)
     private static class EditingCanceller implements Predicate<AWTEvent> {
         @Override
-        public boolean test(@Nonnull AWTEvent e) {
+        public boolean test(AWTEvent e) {
             if (e instanceof KeyEvent ke && ke.getID() == KeyEvent.KEY_PRESSED && ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 Component owner =
                     UIUtil.findParentByCondition(
@@ -1072,7 +1071,7 @@ public class IdeEventQueue extends EventQueue {
         return !Platform.current().os().isMac() || myInputMethodLock == 0;
     }
 
-    private void onFocusEvent(@Nonnull AWTEvent event) {
+    private void onFocusEvent(AWTEvent event) {
         if (FOCUS_AWARE_RUNNABLES_LOG.isDebugEnabled()) {
             FOCUS_AWARE_RUNNABLES_LOG.debug("Focus event list (execute on focus event): " + runnablesWaitingForFocusChangeState());
         }
@@ -1104,7 +1103,7 @@ public class IdeEventQueue extends EventQueue {
         }
     }
 
-    public void disableInputMethods(@Nonnull Disposable parentDisposable) {
+    public void disableInputMethods(Disposable parentDisposable) {
         myInputMethodLock++;
         Disposer.register(parentDisposable, () -> myInputMethodLock--);
     }
@@ -1112,12 +1111,12 @@ public class IdeEventQueue extends EventQueue {
     private final FrequentEventDetector myFrequentEventDetector = new FrequentEventDetector(1009, 100);
 
     @Override
-    public void postEvent(@Nonnull AWTEvent event) {
+    public void postEvent(AWTEvent event) {
         doPostEvent(event);
     }
 
     // return true if posted, false if consumed immediately
-    boolean doPostEvent(@Nonnull AWTEvent event) {
+    boolean doPostEvent(AWTEvent event) {
         for (PostEventHook listener : myPostEventListeners.getListeners()) {
             if (listener.consumePostedEvent(event)) {
                 return false;
@@ -1137,7 +1136,7 @@ public class IdeEventQueue extends EventQueue {
         return true;
     }
 
-    private static boolean isFocusEvent(@Nonnull AWTEvent e) {
+    private static boolean isFocusEvent(AWTEvent e) {
         return e.getID() == FocusEvent.FOCUS_GAINED
             || e.getID() == FocusEvent.FOCUS_LOST
             || e.getID() == WindowEvent.WINDOW_ACTIVATED
@@ -1146,7 +1145,7 @@ public class IdeEventQueue extends EventQueue {
             || e.getID() == WindowEvent.WINDOW_GAINED_FOCUS;
     }
 
-    private static boolean isKeyboardEvent(@Nonnull AWTEvent event) {
+    private static boolean isKeyboardEvent(AWTEvent event) {
         return event instanceof KeyEvent;
     }
 
@@ -1170,7 +1169,7 @@ public class IdeEventQueue extends EventQueue {
         ACTIONS
     }
 
-    private static void dispatchTrayIconEvent(@Nonnull AWTEvent e) {
+    private static void dispatchTrayIconEvent(AWTEvent e) {
         if (e instanceof ActionEvent ae) {
             for (ActionListener listener : ((TrayIcon) e.getSource()).getActionListeners()) {
                 listener.actionPerformed(ae);
@@ -1194,10 +1193,10 @@ public class IdeEventQueue extends EventQueue {
         /**
          * @return true if event is handled by the listener and shouldn't be added to event queue at all
          */
-        boolean consumePostedEvent(@Nonnull AWTEvent event);
+        boolean consumePostedEvent(AWTEvent event);
     }
 
-    public void addPostEventListener(@Nonnull PostEventHook listener, @Nonnull Disposable parentDisposable) {
+    public void addPostEventListener(PostEventHook listener, Disposable parentDisposable) {
         myPostEventListeners.addListener(listener, parentDisposable);
     }
 }

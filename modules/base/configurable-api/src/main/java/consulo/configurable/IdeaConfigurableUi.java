@@ -17,19 +17,18 @@ package consulo.configurable;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 @Deprecated
 @DeprecationInfo("Use consulo.ide.impl.options.SimpleConfigurable")
 public interface IdeaConfigurableUi<S> {
-  void reset(@Nonnull S settings);
+  void reset(S settings);
 
-  boolean isModified(@Nonnull S settings);
+  boolean isModified(S settings);
 
-  void apply(@Nonnull S settings) throws ConfigurationException;
+  void apply(S settings) throws ConfigurationException;
 
-  @Nonnull
+  
   JComponent getComponent(Disposable disposable);
 }

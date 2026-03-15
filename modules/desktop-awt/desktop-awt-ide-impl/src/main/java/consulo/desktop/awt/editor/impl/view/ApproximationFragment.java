@@ -1,7 +1,6 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl.view;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -72,7 +71,7 @@ class ApproximationFragment implements LineFragment {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
   public LineFragment subFragment(int startOffset, int endOffset) {
     throw new UnsupportedOperationException();

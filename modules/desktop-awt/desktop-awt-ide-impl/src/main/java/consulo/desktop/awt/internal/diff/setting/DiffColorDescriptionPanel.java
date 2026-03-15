@@ -21,8 +21,7 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.FormBuilder;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -36,11 +35,11 @@ class DiffColorDescriptionPanel implements ColorDescriptionPanel {
   private ColorBox myStripeMarkColorPanel;
   private CheckBox myInheritIgnoredCheckBox;
 
-  @Nonnull
+  
   private final ColorAndFontOptions myOptions;
 
   @RequiredUIAccess
-  DiffColorDescriptionPanel(@Nonnull ColorAndFontOptions options) {
+  DiffColorDescriptionPanel(ColorAndFontOptions options) {
     myOptions = options;
 
     myPanel = VerticalLayout.create();
@@ -84,7 +83,7 @@ class DiffColorDescriptionPanel implements ColorDescriptionPanel {
     });
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getPanel() {
     return (JComponent)TargetAWT.to(myPanel);
@@ -106,7 +105,7 @@ class DiffColorDescriptionPanel implements ColorDescriptionPanel {
 
   @Override
   @RequiredUIAccess
-  public void reset(@Nonnull EditorSchemeAttributeDescriptor attrDescription) {
+  public void reset(EditorSchemeAttributeDescriptor attrDescription) {
     if (!(attrDescription instanceof ColorAndFontDescription)) return;
     ColorAndFontDescription description = (ColorAndFontDescription)attrDescription;
 
@@ -127,7 +126,7 @@ class DiffColorDescriptionPanel implements ColorDescriptionPanel {
   }
 
   @Override
-  public void apply(@Nonnull EditorSchemeAttributeDescriptor attrDescription, EditorColorsScheme scheme) {
+  public void apply(EditorSchemeAttributeDescriptor attrDescription, EditorColorsScheme scheme) {
     if (!(attrDescription instanceof ColorAndFontDescription)) return;
     ColorAndFontDescription description = (ColorAndFontDescription)attrDescription;
 
@@ -143,34 +142,34 @@ class DiffColorDescriptionPanel implements ColorDescriptionPanel {
   }
 
   @Override
-  public void addListener(@Nonnull Listener listener) {
+  public void addListener(Listener listener) {
     myDispatcher.addListener(listener);
   }
 
   @Nullable
-  private static ColorValue getBackgroundColor(@Nonnull TextAttributes attributes) {
+  private static ColorValue getBackgroundColor(TextAttributes attributes) {
     return attributes.getBackgroundColor();
   }
 
   @Nullable
-  private static ColorValue getIgnoredColor(@Nonnull TextAttributes attributes) {
+  private static ColorValue getIgnoredColor(TextAttributes attributes) {
     return attributes.getForegroundColor();
   }
 
   @Nullable
-  private static ColorValue getStripeMarkColor(@Nonnull TextAttributes attributes) {
+  private static ColorValue getStripeMarkColor(TextAttributes attributes) {
     return attributes.getErrorStripeColor();
   }
 
-  private void setBackgroundColor(@Nonnull TextAttributes attributes) {
+  private void setBackgroundColor(TextAttributes attributes) {
     attributes.setBackgroundColor(myBackgroundColorPanel.getValue());
   }
 
-  private void setIgnoredColor(@Nonnull TextAttributes attributes) {
+  private void setIgnoredColor(TextAttributes attributes) {
     attributes.setForegroundColor(myInheritIgnoredCheckBox.getValueOrError() ? null : myIgnoredColorPanel.getValue());
   }
 
-  private void setStripeMarkColor(@Nonnull TextAttributes attributes) {
+  private void setStripeMarkColor(TextAttributes attributes) {
     attributes.setErrorStripeColor(myStripeMarkColorPanel.getValue());
   }
 }

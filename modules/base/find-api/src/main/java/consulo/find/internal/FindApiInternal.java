@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface FindApiInternal {
-  @Nonnull
+  
   @RequiredUIAccess
   AsyncResult<Void> openScopeConfigurable(Project project, @Nullable String selection);
 }

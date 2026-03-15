@@ -25,7 +25,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public class TreeChangeImpl implements TreeChange, Comparable<TreeChangeImpl> {
@@ -35,7 +34,7 @@ public class TreeChangeImpl implements TreeChange, Comparable<TreeChangeImpl> {
   private final Set<TreeElement> myContentChangeChildren = new HashSet<>();
   private Map<TreeElement, ChangeInfoImpl> myChanges;
 
-  public TreeChangeImpl(@Nonnull CompositeElement parent) {
+  public TreeChangeImpl(CompositeElement parent) {
     myParent = parent;
     assert myParent.getPsi() != null : myParent.getElementType() + " of " + myParent.getClass();
     mySuperParents = JBIterable.generate(parent.getTreeParent(), TreeElement::getTreeParent).toList();
@@ -48,13 +47,13 @@ public class TreeChangeImpl implements TreeChange, Comparable<TreeChangeImpl> {
     return mySuperParents;
   }
 
-  @Nonnull
+  
   private JBIterable<TreeElement> getCurrentChildren() {
     return JBIterable.generate(myParent.getFirstChildNode(), TreeElement::getTreeNext);
   }
 
   @Override
-  public int compareTo(@Nonnull TreeChangeImpl o) {
+  public int compareTo(TreeChangeImpl o) {
     List<CompositeElement> thisParents = ContainerUtil.reverse(getSuperParents());
     List<CompositeElement> thatParents = ContainerUtil.reverse(o.getSuperParents());
     for (int i = 1; i <= thisParents.size() && i <= thatParents.size(); i++) {
@@ -145,7 +144,7 @@ public class TreeChangeImpl implements TreeChange, Comparable<TreeChangeImpl> {
     }
   }
 
-  @Nonnull
+  
   public CompositeElement getChangedParent() {
     return myParent;
   }
@@ -164,7 +163,7 @@ public class TreeChangeImpl implements TreeChange, Comparable<TreeChangeImpl> {
   }
 
   @Override
-  @Nonnull
+  
   public TreeElement[] getAffectedChildren() {
     return getAllChanges().keySet().toArray(TreeElement.EMPTY_ARRAY);
   }
@@ -182,12 +181,12 @@ public class TreeChangeImpl implements TreeChange, Comparable<TreeChangeImpl> {
     return myParent + ": " + getAllChanges().values();
   }
 
-  void appendChanges(@Nonnull TreeChangeImpl next) {
+  void appendChanges(TreeChangeImpl next) {
     myContentChangeChildren.addAll(next.myContentChangeChildren);
     clearCache();
   }
 
-  public void markChildChanged(@Nonnull TreeElement child, int lengthDelta) {
+  public void markChildChanged(TreeElement child, int lengthDelta) {
     myContentChangeChildren.add(child);
     if (lengthDelta != 0) {
       myInitialLengths.computeIfPresent(child, (c, oldLength) -> oldLength - lengthDelta);

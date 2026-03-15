@@ -20,9 +20,8 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public interface DiffRequestPanel extends Disposable {
@@ -34,12 +33,12 @@ public interface DiffRequestPanel extends Disposable {
    */
   void setRequest(@Nullable DiffRequest request, @Nullable Object identity);
 
-  @Nonnull
+  
   JComponent getComponent();
 
   @Nullable
   JComponent getPreferredFocusedComponent();
 
   @RequiredUIAccess
-  <T> void putContextHints(@Nonnull Key<T> key, @Nullable T value);
+  <T> void putContextHints(Key<T> key, @Nullable T value);
 }

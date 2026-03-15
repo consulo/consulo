@@ -26,10 +26,10 @@ import consulo.content.scope.PackageSetBase;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.util.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author lesya
@@ -43,11 +43,11 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
   private final Project myProject;
   private final String myFileGroupId;
 
-  public GroupTreeNode(@Nonnull String name,
+  public GroupTreeNode(String name,
                        boolean supportsDeletion,
-                       @Nonnull SimpleTextAttributes invalidAttributes,
-                       @Nonnull Project project,
-                       @Nonnull Map<String, String> errorsMap, String id) {
+                       SimpleTextAttributes invalidAttributes,
+                       Project project,
+                       Map<String, String> errorsMap, String id) {
     myName = name;
     mySupportsDeletion = supportsDeletion;
     myInvalidAttributes = invalidAttributes;
@@ -60,7 +60,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
     return myFileGroupId;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myName;
@@ -71,7 +71,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
     return AllIcons.Nodes.Folder;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<VirtualFile> getVirtualFiles() {
     ArrayList<VirtualFile> result = new ArrayList<VirtualFile>();
@@ -81,7 +81,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
     return result;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<File> getFiles() {
     ArrayList<File> result = new ArrayList<File>();
@@ -107,7 +107,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public SimpleTextAttributes getAttributes() {
     return myFilterAttributes == null ? SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES : myFilterAttributes;
@@ -118,11 +118,11 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
     return mySupportsDeletion;
   }
 
-  public void addFilePath(@Nonnull String filePath) {
+  public void addFilePath(String filePath) {
     myFilePaths.add(filePath);
   }
 
-  public void rebuild(boolean groupByPackages, @jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
+  public void rebuild(boolean groupByPackages, @Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
     myFilterAttributes = null;
     if (containsGroups()) {
       rebuildGroups(groupByPackages, filter, showOnlyFilteredItems);
@@ -133,7 +133,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
   }
 
   private void rebuildGroups(boolean groupByPackages,
-                             @jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
+                             @Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
                              boolean showOnlyFilteredItems) {
     boolean apply = false;
     for (int i = 0; i < getChildCount(); i++) {
@@ -145,7 +145,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
   }
 
   private void rebuildFiles(boolean groupByPackages,
-                            @jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
+                            @Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
                             boolean showOnlyFilteredItems) {
     for (int i = getChildCount() - 1; i >= 0; i--) {
       TreeNode node = getChildAt(i);
@@ -182,10 +182,10 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
 
   }
 
-  private void addFiles(@Nonnull AbstractTreeNode parentNode,
-                        @Nonnull List<File> roots,
-                        @Nonnull final Collection<File> files,
-                        @Nonnull GroupByPackages groupByPackages,
+  private void addFiles(AbstractTreeNode parentNode,
+                        List<File> roots,
+                        final Collection<File> files,
+                        GroupByPackages groupByPackages,
                         String parentPath) {
     Collections.sort(roots, new Comparator<File>() {
       @Override
@@ -209,7 +209,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
     }
   }
 
-  private void buildFiles(@jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
+  private void buildFiles(@Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
     Collections.sort(myFilePaths, new Comparator<String>() {
       @Override
       public int compare(String path1, String path2) {

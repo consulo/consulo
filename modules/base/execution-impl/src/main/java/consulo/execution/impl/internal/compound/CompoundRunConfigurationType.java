@@ -24,7 +24,6 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class CompoundRunConfigurationType extends ConfigurationTypeBase {
@@ -42,7 +41,7 @@ public class CompoundRunConfigurationType extends ConfigurationTypeBase {
         return new CompoundRunConfiguration(project, CompoundRunConfigurationType.this, "Compound Run Configuration");
       }
 
-      @Nonnull
+      
       @Override
       public String getId() {
         // this is hardcode string as id - never localize it

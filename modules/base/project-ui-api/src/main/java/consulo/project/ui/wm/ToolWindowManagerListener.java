@@ -19,20 +19,19 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 import java.util.List;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface ToolWindowManagerListener extends EventListener {
-    default void toolWindowsRegistered(@Nonnull List<String> ids, @Nonnull ToolWindowManager toolWindowManager) {
+    default void toolWindowsRegistered(List<String> ids, ToolWindowManager toolWindowManager) {
         for (String id : ids) {
             toolWindowRegistered(id);
         }
     }
 
-    default void toolWindowUnregistered(@Nonnull String id, @Nonnull ToolWindow toolWindow) {
+    default void toolWindowUnregistered(String id, ToolWindow toolWindow) {
     }
 
     /**
@@ -40,7 +39,7 @@ public interface ToolWindowManagerListener extends EventListener {
      *
      * @param id <code>id</code> of registered tool window.
      */
-    default void toolWindowRegistered(@Nonnull String id) {
+    default void toolWindowRegistered(String id) {
     }
 
     default void stateChanged(ToolWindowManager toolWindowManager) {
@@ -52,6 +51,6 @@ public interface ToolWindowManagerListener extends EventListener {
     default void stateChanged() {
     }
 
-    default void toolWindowShown(@Nonnull ToolWindow toolWindow) {
+    default void toolWindowShown(ToolWindow toolWindow) {
     }
 }

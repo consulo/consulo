@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.ui.ex.awt.internal.DialogWrapperPeerFactory;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -71,8 +70,8 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
         }
     };
 
-    @Nonnull
-    private static String fitTextToLabel(@Nullable String fullText, @Nonnull JLabel label) {
+    
+    private static String fitTextToLabel(@Nullable String fullText, JLabel label) {
         if (fullText == null || fullText.isEmpty()) {
             return " ";
         }
@@ -166,7 +165,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
     }
 
     @Override
-    public void startBlocking(@Nonnull CompletableFuture<?> stopCondition, @Nonnull Predicate<AWTEvent> isCancellationEvent) {
+    public void startBlocking(CompletableFuture<?> stopCondition, Predicate<AWTEvent> isCancellationEvent) {
         IdeEventQueue.getInstance().pumpEventsForHierarchy(myPanel, stopCondition, event -> {
             if (isCancellationEvent.test(event)) {
                 cancel();
@@ -353,9 +352,9 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
             }
         }
 
-        @Nonnull
+        
         @Override
-        protected DialogWrapperPeer createPeer(@Nonnull Component parent, boolean canBeParent) {
+        protected DialogWrapperPeer createPeer(Component parent, boolean canBeParent) {
             if (useLightPopup()) {
                 try {
                     return new GlassPaneDialogWrapperPeer(this, parent, canBeParent);
@@ -369,7 +368,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
             }
         }
 
-        @Nonnull
+        
         @Override
         protected DialogWrapperPeer createPeer(ComponentManager project, boolean canBeParent, boolean applicationModalIfPossible) {
             if (useLightPopup()) {
@@ -389,7 +388,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
             return System.getProperty("vintage.progress") == null && !isWriteActionProgress();
         }
 
-        @Nonnull
+        
         @Override
         protected DialogWrapperPeer createPeer(ComponentManager project, boolean canBeParent) {
             if (System.getProperty("vintage.progress") == null) {

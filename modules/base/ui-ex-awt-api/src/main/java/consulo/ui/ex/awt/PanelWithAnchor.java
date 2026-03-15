@@ -1,6 +1,6 @@
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**

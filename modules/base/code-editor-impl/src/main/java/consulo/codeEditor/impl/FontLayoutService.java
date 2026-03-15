@@ -19,8 +19,7 @@ import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -40,20 +39,20 @@ public abstract class FontLayoutService {
     return INSTANCE;
   }
 
-  @Nonnull
-  public abstract GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext, @Nonnull char[] chars, int start, int end, boolean isRtl);
+  
+  public abstract GlyphVector layoutGlyphVector(Font font, FontRenderContext fontRenderContext, char[] chars, int start, int end, boolean isRtl);
 
-  public abstract int charWidth(@Nonnull FontMetrics fontMetrics, char c);
+  public abstract int charWidth(FontMetrics fontMetrics, char c);
 
-  public abstract int charWidth(@Nonnull FontMetrics fontMetrics, int codePoint);
+  public abstract int charWidth(FontMetrics fontMetrics, int codePoint);
 
-  public abstract float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint);
+  public abstract float charWidth2D(FontMetrics fontMetrics, int codePoint);
 
-  public abstract int stringWidth(@Nonnull FontMetrics fontMetrics, @Nonnull String str);
+  public abstract int stringWidth(FontMetrics fontMetrics, String str);
 
-  public abstract int getHeight(@Nonnull FontMetrics fontMetrics);
+  public abstract int getHeight(FontMetrics fontMetrics);
 
-  public abstract int getDescent(@Nonnull FontMetrics fontMetrics);
+  public abstract int getDescent(FontMetrics fontMetrics);
 
   @TestOnly
   public static void setInstance(@Nullable FontLayoutService fontLayoutService) {
@@ -75,23 +74,23 @@ public abstract class FontLayoutService {
       }
     }
 
-    @Nonnull
+    
     @Override
-    public GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext, @Nonnull char[] chars, int start, int end, boolean isRtl) {
+    public GlyphVector layoutGlyphVector(Font font, FontRenderContext fontRenderContext, char[] chars, int start, int end, boolean isRtl) {
       return font.layoutGlyphVector(fontRenderContext, chars, start, end, (isRtl ? Font.LAYOUT_RIGHT_TO_LEFT : Font.LAYOUT_LEFT_TO_RIGHT));    }
 
     @Override
-    public int charWidth(@Nonnull FontMetrics fontMetrics, char c) {
+    public int charWidth(FontMetrics fontMetrics, char c) {
       return fontMetrics.charWidth(c);
     }
 
     @Override
-    public int charWidth(@Nonnull FontMetrics fontMetrics, int codePoint) {
+    public int charWidth(FontMetrics fontMetrics, int codePoint) {
       return fontMetrics.charWidth(codePoint);
     }
 
     @Override
-    public float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint) {
+    public float charWidth2D(FontMetrics fontMetrics, int codePoint) {
       if (FontDesignMetricsHacking.isFontDesignMetrics(fontMetrics)) {
         if (codePoint < 256 && myGetLatinCharWidthMethod != null) {
           return myGetLatinCharWidthMethod.apply(fontMetrics, (char)codePoint);
@@ -104,17 +103,17 @@ public abstract class FontLayoutService {
     }
 
     @Override
-    public int stringWidth(@Nonnull FontMetrics fontMetrics, @Nonnull String str) {
+    public int stringWidth(FontMetrics fontMetrics, String str) {
       return fontMetrics.stringWidth(str);
     }
 
     @Override
-    public int getHeight(@Nonnull FontMetrics fontMetrics) {
+    public int getHeight(FontMetrics fontMetrics) {
       return fontMetrics.getHeight();
     }
 
     @Override
-    public int getDescent(@Nonnull FontMetrics fontMetrics) {
+    public int getDescent(FontMetrics fontMetrics) {
       return fontMetrics.getDescent();
     }
   }

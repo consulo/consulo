@@ -29,7 +29,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -40,16 +39,16 @@ import java.util.ArrayList;
 @ExtensionImpl
 public class PlainTextSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Override
-  @Nonnull
+  
   public SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
     return new SyntaxHighlighterBase() {
-      @Nonnull
+      
       @Override
       public Lexer getHighlightingLexer() {
         return createPlainTextLexer();
       }
 
-      @Nonnull
+      
       @Override
       public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         return EMPTY;
@@ -57,7 +56,7 @@ public class PlainTextSyntaxHighlighterFactory extends SyntaxHighlighterFactory 
     };
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return PlainTextLanguage.INSTANCE;

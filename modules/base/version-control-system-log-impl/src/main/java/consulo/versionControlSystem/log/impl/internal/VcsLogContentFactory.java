@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.ChangesViewContentFactory;
 import consulo.versionControlSystem.change.ChangesViewContentProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.Arrays;
@@ -39,7 +38,7 @@ public class VcsLogContentFactory implements ChangesViewContentFactory {
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getTabName() {
     return LocalizeValue.localizeTODO("Log");
@@ -50,7 +49,7 @@ public class VcsLogContentFactory implements ChangesViewContentFactory {
     return !VcsLogManager.findLogProviders(Arrays.asList(ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots()), myProject).isEmpty();
   }
 
-  @Nonnull
+  
   @Override
   public ChangesViewContentProvider create() {
     return new VcsLogContentProvider(myProject, VcsProjectLog.getInstance(myProject));

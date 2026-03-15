@@ -15,7 +15,6 @@
  */
 package consulo.component.internal.inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -23,23 +22,23 @@ import java.util.Objects;
  * @since 2018-08-23
  */
 public interface InjectingKey<T> {
-  @Nonnull
+  
   static <K> InjectingKey<K> of(Class<K> clazz) {
     Objects.requireNonNull(clazz);
     return new SimpleInjectingKey<>(clazz);
   }
 
-  @Nonnull
+  
   static <K> InjectingKey<K> of(String className, ClassLoader classLoader) {
     Objects.requireNonNull(className);
     Objects.requireNonNull(classLoader);
     return new LazyInjectingKey<>(className, classLoader);
   }
 
-  @Nonnull
+  
   String getTargetClassName();
 
-  @Nonnull
+  
   Class<T> getTargetClass();
 
   boolean equals(Object o);

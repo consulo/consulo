@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Nikolay Chashnikov (kotlin)
@@ -41,7 +40,7 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class PresentationAssistant implements Disposable, PersistentStateComponent<PresentationAssistantState> {
-    @Nonnull
+    
     public static PresentationAssistant getInstance() {
         return Application.get().getInstance(PresentationAssistant.class);
     }
@@ -67,7 +66,7 @@ public class PresentationAssistant implements Disposable, PersistentStateCompone
         }
     }
 
-    @Nonnull
+    
     public PresentationAssistantState getConfiguration() {
         return myConfiguration;
     }

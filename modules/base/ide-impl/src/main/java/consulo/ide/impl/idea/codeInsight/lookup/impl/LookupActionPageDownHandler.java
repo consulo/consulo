@@ -21,7 +21,6 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LookupActionPageDownHandler extends LookupActionHandler {
@@ -31,7 +30,7 @@ public class LookupActionPageDownHandler extends LookupActionHandler {
     lookup.movePageDown();
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_CARET_PAGE_DOWN;

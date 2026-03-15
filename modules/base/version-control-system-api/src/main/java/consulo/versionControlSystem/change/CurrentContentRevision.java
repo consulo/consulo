@@ -22,9 +22,7 @@ import consulo.document.FileDocumentManager;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -60,13 +58,13 @@ public class CurrentContentRevision implements ContentRevision {
   }
 
   @Override
-  @Nonnull
+  
   public FilePath getFile() {
     return myFile;
   }
 
   @Override
-  @Nonnull
+  
   public VcsRevisionNumber getRevisionNumber() {
     return VcsRevisionNumber.NULL;
   }
@@ -79,7 +77,7 @@ public class CurrentContentRevision implements ContentRevision {
   }
 
   @Override
-  @NonNls
+  
   public String toString() {
     return "CurrentContentRevision:" + myFile;
   }

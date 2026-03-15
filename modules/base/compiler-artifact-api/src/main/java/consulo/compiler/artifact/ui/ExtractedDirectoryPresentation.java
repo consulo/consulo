@@ -23,7 +23,6 @@ import consulo.util.io.PathUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -43,7 +42,7 @@ public class ExtractedDirectoryPresentation extends PackagingElementPresentation
     return PathUtil.getFileName(myJarPath) + myPathInJar;
   }
 
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.ExtractedFolder);
     String parentPath = PathUtil.getParentPath(myJarPath);
     if (myFile == null || !myFile.isDirectory()) {

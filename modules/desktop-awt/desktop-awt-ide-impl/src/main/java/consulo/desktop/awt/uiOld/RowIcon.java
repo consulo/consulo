@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -67,7 +66,7 @@ public class RowIcon extends JBUI.CachingScalableJBIcon<RowIcon> {
         myScaledIcons = null;
     }
 
-    @Nonnull
+    
     @Override
     protected RowIcon copy() {
         return new RowIcon(this);
@@ -94,7 +93,7 @@ public class RowIcon extends JBUI.CachingScalableJBIcon<RowIcon> {
         return myScaledIcons;
     }
 
-    @Nonnull
+    
     @TestOnly
     Icon[] getAllIcons() {
         List<Icon> icons = ContainerUtil.packNullables(myIcons);

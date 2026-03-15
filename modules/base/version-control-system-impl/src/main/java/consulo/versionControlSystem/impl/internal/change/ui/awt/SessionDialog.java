@@ -25,8 +25,7 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitSession;
 import consulo.versionControlSystem.impl.internal.commit.CommitChangeListDialog;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +43,7 @@ public class SessionDialog extends DialogWrapper {
     private final JComponent myConfigurationComponent;
 
     public SessionDialog(
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         Project project,
         CommitSession session,
         List<Change> changes,
@@ -69,7 +68,7 @@ public class SessionDialog extends DialogWrapper {
     }
 
     public SessionDialog(
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         Project project,
         CommitSession session,
         List<Change> changes,

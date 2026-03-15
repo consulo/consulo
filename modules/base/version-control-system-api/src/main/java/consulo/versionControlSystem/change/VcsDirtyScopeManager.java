@@ -21,8 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -34,8 +33,8 @@ import java.util.Collection;
  */
 @ServiceAPI(value = ComponentScope.PROJECT)
 public abstract class VcsDirtyScopeManager {
-    @Nonnull
-    public static VcsDirtyScopeManager getInstance(@Nonnull Project project) {
+    
+    public static VcsDirtyScopeManager getInstance(Project project) {
         return project.getInstance(VcsDirtyScopeManager.class);
     }
 
@@ -49,26 +48,26 @@ public abstract class VcsDirtyScopeManager {
      *
      * @param file the file for which the status update is requested.
      */
-    public abstract void fileDirty(@Nonnull VirtualFile file);
+    public abstract void fileDirty(VirtualFile file);
 
     /**
      * Requests an asynchronous file status update for the specified file path. Must be called from a read action.
      *
      * @param file the file path for which the status update is requested.
      */
-    public abstract void fileDirty(@Nonnull FilePath file);
+    public abstract void fileDirty(FilePath file);
 
     /**
      * Requests an asynchronous file status update for all files under the specified directory.
      *
      * @param dir the directory for which the file status update is requested.
      */
-    public abstract void dirDirtyRecursively(@Nonnull VirtualFile dir);
+    public abstract void dirDirtyRecursively(VirtualFile dir);
 
-    public abstract void dirDirtyRecursively(@Nonnull FilePath path);
+    public abstract void dirDirtyRecursively(FilePath path);
 
-    @Nonnull
-    public abstract Collection<FilePath> whatFilesDirty(@Nonnull Collection<? extends FilePath> files);
+    
+    public abstract Collection<FilePath> whatFilesDirty(Collection<? extends FilePath> files);
 
     /**
      * Requests an asynchronous file status update for all files specified and under the specified directories

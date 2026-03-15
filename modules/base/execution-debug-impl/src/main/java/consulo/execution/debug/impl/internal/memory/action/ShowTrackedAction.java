@@ -23,25 +23,24 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "MemoryView.ShowOnlyTracked")
 public class ShowTrackedAction extends ToggleAction implements DumbAware {
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return MemoryViewManager.getInstance().isNeedShowTrackedOnly();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         if (e.hasData(Project.KEY)) {
             MemoryViewManager.getInstance().setShowTrackedOnly(state);
         }
     }
 
     @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
+    public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }
 }

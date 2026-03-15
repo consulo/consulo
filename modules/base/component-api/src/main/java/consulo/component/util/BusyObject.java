@@ -19,8 +19,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public interface BusyObject {
-  AsyncResult<Void> getReady(@Nonnull Object requestor);
+  AsyncResult<Void> getReady(Object requestor);
 
   abstract class Impl implements BusyObject {
 
@@ -64,8 +63,8 @@ public interface BusyObject {
     }
 
     @Override
-    @Nonnull
-    public final AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    
+    public final AsyncResult<Void> getReady(Object requestor) {
       if (isReady()) {
         return AsyncResult.done(null);
       }
@@ -74,7 +73,7 @@ public interface BusyObject {
       }
     }
 
-    @Nonnull
+    
     private AsyncResult<Void> addReadyCallback(Object requestor) {
       synchronized (myReadyCallbacks) {
         AsyncResult<Void> cb = myReadyCallbacks.get(requestor);
@@ -119,8 +118,8 @@ public interface BusyObject {
         return myBusyCount.get() == 0;
       }
 
-      @Nonnull
-      public ActionCallback execute(@Nonnull ActiveRunnable runnable) {
+      
+      public ActionCallback execute(ActiveRunnable runnable) {
         myBusyCount.addAndGet(1);
         ActionCallback cb = runnable.run();
         cb.doWhenProcessed(() -> {

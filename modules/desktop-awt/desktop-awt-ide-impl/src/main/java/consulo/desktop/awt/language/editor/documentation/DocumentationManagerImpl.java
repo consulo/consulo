@@ -90,8 +90,7 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -178,7 +177,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         return true;
     }
 
-    @Nonnull
+    
     @Override
     protected AnAction createRestorePopupAction() {
         myRestorePopupAction = super.createRestorePopupAction();
@@ -244,11 +243,11 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @Inject
-    public DocumentationManagerImpl(@Nonnull Project project) {
+    public DocumentationManagerImpl(Project project) {
         super(project);
         AnActionListener actionListener = new AnActionListener() {
             @Override
-            public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+            public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
                 if (getDocInfoHint() != null &&
                     LookupManager.getActiveLookup(myEditor) == null
                     // let the lookup manage all the actions
@@ -260,7 +259,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
             }
 
             @Override
-            public void beforeEditorTyping(char c, @Nonnull DataContext dataContext) {
+            public void beforeEditorTyping(char c, DataContext dataContext) {
                 JBPopup hint = getDocInfoHint();
                 if (hint != null && LookupManager.getActiveLookup(myEditor) == null) {
                     hint.cancel();
@@ -303,7 +302,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
 
     @Override
     @RequiredUIAccess
-    public void showJavaDocInfoAtToolWindow(@Nonnull PsiElement element, @Nonnull PsiElement original) {
+    public void showJavaDocInfoAtToolWindow(PsiElement element, PsiElement original) {
         Content content = recreateToolWindow(element, original);
         if (content == null) {
             return;
@@ -315,7 +314,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
 
     @Override
     @RequiredUIAccess
-    public void showJavaDocInfo(@Nonnull PsiElement element, PsiElement original) {
+    public void showJavaDocInfo(PsiElement element, PsiElement original) {
         showJavaDocInfo(element, original, null);
     }
 
@@ -338,9 +337,9 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     @Override
     @RequiredUIAccess
     public void showJavaDocInfo(
-        @Nonnull Editor editor,
-        @Nonnull PsiElement element,
-        @Nonnull PsiElement original,
+        Editor editor,
+        PsiElement element,
+        PsiElement original,
         @Nullable Runnable closeCallback,
         @Nullable String documentation,
         boolean closeOnSneeze,
@@ -353,20 +352,20 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
 
     @Override
     @RequiredUIAccess
-    public void showJavaDocInfo(@Nonnull PsiElement element, PsiElement original, @Nullable Runnable closeCallback) {
+    public void showJavaDocInfo(PsiElement element, PsiElement original, @Nullable Runnable closeCallback) {
         showJavaDocInfo(element, original, false, closeCallback);
     }
 
     @Override
     @RequiredUIAccess
-    public void showJavaDocInfo(@Nonnull PsiElement element, PsiElement original, boolean requestFocus, @Nullable Runnable closeCallback) {
+    public void showJavaDocInfo(PsiElement element, PsiElement original, boolean requestFocus, @Nullable Runnable closeCallback) {
         showJavaDocInfo(element, original, requestFocus, closeCallback, null, true);
     }
 
     @Override
     @RequiredUIAccess
     public void showJavaDocInfo(
-        @Nonnull PsiElement element,
+        PsiElement element,
         PsiElement original,
         boolean requestFocus,
         @Nullable Runnable closeCallback,
@@ -516,9 +515,9 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
 
     @RequiredUIAccess
     private void doShowJavaDocInfo(
-        @Nonnull PsiElement element,
+        PsiElement element,
         boolean requestFocus,
-        @Nonnull PopupUpdateProcessor updateProcessor,
+        PopupUpdateProcessor updateProcessor,
         PsiElement originalElement,
         @Nullable Runnable closeCallback,
         @Nullable String documentation,
@@ -582,7 +581,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
 
     @RequiredUIAccess
     private void showInPopup(
-        @Nonnull PsiElement element,
+        PsiElement element,
         boolean requestFocus,
         PopupUpdateProcessor updateProcessor,
         PsiElement originalElement,
@@ -684,7 +683,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @RequiredReadAction
-    static String getTitle(@Nonnull PsiElement element, boolean isShort) {
+    static String getTitle(PsiElement element, boolean isShort) {
         String title = SymbolPresentationUtil.getSymbolPresentableText(element);
         return isShort ? title != null ? title : element.getText()
             : CodeInsightLocalize.javadocInfoTitle(title != null ? title : element.getText()).get();
@@ -781,7 +780,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @Override
-    public String generateDocumentation(@Nonnull PsiElement element, @Nullable PsiElement originalElement, boolean onHover) {
+    public String generateDocumentation(PsiElement element, @Nullable PsiElement originalElement, boolean onHover) {
         return new MyCollector(myProject, element, originalElement, null, onHover).getDocumentation();
     }
 
@@ -805,23 +804,23 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @RequiredReadAction
-    public void fetchDocInfo(@Nonnull PsiElement element, @Nonnull DocumentationComponent component) {
+    public void fetchDocInfo(PsiElement element, DocumentationComponent component) {
         cancelAndFetchDocInfo(component, new MyCollector(myProject, element, null, null, false));
     }
 
-    public ActionCallback queueFetchDocInfo(@Nonnull PsiElement element, @Nonnull DocumentationComponent component) {
+    public ActionCallback queueFetchDocInfo(PsiElement element, DocumentationComponent component) {
         return doFetchDocInfo(component, new MyCollector(myProject, element, null, null, false));
     }
 
     @RequiredReadAction
-    private ActionCallback cancelAndFetchDocInfo(@Nonnull DocumentationComponent component, @Nonnull DocumentationCollector provider) {
+    private ActionCallback cancelAndFetchDocInfo(DocumentationComponent component, DocumentationCollector provider) {
         updateToolWindowTabName(provider.element);
         myUpdateDocAlarm.cancelAllRequests();
         return doFetchDocInfo(component, provider);
     }
 
     @RequiredReadAction
-    void updateToolWindowTabName(@Nonnull PsiElement element) {
+    void updateToolWindowTabName(PsiElement element) {
         if (myToolWindow != null) {
             Content content = myToolWindow.getContentManager().getSelectedContent();
             if (content != null) {
@@ -830,7 +829,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         }
     }
 
-    private ActionCallback doFetchDocInfo(@Nonnull DocumentationComponent component, @Nonnull DocumentationCollector collector) {
+    private ActionCallback doFetchDocInfo(DocumentationComponent component, DocumentationCollector collector) {
         ActionCallback callback = new ActionCallback();
         myLastAction = callback;
         if (myPrecalculatedDocumentation != null) {
@@ -1044,7 +1043,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         component.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject(@Nullable PsiElement element) {
         assertSameProject(element);
@@ -1092,7 +1091,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
 
     @Override
     @RequiredUIAccess
-    protected void doUpdateComponent(@Nonnull PsiElement element) {
+    protected void doUpdateComponent(PsiElement element) {
         showJavaDocInfo(element, element, null);
     }
 
@@ -1103,7 +1102,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @Nullable
-    Image getElementImage(@Nonnull PsiElement element, @Nonnull String imageSpec) {
+    Image getElementImage(PsiElement element, String imageSpec) {
         DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
         if (provider instanceof CompositeDocumentationProvider compositeProvider) {
             for (DocumentationProvider p : compositeProvider.getAllProviders()) {
@@ -1157,7 +1156,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         final PsiElement originalElement;
         final boolean onHover;
 
-        MyCollector(@Nonnull Project project, @Nonnull PsiElement element, PsiElement originalElement, String ref, boolean onHover) {
+        MyCollector(Project project, PsiElement element, PsiElement originalElement, String ref, boolean onHover) {
             super(element, null, ref, null);
             this.project = project;
             this.originalElement = originalElement;
@@ -1215,7 +1214,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
 
     @Nullable
     @RequiredReadAction
-    private static String generateFileDoc(@Nonnull PsiFile psiFile, boolean withUrl) {
+    private static String generateFileDoc(PsiFile psiFile, boolean withUrl) {
         VirtualFile file = PsiUtilCore.getVirtualFile(psiFile);
         File ioFile = file == null || !file.isInLocalFileSystem() ? null : VirtualFileUtil.virtualToIoFile(file);
         BasicFileAttributes attr = null;
@@ -1277,7 +1276,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         return "";
     }
 
-    @Nonnull
+    
     private static String getVcsStatus(Project project, VirtualFile file) {
         FileStatus status = ChangeListManager.getInstance(project).getStatus(file);
         return status != FileStatus.NOT_CHANGED

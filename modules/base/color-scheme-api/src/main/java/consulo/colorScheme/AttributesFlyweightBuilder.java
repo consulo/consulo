@@ -17,40 +17,39 @@ package consulo.colorScheme;
 
 import consulo.colorScheme.internal.AttributesFlyweightBuilderImpl;
 import consulo.ui.color.ColorValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2025-03-17
  */
 public interface AttributesFlyweightBuilder {
-    @Nonnull
+    
     static AttributesFlyweightBuilder create() {
         return new AttributesFlyweightBuilderImpl();
     }
 
-    @Nonnull
-    AttributesFlyweightBuilder withForeground(@Nonnull ColorValue foreground);
+    
+    AttributesFlyweightBuilder withForeground(ColorValue foreground);
 
-    @Nonnull
-    AttributesFlyweightBuilder withBackground(@Nonnull ColorValue background);
+    
+    AttributesFlyweightBuilder withBackground(ColorValue background);
 
-    @Nonnull
-    AttributesFlyweightBuilder withEffect(@Nonnull EffectType effectType, @Nullable ColorValue effectColor);
+    
+    AttributesFlyweightBuilder withEffect(EffectType effectType, @Nullable ColorValue effectColor);
 
-    @Nonnull
-    AttributesFlyweightBuilder withAdditionalEffect(@Nonnull EffectType effectType, @Nullable ColorValue effectColor);
+    
+    AttributesFlyweightBuilder withAdditionalEffect(EffectType effectType, @Nullable ColorValue effectColor);
 
-    @Nonnull
-    AttributesFlyweightBuilder withErrorStripeColor(@Nonnull ColorValue errorStripeColor);
+    
+    AttributesFlyweightBuilder withErrorStripeColor(ColorValue errorStripeColor);
 
-    @Nonnull
+    
     AttributesFlyweightBuilder withBoldFont();
 
-    @Nonnull
+    
     AttributesFlyweightBuilder withItalicFont();
 
-    @Nonnull
+    
     AttributesFlyweight build();
 }

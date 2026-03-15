@@ -18,7 +18,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
         myTable = table;
         ProgressManager.getInstance().run(new Task.Backgroundable(project, ExecutionCoverageLocalize.coverageViewBuildingCoverageReport()) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 buildRoot();
             }
 
@@ -62,7 +61,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
             }
 
             @Override
-            public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
+            public void fileStatusChanged(VirtualFile virtualFile) {
                 table.repaint();
             }
         };

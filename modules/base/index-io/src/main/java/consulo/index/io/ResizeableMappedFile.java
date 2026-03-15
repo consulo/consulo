@@ -21,8 +21,7 @@ import consulo.util.lang.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 
 /**
@@ -40,11 +39,11 @@ public class ResizeableMappedFile implements Forceable {
   static final int DEFAULT_ALLOCATION_ROUND_FACTOR = 4096;
   private int myRoundFactor = DEFAULT_ALLOCATION_ROUND_FACTOR;
 
-  public ResizeableMappedFile(@Nonnull File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned) throws IOException {
+  public ResizeableMappedFile(File file, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned) throws IOException {
     this(file, initialSize, lockContext, pageSize, valuesAreBufferAligned, false);
   }
 
-  public ResizeableMappedFile(@Nonnull File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned, boolean nativeBytesOrder)
+  public ResizeableMappedFile(File file, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned, boolean nativeBytesOrder)
           throws IOException {
     myStorage = new PagedFileStorage(file, lockContext, pageSize, valuesAreBufferAligned, nativeBytesOrder);
     myInitialSize = initialSize;
@@ -270,7 +269,7 @@ public class ResizeableMappedFile implements Forceable {
     }
   }
 
-  @Nonnull
+ 
   public PagedFileStorage getPagedFileStorage() {
     return myStorage;
   }

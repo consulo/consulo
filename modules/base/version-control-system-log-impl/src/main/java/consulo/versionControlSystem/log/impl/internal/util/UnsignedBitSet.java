@@ -15,17 +15,16 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.BitSet;
 
 public class UnsignedBitSet implements Cloneable {
-  @Nonnull
+  
   private final BitSet myPositiveSet;
-  @Nonnull
+  
   private final BitSet myNegativeSet;
 
-  public UnsignedBitSet(@Nonnull BitSet positiveSet, @Nonnull BitSet negativeSet) {
+  public UnsignedBitSet(BitSet positiveSet, BitSet negativeSet) {
     myPositiveSet = positiveSet;
     myNegativeSet = negativeSet;
   }

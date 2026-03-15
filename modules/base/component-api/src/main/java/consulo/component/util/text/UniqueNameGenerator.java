@@ -15,7 +15,7 @@
  */
 package consulo.component.util.text;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

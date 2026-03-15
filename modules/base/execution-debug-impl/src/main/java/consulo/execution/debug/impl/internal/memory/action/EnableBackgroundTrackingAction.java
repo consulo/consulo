@@ -25,19 +25,18 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "MemoryView.EnableTrackingWithClosedWindow")
 public class EnableBackgroundTrackingAction extends ToggleAction implements DumbAware {
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         return project != null && !project.isDisposed() && InstancesTracker.getInstance(project).isBackgroundTrackingEnabled();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         Project project = e.getData(Project.KEY);
         if (project != null && !project.isDisposed()) {
             InstancesTracker.getInstance(project).setBackgroundTackingEnabled(state);
@@ -45,7 +44,7 @@ public class EnableBackgroundTrackingAction extends ToggleAction implements Dumb
     }
 
     @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
+    public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }
 }

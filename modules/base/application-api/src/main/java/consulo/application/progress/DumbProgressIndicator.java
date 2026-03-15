@@ -4,7 +4,6 @@ import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
 
-import jakarta.annotation.Nonnull;
 
 public class DumbProgressIndicator implements StandardProgressIndicator {
   public static final DumbProgressIndicator INSTANCE = new DumbProgressIndicator();
@@ -84,7 +83,7 @@ public class DumbProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  @Nonnull
+  
   public ModalityState getModalityState() {
     return Application.get().getNoneModalityState();
   }

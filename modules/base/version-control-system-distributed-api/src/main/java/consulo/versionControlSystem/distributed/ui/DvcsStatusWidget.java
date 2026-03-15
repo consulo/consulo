@@ -21,8 +21,7 @@ import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingListener;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -31,17 +30,17 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     implements StatusBarWidget.MultipleTextValuesPresentation, StatusBarWidget.Multiframe {
     protected static final Logger LOG = Logger.getInstance(DvcsStatusWidget.class);
 
-    @Nonnull
+    
     private final String myVcsName;
 
     @Nullable
     private String myText;
-    @Nonnull
+    
     private LocalizeValue myTooltip = LocalizeValue.empty();
     @Nullable
     private Image myIcon;
 
-    protected DvcsStatusWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory, @Nonnull String vcsName) {
+    protected DvcsStatusWidget(Project project, StatusBarWidgetFactory factory, String vcsName) {
         super(project, factory);
         myVcsName = vcsName;
 
@@ -52,28 +51,28 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     }
 
     @Nullable
-    protected abstract T guessCurrentRepository(@Nonnull Project project);
+    protected abstract T guessCurrentRepository(Project project);
 
-    @Nonnull
-    protected abstract String getFullBranchName(@Nonnull T repository);
+    
+    protected abstract String getFullBranchName(T repository);
 
     @Nullable
-    protected Image getIcon(@Nonnull T repository) {
+    protected Image getIcon(T repository) {
         if (repository.getState() != Repository.State.NORMAL) {
             return PlatformIconGroup.generalWarning();
         }
         return VersionControlSystemIconGroup.branch();
     }
 
-    protected abstract boolean isMultiRoot(@Nonnull Project project);
+    protected abstract boolean isMultiRoot(Project project);
 
-    @Nonnull
-    protected abstract ListPopup getPopup(@Nonnull Project project, @Nonnull T repository);
+    
+    protected abstract ListPopup getPopup(Project project, T repository);
 
-    protected abstract void rememberRecentRoot(@Nonnull String path);
+    protected abstract void rememberRecentRoot(String path);
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         super.install(statusBar);
         updateLater();
     }
@@ -92,19 +91,19 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     }
 
     @Override
-    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+    public void selectionChanged(FileEditorManagerEvent event) {
         LOG.debug("selection changed");
         update();
     }
 
     @Override
-    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileOpened(FileEditorManager source, VirtualFile file) {
         LOG.debug("file opened");
         update();
     }
 
     @Override
-    public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileClosed(FileEditorManager source, VirtualFile file) {
         LOG.debug("file closed");
         update();
     }
@@ -116,7 +115,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         return StringUtil.defaultIfEmpty(myText, "");
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTooltipText() {
         return myTooltip;
@@ -186,7 +185,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         rememberRecentRoot(repository.getRoot().getPath());
     }
 
-    @Nonnull
+    
     private LocalizeValue getToolTip(@Nullable T repository) {
         if (repository == null) {
             return LocalizeValue.empty();

@@ -22,7 +22,6 @@ import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,13 +29,13 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class UniqueVFilePathBuilder {
   private static final UniqueVFilePathBuilder DUMMY_BUILDER = new UniqueVFilePathBuilder() {
-    @Nonnull
+    
     @Override
     public String getUniqueVirtualFilePath(Project project, VirtualFile vFile) {
       return vFile.getPresentableName();
     }
 
-    @Nonnull
+    
     @Override
     public String getUniqueVirtualFilePathWithinOpenedFileEditors(Project project, VirtualFile vFile) {
       return vFile.getPresentableName();
@@ -47,13 +46,13 @@ public abstract class UniqueVFilePathBuilder {
     return Application.get().getInstance(UniqueVFilePathBuilder.class);
   }
 
-  @Nonnull
-  public String getUniqueVirtualFilePath(@Nonnull Project project, @Nonnull VirtualFile vFile, @Nonnull SearchScope scope) {
+  
+  public String getUniqueVirtualFilePath(Project project, VirtualFile vFile, SearchScope scope) {
     return getUniqueVirtualFilePath(project, vFile);
   }
 
   public abstract String getUniqueVirtualFilePath(Project project, VirtualFile vFile);
 
-  @Nonnull
+  
   public abstract String getUniqueVirtualFilePathWithinOpenedFileEditors(Project project, VirtualFile vFile);
 }

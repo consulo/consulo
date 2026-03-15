@@ -19,7 +19,6 @@ package consulo.language.psi;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -27,13 +26,13 @@ import jakarta.annotation.Nonnull;
 public abstract class AbstractElementManipulator<T extends PsiElement> implements ElementManipulator<T> {
 
   @Override
-  public T handleContentChange(@Nonnull T element, String newContent) throws IncorrectOperationException {
+  public T handleContentChange(T element, String newContent) throws IncorrectOperationException {
     return handleContentChange(element, getRangeInElement(element), newContent);
   }
 
   @Override
-  @Nonnull
-  public TextRange getRangeInElement(@Nonnull T element) {
+  
+  public TextRange getRangeInElement(T element) {
     return new TextRange(0, element.getTextLength());
   }
 }

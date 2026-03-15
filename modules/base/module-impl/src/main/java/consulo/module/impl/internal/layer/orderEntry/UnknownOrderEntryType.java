@@ -21,7 +21,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -37,20 +36,20 @@ public class UnknownOrderEntryType implements OrderEntryType<UnknownOrderEntryIm
     myElement = element;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return myId;
   }
 
-  @Nonnull
+  
   @Override
-  public UnknownOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
+  public UnknownOrderEntryImpl loadOrderEntry(Element element, ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     throw new IllegalArgumentException("this method ill never call");
   }
 
   @Override
-  public void storeOrderEntry(@Nonnull Element element, @Nonnull UnknownOrderEntryImpl orderEntry) {
+  public void storeOrderEntry(Element element, UnknownOrderEntryImpl orderEntry) {
     List<Attribute> attributes = myElement.getAttributes();
     for (Attribute attribute : attributes) {
       element.setAttribute(attribute.getName(), attribute.getValue());

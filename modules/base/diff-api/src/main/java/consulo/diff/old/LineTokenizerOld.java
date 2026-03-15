@@ -17,7 +17,6 @@ package consulo.diff.old;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +27,12 @@ public class LineTokenizerOld extends LineTokenizerBase<String> {
   private final char[] myChars;
   private final String myText;
 
-  public LineTokenizerOld(@Nonnull String text) {
+  public LineTokenizerOld(String text) {
     myChars = text.toCharArray();
     myText = text;
   }
 
-  @Nonnull
+  
   public String[] execute() {
     ArrayList<String> lines = new ArrayList<String>();
     doExecute(lines);
@@ -60,14 +59,14 @@ public class LineTokenizerOld extends LineTokenizerBase<String> {
     return myChars.length;
   }
 
-  @Nonnull
+  
   @Override
   protected String substring(int start, int end) {
     return myText.substring(start, end);
   }
 
-  @Nonnull
-  public static String concatLines(@Nonnull String[] lines) {
+  
+  public static String concatLines(String[] lines) {
     StringBuilder buffer = new StringBuilder();
     for (String line : lines) {
       buffer.append(line);
@@ -75,8 +74,8 @@ public class LineTokenizerOld extends LineTokenizerBase<String> {
     return buffer.substring(0, buffer.length());
   }
 
-  @Nonnull
-  public static String correctLineSeparators(@Nonnull String text) {
+  
+  public static String correctLineSeparators(String text) {
     return concatLines(new LineTokenizerOld(text).execute());
   }
 

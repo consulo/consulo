@@ -26,7 +26,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 // from kotlin
 @ActionImpl(
@@ -48,7 +47,7 @@ public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAw
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;

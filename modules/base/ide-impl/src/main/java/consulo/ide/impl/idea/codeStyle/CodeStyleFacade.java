@@ -26,8 +26,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -58,7 +57,7 @@ public interface CodeStyleFacade {
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Nullable
     @Deprecated
-    public abstract String getLineIndent(@Nonnull Document document, int offset);
+    public abstract String getLineIndent(Document document, int offset);
 
     /**
      * Calculates the indent that should be used for the line at specified offset in the specified
@@ -75,7 +74,7 @@ public interface CodeStyleFacade {
      * was not possible to calculate the indent.
      */
     @Nullable
-    default String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset, boolean allowDocCommit) {
+    default String getLineIndent(Editor editor, @Nullable Language language, int offset, boolean allowDocCommit) {
         //noinspection deprecation
         return getLineIndent(editor.getDocument(), offset);
     }

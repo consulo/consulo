@@ -22,8 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -38,7 +37,7 @@ public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopI
             setModel(new SpinnerNumberModel(value, min, max, 1));
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopIntBoxImpl.this;

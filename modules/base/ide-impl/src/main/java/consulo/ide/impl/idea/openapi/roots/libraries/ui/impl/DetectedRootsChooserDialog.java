@@ -34,8 +34,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -122,7 +121,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     init(suggestedRoots);
   }
 
-  @NonNls
+  
   private void init(List<SuggestedChildRootInfo> suggestedRoots) {
     myDescription = "<html><body>" + Application.get().getName().get() +
       " just scanned files and detected the following " +
@@ -237,7 +236,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     return myTreeTable.getCheckedNodes(SuggestedChildRootInfo.class);
   }
 
-  @NonNls
+  
   @Override
   protected String getDimensionServiceKey() {
     return "DetectedRootsChooserDialog";

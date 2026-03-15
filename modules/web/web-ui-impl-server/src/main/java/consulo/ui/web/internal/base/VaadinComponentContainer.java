@@ -19,7 +19,6 @@ import com.vaadin.shared.ui.AbstractComponentContainerState;
 import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,7 +37,7 @@ public abstract class VaadinComponentContainer extends AbstractComponentContaine
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
   public Component toUIComponent() {
     return myComponent;

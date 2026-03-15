@@ -23,7 +23,6 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class StepOutAction extends XDebuggerActionBase {
     private final DebuggerActionHandler myHandler = new XDebuggerSuspendedActionHandler() {
         @Override
-        protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+        protected void perform(XDebugSession session, DataContext dataContext) {
             session.stepOut();
         }
     };
@@ -45,7 +44,7 @@ public class StepOutAction extends XDebuggerActionBase {
         );
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

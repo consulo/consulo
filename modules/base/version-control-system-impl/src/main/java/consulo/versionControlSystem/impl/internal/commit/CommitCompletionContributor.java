@@ -34,7 +34,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -71,7 +70,7 @@ public class CommitCompletionContributor extends CompletionContributor {
     }
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return PlainTextLanguage.INSTANCE;

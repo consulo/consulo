@@ -7,8 +7,7 @@ import consulo.application.util.SimpleTimerTask;
 import consulo.application.util.mac.foundation.ID;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.ActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -176,18 +175,18 @@ final class TouchBarsManager {
         return lastModifiersEx;
     }
 
-    static synchronized void register(@Nonnull Component component, @Nonnull ActionGroup actions, @Nullable Customizer customizations) {
+    static synchronized void register(Component component, ActionGroup actions, @Nullable Customizer customizations) {
         LOG.debug("register actions '%s' for component %s", actions, component);
         unregister(component); // cleanup for insurance
         ourComp2Actions.put(component, new ComponentActions(component, actions, null, customizations));
     }
 
-    static synchronized void register(@Nonnull Component component, @Nonnull ActionGroup actions) {
+    static synchronized void register(Component component, ActionGroup actions) {
         register(component, actions, null);
     }
 
-    static synchronized void register(@Nonnull Component component,
-                                      @Nonnull Map<Long, ActionGroup> actions,
+    static synchronized void register(Component component,
+                                      Map<Long, ActionGroup> actions,
                                       @Nullable Customizer customizations) {
         ActionGroup mainLayout = actions.get(0L);
         if (mainLayout == null) {
@@ -206,28 +205,28 @@ final class TouchBarsManager {
         ourComp2Actions.put(component, new ComponentActions(component, mainLayout, actions, customizations));
     }
 
-    static synchronized void registerAndShow(@Nonnull Component component,
-                                             @Nonnull Map<Long, ActionGroup> actions,
+    static synchronized void registerAndShow(Component component,
+                                             Map<Long, ActionGroup> actions,
                                              @Nullable Customizer customizations) {
         register(component, actions, customizations);
         showActionsOfComponent(component);
     }
 
-    static synchronized void registerAndShow(@Nonnull Component component,
-                                             @Nonnull ActionGroup actions,
+    static synchronized void registerAndShow(Component component,
+                                             ActionGroup actions,
                                              @Nullable Customizer customizations) {
         register(component, actions, customizations);
         showActionsOfComponent(component);
     }
 
-    static synchronized void registerAndShow(@Nonnull Component component, @Nonnull TBPanel tb) {
+    static synchronized void registerAndShow(Component component, TBPanel tb) {
         LOG.debug("registerAndShow non-action touchbar '%s' for component %s", tb, component);
         unregister(component); // cleanup for insurance
         ourComp2Actions.put(component, new ComponentActions(component, tb));
         showActionsOfComponent(component);
     }
 
-    static synchronized void unregister(@Nonnull Component component) {
+    static synchronized void unregister(Component component) {
         LOG.debug("UNREGISTER: component %s", component);
 
         @Nullable ComponentActions componentActions = ourComp2Actions.remove(component);
@@ -239,7 +238,7 @@ final class TouchBarsManager {
         componentActions.clearCachedTouchbars();
     }
 
-    static synchronized void showActionsOfComponent(@Nonnull Component component) {
+    static synchronized void showActionsOfComponent(Component component) {
         @Nullable ComponentActions componentActions = ourComp2Actions.get(component);
         if (componentActions == null) {
             LOG.debug("SHOW: can't find actions info for component: %s (nothing to show)", component);
@@ -267,7 +266,7 @@ final class TouchBarsManager {
         ourComp2Actions.clear();
     }
 
-    private static @Nullable Window getWindow(@Nonnull Component component) {
+    private static @Nullable Window getWindow(Component component) {
         if (component instanceof Window) {
             return (Window) component;
         }
@@ -280,12 +279,12 @@ final class TouchBarsManager {
         return window;
     }
 
-    private static void showTouchbar(@Nonnull ComponentActions componentActions) {
+    private static void showTouchbar(ComponentActions componentActions) {
         componentActions.setCurrent(lastModifiersEx);
         getWindowStack(getWindow(componentActions.component.get())).push(componentActions);
     }
 
-    private static @Nonnull Stack getWindowStack(@Nullable Window window) {
+    private static Stack getWindowStack(@Nullable Window window) {
         Stack stack = ourStacks.get(window);
         if (stack == null) {
             stack = new Stack(window);
@@ -302,7 +301,7 @@ final class TouchBarsManager {
         return stack;
     }
 
-    static synchronized void hideTouchbar(@Nonnull TBPanel tb) {
+    static synchronized void hideTouchbar(TBPanel tb) {
         for (Stack stack : ourStacks.values()) {
             stack.removeTouchbar(tb);
         }
@@ -330,7 +329,7 @@ final class TouchBarsManager {
     private static final class ComponentActions {
         private static final Map<ActionGroup, TBPanel> ourActions2Touchbar = new WeakHashMap<>(); // Cached touchbars (per ActionGroup)
 
-        final @Nonnull WeakReference<Component> component;
+        final WeakReference<Component> component;
         final @Nullable ActionGroup actions;
         final @Nullable Map<Long, ActionGroup> altActions;
         final @Nullable Customizer customizer;
@@ -339,8 +338,8 @@ final class TouchBarsManager {
 
         private @Nullable TBPanel current;
 
-        ComponentActions(@Nonnull Component component,
-                         @Nonnull ActionGroup actions,
+        ComponentActions(Component component,
+                         ActionGroup actions,
                          @Nullable Map<Long, ActionGroup> altActions,
                          @Nullable Customizer customizer) {
             this.component = new WeakReference<>(component);
@@ -350,8 +349,8 @@ final class TouchBarsManager {
             this.customTouchbar = null;
         }
 
-        ComponentActions(@Nonnull Component component,
-                         @Nonnull TBPanel customTouchbar) {
+        ComponentActions(Component component,
+                         TBPanel customTouchbar) {
             this.component = new WeakReference<>(component);
             this.actions = null;
             this.altActions = null;
@@ -468,7 +467,7 @@ final class TouchBarsManager {
             }
         }
 
-        synchronized void push(@Nonnull ComponentActions ca) {
+        synchronized void push(ComponentActions ca) {
             if (!myStack.isEmpty() && myStack.peek() == ca) {
                 return;
             }
@@ -492,7 +491,7 @@ final class TouchBarsManager {
             _scheduleUpdateNative();
         }
 
-        synchronized void removeTouchbar(@Nonnull TBPanel tb) {
+        synchronized void removeTouchbar(TBPanel tb) {
             if (myStack.isEmpty()) {
                 return;
             }

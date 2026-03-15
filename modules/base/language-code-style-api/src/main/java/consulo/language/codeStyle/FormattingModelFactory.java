@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A factory for standard formatting model implementations. Not to be used directly
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 
 public interface FormattingModelFactory {
-    default FormattingModel createFormattingModelForPsiFile(PsiFile file, @Nonnull Block rootBlock, CodeStyleSettings settings) {
+    default FormattingModel createFormattingModelForPsiFile(PsiFile file, Block rootBlock, CodeStyleSettings settings) {
         return new PsiBasedFormattingModel(file, rootBlock, FormattingDocumentModel.create(file));
     }
 }

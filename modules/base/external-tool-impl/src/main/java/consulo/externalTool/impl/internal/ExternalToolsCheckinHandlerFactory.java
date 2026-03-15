@@ -29,7 +29,6 @@ import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +45,7 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
 
     public static final Object NONE_TOOL = new Object();
 
-    @Nonnull
+    
     @Override
     public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
         final ToolsProjectConfig config = ToolsProjectConfig.getInstance(panel.getProject());

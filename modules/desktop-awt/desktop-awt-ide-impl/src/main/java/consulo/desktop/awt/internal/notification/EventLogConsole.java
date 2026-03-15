@@ -51,8 +51,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +66,7 @@ class EventLogConsole {
     private static final Key<String> NOTIFICATION_ID = Key.create("NOTIFICATION_ID");
 
     private final NotNullLazyValue<Editor> myLogEditor = new NotNullLazyValue<>() {
-        @Nonnull
+        
         @Override
         protected Editor compute() {
             return createLogEditor();
@@ -75,7 +74,7 @@ class EventLogConsole {
     };
 
     private final NotNullLazyValue<EditorHyperlinkSupport> myHyperlinkSupport = new NotNullLazyValue<>() {
-        @Nonnull
+        
         @Override
         protected EditorHyperlinkSupport compute() {
             return new EditorHyperlinkSupport(getConsoleEditor(), myProjectModel.getProject());
@@ -103,7 +102,7 @@ class EventLogConsole {
             ProjectManagerListener.class,
             new ProjectManagerListener() {
                 @Override
-                public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+                public void projectClosed(Project project, UIAccess uiAccess) {
                     if (project == myProjectModel.getProject()) {
                         EditorFactory.getInstance().releaseEditor(editor);
                     }
@@ -118,7 +117,7 @@ class EventLogConsole {
         editor.installPopupHandler(new ContextMenuPopupHandler() {
             @Nullable
             @Override
-            public ActionGroup getActionGroup(@Nonnull EditorMouseEvent event) {
+            public ActionGroup getActionGroup(EditorMouseEvent event) {
                 ActionManager actionManager = ActionManager.getInstance();
                 return createPopupActions(actionManager, clearLog, editor, event);
             }
@@ -126,7 +125,7 @@ class EventLogConsole {
         return editor;
     }
 
-    private void installNotificationsFont(@Nonnull EditorEx editor) {
+    private void installNotificationsFont(EditorEx editor) {
         DelegateColorScheme globalScheme = new DelegateColorScheme(EditorColorsManager.getInstance().getGlobalScheme()) {
             @Override
             public String getEditorFontName() {
@@ -191,9 +190,9 @@ class EventLogConsole {
     }
 
     private static void addConfigureNotificationAction(
-        @Nonnull EditorEx editor,
-        @Nonnull EditorMouseEvent event,
-        @Nonnull DefaultActionGroup actions
+        EditorEx editor,
+        EditorMouseEvent event,
+        DefaultActionGroup actions
     ) {
         LogicalPosition position = editor.xyToLogicalPosition(event.getMouseEvent().getPoint());
         if (EditorUtil.inVirtualSpace(editor, position)) {
@@ -214,7 +213,7 @@ class EventLogConsole {
         );
     }
 
-    private static void addConfigureNotificationAction(@Nonnull DefaultActionGroup actions, @Nonnull String groupId) {
+    private static void addConfigureNotificationAction(DefaultActionGroup actions, String groupId) {
         DefaultActionGroup displayTypeGroup =
             new DefaultActionGroup(LocalizeValue.localizeTODO("VcsBranchMappingChangedNotification Display Type"), true);
         NotificationSettings settings = NotificationsConfigurationImpl.getSettings(groupId);
@@ -237,9 +236,9 @@ class EventLogConsole {
         private final NotificationDisplayType myCurrent;
 
         public DisplayTypeAction(
-            @Nonnull NotificationSettings settings,
-            @Nonnull NotificationDisplayType type,
-            @Nonnull NotificationDisplayType current
+            NotificationSettings settings,
+            NotificationDisplayType type,
+            NotificationDisplayType current
         ) {
             super(type.getTitle());
             mySettings = settings;
@@ -248,12 +247,12 @@ class EventLogConsole {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myType == myCurrent;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             if (state) {
                 NotificationsConfigurationImpl.getInstanceImpl().changeSettings(mySettings.withDisplayType(myType));
             }
@@ -328,7 +327,7 @@ class EventLogConsole {
         }
     }
 
-    private static int calculateTabs(@Nonnull Editor editor, int startDateOffset) {
+    private static int calculateTabs(Editor editor, int startDateOffset) {
         Document document = editor.getDocument();
         int startOffset = document.getTextLength();
         Point dateStartPoint = editor.logicalPositionToXY(editor.offsetToLogicalPosition(startDateOffset));
@@ -354,7 +353,7 @@ class EventLogConsole {
 
     private void highlightNotification(
         Notification notification,
-        @Nonnull String message,
+        String message,
         int startLine,
         int endLine,
         int titleOffset,
@@ -418,7 +417,7 @@ class EventLogConsole {
         }
     }
 
-    public void showNotification(@Nonnull List<String> ids) {
+    public void showNotification(List<String> ids) {
         clearNMore();
         myNMoreHighlighters = new ArrayList<>();
 
@@ -469,7 +468,7 @@ class EventLogConsole {
     }
 
     @Nullable
-    private RangeHighlighterEx findHighlighter(@Nonnull String id) {
+    private RangeHighlighterEx findHighlighter(String id) {
         EditorEx editor = (EditorEx) getConsoleEditor();
         SimpleReference<RangeHighlighterEx> highlighter = new SimpleReference<>();
 
@@ -518,14 +517,14 @@ class EventLogConsole {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             LogModel model = myConsole.myProjectModel;
             e.getPresentation().setEnabled(!model.getNotifications().isEmpty());
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             LogModel model = myConsole.myProjectModel;
             for (Notification notification : model.getNotifications()) {
                 notification.expire();

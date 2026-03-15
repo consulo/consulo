@@ -22,8 +22,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -49,14 +48,14 @@ public abstract class WindowManagerEx extends WindowManager {
   public abstract IdeFrameEx getIdeFrame(@Nullable Project project);
 
   @Override
-  public void requestUserAttention(@Nonnull IdeFrame frame, boolean critical) {
+  public void requestUserAttention(IdeFrame frame, boolean critical) {
     Project project = frame.getProject();
     if (project != null) AppIcon.getInstance().requestAttention(project, critical);
   }
 
-  @Nonnull
+ 
   @RequiredUIAccess
-  public abstract IdeFrameEx allocateFrame(@Nonnull Project project, @Nullable IdeFrameState state);
+  public abstract IdeFrameEx allocateFrame(Project project, @Nullable IdeFrameState state);
 
   public abstract void releaseFrame(IdeFrameEx frame);
 
@@ -64,7 +63,7 @@ public abstract class WindowManagerEx extends WindowManager {
    * @return focus owner of the specified window.
    * @throws IllegalArgumentException if <code>window</code> is <code>null</code>.
    */
-  public abstract Component getFocusedComponent(@Nonnull Window window);
+  public abstract Component getFocusedComponent(Window window);
 
   /**
    * @param project may be <code>null</code> when no project is opened.
@@ -75,8 +74,7 @@ public abstract class WindowManagerEx extends WindowManager {
   @Nullable
   public abstract Component getFocusedComponent(@Nullable Project project);
 
-  @Nullable
-  public abstract consulo.ui.Window getMostRecentFocusedWindow();
+  public abstract consulo.ui.@Nullable Window getMostRecentFocusedWindow();
 
   @RequiredUIAccess
   public abstract IdeFrame findFrameFor(@Nullable Project project);
@@ -108,7 +106,7 @@ public abstract class WindowManagerEx extends WindowManager {
   /**
    * @return bounds for the screen device for the given project frame
    */
-  public abstract Rectangle getScreenBounds(@Nonnull Project project);
+  public abstract Rectangle getScreenBounds(Project project);
 
   public abstract void setWindowMask(Window window, Shape mask);
 

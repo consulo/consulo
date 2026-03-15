@@ -10,8 +10,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
   private final Document myDocument;
   private final ProgressIndicator myProgressIndicator;
 
-  public IndentOptionsDetectorImpl(@Nonnull PsiFile file, @Nonnull ProgressIndicator indicator) {
+  public IndentOptionsDetectorImpl(PsiFile file, ProgressIndicator indicator) {
     myFile = file;
     myProject = file.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(myFile);
@@ -32,7 +31,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
   }
 
   @TestOnly
-  public IndentOptionsDetectorImpl(@Nonnull PsiFile file) {
+  public IndentOptionsDetectorImpl(PsiFile file) {
     myFile = file;
     myProject = file.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(myFile);
@@ -54,7 +53,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
   }
 
   @Override
-  @Nonnull
+  
   public IndentOptions getIndentOptions() {
     IndentOptions indentOptions = (IndentOptions)CodeStyle.getSettings(myFile).getIndentOptions(myFile.getFileType()).clone();
 

@@ -24,7 +24,6 @@ import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShowProcessWindow")
 public class ShowProcessWindowAction extends ToggleAction implements DumbAware {
@@ -33,21 +32,21 @@ public class ShowProcessWindowAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
         StatusBarEx statusBar = frame == null ? null : (StatusBarEx) frame.getStatusBar();
         return statusBar != null && statusBar.isProcessWindowOpen();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(IdeFrameUtil.findFocusedRootIdeFrame() != null);
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
         StatusBarEx statusBar = frame == null ? null : (StatusBarEx) frame.getStatusBar();
 

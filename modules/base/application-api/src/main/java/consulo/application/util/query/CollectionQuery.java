@@ -7,7 +7,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,12 +18,12 @@ import java.util.function.Predicate;
 public class CollectionQuery<T> implements Query<T> {
     private final Collection<T> myCollection;
 
-    public CollectionQuery(@Nonnull Collection<T> collection) {
+    public CollectionQuery(Collection<T> collection) {
         myCollection = collection;
     }
 
     @Override
-    @Nonnull
+    
     public Collection<T> findAll() {
         return myCollection;
     }
@@ -36,23 +35,23 @@ public class CollectionQuery<T> implements Query<T> {
     }
 
     @Override
-    public boolean forEach(@Nonnull Predicate<? super T> consumer) {
+    public boolean forEach(Predicate<? super T> consumer) {
         return ContainerUtil.process(myCollection, consumer);
     }
 
-    @Nonnull
+    
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(Predicate<? super T> consumer) {
         return AsyncUtil.wrapBoolean(forEach(consumer));
     }
 
-    @Nonnull
+    
     @Override
-    public T[] toArray(@Nonnull T[] a) {
+    public T[] toArray(T[] a) {
         return findAll().toArray(a);
     }
 
-    @Nonnull
+    
     @Override
     public Iterator<T> iterator() {
         return myCollection.iterator();

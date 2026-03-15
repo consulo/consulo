@@ -18,7 +18,7 @@ package consulo.versionControlSystem.checkin;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.CommitContext;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * just interface for checkin handlers creation

@@ -16,8 +16,7 @@
 package consulo.language.codeStyle.arrangement;
 
 import consulo.language.codeStyle.arrangement.match.ArrangementEntryMatcher;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -53,7 +52,7 @@ public interface ArrangementEntry {
    * @return    current entry's children. Empty collection if there are no children
    * @see #getParent() 
    */
-  @Nonnull
+  
   List<? extends ArrangementEntry> getChildren();
 
   /**

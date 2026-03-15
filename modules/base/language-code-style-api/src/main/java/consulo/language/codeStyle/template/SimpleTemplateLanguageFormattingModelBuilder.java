@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,8 +31,8 @@ import java.util.List;
  */
 public abstract class SimpleTemplateLanguageFormattingModelBuilder implements FormattingModelBuilder {
   @Override
-  @Nonnull
-  public FormattingModel createModel(@Nonnull FormattingContext formattingContext) {
+  
+  public FormattingModel createModel(FormattingContext formattingContext) {
     PsiElement element = formattingContext.getPsiElement();
     CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
     
@@ -56,7 +55,7 @@ public abstract class SimpleTemplateLanguageFormattingModelBuilder implements Fo
       }
 
       @Override
-      public Spacing getSpacing(Block child1, @Nonnull Block child2) {
+      public Spacing getSpacing(Block child1, Block child2) {
         return Spacing.getReadOnlySpacing();
       }
 

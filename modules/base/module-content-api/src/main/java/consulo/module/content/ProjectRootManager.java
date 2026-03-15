@@ -23,7 +23,6 @@ import consulo.module.content.layer.OrderEnumerator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    * @param project the project for which the instance is requested.
    * @return the instance.
    */
-  @Nonnull
+  
   public static ProjectRootManager getInstance(Project project) {
     return project.getComponent(ProjectRootManager.class);
   }
@@ -48,7 +47,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return the file index instance.
    */
-  @Nonnull
+  
   public abstract ProjectFileIndex getFileIndex();
 
   /**
@@ -57,7 +56,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return new enumerator instance
    */
-  @Nonnull
+  
   public abstract OrderEnumerator orderEntries();
 
   /**
@@ -66,8 +65,8 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    * @param modules modules to process
    * @return new enumerator instance
    */
-  @Nonnull
-  public abstract OrderEnumerator orderEntries(@Nonnull Collection<? extends Module> modules);
+  
+  public abstract OrderEnumerator orderEntries(Collection<? extends Module> modules);
 
   /**
    * Unlike getContentRoots(), this includes the project base dir. Is this really necessary?
@@ -82,7 +81,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return the list of content root URLs.
    */
-  @Nonnull
+  
   public abstract List<String> getContentRootUrls();
 
   /**
@@ -90,7 +89,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return the list of content roots.
    */
-  @Nonnull
+  
   public abstract VirtualFile[] getContentRoots();
 
   /**
@@ -100,7 +99,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    */
   public abstract VirtualFile[] getContentSourceRoots();
 
-  public void mergeRootsChangesDuring(@Nonnull Runnable runnable) {
+  public void mergeRootsChangesDuring(Runnable runnable) {
     runnable.run();
   }
 }

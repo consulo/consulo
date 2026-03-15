@@ -18,8 +18,7 @@ package consulo.content.scope;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseSearchScope implements SearchScope {
     private static int hashCodeCounter = 0;
@@ -37,7 +36,7 @@ public abstract class BaseSearchScope implements SearchScope {
         return myHashCode;
     }
 
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
         return "<unknown scope>";
@@ -50,13 +49,13 @@ public abstract class BaseSearchScope implements SearchScope {
     }
 
     @Override
-    @Nonnull
-    public abstract SearchScope intersectWith(@Nonnull SearchScope scope2);
+    
+    public abstract SearchScope intersectWith(SearchScope scope2);
 
     @Override
-    @Nonnull
-    public abstract SearchScope union(@Nonnull SearchScope scope);
+    
+    public abstract SearchScope union(SearchScope scope);
 
     @Override
-    public abstract boolean contains(@Nonnull VirtualFile file);
+    public abstract boolean contains(VirtualFile file);
 }

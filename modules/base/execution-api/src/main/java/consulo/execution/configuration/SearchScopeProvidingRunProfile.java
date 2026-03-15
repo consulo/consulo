@@ -18,7 +18,6 @@ package consulo.execution.configuration;
 
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for run configurations that can specify which part of the project should be used to search sources. This information
@@ -30,6 +29,6 @@ public interface SearchScopeProvidingRunProfile extends RunProfile {
   /**
    * @return modules where to search sources for this configuration
    */
-  @Nonnull
+  
   Module[] getModules();
 }

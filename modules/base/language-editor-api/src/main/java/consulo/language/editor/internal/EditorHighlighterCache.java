@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 
@@ -43,7 +42,7 @@ public class EditorHighlighterCache {
     private EditorHighlighterCache() {
     }
 
-    public static void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull EditorHighlighter highlighter) {
+    public static void rememberEditorHighlighterForCachesOptimization(Document document, EditorHighlighter highlighter) {
         document.putUserData(ourSomeEditorSyntaxHighlighter, new WeakReference<EditorHighlighter>(highlighter));
     }
 

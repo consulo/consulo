@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.util;
 
 import consulo.application.util.function.Computable;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max

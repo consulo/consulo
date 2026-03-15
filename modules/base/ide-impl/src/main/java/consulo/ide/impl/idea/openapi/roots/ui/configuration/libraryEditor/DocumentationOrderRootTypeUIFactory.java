@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -44,25 +43,25 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
-    @Nonnull
+    
     @Override
     public String getOrderRootTypeId() {
         return "documentation";
     }
 
-    @Nonnull
+    
     @Override
     public SdkPathEditor createPathEditor(Sdk sdk) {
         return new DocumentationPathsEditor(sdk);
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.filetypesText();
     }
 
-    @Nonnull
+    
     @Override
     public String getNodeText() {
         return ProjectBundle.message("library.javadocs.node");
@@ -91,13 +90,13 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
                     @RequiredUIAccess
                     @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         onSpecifyUrlButtonClicked();
                     }
 
                     @RequiredUIAccess
                     @Override
-                    public void update(@Nonnull AnActionEvent e) {
+                    public void update(AnActionEvent e) {
                         e.getPresentation().setEnabled(myEnabled);
                     }
                 };

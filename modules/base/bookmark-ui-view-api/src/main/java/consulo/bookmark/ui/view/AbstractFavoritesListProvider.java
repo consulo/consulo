@@ -21,9 +21,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.CommonActionsPanel;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,15 +42,15 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
     protected final List<AbstractTreeNode<T>> myChildren = new ArrayList<>();
     protected final FavoritesListNode myNode;
 
-    protected AbstractFavoritesListProvider(@Nonnull Project project, String listName) {
+    protected AbstractFavoritesListProvider(Project project, String listName) {
         this(project, listName, null);
     }
 
-    protected AbstractFavoritesListProvider(@Nonnull Project project, final String listName, @Nullable String description) {
+    protected AbstractFavoritesListProvider(Project project, final String listName, @Nullable String description) {
         myProject = project;
         myListName = listName;
         myNode = new FavoritesListNode(project, listName, description) {
-            @Nonnull
+            
             @Override
             @RequiredReadAction
             public Collection<? extends AbstractTreeNode> getChildren() {
@@ -81,22 +80,22 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
         return o1.getIndex() - o2.getIndex();
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
+    public LocalizeValue getCustomName(CommonActionsPanel.Buttons type) {
         return LocalizeValue.empty();
     }
 
     @Override
-    public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
+    public boolean willHandle(CommonActionsPanel.Buttons type, Project project, Set<Object> selectedObjects) {
         return false;
     }
 
     @Override
     public void handle(
-        @Nonnull CommonActionsPanel.Buttons type,
+        CommonActionsPanel.Buttons type,
         Project project,
-        @Nonnull Set<Object> selectedObjects,
+        Set<Object> selectedObjects,
         JComponent component
     ) {
     }
@@ -110,7 +109,7 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
     public void customizeRenderer(
         ColoredTreeCellRenderer renderer,
         JTree tree,
-        @Nonnull Object value,
+        Object value,
         boolean selected,
         boolean expanded,
         boolean leaf,

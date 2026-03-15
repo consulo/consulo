@@ -38,8 +38,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -54,21 +53,21 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
         super(text, description, icon);
     }
 
-    protected CreateFromTemplateAction(@Nonnull LocalizeValue text) {
+    protected CreateFromTemplateAction(LocalizeValue text) {
         super(text);
     }
 
-    protected CreateFromTemplateAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected CreateFromTemplateAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected CreateFromTemplateAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected CreateFromTemplateAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         IdeView view = e.getData(IdeView.KEY);
         if (view == null) {
             return;
@@ -87,14 +86,14 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
         final SimpleReference<String> selectedTemplateName = SimpleReference.create(null);
         builder.show(getErrorTitle(), getDefaultTemplateName(dir), new CreateFileFromTemplateDialog.FileCreator<T>() {
                 @Override
-                public T createFile(@Nonnull String name, @Nonnull String templateName) {
+                public T createFile(String name, String templateName) {
                     selectedTemplateName.set(templateName);
                     return CreateFromTemplateAction.this.createFile(name, templateName, dir);
                 }
 
                 @Override
-                @Nonnull
-                public LocalizeValue getActionName(@Nonnull String name, @Nonnull String templateName) {
+                
+                public LocalizeValue getActionName(String name, String templateName) {
                     return CreateFromTemplateAction.this.getActionName(dir, name, templateName);
                 }
             },
@@ -115,7 +114,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     protected abstract void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder);
 
     @Nullable
-    protected String getDefaultTemplateName(@Nonnull PsiDirectory dir) {
+    protected String getDefaultTemplateName(PsiDirectory dir) {
         String property = getDefaultTemplateProperty();
         return property == null ? null : ProjectPropertiesComponent.getInstance(dir.getProject()).getValue(property);
     }
@@ -131,7 +130,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (!e.getPresentation().isVisible()) {
             return;
         }
@@ -162,10 +161,10 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
         return false;
     }
 
-    @Nonnull
+    
     protected abstract LocalizeValue getActionName(PsiDirectory directory, String newName, String templateName);
 
-    @Nonnull
+    
     protected LocalizeValue getErrorTitle() {
         return CommonLocalize.titleError();
     }

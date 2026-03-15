@@ -17,8 +17,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -39,20 +38,20 @@ public interface FormattingModelBuilder extends LanguageExtension {
     ExtensionPointCacheKey<FormattingModelBuilder, ByLanguageValue<List<FormattingModelBuilder>>> KEY =
         ExtensionPointCacheKey.create("FormattingModelBuilder", LanguageOneToMany.build(false));
 
-    @Nonnull
-    static List<FormattingModelBuilder> forLanguage(@Nonnull Language language) {
+    
+    static List<FormattingModelBuilder> forLanguage(Language language) {
         return Application.get().getExtensionPoint(FormattingModelBuilder.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
     @Nullable
     @RequiredReadAction
-    static FormattingModelBuilder forContext(@Nonnull PsiElement context) {
+    static FormattingModelBuilder forContext(PsiElement context) {
         return forContext(context.getLanguage(), context);
     }
 
     @Nullable
     @RequiredReadAction
-    static FormattingModelBuilder forContext(@Nonnull Language language, @Nonnull PsiElement context) {
+    static FormattingModelBuilder forContext(Language language, PsiElement context) {
         if (!isFormatterAllowed(context)) {
             return null;
         }
@@ -66,7 +65,7 @@ public interface FormattingModelBuilder extends LanguageExtension {
         return ContainerUtil.getFirstItem(forLanguage(language));
     }
 
-    private static boolean isFormatterAllowed(@Nonnull PsiElement context) {
+    private static boolean isFormatterAllowed(PsiElement context) {
         return context.getApplication().getExtensionPoint(LanguageFormattingRestriction.class)
             .allMatchSafe(each -> each.isFormatterAllowed(context));
     }
@@ -78,8 +77,8 @@ public interface FormattingModelBuilder extends LanguageExtension {
      * @return the formatting model for the file.
      * @see FormattingContext
      */
-    @Nonnull
-    FormattingModel createModel(@Nonnull FormattingContext formattingContext);
+    
+    FormattingModel createModel(FormattingContext formattingContext);
 
     /**
      * Returns the TextRange which should be processed by the formatter in order to detect proper indent options.

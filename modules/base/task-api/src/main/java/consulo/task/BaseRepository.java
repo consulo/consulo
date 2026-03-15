@@ -21,8 +21,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
@@ -89,7 +88,7 @@ public abstract class BaseRepository extends TaskRepository {
     }
   }
 
-  @Nonnull
+  
   @Override
   public abstract BaseRepository clone();
 
@@ -177,7 +176,7 @@ public abstract class BaseRepository extends TaskRepository {
   }
 
   @Nullable
-  public String extractId(@Nonnull String taskName) {
+  public String extractId(String taskName) {
     Matcher matcher = PATTERN.matcher(taskName);
     return matcher.find() ? matcher.group() : null;
   }

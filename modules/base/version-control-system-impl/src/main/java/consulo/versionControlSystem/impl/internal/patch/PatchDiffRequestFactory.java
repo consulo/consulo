@@ -45,21 +45,20 @@ import consulo.versionControlSystem.impl.internal.patch.tool.ApplyPatchMergeRequ
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PatchDiffRequestFactory {
-    @Nonnull
+    
     public static DiffRequest createDiffRequest(
         @Nullable Project project,
-        @Nonnull Change change,
-        @Nonnull String name,
-        @Nonnull UserDataHolder context,
-        @Nonnull ProgressIndicator indicator
+        Change change,
+        String name,
+        UserDataHolder context,
+        ProgressIndicator indicator
     ) throws DiffRequestProducerException {
         ChangeDiffRequestProducer proxyProducer = ChangeDiffRequestProducer.create(project, change);
         if (proxyProducer == null) {
@@ -68,17 +67,17 @@ public class PatchDiffRequestFactory {
         return proxyProducer.process(context, indicator);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static DiffRequest createConflictDiffRequest(
         @Nullable Project project,
         @Nullable VirtualFile file,
-        @Nonnull TextFilePatch patch,
-        @Nonnull String afterTitle,
-        @Nonnull Supplier<ApplyPatchForBaseRevisionTexts> textsGetter,
-        @Nonnull String name,
-        @Nonnull UserDataHolder context,
-        @Nonnull ProgressIndicator indicator
+        TextFilePatch patch,
+        String afterTitle,
+        Supplier<ApplyPatchForBaseRevisionTexts> textsGetter,
+        String name,
+        UserDataHolder context,
+        ProgressIndicator indicator
     ) throws DiffRequestProducerException {
         if (file == null) {
             throw new DiffRequestProducerException("Can't show diff for '" + name + "'");
@@ -119,13 +118,13 @@ public class PatchDiffRequestFactory {
         }
     }
 
-    @Nonnull
+    
     public static DiffRequest createDiffRequest(
         @Nullable Project project,
         @Nullable VirtualFile file,
-        @Nonnull List<String> contents,
+        List<String> contents,
         @Nullable String windowTitle,
-        @Nonnull List<String> titles
+        List<String> titles
     ) {
         assert contents.size() == 3;
         assert titles.size() == 3;
@@ -153,12 +152,12 @@ public class PatchDiffRequestFactory {
         );
     }
 
-    @Nonnull
+    
     public static DiffRequest createBadDiffRequest(
         @Nullable Project project,
-        @Nonnull VirtualFile file,
-        @Nonnull String localContent,
-        @Nonnull AppliedTextPatch textPatch,
+        VirtualFile file,
+        String localContent,
+        AppliedTextPatch textPatch,
         @Nullable String windowTitle,
         @Nullable String localTitle,
         @Nullable String resultTitle,
@@ -192,14 +191,14 @@ public class PatchDiffRequestFactory {
         );
     }
 
-    @Nonnull
+    
     public static MergeRequest createMergeRequest(
         @Nullable Project project,
-        @Nonnull Document document,
-        @Nonnull VirtualFile file,
-        @Nonnull String baseContent,
-        @Nonnull String localContent,
-        @Nonnull String patchedContent,
+        Document document,
+        VirtualFile file,
+        String baseContent,
+        String localContent,
+        String patchedContent,
         @Nullable Consumer<MergeResult> callback
     ) throws InvalidDiffRequestException {
         List<String> titles = ContainerUtil.list(null, null, null);
@@ -208,13 +207,13 @@ public class PatchDiffRequestFactory {
         return createMergeRequest(project, document, file, contents, null, titles, callback);
     }
 
-    @Nonnull
+    
     public static MergeRequest createBadMergeRequest(
         @Nullable Project project,
-        @Nonnull Document document,
-        @Nonnull VirtualFile file,
-        @Nonnull String localContent,
-        @Nonnull AppliedTextPatch textPatch,
+        Document document,
+        VirtualFile file,
+        String localContent,
+        AppliedTextPatch textPatch,
         @Nullable Consumer<MergeResult> callback
     ) throws InvalidDiffRequestException {
         return createBadMergeRequest(
@@ -231,14 +230,14 @@ public class PatchDiffRequestFactory {
         );
     }
 
-    @Nonnull
+    
     public static MergeRequest createMergeRequest(
         @Nullable Project project,
-        @Nonnull Document document,
+        Document document,
         @Nullable VirtualFile file,
-        @Nonnull List<String> contents,
+        List<String> contents,
         @Nullable String windowTitle,
-        @Nonnull List<String> titles,
+        List<String> titles,
         @Nullable Consumer<MergeResult> callback
     ) throws InvalidDiffRequestException {
         assert contents.size() == 3;
@@ -259,13 +258,13 @@ public class PatchDiffRequestFactory {
             .createMergeRequest(project, fileType, document, contents, windowTitle, actualTitles, callback);
     }
 
-    @Nonnull
+    
     public static MergeRequest createBadMergeRequest(
         @Nullable Project project,
-        @Nonnull Document document,
+        Document document,
         @Nullable VirtualFile file,
-        @Nonnull String localContent,
-        @Nonnull AppliedTextPatch textPatch,
+        String localContent,
+        AppliedTextPatch textPatch,
         @Nullable String windowTitle,
         @Nullable String localTitle,
         @Nullable String resultTitle,
@@ -305,7 +304,7 @@ public class PatchDiffRequestFactory {
         );
     }
 
-    @Nonnull
+    
     private static String getPatchTitle(@Nullable VirtualFile file) {
         if (file != null) {
             return VcsLocalize.patchApplyConflictTitle(getPresentablePath(file)).get();
@@ -315,13 +314,13 @@ public class PatchDiffRequestFactory {
         }
     }
 
-    @Nonnull
+    
     private static String getBadPatchTitle(@Nullable VirtualFile file) {
         return file != null ? "Result of Patch Apply to " + getPresentablePath(file) : "Result of Patch Apply";
     }
 
-    @Nonnull
-    private static String getPresentablePath(@Nonnull VirtualFile file) {
+    
+    private static String getPresentablePath(VirtualFile file) {
         String fullPath = file.getParent() == null ? file.getPath() : file.getParent().getPath();
         return file.getName() + " (" + fullPath + ")";
     }

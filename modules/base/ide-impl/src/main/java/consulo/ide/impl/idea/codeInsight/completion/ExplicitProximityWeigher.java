@@ -21,7 +21,6 @@ import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public class ExplicitProximityWeigher extends CompletionWeigher {
 
   @Override
-  public Integer weigh(@Nonnull LookupElement item, @Nonnull CompletionLocation location) {
+  public Integer weigh(LookupElement item, CompletionLocation location) {
     PrioritizedLookupElement prioritized = item.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
     return prioritized != null ? prioritized.getExplicitProximity() : 0;
   }

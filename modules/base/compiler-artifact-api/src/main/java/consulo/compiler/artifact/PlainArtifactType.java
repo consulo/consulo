@@ -25,7 +25,6 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -42,20 +41,20 @@ public class PlainArtifactType extends ArtifactType {
         super(ID, CompilerLocalize.artifactTypePlain());
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.nodesArtifact();
     }
 
     @Override
-    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+    public String getDefaultPathFor(PackagingElementOutputKind kind) {
         return "/";
     }
 
     @Override
-    @Nonnull
-    public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory elementFactory, @Nonnull String artifactName) {
+    
+    public CompositePackagingElement<?> createRootElement(PackagingElementFactory elementFactory, String artifactName) {
         return new ArtifactRootElementImpl();
     }
 }

@@ -27,7 +27,6 @@ import consulo.versionControlSystem.impl.internal.patch.DefaultPatchBaseVersionP
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,7 @@ public class ApplyPatchForBaseRevisionTexts {
     private List<String> myWarnings;
     private boolean myBaseRevisionLoaded;
 
-    @Nonnull
+    
     public static ApplyPatchForBaseRevisionTexts create(
         Project project,
         VirtualFile file,

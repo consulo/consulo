@@ -32,8 +32,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +42,7 @@ import java.util.List;
  * @since 2009-08-13
  */
 public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressIntentionAction {
-  @Nonnull
+  
   protected final String myID;
   private final boolean myReplaceOtherSuppressionIds;
 
@@ -55,18 +54,18 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
    * @param replaceOtherSuppressionIds Merge suppression policy. If false new tool id will be append to the end
    *                                   otherwise replace other ids
    */
-  public AbstractSuppressByNoInspectionCommentFix(@Nonnull String ID, boolean replaceOtherSuppressionIds) {
+  public AbstractSuppressByNoInspectionCommentFix(String ID, boolean replaceOtherSuppressionIds) {
     myID = ID;
     myReplaceOtherSuppressionIds = replaceOtherSuppressionIds;
   }
 
-  protected final void replaceSuppressionComment(@Nonnull PsiElement comment) {
+  protected final void replaceSuppressionComment(PsiElement comment) {
     SuppressionUtil.replaceSuppressionComment(comment, myID, myReplaceOtherSuppressionIds, getCommentLanguage(comment));
   }
 
-  protected void createSuppression(@Nonnull Project project,
-                                   @Nonnull PsiElement element,
-                                   @Nonnull PsiElement container) throws IncorrectOperationException {
+  protected void createSuppression(Project project,
+                                   PsiElement element,
+                                   PsiElement container) throws IncorrectOperationException {
     SuppressionUtil.createSuppression(project, container, myID, getCommentLanguage(element));
   }
 
@@ -75,18 +74,18 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
    * @return language that will be used for comment creating.
    * In common case language will be the same as language of quickfix target
    */
-  @Nonnull
-  protected Language getCommentLanguage(@Nonnull PsiElement element) {
+  
+  protected Language getCommentLanguage(PsiElement element) {
     return element.getLanguage();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement context) {
+  public boolean isAvailable(Project project, Editor editor, PsiElement context) {
     return context.isValid() && context.getManager().isInProject(context) && getContainer(context) != null;
   }
 
   @Override
-  public void invoke(@Nonnull Project project, @Nullable Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
+  public void invoke(Project project, @Nullable Editor editor, PsiElement element) throws IncorrectOperationException {
     PsiElement container = getContainer(element);
     if (container == null) return;
 
@@ -120,7 +119,7 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
   }
 
   @Nullable
-  protected List<? extends PsiElement> getCommentsFor(@Nonnull PsiElement container) {
+  protected List<? extends PsiElement> getCommentsFor(PsiElement container) {
     PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {
       return null;
@@ -128,7 +127,7 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
     return Collections.singletonList(prev);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return InspectionLocalize.suppressInspectionFamily();

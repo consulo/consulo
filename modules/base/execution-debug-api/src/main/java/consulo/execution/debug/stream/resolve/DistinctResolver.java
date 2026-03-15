@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.resolve;
 
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.TraceInfo;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
  */
 public class DistinctResolver implements ValuesOrderResolver {
     @Override
-    public @Nonnull Result resolve(@Nonnull TraceInfo info) {
+    public Result resolve(TraceInfo info) {
         Map<TraceElement, List<TraceElement>> direct = info.getDirectTrace();
         Map<TraceElement, List<TraceElement>> reverse = info.getReverseTrace();
         if (direct == null || reverse == null) {

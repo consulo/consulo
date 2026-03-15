@@ -8,8 +8,7 @@ import consulo.execution.coverage.view.CoverageView;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman.Chernyatchik
@@ -18,7 +17,7 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
     private final Project myProject;
 
     @Nullable
-    protected abstract Runnable createRenewRequest(@Nonnull CoverageSuitesBundle suite, @Nonnull CoverageDataManager dataManager);
+    protected abstract Runnable createRenewRequest(CoverageSuitesBundle suite, CoverageDataManager dataManager);
 
     public BaseCoverageAnnotator(Project project) {
         myProject = project;
@@ -29,7 +28,7 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
     }
 
     @Override
-    public void renewCoverageData(@Nonnull final CoverageSuitesBundle suite, @Nonnull CoverageDataManager dataManager) {
+    public void renewCoverageData(final CoverageSuitesBundle suite, CoverageDataManager dataManager) {
         final Runnable request = createRenewRequest(suite, dataManager);
         if (request != null) {
             if (myProject.isDisposed()) {
@@ -37,7 +36,7 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
             }
             ProgressManager.getInstance().run(new Task.Backgroundable(myProject, ExecutionCoverageLocalize.coverageViewLoadingData(), false) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     request.run();
                 }
 

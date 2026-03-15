@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -30,14 +29,14 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface XDebuggerHistoryManager {
-    static XDebuggerHistoryManager getInstance(@Nonnull Project project) {
+    static XDebuggerHistoryManager getInstance(Project project) {
         return project.getInstance(XDebuggerHistoryManager.class);
     }
 
     String BREAKPOINT_CONDITION_HISTORY_ID = "breakpointCondition";
 
-    boolean addRecentExpression(@Nonnull String id, @Nullable XExpression expression);
+    boolean addRecentExpression(String id, @Nullable XExpression expression);
 
-    @Nonnull
-    List<XExpression> getRecentExpressions(@Nonnull String id);
+    
+    List<XExpression> getRecentExpressions(String id);
 }

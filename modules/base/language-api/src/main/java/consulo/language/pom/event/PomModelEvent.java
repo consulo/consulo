@@ -18,8 +18,7 @@ package consulo.language.pom.event;
 import consulo.language.pom.PomModel;
 import consulo.language.pom.PomModelAspect;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class PomModelEvent extends EventObject {
@@ -29,7 +28,7 @@ public class PomModelEvent extends EventObject {
     super(source);
   }
 
-  @Nonnull
+  
   public Set<PomModelAspect> getChangedAspects() {
     if (myChangeSets != null) {
       return myChangeSets.keySet();
@@ -51,7 +50,7 @@ public class PomModelEvent extends EventObject {
     }
   }
 
-  public <T extends PomChangeSet> T registerChangeSetIfAbsent(PomModelAspect aspect, @Nonnull T set) {
+  public <T extends PomChangeSet> T registerChangeSetIfAbsent(PomModelAspect aspect, T set) {
     PomChangeSet oldSet = getChangeSet(aspect);
     if (oldSet != null) return (T)oldSet;
 
@@ -66,7 +65,7 @@ public class PomModelEvent extends EventObject {
     return myChangeSets.get(aspect);
   }
 
-  public void merge(@Nonnull PomModelEvent event) {
+  public void merge(PomModelEvent event) {
     if (event.myChangeSets == null) return;
     if (myChangeSets == null) {
       myChangeSets = new HashMap<>(event.myChangeSets);

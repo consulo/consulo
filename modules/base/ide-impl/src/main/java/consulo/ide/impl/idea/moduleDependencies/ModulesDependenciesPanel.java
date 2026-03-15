@@ -54,7 +54,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.content.Content;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -147,7 +146,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 DependenciesAnalyzeManager.getInstance(myProject).closeContent(myContent);
             }
         });
@@ -160,19 +159,19 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
             isForwardDirection() ? PlatformIconGroup.actionsMoveup() : PlatformIconGroup.actionsMovedown()
         ) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return isForwardDirection();
             }
 
             @Override
             @RequiredUIAccess
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 PropertiesComponent.getInstance(myProject).setValue(DIRECTION, String.valueOf(state));
                 initLeftTreeModel();
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setIcon(isForwardDirection() ? PlatformIconGroup.actionsMoveup() : PlatformIconGroup.actionsMovedown());
             }
         });
@@ -201,13 +200,13 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 analyzeDepsAction.actionPerformed(e);
             }
 
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 analyzeDepsAction.update(e);
             }
         });
@@ -515,7 +514,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
             return false;
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getNavigateActionText(boolean focusEditor) {
             return ProjectUIViewLocalize.actionOpenModuleSettingsText();
@@ -534,7 +533,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         }
 
         @Override
-        public Object getData(@Nonnull Key dataId) {
+        public Object getData(Key dataId) {
             if (Project.KEY == dataId) {
                 return myProject;
             }
@@ -564,7 +563,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     private static class MyTreeCellRenderer extends ColoredTreeCellRenderer {
         @Override
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,

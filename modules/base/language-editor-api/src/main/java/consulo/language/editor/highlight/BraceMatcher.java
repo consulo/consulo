@@ -22,8 +22,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @see PairedBraceMatcher simple implementation of paired tokens per language
@@ -44,9 +43,9 @@ public interface BraceMatcher {
   boolean isStructuralBrace(HighlighterIterator iterator, CharSequence text, FileType fileType);
 
   @Nullable
-  IElementType getOppositeBraceTokenType(@Nonnull IElementType type);
+  IElementType getOppositeBraceTokenType(IElementType type);
 
-  boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType);
+  boolean isPairedBracesAllowedBeforeType(IElementType lbraceType, @Nullable IElementType contextType);
 
   /**
    * Returns the start offset of the code construct which owns the opening structural brace at the specified offset. For example,

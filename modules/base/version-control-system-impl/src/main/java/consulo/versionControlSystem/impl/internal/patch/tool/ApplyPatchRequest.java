@@ -17,28 +17,27 @@ package consulo.versionControlSystem.impl.internal.patch.tool;
 
 import consulo.diff.content.DocumentContent;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ApplyPatchRequest {
-  @Nonnull
+  
   DocumentContent getResultContent();
 
-  @Nonnull
+  
   String getLocalContent();
 
-  @Nonnull
+  
   AppliedTextPatch getPatch();
 
   @Nullable
   String getTitle();
 
-  @Nonnull
+  
   String getLocalTitle();
 
-  @Nonnull
+  
   String getResultTitle();
 
-  @Nonnull
+  
   String getPatchTitle();
 }

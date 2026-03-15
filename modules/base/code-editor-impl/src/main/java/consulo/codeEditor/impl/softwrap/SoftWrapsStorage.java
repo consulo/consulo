@@ -21,8 +21,7 @@ import consulo.codeEditor.TextChange;
 import consulo.codeEditor.event.SoftWrapChangeListener;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +56,7 @@ public class SoftWrapsStorage implements Dumpable {
     /**
      * @return view for registered soft wraps sorted by offset in ascending order if any; empty collection otherwise
      */
-    @Nonnull
+    
     public List<SoftWrapImpl> getSoftWraps() {
         return myWrapsView;
     }
@@ -197,7 +196,7 @@ public class SoftWrapsStorage implements Dumpable {
      * @param listener listener to register
      * @return <code>true</code> if given listener was not registered before; <code>false</code> otherwise
      */
-    public boolean addSoftWrapChangeListener(@Nonnull SoftWrapChangeListener listener) {
+    public boolean addSoftWrapChangeListener(SoftWrapChangeListener listener) {
         return myListeners.add(listener);
     }
 
@@ -207,7 +206,7 @@ public class SoftWrapsStorage implements Dumpable {
         }
     }
 
-    @Nonnull
+    
     @Override
     public String dumpState() {
         return myWraps.toString();

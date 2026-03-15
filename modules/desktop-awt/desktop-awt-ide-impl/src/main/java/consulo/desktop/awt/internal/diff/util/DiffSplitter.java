@@ -11,8 +11,7 @@ import consulo.ui.ex.awt.Divider;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.Splitter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -101,7 +100,7 @@ public class DiffSplitter extends Splitter {
   }
 
   public interface Painter {
-    void paint(@Nonnull Graphics g, @Nonnull JComponent divider);
+    void paint(Graphics g, JComponent divider);
   }
 
   @Nullable

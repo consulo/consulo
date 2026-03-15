@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,9 +29,9 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TextConsoleBuilderFactory {
-  public abstract TextConsoleBuilder createBuilder(@Nonnull Project project);
+  public abstract TextConsoleBuilder createBuilder(Project project);
 
-  public abstract TextConsoleBuilder createBuilder(@Nonnull Project project, @Nonnull SearchScope scope);
+  public abstract TextConsoleBuilder createBuilder(Project project, SearchScope scope);
 
   public static TextConsoleBuilderFactory getInstance() {
     return Application.get().getInstance(TextConsoleBuilderFactory.class);

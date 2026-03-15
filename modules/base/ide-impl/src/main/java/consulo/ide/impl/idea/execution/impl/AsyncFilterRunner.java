@@ -17,8 +17,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import consulo.util.concurrent.Promise;
 
 import java.util.ArrayList;
@@ -39,15 +38,15 @@ class AsyncFilterRunner {
   private final EditorHyperlinkSupport myHyperlinks;
   private final Editor myEditor;
   private final Queue<HighlighterJob> myQueue = new ConcurrentLinkedQueue<>();
-  @Nonnull
+ 
   private List<FilterResult> myResults = new ArrayList<>();
 
-  AsyncFilterRunner(@Nonnull EditorHyperlinkSupport hyperlinks, @Nonnull Editor editor) {
+  AsyncFilterRunner(EditorHyperlinkSupport hyperlinks, Editor editor) {
     myHyperlinks = hyperlinks;
     myEditor = editor;
   }
 
-  void highlightHyperlinks(@Nonnull Project project, @Nonnull Filter customFilter, int startLine, int endLine) {
+  void highlightHyperlinks(Project project, Filter customFilter, int startLine, int endLine) {
     if (endLine < 0) return;
 
     myQueue.offer(new HighlighterJob(project, customFilter, startLine, endLine, myEditor.getDocument()));
@@ -96,7 +95,7 @@ class AsyncFilterRunner {
     }
   }
 
-  @Nonnull
+ 
   private List<FilterResult> takeAvailableResults() {
     synchronized (myQueue) {
       List<FilterResult> results = myResults;
@@ -187,17 +186,17 @@ class AsyncFilterRunner {
   }
 
   private class HighlighterJob {
-    @Nonnull
+   
     private final Project myProject;
     private final AtomicInteger startLine;
     private final int endLine;
     private final DeltaTracker delta;
-    @Nonnull
+   
     private final Filter filter;
-    @Nonnull
+   
     private final Document snapshot;
 
-    HighlighterJob(@Nonnull Project project, @Nonnull Filter filter, int startLine, int endLine, @Nonnull Document document) {
+    HighlighterJob(Project project, Filter filter, int startLine, int endLine, Document document) {
       myProject = project;
       this.startLine = new AtomicInteger(startLine);
       this.endLine = endLine;
@@ -212,8 +211,7 @@ class AsyncFilterRunner {
       return !delta.isOutdated() && startLine.get() <= endLine;
     }
 
-    @Nullable
-    private AsyncFilterRunner.FilterResult analyzeNextLine() {
+    private AsyncFilterRunner.@Nullable FilterResult analyzeNextLine() {
       int line = startLine.get();
       Filter.Result result = analyzeLine(line);
       LOG.assertTrue(line == startLine.getAndIncrement());

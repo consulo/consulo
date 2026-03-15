@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 @ActionImpl(id = "Back")
@@ -35,13 +34,13 @@ public class BackAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         IdeDocumentHistory.getInstance(project).back();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabled(
             project != null && !project.isDisposed() && IdeDocumentHistory.getInstance(project).isBackAvailable()

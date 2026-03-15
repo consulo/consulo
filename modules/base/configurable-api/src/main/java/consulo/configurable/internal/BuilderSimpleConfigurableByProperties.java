@@ -23,7 +23,6 @@ import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -43,11 +42,11 @@ public class BuilderSimpleConfigurableByProperties<Instance extends Configurable
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
-  protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder,
-                                   @Nonnull Disposable uiDisposable) {
+  protected Component createLayout(PropertyBuilder propertyBuilder,
+                                   Disposable uiDisposable) {
     myInstance = myInstanceFactory.get();
 
     VerticalLayout layout = VerticalLayout.create();
@@ -72,7 +71,7 @@ public class BuilderSimpleConfigurableByProperties<Instance extends Configurable
 
   @RequiredUIAccess
   @Override
-  protected void disposeUIResources(@Nonnull LayoutWrapper component) {
+  protected void disposeUIResources(LayoutWrapper component) {
     myInstance = null;
   }
 }

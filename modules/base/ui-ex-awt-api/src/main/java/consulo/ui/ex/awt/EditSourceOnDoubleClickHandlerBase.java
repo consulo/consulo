@@ -21,8 +21,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -37,7 +36,7 @@ public class EditSourceOnDoubleClickHandlerBase {
   /**
    * @return {@code true} to expand/collapse the node, {@code false} to navigate to source if possible
    */
-  public static boolean isExpandPreferable(@Nonnull JTree tree, @Nullable TreePath path) {
+  public static boolean isExpandPreferable(JTree tree, @Nullable TreePath path) {
     if (path == null) return false; // path is not specified
 
     ExpandOnDoubleClick behavior = ExpandOnDoubleClick.getBehavior(tree);

@@ -7,8 +7,7 @@ import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -29,14 +28,14 @@ public final class LocalFileFinder {
    * Method is not generic and is not suitable for all.
    */
   @Nullable
-  public static VirtualFile findFile(@Nonnull String path) {
+  public static VirtualFile findFile(String path) {
     if (windowsDriveExists(path)) {
       return LocalFileSystem.getInstance().findFileByPath(path);
     }
     return null;
   }
 
-  public static boolean windowsDriveExists(@Nonnull String path) {
+  public static boolean windowsDriveExists(String path) {
     if (!Platform.current().os().isWindows()) {
       return true;
     }

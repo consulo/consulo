@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TranslatingCompilerFilesMonitorHelper {
     @Nullable
-    VirtualFile[] getRootsForModule(@Nonnull Module module);
+    VirtualFile[] getRootsForModule(Module module);
 
     boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> oldExtension);
 }

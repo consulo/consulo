@@ -30,8 +30,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ import java.util.function.Function;
 @ExtensionImpl
 public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;
@@ -52,7 +51,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
   @RequiredReadAction
   @Nullable
   @Override
-  public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
+  public LineMarkerInfo getLineMarkerInfo(PsiElement element) {
     List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.forLanguage(element.getLanguage());
     ActionGroup.Builder builder = null;
     Image icon = null;
@@ -117,7 +116,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
     };
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("Run line marker");

@@ -20,8 +20,7 @@ import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 
 import consulo.language.inject.advanced.LanguageInjectionSupport;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +40,7 @@ public class LanguageSupportCache {
     ExtensionPointCacheKey.groupBy("LanguageInjectionSupportCache", LanguageInjectionSupport::getId);
 
 
-  @Nonnull
+  
   public Collection<LanguageInjectionSupport> getAllSupports() {
     return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).values();
   }
@@ -51,7 +50,7 @@ public class LanguageSupportCache {
     return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).get(id);
   }
 
-  @Nonnull
+  
   public Set<String> getAllSupportIds() {
     return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).keySet();
   }

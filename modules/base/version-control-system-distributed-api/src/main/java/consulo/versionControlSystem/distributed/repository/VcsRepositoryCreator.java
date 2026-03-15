@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Creates {@link Repository} instance for appropriate vcs if root is valid
@@ -29,8 +28,8 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsRepositoryCreator {
   @Nullable
-  Repository createRepositoryIfValid(@Nonnull VirtualFile root);
+  Repository createRepositoryIfValid(VirtualFile root);
 
-  @Nonnull
+  
   VcsKey getVcsKey();
 }

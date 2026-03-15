@@ -16,8 +16,7 @@
 package consulo.ide.impl.idea.designer.model;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public final class ErrorInfo {
   private final HighlightDisplayLevel myLevel;
   private final List<QuickFix> myQuickFixes = new ArrayList<QuickFix>();
 
-  public ErrorInfo(@Nonnull String name, @Nullable String propertyName, @Nonnull HighlightDisplayLevel level) {
+  public ErrorInfo(String name, @Nullable String propertyName, HighlightDisplayLevel level) {
     myName = name;
     myPropertyName = propertyName;
     myLevel = level;

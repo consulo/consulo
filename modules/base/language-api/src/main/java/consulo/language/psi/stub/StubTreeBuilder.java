@@ -28,8 +28,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,8 +123,8 @@ public class StubTreeBuilder {
   /**
    * Order is deterministic. First element matches {@link FileViewProvider#getStubBindingRoot()}
    */
-  @Nonnull
-  public static List<Pair<IStubFileElementType, PsiFile>> getStubbedRoots(@Nonnull FileViewProvider viewProvider) {
+  
+  public static List<Pair<IStubFileElementType, PsiFile>> getStubbedRoots(FileViewProvider viewProvider) {
     List<Trinity<Language, IStubFileElementType, PsiFile>> roots = new SmartList<>();
     PsiFile stubBindingRoot = viewProvider.getStubBindingRoot();
     for (Language language : viewProvider.getLanguages()) {

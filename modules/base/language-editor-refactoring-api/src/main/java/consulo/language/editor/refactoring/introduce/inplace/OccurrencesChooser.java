@@ -19,8 +19,6 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.SimpleListPopupStepBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -39,7 +37,7 @@ public abstract class OccurrencesChooser<T> {
          * @param occurrencesCount number of occurrences
          * @return user-readable description of given choice
          */
-        @Nls
+        
         String formatDescription(int occurrencesCount);
     }
 
@@ -100,13 +98,13 @@ public abstract class OccurrencesChooser<T> {
         showChooser(occurrencesMap, RefactoringLocalize.replaceMultipleOccurrencesFound(), callback);
     }
 
-    public void showChooser(Map<ReplaceChoice, List<T>> occurrencesMap, @Nonnull Consumer<? super ReplaceChoice> callback) {
+    public void showChooser(Map<ReplaceChoice, List<T>> occurrencesMap, Consumer<? super ReplaceChoice> callback) {
         showChooser(occurrencesMap, RefactoringLocalize.replaceMultipleOccurrencesFound(), callback);
     }
 
     @SuppressWarnings("unchecked")
     public <C extends BaseReplaceChoice> void showChooser(Map<C, List<T>> occurrencesMap,
-                                                          @Nonnull LocalizeValue title,
+                                                          LocalizeValue title,
                                                           Consumer<? super C> callback) {
         if (occurrencesMap.size() == 1) {
             callback.accept(occurrencesMap.keySet().iterator().next());
@@ -129,7 +127,7 @@ public abstract class OccurrencesChooser<T> {
         listPopup.setRequestFocus(true);
         listPopup.addListener(new JBPopupListener() {
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 dropHighlighters();
             }
         });

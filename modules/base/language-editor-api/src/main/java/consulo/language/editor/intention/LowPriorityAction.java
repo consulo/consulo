@@ -16,7 +16,6 @@
 package consulo.language.editor.intention;
 
 import consulo.language.editor.inspection.PriorityAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Max Ishchenko
@@ -24,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * Marked actions are shown lower in the list of available quick fixes.
  */
 public interface LowPriorityAction extends PriorityAction {
-  @Nonnull
+  
   @Override
   default Priority getPriority() {
     return Priority.LOW;

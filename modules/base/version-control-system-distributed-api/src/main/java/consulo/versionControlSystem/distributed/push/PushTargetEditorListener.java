@@ -15,8 +15,7 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import jakarta.annotation.Nonnull;
 
 public interface PushTargetEditorListener {
-  void onTargetInEditModeChanged(@Nonnull String value);
+  void onTargetInEditModeChanged(String value);
 }

@@ -25,8 +25,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.oio.OioEventLoopGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -53,16 +52,16 @@ public class BuiltInServer implements Disposable {
     }
 
     private BuiltInServer(
-        @Nonnull EventLoopGroup eventLoopGroup,
+        EventLoopGroup eventLoopGroup,
         int port,
-        @Nonnull ChannelRegistrar channelRegistrar
+        ChannelRegistrar channelRegistrar
     ) {
         this.eventLoopGroup = eventLoopGroup;
         this.port = port;
         this.channelRegistrar = channelRegistrar;
     }
 
-    @Nonnull
+    
     public EventLoopGroup getEventLoopGroup() {
         return eventLoopGroup;
     }
@@ -81,7 +80,7 @@ public class BuiltInServer implements Disposable {
         Logger.getInstance(BuiltInServer.class).info("web server stopped");
     }
 
-    @Nonnull
+    
     public static BuiltInServer start(
         int workerCount,
         int firstPort,
@@ -99,7 +98,7 @@ public class BuiltInServer implements Disposable {
         );
     }
 
-    @Nonnull
+    
     public static BuiltInServer startNioOrOio(
         int workerCount,
         int firstPort,
@@ -119,9 +118,9 @@ public class BuiltInServer implements Disposable {
         return start(nioEventLoopGroup, true, firstPort, portsCount, tryAnyPort, handler);
     }
 
-    @Nonnull
+    
     public static BuiltInServer start(
-        @Nonnull EventLoopGroup eventLoopGroup,
+        EventLoopGroup eventLoopGroup,
         boolean isEventLoopGroupOwner,
         int firstPort,
         int portsCount,
@@ -136,15 +135,15 @@ public class BuiltInServer implements Disposable {
     }
 
     static void configureChildHandler(
-        @Nonnull ServerBootstrap bootstrap,
-        @Nonnull final ChannelRegistrar channelRegistrar,
+        ServerBootstrap bootstrap,
+        final ChannelRegistrar channelRegistrar,
         @Nullable final Supplier<ChannelHandler> channelHandler
     ) {
         final PortUnificationServerHandler portUnificationServerHandler =
             channelHandler == null ? new PortUnificationServerHandler() : null;
         bootstrap.childHandler(new ChannelInitializer() {
             @Override
-            protected void initChannel(@Nonnull Channel channel) throws Exception {
+            protected void initChannel(Channel channel) throws Exception {
                 channel.pipeline().addLast(channelRegistrar, channelHandler == null ? portUnificationServerHandler : channelHandler.get());
             }
         });
@@ -154,8 +153,8 @@ public class BuiltInServer implements Disposable {
         int firstPort,
         int portsCount,
         boolean tryAnyPort,
-        @Nonnull ServerBootstrap bootstrap,
-        @Nonnull ChannelRegistrar channelRegistrar,
+        ServerBootstrap bootstrap,
+        ChannelRegistrar channelRegistrar,
         boolean isEventLoopGroupOwner
     ) throws Exception {
         InetAddress address = InetAddress.getLoopbackAddress();
@@ -188,16 +187,16 @@ public class BuiltInServer implements Disposable {
         return -1;  // unreachable
     }
 
-    public static void replaceDefaultHandler(@Nonnull ChannelHandlerContext context, @Nonnull ChannelHandler channelHandler) {
+    public static void replaceDefaultHandler(ChannelHandlerContext context, ChannelHandler channelHandler) {
         context.pipeline().replace(DelegatingHttpRequestHandler.class, "replacedDefaultHandler", channelHandler);
     }
 
     private static class BuiltInServerThreadFactory implements ThreadFactory {
         private final AtomicInteger counter = new AtomicInteger();
 
-        @Nonnull
+        
         @Override
-        public Thread newThread(@Nonnull Runnable r) {
+        public Thread newThread(Runnable r) {
             return new Thread(r, "Netty Builtin Server " + counter.incrementAndGet());
         }
     }

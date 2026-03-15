@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /*
@@ -37,121 +36,121 @@ import java.io.IOException;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class DiffContentFactory {
-  @Nonnull
+  
   public static DiffContentFactory getInstance() {
     return Application.get().getInstance(DiffContentFactory.class);
   }
 
-  @Nonnull
+  
   public abstract EmptyContent createEmpty();
 
 
-  @Nonnull
-  public abstract DocumentContent create(@Nonnull String text);
+  
+  public abstract DocumentContent create(String text);
 
-  @Nonnull
-  public abstract DocumentContent create(@Nonnull String text, @Nullable FileType type);
+  
+  public abstract DocumentContent create(String text, @Nullable FileType type);
 
-  @Nonnull
-  public abstract DocumentContent create(@Nonnull String text, @Nullable FileType type, boolean respectLineSeparators);
+  
+  public abstract DocumentContent create(String text, @Nullable FileType type, boolean respectLineSeparators);
 
-  @Nonnull
-  public abstract DocumentContent create(@Nonnull String text, @Nullable VirtualFile highlightFile);
+  
+  public abstract DocumentContent create(String text, @Nullable VirtualFile highlightFile);
 
-  @Nonnull
-  public abstract DocumentContent create(@Nonnull String text, @Nullable DocumentContent referent);
+  
+  public abstract DocumentContent create(String text, @Nullable DocumentContent referent);
 
 
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text);
+  
+  public abstract DocumentContent create(@Nullable Project project, String text);
 
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text, @Nullable FileType type);
+  
+  public abstract DocumentContent create(@Nullable Project project, String text, @Nullable FileType type);
 
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text, @Nullable FileType type,
+  
+  public abstract DocumentContent create(@Nullable Project project, String text, @Nullable FileType type,
                                          boolean respectLineSeparators);
 
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text, @Nullable VirtualFile highlightFile);
+  
+  public abstract DocumentContent create(@Nullable Project project, String text, @Nullable VirtualFile highlightFile);
 
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text, @Nullable DocumentContent referent);
-
-
-  @Nonnull
-  public abstract DocumentContent create(@Nonnull Document document, @Nullable DocumentContent referent);
+  
+  public abstract DocumentContent create(@Nullable Project project, String text, @Nullable DocumentContent referent);
 
 
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull Document document);
-
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull Document document, @Nullable FileType fileType);
-
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull Document document, @Nullable VirtualFile file);
-
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull Document document, @Nullable DocumentContent referent);
+  
+  public abstract DocumentContent create(Document document, @Nullable DocumentContent referent);
 
 
-  @Nonnull
-  public abstract DiffContent create(@Nullable Project project, @Nonnull VirtualFile file);
+  
+  public abstract DocumentContent create(@Nullable Project project, Document document);
 
-  @Nullable
-  public abstract DocumentContent createDocument(@Nullable Project project, @Nonnull VirtualFile file);
+  
+  public abstract DocumentContent create(@Nullable Project project, Document document, @Nullable FileType fileType);
+
+  
+  public abstract DocumentContent create(@Nullable Project project, Document document, @Nullable VirtualFile file);
+
+  
+  public abstract DocumentContent create(@Nullable Project project, Document document, @Nullable DocumentContent referent);
+
+
+  
+  public abstract DiffContent create(@Nullable Project project, VirtualFile file);
 
   @Nullable
-  public abstract FileContent createFile(@Nullable Project project, @Nonnull VirtualFile file);
+  public abstract DocumentContent createDocument(@Nullable Project project, VirtualFile file);
+
+  @Nullable
+  public abstract FileContent createFile(@Nullable Project project, VirtualFile file);
 
 
-  @Nonnull
-  public abstract DocumentContent createFragment(@Nullable Project project, @Nonnull Document document, @Nonnull TextRange range);
+  
+  public abstract DocumentContent createFragment(@Nullable Project project, Document document, TextRange range);
 
-  @Nonnull
-  public abstract DocumentContent createFragment(@Nullable Project project, @Nonnull DocumentContent content, @Nonnull TextRange range);
+  
+  public abstract DocumentContent createFragment(@Nullable Project project, DocumentContent content, TextRange range);
 
 
-  @Nonnull
+  
   public abstract DiffContent createClipboardContent();
 
-  @Nonnull
+  
   public abstract DocumentContent createClipboardContent(@Nullable DocumentContent referent);
 
-  @Nonnull
+  
   public abstract DiffContent createClipboardContent(@Nullable Project project);
 
-  @Nonnull
+  
   public abstract DocumentContent createClipboardContent(@Nullable Project project, @Nullable DocumentContent referent);
 
 
-  @Nonnull
+  
   public abstract DiffContent createFromBytes(@Nullable Project project,
-                                              @Nonnull byte[] content,
-                                              @Nonnull VirtualFile highlightFile) throws IOException;
+                                              byte[] content,
+                                              VirtualFile highlightFile) throws IOException;
 
-  @Nonnull
+  
   public abstract DiffContent createBinary(@Nullable Project project,
-                                           @Nonnull byte[] content,
-                                           @Nonnull FileType type,
-                                           @Nonnull String fileName) throws IOException;
+                                           byte[] content,
+                                           FileType type,
+                                           String fileName) throws IOException;
 
 
-  @Nonnull
+  
   @Deprecated
   public DiffContent createFromBytes(@Nullable Project project,
-                                     @Nonnull VirtualFile highlightFile,
-                                     @Nonnull byte[] content) throws IOException {
+                                     VirtualFile highlightFile,
+                                     byte[] content) throws IOException {
     return createFromBytes(project, content, highlightFile);
   }
 
-  @Nonnull
+  
   @Deprecated
   public DiffContent createBinary(@Nullable Project project,
-                                  @Nonnull String fileName,
-                                  @Nonnull FileType type,
-                                  @Nonnull byte[] content) throws IOException {
+                                  String fileName,
+                                  FileType type,
+                                  byte[] content) throws IOException {
     return createBinary(project, content, type, fileName);
   }
 }

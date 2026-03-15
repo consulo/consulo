@@ -19,8 +19,7 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.image.*;
@@ -125,7 +124,7 @@ public final class NST {
     @SuppressWarnings("unused")
     static ID createScrubber(
         String uid, int itemWidth, NSTLibrary.ScrubberDelegate delegate, NSTLibrary.ScrubberCacheUpdater updater,
-        @Nonnull List<TBItemScrubber.ItemData> items, int visibleItems, @Nullable TouchBarStats stats
+        List<TBItemScrubber.ItemData> items, int visibleItems, @Nullable TouchBarStats stats
     ) {
         Pair<Pointer, Integer> mem = _packItems(items, visibleItems, false, true);
         return nstLibrary.createScrubber(uid, itemWidth, delegate, updater, mem == null ? null : mem.getFirst(),
@@ -183,7 +182,7 @@ public final class NST {
         boolean withImages, boolean withText
     ) {
         long startNs = withImages && scrubber.getStats() != null ? System.nanoTime() : 0;
-        @Nonnull List<TBItemScrubber.ItemData> items = scrubber.getItems();
+        List<TBItemScrubber.ItemData> items = scrubber.getItems();
         Pair<Pointer, Integer> mem = _packItems(items.subList(fromIndex, fromIndex + itemsCount), itemsCount, withImages, withText);
         synchronized (scrubber) {
             if (scrubber.myNativePeer.equals(ID.NIL)) {
@@ -214,7 +213,7 @@ public final class NST {
     }
 
     private static @Nullable Pair<Pointer, Integer> _packItems(
-        @Nonnull List<TBItemScrubber.ItemData> items,
+        List<TBItemScrubber.ItemData> items,
         int visibleItems, boolean withImages, boolean withText
     ) {
         if (items.isEmpty()) {
@@ -355,7 +354,7 @@ public final class NST {
         return _drawIconIntoMemory(icon, scale, memory, 0);
     }
 
-    private static float getIconScaleForTouchbar(@Nonnull Image icon) {
+    private static float getIconScaleForTouchbar(Image icon) {
         // according to https://developer.apple.com/macos/human-interface-guidelines/touch-bar/touch-bar-icons-and-images/
         // icons, generally should not exceed 44px in height (36px for circular icons)
         // Ideal icon size	    36px X 36px (18pt X 18pt @2x)
@@ -379,7 +378,7 @@ public final class NST {
     }
 
     // returns count of written bytes
-    private static int _writeIconRaster(@Nonnull Image icon, float scale, @Nonnull Pointer memory, int offset, int totalMemoryBytes)
+    private static int _writeIconRaster(Image icon, float scale, Pointer memory, int offset, int totalMemoryBytes)
         throws Exception {
         int w = Math.round(icon.getWidth() * scale);
         int h = Math.round(icon.getHeight() * scale);
@@ -407,7 +406,7 @@ public final class NST {
     }
 
     // returns count of written bytes
-    private static @Nonnull BufferedImage _drawIconIntoMemory(@Nonnull Image icon, float scale, @Nonnull Pointer memory, int offset) {
+    private static BufferedImage _drawIconIntoMemory(Image icon, float scale, Pointer memory, int offset) {
         int w = Math.round(icon.getWidth() * scale);
         int h = Math.round(icon.getHeight() * scale);
         int rasterSizeInBytes = w * h * 4;

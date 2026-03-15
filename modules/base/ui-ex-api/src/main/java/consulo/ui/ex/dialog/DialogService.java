@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ui.Component;
 import consulo.ui.WindowOwner;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,12 +26,12 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DialogService {
-    @Nonnull
-    Dialog build(@Nonnull DialogDescriptor descriptor);
+    
+    Dialog build(DialogDescriptor descriptor);
 
-    @Nonnull
-    Dialog build(@Nonnull Component parent, @Nonnull DialogDescriptor descriptor);
+    
+    Dialog build(Component parent, DialogDescriptor descriptor);
 
-    @Nonnull
-    Dialog build(@Nonnull WindowOwner windowOwner, @Nonnull DialogDescriptor descriptor);
+    
+    Dialog build(WindowOwner windowOwner, DialogDescriptor descriptor);
 }

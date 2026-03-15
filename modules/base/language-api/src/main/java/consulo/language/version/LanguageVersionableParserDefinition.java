@@ -20,52 +20,51 @@ import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiParser;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19:52/24.06.13
  */
 public abstract class LanguageVersionableParserDefinition implements ParserDefinition {
-  @Nonnull
+  
   @Override
-  public Lexer createLexer(@Nonnull LanguageVersion languageVersion) {
+  public Lexer createLexer(LanguageVersion languageVersion) {
     if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).createLexer();
     }
     throw throwError("createLexer", languageVersion);
   }
 
-  @Nonnull
+  
   @Override
-  public PsiParser createParser(@Nonnull LanguageVersion languageVersion) {
+  public PsiParser createParser(LanguageVersion languageVersion) {
     if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).createParser();
     }
     throw throwError("createParser", languageVersion);
   }
 
-  @Nonnull
+  
   @Override
-  public TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
+  public TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
     if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getWhitespaceTokens();
     }
     throw throwError("getWhitespaceTokens", languageVersion);
   }
 
-  @Nonnull
+  
   @Override
-  public TokenSet getCommentTokens(@Nonnull LanguageVersion languageVersion) {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getCommentTokens();
     }
     throw throwError("getCommentTokens", languageVersion);
   }
 
-  @Nonnull
+  
   @Override
-  public TokenSet getStringLiteralElements(@Nonnull LanguageVersion languageVersion) {
+  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getStringLiteralElements();
     }

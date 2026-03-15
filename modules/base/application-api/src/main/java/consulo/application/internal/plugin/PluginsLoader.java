@@ -39,8 +39,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +78,7 @@ public class PluginsLoader {
   public static void setVersionChecker() {
     PluginValidator.VALIDATOR = new PluginDescriptorVersionValidator() {
       @Override
-      public boolean validateVersion(@Nonnull PluginDescriptor descriptor) {
+      public boolean validateVersion(PluginDescriptor descriptor) {
         return !isIncompatible(descriptor);
       }
 
@@ -102,7 +101,7 @@ public class PluginsLoader {
     };
   }
 
-  @Nonnull
+  
   public static PluginsInitializeInfo initPlugins(@Nullable StartupProgress progress, boolean isHeadlessMode) {
     long start = System.currentTimeMillis();
     PluginsInitializeInfo info;
@@ -119,7 +118,7 @@ public class PluginsLoader {
     return info;
   }
 
-  @Nonnull
+  
   static PluginsInitializeInfo initializePlugins(@Nullable StartupProgress progress, boolean isHeadlessMode) {
     PluginsInitializeInfo info = new PluginsInitializeInfo();
 
@@ -264,7 +263,7 @@ public class PluginsLoader {
     }
   }
 
-  @Nonnull
+  
   private static List<PluginDescriptorImpl> loadPluginDescriptors(@Nullable StartupProgress progress, boolean isHeadlessMode) {
     StatCollector stat = new StatCollector();
 
@@ -292,7 +291,7 @@ public class PluginsLoader {
     return PluginDescriptorLoader.loadDescriptor(file, false, PluginsLoader.C_LOG);
   }
 
-  @Nonnull
+  
   public static List<PluginDescriptorImpl> loadDescriptorsFromPluginsPath(@Nullable StartupProgress progress,
                                                                           boolean isHeadlessMode,
                                                                           StatCollector stat) {
@@ -321,7 +320,7 @@ public class PluginsLoader {
     loadDescriptors(new File(pluginsPath), result, progress, pluginsCount, stat, isHeadlessMode, isPreInstalledPath);
   }
 
-  public static void loadDescriptors(@Nonnull File pluginsHome,
+  public static void loadDescriptors(File pluginsHome,
                                      List<PluginDescriptorImpl> result,
                                      @Nullable StartupProgress progress,
                                      int pluginsCount,
@@ -475,7 +474,7 @@ public class PluginsLoader {
     });
   }
 
-  @Nonnull
+  
   static List<ModuleLayer> getParentModuleLayer(Map<PluginId, ? extends PluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
     List<ModuleLayer> result = new ArrayList<>();
     for (PluginId id : pluginIds) {
@@ -495,9 +494,9 @@ public class PluginsLoader {
   }
 
   @Nullable
-  static ClassLoader createPluginClassLoader(@Nonnull Set<PluginId> enabledPluginIds,
-                                             @Nonnull ClassLoader[] parentLoaders,
-                                             @Nonnull PluginDescriptor pluginDescriptor) {
+  static ClassLoader createPluginClassLoader(Set<PluginId> enabledPluginIds,
+                                             ClassLoader[] parentLoaders,
+                                             PluginDescriptor pluginDescriptor) {
     try {
       return PluginClassLoaderFactory.create(enabledPluginIds, parentLoaders, pluginDescriptor);
     }
@@ -507,7 +506,7 @@ public class PluginsLoader {
     return null;
   }
 
-  @Nonnull
+  
   static ClassLoader[] getParentLoaders(Map<PluginId, ? extends PluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
     List<ClassLoader> classLoaders = new ArrayList<>();
     for (PluginId id : pluginIds) {

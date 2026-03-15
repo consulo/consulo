@@ -21,8 +21,7 @@ import consulo.language.psi.PsiReference;
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,10 +39,10 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
   }
 
   @Override
-  public boolean createReferences(@Nonnull final PsiElement psiElement,
+  public boolean createReferences(final PsiElement psiElement,
                                   final int offset,
                                   final String text,
-                                  @Nonnull List<PsiReference> references,
+                                  List<PsiReference> references,
                                   final boolean soft) {
 
     FileReferenceSet set = new FileReferenceSet(text, psiElement, offset, null, true, myEndingSlashNotAllowed, mySuitableFileTypes) {
@@ -66,7 +65,7 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
 
   @Override
   @Nullable
-  public PathReference getPathReference(@Nonnull final String path, @Nonnull PsiElement element) {
+  public PathReference getPathReference(final String path, PsiElement element) {
     List<PsiReference> list = new SmartList<PsiReference>();
     createReferences(element, list, true);
     if (list.isEmpty()) return null;

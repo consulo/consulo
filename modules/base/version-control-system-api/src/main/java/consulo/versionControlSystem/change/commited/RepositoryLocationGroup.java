@@ -17,7 +17,6 @@ package consulo.versionControlSystem.change.commited;
 
 import consulo.versionControlSystem.RepositoryLocation;
 import consulo.versionControlSystem.VcsException;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class RepositoryLocationGroup implements RepositoryLocation {
     return myPresentableString;
   }
 
-  public void add(@Nonnull RepositoryLocation location) {
+  public void add(RepositoryLocation location) {
     for (int i = 0; i < myLocations.size(); i++) {
       RepositoryLocation t = myLocations.get(i);
       if (t.getKey().compareTo(location.getKey()) >= 0) {

@@ -22,30 +22,29 @@ import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogStorage;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class TopCommitsCache {
-  @Nonnull
+  
   private final VcsLogStorage myHashMap;
-  @Nonnull
+  
   private final ConcurrentIntObjectMap<VcsCommitMetadata> myCache = IntMaps.newConcurrentIntObjectHashMap();
-  @Nonnull
+  
   private List<VcsCommitMetadata> mySortedDetails = new ArrayList<>();
 
-  public TopCommitsCache(@Nonnull VcsLogStorage hashMap) {
+  public TopCommitsCache(VcsLogStorage hashMap) {
     myHashMap = hashMap;
   }
 
-  private int getIndex(@Nonnull VcsCommitMetadata metadata) {
+  private int getIndex(VcsCommitMetadata metadata) {
     return myHashMap.getCommitIndex(metadata.getId(), metadata.getRoot());
   }
 
-  public void storeDetails(@Nonnull List<? extends VcsCommitMetadata> sortedDetails) {
+  public void storeDetails(List<? extends VcsCommitMetadata> sortedDetails) {
     List<VcsCommitMetadata> newDetails = ContainerUtil.filter(sortedDetails, metadata -> !myCache.containsValue(metadata));
     if (newDetails.isEmpty()) return;
     Iterator<VcsCommitMetadata> it = new MergingIterator(mySortedDetails, newDetails);
@@ -85,7 +84,7 @@ public class TopCommitsCache {
     private final PeekingIterator<VcsCommitMetadata> myFirst;
     private final PeekingIterator<VcsCommitMetadata> mySecond;
 
-    private MergingIterator(@Nonnull List<VcsCommitMetadata> first, @Nonnull List<VcsCommitMetadata> second) {
+    private MergingIterator(List<VcsCommitMetadata> first, List<VcsCommitMetadata> second) {
       myFirst = Iterators.peekingIterator(first.iterator());
       mySecond = Iterators.peekingIterator(second.iterator());
     }

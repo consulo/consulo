@@ -23,7 +23,6 @@ import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,20 +30,20 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface InspectionProjectProfileManager extends SeverityProvider, ProjectProfileManager {
-    @Nonnull
+    
     static InspectionProjectProfileManager getInstance(Project project) {
         return project.getInstance(InspectionProjectProfileManager.class);
     }
 
-    @Nonnull
+    
     default InspectionProfile getCurrentProfile() {
         return getInspectionProfile();
     }
 
-    @Nonnull
+    
     InspectionProfile getInspectionProfile();
 
-    public static boolean isInformationLevel(String shortName, @Nonnull PsiElement element) {
+    public static boolean isInformationLevel(String shortName, PsiElement element) {
         HighlightDisplayKey key = InspectionCacheService.getInstance().get().find(shortName);
         if (key != null) {
             HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getCurrentProfile().getErrorLevel(key, element);

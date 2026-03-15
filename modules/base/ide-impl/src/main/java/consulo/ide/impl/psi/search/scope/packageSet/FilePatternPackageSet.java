@@ -28,17 +28,16 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.regex.Pattern;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
  * @since 2008-01-15
  */
 public class FilePatternPackageSet extends PatternBasedPackageSet {
-  @NonNls public static final String SCOPE_FILE = "file";
+  public static final String SCOPE_FILE = "file";
   private Pattern myModulePattern;
   private Pattern myModuleGroupPattern;
   private final String myPathPattern;
@@ -46,8 +45,8 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
   private final String myModulePatternText;
   private static final Logger LOG = Logger.getInstance(FilePatternPackageSet.class);
 
-  public FilePatternPackageSet(@NonNls String modulePattern,
-                               @NonNls String filePattern) {
+  public FilePatternPackageSet(String modulePattern,
+                               String filePattern) {
     myPathPattern = filePattern;
     myModulePatternText = modulePattern;
     if (modulePattern == null || modulePattern.isEmpty()) {
@@ -149,7 +148,7 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
   }
 
   @Override
-  @Nonnull
+  
   public PackageSet createCopy() {
     return new FilePatternPackageSet(myModulePatternText, myPathPattern);
   }
@@ -160,9 +159,9 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
   }
 
   @Override
-  @Nonnull
+  
   public String getText() {
-    @NonNls StringBuffer buf = new StringBuffer("file");
+    StringBuffer buf = new StringBuffer("file");
 
     if (myModulePattern != null || myModuleGroupPattern != null) {
       buf.append("[").append(myModulePatternText).append("]");
@@ -191,9 +190,9 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
     return Comparing.strEqual(myPathPattern, oldQName);
   }
 
-  @jakarta.annotation.Nullable
-  public static String getRelativePath(@Nonnull VirtualFile virtualFile,
-                                       @Nonnull ProjectFileIndex index,
+  @Nullable
+  public static String getRelativePath(VirtualFile virtualFile,
+                                       ProjectFileIndex index,
                                        boolean useFQName,
                                        VirtualFile projectBaseDir) {
     VirtualFile contentRootForFile = index.getContentRootForFile(virtualFile);

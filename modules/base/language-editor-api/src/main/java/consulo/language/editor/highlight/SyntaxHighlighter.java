@@ -22,7 +22,6 @@ import consulo.language.lexer.Lexer;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Controls the syntax highlighting of a file.
@@ -37,7 +36,7 @@ public interface SyntaxHighlighter {
    *
    * @return The lexer implementation.
    */
-  @Nonnull
+  
   Lexer getHighlightingLexer();
 
   /**
@@ -47,6 +46,6 @@ public interface SyntaxHighlighter {
    * @param tokenType The token type for which the highlighting is requested.
    * @return The array of text attribute keys.
    */
-  @Nonnull
-  TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType);
+  
+  TextAttributesKey[] getTokenHighlights(IElementType tokenType);
 }

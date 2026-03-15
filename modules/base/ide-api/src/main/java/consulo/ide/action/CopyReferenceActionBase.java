@@ -37,22 +37,21 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.StringSelection;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class CopyReferenceActionBase extends DumbAwareAction {
-    protected CopyReferenceActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected CopyReferenceActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);
         setInjectedContext(true);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean plural = false;
         boolean enabled;
         boolean paths = false;
@@ -95,7 +94,7 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     protected List<PsiElement> getPsiElements(DataContext dataContext, Editor editor) {
         return CopyReferenceUtil.getElementsToCopy(editor, dataContext);
@@ -103,7 +102,7 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Editor editor = e.getData(Editor.KEY);
         Project project = e.getData(Project.KEY);
         List<PsiElement> elements = getPsiElements(e.getDataContext(), editor);

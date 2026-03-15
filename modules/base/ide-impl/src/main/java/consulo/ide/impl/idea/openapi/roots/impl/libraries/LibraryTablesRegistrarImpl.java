@@ -21,20 +21,19 @@ import consulo.content.library.LibraryTablesRegistrar;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
 public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implements Disposable {
   @Override
-  @Nonnull
-  public LibraryTable getLibraryTable(@Nonnull Project project) {
+  
+  public LibraryTable getLibraryTable(Project project) {
     return ProjectLibraryTable.getInstance(project);
   }
 
   @Override
-  public LibraryTable getLibraryTableByLevel(String level, @Nonnull Project project) {
+  public LibraryTable getLibraryTableByLevel(String level, Project project) {
     if (LibraryTablesRegistrar.PROJECT_LEVEL.equals(level)) return getLibraryTable(project);
     return null;
   }

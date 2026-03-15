@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.document.DocumentReference;
 import consulo.undoRedo.UndoableAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * Used to make Undo/Redo action available for some Document, even if it was not modified.
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
 class MentionOnlyUndoableAction implements UndoableAction {
   private final DocumentReference[] myRefs;
 
-  protected MentionOnlyUndoableAction(@Nonnull DocumentReference[] refs) {
+  protected MentionOnlyUndoableAction(DocumentReference[] refs) {
     myRefs = refs;
   }
 

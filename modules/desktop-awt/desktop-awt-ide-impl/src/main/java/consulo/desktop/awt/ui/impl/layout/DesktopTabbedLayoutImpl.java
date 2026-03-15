@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TabbedLayout;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -48,7 +47,7 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
             return false;
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopTabbedLayoutImpl.this;
@@ -65,16 +64,16 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
         DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
     }
 
-    @Nonnull
+    
     @Override
     public Tab createTab() {
         return new DesktopTabImpl(this);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
+    public Tab addTab(Tab tab, Component component) {
         DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
 
         desktopTab.setComponent(component);
@@ -86,17 +85,17 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
         return tab;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
+    public Tab addTab(String tabName, Component component) {
         Tab tab = createTab();
         tab.setRenderer((t, p) -> p.append(tabName));
         return addTab(tab, component);
     }
 
     @Override
-    public void removeTab(@Nonnull Tab tab) {
+    public void removeTab(Tab tab) {
         DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
         toAWTComponent().removeTab(desktopTab.getTabInfo());
     }

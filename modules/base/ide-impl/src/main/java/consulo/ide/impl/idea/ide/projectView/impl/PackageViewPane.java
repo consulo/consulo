@@ -52,8 +52,7 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -73,14 +72,14 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         super(project);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTitle() {
         return IdeLocalize.titlePackages();
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return ID;
     }
@@ -91,11 +90,11 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    public BaseProjectTreeBuilder createBuilder(@Nonnull DefaultTreeModel model) {
+    public BaseProjectTreeBuilder createBuilder(DefaultTreeModel model) {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public List<PsiElement> getElementsFromNode(@Nullable Object node) {
@@ -114,7 +113,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (DeleteProvider.KEY == dataId) {
             PackageElement selectedPackageElement = getSelectedPackageElement();
             if (selectedPackageElement != null) {
@@ -147,7 +146,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         return result;
     }
 
-    @Nonnull
+    
     @Override
     public PsiDirectory[] getSelectedDirectories() {
         PackageElement packageElement = getSelectedPackageElement();
@@ -171,20 +170,20 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return ProjectView.getInstance(myProject).isShowLibraryContents(getId());
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             ProjectViewImpl projectView = (ProjectViewImpl) ProjectView.getInstance(myProject);
             projectView.setShowLibraryContents(flag, getId());
         }
 
         @Override
         @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             Presentation presentation = e.getPresentation();
             ProjectViewImpl projectView = (ProjectViewImpl) ProjectView.getInstance(myProject);
@@ -204,7 +203,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    protected AbstractTreeUpdater createTreeUpdater(@Nonnull AbstractTreeBuilder treeBuilder) {
+    protected AbstractTreeUpdater createTreeUpdater(AbstractTreeBuilder treeBuilder) {
         return new PackageViewTreeUpdater(treeBuilder);
     }
 
@@ -224,7 +223,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    protected ProjectViewTree createTree(@Nonnull DefaultTreeModel treeModel) {
+    protected ProjectViewTree createTree(DefaultTreeModel treeModel) {
         return new ProjectViewTree(myProject, treeModel) {
             @Override
             public String toString() {
@@ -233,7 +232,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         };
     }
 
-    @Nonnull
+    
     public String getComponentName() {
         return "PackagesPane";
     }
@@ -250,7 +249,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
         @Override
         @RequiredReadAction
-        public boolean addSubtreeToUpdateByElement(@Nonnull Object element) {
+        public boolean addSubtreeToUpdateByElement(Object element) {
             // should convert PsiDirectories into PackageElements
             if (element instanceof PsiDirectory dir) {
                 PsiPackage aPackage = PsiPackageManager.getInstance(dir.getProject()).findAnyPackage(dir);
@@ -324,7 +323,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
     private final class MyDeletePSIElementProvider implements DeleteProvider {
         @Override
-        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public boolean canDeleteElement(DataContext dataContext) {
             for (PsiDirectory directory : getSelectedDirectories()) {
                 if (!directory.getManager().isInProject(directory)) {
                     return false;
@@ -335,7 +334,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
         @Override
         @RequiredUIAccess
-        public void deleteElement(@Nonnull DataContext dataContext) {
+        public void deleteElement(DataContext dataContext) {
             List<PsiDirectory> allElements = Arrays.asList(getSelectedDirectories());
             List<PsiElement> validElements = new ArrayList<>();
             for (PsiElement psiElement : allElements) {

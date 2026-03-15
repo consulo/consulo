@@ -11,8 +11,7 @@ import consulo.language.psi.stub.FileContent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,7 +19,7 @@ import java.util.Map;
 class StubUpdatingForwardIndexAccessor implements ForwardIndexAccessor<Integer, SerializedStubTree> {
   private volatile UpdatableIndex<Integer, SerializedStubTree, FileContent> myIndex;
 
-  @Nonnull
+  
   @Override
   public InputDataDiffBuilder<Integer, SerializedStubTree> getDiffBuilder(int inputId, @Nullable ByteArraySequence sequence) throws IOException {
     Ref<Map<Integer, SerializedStubTree>> dataRef = Ref.create();
@@ -46,11 +45,11 @@ class StubUpdatingForwardIndexAccessor implements ForwardIndexAccessor<Integer, 
 
   @Nullable
   @Override
-  public ByteArraySequence serializeIndexedData(@Nonnull InputData<Integer, SerializedStubTree> data) {
+  public ByteArraySequence serializeIndexedData(InputData<Integer, SerializedStubTree> data) {
     return null;
   }
 
-  void setIndex(@Nonnull UpdatableIndex<Integer, SerializedStubTree, FileContent> index) {
+  void setIndex(UpdatableIndex<Integer, SerializedStubTree, FileContent> index) {
     myIndex = index;
   }
 }

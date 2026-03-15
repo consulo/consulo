@@ -15,12 +15,11 @@
  */
 package consulo.language.ast;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface ICompositeElementType {
-  @Nonnull
+  
   ASTNode createCompositeNode();
 }

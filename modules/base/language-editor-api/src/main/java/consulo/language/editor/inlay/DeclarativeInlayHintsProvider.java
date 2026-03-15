@@ -9,8 +9,7 @@ import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -27,25 +26,25 @@ public interface DeclarativeInlayHintsProvider extends PossiblyDumbAware {
     @Nullable
     DeclarativeInlayHintsCollector createCollector(PsiFile file, Editor editor);
 
-    @Nonnull
+    
     Language getLanguage();
 
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
+    
     LocalizeValue getName();
 
-    @Nonnull
+    
     LocalizeValue getDescription();
 
-    @Nonnull
+    
     LocalizeValue getPreviewFileText();
 
-    @Nonnull
+    
     InlayGroup getGroup();
 
-    @Nonnull
+    
     default Set<DeclarativeInlayOptionInfo> getOptions() {
         return Set.of();
     }

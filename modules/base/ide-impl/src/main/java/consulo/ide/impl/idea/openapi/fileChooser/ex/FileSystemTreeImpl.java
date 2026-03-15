@@ -28,8 +28,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -52,7 +51,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     private final ArrayList<Runnable> myOkActions = new ArrayList<>(2);
     private final FileChooserDescriptor myDescriptor;
 
-    @Nonnull
+    
     private final AsyncTreeModel myAsyncTreeModel;
 
     private final List<Listener> myListeners = Lists.newLockFreeCopyOnWriteList();
@@ -110,7 +109,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                 @RequiredUIAccess
                 @Override
                 public void customizeCellRenderer(
-                    @Nonnull JTree tree,
+                    JTree tree,
                     Object value,
                     boolean selected,
                     boolean expanded,
@@ -348,12 +347,12 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    public <T> T getData(@Nonnull Key<T> key) {
+    public <T> T getData(Key<T> key) {
         return myDescriptor.getUserData(key);
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile[] getSelectedFiles() {
         TreePath[] paths = myTree.getSelectionPaths();
         if (paths == null) {
@@ -391,7 +390,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    public boolean isUnderRoots(@Nonnull VirtualFile file) {
+    public boolean isUnderRoots(VirtualFile file) {
         List<VirtualFile> roots = myDescriptor.getRoots();
         if (roots.size() == 0) {
             return true;
@@ -412,7 +411,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
         Disposer.register(parent, () -> myListeners.remove(listener));
     }
 
-    private void fireSelection(@Nonnull List<? extends VirtualFile> selection) {
+    private void fireSelection(List<? extends VirtualFile> selection) {
         for (Listener each : myListeners) {
             each.selectionChanged(selection);
         }

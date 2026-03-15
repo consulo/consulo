@@ -23,8 +23,7 @@ import consulo.util.collection.JBTreeTraverser;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.DifferenceFilter;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -38,12 +37,12 @@ public class ReflectionUtil {
     }
 
     @Nullable
-    public static Type resolveVariable(@Nonnull TypeVariable variable, @Nonnull Class classType) {
+    public static Type resolveVariable(TypeVariable variable, Class classType) {
         return resolveVariable(variable, classType, true);
     }
 
     @Nullable
-    public static Type resolveVariable(@Nonnull TypeVariable variable, @Nonnull Class classType, boolean resolveInInterfacesOnly) {
+    public static Type resolveVariable(TypeVariable variable, Class classType, boolean resolveInInterfacesOnly) {
         Class aClass = getRawType(classType);
         int index = ArrayUtil.find(aClass.getTypeParameters(), variable);
         if (index >= 0) {
@@ -92,13 +91,13 @@ public class ReflectionUtil {
     }
 
     @SuppressWarnings("HardCodedStringLiteral")
-    @Nonnull
-    public static String declarationToString(@Nonnull GenericDeclaration anInterface) {
+    
+    public static String declarationToString(GenericDeclaration anInterface) {
         return anInterface.toString() + Arrays.asList(anInterface.getTypeParameters()) + " loaded by " + ((Class)anInterface).getClassLoader();
     }
 
-    @Nonnull
-    public static Class<?> boxType(@Nonnull Class<?> type) {
+    
+    public static Class<?> boxType(Class<?> type) {
         if (!type.isPrimitive()) {
             return type;
         }
@@ -129,8 +128,8 @@ public class ReflectionUtil {
         return type;
     }
 
-    @Nonnull
-    public static Class<?> getRawType(@Nonnull Type type) {
+    
+    public static Class<?> getRawType(Type type) {
         if (type instanceof Class) {
             return (Class)type;
         }
@@ -145,13 +144,13 @@ public class ReflectionUtil {
         return null;
     }
 
-    @Nonnull
-    public static Type[] getActualTypeArguments(@Nonnull ParameterizedType parameterizedType) {
+    
+    public static Type[] getActualTypeArguments(ParameterizedType parameterizedType) {
         return parameterizedType.getActualTypeArguments();
     }
 
     @Nullable
-    public static Class<?> substituteGenericType(@Nonnull Type genericType, @Nonnull Type classType) {
+    public static Class<?> substituteGenericType(Type genericType, Type classType) {
         if (genericType instanceof TypeVariable) {
             Class<?> aClass = getRawType(classType);
             Type type = resolveVariable((TypeVariable)genericType, aClass);
@@ -174,8 +173,8 @@ public class ReflectionUtil {
         return null;
     }
 
-    @Nonnull
-    public static List<Field> collectFields(@Nonnull Class clazz) {
+    
+    public static List<Field> collectFields(Class clazz) {
         List<Field> result = new ArrayList<>();
         for (Class c : classTraverser(clazz)) {
             result.addAll(getClassDeclaredFields(c));
@@ -183,8 +182,8 @@ public class ReflectionUtil {
         return result;
     }
 
-    @Nonnull
-    public static Field findField(@Nonnull Class clazz, @Nullable Class type, @Nonnull String name) throws NoSuchFieldException {
+    
+    public static Field findField(Class clazz, @Nullable Class type, String name) throws NoSuchFieldException {
         Field result = processFields(clazz, field -> name.equals(field.getName()) && (type == null || field.getType().equals(type)));
         if (result != null) {
             return result;
@@ -193,8 +192,8 @@ public class ReflectionUtil {
         throw new NoSuchFieldException("Class: " + clazz + " name: " + name + " type: " + type);
     }
 
-    @Nonnull
-    public static Field findAssignableField(@Nonnull Class<?> clazz, @Nullable Class<?> fieldType, @Nonnull String fieldName)
+    
+    public static Field findAssignableField(Class<?> clazz, @Nullable Class<?> fieldType, String fieldName)
         throws NoSuchFieldException {
         Field result = processFields(
             clazz,
@@ -206,7 +205,7 @@ public class ReflectionUtil {
         throw new NoSuchFieldException("Class: " + clazz + " fieldName: " + fieldName + " fieldType: " + fieldType);
     }
 
-    private static Field processFields(@Nonnull Class clazz, @Nonnull Predicate<Field> checker) {
+    private static Field processFields(Class clazz, Predicate<Field> checker) {
         for (Class c : classTraverser(clazz)) {
             Field field = JBIterable.of(c.getDeclaredFields()).find(checker);
             if (field != null) {
@@ -217,7 +216,7 @@ public class ReflectionUtil {
         return null;
     }
 
-    public static void resetField(@Nonnull Class clazz, @Nullable Class type, @Nonnull String name) {
+    public static void resetField(Class clazz, @Nullable Class type, String name) {
         try {
             resetField(null, findField(clazz, type, name));
         }
@@ -226,7 +225,7 @@ public class ReflectionUtil {
         }
     }
 
-    public static void resetField(@Nonnull Object object, @Nullable Class type, @Nonnull String name) {
+    public static void resetField(Object object, @Nullable Class type, String name) {
         try {
             resetField(object, findField(object.getClass(), type, name));
         }
@@ -235,7 +234,7 @@ public class ReflectionUtil {
         }
     }
 
-    public static void resetField(@Nonnull Object object, @Nonnull String name) {
+    public static void resetField(Object object, String name) {
         try {
             resetField(object, findField(object.getClass(), null, name));
         }
@@ -244,7 +243,7 @@ public class ReflectionUtil {
         }
     }
 
-    public static void resetField(@Nullable Object object, @Nonnull Field field) {
+    public static void resetField(@Nullable Object object, Field field) {
         field.setAccessible(true);
         Class<?> type = field.getType();
         try {
@@ -271,12 +270,12 @@ public class ReflectionUtil {
         }
     }
 
-    public static void resetStaticField(@Nonnull Class aClass, @Nonnull String name) {
+    public static void resetStaticField(Class aClass, String name) {
         resetField(aClass, null, name);
     }
 
     @Nullable
-    public static Method findMethod(@Nonnull Collection<Method> methods, @Nonnull String name, @Nonnull Class... parameters) {
+    public static Method findMethod(Collection<Method> methods, String name, Class... parameters) {
         for (Method method : methods) {
             if (name.equals(method.getName()) && Arrays.equals(parameters, method.getParameterTypes())) {
                 method.setAccessible(true);
@@ -287,50 +286,50 @@ public class ReflectionUtil {
     }
 
     @Nullable
-    public static Method getMethod(@Nonnull Class aClass, @Nonnull String name, @Nonnull Class... parameters) {
+    public static Method getMethod(Class aClass, String name, Class... parameters) {
         return findMethod(getClassPublicMethods(aClass, false), name, parameters);
     }
 
     @Nullable
-    public static Method getDeclaredMethod(@Nonnull Class aClass, @Nonnull String name, @Nonnull Class... parameters) {
+    public static Method getDeclaredMethod(Class aClass, String name, Class... parameters) {
         return findMethod(getClassDeclaredMethods(aClass, false), name, parameters);
     }
 
     @Nullable
-    public static Field getDeclaredField(@Nonnull Class aClass, @Nonnull String name) {
+    public static Field getDeclaredField(Class aClass, String name) {
         return processFields(aClass, field -> name.equals(field.getName()));
     }
 
-    @Nonnull
-    public static List<Method> getClassPublicMethods(@Nonnull Class aClass) {
+    
+    public static List<Method> getClassPublicMethods(Class aClass) {
         return getClassPublicMethods(aClass, false);
     }
 
-    @Nonnull
-    public static List<Method> getClassPublicMethods(@Nonnull Class aClass, boolean includeSynthetic) {
+    
+    public static List<Method> getClassPublicMethods(Class aClass, boolean includeSynthetic) {
         Method[] methods = aClass.getMethods();
         return includeSynthetic ? Arrays.asList(methods) : filterRealMethods(methods);
     }
 
-    @Nonnull
-    public static List<Method> getClassDeclaredMethods(@Nonnull Class aClass) {
+    
+    public static List<Method> getClassDeclaredMethods(Class aClass) {
         return getClassDeclaredMethods(aClass, false);
     }
 
-    @Nonnull
-    public static List<Method> getClassDeclaredMethods(@Nonnull Class aClass, boolean includeSynthetic) {
+    
+    public static List<Method> getClassDeclaredMethods(Class aClass, boolean includeSynthetic) {
         Method[] methods = aClass.getDeclaredMethods();
         return includeSynthetic ? Arrays.asList(methods) : filterRealMethods(methods);
     }
 
-    @Nonnull
-    public static List<Field> getClassDeclaredFields(@Nonnull Class aClass) {
+    
+    public static List<Field> getClassDeclaredFields(Class aClass) {
         Field[] fields = aClass.getDeclaredFields();
         return Arrays.asList(fields);
     }
 
-    @Nonnull
-    private static List<Method> filterRealMethods(@Nonnull Method[] methods) {
+    
+    private static List<Method> filterRealMethods(Method[] methods) {
         List<Method> result = new ArrayList<>();
         for (Method method : methods) {
             if (!method.isSynthetic()) {
@@ -342,9 +341,9 @@ public class ReflectionUtil {
 
     @Nullable
     public static Class getMethodDeclaringClass(
-        @Nonnull Class<?> instanceClass,
-        @Nonnull String methodName,
-        @Nonnull Class... parameters
+        Class<?> instanceClass,
+        String methodName,
+        Class... parameters
     ) {
         Method method = getMethod(instanceClass, methodName, parameters);
         return method == null ? null : method.getDeclaringClass();
@@ -352,10 +351,10 @@ public class ReflectionUtil {
 
     @SuppressWarnings("unchecked")
     public static <T> T getField(
-        @Nonnull Class objectClass,
+        Class objectClass,
         @Nullable Object object,
         @Nullable Class<T> fieldType,
-        @Nonnull String fieldName
+        String fieldName
     ) {
         try {
             Field field = findAssignableField(objectClass, fieldType, fieldName);
@@ -372,7 +371,7 @@ public class ReflectionUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getStaticFieldValue(@Nonnull Class objectClass, @Nullable Class<T> fieldType, @Nonnull String fieldName) {
+    public static <T> T getStaticFieldValue(Class objectClass, @Nullable Class<T> fieldType, String fieldName) {
         try {
             Field field = findAssignableField(objectClass, fieldType, fieldName);
             if (!Modifier.isStatic(field.getModifiers())) {
@@ -392,10 +391,10 @@ public class ReflectionUtil {
 
     // returns true if value was set
     public static <T> boolean setField(
-        @Nonnull Class objectClass,
+        Class objectClass,
         Object object,
         @Nullable Class<T> fieldType,
-        @Nonnull String fieldName,
+        String fieldName,
         T value
     ) {
         try {
@@ -415,7 +414,7 @@ public class ReflectionUtil {
         }
     }
 
-    public static Type resolveVariableInHierarchy(@Nonnull TypeVariable variable, @Nonnull Class aClass) {
+    public static Type resolveVariableInHierarchy(TypeVariable variable, Class aClass) {
         Type type;
         Class current = aClass;
         while ((type = resolveVariable(variable, current, false)) == null) {
@@ -427,8 +426,8 @@ public class ReflectionUtil {
         return type instanceof TypeVariable typeVar ? resolveVariableInHierarchy(typeVar, aClass) : type;
     }
 
-    @Nonnull
-    public static <T> Constructor<T> getDefaultConstructor(@Nonnull Class<T> aClass) {
+    
+    public static <T> Constructor<T> getDefaultConstructor(Class<T> aClass) {
         try {
             Constructor<T> constructor = aClass.getConstructor();
             constructor.setAccessible(true);
@@ -442,15 +441,15 @@ public class ReflectionUtil {
     /**
      * @deprecated use {@link #newInstance(Class)} instead (this method will fail anyway if non-empty {@code parameterTypes} is passed)
      */
-    public static <T> T newInstance(@Nonnull Class<T> aClass, @Nonnull Class... parameterTypes) {
+    public static <T> T newInstance(Class<T> aClass, Class... parameterTypes) {
         return newInstance(aClass);
     }
 
     /**
      * Like {@link Class#newInstance()} but also handles private classes
      */
-    @Nonnull
-    public static <T> T newInstance(@Nonnull Class<T> aClass) {
+    
+    public static <T> T newInstance(Class<T> aClass) {
         try {
             Constructor<T> constructor = aClass.getDeclaredConstructor();
             try {
@@ -466,8 +465,8 @@ public class ReflectionUtil {
         }
     }
 
-    @Nonnull
-    public static <T> T createInstance(@Nonnull Constructor<T> constructor, @Nonnull Object... args) {
+    
+    public static <T> T createInstance(Constructor<T> constructor, Object... args) {
         try {
             return constructor.newInstance(args);
         }
@@ -493,14 +492,14 @@ public class ReflectionUtil {
         return callerClass;
     }
 
-    public static void copyFields(@Nonnull Field[] fields, @Nonnull Object from, @Nonnull Object to) {
+    public static void copyFields(Field[] fields, Object from, Object to) {
         copyFields(fields, from, to, null);
     }
 
     public static boolean copyFields(
-        @Nonnull Field[] fields,
-        @Nonnull Object from,
-        @Nonnull Object to,
+        Field[] fields,
+        Object from,
+        Object to,
         @Nullable DifferenceFilter diffFilter
     ) {
         Set<Field> sourceFields = new HashSet<>(Arrays.asList(from.getClass().getFields()));
@@ -523,7 +522,7 @@ public class ReflectionUtil {
         return valuesChanged;
     }
 
-    public static void copyFieldValue(@Nonnull Object from, @Nonnull Object to, @Nonnull Field field) throws IllegalAccessException {
+    public static void copyFieldValue(Object from, Object to, Field field) throws IllegalAccessException {
         Class<?> fieldType = field.getType();
         if (fieldType.isPrimitive() || fieldType.equals(String.class) || fieldType.isEnum()) {
             field.set(to, field.get(from));
@@ -541,8 +540,8 @@ public class ReflectionUtil {
         return Modifier.isFinal(field.getModifiers());
     }
 
-    @Nonnull
-    public static Class forName(@Nonnull String fqn) {
+    
+    public static Class forName(String fqn) {
         try {
             return Class.forName(fqn);
         }
@@ -552,7 +551,7 @@ public class ReflectionUtil {
     }
 
     @Nullable
-    public static Class findClassOrNull(@Nonnull String fqn, @Nonnull ClassLoader classLoader) {
+    public static Class findClassOrNull(String fqn, ClassLoader classLoader) {
         try {
             return Class.forName(fqn, true, classLoader);
         }
@@ -584,11 +583,11 @@ public class ReflectionUtil {
     }
 
     @Deprecated
-    public static boolean isAssignable(@Nonnull Class<?> ancestor, @Nonnull Class<?> descendant) {
+    public static boolean isAssignable(Class<?> ancestor, Class<?> descendant) {
         return consulo.util.lang.reflect.ReflectionUtil.isAssignable(ancestor, descendant);
     }
 
-    @Nonnull
+    
     public static JBTreeTraverser<Class> classTraverser(@Nullable Class root) {
         return new JBTreeTraverser<>(CLASS_STRUCTURE).unique().withRoot(root);
     }
@@ -596,7 +595,7 @@ public class ReflectionUtil {
     private static final Function<Class, Iterable<Class>> CLASS_STRUCTURE =
         aClass -> JBIterable.of(aClass.getSuperclass()).append(aClass.getInterfaces());
 
-    public static boolean comparePublicNonFinalFields(@Nonnull Object first, @Nonnull Object second) {
+    public static boolean comparePublicNonFinalFields(Object first, Object second) {
         Set<Field> firstFields = new HashSet<>(Arrays.asList(first.getClass().getFields()));
         for (Field field : second.getClass().getFields()) {
             if (firstFields.contains(field)) {
@@ -615,7 +614,7 @@ public class ReflectionUtil {
         return true;
     }
 
-    public static void clearOwnFields(@Nullable Object object, @Nonnull Predicate<? super Field> selectCondition) {
+    public static void clearOwnFields(@Nullable Object object, Predicate<? super Field> selectCondition) {
         if (object == null) {
             return;
         }

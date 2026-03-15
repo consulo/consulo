@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -103,7 +102,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
     return myLabel;
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myTable.getEmptyText();

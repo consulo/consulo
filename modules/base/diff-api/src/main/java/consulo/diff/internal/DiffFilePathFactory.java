@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.diff.DiffFilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,5 +26,5 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DiffFilePathFactory {
-  DiffFilePath createFilePath(@Nonnull VirtualFile file);
+  DiffFilePath createFilePath(VirtualFile file);
 }

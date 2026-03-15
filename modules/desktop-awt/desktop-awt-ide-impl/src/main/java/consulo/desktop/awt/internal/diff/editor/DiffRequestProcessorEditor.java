@@ -21,8 +21,7 @@ import consulo.diff.impl.internal.editor.FileEditorBase;
 import consulo.diff.localize.DiffLocalize;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,7 +88,7 @@ public class DiffRequestProcessorEditor extends FileEditorBase {
     myProcessor.updateRequest();
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -107,7 +106,7 @@ public class DiffRequestProcessorEditor extends FileEditorBase {
     return myFile;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return DiffLocalize.diffFileEditorName().get();

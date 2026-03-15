@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextAccessor;
 import consulo.ui.ex.awt.TextComponentAccessor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -73,9 +72,9 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
                 return module == null ? null : module.getProject();
             }
 
-            @Nonnull
+            
             @Override
-            protected String expandPath(@Nonnull String path) {
+            protected String expandPath(String path) {
                 Project project = getProject();
                 if (project != null) {
                     path = ProjectPathMacroManager.getInstance(project).expandPath(path);
@@ -134,7 +133,7 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
         }
 
         @Override
-        public void setText(ComboBox<String> component, @Nonnull String text) {
+        public void setText(ComboBox<String> component, String text) {
             if (component != null) {
                 component.setSelectedItem(text);
             }

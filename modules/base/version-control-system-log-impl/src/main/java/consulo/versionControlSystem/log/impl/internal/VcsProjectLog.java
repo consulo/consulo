@@ -30,8 +30,7 @@ import consulo.versionControlSystem.log.impl.internal.data.VcsLogTabsProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogPanel;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.root.VcsRoot;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -43,19 +42,19 @@ import java.util.Collection;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class VcsProjectLog {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final MessageBus myMessageBus;
-    @Nonnull
+    
     private final VcsLogTabsProperties myUiProperties;
 
-    @Nonnull
+    
     private final LazyVcsLogManager myLogManager = new LazyVcsLogManager();
     private volatile VcsLogUiImpl myUi;
 
     @Inject
-    public VcsProjectLog(@Nonnull Project project, @Nonnull VcsLogTabsProperties uiProperties) {
+    public VcsProjectLog(Project project, VcsLogTabsProperties uiProperties) {
         myProject = project;
         myMessageBus = project.getMessageBus();
         myUiProperties = uiProperties;
@@ -70,13 +69,13 @@ public class VcsProjectLog {
         return cached.getDataManager();
     }
 
-    @Nonnull
+    
     private Collection<VcsRoot> getVcsRoots() {
         return Arrays.asList(ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots());
     }
 
-    @Nonnull
-    public JComponent initMainLog(@Nonnull String contentTabName) {
+    
+    public JComponent initMainLog(String contentTabName) {
         myUi = myLogManager.getValue().createLogUi(VcsLogTabsProperties.MAIN_LOG_ID, contentTabName, null);
         return new VcsLogPanel(myLogManager.getValue(), myUi);
     }
@@ -130,7 +129,7 @@ public class VcsProjectLog {
         return !VcsLogManager.findLogProviders(getVcsRoots(), myProject).isEmpty();
     }
 
-    public static VcsProjectLog getInstance(@Nonnull Project project) {
+    public static VcsProjectLog getInstance(Project project) {
         return project.getInstance(VcsProjectLog.class);
     }
 
@@ -138,7 +137,7 @@ public class VcsProjectLog {
         @Nullable
         private VcsLogManager myValue;
 
-        @Nonnull
+        
         @RequiredUIAccess
         public synchronized VcsLogManager getValue() {
             if (myValue == null) {
@@ -148,7 +147,7 @@ public class VcsProjectLog {
             return myValue;
         }
 
-        @Nonnull
+        
         @RequiredUIAccess
         protected synchronized VcsLogManager compute() {
             return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLog.this::recreateLog);

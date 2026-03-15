@@ -6,7 +6,6 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceProvidersRegistry;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -22,7 +21,7 @@ public class PsiCoreCommentImpl extends LeafPsiElement implements PsiComment {
   }
 
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor) {
+  public void accept(PsiElementVisitor visitor) {
     visitor.visitComment(this);
   }
 
@@ -32,7 +31,7 @@ public class PsiCoreCommentImpl extends LeafPsiElement implements PsiComment {
   }
 
   @Override
-  @Nonnull
+  
   public PsiReference[] getReferences() {
     return ReferenceProvidersRegistry.getReferencesFromProviders(this);
   }

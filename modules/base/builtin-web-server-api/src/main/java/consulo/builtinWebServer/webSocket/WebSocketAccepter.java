@@ -17,7 +17,6 @@ package consulo.builtinWebServer.webSocket;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
 
 import java.nio.charset.StandardCharsets;
 
@@ -27,9 +26,9 @@ import java.nio.charset.StandardCharsets;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface WebSocketAccepter {
-    default void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array) {
+    default void accept(WebSocketConnection connection, byte[] array) {
         accept(connection, new String(array, StandardCharsets.UTF_8));
     }
 
-    void accept(@Nonnull WebSocketConnection connection, @Nonnull String text);
+    void accept(WebSocketConnection connection, String text);
 }

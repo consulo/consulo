@@ -24,7 +24,6 @@ import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -55,7 +54,7 @@ public class LightDumbService extends DumbService implements ModificationTracker
     }
 
     @Override
-    public void runWhenSmart(@Nonnull Runnable runnable) {
+    public void runWhenSmart(Runnable runnable) {
     }
 
     @Override
@@ -63,19 +62,19 @@ public class LightDumbService extends DumbService implements ModificationTracker
     }
 
     @Override
-    public void smartInvokeLater(@Nonnull Runnable runnable) {
+    public void smartInvokeLater(Runnable runnable) {
     }
 
     @Override
-    public void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+    public void smartInvokeLater(Runnable runnable, ModalityState modalityState) {
     }
 
     @Override
-    public void queueTask(@Nonnull DumbModeTask task) {
+    public void queueTask(DumbModeTask task) {
     }
 
     @Override
-    public void cancelTask(@Nonnull DumbModeTask task) {
+    public void cancelTask(DumbModeTask task) {
     }
 
     @Override
@@ -83,7 +82,7 @@ public class LightDumbService extends DumbService implements ModificationTracker
     }
 
     @Override
-    public void showDumbModeNotification(@Nonnull LocalizeValue message) {
+    public void showDumbModeNotification(LocalizeValue message) {
     }
 
     @Override
@@ -100,9 +99,9 @@ public class LightDumbService extends DumbService implements ModificationTracker
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public AccessToken startHeavyActivityStarted(@Nonnull LocalizeValue activityName) {
+    public AccessToken startHeavyActivityStarted(LocalizeValue activityName) {
         return AccessToken.EMPTY_ACCESS_TOKEN;
     }
 

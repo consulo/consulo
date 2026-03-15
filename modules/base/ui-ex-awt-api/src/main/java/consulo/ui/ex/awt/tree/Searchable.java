@@ -17,7 +17,6 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.util.concurrent.Promise;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.TreePath;
 
 /**
@@ -31,6 +30,6 @@ public interface Searchable {
    * @return a {@code Promise} containing a search result
    * @see Identifiable#getUniqueID
    */
-  @Nonnull
+  
   Promise<TreePath> getTreePath(Object object);
 }

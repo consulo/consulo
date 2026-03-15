@@ -4,17 +4,16 @@ package consulo.execution.debug.attach;
 import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 public interface XLocalAttachDebugger extends XAttachDebugger {
   @Override
-  @Nonnull
+  
   String getDebuggerDisplayName();
 
-  void attachDebugSession(@Nonnull Project project, @Nonnull ProcessInfo info) throws ExecutionException;
+  void attachDebugSession(Project project, ProcessInfo info) throws ExecutionException;
 
   @Override
-  default void attachDebugSession(@Nonnull Project project, @Nonnull XAttachHost hostInfo, @Nonnull ProcessInfo info) throws ExecutionException {
+  default void attachDebugSession(Project project, XAttachHost hostInfo, ProcessInfo info) throws ExecutionException {
     attachDebugSession(project, info);
   }
 }

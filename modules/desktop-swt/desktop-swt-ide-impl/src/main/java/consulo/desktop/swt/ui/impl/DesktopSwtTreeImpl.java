@@ -25,8 +25,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeItem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -154,7 +153,7 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
   }
 
   @Override
-  public void expand(@Nonnull TreeNode<E> node) {
+  public void expand(TreeNode<E> node) {
 
   }
 }

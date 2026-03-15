@@ -4,7 +4,6 @@ package consulo.application.util.matcher;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 
 public class WordPrefixMatcher implements Matcher {
@@ -15,7 +14,7 @@ public class WordPrefixMatcher implements Matcher {
   }
 
   @Override
-  public boolean matches(@Nonnull String name) {
+  public boolean matches(String name) {
     String[] nameWords = NameUtil.nameToWords(name);
     return Arrays.stream(myPatternWords).allMatch(pw -> ContainerUtil.exists(nameWords, nw -> StringUtil.startsWithIgnoreCase(nw, pw)));
   }

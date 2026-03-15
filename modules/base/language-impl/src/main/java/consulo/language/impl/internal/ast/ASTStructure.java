@@ -20,7 +20,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -28,29 +27,29 @@ import jakarta.annotation.Nonnull;
 public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   private final ASTNode myRoot;
 
-  public ASTStructure(@Nonnull ASTNode root) {
+  public ASTStructure(ASTNode root) {
     myRoot = root;
   }
 
   @Override
-  @Nonnull
+  
   public ASTNode getRoot() {
     return myRoot;
   }
 
   @Override
-  public ASTNode getParent(@Nonnull ASTNode node) {
+  public ASTNode getParent(ASTNode node) {
     return node.getTreeParent();
   }
 
   @Override
-  @Nonnull
-  public ASTNode prepareForGetChildren(@Nonnull ASTNode astNode) {
+  
+  public ASTNode prepareForGetChildren(ASTNode astNode) {
     return astNode;
   }
 
   @Override
-  public int getChildren(@Nonnull ASTNode astNode, @Nonnull SimpleReference<ASTNode[]> into) {
+  public int getChildren(ASTNode astNode, SimpleReference<ASTNode[]> into) {
     ASTNode child = astNode.getFirstChildNode();
     if (child == null) return 0;
 
@@ -79,19 +78,19 @@ public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   public void disposeChildren(ASTNode[] nodes, int count) {
   }
 
-  @Nonnull
+  
   @Override
-  public CharSequence toString(@Nonnull ASTNode node) {
+  public CharSequence toString(ASTNode node) {
     return node.getChars();
   }
 
   @Override
-  public int getStartOffset(@Nonnull ASTNode node) {
+  public int getStartOffset(ASTNode node) {
     return node.getStartOffset();
   }
 
   @Override
-  public int getEndOffset(@Nonnull ASTNode node) {
+  public int getEndOffset(ASTNode node) {
     return node.getStartOffset() + node.getTextLength();
   }
 }

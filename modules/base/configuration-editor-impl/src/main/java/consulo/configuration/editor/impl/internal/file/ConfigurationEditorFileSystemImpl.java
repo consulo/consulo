@@ -23,8 +23,7 @@ import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.HiddenFileSystem;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.net.URLDecoder;
@@ -52,7 +51,7 @@ public class ConfigurationEditorFileSystemImpl extends BaseVirtualFileSystem imp
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
     public String getProtocol() {
         return PROTOCOL;
@@ -60,7 +59,7 @@ public class ConfigurationEditorFileSystemImpl extends BaseVirtualFileSystem imp
 
     @Nullable
     @Override
-    public VirtualFile findFileByPath(@Nonnull String path) {
+    public VirtualFile findFileByPath(String path) {
         if (!path.isBlank() && path.charAt(0) == '/') {
             String extensionId;
 
@@ -95,7 +94,7 @@ public class ConfigurationEditorFileSystemImpl extends BaseVirtualFileSystem imp
 
     @Nullable
     @Override
-    public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
+    public VirtualFile refreshAndFindFileByPath(String path) {
         return findFileByPath(path);
     }
 

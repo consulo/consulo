@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -150,7 +149,7 @@ public class NewColorAndFontPanel extends JPanel {
         return myOptionsPanel.showOption(option);
     }
 
-    @Nonnull
+    
     public Set<String> processListOptions() {
         if (myOptionList == null) {
             return myOptionsPanel.processListOptions();

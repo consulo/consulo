@@ -6,14 +6,13 @@ import consulo.language.editor.annotation.AnnotationSession;
 import consulo.language.editor.annotation.Annotator;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 public class AnnotatorStatisticsCollector {
     // annotator-related internal statistics
     //private final Map<Annotator, DaemonCodeAnalyzer.DaemonListener.AnnotatorStatistics> myAnnotatorStats = new ConcurrentHashMap<>();
     // annotators which produced at least one Annotation during this session
 
-    public void reportAnnotationProduced(@Nonnull Annotator annotator, @Nonnull Annotation annotation) {
+    public void reportAnnotationProduced(Annotator annotator, Annotation annotation) {
         //DaemonCodeAnalyzer.DaemonListener.AnnotatorStatistics stat =
         //    myAnnotatorStats.computeIfAbsent(annotator, __ -> new DaemonCodeAnalyzer.DaemonListener.AnnotatorStatistics(annotator));
         //if (stat.firstAnnotation == null) {
@@ -25,7 +24,7 @@ public class AnnotatorStatisticsCollector {
         //stat.lastAnnotationStamp = System.nanoTime();
     }
 
-    public void reportAnalysisFinished(@Nonnull Project project, @Nonnull AnnotationSession session, @Nonnull PsiFile file) {
+    public void reportAnalysisFinished(Project project, AnnotationSession session, PsiFile file) {
         //for (DaemonCodeAnalyzer.DaemonListener.AnnotatorStatistics stat : myAnnotatorStats.values()) {
         //    stat.annotatorFinishStamp = System.nanoTime();
         //}
@@ -34,7 +33,7 @@ public class AnnotatorStatisticsCollector {
         //myAnnotatorStats.clear();
     }
 
-    public void reportNewAnnotatorCreated(@Nonnull Annotator annotator) {
+    public void reportNewAnnotatorCreated(Annotator annotator) {
         //DaemonCodeAnalyzer.DaemonListener.AnnotatorStatistics stat =
         //    myAnnotatorStats.computeIfAbsent(annotator, __ -> new DaemonCodeAnalyzer.DaemonListener.AnnotatorStatistics(annotator));
         //stat.annotatorStartStamp = System.nanoTime();

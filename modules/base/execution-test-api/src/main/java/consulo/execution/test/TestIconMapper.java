@@ -17,8 +17,7 @@ package consulo.execution.test;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,8 +38,7 @@ public class TestIconMapper implements PoolOfTestIcons {
     return magnitudes.get(value);
   }
 
-  @Nullable
-  public static Image getIcon(@Nonnull TestStateInfo.Magnitude magnitude) {
+  public static Image getIcon(TestStateInfo.@Nullable Magnitude magnitude) {
     switch (magnitude) {
       case SKIPPED_INDEX:
         return SKIPPED_ICON;

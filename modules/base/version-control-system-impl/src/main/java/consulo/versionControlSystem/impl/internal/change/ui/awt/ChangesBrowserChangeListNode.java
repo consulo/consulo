@@ -24,7 +24,6 @@ import consulo.versionControlSystem.impl.internal.change.ui.ChangeListRemoteStat
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
 
     @Override
     public void render(
-        @Nonnull ChangesBrowserNodeRenderer renderer,
+        ChangesBrowserNodeRenderer renderer,
         boolean selected,
         boolean expanded,
         boolean hasFocus

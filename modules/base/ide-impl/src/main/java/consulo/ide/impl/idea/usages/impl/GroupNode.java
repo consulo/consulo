@@ -29,8 +29,7 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -47,7 +46,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     private int myRecursiveUsageCount; // EDT only access
     private final List<Node> myChildren = new SmartList<>(); // guarded by this
 
-    private GroupNode(@Nonnull Node parent, @Nonnull UsageGroup group, int ruleIndex) {
+    private GroupNode(Node parent, UsageGroup group, int ruleIndex) {
         setUserObject(group);
         setParent(parent);
         myRuleIndex = ruleIndex;
@@ -74,12 +73,12 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         }
     }
 
-    @Nonnull
+    
     List<Node> getChildren() {
         return myChildren;
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     List<Node> getSwingChildren() {
         // on java 9 - children is Vector<TreeNode>
@@ -87,8 +86,8 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         return ObjectUtil.notNull(children, Collections.<Node>emptyList());
     }
 
-    @Nonnull
-    GroupNode addOrGetGroup(@Nonnull UsageGroup group, int ruleIndex, @Nonnull Consumer<? super Node> edtInsertedUnderQueue) {
+    
+    GroupNode addOrGetGroup(UsageGroup group, int ruleIndex, Consumer<? super Node> edtInsertedUnderQueue) {
         GroupNode newNode;
         synchronized (this) {
             newNode = new GroupNode(this, group, ruleIndex);
@@ -104,18 +103,18 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     }
 
     // >= 0 if found, < 0 if not found
-    private static int getNodeIndex(@Nonnull Node newNode, @Nonnull List<? extends Node> children) {
+    private static int getNodeIndex(Node newNode, List<? extends Node> children) {
         return Collections.binarySearch(children, newNode, COMPARATOR);
     }
 
     // always >= 0
-    private static int getNodeInsertionIndex(@Nonnull Node node, @Nonnull List<? extends Node> children) {
+    private static int getNodeInsertionIndex(Node node, List<? extends Node> children) {
         int i = getNodeIndex(node, children);
         return i >= 0 ? i : -i - 1;
     }
 
     @RequiredUIAccess
-    void addTargetsNode(@Nonnull Node node, @Nonnull DefaultTreeModel treeModel) {
+    void addTargetsNode(Node node, DefaultTreeModel treeModel) {
         UIAccess.assertIsUIThread();
         int index;
         synchronized (this) {
@@ -137,7 +136,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     }
 
     @Nullable
-    private UsageNode tryMerge(@Nonnull Usage usage) {
+    private UsageNode tryMerge(Usage usage) {
         if (!(usage instanceof MergeableUsage mergeableUsage)) {
             return null;
         }
@@ -156,7 +155,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     }
 
     @RequiredUIAccess
-    int removeUsagesBulk(@Nonnull Set<UsageNode> usages, @Nonnull DefaultTreeModel treeModel) {
+    int removeUsagesBulk(Set<UsageNode> usages, DefaultTreeModel treeModel) {
         UIAccess.assertIsUIThread();
         int removed = 0;
         synchronized (this) {
@@ -207,9 +206,9 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
      * @param nodes     must all be children of parent
      */
     private static void removeNodesFromParent(
-        @Nonnull DefaultTreeModel treeModel,
-        @Nonnull GroupNode parent,
-        @Nonnull List<? extends MutableTreeNode> nodes
+        DefaultTreeModel treeModel,
+        GroupNode parent,
+        List<? extends MutableTreeNode> nodes
     ) {
         int count = nodes.size();
         if (count == 0) {
@@ -228,8 +227,8 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         treeModel.nodesWereRemoved(parent, indices, nodes.toArray());
     }
 
-    @Nonnull
-    UsageNode addOrGetUsage(@Nonnull Usage usage, boolean filterDuplicateLines, @Nonnull Consumer<? super Node> edtInsertedUnderQueue) {
+    
+    UsageNode addOrGetUsage(Usage usage, boolean filterDuplicateLines, Consumer<? super Node> edtInsertedUnderQueue) {
         UsageNode newNode;
         synchronized (this) {
             if (filterDuplicateLines) {
@@ -359,7 +358,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     }
 
     @Override
-    public int compareTo(@Nonnull GroupNode groupNode) {
+    public int compareTo(GroupNode groupNode) {
         if (myRuleIndex == groupNode.myRuleIndex) {
             return getGroup().compareTo(groupNode.getGroup());
         }
@@ -406,13 +405,13 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         return true;
     }
 
-    @Nonnull
+    
     @Override
-    protected String getText(@Nonnull UsageView view) {
+    protected String getText(UsageView view) {
         return getGroup().getText(view);
     }
 
-    @Nonnull
+    
     public synchronized Collection<GroupNode> getSubGroups() {
         List<GroupNode> list = new ArrayList<>();
         for (Node n : myChildren) {
@@ -423,7 +422,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         return list;
     }
 
-    @Nonnull
+    
     public synchronized Collection<UsageNode> getUsageNodes() {
         List<UsageNode> list = new ArrayList<>();
         for (Node n : myChildren) {
@@ -434,7 +433,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         return list;
     }
 
-    @Nonnull
+    
     static Root createRoot() {
         return new Root();
     }
@@ -445,9 +444,9 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
             return "Root " + super.toString();
         }
 
-        @Nonnull
+        
         @Override
-        protected String getText(@Nonnull UsageView view) {
+        protected String getText(UsageView view) {
             return "";
         }
     }

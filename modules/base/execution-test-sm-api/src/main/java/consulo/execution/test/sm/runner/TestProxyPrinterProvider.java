@@ -22,8 +22,7 @@ import consulo.execution.test.ui.TestsOutputConsolePrinter;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.Filter;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -33,15 +32,15 @@ public final class TestProxyPrinterProvider {
     private final BaseTestsOutputConsoleView myTestOutputConsoleView;
 
     public TestProxyPrinterProvider(
-        @Nonnull BaseTestsOutputConsoleView testsOutputConsoleView,
-        @Nonnull TestProxyFilterProvider filterProvider
+        BaseTestsOutputConsoleView testsOutputConsoleView,
+        TestProxyFilterProvider filterProvider
     ) {
         myTestOutputConsoleView = testsOutputConsoleView;
         myFilterProvider = filterProvider;
     }
 
     @Nullable
-    public Printer getPrinterByType(@Nonnull String nodeType, @Nonnull String nodeName, @Nullable String nodeArguments) {
+    public Printer getPrinterByType(String nodeType, String nodeName, @Nullable String nodeArguments) {
         Filter filter = myFilterProvider.getFilter(nodeType, nodeName, nodeArguments);
         if (filter != null && !Disposer.isDisposed(myTestOutputConsoleView)) {
             return new HyperlinkPrinter(myTestOutputConsoleView, HyperlinkPrinter.ERROR_CONTENT_TYPE, filter);
@@ -58,9 +57,9 @@ public final class TestProxyPrinterProvider {
         private final Filter myFilter;
 
         HyperlinkPrinter(
-            @Nonnull BaseTestsOutputConsoleView testsOutputConsoleView,
-            @Nonnull Predicate<? super ConsoleViewContentType> contentTypeCondition,
-            @Nonnull Filter filter
+            BaseTestsOutputConsoleView testsOutputConsoleView,
+            Predicate<? super ConsoleViewContentType> contentTypeCondition,
+            Filter filter
         ) {
             super(testsOutputConsoleView, testsOutputConsoleView.getProperties(), null);
             myContentTypeCondition = contentTypeCondition;
@@ -90,7 +89,7 @@ public final class TestProxyPrinterProvider {
             super.print(text, contentType);
         }
 
-        private void printLine(@Nonnull String line, @Nonnull ConsoleViewContentType contentType) {
+        private void printLine(String line, ConsoleViewContentType contentType) {
             Filter.Result result;
             try {
                 result = myFilter.applyFilter(line, line.length());
@@ -114,8 +113,8 @@ public final class TestProxyPrinterProvider {
             }
         }
 
-        @Nonnull
-        private static List<Filter.ResultItem> sort(@Nonnull List<Filter.ResultItem> items) {
+        
+        private static List<Filter.ResultItem> sort(List<Filter.ResultItem> items) {
             if (items.size() <= 1) {
                 return items;
             }

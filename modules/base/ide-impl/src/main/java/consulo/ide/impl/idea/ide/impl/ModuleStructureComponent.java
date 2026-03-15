@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -39,7 +38,7 @@ public class ModuleStructureComponent extends SimpleToolWindowPanel implements D
   }
 
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     return myStructurePane.getData(dataId);
   }
 

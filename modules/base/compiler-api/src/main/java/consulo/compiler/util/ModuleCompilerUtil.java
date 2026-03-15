@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.util.collection.Chunk;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -97,7 +96,7 @@ public final class ModuleCompilerUtil {
         return GraphAlgorithms.getInstance().computeSCCGraph(graph);
     }
 
-    public static void sortModules(@Nonnull Project project, List<Module> modules) {
+    public static void sortModules(Project project, List<Module> modules) {
         Application application = project.getApplication();
         Runnable sort = () -> {
             Comparator<Module> comparator = ModuleManager.getInstance(project).moduleDependencyComparator();

@@ -19,8 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataValidator;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class PsiFileDataValidator implements DataValidator<PsiFile> {
-  @Nonnull
+  
   @Override
   public Key<PsiFile> getKey() {
     return PsiFile.KEY;

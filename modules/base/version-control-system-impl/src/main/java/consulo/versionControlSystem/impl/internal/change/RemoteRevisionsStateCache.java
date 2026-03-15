@@ -27,7 +27,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;

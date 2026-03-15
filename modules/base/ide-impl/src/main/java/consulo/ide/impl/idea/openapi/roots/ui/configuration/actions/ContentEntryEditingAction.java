@@ -25,8 +25,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -39,13 +38,13 @@ import java.util.List;
 public abstract class ContentEntryEditingAction extends ToggleAction implements DumbAware {
   protected final JTree myTree;
 
-  protected ContentEntryEditingAction(JTree tree, @Nonnull LocalizeValue text, @Nullable Image image) {
+  protected ContentEntryEditingAction(JTree tree, LocalizeValue text, @Nullable Image image) {
     super(text, text, image);
     myTree = tree;
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     super.update(e);
     Presentation presentation = e.getPresentation();
     presentation.setEnabled(true);
@@ -62,7 +61,7 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
     }
   }
 
-  @Nonnull
+  
   protected final VirtualFile[] getSelectedFiles() {
     TreePath[] selectionPaths = myTree.getSelectionPaths();
     if (selectionPaths == null) {

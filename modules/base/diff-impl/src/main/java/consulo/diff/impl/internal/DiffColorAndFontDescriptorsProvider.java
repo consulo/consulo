@@ -25,7 +25,6 @@ import consulo.diff.DiffColors;
 import consulo.diff.util.TextDiffTypeFactory;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +35,14 @@ import java.util.List;
  */
 @ExtensionImpl
 public class DiffColorAndFontDescriptorsProvider implements ColorAndFontDescriptorsProvider {
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return ApplicationLocalize.titleDiff();
   }
 
   @Override
-  @Nonnull
+  
   public AttributesDescriptor[] getAttributeDescriptors() {
     TextDiffTypeFactory.TextDiffTypeImpl[] diffTypes = TextDiffTypeFactory.getInstance().getAllDiffTypes();
     return ContainerUtil.map2Array(
@@ -56,7 +55,7 @@ public class DiffColorAndFontDescriptorsProvider implements ColorAndFontDescript
   }
 
   @Override
-  @Nonnull
+  
   public ColorDescriptor[] getColorDescriptors() {
     List<ColorDescriptor> descriptors = new ArrayList<>();
 

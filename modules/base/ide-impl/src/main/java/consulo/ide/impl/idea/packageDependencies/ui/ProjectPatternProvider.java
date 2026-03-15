@@ -34,9 +34,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -71,7 +69,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return FILE;
     }
@@ -88,7 +86,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
             if (!recursively) {
                 return null;
             }
-            @NonNls String modulePattern = "group:" + moduleGroupNode.getModuleGroup().toString();
+            String modulePattern = "group:" + moduleGroupNode.getModuleGroup().toString();
             return new FilePatternPackageSet(modulePattern, "*//*");
         }
         else if (node instanceof ModuleNode moduleNode) {
@@ -152,18 +150,18 @@ public class ProjectPatternProvider extends PatternDialectProvider {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return DependencyUISettings.getInstance().UI_COMPACT_EMPTY_MIDDLE_PACKAGES;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_COMPACT_EMPTY_MIDDLE_PACKAGES = flag;
             myUpdate.run();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             Project eventProject = e.getData(Project.KEY);
             if (eventProject == null) {

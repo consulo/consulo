@@ -28,7 +28,6 @@ import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.shelf.ShelvedBinaryFile;
 import consulo.versionControlSystem.change.shelf.ShelvedChangeList;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.io.File;
@@ -104,11 +103,11 @@ public class ShelvedChangeListImpl implements ShelvedChangeList, JDOMExternaliza
     }
 
     @Override
-    public void writeExternal(@Nonnull Element element) throws WriteExternalException {
+    public void writeExternal(Element element) throws WriteExternalException {
         writeExternal(element, this);
     }
 
-    private static void writeExternal(@Nonnull Element element, @Nonnull ShelvedChangeListImpl shelvedChangeList) throws WriteExternalException {
+    private static void writeExternal(Element element, ShelvedChangeListImpl shelvedChangeList) throws WriteExternalException {
         DefaultJDOMExternalizer.writeExternal(shelvedChangeList, element);
         element.setAttribute(NAME_ATTRIBUTE, shelvedChangeList.getName());
         element.setAttribute(ATTRIBUTE_DATE, Long.toString(shelvedChangeList.DATE.getTime()));
@@ -129,7 +128,7 @@ public class ShelvedChangeListImpl implements ShelvedChangeList, JDOMExternaliza
         return DESCRIPTION;
     }
 
-    @Nonnull
+    
     @Override
     public List<ShelvedChangeImpl> getChanges(Project project) {
         if (myChanges == null) {
@@ -166,7 +165,7 @@ public class ShelvedChangeListImpl implements ShelvedChangeList, JDOMExternaliza
         return myBinaryFiles;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return mySchemeName;
@@ -182,14 +181,14 @@ public class ShelvedChangeListImpl implements ShelvedChangeList, JDOMExternaliza
         return DESCRIPTION;
     }
 
-    @Nonnull
+    
     @Override
     public ExternalInfo getExternalInfo() {
         return myExternalInfo;
     }
 
     @Override
-    public void setName(@Nonnull String newName) {
+    public void setName(String newName) {
         mySchemeName = newName;
     }
 

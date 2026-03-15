@@ -27,8 +27,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Should be registered as language extension
@@ -40,7 +39,7 @@ public interface PsiStructureViewFactory extends LanguageExtension {
   ExtensionPointCacheKey<PsiStructureViewFactory, ByLanguageValue<PsiStructureViewFactory>> KEY = ExtensionPointCacheKey.create("PsiStructureViewFactory", LanguageOneToOne.build());
 
   @Nullable
-  static PsiStructureViewFactory forLanguage(@Nonnull Language language) {
+  static PsiStructureViewFactory forLanguage(Language language) {
     return Application.get().getExtensionPoint(PsiStructureViewFactory.class).getOrBuildCache(KEY).get(language);
   }
 

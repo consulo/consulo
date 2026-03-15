@@ -11,8 +11,7 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class UrlFilter implements Filter, DumbAware {
 
   @Nullable
   @Override
-  public Result applyFilter(@Nonnull String line, int entireLength) {
+  public Result applyFilter(String line, int entireLength) {
     if (!URLUtil.canContainUrl(line)) return null;
 
     int textStartOffset = entireLength - line.length();
@@ -56,14 +55,14 @@ public class UrlFilter implements Filter, DumbAware {
     return items != null ? new Result(items) : item != null ? new Result(item.getHighlightStartOffset(), item.getHighlightEndOffset(), item.getHyperlinkInfo()) : null;
   }
 
-  @Nonnull
-  protected HyperlinkInfo buildHyperlinkInfo(@Nonnull String url) {
+  
+  protected HyperlinkInfo buildHyperlinkInfo(String url) {
     HyperlinkInfo fileHyperlinkInfo = buildFileHyperlinkInfo(url);
     return fileHyperlinkInfo != null ? fileHyperlinkInfo : new OpenUrlHyperlinkInfo(url);
   }
 
   @Nullable
-  private HyperlinkInfo buildFileHyperlinkInfo(@Nonnull String url) {
+  private HyperlinkInfo buildFileHyperlinkInfo(String url) {
     if (myProject != null && !url.endsWith(".html") && url.startsWith(LocalFileSystem.PROTOCOL_PREFIX)) {
       int documentLine = 0, documentColumn = 0;
       int filePathEndIndex = url.length();
@@ -92,17 +91,17 @@ public class UrlFilter implements Filter, DumbAware {
 
   private class FileUrlHyperlinkInfo extends LazyFileHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
     private
-    @Nonnull
+    
     final String myUrl;
 
-    FileUrlHyperlinkInfo(@Nonnull String filePath, int documentLine, int documentColumn, @Nonnull String url) {
+    FileUrlHyperlinkInfo(String filePath, int documentLine, int documentColumn, String url) {
       super(UrlFilter.this.myProject, filePath, documentLine, documentColumn);
       myUrl = url;
     }
 
     @RequiredUIAccess
     @Override
-    public void navigate(@Nonnull Project project) {
+    public void navigate(Project project) {
       VirtualFile file = getVirtualFile();
       if (file == null || !file.isValid()) {
         Messages.showErrorDialog(
@@ -117,7 +116,7 @@ public class UrlFilter implements Filter, DumbAware {
 
     @Override
     @Nullable
-    public ActionGroup getPopupMenuGroup(@Nonnull MouseEvent event) {
+    public ActionGroup getPopupMenuGroup(MouseEvent event) {
       return new OpenUrlHyperlinkInfo(myUrl).getPopupMenuGroup(event);
     }
   }

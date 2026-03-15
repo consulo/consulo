@@ -64,8 +64,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -91,7 +90,7 @@ public class RunConfigurable extends BaseConfigurable {
             return Image.empty(Image.DEFAULT_ICON_SIZE);
         }
 
-        @Nonnull
+       
         @Override
         public String getId() {
             return "";
@@ -113,7 +112,7 @@ public class RunConfigurable extends BaseConfigurable {
 
     private volatile boolean isDisposed = false;
 
-    @Nonnull
+   
     private final Project myProject;
     private RunDialogBase myRunDialog;
     private final TitlelessDecorator myTitlelessDecorator;
@@ -136,16 +135,16 @@ public class RunConfigurable extends BaseConfigurable {
     private RunConfigurable.MyToolbarAddAction myAddAction = new MyToolbarAddAction();
     private RunManagerImpl myRunManager;
 
-    public RunConfigurable(@Nonnull Project project) {
+    public RunConfigurable(Project project) {
         this(project, null, TitlelessDecorator.NOTHING, null);
     }
 
-    public RunConfigurable(@Nonnull Project project, @Nullable RunConfiguration preselectedConfiguration) {
+    public RunConfigurable(Project project, @Nullable RunConfiguration preselectedConfiguration) {
         this(project, null, TitlelessDecorator.NOTHING, preselectedConfiguration);
     }
 
     public RunConfigurable(
-        @Nonnull Project project,
+        Project project,
         @Nullable RunDialogBase runDialog,
         TitlelessDecorator titlelessDecorator,
         @Nullable RunConfiguration preselectedConfiguration
@@ -157,7 +156,7 @@ public class RunConfigurable extends BaseConfigurable {
         myRunManager = (RunManagerImpl) RunManager.getInstance(myProject);
     }
 
-    @Nonnull
+   
     @Override
     public LocalizeValue getDisplayName() {
         return ExecutionLocalize.runConfigurableDisplayName();
@@ -190,7 +189,7 @@ public class RunConfigurable extends BaseConfigurable {
             @Override
             @RequiredUIAccess
             public void customizeCellRenderer(
-                @Nonnull JTree tree,
+                JTree tree,
                 Object value,
                 boolean selected,
                 boolean expanded,
@@ -385,7 +384,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private boolean selectConfiguration(@Nonnull RunConfiguration configuration) {
+    private boolean selectConfiguration(RunConfiguration configuration) {
         DefaultMutableTreeNode child = TreeUtil.findNode(myRoot, node -> {
             Object userObject = node.getUserObject();
             if (userObject instanceof SettingsEditorConfigurable settingsEditorConfigurable) {
@@ -640,7 +639,7 @@ public class RunConfigurable extends BaseConfigurable {
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    public JComponent createComponent(Disposable uiDisposable) {
         myProject.getApplication().getExtensionPoint(RunConfigurationsSettings.class).forEach(each -> {
             UnnamedConfigurable configurable = each.createConfigurable();
             myAdditionalSettings.add(Pair.create(configurable, configurable.createComponent(uiDisposable)));
@@ -650,7 +649,7 @@ public class RunConfigurable extends BaseConfigurable {
         DataManager.registerDataProvider(myWholePanel, new DataProvider() {
             @Nullable
             @Override
-            public Object getData(@Nonnull Key dataId) {
+            public Object getData(Key dataId) {
                 return RunConfigurationSelector.KEY == dataId
                     ? (RunConfigurationSelector) configuration -> selectConfiguration(configuration) : null;
             }
@@ -767,7 +766,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private void applyByType(@Nonnull ConfigurationType type) throws ConfigurationException {
+    private void applyByType(ConfigurationType type) throws ConfigurationException {
         RunnerAndConfigurationSettings selectedSettings = getSelectedSettings();
         int indexToMove = -1;
 
@@ -868,7 +867,7 @@ public class RunConfigurable extends BaseConfigurable {
     }
 
     @Nullable
-    private DefaultMutableTreeNode getConfigurationTypeNode(@Nonnull ConfigurationType type) {
+    private DefaultMutableTreeNode getConfigurationTypeNode(ConfigurationType type) {
         for (int i = 0; i < myRoot.getChildCount(); i++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) myRoot.getChildAt(i);
             if (node.getUserObject() == type) {
@@ -1027,7 +1026,7 @@ public class RunConfigurable extends BaseConfigurable {
 
     private static boolean canRunConfiguration(
         @Nullable SingleConfigurationConfigurable<RunConfiguration> configuration,
-        @Nonnull Executor executor
+        Executor executor
     ) {
         try {
             return configuration != null && RunManagerImpl.canRunConfiguration(configuration.getSnapshot(), executor);
@@ -1066,13 +1065,12 @@ public class RunConfigurable extends BaseConfigurable {
         return null;
     }
 
-    @Nonnull
+   
     private DefaultMutableTreeNode getNode(int row) {
         return (DefaultMutableTreeNode) myTree.getPathForRow(row).getLastPathComponent();
     }
 
-    @Nullable
-    Trinity<Integer, Integer, RowsDnDSupport.RefinedDropSupport.Position> getAvailableDropPosition(int direction) {
+    @Nullable Trinity<Integer, Integer, RowsDnDSupport.RefinedDropSupport.Position> getAvailableDropPosition(int direction) {
         int[] rows = myTree.getSelectionRows();
         if (rows == null || rows.length != 1) {
             return null;
@@ -1127,7 +1125,7 @@ public class RunConfigurable extends BaseConfigurable {
     }
 
 
-    @Nonnull
+   
     private static String createUniqueName(DefaultMutableTreeNode typeNode, @Nullable String baseName, NodeKind... kinds) {
         String str = (baseName == null) ? ExecutionLocalize.runConfigurationUnnamedNamePrefix().get() : baseName;
         List<DefaultMutableTreeNode> configurationNodes = new ArrayList<>();
@@ -1199,13 +1197,13 @@ public class RunConfigurable extends BaseConfigurable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Component targetComponent = e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT);
             boolean center = targetComponent instanceof JTree; // shortcut
             showAddPopup(true, center, targetComponent);
         }
 
-        private void showAddPopup(boolean showApplicableTypesOnly, boolean center, @Nonnull Component targetComponent) {
+        private void showAddPopup(boolean showApplicableTypesOnly, boolean center, Component targetComponent) {
             List<ConfigurationType> allTypes = myRunManager.getConfigurationFactories(false);
             final List<ConfigurationType> configurationTypes =
                 ConfigurationTypeSelector.getTypesToShow(myProject, showApplicableTypesOnly, allTypes);
@@ -1218,7 +1216,7 @@ public class RunConfigurable extends BaseConfigurable {
             ListPopup popup = JBPopupFactory.getInstance().createListPopup(
                 new BaseListPopupStep<ConfigurationType>(ExecutionLocalize.addNewRunConfigurationAction2Name().get(), configurationTypes) {
                     @Override
-                    @Nonnull
+                   
                     public String getTextFor(ConfigurationType type) {
                         if (type == HIDDEN_ITEMS_STUB) {
                             return hiddenCount + " items more (irrelevant)...";
@@ -1271,7 +1269,7 @@ public class RunConfigurable extends BaseConfigurable {
                             factories
                         ) {
                             @Override
-                            @Nonnull
+                           
                             public String getTextFor(ConfigurationFactory value) {
                                 return value.getDisplayName().get();
                             }
@@ -1315,7 +1313,7 @@ public class RunConfigurable extends BaseConfigurable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             doRemove();
         }
 
@@ -1417,7 +1415,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             boolean enabled = isEnabled(e);
             e.getPresentation().setEnabled(enabled);
         }
@@ -1452,7 +1450,7 @@ public class RunConfigurable extends BaseConfigurable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
             LOG.assertTrue(configuration != null);
             try {
@@ -1473,7 +1471,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
             e.getPresentation().setEnabled(configuration != null && !(configuration.getConfiguration() instanceof UnknownRunConfiguration));
         }
@@ -1490,7 +1488,7 @@ public class RunConfigurable extends BaseConfigurable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             SingleConfigurationConfigurable<RunConfiguration> configurationConfigurable = getSelectedConfiguration();
             LOG.assertTrue(configurationConfigurable != null);
             try {
@@ -1508,7 +1506,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
             boolean enabled;
             if (configuration == null) {
@@ -1560,14 +1558,14 @@ public class RunConfigurable extends BaseConfigurable {
     private class MyMoveAction extends DumbAwareAction {
         private final int myDirection;
 
-        protected MyMoveAction(@Nonnull LocalizeValue text, Image icon, int direction) {
+        protected MyMoveAction(LocalizeValue text, Image icon, int direction) {
             super(text, LocalizeValue.empty(), icon);
             myDirection = direction;
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             doMove();
         }
 
@@ -1579,7 +1577,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(isEnabled(e));
         }
 
@@ -1599,7 +1597,7 @@ public class RunConfigurable extends BaseConfigurable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreeNode defaults = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot);
             if (defaults != null) {
                 ConfigurationType configurationType = getSelectedConfigurationType();
@@ -1618,7 +1616,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             boolean isEnabled = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot) != null;
             TreePath path = myTree.getSelectionPath();
             if (path != null) {
@@ -1646,7 +1644,7 @@ public class RunConfigurable extends BaseConfigurable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             ConfigurationType type = getSelectedConfigurationType();
             if (type == null) {
                 return;
@@ -1678,7 +1676,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             boolean isEnabled = false;
             boolean toMove = false;
             DefaultMutableTreeNode[] selectedNodes = getSelectedNodes();
@@ -1720,7 +1718,7 @@ public class RunConfigurable extends BaseConfigurable {
         return null;
     }
 
-    @Nonnull
+   
     private DefaultMutableTreeNode[] getSelectedNodes() {
         return myTree.getSelectedNodes(DefaultMutableTreeNode.class, null);
     }
@@ -1829,7 +1827,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    @Nonnull
+   
     static NodeKind getKind(@Nullable DefaultMutableTreeNode node) {
         if (node == null) {
             return UNKNOWN;
@@ -1875,7 +1873,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public boolean canDrop(int oldIndex, int newIndex, @Nonnull Position position) {
+        public boolean canDrop(int oldIndex, int newIndex, Position position) {
             if (myTree.getRowCount() <= oldIndex || myTree.getRowCount() <= newIndex || oldIndex < 0 || newIndex < 0) {
                 return false;
             }
@@ -1968,7 +1966,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public void drop(int oldIndex, int newIndex, @Nonnull Position position) {
+        public void drop(int oldIndex, int newIndex, Position position) {
             DefaultMutableTreeNode oldNode = (DefaultMutableTreeNode) myTree.getPathForRow(oldIndex).getLastPathComponent();
             DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) myTree.getPathForRow(newIndex).getLastPathComponent();
             DefaultMutableTreeNode newParent = (DefaultMutableTreeNode) newNode.getParent();
@@ -2057,7 +2055,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         @Nullable
-        private RunnerAndConfigurationSettings getSettings(@Nonnull DefaultMutableTreeNode treeNode) {
+        private RunnerAndConfigurationSettings getSettings(DefaultMutableTreeNode treeNode) {
             Object userObject = treeNode.getUserObject();
             if (userObject instanceof SingleConfigurationConfigurable configurable) {
                 return (RunnerAndConfigurationSettings) configurable.getSettings();

@@ -47,7 +47,6 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,28 +59,28 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
 
     private static final Logger LOG = Logger.getInstance(ExternalSystemBeforeRunTaskProvider.class);
 
-    @Nonnull
+    
     private final ProjectSystemId mySystemId;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final Key<ExternalSystemBeforeRunTask> myId;
 
-    public ExternalSystemBeforeRunTaskProvider(@Nonnull ProjectSystemId systemId,
-                                               @Nonnull Project project,
-                                               @Nonnull Key<ExternalSystemBeforeRunTask> id) {
+    public ExternalSystemBeforeRunTaskProvider(ProjectSystemId systemId,
+                                               Project project,
+                                               Key<ExternalSystemBeforeRunTask> id) {
         mySystemId = systemId;
         myProject = project;
         myId = id;
     }
 
     @Override
-    @Nonnull
+    
     public Key<ExternalSystemBeforeRunTask> getId() {
         return myId;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ExternalSystemLocalize.tasksBeforeRunEmpty(mySystemId.getDisplayName());
@@ -92,7 +91,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
         return true;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, ExternalSystemBeforeRunTask task) {
@@ -126,7 +125,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
         return runner.canRun(DefaultRunExecutor.EXECUTOR_ID, environment.getRunProfile());
     }
 
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess,
                                               DataContext context,
@@ -164,22 +163,22 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
 
         myProject.getMessageBus().connect(disposable).subscribe(ExecutionListener.class, new ExecutionListener() {
             @Override
-            public void processStartScheduled(@Nonnull String executorIdLocal, @Nonnull ExecutionEnvironment environmentLocal) {
+            public void processStartScheduled(String executorIdLocal, ExecutionEnvironment environmentLocal) {
                 if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
                 }
             }
 
             @Override
-            public void processNotStarted(@Nonnull String executorIdLocal, @Nonnull ExecutionEnvironment environmentLocal) {
+            public void processNotStarted(String executorIdLocal, ExecutionEnvironment environmentLocal) {
                 if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
                     result.setRejected();
                 }
             }
 
             @Override
-            public void processStarted(@Nonnull String executorIdLocal,
-                                       @Nonnull final ExecutionEnvironment environmentLocal,
-                                       @Nonnull ProcessHandler handler) {
+            public void processStarted(String executorIdLocal,
+                                       final ExecutionEnvironment environmentLocal,
+                                       ProcessHandler handler) {
                 if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
                     handler.addProcessListener(new ProcessListener() {
                         @Override
@@ -211,7 +210,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
         return result;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     @SuppressWarnings("unchecked")

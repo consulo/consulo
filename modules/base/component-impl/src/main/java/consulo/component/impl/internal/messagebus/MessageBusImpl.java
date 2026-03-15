@@ -13,8 +13,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.collection.*;
 import consulo.util.lang.CompoundRuntimeException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.reflect.Proxy;
@@ -52,14 +51,14 @@ public class MessageBusImpl implements MessageBus, Disposable {
   private final Map<Class, List<MessageBusConnectionImpl>> mySubscriberCache = new ConcurrentHashMap<>();
   private final List<MessageBusImpl> myChildBuses = Lists.newLockFreeCopyOnWriteList();
 
-  @Nonnull
+  
   private MultiMap<String, InjectingBinding> myTopicClassToListenerClass = MultiMap.empty();
 
   private MessageBusImpl myParentBus;
 
   private final RootBus myRootBus;
 
-  @Nonnull
+  
   protected final TopicBindingLoader myTopicBindingLoader;
 
   //is used for debugging purposes
@@ -69,7 +68,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
 
   private final MessageBusConnectionImpl myLazyConnection;
 
-  public MessageBusImpl(@Nonnull TopicBindingLoader topicBindingLoader, @Nonnull InjectingContainerOwner owner, @Nonnull MessageBusImpl parentBus) {
+  public MessageBusImpl(TopicBindingLoader topicBindingLoader, InjectingContainerOwner owner, MessageBusImpl parentBus) {
     myTopicBindingLoader = topicBindingLoader;
     myOwner = owner;
     myConnectionDisposable = Disposable.newDisposable(myOwner.toString());
@@ -86,7 +85,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   // root message bus constructor
-  private MessageBusImpl(@Nonnull TopicBindingLoader topicBindingLoader, @Nonnull InjectingContainerOwner owner) {
+  private MessageBusImpl(TopicBindingLoader topicBindingLoader, InjectingContainerOwner owner) {
     myOwner = owner;
     myTopicBindingLoader = topicBindingLoader;
     myConnectionDisposable = Disposable.newDisposable(myOwner.toString());
@@ -95,7 +94,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     myLazyConnection = connect();
   }
 
-  public void setLazyListeners(@Nonnull MultiMap<String, InjectingBinding> map) {
+  public void setLazyListeners(MultiMap<String, InjectingBinding> map) {
     if (myTopicClassToListenerClass != MultiMap.<String, InjectingBinding>empty()) {
       throw new IllegalStateException("Already set: " + myTopicClassToListenerClass);
     }
@@ -115,7 +114,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   /**
    * calculates {@link #myOrder} for the given child bus
    */
-  @Nonnull
+  
   private int[] nextOrder() {
     MessageBusImpl lastChild = ContainerUtil.getLastItem(myChildBuses);
 
@@ -127,7 +126,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     return ArrayUtil.append(myOrder, lastChildIndex + 1);
   }
 
-  private void onChildBusDisposed(@Nonnull MessageBusImpl childBus) {
+  private void onChildBusDisposed(MessageBusImpl childBus) {
     boolean removed = myChildBuses.remove(childBus);
     Map<MessageBusImpl, Integer> map = myRootBus.myWaitingBuses.get();
     if (map != null) map.remove(childBus);
@@ -136,7 +135,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   private static final class DeliveryJob {
-    DeliveryJob(@Nonnull MessageBusConnectionImpl connection, @Nonnull Message message) {
+    DeliveryJob(MessageBusConnectionImpl connection, Message message) {
       this.connection = connection;
       this.message = message;
     }
@@ -151,14 +150,14 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   @Override
-  @Nonnull
+  
   public MessageBusConnectionImpl connect() {
     return connect(myConnectionDisposable);
   }
 
   @Override
-  @Nonnull
-  public MessageBusConnectionImpl connect(@Nonnull Disposable parentDisposable) {
+  
+  public MessageBusConnectionImpl connect(Disposable parentDisposable) {
     checkNotDisposed();
     MessageBusConnectionImpl connection = new MessageBusConnectionImpl(this);
     Disposer.register(parentDisposable, connection);
@@ -166,8 +165,8 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   @Override
-  @Nonnull
-  public <L> L syncPublisher(@Nonnull Class<L> topicClass) {
+  
+  public <L> L syncPublisher(Class<L> topicClass) {
     checkNotDisposed();
     @SuppressWarnings("unchecked") L publisher = (L)myPublishers.get(topicClass);
     if (publisher != null) {
@@ -194,9 +193,9 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
   }
 
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
-  private <L> L subscribeLazyListeners(@Nonnull Class<L> topic, @Nonnull Class<L> listenerClass) {
+  private <L> L subscribeLazyListeners(Class<L> topic, Class<L> listenerClass) {
     L publisher = (L)myPublishers.get(topic);
     if (publisher != null) {
       return publisher;
@@ -259,7 +258,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   @Override
-  public boolean hasUndeliveredEvents(@Nonnull Class<?> topic) {
+  public boolean hasUndeliveredEvents(Class<?> topic) {
     if (myDisposed) return false;
     if (!isDispatchingAnything()) return false;
 
@@ -282,13 +281,13 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
   }
 
-  @Nonnull
+  
   @TestOnly
   String getOwner() {
     return myOwner.toString();
   }
 
-  private void calcSubscribers(@Nonnull Class<?> topicClass, @Nonnull List<? super MessageBusConnectionImpl> result) {
+  private void calcSubscribers(Class<?> topicClass, List<? super MessageBusConnectionImpl> result) {
     List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topicClass);
     if (topicSubscribers != null) {
       result.addAll(topicSubscribers);
@@ -312,7 +311,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
   }
 
-  private void postMessage(@Nonnull Message message) {
+  private void postMessage(Message message) {
     checkNotDisposed();
     List<MessageBusConnectionImpl> topicSubscribers = getTopicSubscribers(message.getTopicClass());
     if (!topicSubscribers.isEmpty()) {
@@ -324,8 +323,8 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
   }
 
-  @Nonnull
-  private List<MessageBusConnectionImpl> getTopicSubscribers(@Nonnull Class<?> topic) {
+  
+  private List<MessageBusConnectionImpl> getTopicSubscribers(Class<?> topic) {
     List<MessageBusConnectionImpl> topicSubscribers = mySubscriberCache.get(topic);
     if (topicSubscribers == null) {
       topicSubscribers = new ArrayList<>();
@@ -357,7 +356,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
   }
 
-  protected void sendMessage(@Nonnull Message message) {
+  protected void sendMessage(Message message) {
     pumpMessages();
     postMessage(message);
     pumpMessages();
@@ -381,7 +380,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
   }
 
-  private static void pumpWaitingBuses(@Nonnull List<? extends MessageBusImpl> buses) {
+  private static void pumpWaitingBuses(List<? extends MessageBusImpl> buses) {
     List<Throwable> exceptions = null;
     for (MessageBusImpl bus : buses) {
       if (bus.myDisposed) continue;
@@ -391,7 +390,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     rethrowExceptions(exceptions);
   }
 
-  private static List<Throwable> appendExceptions(@Nullable List<Throwable> exceptions, @Nonnull List<? extends Throwable> busExceptions) {
+  private static List<Throwable> appendExceptions(@Nullable List<Throwable> exceptions, List<? extends Throwable> busExceptions) {
     if (!busExceptions.isEmpty()) {
       if (exceptions == null) exceptions = new ArrayList<>(busExceptions.size());
       exceptions.addAll(busExceptions);
@@ -408,7 +407,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     CompoundRuntimeException.throwIfNotEmpty(exceptions);
   }
 
-  private static boolean ensureAlive(@Nonnull Map<MessageBusImpl, Integer> map, @Nonnull MessageBusImpl bus) {
+  private static boolean ensureAlive(Map<MessageBusImpl, Integer> map, MessageBusImpl bus) {
     if (bus.myDisposed) {
       map.remove(bus);
       LOG.error("Accessing disposed message bus " + bus);
@@ -417,7 +416,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     return true;
   }
 
-  @Nonnull
+  
   private List<Throwable> doPumpMessages() {
     Queue<DeliveryJob> queue = myMessageQueue.get();
     List<Throwable> exceptions = Collections.emptyList();
@@ -439,7 +438,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     return exceptions;
   }
 
-  void notifyOnSubscription(@Nonnull MessageBusConnectionImpl connection, @Nonnull Class<?> topic) {
+  void notifyOnSubscription(MessageBusConnectionImpl connection, Class<?> topic) {
     checkNotDisposed();
     List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topic);
     if (topicSubscribers == null) {
@@ -459,7 +458,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
   }
 
-  void notifyConnectionTerminated(@Nonnull MessageBusConnectionImpl connection) {
+  void notifyConnectionTerminated(MessageBusConnectionImpl connection) {
     for (List<MessageBusConnectionImpl> topicSubscribers : mySubscribers.values()) {
       topicSubscribers.remove(connection);
     }
@@ -484,12 +483,12 @@ public class MessageBusImpl implements MessageBus, Disposable {
     job.connection.deliverMessage(job.message);
   }
 
-  @Nonnull
+  
   static <T> ThreadLocal<Queue<T>> createThreadLocalQueue() {
     return ThreadLocal.withInitial(ArrayDeque::new);
   }
 
-  <T> void invokeListener(@Nonnull Message<T> message, T handler) throws Throwable {
+  <T> void invokeListener(Message<T> message, T handler) throws Throwable {
     message.invoke(handler);
   }
 
@@ -512,7 +511,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
       myClearedSubscribersCache = true;
     }
 
-    RootBus(@Nonnull TopicBindingLoader bindingLoader, @Nonnull InjectingContainerOwner owner) {
+    RootBus(TopicBindingLoader bindingLoader, InjectingContainerOwner owner) {
       super(bindingLoader, owner);
     }
   }

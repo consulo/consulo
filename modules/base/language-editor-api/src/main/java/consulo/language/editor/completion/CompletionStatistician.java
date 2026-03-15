@@ -22,8 +22,7 @@ import consulo.language.statistician.StatisticsInfo;
 import consulo.language.statistician.StatisticsManager;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -36,7 +35,7 @@ public abstract class CompletionStatistician extends Statistician<LookupElement,
     @Override
     public abstract StatisticsInfo serialize(LookupElement element, CompletionLocation location);
 
-    @Nonnull
+    
     @Override
     public Key<CompletionStatistician> getKey() {
         return STATISTICS_KEY;
@@ -46,7 +45,7 @@ public abstract class CompletionStatistician extends Statistician<LookupElement,
         item.putUserData(BASE_STATISTICS_INFO, null);
     }
 
-    @Nonnull
+    
     public static StatisticsInfo getBaseStatisticsInfo(LookupElement item, @Nullable CompletionLocation location) {
         StatisticsInfo info = BASE_STATISTICS_INFO.get(item);
         if (info == null) {
@@ -58,8 +57,8 @@ public abstract class CompletionStatistician extends Statistician<LookupElement,
         return info;
     }
 
-    @Nonnull
-    private static StatisticsInfo calcBaseInfo(LookupElement item, @Nonnull CompletionLocation location) {
+    
+    private static StatisticsInfo calcBaseInfo(LookupElement item, CompletionLocation location) {
         if (!ApplicationManager.getApplication().isUnitTestMode()) {
             LOG.assertTrue(!ApplicationManager.getApplication().isDispatchThread());
         }

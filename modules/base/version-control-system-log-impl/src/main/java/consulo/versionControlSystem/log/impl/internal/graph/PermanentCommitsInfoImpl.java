@@ -24,17 +24,16 @@ import consulo.versionControlSystem.log.graph.PermanentCommitsInfo;
 import consulo.versionControlSystem.log.graph.TimestampGetter;
 import consulo.versionControlSystem.log.impl.internal.util.CompressedIntList;
 import consulo.versionControlSystem.log.impl.internal.util.IntList;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
 public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<CommitId> {
   private static final Logger LOG = Logger.getInstance(PermanentCommitsInfoImpl.class);
 
-  @Nonnull
+  
   public static <CommitId> PermanentCommitsInfoImpl<CommitId> newInstance(
-    @Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
-    @Nonnull Map<Integer, CommitId> notLoadedCommits
+    List<? extends GraphCommit<CommitId>> graphCommits,
+    Map<Integer, CommitId> notLoadedCommits
   ) {
     TimestampGetter timestampGetter = createTimestampGetter(graphCommits);
 
@@ -50,8 +49,8 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
     return new PermanentCommitsInfoImpl<>(timestampGetter, commitIdIndex, notLoadedCommits);
   }
 
-  @Nonnull
-  public static <CommitId> IntTimestampGetter createTimestampGetter(@Nonnull final List<? extends GraphCommit<CommitId>> graphCommits) {
+  
+  public static <CommitId> IntTimestampGetter createTimestampGetter(final List<? extends GraphCommit<CommitId>> graphCommits) {
     return IntTimestampGetter.newInstance(new TimestampGetter() {
       @Override
       public int size() {
@@ -65,8 +64,8 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
     });
   }
 
-  @Nonnull
-  private static List<Integer> createCompressedIntList(@Nonnull final List<? extends GraphCommit<Integer>> graphCommits) {
+  
+  private static List<Integer> createCompressedIntList(final List<? extends GraphCommit<Integer>> graphCommits) {
     final IntList compressedIntList = CompressedIntList.newInstance(new IntList() {
       @Override
       public int size() {
@@ -79,7 +78,7 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
       }
     }, 30);
     return new AbstractList<>() {
-      @Nonnull
+      
       @Override
       public Integer get(int index) {
         return compressedIntList.get(index);
@@ -92,25 +91,25 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
     };
   }
 
-  @Nonnull
+  
   private final TimestampGetter myTimestampGetter;
 
-  @Nonnull
+  
   private final List<CommitId> myCommitIdIndexes;
 
-  @Nonnull
+  
   private final Map<Integer, CommitId> myNotLoadCommits;
 
-  public PermanentCommitsInfoImpl(@Nonnull TimestampGetter timestampGetter,
-                                  @Nonnull List<CommitId> commitIdIndex,
-                                  @Nonnull Map<Integer, CommitId> notLoadCommits) {
+  public PermanentCommitsInfoImpl(TimestampGetter timestampGetter,
+                                  List<CommitId> commitIdIndex,
+                                  Map<Integer, CommitId> notLoadCommits) {
     myTimestampGetter = timestampGetter;
     myCommitIdIndexes = commitIdIndex;
     myNotLoadCommits = notLoadCommits;
   }
 
   @Override
-  @Nonnull
+  
   public CommitId getCommitId(int nodeId) {
     if (nodeId < 0) return myNotLoadCommits.get(nodeId);
     return myCommitIdIndexes.get(nodeId);
@@ -122,45 +121,45 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
     return myTimestampGetter.getTimestamp(nodeId);
   }
 
-  @Nonnull
+  
   public TimestampGetter getTimestampGetter() {
     return myTimestampGetter;
   }
 
   // todo optimize with special map
   @Override
-  public int getNodeId(@Nonnull CommitId commitId) {
+  public int getNodeId(CommitId commitId) {
     int indexOf = myCommitIdIndexes.indexOf(commitId);
     if (indexOf != -1) return indexOf;
 
     return getNotLoadNodeId(commitId);
   }
 
-  private int getNotLoadNodeId(@Nonnull CommitId commitId) {
+  private int getNotLoadNodeId(CommitId commitId) {
     for (Map.Entry<Integer, CommitId> entry : myNotLoadCommits.entrySet()) {
       if (entry.getValue().equals(commitId)) return entry.getKey();
     }
     return -1;
   }
 
-  @Nonnull
-  public List<CommitId> convertToCommitIdList(@Nonnull Collection<Integer> commitIndexes) {
+  
+  public List<CommitId> convertToCommitIdList(Collection<Integer> commitIndexes) {
     return ContainerUtil.map(commitIndexes, this::getCommitId);
   }
 
-  @Nonnull
-  public Set<CommitId> convertToCommitIdSet(@Nonnull Collection<Integer> commitIndexes) {
+  
+  public Set<CommitId> convertToCommitIdSet(Collection<Integer> commitIndexes) {
     return ContainerUtil.map2Set(commitIndexes, this::getCommitId);
   }
 
   @Override
-  @Nonnull
-  public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> commitIds) {
+  
+  public Set<Integer> convertToNodeIds(Collection<CommitId> commitIds) {
     return convertToNodeIds(commitIds, false);
   }                                                                                                   
 
-  @Nonnull
-  public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> commitIds, boolean reportNotFound) {
+  
+  public Set<Integer> convertToNodeIds(Collection<CommitId> commitIds, boolean reportNotFound) {
     Set<Integer> result = new HashSet<>();
     Set<CommitId> matchedIds = new HashSet<>();
     for (int i = 0; i < myCommitIdIndexes.size(); i++) {

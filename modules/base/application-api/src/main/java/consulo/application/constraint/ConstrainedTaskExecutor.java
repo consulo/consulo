@@ -4,8 +4,7 @@ package consulo.application.constraint;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
@@ -15,7 +14,7 @@ import java.util.function.BooleanSupplier;
  */
 public class ConstrainedTaskExecutor implements Executor {
   private final
-  @Nonnull
+  
   ConstrainedExecutionScheduler myExecutionScheduler;
   private final
   @Nullable
@@ -24,14 +23,14 @@ public class ConstrainedTaskExecutor implements Executor {
   @Nullable
   Expiration myExpiration;
 
-  public ConstrainedTaskExecutor(@Nonnull ConstrainedExecutionScheduler executionScheduler, @Nullable BooleanSupplier cancellationCondition, @Nullable Expiration expiration) {
+  public ConstrainedTaskExecutor(ConstrainedExecutionScheduler executionScheduler, @Nullable BooleanSupplier cancellationCondition, @Nullable Expiration expiration) {
     myExecutionScheduler = executionScheduler;
     myCancellationCondition = cancellationCondition;
     myExpiration = expiration;
   }
 
   @Override
-  public void execute(@Nonnull Runnable command) {
+  public void execute(Runnable command) {
     BooleanSupplier condition = ((myExpiration == null) && (myCancellationCondition == null)) ? null : () -> {
       if (myExpiration != null && myExpiration.isExpired()) return false;
       if (myCancellationCondition != null && myCancellationCondition.getAsBoolean()) return false;
@@ -40,14 +39,14 @@ public class ConstrainedTaskExecutor implements Executor {
     myExecutionScheduler.scheduleWithinConstraints(command, condition);
   }
 
-  public CancellablePromise<Void> submit(@Nonnull Runnable task) {
+  public CancellablePromise<Void> submit(Runnable task) {
     return submit(() -> {
       task.run();
       return null;
     });
   }
 
-  public <T> CancellablePromise<T> submit(@Nonnull Callable<? extends T> task) {
+  public <T> CancellablePromise<T> submit(Callable<? extends T> task) {
     AsyncPromise<T> promise = new AsyncPromise<>();
     if (myExpiration != null) {
       Expiration.Handle expirationHandle = myExpiration.invokeOnExpiration(promise::cancel);

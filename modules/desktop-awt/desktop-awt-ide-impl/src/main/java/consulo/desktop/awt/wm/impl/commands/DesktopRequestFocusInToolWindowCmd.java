@@ -26,7 +26,7 @@ import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.DesktopWindowWatcher;
 import consulo.ui.ex.awt.util.Alarm;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

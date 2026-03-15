@@ -23,8 +23,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
 import consulo.versionControlSystem.internal.FlatSpeedSearchShouldBeShowingFilter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.function.Predicate;
@@ -38,21 +37,21 @@ import java.util.function.Predicate;
 public class DesktopAWTFlatSpeedSearchPopupFactoryImpl implements FlatSpeedSearchPopupFactory {
     @Override
     public ListPopup createFlatSpeedSearchPopup(String title,
-                                                @Nonnull ActionGroup actionGroup,
-                                                @Nonnull DataContext dataContext,
+                                                ActionGroup actionGroup,
+                                                DataContext dataContext,
                                                 @Nullable Predicate<AnAction> preselectActionCondition,
                                                 boolean showDisableActions,
-                                                @Nonnull FlatSpeedSearchShouldBeShowingFilter filter) {
+                                                FlatSpeedSearchShouldBeShowingFilter filter) {
         return new FlatSpeedSearchPopup(title, actionGroup, dataContext, preselectActionCondition, showDisableActions) {
             @Override
-            protected boolean shouldBeShowing(@Nonnull AnAction action) {
+            protected boolean shouldBeShowing(AnAction action) {
                 return super.shouldBeShowing(action) || filter.shouldBeShowing(action, getSpeedSearch().isHoldingFilter());
             }
         };
     }
 
     @Override
-    public ListPopup createBranchPopup(@Nonnull String title, @Nonnull Project project, @Nonnull Predicate<AnAction> preselectActionCondition, @Nonnull ActionGroup actions, @Nullable String dimensionKey) {
+    public ListPopup createBranchPopup(String title, Project project, Predicate<AnAction> preselectActionCondition, ActionGroup actions, @Nullable String dimensionKey) {
         return new BranchActionGroupPopup(title, project, preselectActionCondition, actions, dimensionKey);
     }
 }

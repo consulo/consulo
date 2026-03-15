@@ -21,12 +21,11 @@ import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 
 
 public class LibraryModuleGroupUrl extends AbstractUrl {
 
-  @NonNls private static final String ELEMENT_TYPE = "libraryModuleGroup";
+  private static final String ELEMENT_TYPE = "libraryModuleGroup";
 
   public LibraryModuleGroupUrl(String moduleName) {
     super(null, moduleName, ELEMENT_TYPE);

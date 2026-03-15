@@ -32,7 +32,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,12 +46,12 @@ class LeafPatcher extends RecursiveTreeElementWalkingVisitor {
   private LiteralTextEscaper currentTextEscaper;
   private TextRange rangeInHost;
   private final Map<LeafElement, String> newTexts = new HashMap<>();
-  @Nonnull
+  
   private final List<? extends PlaceInfo> myPlaceInfos;
   private final StringBuilder catLeafs;
   private final StringBuilder tempLeafBuffer = new StringBuilder();
 
-  LeafPatcher(@Nonnull List<? extends PlaceInfo> placeInfos, int approxTextLength) {
+  LeafPatcher(List<? extends PlaceInfo> placeInfos, int approxTextLength) {
     myPlaceInfos = placeInfos;
     catLeafs = new StringBuilder(approxTextLength);
   }
@@ -135,14 +134,14 @@ class LeafPatcher extends RecursiveTreeElementWalkingVisitor {
 
   static final Key<String> UNESCAPED_TEXT = Key.create("INJECTED_UNESCAPED_TEXT");
 
-  private static void storeUnescapedTextFor(@Nonnull LeafElement leaf, @Nonnull String leafText) {
+  private static void storeUnescapedTextFor(LeafElement leaf, String leafText) {
     PsiElement psi = leaf.getPsi();
     if (psi != null) {
       psi.putCopyableUserData(UNESCAPED_TEXT, leafText);
     }
   }
 
-  void patch(@Nonnull ASTNode parsedNode, @Nonnull List<? extends PlaceInfo> placeInfos) {
+  void patch(ASTNode parsedNode, List<? extends PlaceInfo> placeInfos) {
     ((TreeElement)parsedNode).acceptTree(this);
 
     assert ((TreeElement)parsedNode).textMatches(catLeafs) : "Malformed PSI structure: leaf texts do not add up to the whole file text." +

@@ -23,8 +23,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.xml.serializer.JDOMExternalizable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -37,7 +36,7 @@ public class StateComponentInfo<T> {
   private static final String OPTION_WORKSPACE = "workspace";
 
   @Nullable
-  public static <K> StateComponentInfo<K> build(@Nonnull K o, @Nullable ComponentManager project) {
+  public static <K> StateComponentInfo<K> build(K o, @Nullable ComponentManager project) {
     if (!(o instanceof PersistentStateComponent) && !(o instanceof JDOMExternalizable)) {
       return null;
     }
@@ -84,7 +83,7 @@ public class StateComponentInfo<T> {
   }
 
   @Nullable
-  private static State getStateSpec(@Nonnull Class<?> aClass) {
+  private static State getStateSpec(Class<?> aClass) {
     do {
       State stateSpec = aClass.getAnnotation(State.class);
       if (stateSpec != null) {
@@ -103,17 +102,17 @@ public class StateComponentInfo<T> {
     myState = state;
   }
 
-  @Nonnull
+  
   public PersistentStateComponent<T> getComponent() {
     return myComponent;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myState.name();
   }
 
-  @Nonnull
+  
   public State getState() {
     return myState;
   }

@@ -8,8 +8,7 @@ import consulo.platform.Platform;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
@@ -70,7 +69,7 @@ public class FontInfo {
     myContext = context;
   }
 
-  @Nonnull
+  
   private static Font getFontWithLigaturesEnabled(Font font, @JdkConstants.FontStyle int fontStyle) {
     return font.deriveFont(Collections.singletonMap(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON));
   }
@@ -78,7 +77,7 @@ public class FontInfo {
   private static final Comparator<File> BY_NAME = Comparator.comparing(File::getName);
 
   @Nullable
-  private static File findFileForFont(@Nonnull String familyName, int style) {
+  private static File findFileForFont(String familyName, int style) {
     File fontFile = doFindFileForFont(familyName, style);
     if (fontFile == null && style != Font.PLAIN) fontFile = doFindFileForFont(familyName, Font.PLAIN);
     if (fontFile == null) fontFile = doFindFileForFont(familyName, -1);
@@ -86,7 +85,7 @@ public class FontInfo {
   }
 
   @Nullable
-  private static File doFindFileForFont(@Nonnull String familyName, int style) {
+  private static File doFindFileForFont(String familyName, int style) {
     String normalizedFamilyName = familyName.toLowerCase(Locale.getDefault()).replace(" ", "");
     FilenameFilter filter = (file, name) -> {
       String normalizedName = name.toLowerCase(Locale.getDefault());
@@ -111,7 +110,7 @@ public class FontInfo {
     return Collections.min(files, BY_NAME);
   }
 
-  private static int getFontStyle(@Nonnull String fontFileNameLowercase) {
+  private static int getFontStyle(String fontFileNameLowercase) {
     String baseName = fontFileNameLowercase.substring(0, fontFileNameLowercase.length() - 4);
     if (baseName.endsWith("-it")) {
       return Font.ITALIC;
@@ -144,7 +143,7 @@ public class FontInfo {
   public static final int SLOTMASK = 0xff000000;
   public static final int GLYPHMASK = 0x00ffffff;
 
-  public static boolean canDisplay(@Nonnull Font font, int codePoint, boolean disableFontFallback) {
+  public static boolean canDisplay(Font font, int codePoint, boolean disableFontFallback) {
     if (!Character.isValidCodePoint(codePoint)) return false;
     if (disableFontFallback && Platform.current().os().isMac()) {
       int glyphCode = font.createGlyphVector(DEFAULT_CONTEXT, new String(new int[]{codePoint}, 0, 1)).getGlyphCode(0);
@@ -176,8 +175,8 @@ public class FontInfo {
     return myFontMetrics;
   }
 
-  @Nonnull
-  public static FontMetrics getFontMetrics(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext) {
+  
+  public static FontMetrics getFontMetrics(Font font, FontRenderContext fontRenderContext) {
     return FontDesignMetricsHacking.getMetrics(font, fontRenderContext);
   }
 

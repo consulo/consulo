@@ -31,8 +31,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +42,10 @@ import java.util.List;
  */
 @ExtensionImpl
 public class DiffSettingsConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
         TextDiffSettingsHolder.TextDiffSettings textDiffSettings = TextDiffSettingsHolder.TextDiffSettings.getSettings();
         DiffSettingsHolder.DiffSettings diffSettings = DiffSettingsHolder.DiffSettings.getSettings();
 
@@ -81,13 +80,13 @@ public class DiffSettingsConfigurable extends SimpleConfigurableByProperties imp
         return rootLayout;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "diff.base";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Diff & Merge");

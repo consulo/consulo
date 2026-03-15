@@ -15,13 +15,12 @@
  */
 package consulo.build.ui.event;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface OutputBuildEvent extends BuildEvent {
-  @Nonnull
+  
   @BuildEventsNls.Message
   String getMessage();
 

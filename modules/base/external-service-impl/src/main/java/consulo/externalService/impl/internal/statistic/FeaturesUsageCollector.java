@@ -22,21 +22,20 @@ import consulo.externalService.statistic.UsagesCollector;
 import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @ExtensionImpl
 public class FeaturesUsageCollector extends UsagesCollector {
-    @Nonnull
+    
     @Override
     public String getGroupId() {
         return "consulo.platform.base:productivity";
     }
 
-    @Nonnull
+    
     @Override
     public Set<UsageDescriptor> getUsages(@Nullable Project project) {
         Set<UsageDescriptor> usages = new HashSet<>();

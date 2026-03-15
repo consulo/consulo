@@ -5,17 +5,16 @@ import consulo.annotation.component.ExtensionImpl;
 
 import consulo.searchEverywhere.SEResultsEqualityProvider;
 import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
 @ExtensionImpl
 public class TrivialElementsEqualityProvider implements SEResultsEqualityProvider {
-    @Nonnull
+    
     @Override
     public SEEqualElementsActionType compareItems(
-        @Nonnull SearchEverywhereFoundElementInfo newItem,
-        @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItem
+        SearchEverywhereFoundElementInfo newItem,
+        SearchEverywhereFoundElementInfo alreadyFoundItem
     ) {
         if (Objects.equals(newItem.getElement(), alreadyFoundItem.getElement())) {
             return newItem.getPriority() > alreadyFoundItem.getPriority()

@@ -25,7 +25,6 @@ import consulo.language.psi.PsiNavigationSupport;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ExtensionImpl
@@ -37,14 +36,14 @@ public class NavigatableRule implements GetDataRule<Navigatable> {
         myPsiNavigationSupport = psiNavigationSupport;
     }
 
-    @Nonnull
+    
     @Override
     public Key<Navigatable> getKey() {
         return Navigatable.KEY;
     }
 
     @Override
-    public Navigatable getData(@Nonnull DataProvider dataProvider) {
+    public Navigatable getData(DataProvider dataProvider) {
         Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
         if (navigatable != null && navigatable instanceof OpenFileDescriptor openFileDescriptor) {
             if (openFileDescriptor.getFile().isValid()) {

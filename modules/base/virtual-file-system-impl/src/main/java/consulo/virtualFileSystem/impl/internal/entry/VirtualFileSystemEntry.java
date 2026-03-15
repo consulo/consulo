@@ -14,9 +14,7 @@ import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.internal.*;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +42,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
 
   static final int ALL_FLAGS_MASK = DIRTY_FLAG | IS_SYMLINK_FLAG | HAS_SYMLINK_FLAG | IS_SPECIAL_FLAG | IS_WRITABLE_FLAG | IS_HIDDEN_FLAG | INDEXED_FLAG | CHILDREN_CACHED;
 
-  @Nonnull // except NULL_VIRTUAL_FILE
+  // except NULL_VIRTUAL_FILE
   final VfsData.Segment mySegment;
   private final VirtualDirectoryImpl myParent;
   final int myId;
@@ -55,7 +53,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     assert (~ALL_FLAGS_MASK) == LocalTimeCounter.TIME_MASK;
   }
 
-  VirtualFileSystemEntry(int id, @Nonnull VfsData.Segment segment, @Nullable VirtualDirectoryImpl parent) {
+  VirtualFileSystemEntry(int id, VfsData.Segment segment, @Nullable VirtualDirectoryImpl parent) {
     mySegment = segment;
     myId = id;
     myParent = parent;
@@ -79,12 +77,12 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return getNameSequence().toString();
   }
 
-  @Nonnull
+  
   @Override
   public CharSequence getNameSequence() {
     return FileNameCache.getVFileName(getNameId());
@@ -160,7 +158,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     }
   }
 
-  @Nonnull
+  
   protected char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef) {
     CharSequence name = getNameSequence();
 
@@ -172,14 +170,14 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     return chars;
   }
 
-  private static int copyString(@Nonnull char[] chars, int pos, @Nonnull CharSequence s) {
+  private static int copyString(char[] chars, int pos, CharSequence s) {
     int length = s.length();
     CharArrayUtil.getChars(s, chars, 0, pos, length);
     return pos + length;
   }
 
   @Override
-  @Nonnull
+  
   public String getUrl() {
     String protocol = getFileSystem().getProtocol();
     int prefixLen = protocol.length() + "://".length();
@@ -189,7 +187,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public String getPath() {
     return new String(appendPathOnFileSystem(0, new int[]{0}));
   }
@@ -201,7 +199,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  public void rename(Object requestor, @Nonnull @NonNls String newName) throws IOException {
+  public void rename(Object requestor, String newName) throws IOException {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (getName().equals(newName)) return;
     validateName(newName);
@@ -209,8 +207,8 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  @Nonnull
-  public VirtualFile createChildData(Object requestor, @Nonnull String name) throws IOException {
+  
+  public VirtualFile createChildData(Object requestor, String name) throws IOException {
     validateName(name);
     return ourPersistence.createChildFile(requestor, this, name);
   }
@@ -240,9 +238,9 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     return ourPersistence.getLength(this);
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFile copy(Object requestor, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException {
+  public VirtualFile copy(Object requestor, VirtualFile newParent, String copyName) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VirtualFileSystemLocalize.fileCopyError(newParent.getPresentableUrl()).get());
     }
@@ -255,7 +253,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  public void move(Object requestor, @Nonnull VirtualFile newParent) throws IOException {
+  public void move(Object requestor, VirtualFile newParent) throws IOException {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     if (getFileSystem() != newParent.getFileSystem()) {
@@ -284,13 +282,13 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  @Nonnull
-  public VirtualFile createChildDirectory(Object requestor, @Nonnull String name) throws IOException {
+  
+  public VirtualFile createChildDirectory(Object requestor, String name) throws IOException {
     validateName(name);
     return ourPersistence.createChildDirectory(requestor, this, name);
   }
 
-  private void validateName(@Nonnull String name) throws IOException {
+  private void validateName(String name) throws IOException {
     if (!getFileSystem().isValidName(name)) {
       throw new IOException(VirtualFileSystemLocalize.fileInvalidNameError(name).get());
     }
@@ -311,7 +309,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     return getUrl();
   }
 
-  public void setNewName(@Nonnull String newName) {
+  public void setNewName(String newName) {
     if (!getFileSystem().isValidName(newName)) {
       throw new IllegalArgumentException(VirtualFileSystemLocalize.fileInvalidNameError(newName).get());
     }
@@ -323,7 +321,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     ((PersistentFSImpl)PersistentFS.getInstance()).incStructuralModificationCount();
   }
 
-  public void setParent(@Nonnull VirtualFile newParent) {
+  public void setParent(VirtualFile newParent) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     VirtualDirectoryImpl parent = getParent();
@@ -345,13 +343,13 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     mySegment.vfsData.invalidateFile(myId);
   }
 
-  @Nonnull
+  
   @Override
   public Charset getCharset() {
     return isCharsetSet() ? super.getCharset() : computeCharset();
   }
 
-  @Nonnull
+  
   private Charset computeCharset() {
     Charset charset;
     if (isDirectory()) {
@@ -386,14 +384,14 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  public boolean is(@Nonnull VFileProperty property) {
+  public boolean is(VFileProperty property) {
     if (property == VFileProperty.SPECIAL) return getFlagInt(IS_SPECIAL_FLAG);
     if (property == VFileProperty.HIDDEN) return getFlagInt(IS_HIDDEN_FLAG);
     if (property == VFileProperty.SYMLINK) return getFlagInt(IS_SYMLINK_FLAG);
     return super.is(property);
   }
 
-  public void updateProperty(@Nonnull String property, boolean value) {
+  public void updateProperty(String property, boolean value) {
     if (property == PROP_WRITABLE) setFlagInt(IS_WRITABLE_FLAG, value);
     if (property == PROP_HIDDEN) setFlagInt(IS_HIDDEN_FLAG, value);
   }
@@ -445,7 +443,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     CachedFileType cache = myFileType;
@@ -463,7 +461,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
       return "NULL";
     }
 
-    @Nonnull
+    
     @Override
     public NewVirtualFileSystem getFileSystem() {
       throw new UnsupportedOperationException();
@@ -471,29 +469,29 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
 
     @Nullable
     @Override
-    public NewVirtualFile findChild(@Nonnull String name) {
+    public NewVirtualFile findChild(String name) {
       throw new UnsupportedOperationException();
     }
 
     @Nullable
     @Override
-    public NewVirtualFile refreshAndFindChild(@Nonnull String name) {
+    public NewVirtualFile refreshAndFindChild(String name) {
       throw new UnsupportedOperationException();
     }
 
     @Nullable
     @Override
-    public NewVirtualFile findChildIfCached(@Nonnull String name) {
+    public NewVirtualFile findChildIfCached(String name) {
       throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public Collection<VirtualFile> getCachedChildren() {
       throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public Iterable<VirtualFile> iterInDbChildren() {
       throw new UnsupportedOperationException();
@@ -509,7 +507,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
       throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) {
       throw new UnsupportedOperationException();

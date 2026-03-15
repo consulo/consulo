@@ -19,8 +19,7 @@ package consulo.versionControlSystem.root;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -30,12 +29,12 @@ public class VcsRoot {
   @Nullable
   private final AbstractVcs myVcs;
 
-  @Nonnull
+  
   private final VirtualFile myPath;
 
   private int hashcode;
 
-  public VcsRoot(@Nullable AbstractVcs vcs, @Nonnull VirtualFile path) {
+  public VcsRoot(@Nullable AbstractVcs vcs, VirtualFile path) {
     myVcs = vcs;
     myPath = path;
   }
@@ -45,7 +44,7 @@ public class VcsRoot {
     return myVcs;
   }
 
-  @Nonnull
+  
   public VirtualFile getPath() {
     return myPath;
   }

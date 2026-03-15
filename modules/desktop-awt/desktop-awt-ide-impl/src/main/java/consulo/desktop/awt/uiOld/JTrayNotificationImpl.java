@@ -8,8 +8,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -49,7 +48,7 @@ final class JTrayNotificationImpl implements SystemNotificationsImpl.Notifier {
   }
 
   @Override
-  public void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description) {
+  public void notify(String name, String title, String description) {
     myTrayIcon.displayMessage(title, description, TrayIcon.MessageType.INFO);
   }
 }

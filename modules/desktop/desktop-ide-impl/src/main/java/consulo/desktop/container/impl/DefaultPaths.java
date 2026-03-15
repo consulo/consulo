@@ -19,7 +19,6 @@ import com.sun.jna.platform.win32.Shell32Util;
 import com.sun.jna.platform.win32.ShlObj;
 import consulo.platform.Platform;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -29,7 +28,7 @@ import java.io.File;
  */
 public abstract class DefaultPaths {
   private static class Fallback extends DefaultPaths {
-    @Nonnull
+    
     @Override
     public File getDocumentsDir() {
       String userHome = SystemProperties.getUserHome();
@@ -41,14 +40,14 @@ public abstract class DefaultPaths {
       return new File(userHome + File.separatorChar + ourDefaultPrefix + " Project");
     }
 
-    @Nonnull
+    
     @Override
     public String getLocalSettingsDir() {
       String userHome = SystemProperties.getUserHome();
       return userHome + File.separatorChar + ".consulo_settings" + File.separatorChar + "system";
     }
 
-    @Nonnull
+    
     @Override
     public String getRoamingSettingsDir() {
       String userHome = SystemProperties.getUserHome();
@@ -57,28 +56,28 @@ public abstract class DefaultPaths {
   }
 
   private static abstract class SimpleDefaultPaths extends DefaultPaths {
-    @Nonnull
+    
     protected abstract String getDocumentsDirNoPrefix();
 
     @Override
-    @Nonnull
+    
     public File getDocumentsDir() {
       return new File(getDocumentsDirNoPrefix(), ourDefaultPrefix);
     }
 
-    @Nonnull
+    
     protected abstract String getLocalSettingsDirNoPrefix();
 
     @Override
-    @Nonnull
+    
     public String getLocalSettingsDir() {
       return getLocalSettingsDirNoPrefix() + File.separatorChar + ourDefaultPrefix;
     }
 
-    @Nonnull
+    
     protected abstract String getRoamingSettingsDirNoPrefix();
 
-    @Nonnull
+    
     @Override
     public String getRoamingSettingsDir() {
       return getRoamingSettingsDirNoPrefix() + File.separatorChar + ourDefaultPrefix;
@@ -86,37 +85,37 @@ public abstract class DefaultPaths {
   }
 
   private static class Mac extends SimpleDefaultPaths {
-    @Nonnull
+    
     @Override
     protected String getDocumentsDirNoPrefix() {
       return SystemProperties.getUserHome() + "/Documents";
     }
 
-    @Nonnull
+    
     @Override
-    public File getExternalPlatformDirectory(@Nonnull File defaultPath) {
+    public File getExternalPlatformDirectory(File defaultPath) {
       return new File(SystemProperties.getUserHome(), "Library/Application Support/Consulo Platform");
     }
 
-    @Nonnull
+    
     @Override
     protected String getLocalSettingsDirNoPrefix() {
       return SystemProperties.getUserHome() + "/Library/Caches";
     }
 
-    @Nonnull
+    
     @Override
     protected String getRoamingSettingsDirNoPrefix() {
       return SystemProperties.getUserHome() + "/Library/Preferences";
     }
 
-    @Nonnull
+    
     @Override
     public String getRoamingPluginsDir() {
       return SystemProperties.getUserHome() + "/Library/Application Support/" + ourDefaultPrefix;
     }
 
-    @Nonnull
+    
     @Override
     public File getLocalLogsDir() {
       return new File(SystemProperties.getUserHome() + "/Library/Logs/" + ourDefaultPrefix);
@@ -124,26 +123,26 @@ public abstract class DefaultPaths {
   }
 
   private static class Windows extends SimpleDefaultPaths {
-    @Nonnull
+    
     @Override
-    public File getExternalPlatformDirectory(@Nonnull File defaultPath) {
+    public File getExternalPlatformDirectory(File defaultPath) {
       return new File(Shell32Util.getFolderPath(ShlObj.CSIDL_APPDATA), "Consulo Platform");
     }
 
-    @Nonnull
+    
     @Override
     protected String getDocumentsDirNoPrefix() {
       return Shell32Util.getFolderPath(ShlObj.CSIDL_PERSONAL);
     }
 
-    @Nonnull
+    
     @Override
     protected String getLocalSettingsDirNoPrefix() {
       // will return path like C:\Users\{user.name}\AppData\Local
       return Shell32Util.getFolderPath(ShlObj.CSIDL_LOCAL_APPDATA);
     }
 
-    @Nonnull
+    
     @Override
     protected String getRoamingSettingsDirNoPrefix() {
       // will return path like C:\Users\{user.name}\AppData\Roaming
@@ -164,7 +163,7 @@ public abstract class DefaultPaths {
     return new Fallback();
   }
 
-  @Nonnull
+  
   public static DefaultPaths getInstance() {
     return ourInstance;
   }
@@ -172,16 +171,16 @@ public abstract class DefaultPaths {
   /**
    * @return default directory for new projects
    */
-  @Nonnull
+  
   public abstract File getDocumentsDir();
 
   /**
    * @return directory for caches, etc. Removing will not broke user settings
    */
-  @Nonnull
+  
   public abstract String getLocalSettingsDir();
 
-  @Nonnull
+  
   public File getLocalLogsDir() {
     return new File(getLocalSettingsDir(), "logs");
   }
@@ -189,10 +188,10 @@ public abstract class DefaultPaths {
   /**
    * @return directory for user settings
    */
-  @Nonnull
+  
   public abstract String getRoamingSettingsDir();
 
-  @Nonnull
+  
   public String getRoamingPluginsDir() {
     return getRoamingSettingsDir() + File.separatorChar + "plugins";
   }
@@ -200,8 +199,8 @@ public abstract class DefaultPaths {
   /**
    * @return external platform directory, on each updates directory will be install in it, or inside distribution directory if null
    */
-  @Nonnull
-  public File getExternalPlatformDirectory(@Nonnull File defaultPath) {
+  
+  public File getExternalPlatformDirectory(File defaultPath) {
     return defaultPath;
   }
 }

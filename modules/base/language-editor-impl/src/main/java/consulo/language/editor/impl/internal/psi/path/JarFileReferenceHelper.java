@@ -24,7 +24,6 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -35,24 +34,24 @@ import java.util.Collections;
 public class JarFileReferenceHelper extends FileReferenceHelper {
   @Override
   @RequiredReadAction
-  public PsiFileSystemItem getPsiFileSystemItem(Project project, @Nonnull VirtualFile file) {
+  public PsiFileSystemItem getPsiFileSystemItem(Project project, VirtualFile file) {
     return null;
   }
 
   @Override
-  @Nonnull
-  public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
+  
+  public Collection<PsiFileSystemItem> getRoots(Module module) {
     return PsiFileReferenceHelper.getContextsForModule(module, "", null);
   }
 
   @Override
-  @Nonnull
-  public Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file) {
+  
+  public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
     return Collections.emptyList();
   }
 
   @Override
-  public boolean isMine(Project project, @Nonnull VirtualFile file) {
+  public boolean isMine(Project project, VirtualFile file) {
     return ProjectRootManager.getInstance(project).getFileIndex().isInLibraryClasses(file);
   }
 }

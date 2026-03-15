@@ -8,7 +8,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,7 +27,7 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
     protected abstract boolean run(DataContext dataContext, V value);
 
     @Override
-    public void execute(@Nonnull DataContext dataContext, @Nonnull V value) {
+    public void execute(DataContext dataContext, V value) {
         try {
             if (run(dataContext, value)) {
                 notifyNotificationIfNeeded(ExecutionStatus.SUCCESS, dataContext, value);
@@ -90,15 +89,15 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
             this.myValue = value;
         }
 
-        public void setTitle(@Nonnull LocalizeValue title) {
+        public void setTitle(LocalizeValue title) {
             myBuilder.title(title);
         }
 
-        public void setSubtitle(@Nonnull LocalizeValue subtitle) {
+        public void setSubtitle(LocalizeValue subtitle) {
             myBuilder.subtitle(subtitle);
         }
 
-        public void setContent(@Nonnull LocalizeValue content) {
+        public void setContent(LocalizeValue content) {
             myBuilder.content(content);
         }
 

@@ -19,8 +19,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.disposer.Disposable;
 import consulo.document.MarkupIterator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -48,29 +47,29 @@ public interface MarkupModelEx extends MarkupModel {
      * @deprecated use {@code RangeHighlighterEx.setXXX()} methods to fire changes
      */
     @Deprecated
-    default void fireAttributesChanged(@Nonnull RangeHighlighterEx highlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
+    default void fireAttributesChanged(RangeHighlighterEx highlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
     }
 
-    void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter);
+    void fireAfterAdded(RangeHighlighterEx segmentHighlighter);
 
-    void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter);
+    void fireBeforeRemoved(RangeHighlighterEx segmentHighlighter);
 
-    void fireAfterRemoved(@Nonnull RangeHighlighterEx highlighter);
+    void fireAfterRemoved(RangeHighlighterEx highlighter);
 
-    boolean containsHighlighter(@Nonnull RangeHighlighter highlighter);
+    boolean containsHighlighter(RangeHighlighter highlighter);
 
-    void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener);
+    void addMarkupModelListener(Disposable parentDisposable, MarkupModelListener listener);
 
-    void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes);
+    void setRangeHighlighterAttributes(RangeHighlighter highlighter, TextAttributes textAttributes);
 
-    boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor);
+    boolean processRangeHighlightersOverlappingWith(int start, int end, Predicate<? super RangeHighlighterEx> processor);
 
-    boolean processRangeHighlightersOutside(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor);
+    boolean processRangeHighlightersOutside(int start, int end, Predicate<? super RangeHighlighterEx> processor);
 
-    @Nonnull
+    
     MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset);
 
-    @Nonnull
+    
     MarkupIterator<RangeHighlighterEx> overlappingIterator(
         int startOffset,
         int endOffset,
@@ -79,13 +78,13 @@ public interface MarkupModelEx extends MarkupModel {
     );
 
     // optimization: creates highlighter and fires only one event: highlighterCreated
-    @Nonnull
+    
     RangeHighlighterEx addRangeHighlighterAndChangeAttributes(
         @Nullable TextAttributesKey textAttributesKey,
         int startOffset,
         int endOffset,
         int layer,
-        @Nonnull HighlighterTargetArea targetArea,
+        HighlighterTargetArea targetArea,
         boolean isPersistent,
         @Nullable Consumer<? super RangeHighlighterEx> changeAttributesAction
     );
@@ -99,12 +98,12 @@ public interface MarkupModelEx extends MarkupModel {
      * Using the overload taking a {@link TextAttributesKey} will make the platform take care of all these cases.
      */
     @Deprecated
-    @Nonnull
+    
     default RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
                                                                       int endOffset,
                                                                       int layer,
                                                                       TextAttributes textAttributes,
-                                                                      @Nonnull HighlighterTargetArea targetArea,
+                                                                      HighlighterTargetArea targetArea,
                                                                       boolean isPersistent,
                                                                       @Nullable Consumer<? super RangeHighlighterEx> changeAttributesAction) {
         return addRangeHighlighterAndChangeAttributes(null, startOffset, endOffset, layer, targetArea, isPersistent, ex -> {
@@ -119,8 +118,8 @@ public interface MarkupModelEx extends MarkupModel {
 
     // runs change attributes action and fires highlighterChanged event if there were changes
     void changeAttributesInBatch(
-        @Nonnull RangeHighlighterEx highlighter,
-        @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction
+        RangeHighlighterEx highlighter,
+        Consumer<? super RangeHighlighterEx> changeAttributesAction
     );
 
     default void setErrorStripeVisible(boolean value) {

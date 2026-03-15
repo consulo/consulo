@@ -29,15 +29,14 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
  */
 @ExtensionImpl
 public class GeneralCodeFoldingConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "editor.preferences.folding.general";
@@ -49,16 +48,16 @@ public class GeneralCodeFoldingConfigurable extends SimpleConfigurableByProperti
     return "editor.preferences.folding";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("General");
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
     VerticalLayout verticalLayout = VerticalLayout.create();
 
     CodeFoldingSettings settings = CodeFoldingSettings.getInstance();

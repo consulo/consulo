@@ -18,7 +18,6 @@ package consulo.language.psi.stub;
 import consulo.language.psi.stub.internal.StubSpine;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -27,21 +26,21 @@ import java.util.List;
 public class StubTree extends ObjectStubTree<StubElement<?>> {
   private final StubSpine mySpine = new StubSpine(this);
 
-  public StubTree(@Nonnull PsiFileStub root) {
+  public StubTree(PsiFileStub root) {
     this(root, true);
   }
 
-  public StubTree(@Nonnull PsiFileStub root, boolean withBackReference) {
+  public StubTree(PsiFileStub root, boolean withBackReference) {
     super((ObjectStubBase)root, withBackReference);
   }
 
-  @Nonnull
+  
   @Override
-  protected List<StubElement<?>> enumerateStubs(@Nonnull Stub root) {
+  protected List<StubElement<?>> enumerateStubs(Stub root) {
     return ((StubBase)root).myStubList.finalizeLoadingStage().toPlainList();
   }
 
-  @Nonnull
+  
   @Override
   final List<StubElement<?>> getPlainListFromAllRoots() {
     PsiFileStub[] roots = ((PsiFileStubImpl<?>)getRoot()).getStubRoots();
@@ -50,13 +49,13 @@ public class StubTree extends ObjectStubTree<StubElement<?>> {
     return ContainerUtil.concat(roots, stub -> ((PsiFileStubImpl)stub).myStubList.toPlainList());
   }
 
-  @Nonnull
+  
   @Override
   public PsiFileStub getRoot() {
     return (PsiFileStub)myRoot;
   }
 
-  @Nonnull
+  
   public StubbedSpine getSpine() {
     return mySpine;
   }

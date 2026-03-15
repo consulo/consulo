@@ -23,8 +23,7 @@ import consulo.virtualFileSystem.fileType.PlainTextLikeFileType;
 import consulo.virtualFileSystem.fileType.matcher.ExactFileNameMatcher;
 import consulo.virtualFileSystem.fileType.matcher.WildcardFileNameMatcher;
 import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 
@@ -84,7 +83,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
         mySyntaxTable = syntaxTable;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return getId();
@@ -96,7 +95,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     }
 
     @Override
-    public void copyFrom(@Nonnull UserFileType newType) {
+    public void copyFrom(UserFileType newType) {
         super.copyFrom(newType);
 
         if (newType instanceof AbstractFileType abstractFileType) {
@@ -111,15 +110,15 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     }
 
     @Override
-    public void readExternal(@Nonnull Element typeElement) throws InvalidDataException {
+    public void readExternal(Element typeElement) throws InvalidDataException {
         Element element = typeElement.getChild(ELEMENT_HIGHLIGHTING);
         if (element != null) {
             setSyntaxTable(readSyntaxTable(element));
         }
     }
 
-    @Nonnull
-    static SyntaxTable readSyntaxTable(@Nonnull Element root) {
+    
+    static SyntaxTable readSyntaxTable(Element root) {
         SyntaxTable table = new SyntaxTable();
 
         for (Element element : root.getChildren()) {
@@ -207,11 +206,11 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     }
 
     @Override
-    public void writeExternal(@Nonnull Element element) {
+    public void writeExternal(Element element) {
         writeTable(element, getSyntaxTable());
     }
 
-    private static void writeTable(@Nonnull Element element, @Nonnull SyntaxTable table) {
+    private static void writeTable(Element element, SyntaxTable table) {
         Element highlightingElement = new Element(ELEMENT_HIGHLIGHTING);
 
         Element optionsElement = new Element(ELEMENT_OPTIONS);
@@ -328,8 +327,8 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     static final String ATTRIBUTE_PATTERN = "pattern";
     static final String ATTRIBUTE_TYPE = "type";
 
-    @Nonnull
-    static List<Pair<FileNameMatcher, String>> readAssociations(@Nonnull Element element) {
+    
+    static List<Pair<FileNameMatcher, String>> readAssociations(Element element) {
         List<Element> children = element.getChildren(ELEMENT_MAPPING);
         if (children.isEmpty()) {
             return Collections.emptyList();
@@ -347,7 +346,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     }
 
     @Nullable
-    static Element writeMapping(String typeName, @Nonnull FileNameMatcher matcher, boolean specifyTypeName) {
+    static Element writeMapping(String typeName, FileNameMatcher matcher, boolean specifyTypeName) {
         Element mapping = new Element(ELEMENT_MAPPING);
         if (matcher instanceof ExtensionFileNameMatcherImpl extensionFileNameMatcher) {
             mapping.setAttribute(ATTRIBUTE_EXT, extensionFileNameMatcher.getExtension());
@@ -386,7 +385,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     }
 
     @Override
-    @Nonnull
+    
     public ExternalInfo getExternalInfo() {
         return myExternalInfo;
     }

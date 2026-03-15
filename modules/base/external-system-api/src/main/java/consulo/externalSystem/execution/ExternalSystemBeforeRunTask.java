@@ -20,7 +20,6 @@ import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 /**
@@ -29,16 +28,16 @@ import org.jdom.Element;
  */
 public class ExternalSystemBeforeRunTask extends BeforeRunTask<ExternalSystemBeforeRunTask> {
 
-    @Nonnull
+    
     private final ExternalSystemTaskExecutionSettings myTaskExecutionSettings;
 
-    public ExternalSystemBeforeRunTask(@Nonnull Key<ExternalSystemBeforeRunTask> providerId, @Nonnull ProjectSystemId systemId) {
+    public ExternalSystemBeforeRunTask(Key<ExternalSystemBeforeRunTask> providerId, ProjectSystemId systemId) {
         super(providerId);
         myTaskExecutionSettings = new ExternalSystemTaskExecutionSettings();
         myTaskExecutionSettings.setExternalSystemIdString(systemId.getId());
     }
 
-    @Nonnull
+    
     public ExternalSystemTaskExecutionSettings getTaskExecutionSettings() {
         return myTaskExecutionSettings;
     }

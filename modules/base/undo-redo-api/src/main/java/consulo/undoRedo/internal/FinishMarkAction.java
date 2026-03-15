@@ -25,21 +25,20 @@ import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
  * @since 2011-11-08
  */
 public class FinishMarkAction extends BasicUndoableAction {
-    @Nonnull
+    
     private final StartMarkAction myStartAction;
     private boolean myGlobal = false;
     private String myCommandName;
     private DocumentReference myReference;
 
-    private FinishMarkAction(DocumentReference reference, @Nonnull StartMarkAction action) {
+    private FinishMarkAction(DocumentReference reference, StartMarkAction action) {
         super(reference);
         myReference = reference;
         myStartAction = action;

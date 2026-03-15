@@ -22,8 +22,7 @@ import consulo.util.lang.ByteArrayCharSequence;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,11 +45,11 @@ public abstract class ArchiveHandler {
 
     /** @deprecated use {@link EntryInfo#EntryInfo(CharSequence, boolean, long, long, EntryInfo)} instead (to be removed in IDEA 16) */
     @SuppressWarnings("unused")
-    public EntryInfo(EntryInfo parent, @Nonnull String shortName, boolean isDirectory, long length, long timestamp) {
+    public EntryInfo(EntryInfo parent, String shortName, boolean isDirectory, long length, long timestamp) {
       this(shortName, isDirectory, length, timestamp, parent);
     }
 
-    public EntryInfo(@Nonnull CharSequence shortName, boolean isDirectory, long length, long timestamp, @Nullable EntryInfo parent) {
+    public EntryInfo(CharSequence shortName, boolean isDirectory, long length, long timestamp, @Nullable EntryInfo parent) {
       this.parent = parent;
       this.shortName = shortName;
       this.isDirectory = isDirectory;
@@ -64,17 +63,17 @@ public abstract class ArchiveHandler {
   private volatile Reference<Map<String, EntryInfo>> myEntries = new SoftReference<Map<String, EntryInfo>>(null);
   private boolean myCorrupted;
 
-  protected ArchiveHandler(@Nonnull String path) {
+  protected ArchiveHandler(String path) {
     myPath = new File(path);
   }
 
-  @Nonnull
+  
   public File getFile() {
     return myPath;
   }
 
   @Nullable
-  public FileAttributes getAttributes(@Nonnull String relativePath) {
+  public FileAttributes getAttributes(String relativePath) {
     if (relativePath.isEmpty()) {
       FileAttributes attributes = FileSystemUtil.getAttributes(myPath);
       return attributes != null ? new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false) : null;
@@ -85,8 +84,8 @@ public abstract class ArchiveHandler {
     }
   }
 
-  @Nonnull
-  public String[] list(@Nonnull String relativePath) {
+  
+  public String[] list(String relativePath) {
     EntryInfo entry = getEntryInfo(relativePath);
     if (entry == null || !entry.isDirectory) return ArrayUtil.EMPTY_STRING_ARRAY;
 
@@ -104,11 +103,11 @@ public abstract class ArchiveHandler {
   }
 
   @Nullable
-  protected EntryInfo getEntryInfo(@Nonnull String relativePath) {
+  protected EntryInfo getEntryInfo(String relativePath) {
     return getEntriesMap().get(relativePath);
   }
 
-  @Nonnull
+  
   protected Map<String, EntryInfo> getEntriesMap() {
     Map<String, EntryInfo> map = SoftReference.dereference(myEntries);
     if (map == null) {
@@ -137,16 +136,16 @@ public abstract class ArchiveHandler {
     return map;
   }
 
-  @Nonnull
+  
   protected abstract Map<String, EntryInfo> createEntriesMap() throws IOException;
 
-  @Nonnull
+  
   protected EntryInfo createRootEntry() {
     return new EntryInfo("", true, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, null);
   }
 
-  @Nonnull
-  protected EntryInfo getOrCreate(@Nonnull Map<String, EntryInfo> map, @Nonnull String entryName) {
+  
+  protected EntryInfo getOrCreate(Map<String, EntryInfo> map, String entryName) {
     EntryInfo entry = map.get(entryName);
     if (entry == null) {
       Pair<String, String> path = splitPath(entryName);
@@ -158,14 +157,14 @@ public abstract class ArchiveHandler {
     return entry;
   }
 
-  @Nonnull
-  protected Pair<String, String> splitPath(@Nonnull String entryName) {
+  
+  protected Pair<String, String> splitPath(String entryName) {
     int p = entryName.lastIndexOf('/');
     String parentName = p > 0 ? entryName.substring(0, p) : "";
     String shortName = p > 0 ? entryName.substring(p + 1) : entryName;
     return Pair.create(parentName, shortName);
   }
 
-  @Nonnull
-  public abstract byte[] contentsToByteArray(@Nonnull String relativePath) throws IOException;
+  
+  public abstract byte[] contentsToByteArray(String relativePath) throws IOException;
 }

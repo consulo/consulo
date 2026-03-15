@@ -3,7 +3,6 @@ package consulo.execution.impl.internal.console;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.ConsoleFolding;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -21,12 +20,12 @@ public class SubstringConsoleFolding extends ConsoleFolding {
   }
 
   @Override
-  public boolean shouldFoldLine(@Nonnull Project project, String line) {
+  public boolean shouldFoldLine(Project project, String line) {
     return mySettings.shouldFoldLine(line);
   }
 
   @Override
-  public String getPlaceholderText(@Nonnull Project project, List<String> lines) {
+  public String getPlaceholderText(Project project, List<String> lines) {
     return " <" + lines.size() + " internal calls>";
   }
 }

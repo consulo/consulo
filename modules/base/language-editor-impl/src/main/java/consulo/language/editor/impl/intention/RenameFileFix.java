@@ -31,7 +31,6 @@ import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -49,20 +48,20 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getText() {
         return CodeInsightLocalize.renameFileFix();
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getName() {
         return getText();
     }
 
     @Override
     @RequiredUIAccess
-    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+    public void applyFix(Project project, ProblemDescriptor descriptor) {
         PsiFile file = descriptor.getPsiElement().getContainingFile();
         if (isAvailable(project, null, file)) {
             CommandProcessor.getInstance().newCommand()
@@ -73,7 +72,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
     }
 
     @Override
-    public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public final boolean isAvailable(Project project, Editor editor, PsiFile file) {
         if (!file.isValid()) {
             return false;
         }
@@ -91,7 +90,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
 
 
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         VirtualFile vFile = file.getVirtualFile();
         Document document = PsiDocumentManager.getInstance(project).getDocument(file);
         FileDocumentManager.getInstance().saveDocument(document);

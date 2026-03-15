@@ -23,7 +23,6 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -63,7 +62,7 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButton {
         return actionToolbar != null ? actionToolbar.getToolbarDataContext() : DataManager.getInstance().getDataContext();
     }
 
-    @Nonnull
+    
     @Override
     public Presentation getPresentation() {
         return myEngine.getPresentation();
@@ -84,13 +83,13 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButton {
         myEngine.updateIcon();
     }
 
-    @Nonnull
+    
     @Override
     public Component getUIComponent() {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return this;

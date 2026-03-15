@@ -59,8 +59,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -77,14 +76,14 @@ import java.util.List;
 public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelper {
     private static class FileEditorAffectCaretContext extends CaretDataContext {
 
-        public FileEditorAffectCaretContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+        public FileEditorAffectCaretContext(DataContext delegate, Caret caret) {
             super(delegate, caret);
         }
 
         @Nullable
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T getData(@Nonnull Key<T> dataId) {
+        public <T> T getData(Key<T> dataId) {
             Project project = super.getData(Project.KEY);
             if (project != null) {
                 FileEditorManager fm = FileEditorManager.getInstance(project);
@@ -119,14 +118,14 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         return offset >= document.getTextLength() ? "" : CodeStyleFacade.getInstance(project).getLineIndent(document, offset);
     }
 
-    @Nonnull
+    
     @Override
-    public CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+    public CaretDataContext createCaretDataContext(DataContext delegate, Caret caret) {
         return new FileEditorAffectCaretContext(delegate, caret);
     }
 
     @Override
-    public boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
+    public boolean ensureInjectionUpToDate(Caret hostCaret) {
         Editor editor = hostCaret.getEditor();
         Project project = editor.getProject();
         if (project != null && InjectedLanguageManager.getInstance(project).mightHaveInjectedFragmentAtOffset(editor.getDocument(), hostCaret.getOffset())) {
@@ -144,7 +143,7 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @Override
-    public void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull EditorHighlighter highlighter) {
+    public void rememberEditorHighlighterForCachesOptimization(Document document, EditorHighlighter highlighter) {
         if (!(highlighter instanceof EmptyEditorHighlighter)) {
             EditorHighlighterCache.rememberEditorHighlighterForCachesOptimization(document, highlighter);
         }
@@ -156,7 +155,7 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @Override
-    public boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
+    public boolean shouldUseSmartTabs(Project project, Editor editor) {
         if (!(editor instanceof EditorEx)) {
             return false;
         }
@@ -165,23 +164,23 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @Override
-    public int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, int start, int offset, int tabSize) {
+    public int calcColumnNumber(@Nullable Editor editor, CharSequence text, int start, int offset, int tabSize) {
         return EditorImplUtil.calcColumnNumber(editor, text, start, offset, tabSize);
     }
 
     @Override
-    public int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
+    public int getLastVisualLineColumnNumber(Editor editor, int line) {
         return EditorImplUtil.getLastVisualLineColumnNumber(editor, line);
     }
 
     @Override
-    public int getSpaceWidth(@Nonnull Editor editor) {
+    public int getSpaceWidth(Editor editor) {
         return EditorImplUtil.getSpaceWidth(Font.PLAIN, editor);
     }
 
-    @Nonnull
+    
     @Override
-    public MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
+    public MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create) {
         return DocumentMarkupModelImpl.forDocument(document, project, create);
     }
 
@@ -195,38 +194,38 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         return myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS;
     }
 
-    @Nonnull
+    
     @Override
-    public LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
+    public LineWrapPositionStrategy getLineWrapPositionStrategy(Editor editor) {
         return LanguageLineWrapPositionStrategy.forEditor(editor);
     }
 
-    @Nonnull
+    
     @Override
     public EditorHighlighter createEmptyHighlighter(Project project, Document document) {
         return EditorUtil.createEmptyHighlighter(project, document);
     }
 
     @Override
-    public void updateFoldRegions(@Nonnull Project project, @Nonnull Editor editor) {
+    public void updateFoldRegions(Project project, Editor editor) {
         CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(project);
         foldingManager.updateFoldRegions(editor);
     }
 
     @Nullable
     @Override
-    public StickyLinesModel getStickyLinesModel(@Nonnull Project project, @Nonnull Document document) {
+    public StickyLinesModel getStickyLinesModel(Project project, Document document) {
         return StickyLinesModelImpl.getModel(project, document);
     }
 
-    @Nonnull
+    
     @Override
-    public StickyLinesModel getStickyLinesModel(@Nonnull MarkupModel markupModel) {
+    public StickyLinesModel getStickyLinesModel(MarkupModel markupModel) {
         return StickyLinesModelImpl.getModel(markupModel);
     }
 
     @Override
-    public void restartStickyPass(@Nonnull Project project, @Nonnull Document document) {
+    public void restartStickyPass(Project project, Document document) {
         ReadAction.nonBlocking(() -> {
                 StickyLinesCollector collector = new StickyLinesCollector(project, document);
                 collector.forceCollectPass();
@@ -238,7 +237,7 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @Override
-    public int compareByHighlightInfoSeverity(@Nonnull RangeHighlighterEx o1, @Nonnull RangeHighlighterEx o2) {
+    public int compareByHighlightInfoSeverity(RangeHighlighterEx o1, RangeHighlighterEx o2) {
         HighlightInfo info1 = HighlightInfo.fromRangeHighlighter(o1);
         HighlightInfo info2 = HighlightInfo.fromRangeHighlighter(o2);
         HighlightSeverity severity1 = info1 == null ? null : info1.getSeverity();
@@ -262,7 +261,7 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @Override
-    public void includeCurrentCommandAsNavigation(@Nonnull Project project) {
+    public void includeCurrentCommandAsNavigation(Project project) {
         IdeDocumentHistory instance = IdeDocumentHistory.getInstance(project);
         instance.includeCurrentCommandAsNavigation();
     }
@@ -283,7 +282,7 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @RequiredReadAction
-    static boolean canIndent(Document document, PsiFile file, int line, @Nonnull IndentStrategy indentStrategy) {
+    static boolean canIndent(Document document, PsiFile file, int line, IndentStrategy indentStrategy) {
         int offset = document.getLineStartOffset(line);
         if (file != null) {
             PsiElement element = file.findElementAt(offset);

@@ -16,7 +16,6 @@
 package consulo.project.ui.internal;
 
 import consulo.project.ui.notification.Notification;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -26,7 +25,7 @@ import java.util.Collection;
 public class UnknownMacroNotification extends Notification {
     private final Collection<String> myMacros;
 
-    public UnknownMacroNotification(@Nonnull Notification.Builder notificationBuilder, @Nonnull Collection<String> macros) {
+    public UnknownMacroNotification(Notification.Builder notificationBuilder, Collection<String> macros) {
         super(notificationBuilder);
         myMacros = macros;
     }

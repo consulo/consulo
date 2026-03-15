@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public class SizedIcon extends JBUI.CachingScalableJBIcon {
         myScaledDelegate = null;
     }
 
-    @Nonnull
+    
     @Override
     protected SizedIcon copy() {
         return new SizedIcon(this);

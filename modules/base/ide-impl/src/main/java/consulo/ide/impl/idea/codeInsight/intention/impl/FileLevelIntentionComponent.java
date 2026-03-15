@@ -25,8 +25,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -40,14 +39,14 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
 
     @RequiredUIAccess
     public FileLevelIntentionComponent(
-        @Nonnull LocalizeValue description,
-        @Nonnull HighlightSeverity severity,
+        LocalizeValue description,
+        HighlightSeverity severity,
         @Nullable GutterMark gutterMark,
         @Nullable List<Pair<IntentionActionDescriptor, TextRange>> intentions,
-        @Nonnull Project project,
-        @Nonnull PsiFile psiFile,
-        @Nonnull Editor editor,
-        @Nonnull LocalizeValue tooltip
+        Project project,
+        PsiFile psiFile,
+        Editor editor,
+        LocalizeValue tooltip
     ) {
         super(getColor(project, severity));
         myProject = project;
@@ -100,8 +99,8 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
         }
     }
 
-    @Nonnull
-    private static Color getColor(@Nonnull Project project, @Nonnull HighlightSeverity severity) {
+    
+    private static Color getColor(Project project, HighlightSeverity severity) {
         if (SeverityRegistrarImpl.getSeverityRegistrar(project).compare(severity, HighlightSeverity.ERROR) >= 0) {
             return LightColors.RED;
         }

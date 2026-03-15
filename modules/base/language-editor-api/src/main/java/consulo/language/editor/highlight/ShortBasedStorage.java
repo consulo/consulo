@@ -4,7 +4,6 @@ package consulo.language.editor.highlight;
 import consulo.language.ast.IElementType;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 
 import static consulo.language.editor.highlight.SegmentArray.INITIAL_SIZE;
 import static consulo.language.editor.highlight.SegmentArray.calcCapacity;
@@ -82,8 +81,8 @@ public class ShortBasedStorage implements DataStorage {
     return new ShortBasedStorage();
   }
 
-  @Nonnull
-  protected static short[] insert(@Nonnull short[] array, @Nonnull short[] insertArray, int startIndex, int insertLength, int mySegmentCount) {
+  
+  protected static short[] insert(short[] array, short[] insertArray, int startIndex, int insertLength, int mySegmentCount) {
     short[] newArray = reallocateArray(array, mySegmentCount + insertLength);
     if (startIndex < mySegmentCount) {
       System.arraycopy(newArray, startIndex, newArray, startIndex + insertLength, mySegmentCount - startIndex);
@@ -92,8 +91,8 @@ public class ShortBasedStorage implements DataStorage {
     return newArray;
   }
 
-  @Nonnull
-  protected static short[] reallocateArray(@Nonnull short[] array, int index) {
+  
+  protected static short[] reallocateArray(short[] array, int index) {
     if (index < array.length) return array;
     return ArrayUtil.realloc(array, calcCapacity(array.length, index));
   }

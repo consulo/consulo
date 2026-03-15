@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.Set;
 public class PreserveSelection implements SelectionPolicy {
   public static final PreserveSelection INSTANCE = new PreserveSelection();
 
-  @Nonnull
+  
   @Override
   public List<Integer> performSelection(ChooseByNameBase popup, SmartPointerListModel<?> model) {
     Set<Object> chosenElements = popup.currentChosenInfo == null ? Collections.emptySet() : popup.currentChosenInfo.getChosenElements();

@@ -21,8 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -39,7 +38,7 @@ public abstract class ReadTask {
      * use {@link #performInReadAction(ProgressIndicator)} instead
      */
     @RequiredReadAction
-    public void computeInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
+    public void computeInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
         throw new UnsupportedOperationException();
     }
 
@@ -51,7 +50,7 @@ public abstract class ReadTask {
      */
     @Nullable
     @RequiredReadAction
-    public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
+    public Continuation performInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
         computeInReadAction(indicator);
         return null;
     }
@@ -60,7 +59,7 @@ public abstract class ReadTask {
      * Is invoked on Swing thread whenever the computation is canceled by a write action.
      * A likely implementation is to restart the computation, maybe based on the new state of the system.
      */
-    public abstract void onCanceled(@Nonnull ProgressIndicator indicator);
+    public abstract void onCanceled(ProgressIndicator indicator);
 
     /**
      * Is invoked on a background thread. The responsibility of this method is to start a read action and
@@ -69,7 +68,7 @@ public abstract class ReadTask {
      *
      * @param indicator the progress indicator of the background thread
      */
-    public Continuation runBackgroundProcess(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
+    public Continuation runBackgroundProcess(ProgressIndicator indicator) throws ProcessCanceledException {
         return ApplicationManager.getApplication().runReadAction((Supplier<Continuation>) () -> performInReadAction(indicator));
     }
 
@@ -85,7 +84,7 @@ public abstract class ReadTask {
          * @param action code to be executed in Swing thread in default modality state
          * @see IdeaModalityState#defaultModalityState()
          */
-        public Continuation(@Nonnull Runnable action) {
+        public Continuation(Runnable action) {
             this(action, Application.get().getDefaultModalityState());
         }
 
@@ -93,7 +92,7 @@ public abstract class ReadTask {
          * @param action        code to be executed in Swing thread in default modality state
          * @param modalityState modality state when the action is to be executed
          */
-        public Continuation(@Nonnull Runnable action, @Nonnull ModalityState modalityState) {
+        public Continuation(Runnable action, ModalityState modalityState) {
             myAction = action;
             myModalityState = modalityState;
         }
@@ -101,7 +100,7 @@ public abstract class ReadTask {
         /**
          * @return modality state when {@link #getAction()} is to be executed
          */
-        @Nonnull
+        
         public ModalityState getModalityState() {
             return myModalityState;
         }
@@ -109,7 +108,7 @@ public abstract class ReadTask {
         /**
          * @return runnable to be executed in Swing thread in default modality state
          */
-        @Nonnull
+        
         public Runnable getAction() {
             return myAction;
         }

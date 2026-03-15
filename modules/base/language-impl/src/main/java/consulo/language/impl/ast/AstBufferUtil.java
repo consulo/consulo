@@ -23,8 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.lang.CharArrayCharSequence;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -32,17 +31,17 @@ import jakarta.annotation.Nullable;
 public final class AstBufferUtil {
   private AstBufferUtil() { }
 
-  public static int toBuffer(@Nonnull ASTNode element, @Nullable char[] buffer, int offset) {
+  public static int toBuffer(ASTNode element, @Nullable char[] buffer, int offset) {
     return toBuffer(element, buffer, offset, false);
   }
 
-  public static int toBuffer(@Nonnull ASTNode element, @Nullable char[] buffer, int offset, boolean skipWhitespaceAndComments) {
+  public static int toBuffer(ASTNode element, @Nullable char[] buffer, int offset, boolean skipWhitespaceAndComments) {
     BufferVisitor visitor = new BufferVisitor(skipWhitespaceAndComments, skipWhitespaceAndComments, offset, buffer);
     ((TreeElement)element).acceptTree(visitor);
     return visitor.end;
   }
 
-  public static String getTextSkippingWhitespaceComments(@Nonnull ASTNode element) {
+  public static String getTextSkippingWhitespaceComments(ASTNode element) {
     int length = toBuffer(element, null, 0, true);
     char[] buffer = new char[length];
     toBuffer(element, buffer, 0, true);

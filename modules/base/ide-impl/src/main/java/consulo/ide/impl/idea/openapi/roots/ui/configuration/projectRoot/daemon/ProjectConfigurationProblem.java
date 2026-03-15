@@ -20,7 +20,6 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.RelativePoint;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,14 +30,14 @@ class ProjectConfigurationProblem extends ConfigurationError {
   private final ProjectStructureProblemDescription myDescription;
   private final Project myProject;
 
-  public ProjectConfigurationProblem(@Nonnull ProjectStructureProblemDescription description, @Nonnull Project project) {
+  public ProjectConfigurationProblem(ProjectStructureProblemDescription description, Project project) {
     super(StringUtil.unescapeXml(description.getMessage(true)), computeDescription(description),
           getSettings(project, description.getProblemLevel()).isIgnored(description));
     myDescription = description;
     myProject = project;
   }
 
-  @Nonnull
+  
   private static StructureProblemsSettings getSettings(Project project,
                                                        ProjectStructureProblemDescription.ProblemLevel problemLevel) {
     if (problemLevel == ProjectStructureProblemDescription.ProblemLevel.PROJECT) {
@@ -49,7 +48,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
     }
   }
 
-  @Nonnull
+  
   private static String computeDescription(ProjectStructureProblemDescription description) {
     String descriptionString = description.getDescription();
     return descriptionString != null ? descriptionString : description.getMessage(true);
@@ -74,7 +73,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
   @Override
   public void fix(final JComponent contextComponent, RelativePoint relativePoint) {
     JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationErrorQuickFix>(null, myDescription.getFixes()) {
-      @Nonnull
+      
       @Override
       public String getTextFor(ConfigurationErrorQuickFix value) {
         return value.getActionName();

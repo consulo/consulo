@@ -17,7 +17,6 @@ package consulo.language.editor.template;
 
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -48,7 +47,7 @@ public final class LiveTemplateBuilder {
     return myText;
   }
 
-  public static boolean isEndVariable(@Nonnull String name) {
+  public static boolean isEndVariable(String name) {
     return name.startsWith(END_PREFIX);
   }
 
@@ -71,7 +70,7 @@ public final class LiveTemplateBuilder {
     return false;
   }
 
-  @Nonnull
+  
   public Template buildTemplate() {
     List<Variable> variables = getListWithLimit(myVariables);
     if (!findVarOccurence(Template.END)) {

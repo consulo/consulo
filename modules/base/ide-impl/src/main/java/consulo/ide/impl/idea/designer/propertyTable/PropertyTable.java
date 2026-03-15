@@ -43,8 +43,7 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.TableUI;
@@ -267,7 +266,7 @@ public abstract class PropertyTable extends JBTable {
     return null;
   }
 
-  protected abstract List<ErrorInfo> getErrors(@Nonnull PropertiesContainer container);
+  protected abstract List<ErrorInfo> getErrors(PropertiesContainer container);
 
   @Override
   public String getToolTipText(MouseEvent event) {
@@ -302,7 +301,7 @@ public abstract class PropertyTable extends JBTable {
     update(myContainers, null);
   }
 
-  public void update(@Nonnull List<? extends PropertiesContainer> containers, @Nullable Property initialSelection) {
+  public void update(List<? extends PropertiesContainer> containers, @Nullable Property initialSelection) {
     finishEditing();
 
     if (mySkipUpdate) {
@@ -365,12 +364,12 @@ public abstract class PropertyTable extends JBTable {
     }
   }
 
-  @Nonnull
+  
   protected Comparator<String> getGroupComparator() {
     return GROUP_COMPARATOR;
   }
 
-  @Nonnull
+  
   protected Comparator<Property> getPropertyComparator() {
     return PROPERTY_COMPARATOR;
   }
@@ -1068,7 +1067,7 @@ public abstract class PropertyTable extends JBTable {
     }
   }
 
-  private static int getDepth(@Nonnull Property property) {
+  private static int getDepth(Property property) {
     int result = 0;
     for (Property each = property.getParent(); each != null; each = each.getParent(), result++) {
       // empty
@@ -1076,8 +1075,8 @@ public abstract class PropertyTable extends JBTable {
     return result;
   }
 
-  @Nonnull
-  private static Pair<Integer, Integer> getBeforeIconAndAfterIndents(@Nonnull Property property, @Nonnull Icon icon) {
+  
+  private static Pair<Integer, Integer> getBeforeIconAndAfterIndents(Property property, Icon icon) {
     int nodeIndent = UIUtil.getTreeLeftChildIndent() + UIUtil.getTreeRightChildIndent();
     int beforeIcon = nodeIndent * getDepth(property);
 
@@ -1180,8 +1179,8 @@ public abstract class PropertyTable extends JBTable {
     }
   }
 
-  @Nonnull
-  protected abstract TextAttributesKey getErrorAttributes(@Nonnull HighlightSeverity severity);
+  
+  protected abstract TextAttributesKey getErrorAttributes(HighlightSeverity severity);
 
   private class PropertyCellRenderer implements TableCellRenderer {
     private final ColoredTableCellRenderer myCellRenderer;
@@ -1338,7 +1337,7 @@ public abstract class PropertyTable extends JBTable {
       super(null, StringUtil.notNullize(name));
     }
 
-    @Nonnull
+    
     @Override
     public PropertyRenderer getRenderer() {
       return new LabelPropertyRenderer(null);

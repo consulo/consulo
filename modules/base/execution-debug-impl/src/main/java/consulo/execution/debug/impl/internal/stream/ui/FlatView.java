@@ -10,8 +10,7 @@ import consulo.execution.debug.stream.ui.TraceController;
 import consulo.execution.debug.stream.ui.ValueWithPosition;
 import consulo.execution.debug.stream.ui.ValuesPositionsListener;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,11 +24,11 @@ import java.util.stream.Collectors;
 public class FlatView extends JPanel {
     private final Map<TraceElement, ValueWithPositionImpl> myPool = new HashMap<>();
 
-    public FlatView(@Nonnull List<? extends TraceController> controllers,
-                    @Nonnull DebuggerCommandLauncher launcher,
-                    @Nonnull GenericEvaluationContext context,
-                    @Nonnull CollectionTreeBuilder builder,
-                    @Nonnull String debugName) {
+    public FlatView(List<? extends TraceController> controllers,
+                    DebuggerCommandLauncher launcher,
+                    GenericEvaluationContext context,
+                    CollectionTreeBuilder builder,
+                    String debugName) {
         super(new GridLayout(1, 2 * controllers.size() - 1));
 
         assert !controllers.isEmpty();

@@ -18,7 +18,7 @@ package consulo.language.editor.internal.inspection;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

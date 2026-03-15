@@ -36,7 +36,7 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

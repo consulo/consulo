@@ -19,7 +19,6 @@ import consulo.desktop.awt.uiOld.RowIcon;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -47,13 +46,13 @@ public class DesktopAppendImageImpl extends RowIcon implements Image, DesktopAWT
         return getIconWidth();
     }
 
-    @Nonnull
+    
     @Override
     public DesktopAWTImage copyWithNewSize(int width, int height) {
         return new DesktopAppendImageImpl(ImageEffects.resize(myImg1, width, height), ImageEffects.resize(myImg2, width, height));
     }
 
-    @Nonnull
+    
     @Override
     public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
         return new DesktopAppendImageImpl(

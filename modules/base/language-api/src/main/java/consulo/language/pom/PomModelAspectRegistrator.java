@@ -15,7 +15,6 @@
  */
 package consulo.language.pom;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -24,7 +23,7 @@ import java.util.Set;
  * @since 18-Jun-24
  */
 public interface PomModelAspectRegistrator {
-  <P extends PomModelAspect> P getModelAspect(@Nonnull Class<P> clazz);
+  <P extends PomModelAspect> P getModelAspect(Class<P> clazz);
 
   void register(Class<? extends PomModelAspect> aClass, PomModelAspect aspect, Set<PomModelAspect> dependencies);
 }

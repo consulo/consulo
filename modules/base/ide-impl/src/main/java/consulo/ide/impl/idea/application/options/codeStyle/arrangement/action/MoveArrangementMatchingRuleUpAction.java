@@ -23,7 +23,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class MoveArrangementMatchingRuleUpAction extends AbstractMoveArrangement
     }
 
     @Override
-    protected void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings) {
+    protected void fillMappings(ArrangementMatchingRulesControl control, List<int[]> mappings) {
         IntList rows = control.getSelectedModelRows();
         IntLists.reverse(rows);
         int top = -1;

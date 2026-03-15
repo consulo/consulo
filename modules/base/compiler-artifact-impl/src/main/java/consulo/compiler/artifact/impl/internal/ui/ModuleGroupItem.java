@@ -24,7 +24,6 @@ import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.compiler.artifact.ui.SourceItemPresentation;
 import consulo.compiler.artifact.internal.SourceItemWeights;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,13 +51,13 @@ public class ModuleGroupItem extends PackagingSourceItem {
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
     return new ModuleGroupSourceItemPresentation(myGroupName);
   }
 
-  @Nonnull
+  
   @Override
-  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
+  public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
     return Collections.emptyList();
   }
 
@@ -79,7 +78,7 @@ public class ModuleGroupItem extends PackagingSourceItem {
     }
 
     @Override
-    public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+    public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
       presentationData.setIcon(AllIcons.Nodes.ModuleGroup);
       presentationData.addText(myGroupName, mainAttributes);

@@ -20,7 +20,6 @@ import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandle
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerPauseActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -37,7 +36,7 @@ public class PauseAction extends XDebuggerActionBase {
         );
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

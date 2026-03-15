@@ -25,7 +25,7 @@ import consulo.usage.UsageType;
 import consulo.usage.UsageTypeProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.ConcurrentMap;
 
 @ExtensionImpl(order = "last")

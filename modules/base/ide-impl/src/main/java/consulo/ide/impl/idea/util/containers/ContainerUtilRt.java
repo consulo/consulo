@@ -20,8 +20,7 @@ import consulo.util.lang.Pair;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.Stack;
 import org.jetbrains.annotations.Contract;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -38,21 +37,21 @@ import java.util.function.Function;
 public class ContainerUtilRt {
     private static final int ARRAY_COPY_THRESHOLD = 20;
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <K, V> HashMap<K, V> newHashMap() {
         return new HashMap<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <K, V> HashMap<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map) {
+    public static <K, V> HashMap<K, V> newHashMap(Map<? extends K, ? extends V> map) {
         return new HashMap<>(map);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <K, V> Map<K, V> newHashMap(@Nonnull List<K> keys, @Nonnull List<V> values) {
+    public static <K, V> Map<K, V> newHashMap(List<K> keys, List<V> values) {
         if (keys.size() != values.size()) {
             throw new IllegalArgumentException(keys + " should have same length as " + values);
         }
@@ -64,10 +63,10 @@ public class ContainerUtilRt {
         return map;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     @SafeVarargs
-    public static <K, V> Map<K, V> newHashMap(@Nonnull Pair<K, ? extends V> first, @Nonnull Pair<K, ? extends V>... entries) {
+    public static <K, V> Map<K, V> newHashMap(Pair<K, ? extends V> first, Pair<K, ? extends V>... entries) {
         Map<K, V> map = newHashMap(entries.length + 1);
         map.put(first.getFirst(), first.getSecond());
         for (Pair<K, ? extends V> entry : entries) {
@@ -76,45 +75,45 @@ public class ContainerUtilRt {
         return map;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <K, V> Map<K, V> newHashMap(int initialCapacity) {
         return new HashMap<>(initialCapacity);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <K extends Comparable, V> TreeMap<K, V> newTreeMap() {
         return new TreeMap<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <K extends Comparable, V> TreeMap<K, V> newTreeMap(@Nonnull Map<K, V> map) {
+    public static <K extends Comparable, V> TreeMap<K, V> newTreeMap(Map<K, V> map) {
         return new TreeMap<>(map);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
         return new LinkedHashMap<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int capacity) {
         return new LinkedHashMap<>(capacity);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(@Nonnull Map<K, V> map) {
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(Map<K, V> map) {
         return new LinkedHashMap<>(map);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(@Nonnull Pair<K, V> first, @Nonnull Pair<K, V>[] entries) {
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(Pair<K, V> first, Pair<K, V>[] entries) {
         LinkedHashMap<K, V> map = newLinkedHashMap();
         map.put(first.getFirst(), first.getSecond());
         for (Pair<K, V> entry : entries) {
@@ -123,45 +122,45 @@ public class ContainerUtilRt {
         return map;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> LinkedList<T> newLinkedList() {
         return new LinkedList<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     @SafeVarargs
-    public static <T> LinkedList<T> newLinkedList(@Nonnull T... elements) {
+    public static <T> LinkedList<T> newLinkedList(T... elements) {
         LinkedList<T> list = newLinkedList();
         Collections.addAll(list, elements);
         return list;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T> LinkedList<T> newLinkedList(@Nonnull Iterable<? extends T> elements) {
+    public static <T> LinkedList<T> newLinkedList(Iterable<? extends T> elements) {
         return copy(ContainerUtilRt.<T>newLinkedList(), elements);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> ArrayList<T> newArrayList() {
         return new ArrayList<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     @SafeVarargs
-    public static <T> ArrayList<T> newArrayList(@Nonnull T... elements) {
+    public static <T> ArrayList<T> newArrayList(T... elements) {
         ArrayList<T> list = newArrayListWithCapacity(elements.length);
         Collections.addAll(list, elements);
         return list;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T> ArrayList<T> newArrayList(@Nonnull Iterable<? extends T> elements) {
+    public static <T> ArrayList<T> newArrayList(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
             return new ArrayList<>(collection);
@@ -169,42 +168,42 @@ public class ContainerUtilRt {
         return copy(ContainerUtilRt.<T>newArrayList(), elements);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> ArrayList<T> newArrayListWithCapacity(int size) {
         return new ArrayList<>(size);
     }
 
-    @Nonnull
-    private static <T, C extends Collection<T>> C copy(@Nonnull C collection, @Nonnull Iterable<? extends T> elements) {
+    
+    private static <T, C extends Collection<T>> C copy(C collection, Iterable<? extends T> elements) {
         for (T element : elements) {
             collection.add(element);
         }
         return collection;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> HashSet<T> newHashSet() {
         return new HashSet<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> HashSet<T> newHashSet(int initialCapacity) {
         return new HashSet<>(initialCapacity);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     @SafeVarargs
-    public static <T> HashSet<T> newHashSet(@Nonnull T... elements) {
+    public static <T> HashSet<T> newHashSet(T... elements) {
         return new HashSet<>(Arrays.asList(elements));
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T> HashSet<T> newHashSet(@Nonnull Iterable<? extends T> elements) {
+    public static <T> HashSet<T> newHashSet(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
             return new HashSet<>(collection);
@@ -212,30 +211,30 @@ public class ContainerUtilRt {
         return newHashSet(elements.iterator());
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T> HashSet<T> newHashSet(@Nonnull Iterator<? extends T> iterator) {
+    public static <T> HashSet<T> newHashSet(Iterator<? extends T> iterator) {
         HashSet<T> set = newHashSet();
         while (iterator.hasNext()) set.add(iterator.next());
         return set;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> LinkedHashSet<T> newLinkedHashSet() {
         return new LinkedHashSet<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     @SafeVarargs
-    public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull T... elements) {
+    public static <T> LinkedHashSet<T> newLinkedHashSet(T... elements) {
         return newLinkedHashSet(Arrays.asList(elements));
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull Iterable<? extends T> elements) {
+    public static <T> LinkedHashSet<T> newLinkedHashSet(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
             return new LinkedHashSet<>(collection);
@@ -243,49 +242,49 @@ public class ContainerUtilRt {
         return copy(new LinkedHashSet<T>(), elements);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> TreeSet<T> newTreeSet() {
         return new TreeSet<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     @SafeVarargs
-    public static <T> TreeSet<T> newTreeSet(@Nonnull T... elements) {
+    public static <T> TreeSet<T> newTreeSet(T... elements) {
         TreeSet<T> set = newTreeSet();
         Collections.addAll(set, elements);
         return set;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T> TreeSet<T> newTreeSet(@Nonnull Iterable<? extends T> elements) {
+    public static <T> TreeSet<T> newTreeSet(Iterable<? extends T> elements) {
         return copy(ContainerUtilRt.<T>newTreeSet(), elements);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> TreeSet<T> newTreeSet(@Nullable Comparator<? super T> comparator) {
         return new TreeSet<>(comparator);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> consulo.util.collection.Stack<T> newStack() {
         return new consulo.util.collection.Stack<>();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T> consulo.util.collection.Stack<T> newStack(@Nonnull Collection<T> elements) {
+    public static <T> consulo.util.collection.Stack<T> newStack(Collection<T> elements) {
         return new consulo.util.collection.Stack<>(elements);
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     @SafeVarargs
-    public static <T> consulo.util.collection.Stack<T> newStack(@Nonnull T... initial) {
+    public static <T> consulo.util.collection.Stack<T> newStack(T... initial) {
         return new Stack<>(Arrays.asList(initial));
     }
 
@@ -313,36 +312,36 @@ public class ContainerUtilRt {
             throw new IndexOutOfBoundsException("Index: " + index);
         }
 
-        @Nonnull
+        
         @Override
         public Object[] toArray() {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
 
-        @Nonnull
+        
         @Override
-        public <E> E[] toArray(@Nonnull E[] a) {
+        public <E> E[] toArray(E[] a) {
             if (a.length != 0) {
                 a[0] = null;
             }
             return a;
         }
 
-        @Nonnull
+        
         @Override
         public Iterator<T> iterator() {
             return EmptyIterator.getInstance();
         }
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> List<T> emptyList() {
         //noinspection unchecked
         return (List<T>)EmptyList.INSTANCE;
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     public static <T> CopyOnWriteArrayList<T> createEmptyCOWList() {
         // does not create garbage new Object[0]
@@ -353,13 +352,13 @@ public class ContainerUtilRt {
      * @see #addIfNotNull(Collection, Object)
      */
     @Deprecated
-    public static <T> void addIfNotNull(@Nullable T element, @Nonnull Collection<T> result) {
+    public static <T> void addIfNotNull(@Nullable T element, Collection<T> result) {
         if (element != null) {
             result.add(element);
         }
     }
 
-    public static <T> void addIfNotNull(@Nonnull Collection<T> result, @Nullable T element) {
+    public static <T> void addIfNotNull(Collection<T> result, @Nullable T element) {
         if (element != null) {
             result.add(element);
         }
@@ -368,18 +367,18 @@ public class ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from array converted by mapper
      */
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T, V> List<V> map2List(@Nonnull T[] array, @Nonnull Function<T, V> mapper) {
+    public static <T, V> List<V> map2List(T[] array, Function<T, V> mapper) {
         return map2List(Arrays.asList(array), mapper);
     }
 
     /**
      * @return read-only list consisting of the elements from collection converted by mapper
      */
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T, V> List<V> map2List(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
+    public static <T, V> List<V> map2List(Collection<? extends T> collection, Function<T, V> mapper) {
         if (collection.isEmpty()) {
             return emptyList();
         }
@@ -393,18 +392,18 @@ public class ContainerUtilRt {
     /**
      * @return read-only set consisting of the elements from collection converted by mapper
      */
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T, V> Set<V> map2Set(@Nonnull T[] collection, @Nonnull Function<T, V> mapper) {
+    public static <T, V> Set<V> map2Set(T[] collection, Function<T, V> mapper) {
         return map2Set(Arrays.asList(collection), mapper);
     }
 
     /**
      * @return read-only set consisting of the elements from collection converted by mapper
      */
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T, V> Set<V> map2Set(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
+    public static <T, V> Set<V> map2Set(Collection<? extends T> collection, Function<T, V> mapper) {
         if (collection.isEmpty()) {
             return Collections.emptySet();
         }
@@ -415,8 +414,8 @@ public class ContainerUtilRt {
         return set;
     }
 
-    @Nonnull
-    public static <T> T[] toArray(@Nonnull List<T> collection, @Nonnull T[] array) {
+    
+    public static <T> T[] toArray(List<T> collection, T[] array) {
         int length = array.length;
         if (length < ARRAY_COPY_THRESHOLD && array.length >= collection.size()) {
             for (int i = 0; i < collection.size(); i++) {
@@ -431,8 +430,8 @@ public class ContainerUtilRt {
      * This is a replacement for {@link Collection#toArray(Object[])}. For small collections it is faster to stay at java level and refrain
      * from calling JNI {@link System#arraycopy(Object, int, Object, int, int)}
      */
-    @Nonnull
-    public static <T> T[] toArray(@Nonnull Collection<T> c, @Nonnull T[] sample) {
+    
+    public static <T> T[] toArray(Collection<T> c, T[] sample) {
         int size = c.size();
         if (size == sample.length && size < ARRAY_COPY_THRESHOLD) {
             int i = 0;

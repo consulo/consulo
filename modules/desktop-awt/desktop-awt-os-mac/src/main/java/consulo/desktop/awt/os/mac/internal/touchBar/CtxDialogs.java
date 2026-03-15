@@ -11,8 +11,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.JBIterable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +26,7 @@ final class CtxDialogs {
     private static final int BUTTON_BORDER = 16;
     private static final int BUTTON_IMAGE_MARGIN = 2;
 
-    static @Nonnull Disposable showWindowActions(@Nonnull Component contentPane) {
+    static Disposable showWindowActions(Component contentPane) {
         DefaultActionGroup actions = new DefaultActionGroup();
 
         //
@@ -60,10 +59,10 @@ final class CtxDialogs {
         ModalityState ms = LaterInvocator.getCurrentModalityState();
         final TBPanel.CrossEscInfo crossEscInfo = isCrossEscGroup(actions) ? new TBPanel.CrossEscInfo(true, false) : null;
         Customizer customizer = new Customizer(crossEscInfo, null/*dialog actions mustn't be closed because of auto-close*/) {
-            private final @Nonnull WeakReference<Component> myRoot = new WeakReference<>(contentPane);
+            private final WeakReference<Component> myRoot = new WeakReference<>(contentPane);
 
             @Override
-            void onBeforeActionsExpand(@Nonnull ActionGroup actionGroup) {
+            void onBeforeActionsExpand(ActionGroup actionGroup) {
                 // NOTE: possible optimization - listen for component hierarchy changes and do traverse only when it was changed
                 List<AnAction> allActs = findAllTouchbarActions(myRoot.get());
                 actions.removeAll();
@@ -113,7 +112,7 @@ final class CtxDialogs {
         };
     }
 
-    private static @Nullable List<AnAction> findAllTouchbarActions(@Nonnull Component root) {
+    private static @Nullable List<AnAction> findAllTouchbarActions(Component root) {
         List<AnAction> result = null;
         // by default used TreeTraversal.PRE_ORDER_DFS: each node's subtrees are traversed after the node itself is returned.
         JBIterable<Component> iter = UIUtil.uiTraverser(root).expandAndFilter(c -> c.isVisible()).traverse();
@@ -132,7 +131,7 @@ final class CtxDialogs {
         return result;
     }
 
-    private static boolean isCrossEscGroup(@Nonnull ActionGroup group) {
+    private static boolean isCrossEscGroup(ActionGroup group) {
         for (AnAction child : group.getChildren(null)) {
             TouchbarActionCustomizations customizations = TouchbarActionCustomizations.getCustomizations(child);
             if (customizations == null || !customizations.isCrossEsc()) {

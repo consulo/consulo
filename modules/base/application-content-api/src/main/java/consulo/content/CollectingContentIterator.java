@@ -17,7 +17,6 @@ package consulo.content;
 
 import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -25,6 +24,6 @@ import java.util.List;
  * @author max
  */
 public interface CollectingContentIterator extends ContentIterator {
-  @Nonnull
+  
   List<VirtualFile> getFiles();
 }

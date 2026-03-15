@@ -23,8 +23,7 @@ import consulo.diff.merge.MergeResult;
 import consulo.diff.merge.MergeTool;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,28 +32,28 @@ import java.awt.*;
 public class ErrorMergeTool implements MergeTool {
     public static final ErrorMergeTool INSTANCE = new ErrorMergeTool();
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+    public MergeViewer createComponent(MergeContext context, MergeRequest request) {
         return new MyViewer(context, request);
     }
 
     @Override
-    public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+    public boolean canShow(MergeContext context, MergeRequest request) {
         return true;
     }
 
     private static class MyViewer implements MergeViewer {
-        @Nonnull
+        
         private final MergeContext myMergeContext;
-        @Nonnull
+        
         private final MergeRequest myMergeRequest;
 
-        @Nonnull
+        
         private final JPanel myPanel;
 
-        public MyViewer(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+        public MyViewer(MergeContext context, MergeRequest request) {
             myMergeContext = context;
             myMergeRequest = request;
 
@@ -62,12 +61,12 @@ public class ErrorMergeTool implements MergeTool {
             myPanel.add(createComponent(), BorderLayout.CENTER);
         }
 
-        @Nonnull
+        
         private JComponent createComponent() {
             return AWTDiffUtil.createMessagePanel("Can't show diff");
         }
 
-        @Nonnull
+        
         @Override
         public JComponent getComponent() {
             return myPanel;
@@ -79,7 +78,7 @@ public class ErrorMergeTool implements MergeTool {
             return null;
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
         public ToolbarComponents init() {
@@ -88,7 +87,7 @@ public class ErrorMergeTool implements MergeTool {
 
         @Nullable
         @Override
-        public ActionRecord getResolveAction(@Nonnull MergeResult result) {
+        public ActionRecord getResolveAction(MergeResult result) {
             if (result == MergeResult.RESOLVED) {
                 return null;
             }

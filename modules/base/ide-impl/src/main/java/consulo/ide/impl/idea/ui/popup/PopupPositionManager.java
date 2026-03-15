@@ -18,8 +18,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,13 +46,13 @@ public class PopupPositionManager {
     positionPopupInBestPosition(hint, editor, dataContext, DEFAULT_POSITION_ORDER);
   }
 
-  public static void positionPopupInBestPosition(final JBPopup hint, @Nullable Editor editor, @Nullable DataContext dataContext, @Nonnull Position... relationToExistingPopup) {
+  public static void positionPopupInBestPosition(final JBPopup hint, @Nullable Editor editor, @Nullable DataContext dataContext, Position... relationToExistingPopup) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup != null && lookup.getCurrentItem() != null && lookup.getComponent().isShowing()) {
       new PositionAdjuster(lookup.getComponent()).adjust(hint, relationToExistingPopup);
       lookup.addLookupListener(new LookupListener() {
         @Override
-        public void lookupCanceled(@Nonnull LookupEvent event) {
+        public void lookupCanceled(LookupEvent event) {
           if (hint.isVisible()) {
             hint.cancel();
           }

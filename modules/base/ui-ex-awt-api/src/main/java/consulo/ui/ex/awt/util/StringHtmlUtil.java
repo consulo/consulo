@@ -19,8 +19,7 @@ import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
@@ -37,7 +36,7 @@ public class StringHtmlUtil {
   private static final Logger LOG = Logger.getInstance(StringHtmlUtil.class);
 
   private static class MyHtml2Text extends HTMLEditorKit.ParserCallback {
-    @Nonnull
+    
     private final StringBuilder myBuffer = new StringBuilder();
 
     public void parse(Reader in) throws IOException {

@@ -56,8 +56,7 @@ import consulo.util.collection.MutualMap;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -107,7 +106,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
     }
 
     @Override
-    public String getDimensionKeyForFocus(@Nonnull String key) {
+    public String getDimensionKeyForFocus(String key) {
         Component owner = ProjectIdeFocusManager.getInstance(myProject).getFocusOwner();
         if (owner == null) {
             return key;
@@ -150,7 +149,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
     }
 
     @Override
-    public DragSession createDragSession(MouseEvent mouseEvent, @Nonnull DockableContent content) {
+    public DragSession createDragSession(MouseEvent mouseEvent, DockableContent content) {
         stopCurrentDragSession();
 
         for (DockContainer each : myContainers) {
@@ -195,13 +194,13 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
         private Image myDragImage;
         private final Image myDefaultDragImage;
 
-        @Nonnull
+        
         private final DockableContent myContent;
 
         private DockContainer myCurrentOverContainer;
         private final JLabel myImageContainer;
 
-        private MyDragSession(MouseEvent me, @Nonnull DockableContent content) {
+        private MyDragSession(MouseEvent me, DockableContent content) {
             myWindow = JWindowPopupFactory.getInstance().create(null);
             myContent = content;
 
@@ -250,7 +249,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
             myWindow.setBounds(new Rectangle(showPoint, size));
         }
 
-        @Nonnull
+        
         @Override
         public DockContainer.ContentResponse getResponse(MouseEvent e) {
             RelativePoint point = new RelativePoint(e);
@@ -327,7 +326,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
     }
 
     @Nullable
-    private DockContainer findContainerFor(RelativePoint point, @Nonnull DockableContent content) {
+    private DockContainer findContainerFor(RelativePoint point, DockableContent content) {
         for (DockContainer each : myContainers) {
             RelativeRectangle rec = ((SwingDockContainer) each).getAcceptArea();
             if (rec.contains(point) && each.getContentResponse(content, point).canAccept()) {
@@ -374,9 +373,9 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
     }
 
     @Override
-    @Nonnull
-    public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file,
-                                                                              @Nonnull FileEditorManager fileEditorManager) {
+    
+    public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(VirtualFile file,
+                                                                              FileEditorManager fileEditorManager) {
         DockContainer container = findFactory(DockableEditorContainerFactory.TYPE).createContainer(this, null);
         register(container);
 
@@ -470,7 +469,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
 
         @Override
         @SuppressWarnings("unchecked")
-        public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+        public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass) {
             return (E) myNorthExtensions.get(extensioClass);
         }
 

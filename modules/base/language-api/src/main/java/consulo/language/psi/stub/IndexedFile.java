@@ -5,16 +5,15 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public interface IndexedFile extends UserDataHolder {
-  @Nonnull
+  
   FileType getFileType();
 
-  @Nonnull
+  
   VirtualFile getFile();
 
-  @Nonnull
+  
   String getFileName();
 
   Project getProject();

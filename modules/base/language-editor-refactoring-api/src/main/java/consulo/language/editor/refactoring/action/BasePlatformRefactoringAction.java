@@ -25,8 +25,7 @@ import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -37,13 +36,13 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
     protected BasePlatformRefactoringAction() {
     }
 
-    protected BasePlatformRefactoringAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected BasePlatformRefactoringAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     @Override
     @RequiredReadAction
-    protected final RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
+    protected final RefactoringActionHandler getHandler(DataContext dataContext) {
         PsiElement element = null;
         Editor editor = dataContext.getData(Editor.KEY);
         PsiFile file = dataContext.getData(PsiFile.KEY);
@@ -95,7 +94,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
     }
 
     @Nullable
-    protected RefactoringActionHandler getHandler(@Nonnull Language language, PsiElement element) {
+    protected RefactoringActionHandler getHandler(Language language, PsiElement element) {
         RefactoringSupportProvider provider = RefactoringSupportProvider.forLanguage(language);
         if (provider.isAvailable(element)) {
             return getRefactoringHandler(provider, element);
@@ -106,10 +105,10 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
     @Override
     @RequiredReadAction
     protected boolean isAvailableOnElementInEditorAndFile(
-        @Nonnull PsiElement element,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull DataContext context
+        PsiElement element,
+        Editor editor,
+        PsiFile file,
+        DataContext context
     ) {
         return getHandler(context) != null;
     }
@@ -123,7 +122,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
 
     @Override
     @RequiredReadAction
-    protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    protected boolean isEnabledOnElements(PsiElement[] elements) {
         if (elements.length > 0) {
             Language language = elements[0].getLanguage();
             return getHandler(language, elements[0]) instanceof ElementsHandler elementsHandler
@@ -133,10 +132,10 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
     }
 
     @Nullable
-    protected abstract RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider);
+    protected abstract RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider);
 
     @Nullable
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, PsiElement element) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider, PsiElement element) {
         return getRefactoringHandler(provider);
     }
 

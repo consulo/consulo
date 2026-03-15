@@ -40,8 +40,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.DefaultRollbackEnvironment;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -109,7 +108,7 @@ public class RollbackWorker {
                 }
             ) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     rollbackAction.run();
                 }
             });
@@ -117,7 +116,7 @@ public class RollbackWorker {
         else if (myInvokedFromModalContext) {
             ProgressManager.getInstance().run(new Task.Modal(myProject, myOperationName, true) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     rollbackAction.run();
                 }
             });
@@ -235,7 +234,7 @@ public class RollbackWorker {
             WaitForProgressToShow.runOrInvokeLaterAboveProgress(forAwtThread, null, project);
         }
 
-        private void markDirty(@Nonnull VcsDirtyScopeManager manager, @Nonnull VcsGuess vcsGuess, @Nullable ContentRevision revision) {
+        private void markDirty(VcsDirtyScopeManager manager, VcsGuess vcsGuess, @Nullable ContentRevision revision) {
             if (revision != null) {
                 FilePath parent = revision.getFile().getParentPath();
                 if (parent != null && couldBeMarkedDirty(vcsGuess, parent)) {
@@ -247,7 +246,7 @@ public class RollbackWorker {
             }
         }
 
-        private boolean couldBeMarkedDirty(@Nonnull VcsGuess vcsGuess, @Nonnull FilePath path) {
+        private boolean couldBeMarkedDirty(VcsGuess vcsGuess, FilePath path) {
             return vcsGuess.getVcsForDirty(path) != null;
         }
 

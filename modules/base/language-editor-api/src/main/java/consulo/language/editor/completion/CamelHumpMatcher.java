@@ -11,8 +11,7 @@ import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -25,7 +24,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
   private final boolean myTypoTolerant;
 
 
-  public CamelHumpMatcher(@Nonnull String prefix) {
+  public CamelHumpMatcher(String prefix) {
     this(prefix, true);
   }
 
@@ -63,12 +62,12 @@ public class CamelHumpMatcher extends PrefixMatcher {
     return myTypoTolerant;
   }
 
-  private static int skipUnderscores(@Nonnull String name) {
+  private static int skipUnderscores(String name) {
     return CharArrayUtil.shiftForward(name, 0, "_");
   }
 
   @Override
-  public boolean prefixMatches(@Nonnull String name) {
+  public boolean prefixMatches(String name) {
     if (name.startsWith("_") && CodeInsightSettings.getInstance().COMPLETION_CASE_SENSITIVE == CodeInsightSettings.FIRST_LETTER && firstLetterCaseDiffers(name)) {
       return false;
     }
@@ -87,7 +86,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
   }
 
   @Override
-  public boolean prefixMatches(@Nonnull CompositeStringHolder element) {
+  public boolean prefixMatches(CompositeStringHolder element) {
     return prefixMatchersInternal(element, !element.isCaseSensitive());
   }
 
@@ -106,8 +105,8 @@ public class CamelHumpMatcher extends PrefixMatcher {
   }
 
   @Override
-  @Nonnull
-  public PrefixMatcher cloneWithPrefix(@Nonnull String prefix) {
+  
+  public PrefixMatcher cloneWithPrefix(String prefix) {
     if (prefix.equals(myPrefix)) {
       return this;
     }

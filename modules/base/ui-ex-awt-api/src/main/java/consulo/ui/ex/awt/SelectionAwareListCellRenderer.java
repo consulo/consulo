@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Function;
@@ -13,9 +12,9 @@ public class SelectionAwareListCellRenderer<T> implements ListCellRenderer<T> {
     myFun = fun;
   }
 
-  @Nonnull
+  
   @Override
-  public Component getListCellRendererComponent(@Nonnull JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
     @SuppressWarnings({"unchecked"}) JComponent comp = myFun.apply((T)value);
     comp.setOpaque(true);
     if (isSelected) {

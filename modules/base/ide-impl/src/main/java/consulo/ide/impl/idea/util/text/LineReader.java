@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.text;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -3,14 +3,13 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.component.util.NamedRunnable;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
  * @author Sergey.Malenkov
  */
 abstract class TreeRunnable extends NamedRunnable {
-  TreeRunnable(@Nonnull String name) {
+  TreeRunnable(String name) {
     super(name);
   }
 
@@ -28,7 +27,7 @@ abstract class TreeRunnable extends NamedRunnable {
   }
 
   abstract static class TreeConsumer<T> extends TreeRunnable implements Consumer<T> {
-    TreeConsumer(@Nonnull String name) {
+    TreeConsumer(String name) {
       super(name);
     }
 

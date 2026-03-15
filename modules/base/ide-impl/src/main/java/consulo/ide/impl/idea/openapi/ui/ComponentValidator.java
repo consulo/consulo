@@ -15,8 +15,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -68,7 +67,7 @@ public class ComponentValidator {
     private Dimension popupSize;
     private boolean disableValidation;
 
-    public ComponentValidator(@Nonnull Disposable parentDisposable) {
+    public ComponentValidator(Disposable parentDisposable) {
         this.parentDisposable = parentDisposable;
     }
 
@@ -76,7 +75,7 @@ public class ComponentValidator {
      * @deprecated Use {@link ComponentValidator#withValidator(Supplier)} instead
      */
     @Deprecated
-    public ComponentValidator withValidator(@Nonnull Consumer<? super ComponentValidator> validator) {
+    public ComponentValidator withValidator(Consumer<? super ComponentValidator> validator) {
         this.validator = () -> {
             validator.accept(this);
             return validationInfo;
@@ -84,22 +83,22 @@ public class ComponentValidator {
         return this;
     }
 
-    public ComponentValidator withValidator(@Nonnull Supplier<? extends ValidationInfo> validator) {
+    public ComponentValidator withValidator(Supplier<? extends ValidationInfo> validator) {
         this.validator = validator;
         return this;
     }
 
-    public ComponentValidator withFocusValidator(@Nonnull Supplier<? extends ValidationInfo> focusValidator) {
+    public ComponentValidator withFocusValidator(Supplier<? extends ValidationInfo> focusValidator) {
         this.focusValidator = focusValidator;
         return this;
     }
 
-    public ComponentValidator withHyperlinkListener(@Nonnull HyperlinkListener hyperlinkListener) {
+    public ComponentValidator withHyperlinkListener(HyperlinkListener hyperlinkListener) {
         this.hyperlinkListener = hyperlinkListener;
         return this;
     }
 
-    public ComponentValidator withOutlineProvider(@Nonnull Function<? super JComponent, ? extends JComponent> outlineProvider) {
+    public ComponentValidator withOutlineProvider(Function<? super JComponent, ? extends JComponent> outlineProvider) {
         this.outlineProvider = outlineProvider;
         return this;
     }
@@ -109,7 +108,7 @@ public class ComponentValidator {
         return this;
     }
 
-    public ComponentValidator installOn(@Nonnull JComponent component) {
+    public ComponentValidator installOn(JComponent component) {
         Component fc = getFocusable(component).orElse(outlineProvider.apply(component));
         component.putClientProperty(PROPERTY_NAME, this);
 
@@ -170,10 +169,10 @@ public class ComponentValidator {
     /**
      * Convenient wrapper for mostly used scenario.
      */
-    public ComponentValidator andRegisterOnDocumentListener(@Nonnull JTextComponent textComponent) {
+    public ComponentValidator andRegisterOnDocumentListener(JTextComponent textComponent) {
         textComponent.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
-            protected void textChanged(@Nonnull DocumentEvent e) {
+            protected void textChanged(DocumentEvent e) {
                 getInstance(textComponent).ifPresent(ComponentValidator::revalidate); // Don't use 'this' to avoid cyclic references.
             }
         });
@@ -186,7 +185,7 @@ public class ComponentValidator {
         }
     }
 
-    public static Optional<ComponentValidator> getInstance(@Nonnull JComponent component) {
+    public static Optional<ComponentValidator> getInstance(JComponent component) {
         return Optional.ofNullable((ComponentValidator)component.getClientProperty(PROPERTY_NAME));
     }
 
@@ -251,9 +250,9 @@ public class ComponentValidator {
         }
     }
 
-    @Nonnull
+    
     public static ComponentPopupBuilder createPopupBuilder(
-        @Nonnull ValidationInfo info,
+        ValidationInfo info,
         @Nullable Consumer<? super JEditorPane> configurator
     ) {
         JEditorPane tipComponent = new JEditorPane();
@@ -314,7 +313,7 @@ public class ComponentValidator {
         return result.toString();
     }
 
-    public static boolean withinComponent(@Nonnull ValidationInfo info, @Nonnull MouseEvent e) {
+    public static boolean withinComponent(ValidationInfo info, MouseEvent e) {
         if (info.component != null && info.component.isShowing()) {
             Rectangle screenBounds = new Rectangle(info.component.getLocationOnScreen(), info.component.getSize());
             return screenBounds.contains(e.getLocationOnScreen());

@@ -17,7 +17,6 @@ package consulo.http.impl.internal.ws;
 
 import consulo.http.ws.WebSocketConnectionBuilder;
 import consulo.http.ws.WebSocketSession;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -34,31 +33,31 @@ public abstract class WebSocketConnectionBuilderImpl implements WebSocketConnect
     protected BiConsumer<WebSocketSession, Throwable> myOnError;
 
     @Override
-    public WebSocketConnectionBuilder onOpen(@Nonnull Consumer<WebSocketSession> consumer) {
+    public WebSocketConnectionBuilder onOpen(Consumer<WebSocketSession> consumer) {
         myOnOpen = consumer;
         return this;
     }
 
     @Override
-    public WebSocketConnectionBuilder onText(@Nonnull BiConsumer<WebSocketSession, String> consumer) {
+    public WebSocketConnectionBuilder onText(BiConsumer<WebSocketSession, String> consumer) {
         myOnText = consumer;
         return this;
     }
 
     @Override
-    public WebSocketConnectionBuilder onBinary(@Nonnull BiConsumer<WebSocketSession, byte[]> consumer) {
+    public WebSocketConnectionBuilder onBinary(BiConsumer<WebSocketSession, byte[]> consumer) {
         myOnBinary = consumer;
         return this;
     }
 
     @Override
-    public WebSocketConnectionBuilder onClose(@Nonnull Consumer<WebSocketSession> consumer) {
+    public WebSocketConnectionBuilder onClose(Consumer<WebSocketSession> consumer) {
         myOnClose = consumer;
         return this;
     }
 
     @Override
-    public WebSocketConnectionBuilder onError(@Nonnull BiConsumer<WebSocketSession, Throwable> consumer) {
+    public WebSocketConnectionBuilder onError(BiConsumer<WebSocketSession, Throwable> consumer) {
         myOnError = consumer;
         return this;
     }

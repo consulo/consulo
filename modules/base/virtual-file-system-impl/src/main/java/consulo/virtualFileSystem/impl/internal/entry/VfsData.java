@@ -18,8 +18,7 @@ import consulo.virtualFileSystem.impl.internal.FSRecords;
 import consulo.virtualFileSystem.impl.internal.FileNameCache;
 import consulo.virtualFileSystem.impl.internal.PersistentFSImpl;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.*;
@@ -76,7 +75,7 @@ public class VfsData {
   public VfsData() {
     ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
       @Override
-      public void writeActionFinished(@Nonnull Object action) {
+      public void writeActionFinished(Object action) {
         // after top-level write action is finished, all the deletion listeners should have processed the deleted files
         // and their data is considered safe to remove. From this point on accessing a removed file will result in an exception.
         if (!ApplicationManager.getApplication().isWriteAccessAllowed()) {
@@ -100,7 +99,7 @@ public class VfsData {
   }
 
   @Nullable
-  VirtualFileSystemEntry getFileById(int id, @Nonnull VirtualDirectoryImpl parent) {
+  VirtualFileSystemEntry getFileById(int id, VirtualDirectoryImpl parent) {
     PersistentFSImpl persistentFS = (PersistentFSImpl)PersistentFS.getInstance();
     VirtualFileSystemEntry dir = persistentFS.getCachedDir(id);
     if (dir != null) return dir;
@@ -155,7 +154,7 @@ public class VfsData {
     }
   }
 
-  static void initFile(int id, @Nonnull Segment segment, int nameId, @Nonnull Object data) throws FileAlreadyCreatedException {
+  static void initFile(int id, Segment segment, int nameId, Object data) throws FileAlreadyCreatedException {
     int offset = getOffset(id);
 
     segment.setNameId(id, nameId);
@@ -174,7 +173,7 @@ public class VfsData {
     segment.myObjectArray.set(offset, data);
   }
 
-  @Nonnull
+  
   CharSequence getNameByFileId(int id) {
     return FileNameCache.getVFileName(getNameId(id));
   }
@@ -212,10 +211,10 @@ public class VfsData {
     // <nameId, flags> pairs, "flags" part containing flags per se and modification stamp
     private final AtomicIntegerArray myIntArray = new AtomicIntegerArray(SEGMENT_SIZE * 2);
 
-    @Nonnull
+    
     final VfsData vfsData;
 
-    Segment(@Nonnull VfsData vfsData) {
+    Segment(VfsData vfsData) {
       this.vfsData = vfsData;
     }
 
@@ -228,7 +227,7 @@ public class VfsData {
       myIntArray.set(getOffset(fileId) * 2, nameId);
     }
 
-    void setUserMap(int fileId, @Nonnull KeyFMap map) {
+    void setUserMap(int fileId, KeyFMap map) {
       myObjectArray.set(getOffset(fileId), map);
     }
 
@@ -284,7 +283,7 @@ public class VfsData {
   // non-final field accesses are synchronized on this instance, but this happens in VirtualDirectoryImpl
   static class DirectoryData {
     private static final AtomicFieldUpdater<DirectoryData, KeyFMap> MY_USER_MAP_UPDATER = AtomicFieldUpdater.forFieldOfType(DirectoryData.class, KeyFMap.class);
-    @Nonnull
+    
     volatile KeyFMap myUserMap = KeyFMap.EMPTY_MAP;
     /**
      * sorted by {@link VfsData#getNameByFileId(int)}
@@ -292,14 +291,14 @@ public class VfsData {
      *
      * @see VirtualDirectoryImpl#findIndex(int[], CharSequence, boolean)
      */
-    @Nonnull
+    
     volatile int[] myChildrenIds = ArrayUtil.EMPTY_INT_ARRAY; // guarded by this
 
     // assigned under lock(this) only; accessed/modified map contents under lock(myAdoptedNames)
     private volatile Set<CharSequence> myAdoptedNames;
 
-    @Nonnull
-    VirtualFileSystemEntry[] getFileChildren(@Nonnull VirtualDirectoryImpl parent) {
+    
+    VirtualFileSystemEntry[] getFileChildren(VirtualDirectoryImpl parent) {
       int[] ids = myChildrenIds;
       VirtualFileSystemEntry[] children = new VirtualFileSystemEntry[ids.length];
       for (int i = 0; i < ids.length; i++) {
@@ -317,7 +316,7 @@ public class VfsData {
       return MY_USER_MAP_UPDATER.compareAndSet(this, oldMap, newMap);
     }
 
-    boolean isAdoptedName(@Nonnull CharSequence name) {
+    boolean isAdoptedName(CharSequence name) {
       Set<CharSequence> adopted = myAdoptedNames;
       if (adopted == null) {
         return false;
@@ -333,7 +332,7 @@ public class VfsData {
      * <p>
      * Must be called in synchronized(VfsData)
      */
-    void removeAdoptedName(@Nonnull CharSequence name) {
+    void removeAdoptedName(CharSequence name) {
       Set<CharSequence> adopted = myAdoptedNames;
       if (adopted == null) {
         return;
@@ -349,7 +348,7 @@ public class VfsData {
     /**
      * Must be called in synchronized(VfsData)
      */
-    void addAdoptedName(@Nonnull CharSequence name, boolean caseSensitive) {
+    void addAdoptedName(CharSequence name, boolean caseSensitive) {
       Set<CharSequence> adopted = getOrCreateAdoptedNames(caseSensitive);
       CharSequence sequence = ByteArrayCharSequence.convertToBytesIfPossible(name);
       synchronized (adopted) {
@@ -361,7 +360,7 @@ public class VfsData {
      * Optimization: faster than call {@link #addAdoptedName(CharSequence, boolean)} one by one
      * Must be called in synchronized(VfsData)
      */
-    void addAdoptedNames(@Nonnull Collection<? extends CharSequence> names, boolean caseSensitive) {
+    void addAdoptedNames(Collection<? extends CharSequence> names, boolean caseSensitive) {
       Set<CharSequence> adopted = getOrCreateAdoptedNames(caseSensitive);
       synchronized (adopted) {
         adopted.addAll(names);
@@ -371,7 +370,7 @@ public class VfsData {
     /**
      * Must be called in synchronized(VfsData)
      */
-    @Nonnull
+    
     private Set<CharSequence> getOrCreateAdoptedNames(boolean caseSensitive) {
       Set<CharSequence> adopted = myAdoptedNames;
       if (adopted == null) {
@@ -380,7 +379,7 @@ public class VfsData {
       return adopted;
     }
 
-    @Nonnull
+    
     List<String> getAdoptedNames() {
       Set<CharSequence> adopted = myAdoptedNames;
       if (adopted == null) return Collections.emptyList();

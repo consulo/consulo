@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -30,5 +29,5 @@ import jakarta.annotation.Nullable;
 public interface HectorComponentPanelsProvider {
   ExtensionPointName<HectorComponentPanelsProvider> EP_NAME = ExtensionPointName.create(HectorComponentPanelsProvider.class);
 
-  @Nullable HectorComponentPanel createConfigurable(@Nonnull PsiFile file);
+  @Nullable HectorComponentPanel createConfigurable(PsiFile file);
 }

@@ -18,17 +18,16 @@ package consulo.execution.ui.console;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
 public interface FilterMixin {
   boolean shouldRunHeavy();
 
-  void applyHeavyFilter(@Nonnull Document copiedFragment, int startOffset, int startLineNumber, @Nonnull Consumer<? super AdditionalHighlight> consumer);
+  void applyHeavyFilter(Document copiedFragment, int startOffset, int startLineNumber, Consumer<? super AdditionalHighlight> consumer);
 
-  @Nonnull
+  
   String getUpdateMessage();
 
   class AdditionalHighlight extends Filter.Result {
@@ -36,7 +35,7 @@ public interface FilterMixin {
       super(start, end, null);
     }
 
-    public AdditionalHighlight(@Nonnull List<? extends Filter.ResultItem> resultItems) {
+    public AdditionalHighlight(List<? extends Filter.ResultItem> resultItems) {
       super(resultItems);
     }
 

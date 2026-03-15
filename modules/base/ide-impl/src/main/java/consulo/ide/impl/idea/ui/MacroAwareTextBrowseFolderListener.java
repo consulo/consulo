@@ -8,18 +8,17 @@ import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.ui.ex.awt.TextBrowseFolderListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class MacroAwareTextBrowseFolderListener extends TextBrowseFolderListener {
-  public MacroAwareTextBrowseFolderListener(@Nonnull FileChooserDescriptor fileChooserDescriptor,
+  public MacroAwareTextBrowseFolderListener(FileChooserDescriptor fileChooserDescriptor,
                                             @Nullable Project project) {
     super(fileChooserDescriptor, project);
   }
 
-  @Nonnull
+  
   @Override
-  protected String expandPath(@Nonnull String path) {
+  protected String expandPath(String path) {
     Project project = (Project)getProject();
     if (project != null) {
       path = ProjectPathMacroManager.getInstance(project).expandPath(path);

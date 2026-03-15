@@ -33,7 +33,6 @@ import consulo.versionControlSystem.VcsDescriptor;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.internal.DefaultVcsRootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,7 +86,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
         return myPanel;
     }
 
-    public void setMapping(@Nonnull VcsDirectoryMapping mapping) {
+    public void setMapping(VcsDirectoryMapping mapping) {
         myMappingCopy = new VcsDirectoryMapping(mapping.getDirectory(), mapping.getVcs(), mapping.getRootSettings());
         myProjectRadioButton.setSelected(myMappingCopy.isDefaultMapping());
         myDirectoryRadioButton.setSelected(!myProjectRadioButton.isSelected());
@@ -105,7 +104,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
         initProjectMessage();
     }
 
-    @Nonnull
+    
     public VcsDirectoryMapping getMapping() {
         VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
         String vcs = wrapper == null || wrapper.isNone() ? "" : wrapper.getId();
@@ -185,7 +184,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
         }
 
         @Override
-        protected void onFileChosen(@Nonnull final VirtualFile chosenFile) {
+        protected void onFileChosen(final VirtualFile chosenFile) {
             String oldText = myDirectoryTextField.getText();
             super.onFileChosen(chosenFile);
             VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
@@ -194,7 +193,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
                     VcsDescriptor probableVcs = null;
 
                     @Override
-                    public void run(@Nonnull ProgressIndicator indicator) {
+                    public void run(ProgressIndicator indicator) {
                         for (VcsDescriptor vcs : myVcses.values()) {
                             if (vcs.probablyUnderVcs(chosenFile)) {
                                 if (probableVcs != null) {

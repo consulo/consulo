@@ -21,8 +21,7 @@ import consulo.language.editor.FileHighlightingSetting;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -31,7 +30,7 @@ import jakarta.annotation.Nullable;
 public class GeneratedSourcesHighlightingSettingProvider extends DefaultHighlightingSettingProvider {
   @Nullable
   @Override
-  public FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file) {
     if (GeneratedSourcesFilter.isGenerated(project, file)) {
       return FileHighlightingSetting.SKIP_INSPECTION;
     }

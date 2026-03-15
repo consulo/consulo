@@ -19,7 +19,6 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.AnsiEscapeDecoder;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class ColoredProcessHandlerImpl extends KillableProcessHandlerImpl implem
 
   private final List<AnsiEscapeDecoder.ColoredTextAcceptor> myColoredTextListeners = new ArrayList<>();
 
-  public ColoredProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public ColoredProcessHandlerImpl(GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
     setShouldKillProcessSoftly(false);
   }
@@ -43,7 +42,7 @@ public class ColoredProcessHandlerImpl extends KillableProcessHandlerImpl implem
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public ColoredProcessHandlerImpl(@Nonnull Process process, /*@NotNull*/ String commandLine) {
+  public ColoredProcessHandlerImpl(Process process, /*@NotNull*/ String commandLine) {
     super(process, commandLine);
     setShouldKillProcessSoftly(false);
   }
@@ -51,7 +50,7 @@ public class ColoredProcessHandlerImpl extends KillableProcessHandlerImpl implem
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public ColoredProcessHandlerImpl(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
+  public ColoredProcessHandlerImpl(Process process, /*@NotNull*/ String commandLine, Charset charset) {
     super(process, commandLine, charset);
     setShouldKillProcessSoftly(false);
   }
@@ -68,7 +67,7 @@ public class ColoredProcessHandlerImpl extends KillableProcessHandlerImpl implem
    * override coloredChunksAvailable method.
    */
   @Override
-  public void coloredTextAvailable(@Nonnull String text, @Nonnull Key attributes) {
+  public void coloredTextAvailable(String text, Key attributes) {
     textAvailable(text, attributes);
     notifyColoredListeners(text, attributes);
   }

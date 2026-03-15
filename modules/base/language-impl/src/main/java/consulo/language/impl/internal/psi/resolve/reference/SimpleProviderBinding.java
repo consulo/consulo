@@ -23,7 +23,6 @@ import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceService;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +39,9 @@ public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider
   }
 
   @Override
-  public void addAcceptableReferenceProviders(@Nonnull PsiElement position,
-                                              @Nonnull List<ProviderInfo<Provider, ProcessingContext>> list,
-                                              @Nonnull PsiReferenceService.Hints hints) {
+  public void addAcceptableReferenceProviders(PsiElement position,
+                                              List<ProviderInfo<Provider, ProcessingContext>> list,
+                                              PsiReferenceService.Hints hints) {
     for (ProviderInfo<Provider, ElementPattern> trinity : myProviderPairs) {
       if (hints != PsiReferenceService.Hints.NO_HINTS && !((PsiReferenceProvider)trinity.provider).acceptsHints(position, hints)) {
         continue;
@@ -65,7 +64,7 @@ public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider
   }
 
   @Override
-  public void unregisterProvider(@Nonnull Provider provider) {
+  public void unregisterProvider(Provider provider) {
     for (ProviderInfo<Provider, ElementPattern> trinity : new ArrayList<>(myProviderPairs)) {
       if (trinity.provider.equals(provider)) {
         myProviderPairs.remove(trinity);

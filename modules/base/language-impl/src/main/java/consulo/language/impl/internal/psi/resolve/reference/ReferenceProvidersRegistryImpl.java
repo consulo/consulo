@@ -26,7 +26,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ControlFlowException;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -62,9 +61,9 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
                 try {
                     ElementPattern<PsiElement> pattern = provider.getElementPattern();
                     registrar.registerReferenceProvider(pattern, new PsiReferenceProvider() {
-                        @Nonnull
+                        
                         @Override
-                        public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
+                        public PsiReference[] getReferencesByElement(PsiElement element, ProcessingContext context) {
                             return provider.getReferencesByElement(element, context);
                         }
                     });

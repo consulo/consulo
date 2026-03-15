@@ -20,7 +20,6 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -30,27 +29,27 @@ class ModalityInvokatorImpl implements ModalityInvokator {
   ModalityInvokatorImpl() {
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable) {
+  public AsyncResult<Void> invokeLater(Runnable runnable) {
     return invokeLater(runnable, ApplicationManager.getApplication().getDisposed());
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
+  public AsyncResult<Void> invokeLater(Runnable runnable, BooleanSupplier expired) {
     return LaterInvocator.invokeLater(runnable, expired);
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull IdeaModalityState state, @Nonnull BooleanSupplier expired) {
+  public AsyncResult<Void> invokeLater(Runnable runnable, IdeaModalityState state, BooleanSupplier expired) {
     return LaterInvocator.invokeLater(runnable, state, expired);
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull IdeaModalityState state) {
+  public AsyncResult<Void> invokeLater(Runnable runnable, IdeaModalityState state) {
     return invokeLater(runnable, state, ApplicationManager.getApplication().getDisposed());
   }
 }

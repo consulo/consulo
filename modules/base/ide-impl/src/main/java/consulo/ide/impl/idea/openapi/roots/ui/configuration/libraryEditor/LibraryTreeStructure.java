@@ -27,7 +27,6 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,15 +55,15 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
     };
   }
 
-  @Nonnull
+  
   @Override
   public Object getRootElement() {
     return myRootElementDescriptor;
   }
 
-  @Nonnull
+  
   @Override
-  public Object[] getChildElements(@Nonnull Object element) {
+  public Object[] getChildElements(Object element) {
     LibraryEditor libraryEditor = myParentEditor.getLibraryEditor();
     if (element == myRootElementDescriptor) {
       ArrayList<LibraryTableTreeContentElement> elements = new ArrayList<>(3);
@@ -126,13 +125,13 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
   }
 
   @Override
-  public Object getParentElement(@Nonnull Object element) {
+  public Object getParentElement(Object element) {
     return ((NodeDescriptor)element).getParentDescriptor();
   }
 
   @Override
-  @Nonnull
-  public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+  
+  public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     return (NodeDescriptor)element;
   }
 }

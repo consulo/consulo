@@ -32,18 +32,17 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "inLineComment", order = "after inStringLiteral")
 public class EnterInLineCommentHandler extends EnterHandlerDelegateAdapter {
     @Override
     @RequiredReadAction
     public Result preprocessEnter(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull SimpleReference<Integer> caretOffsetRef,
-        @Nonnull SimpleReference<Integer> caretAdvance,
-        @Nonnull DataContext dataContext,
+        PsiFile file,
+        Editor editor,
+        SimpleReference<Integer> caretOffsetRef,
+        SimpleReference<Integer> caretAdvance,
+        DataContext dataContext,
         EditorActionHandler originalHandler
     ) {
         int caretOffset = caretOffsetRef.get();

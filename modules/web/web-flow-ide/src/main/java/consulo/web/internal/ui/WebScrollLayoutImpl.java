@@ -25,8 +25,7 @@ import consulo.ui.layout.ScrollableLayoutOptions;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -49,7 +48,7 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     }
 
     @Override
-    public void remove(@Nonnull Component component) {
+    public void remove(Component component) {
         com.vaadin.flow.component.Component vaadinComponent = TargetVaddin.to(component);
         if (vaadinComponent == getFirstChild()) {
             removeAll();
@@ -77,7 +76,7 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     public void addStyle(LayoutStyle style) {
     }
 
-    @Nonnull
+    
     @Override
     public WebScrollLayoutImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

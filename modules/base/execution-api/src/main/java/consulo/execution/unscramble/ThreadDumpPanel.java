@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.ex.action.DefaultActionGroup;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -30,15 +29,15 @@ import java.util.List;
  * @since 04/11/2022
  */
 public interface ThreadDumpPanel {
-  @Nonnull
+  
   static ThreadDumpPanel create(Project project, ConsoleView consoleView, DefaultActionGroup toolbarActions, List<ThreadState> threadDump) {
     return new AWTThreadDumpPanel(project, consoleView, toolbarActions, threadDump);
   }
 
-  @Nonnull
+  
   JComponent getComponent();
 
-  @Nonnull
+  
   Component getUIComponent();
 
   void selectStackFrame(int index);

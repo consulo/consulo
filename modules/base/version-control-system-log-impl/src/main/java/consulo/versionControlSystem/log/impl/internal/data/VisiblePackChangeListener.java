@@ -15,8 +15,7 @@
  */
 package consulo.versionControlSystem.log.impl.internal.data;
 
-import jakarta.annotation.Nonnull;
 
 public interface VisiblePackChangeListener {
-  void onVisiblePackChange(@Nonnull VisiblePack visiblePack);
+  void onVisiblePackChange(VisiblePack visiblePack);
 }

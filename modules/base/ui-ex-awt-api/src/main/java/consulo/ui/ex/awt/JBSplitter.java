@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Major difference between the parent class and <code>JBSplitter</code> is an ability to save proportion
@@ -41,11 +40,11 @@ public class JBSplitter extends Splitter {
     myDefaultProportion = 0.5f;
   }
 
-  public JBSplitter(@Nonnull String proportionKey, float defaultProportion) {
+  public JBSplitter(String proportionKey, float defaultProportion) {
     this(false, proportionKey, defaultProportion);
   }
 
-  public JBSplitter(boolean vertical, @Nonnull String proportionKey, float defaultProportion) {
+  public JBSplitter(boolean vertical, String proportionKey, float defaultProportion) {
     super(vertical, defaultProportion);
 
     mySplitterProportionKey = proportionKey;
@@ -99,7 +98,7 @@ public class JBSplitter extends Splitter {
    * Sets proportion key and load from settings.
    * @param key
    */
-  public final void setAndLoadSplitterProportionKey(@Nonnull String key) {
+  public final void setAndLoadSplitterProportionKey(String key) {
     setSplitterProportionKey(key);
     loadProportion();
   }

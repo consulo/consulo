@@ -4,7 +4,6 @@ package consulo.execution.debug.stream.resolve;
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.TraceInfo;
 import consulo.execution.debug.stream.trace.Value;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -13,7 +12,7 @@ import java.util.*;
  */
 public class FilterResolver implements ValuesOrderResolver {
     @Override
-    public @Nonnull Result resolve(@Nonnull TraceInfo info) {
+    public Result resolve(TraceInfo info) {
         Map<Integer, TraceElement> before = info.getValuesOrderBefore();
         Map<Integer, TraceElement> after = info.getValuesOrderAfter();
         assert before.size() >= after.size();

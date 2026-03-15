@@ -24,7 +24,6 @@ import consulo.language.impl.internal.psi.diff.ShallowNodeComparator;
 import consulo.language.psi.PsiErrorElement;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -33,13 +32,13 @@ import java.util.Objects;
 public class ASTShallowComparator implements ShallowNodeComparator<ASTNode, ASTNode> {
   private final ProgressIndicator myIndicator;
 
-  public ASTShallowComparator(@Nonnull ProgressIndicator indicator) {
+  public ASTShallowComparator(ProgressIndicator indicator) {
     myIndicator = indicator;
   }
 
-  @Nonnull
+  
   @Override
-  public ThreeState deepEqual(@Nonnull ASTNode oldNode, @Nonnull ASTNode newNode) {
+  public ThreeState deepEqual(ASTNode oldNode, ASTNode newNode) {
     return textMatches(oldNode, newNode);
   }
 
@@ -79,7 +78,7 @@ public class ASTShallowComparator implements ShallowNodeComparator<ASTNode, ASTN
   }
 
   // have to perform tree walking by hand here to be able to interrupt ourselves
-  private boolean compareTreeToText(@Nonnull TreeElement root, @Nonnull final String text) {
+  private boolean compareTreeToText(TreeElement root, final String text) {
     final int[] curOffset = {0};
     root.acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
@@ -109,12 +108,12 @@ public class ASTShallowComparator implements ShallowNodeComparator<ASTNode, ASTN
   }
 
   @Override
-  public boolean typesEqual(@Nonnull ASTNode n1, @Nonnull ASTNode n2) {
+  public boolean typesEqual(ASTNode n1, ASTNode n2) {
     return n1.getElementType() == n2.getElementType();
   }
 
   @Override
-  public boolean hashCodesEqual(@Nonnull ASTNode n1, @Nonnull ASTNode n2) {
+  public boolean hashCodesEqual(ASTNode n1, ASTNode n2) {
     if (n1 instanceof LeafElement && n2 instanceof LeafElement) {
       return textMatches(n1, n2) == ThreeState.YES;
     }

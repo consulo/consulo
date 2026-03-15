@@ -45,8 +45,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -213,12 +212,12 @@ public class TreeModelBuilder {
         return new TreeModel(myRoot, myTotalFileCount, myMarkedFileCount);
     }
 
-    private void processFilesRecursively(@Nonnull VirtualFile file) {
+    private void processFilesRecursively(VirtualFile file) {
         VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
             private PackageDependenciesNode parent = null;
 
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (file.isDirectory()) {
                     parent = null;
                 }
@@ -229,7 +228,7 @@ public class TreeModelBuilder {
             }
 
             @Override
-            public void afterChildrenVisited(@Nonnull VirtualFile file) {
+            public void afterChildrenVisited(VirtualFile file) {
                 if (file.isDirectory()) {
                     parent = null;
                 }
@@ -240,7 +239,7 @@ public class TreeModelBuilder {
     private void countFilesRecursively(VirtualFile file) {
         VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (!file.isDirectory()) {
                     counting();
                 }
@@ -479,7 +478,7 @@ public class TreeModelBuilder {
     }
 
 
-    @Nonnull
+    
     private PackageDependenciesNode getRootNode(ScopeType scopeType) {
         if (!myGroupByScopeType) {
             return myRoot;

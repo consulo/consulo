@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -41,13 +40,13 @@ public class JBPanelWithEmptyText extends JBPanel<JBPanelWithEmptyText> implemen
     super(layout);
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;
   }
 
-  @Nonnull
+  
   public JBPanelWithEmptyText withEmptyText(String str) {
     myEmptyText.setText(str);
     return this;

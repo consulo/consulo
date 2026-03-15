@@ -23,8 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.List;
 
@@ -74,16 +73,16 @@ public interface Lookup {
    * Consider using {@link #getTopLevelEditor()} if you don't need injected editor.
    * @return editor, possibly injected, where this lookup is shown
    */
-  @Nonnull
+  
   Editor getEditor();
 
   /**
    * @return the non-injected editor where this lookup is shown
    */
-  @Nonnull
+  
   Editor getTopLevelEditor();
 
-  @Nonnull
+  
   Project getProject();
 
   /**
@@ -99,11 +98,11 @@ public interface Lookup {
 
   boolean isFocused();
 
-  @Nonnull
-  String itemPattern(@Nonnull LookupElement element);
+  
+  String itemPattern(LookupElement element);
 
-  @Nonnull
-  PrefixMatcher itemMatcher(@Nonnull LookupElement item);
+  
+  PrefixMatcher itemMatcher(LookupElement item);
 
   boolean isSelectionTouched();
 

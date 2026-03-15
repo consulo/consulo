@@ -17,8 +17,7 @@
 package consulo.language.editor.impl.internal.template;
 
 import consulo.component.persist.scheme.CompoundScheme;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TemplateGroup extends CompoundScheme<TemplateImpl> {
 
@@ -37,7 +36,7 @@ public class TemplateGroup extends CompoundScheme<TemplateImpl> {
         return myReplace;
     }
 
-    @Nonnull
+    
     @Override
     protected CompoundScheme<TemplateImpl> createNewInstance(String name) {
         return new TemplateGroup(name);

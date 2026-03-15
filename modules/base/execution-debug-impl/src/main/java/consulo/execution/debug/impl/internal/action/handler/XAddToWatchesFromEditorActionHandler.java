@@ -22,15 +22,14 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class XAddToWatchesFromEditorActionHandler extends XDebuggerActionHandler {
   @Override
-  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
     return getTextToEvaluate(dataContext, session) != null;
   }
 
@@ -53,7 +52,7 @@ public class XAddToWatchesFromEditorActionHandler extends XDebuggerActionHandler
   }
 
   @Override
-  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected void perform(XDebugSession session, DataContext dataContext) {
     String text = getTextToEvaluate(dataContext, session);
     if (text == null) return;
 

@@ -18,8 +18,7 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -29,8 +28,8 @@ import java.util.function.Supplier;
 @DeprecationInfo("Use LazyValue")
 public abstract class AtomicNullableLazyValue<T> extends NullableLazyValue<T> {
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  @Nonnull
-  public static <T> AtomicNullableLazyValue<T> createValue(@Nonnull final Supplier<? extends T> value) {
+  
+  public static <T> AtomicNullableLazyValue<T> createValue(final Supplier<? extends T> value) {
     return new AtomicNullableLazyValue<T>() {
       @Nullable
       @Override

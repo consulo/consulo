@@ -31,7 +31,6 @@ import consulo.document.Document;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -67,7 +66,7 @@ public class BackspaceAction extends EditorAction {
         return Integer.MIN_VALUE;
     }
 
-    private static void doBackSpaceAtCaret(@Nonnull Editor editor) {
+    private static void doBackSpaceAtCaret(Editor editor) {
         if (editor.getSelectionModel().hasSelection()) {
             EditorModificationUtil.deleteSelectedText(editor);
             return;

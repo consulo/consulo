@@ -20,8 +20,7 @@ import consulo.application.progress.StandardProgressIndicator;
 import consulo.application.progress.WrappedProgressIndicator;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
@@ -31,11 +30,11 @@ public class ProgressWrapper extends AbstractProgressIndicatorBase implements Wr
   private final ProgressIndicator myOriginal;
   private final boolean myCheckCanceledForMe;
 
-  protected ProgressWrapper(@Nonnull ProgressIndicator original) {
+  protected ProgressWrapper(ProgressIndicator original) {
     this(original, false);
   }
 
-  protected ProgressWrapper(@Nonnull ProgressIndicator original, boolean checkCanceledForMe) {
+  protected ProgressWrapper(ProgressIndicator original, boolean checkCanceledForMe) {
     myOriginal = original;
     myCheckCanceledForMe = checkCanceledForMe;
   }
@@ -57,7 +56,7 @@ public class ProgressWrapper extends AbstractProgressIndicatorBase implements Wr
   }
 
   @Override
-  @Nonnull
+  
   public ProgressIndicator getOriginalProgressIndicator() {
     return myOriginal;
   }
@@ -73,8 +72,8 @@ public class ProgressWrapper extends AbstractProgressIndicatorBase implements Wr
            ((ProgressWrapper)indicator).getOriginalProgressIndicator() : indicator;
   }
 
-  @Nonnull
-  public static ProgressIndicator unwrapAll(@Nonnull ProgressIndicator indicator) {
+  
+  public static ProgressIndicator unwrapAll(ProgressIndicator indicator) {
     while (indicator instanceof ProgressWrapper) {
       indicator = ((ProgressWrapper)indicator).getOriginalProgressIndicator();
     }

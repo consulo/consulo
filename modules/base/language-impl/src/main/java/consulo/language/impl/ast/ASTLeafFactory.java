@@ -21,7 +21,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**
@@ -32,8 +31,8 @@ import java.util.function.Predicate;
 public interface ASTLeafFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTLeafFactory> EP = ElementTypeEntryExtensionCollector.create(ASTLeafFactory.class);
 
-  @Nonnull
-  LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text);
+  
+  LeafElement createLeaf(IElementType type, LanguageVersion languageVersion, CharSequence text);
 
   @Override
   boolean test(IElementType elementType);

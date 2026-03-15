@@ -17,12 +17,11 @@ package consulo.diff.content;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public interface FileContent extends DiffContent {
   /**
    * @return VirtualFile from which this content gets data.
    */
-  @Nonnull
+  
   VirtualFile getFile();
 }

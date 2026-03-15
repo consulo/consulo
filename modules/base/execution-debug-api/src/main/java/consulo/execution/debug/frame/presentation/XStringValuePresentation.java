@@ -17,7 +17,6 @@ package consulo.execution.debug.frame.presentation;
 
 import consulo.execution.debug.frame.XValueNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Renders a value as a string
@@ -27,12 +26,12 @@ import jakarta.annotation.Nonnull;
 public class XStringValuePresentation extends XValuePresentation {
   private final String myValue;
 
-  public XStringValuePresentation(@Nonnull String value) {
+  public XStringValuePresentation(String value) {
     myValue = value;
   }
 
   @Override
-  public void renderValue(@Nonnull XValueTextRenderer renderer) {
+  public void renderValue(XValueTextRenderer renderer) {
     renderer.renderStringValue(myValue, "\"\\", XValueNode.MAX_VALUE_LENGTH);
   }
 }

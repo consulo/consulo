@@ -15,7 +15,6 @@
  */
 package consulo.language.psi;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -24,11 +23,11 @@ import java.util.Objects;
 public final class ReferenceProviderType {
   private final String myId;
 
-  public ReferenceProviderType(@Nonnull String id) {
+  public ReferenceProviderType(String id) {
     myId = id;
   }
 
-  @Nonnull
+  
   public PsiReferenceProvider getProvider() {
     return Objects.requireNonNull(PsiReferenceProviderByType.forType(this), () -> "ReferenceProvider for " + myId + " is not registered");
   }

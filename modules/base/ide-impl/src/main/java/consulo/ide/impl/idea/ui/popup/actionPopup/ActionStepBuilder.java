@@ -10,8 +10,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +30,13 @@ class ActionStepBuilder {
     private int myMaxIconWidth = -1;
     private int myMaxIconHeight = -1;
 
-    ActionStepBuilder(@Nonnull DataContext dataContext,
+    ActionStepBuilder(DataContext dataContext,
                       boolean showNumbers,
                       boolean useAlphaAsNumbers,
                       boolean showDisabled,
                       boolean honorActionMnemonics,
                       @Nullable String actionPlace,
-                      @Nonnull PresentationFactory presentationFactory) {
+                      PresentationFactory presentationFactory) {
         myUseAlphaAsNumbers = useAlphaAsNumbers;
         myPresentationFactory = presentationFactory;
         myListModel = new ArrayList<>();
@@ -49,12 +48,12 @@ class ActionStepBuilder {
         myActionPlace = ObjectUtil.notNull(actionPlace, ActionPlaces.UNKNOWN);
     }
 
-    @Nonnull
+    
     public List<ActionPopupItem> getItems() {
         return myListModel;
     }
 
-    public void buildGroup(@Nonnull ActionGroup actionGroup) {
+    public void buildGroup(ActionGroup actionGroup) {
         appendActionsFromGroup(actionGroup);
 
         if (myListModel.isEmpty()) {
@@ -94,7 +93,7 @@ class ActionStepBuilder {
     }
 
     @RequiredUIAccess
-    private void appendActionsFromGroup(@Nonnull ActionGroup actionGroup) {
+    private void appendActionsFromGroup(ActionGroup actionGroup) {
         List<AnAction> actions =
             ActionGroupExpander.expandActionGroup(actionGroup, myPresentationFactory, myDataContext, myActionPlace, action -> {
                 if (myShowDisabled) {

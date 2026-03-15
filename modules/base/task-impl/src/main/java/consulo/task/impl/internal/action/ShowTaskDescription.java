@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
@@ -39,7 +38,7 @@ public class ShowTaskDescription extends BaseTaskAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
         if (event.getPresentation().isEnabled()) {
             Presentation presentation = event.getPresentation();
@@ -56,7 +55,7 @@ public class ShowTaskDescription extends BaseTaskAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         LocalTask task = getActiveTask(e);
         FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickjavadoc.ctrln");

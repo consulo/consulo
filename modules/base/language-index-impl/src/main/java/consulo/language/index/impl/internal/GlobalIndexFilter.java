@@ -6,7 +6,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.IndexId;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to exclude files from indexing, on a per-index basis.
@@ -18,18 +17,18 @@ public interface GlobalIndexFilter {
     /**
      * Returns true if the given file should be excluded from indexing by the given index.
      */
-    boolean isExcludedFromIndex(@Nonnull VirtualFile virtualFile, @Nonnull IndexId<?, ?> indexId);
+    boolean isExcludedFromIndex(VirtualFile virtualFile, IndexId<?, ?> indexId);
 
     int getVersion();
 
-    boolean affectsIndex(@Nonnull IndexId<?, ?> indexId);
+    boolean affectsIndex(IndexId<?, ?> indexId);
 
     ExtensionPointName<GlobalIndexFilter> EP_NAME = ExtensionPointName.create(GlobalIndexFilter.class);
 
     /**
      * Returns true if the given file should be excluded from indexing by any of the registered filters.
      */
-    static boolean isExcludedFromIndexViaFilters(@Nonnull VirtualFile file, @Nonnull IndexId<?, ?> indexId) {
+    static boolean isExcludedFromIndexViaFilters(VirtualFile file, IndexId<?, ?> indexId) {
         for (GlobalIndexFilter filter : EP_NAME.getExtensionList()) {
             if (filter.isExcludedFromIndex(file, indexId)) {
                 return true;
@@ -38,7 +37,7 @@ public interface GlobalIndexFilter {
         return false;
     }
 
-    static int getFiltersVersion(@Nonnull IndexId<?, ?> indexId) {
+    static int getFiltersVersion(IndexId<?, ?> indexId) {
         int result = 0;
         for (GlobalIndexFilter extension : EP_NAME.getExtensionList()) {
             if (extension.affectsIndex(indexId)) {

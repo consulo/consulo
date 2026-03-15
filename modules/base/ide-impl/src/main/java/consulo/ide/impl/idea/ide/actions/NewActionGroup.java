@@ -20,8 +20,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +38,7 @@ public class NewActionGroup extends ActionGroup {
         super(ActionLocalize.groupNewelementinmenuText(), false);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         AnAction[] actions = ((ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_WEIGHING_NEW)).getChildren(e);
@@ -59,7 +58,7 @@ public class NewActionGroup extends ActionGroup {
         return actions;
     }
 
-    public static boolean isActionInNewPopupMenu(@Nonnull AnAction action) {
+    public static boolean isActionInNewPopupMenu(AnAction action) {
         ActionManager actionManager = ActionManager.getInstance();
         ActionGroup fileGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
         if (!ActionImplUtil.anyActionFromGroupMatches(fileGroup, false, child -> child instanceof NewActionGroup)) {

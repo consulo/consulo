@@ -22,8 +22,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.SwipeLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCons
       myLayoutSupplier = layoutSupplier;
     }
 
-    @Nonnull
+   
     Layout get() {
       if (myLayout == null) {
         myLayout = myLayoutSupplier.get();
@@ -65,7 +64,7 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCons
     initDefaultPanel(myCardLayout = new JBCardLayout());
   }
 
-  private Layout show(LayoutInfo layoutInfo, @Nullable JBCardLayout.SwipeDirection swipeDirection) {
+  private Layout show(LayoutInfo layoutInfo, JBCardLayout.@Nullable SwipeDirection swipeDirection) {
     if (!layoutInfo.myIsAdded) {
       layoutInfo.myIsAdded = true;
 
@@ -82,9 +81,9 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCons
     return layoutInfo.get();
   }
 
-  @Nonnull
+ 
   @Override
-  public SwipeLayout register(@Nonnull String id, @Nonnull Supplier<Layout> layoutSupplier) {
+  public SwipeLayout register(String id, Supplier<Layout> layoutSupplier) {
     LayoutInfo layoutInfo = new LayoutInfo(id, layoutSupplier);
 
     myLayoutInfos.put(id, layoutInfo);
@@ -95,9 +94,9 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCons
     return this;
   }
 
-  @Nonnull
+ 
   @Override
-  public Layout swipeLeftTo(@Nonnull String id) {
+  public Layout swipeLeftTo(String id) {
     LayoutInfo info = myLayoutInfos.get(id);
     if (info == null) {
       throw new IllegalArgumentException(id + " is not registered");
@@ -105,9 +104,9 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCons
     return show(info, JBCardLayout.SwipeDirection.FORWARD);
   }
 
-  @Nonnull
+ 
   @Override
-  public Layout swipeRightTo(@Nonnull String id) {
+  public Layout swipeRightTo(String id) {
     LayoutInfo info = myLayoutInfos.get(id);
     if (info == null) {
       throw new IllegalArgumentException(id + " is not registered");
@@ -123,7 +122,7 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCons
   }
 
   @Override
-  public void remove(@Nonnull Component component) {
+  public void remove(Component component) {
     String id = null;
     for (LayoutInfo info : myLayoutInfos.values()) {
       if (info.get() == component) {

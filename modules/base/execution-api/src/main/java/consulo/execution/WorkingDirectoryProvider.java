@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import org.jetbrains.annotations.SystemIndependent;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface WorkingDirectoryProvider {

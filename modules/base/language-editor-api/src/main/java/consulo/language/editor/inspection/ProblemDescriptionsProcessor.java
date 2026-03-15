@@ -17,8 +17,7 @@ package consulo.language.editor.inspection;
 
 import consulo.language.editor.inspection.reference.RefEntity;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Collects the results of a global inspection.
@@ -35,14 +34,14 @@ public interface ProblemDescriptionsProcessor {
    * @return the problems found for the specified node.
    */
   @Nullable
-  CommonProblemDescriptor[] getDescriptions(@Nonnull RefEntity refEntity);
+  CommonProblemDescriptor[] getDescriptions(RefEntity refEntity);
 
   /**
    * Drops all problems which have been collected for the specified reference graph node.
    *
    * @param refEntity the reference graph node.
    */
-  void ignoreElement(@Nonnull RefEntity refEntity);
+  void ignoreElement(RefEntity refEntity);
 
   /**
    * Registers a problem or several problems, with optional quickfixes, for the specified
@@ -51,7 +50,7 @@ public interface ProblemDescriptionsProcessor {
    * @param refEntity                the reference graph node.
    * @param commonProblemDescriptors the descriptors for the problems to register.
    */
-  void addProblemElement(@Nullable RefEntity refEntity, @Nonnull CommonProblemDescriptor... commonProblemDescriptors);
+  void addProblemElement(@Nullable RefEntity refEntity, CommonProblemDescriptor... commonProblemDescriptors);
 
-  RefEntity getElement(@Nonnull CommonProblemDescriptor descriptor);
+  RefEntity getElement(CommonProblemDescriptor descriptor);
 }

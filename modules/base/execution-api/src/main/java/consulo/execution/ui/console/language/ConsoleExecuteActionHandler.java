@@ -20,7 +20,6 @@ import consulo.execution.internal.LanguageConsoleViewEx;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.undoRedo.ProjectUndoManager;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class ConsoleExecuteActionHandler {
 
@@ -41,10 +40,10 @@ public abstract class ConsoleExecuteActionHandler {
     myAddToHistory = addCurrentToHistory;
   }
 
-  protected void beforeExecution(@Nonnull LanguageConsoleView consoleView) {
+  protected void beforeExecution(LanguageConsoleView consoleView) {
   }
 
-  public void runExecuteAction(@Nonnull LanguageConsoleView consoleView) {
+  public void runExecuteAction(LanguageConsoleView consoleView) {
     if (!myUseProcessStdIn) {
       beforeExecution(consoleView);
     }
@@ -61,7 +60,7 @@ public abstract class ConsoleExecuteActionHandler {
     }
   }
 
-  public final void addToCommandHistoryAndExecute(@Nonnull LanguageConsoleView consoleView, @Nonnull String text) {
+  public final void addToCommandHistoryAndExecute(LanguageConsoleView consoleView, String text) {
     ((LanguageConsoleViewEx)consoleView).addToHistory(text);
 
     doExecute(text, consoleView);
@@ -75,5 +74,5 @@ public abstract class ConsoleExecuteActionHandler {
     myUseProcessStdIn = useProcessStdIn;
   }
 
-  public abstract void doExecute(@Nonnull String text, @Nonnull LanguageConsoleView consoleView);
+  public abstract void doExecute(String text, LanguageConsoleView consoleView);
 }

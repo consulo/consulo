@@ -16,9 +16,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -47,7 +45,7 @@ public final class LaterInvocator {
 
   private static final FlushQueue ourEdtQueue = new FlushQueue(SwingUtilities::invokeLater);
 
-  public static void addModalityStateListener(@RequiredUIAccess @Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+  public static void addModalityStateListener(@RequiredUIAccess ModalityStateListener listener, Disposable parentDisposable) {
     if (!ourModalityStateMulticaster.getListeners().contains(listener)) {
       ourModalityStateMulticaster.addListener(listener, parentDisposable);
     }
@@ -55,8 +53,8 @@ public final class LaterInvocator {
 
   private static final ConcurrentMap<Window, IdeaModalityStateEx> ourWindowModalities = Maps.newConcurrentWeakHashMap();
 
-  @Nonnull
-  public static IdeaModalityStateEx modalityStateForWindow(@Nonnull Window window) {
+  
+  public static IdeaModalityStateEx modalityStateForWindow(Window window) {
     return ourWindowModalities.computeIfAbsent(window, __ -> {
       synchronized (ourModalityStack) {
         for (IdeaModalityStateEx state : ourModalityStack) {
@@ -72,31 +70,31 @@ public final class LaterInvocator {
     });
   }
 
-  private static boolean isModalDialog(@Nonnull Object window) {
+  private static boolean isModalDialog(Object window) {
     return window instanceof Dialog && ((Dialog)window).isModal();
   }
 
-  @Nonnull
-  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
+  
+  public static AsyncResult<Void> invokeLater(Runnable runnable, BooleanSupplier expired) {
     ModalityState modalityState = IdeaModalityState.defaultModalityState();
     return invokeLater(runnable, modalityState, expired);
   }
 
-  @Nonnull
-  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+  
+  public static AsyncResult<Void> invokeLater(Runnable runnable, ModalityState modalityState) {
     return invokeLater(runnable, modalityState, () -> false);
   }
 
-  @Nonnull
-  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired) {
+  
+  public static AsyncResult<Void> invokeLater(Runnable runnable, ModalityState modalityState, BooleanSupplier expired) {
     AsyncResult<Void> callback = AsyncResult.undefined();
     invokeLaterWithCallback(runnable, modalityState, expired, callback);
     return callback;
   }
 
-  public static void invokeLaterWithCallback(@Nonnull Runnable runnable,
-                                             @Nonnull ModalityState modalityState,
-                                             @Nonnull BooleanSupplier expired,
+  public static void invokeLaterWithCallback(Runnable runnable,
+                                             ModalityState modalityState,
+                                             BooleanSupplier expired,
                                              @Nullable ActionCallback callback) {
     if (expired.getAsBoolean()) {
       if (callback != null) {
@@ -109,7 +107,7 @@ public final class LaterInvocator {
     requestFlush();
   }
 
-  public static void invokeAndWait(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
+  public static void invokeAndWait(final Runnable runnable, ModalityState modalityState) {
     UIAccess.assetIsNotUIThread();
 
     final Semaphore semaphore = new Semaphore();
@@ -130,7 +128,7 @@ public final class LaterInvocator {
       }
 
       @Override
-      @NonNls
+      
       public String toString() {
         return "InvokeAndWait[" + runnable + "]";
       }
@@ -150,7 +148,7 @@ public final class LaterInvocator {
     }
   }
 
-  public static void enterModal(@Nonnull Object modalEntity) {
+  public static void enterModal(Object modalEntity) {
     IdeaModalityStateEx state = getCurrentModalityState().appendEntity(modalEntity);
     if (isModalDialog(modalEntity)) {
       List<Object> currentEntities = state.getModalEntities();
@@ -160,7 +158,7 @@ public final class LaterInvocator {
     enterModal(modalEntity, state);
   }
 
-  public static void enterModal(@Nonnull Object modalEntity, @Nonnull IdeaModalityStateEx appendedState) {
+  public static void enterModal(Object modalEntity, IdeaModalityStateEx appendedState) {
     assertIsDispatchThread();
 
     if (LOG.isDebugEnabled()) {
@@ -177,7 +175,7 @@ public final class LaterInvocator {
     reincludeSkippedItemsAndRequestFlush();
   }
 
-  public static void enterModal(Project project, @Nonnull Dialog dialog) {
+  public static void enterModal(Project project, Dialog dialog) {
     assertIsDispatchThread();
 
     if (LOG.isDebugEnabled()) {
@@ -200,7 +198,7 @@ public final class LaterInvocator {
     modalEntitiesStack.push(new IdeaModalityStateEx(ourModalEntities));
   }
 
-  public static void leaveModal(Project project, @Nonnull Dialog dialog) {
+  public static void leaveModal(Project project, Dialog dialog) {
     assertIsDispatchThread();
 
     if (LOG.isDebugEnabled()) {
@@ -229,7 +227,7 @@ public final class LaterInvocator {
     reincludeSkippedItemsAndRequestFlush();
   }
 
-  private static void removeModality(@Nonnull Object modalEntity, int index) {
+  private static void removeModality(Object modalEntity, int index) {
     assertIsDispatchThread();
 
     ourModalEntities.remove(index);
@@ -241,7 +239,7 @@ public final class LaterInvocator {
     }
   }
 
-  public static void leaveModal(@Nonnull Object modalEntity) {
+  public static void leaveModal(Object modalEntity) {
     assertIsDispatchThread();
 
     if (LOG.isDebugEnabled()) {
@@ -266,14 +264,14 @@ public final class LaterInvocator {
     reincludeSkippedItemsAndRequestFlush();
   }
 
-  @Nonnull
+  
   public static Object [] getCurrentModalEntities() {
     assertIsDispatchThread();
 
     return ArrayUtil.toObjectArray(ourModalEntities);
   }
 
-  @Nonnull
+  
   public static IdeaModalityStateEx getCurrentModalityState() {
     assertIsDispatchThread();
 
@@ -301,7 +299,7 @@ public final class LaterInvocator {
     UIAccess.assertIsUIThread();
   }
 
-  @Nonnull
+  
   private static FlushQueue getRunnableQueue() {
     return ourEdtQueue;
   }

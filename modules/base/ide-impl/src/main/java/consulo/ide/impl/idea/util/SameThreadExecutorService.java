@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.util;
 
 import org.jetbrains.annotations.Contract;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,12 +30,12 @@ class SameThreadExecutorService extends AbstractExecutorService {
   }
 
   @Override
-  public boolean awaitTermination(long theTimeout, @Nonnull TimeUnit theUnit) {
+  public boolean awaitTermination(long theTimeout, TimeUnit theUnit) {
     shutdown();
     return true;
   }
 
-  @Nonnull
+  
   @Contract(pure = true)
   @Override
   public List<Runnable> shutdownNow() {
@@ -44,7 +43,7 @@ class SameThreadExecutorService extends AbstractExecutorService {
   }
 
   @Override
-  public void execute(@Nonnull Runnable command) {
+  public void execute(Runnable command) {
     command.run();
   }
 }

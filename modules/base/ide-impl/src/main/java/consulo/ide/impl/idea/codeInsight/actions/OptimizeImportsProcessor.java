@@ -27,8 +27,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.EmptyRunnable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,42 +41,42 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
   public static final String COMMAND_NAME = CodeInsightBundle.message("process.optimize.imports");
   private final List<NotificationInfo> myOptimizerNotifications = new SmartList<>();
 
-  public OptimizeImportsProcessor(@Nonnull Project project) {
+  public OptimizeImportsProcessor(Project project) {
     super(project, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get(), false);
   }
 
-  public OptimizeImportsProcessor(@Nonnull Project project, Module module) {
+  public OptimizeImportsProcessor(Project project, Module module) {
     super(project, module, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get(), false);
   }
 
-  public OptimizeImportsProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs) {
+  public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs) {
     super(project, directory, includeSubdirs, CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, false);
   }
 
-  public OptimizeImportsProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
+  public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
     super(project, directory, includeSubdirs,
       CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, processOnlyVcsChangedFiles);
   }
 
-  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile file) {
+  public OptimizeImportsProcessor(Project project, PsiFile file) {
     super(project, file, CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, false);
   }
 
-  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile[] files, Runnable postRunnable) {
+  public OptimizeImportsProcessor(Project project, PsiFile[] files, Runnable postRunnable) {
     this(project, files, COMMAND_NAME, postRunnable);
   }
 
-  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile[] files, String commandName, Runnable postRunnable) {
+  public OptimizeImportsProcessor(Project project, PsiFile[] files, String commandName, Runnable postRunnable) {
     super(project, files, CodeInsightLocalize.progressTextOptimizingImports().get(), commandName, postRunnable, false);
   }
 
-  public OptimizeImportsProcessor(@Nonnull AbstractLayoutCodeProcessor processor) {
+  public OptimizeImportsProcessor(AbstractLayoutCodeProcessor processor) {
     super(processor, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get());
   }
 
   @Override
-  @Nonnull
-  protected FutureTask<Boolean> prepareTask(@Nonnull PsiFile file, boolean processChangedTextOnly) {
+  
+  protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly) {
     if (DumbService.isDumb(file.getProject())) {
       return new FutureTask<>(EmptyRunnable.INSTANCE, true);
     }
@@ -110,7 +109,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     return new FutureTask<>(runnable, true);
   }
 
-  private void retrieveAndStoreNotificationInfo(@Nonnull Runnable runnable) {
+  private void retrieveAndStoreNotificationInfo(Runnable runnable) {
     if (runnable instanceof ImportOptimizer.CollectingInfoRunnable collectingInfoRunnable) {
       String optimizerMessage = collectingInfoRunnable.getUserNotificationInfo();
       myOptimizerNotifications.add(optimizerMessage != null ? new NotificationInfo(optimizerMessage) : NOTHING_CHANGED_NOTIFICATION);
@@ -148,7 +147,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     private final boolean mySomethingChanged;
     private final String myMessage;
 
-    NotificationInfo(@Nonnull String message) {
+    NotificationInfo(String message) {
       this(true, message);
     }
 

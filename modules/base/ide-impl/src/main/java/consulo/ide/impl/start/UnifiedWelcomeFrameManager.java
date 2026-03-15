@@ -35,7 +35,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -75,7 +74,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public IdeFrame createFrame() {
         Window welcomeFrame = Window.create(FrameTitleUtil.buildTitle(), WindowOptions.builder().disableResize().build());

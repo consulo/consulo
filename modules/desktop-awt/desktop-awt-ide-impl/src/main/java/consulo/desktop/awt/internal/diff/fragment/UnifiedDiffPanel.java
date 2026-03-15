@@ -22,8 +22,7 @@ import consulo.diff.comparison.DiffTooBigException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -36,14 +35,14 @@ public class UnifiedDiffPanel extends DiffPanelBase {
     private static final String OPERATION_CANCELED_CONTENT = "OperationCanceledContent";
     private static final String ERROR_CONTENT = "ErrorContent";
 
-    @Nonnull
+    
     private final AsyncProcessIcon.Big myBusyIcon;
 
     public UnifiedDiffPanel(
         @Nullable Project project,
-        @Nonnull UnifiedContentPanel content,
-        @Nonnull DataProvider provider,
-        @Nonnull DiffContext context
+        UnifiedContentPanel content,
+        DataProvider provider,
+        DiffContext context
     ) {
         super(project, provider, context);
         myBusyIcon = new AsyncProcessIcon.Big("UnifiedDiff");
@@ -82,7 +81,7 @@ public class UnifiedDiffPanel extends DiffPanelBase {
     }
 
     @Override
-    protected void setCurrentCard(@Nonnull String card) {
+    protected void setCurrentCard(String card) {
         if (card == LOADING_CONTENT) {
             myBusyIcon.resume();
         }

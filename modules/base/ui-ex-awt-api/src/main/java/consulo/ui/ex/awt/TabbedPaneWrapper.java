@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.internal.TabFactoryBuilder;
 import consulo.ui.ex.awt.internal.TabbedPaneHolder;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -51,7 +50,7 @@ public class TabbedPaneWrapper {
     }
   }
 
-  public TabbedPaneWrapper(@Nonnull Disposable parentDisposable) {
+  public TabbedPaneWrapper(Disposable parentDisposable) {
     this(SwingConstants.TOP, DEFAULT_PREV_NEXT_SHORTCUTS, parentDisposable);
   }
 
@@ -62,7 +61,7 @@ public class TabbedPaneWrapper {
    *                     <code>SwingConstants.LEFT</code>, <code>SwingConstants.BOTTOM</code> or
    *                     <code>SwingConstants.RIGHT</code>.
    */
-  public TabbedPaneWrapper(int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, @Nonnull Disposable parentDisposable) {
+  public TabbedPaneWrapper(int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, Disposable parentDisposable) {
     TabFactoryBuilder.TabFactory factory;
     if (SwingConstants.BOTTOM == tabPlacement || SwingConstants.TOP == tabPlacement) {
       factory = TabFactoryBuilder.getInstance().createJTabbedPanel(this);
@@ -350,7 +349,7 @@ public class TabbedPaneWrapper {
 
     private boolean myCustomFocus = true;
 
-    public TabWrapper(@Nonnull JComponent component) {
+    public TabWrapper(JComponent component) {
       super(new BorderLayout());
       myComponent = component;
       add(component, BorderLayout.CENTER);
@@ -360,7 +359,7 @@ public class TabbedPaneWrapper {
      * Make possible to search down for DataProviders
      */
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
       if (myComponent instanceof DataProvider) {
         return ((DataProvider)myComponent).getData(dataId);
       }

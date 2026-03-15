@@ -27,8 +27,7 @@ import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -44,7 +43,7 @@ public abstract class IntentionManager  {
    */
   public static final Key<Boolean> SHOW_INTENTION_OPTIONS_KEY = Key.create("SHOW_INTENTION_OPTIONS_KEY");
 
-  @Nonnull
+  
   public static IntentionManager getInstance() {
     return Application.get().getInstance(IntentionManager.class);
   }
@@ -56,14 +55,14 @@ public abstract class IntentionManager  {
    */
   @Deprecated(forRemoval = true)
   @DeprecationInfo("Use @ExtensionImpl for it")
-  public abstract void addAction(@Nonnull IntentionAction action);
+  public abstract void addAction(IntentionAction action);
 
   /**
    * Returns all registered intention actions.
    *
    * @return array of registered actions.
    */
-  @Nonnull
+  
   public abstract IntentionAction[] getIntentionActions();
 
   /**
@@ -72,7 +71,7 @@ public abstract class IntentionManager  {
    *
    * @return array of actions.
    */
-  @Nonnull
+  
   public abstract IntentionAction[] getAvailableIntentionActions();
 
   /**
@@ -80,8 +79,8 @@ public abstract class IntentionManager  {
    * E.g. actions for suppress the problem via comment, javadoc or annotation,
    * and edit corresponding inspection settings.
    */
-  @Nonnull
-  public abstract List<IntentionAction> getStandardIntentionOptions(@Nonnull HighlightDisplayKey displayKey, @Nonnull PsiElement context);
+  
+  public abstract List<IntentionAction> getStandardIntentionOptions(HighlightDisplayKey displayKey, PsiElement context);
 
   /**
    * @return "Fix all '' inspections problems for a file" intention if toolWrapper is local inspection or simple global one
@@ -94,19 +93,19 @@ public abstract class IntentionManager  {
    * @param action action to convert.
    * @return quick fix instance.
    */
-  @Nonnull
-  public abstract LocalQuickFix convertToFix(@Nonnull IntentionAction action);
+  
+  public abstract LocalQuickFix convertToFix(IntentionAction action);
 
   /**
    * @return intention to start code cleanup on file
    */
-  @Nonnull
+  
   public abstract IntentionAction createCleanupAllIntention();
 
   /**
    * @return options for cleanup intention {@link #createCleanupAllIntention()}
    * e.g. edit enabled cleanup inspections or starting cleanup on predefined scope
    */
-  @Nonnull
+  
   public abstract List<IntentionAction> getCleanupIntentionOptions();
 }

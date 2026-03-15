@@ -2,9 +2,7 @@
 package consulo.language.controlFlow;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -21,13 +19,13 @@ public interface Instruction {
     /**
      * Outgoing edges
      */
-    @Nonnull
+    
     Collection<Instruction> allSucc();
 
     /**
      * Incoming edges
      */
-    @Nonnull
+    
     Collection<Instruction> allPred();
 
     int num();
@@ -35,28 +33,28 @@ public interface Instruction {
     /**
      * element presentation is used in toString() for dumping the graph
      */
-    @Nonnull
-    @NonNls
+    
+    
     String getElementPresentation();
 
-    default void addSucc(@Nonnull Instruction endInstruction) {
+    default void addSucc(Instruction endInstruction) {
         if (!allSucc().contains(endInstruction)) {
             allSucc().add(endInstruction);
         }
     }
 
-    default void addPred(@Nonnull Instruction beginInstruction) {
+    default void addPred(Instruction beginInstruction) {
         if (!allPred().contains(beginInstruction)) {
             allPred().add(beginInstruction);
         }
     }
 
-    default void replacePred(@Nonnull Instruction oldInstruction, @Nonnull Collection<? extends Instruction> newInstructions) {
+    default void replacePred(Instruction oldInstruction, Collection<? extends Instruction> newInstructions) {
         newInstructions.forEach(el -> addPred(el));
         allPred().remove(oldInstruction);
     }
 
-    default void replaceSucc(@Nonnull Instruction oldInstruction, @Nonnull Collection<? extends Instruction> newInstructions) {
+    default void replaceSucc(Instruction oldInstruction, Collection<? extends Instruction> newInstructions) {
         newInstructions.forEach(el -> addSucc(el));
         allSucc().remove(oldInstruction);
     }

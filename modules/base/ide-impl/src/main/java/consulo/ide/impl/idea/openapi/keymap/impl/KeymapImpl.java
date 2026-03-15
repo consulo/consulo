@@ -32,7 +32,6 @@ import consulo.util.collection.Lists;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -93,7 +92,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     private KeymapManagerEx myKeymapManager;
     private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myName;
@@ -496,7 +495,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
         return ids;
     }
 
-    public boolean isActionBound(@Nonnull String actionId) {
+    public boolean isActionBound(String actionId) {
         return getKeymapManager().getBoundActions().contains(actionId);
     }
 
@@ -889,7 +888,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     }
 
     @Override
-    @Nonnull
+    
     public ExternalInfo getExternalInfo() {
         return myExternalInfo;
     }

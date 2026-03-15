@@ -26,8 +26,6 @@ import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Map;
 
@@ -76,7 +74,7 @@ public class CustomColorsPage implements ColorSettingsPage {
     ),
   };
 
-  @NonNls
+  
   private static final SyntaxTable SYNTAX_TABLE = new SyntaxTable();
   static {
     SYNTAX_TABLE.setLineComment("#");
@@ -97,25 +95,25 @@ public class CustomColorsPage implements ColorSettingsPage {
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDisplayName() {
     return ConfigurableLocalize.optionsCustomDisplayName();
   }
 
   @Override
-  @Nonnull
+  
   public AttributesDescriptor[] getAttributeDescriptors() {
     return ATTRS;
   }
 
   @Override
-  @Nonnull
+  
   public SyntaxHighlighter getHighlighter() {
     return new CustomFileHighlighter(SYNTAX_TABLE);
   }
 
   @Override
-  @Nonnull
+  
   public String getDemoText() {
     return IdeLocalize.colorCustom().get();
   }

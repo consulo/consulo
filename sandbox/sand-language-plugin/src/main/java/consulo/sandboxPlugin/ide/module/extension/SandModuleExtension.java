@@ -19,18 +19,17 @@ import consulo.content.bundle.SdkType;
 import consulo.module.content.layer.extension.ModuleExtensionWithSdkBase;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.sandboxPlugin.ide.bundle.SandBundleType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 public class SandModuleExtension extends ModuleExtensionWithSdkBase<SandModuleExtension> {
-  public SandModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel) {
+  public SandModuleExtension(String id, ModuleRootLayer rootModel) {
     super(id, rootModel);
   }
 
-  @Nonnull
+  
   @Override
   public Class<? extends SdkType> getSdkTypeClass() {
     return SandBundleType.class;

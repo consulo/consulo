@@ -22,8 +22,7 @@ import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,16 +31,16 @@ import jakarta.annotation.Nullable;
 public class UnsupportedDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     public static final UnsupportedDebuggerEditorsProvider INSTANCE = new UnsupportedDebuggerEditorsProvider();
 
-    @Nonnull
+    
     @Override
     public FileType getFileType() {
         throw new UnsupportedOperationException();
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public Document createDocument(@Nonnull Project project, @Nonnull String text, @Nullable XSourcePosition sourcePosition, @Nonnull EvaluationMode mode) {
+    public Document createDocument(Project project, String text, @Nullable XSourcePosition sourcePosition, EvaluationMode mode) {
         throw new UnsupportedOperationException();
     }
 }

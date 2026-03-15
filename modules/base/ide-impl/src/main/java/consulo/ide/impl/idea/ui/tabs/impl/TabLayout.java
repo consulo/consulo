@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ui.tabs.impl;
 
 import consulo.application.util.registry.Registry;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -30,7 +29,7 @@ public abstract class TabLayout {
     return new ShapeTransform.Top(rectangle);
   }
 
-  public boolean isDragOut(@Nonnull TabLabel tabLabel, int deltaX, int deltaY) {
+  public boolean isDragOut(TabLabel tabLabel, int deltaX, int deltaY) {
     return Math.abs(deltaY) > tabLabel.getSize().height * getDragOutMultiplier();
   }
 

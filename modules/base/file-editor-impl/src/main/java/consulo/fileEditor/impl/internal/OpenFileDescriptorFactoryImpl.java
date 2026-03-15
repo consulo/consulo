@@ -20,7 +20,6 @@ import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -47,42 +46,42 @@ public class OpenFileDescriptorFactoryImpl implements OpenFileDescriptorFactory 
             myFile = file;
         }
 
-        @Nonnull
+        
         @Override
         public Builder offset(int offset) {
             myOffset = offset;
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public Builder persist() {
             myPersist = true;
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public Builder line(int line) {
             myLine = line;
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public Builder column(int column) {
             myColumn = column;
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public Builder useCurrentWindow(boolean useCurrentWindow) {
             myUseCurrentWindow = useCurrentWindow;
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public OpenFileDescriptor build() {
             OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, myFile, myLine, myColumn, myOffset, myPersist);
@@ -98,9 +97,9 @@ public class OpenFileDescriptorFactoryImpl implements OpenFileDescriptorFactory 
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
-    public Builder newBuilder(@Nonnull VirtualFile file) {
+    public Builder newBuilder(VirtualFile file) {
         return new BuilderImp(myProject, file);
     }
 }

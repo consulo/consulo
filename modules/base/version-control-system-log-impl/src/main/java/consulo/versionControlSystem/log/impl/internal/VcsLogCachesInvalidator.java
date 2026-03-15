@@ -22,7 +22,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.log.impl.internal.util.PersistentUtil;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class VcsLogCachesInvalidator extends CachesInvalidator {
@@ -43,7 +42,7 @@ public class VcsLogCachesInvalidator extends CachesInvalidator {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription() {
     return LocalizeValue.localizeTODO("Invalidate VCS log");

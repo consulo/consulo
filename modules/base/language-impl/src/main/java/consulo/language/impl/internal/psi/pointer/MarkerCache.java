@@ -14,8 +14,7 @@ import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,11 +42,11 @@ class MarkerCache {
     private final SmartPointerTracker myPointers;
     private UpdatedRanges myUpdatedRanges;
 
-    MarkerCache(@Nonnull SmartPointerTracker pointers) {
+    MarkerCache(SmartPointerTracker pointers) {
         myPointers = pointers;
     }
 
-    private @Nonnull UpdatedRanges getUpdatedMarkers(@Nonnull FrozenDocument frozen, @Nonnull List<? extends DocumentEvent> events) {
+    private UpdatedRanges getUpdatedMarkers(FrozenDocument frozen, List<? extends DocumentEvent> events) {
         int eventCount = events.size();
         assert eventCount > 0;
 
@@ -71,8 +70,8 @@ class MarkerCache {
         return answer;
     }
 
-    @Nonnull
-    private static ManualRangeMarker[] createMarkers(@Nonnull List<? extends SelfElementInfo> infos) {
+    
+    private static ManualRangeMarker[] createMarkers(List<? extends SelfElementInfo> infos) {
         ManualRangeMarker[] markers = new ManualRangeMarker[infos.size()];
         int i = 0;
         while (i < markers.length) {
@@ -91,11 +90,11 @@ class MarkerCache {
         return markers;
     }
 
-    private static boolean rangeEquals(@Nonnull SelfElementInfo info, int start, int end, boolean greedy) {
+    private static boolean rangeEquals(SelfElementInfo info, int start, int end, boolean greedy) {
         return start == info.getPsiStartOffset() && end == info.getPsiEndOffset() && greedy == info.isGreedy();
     }
 
-    private static @Nonnull UpdatedRanges applyEvents(@Nonnull List<? extends DocumentEvent> events, @Nonnull UpdatedRanges struct) {
+    private static UpdatedRanges applyEvents(List<? extends DocumentEvent> events, UpdatedRanges struct) {
         FrozenDocument frozen = struct.myResultDocument;
         ManualRangeMarker[] resultMarkers = struct.myMarkers.clone();
         for (DocumentEvent event : events) {
@@ -126,7 +125,7 @@ class MarkerCache {
         return new UpdatedRanges(struct.myEventCount + events.size(), frozen, struct.mySortedInfos, resultMarkers);
     }
 
-    boolean updateMarkers(@Nonnull FrozenDocument frozen, @Nonnull List<? extends DocumentEvent> events) {
+    boolean updateMarkers(FrozenDocument frozen, List<? extends DocumentEvent> events) {
         UpdatedRanges updated = getUpdatedMarkers(frozen, events);
 
         boolean sorted = true;
@@ -143,26 +142,26 @@ class MarkerCache {
     }
 
     @Nullable
-    TextRange getUpdatedRange(@Nonnull SelfElementInfo info, @Nonnull FrozenDocument frozen, @Nonnull List<? extends DocumentEvent> events) {
+    TextRange getUpdatedRange(SelfElementInfo info, FrozenDocument frozen, List<? extends DocumentEvent> events) {
         UpdatedRanges struct = getUpdatedMarkers(frozen, events);
         int i = Collections.binarySearch(struct.mySortedInfos, info, INFO_COMPARATOR);
         ManualRangeMarker updated = i >= 0 ? struct.myMarkers[i] : null;
         return updated == null ? null : new UnfairTextRange(updated.getStartOffset(), updated.getEndOffset());
     }
 
-    static @Nullable Segment getUpdatedRange(@Nonnull PsiFile containingFile,
-                                             @Nonnull Segment segment,
+    static @Nullable Segment getUpdatedRange(PsiFile containingFile,
+                                             Segment segment,
                                              boolean isSegmentGreedy,
-                                             @Nonnull FrozenDocument frozen,
-                                             @Nonnull List<? extends DocumentEvent> events) {
+                                             FrozenDocument frozen,
+                                             List<? extends DocumentEvent> events) {
         SelfElementInfo info = new SelfElementInfo(ProperTextRange.create(segment), new Identikit() {
             @Override
-            public @Nullable PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset) {
+            public @Nullable PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset) {
                 return null;
             }
 
             @Override
-            public @Nonnull Language getFileLanguage() {
+            public Language getFileLanguage() {
                 throw new IllegalStateException();
             }
 
@@ -192,7 +191,7 @@ class MarkerCache {
         return updated.myMarkers[0];
     }
 
-    private static boolean isWholeDocumentReplace(@Nonnull FrozenDocument frozen, @Nonnull DocumentEventImpl event) {
+    private static boolean isWholeDocumentReplace(FrozenDocument frozen, DocumentEventImpl event) {
         return event.getInitialStartOffset() == 0 && event.getInitialOldLength() == frozen.getTextLength();
     }
 
@@ -207,9 +206,9 @@ class MarkerCache {
         private final ManualRangeMarker[] myMarkers;
 
         UpdatedRanges(int eventCount,
-                      @Nonnull FrozenDocument resultDocument,
-                      @Nonnull List<SelfElementInfo> sortedInfos,
-                      @Nonnull ManualRangeMarker[] markers) {
+                      FrozenDocument resultDocument,
+                      List<SelfElementInfo> sortedInfos,
+                      ManualRangeMarker[] markers) {
             myEventCount = eventCount;
             myResultDocument = resultDocument;
             mySortedInfos = sortedInfos;

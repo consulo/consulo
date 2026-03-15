@@ -3,19 +3,18 @@ package consulo.language;
 
 import consulo.language.util.LanguageUtil;
 
-import jakarta.annotation.Nonnull;
 
 final class MetaLanguageKindMatcher extends LanguageMatcher {
 
-  @Nonnull
+  
   private final MetaLanguage myLanguage;
 
-  MetaLanguageKindMatcher(@Nonnull MetaLanguage language) {
+  MetaLanguageKindMatcher(MetaLanguage language) {
     myLanguage = language;
   }
 
   @Override
-  public boolean matchesLanguage(@Nonnull Language language) {
+  public boolean matchesLanguage(Language language) {
     return LanguageUtil.hierarchy(language).filter(myLanguage::matchesLanguage).isNotEmpty();
   }
 

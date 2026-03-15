@@ -2,7 +2,6 @@ package consulo.language.psi.scope;
 
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -13,7 +12,7 @@ public class DelegatingGlobalSearchScope extends GlobalSearchScope {
   protected final GlobalSearchScope myBaseScope;
   private final Object myEquality;
 
-  public DelegatingGlobalSearchScope(@Nonnull GlobalSearchScope baseScope) {
+  public DelegatingGlobalSearchScope(GlobalSearchScope baseScope) {
     super(baseScope.getProject());
     myBaseScope = baseScope;
     myEquality = new Object();
@@ -26,22 +25,22 @@ public class DelegatingGlobalSearchScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return myBaseScope.contains(file);
   }
 
   @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     return myBaseScope.compare(file1, file2);
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return myBaseScope.isSearchInModuleContent(aModule);
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
+  public boolean isSearchInModuleContent(Module aModule, boolean testSources) {
     return myBaseScope.isSearchInModuleContent(aModule, testSources);
   }
 

@@ -21,7 +21,6 @@ import consulo.compiler.artifact.execution.BuildArtifactsBeforeRunTaskHelper;
 import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -40,12 +39,12 @@ public class BuildArtifactsBeforeRunTaskHelperImpl implements BuildArtifactsBefo
   }
 
   @Override
-  public void setBuildArtifactBeforeRunOption(@Nonnull DataContext dataContext, @Nonnull Artifact artifact, boolean enable) {
+  public void setBuildArtifactBeforeRunOption(DataContext dataContext, Artifact artifact, boolean enable) {
     BuildArtifactsBeforeRunTaskProvider.setBuildArtifactBeforeRunOption(dataContext, myProject, artifact, enable);
   }
 
   @Override
-  public void setBuildArtifactBeforeRun(@Nonnull RunConfiguration configuration, @Nonnull Artifact artifact) {
+  public void setBuildArtifactBeforeRun(RunConfiguration configuration, Artifact artifact) {
     BuildArtifactsBeforeRunTaskProvider.setBuildArtifactBeforeRun(myProject, configuration, artifact);
   }
 }

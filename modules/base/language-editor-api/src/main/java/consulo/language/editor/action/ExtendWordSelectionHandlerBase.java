@@ -24,8 +24,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +66,7 @@ public abstract class ExtendWordSelectionHandlerBase implements ExtendWordSelect
    * @param cursorOffset current caret offset in editor
    * @return minimal selection length for given element
    */
-  public int getMinimalTextRangeLength(@Nonnull PsiElement element, @Nonnull CharSequence text, int cursorOffset) {
+  public int getMinimalTextRangeLength(PsiElement element, CharSequence text, int cursorOffset) {
     return 0;
   }
 

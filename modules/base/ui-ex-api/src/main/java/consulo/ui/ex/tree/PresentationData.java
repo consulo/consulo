@@ -28,8 +28,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -70,7 +69,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      * @param attributesKey   the attributes for rendering the item text.
      */
     public PresentationData(
-        @Nonnull LocalizeValue presentableText,
+        LocalizeValue presentableText,
         String locationString,
         Image icon,
         @Nullable TextAttributesKey attributesKey
@@ -139,7 +138,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      *
      * @param locationString the location of the object.
      */
-    public void setLocationString(@Nonnull LocalizeValue locationString) {
+    public void setLocationString(LocalizeValue locationString) {
         myLocationString = locationString.get();
     }
 
@@ -158,7 +157,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      *
      * @param presentableText the name of the object.
      */
-    public void setPresentableText(@Nonnull LocalizeValue presentableText) {
+    public void setPresentableText(LocalizeValue presentableText) {
         myPresentableText = presentableText.get();
     }
 
@@ -228,7 +227,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myChanged = changed;
     }
 
-    @Nonnull
+    
     public List<PresentableNodeDescriptor.ColoredFragment> getColoredText() {
         return myColoredText;
     }
@@ -241,7 +240,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myColoredText.add(new PresentableNodeDescriptor.ColoredFragment(LocalizeValue.ofNullable(text), attributes));
     }
 
-    public void addText(@Nonnull LocalizeValue text, SimpleTextAttributes attributes) {
+    public void addText(LocalizeValue text, SimpleTextAttributes attributes) {
         myColoredText.add(new PresentableNodeDescriptor.ColoredFragment(text, LocalizeValue.empty(), attributes));
     }
 
@@ -265,7 +264,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     @Override
-    @Nonnull
+    
     public Object[] getEqualityObjects() {
         return new Object[]{myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText, myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
     }

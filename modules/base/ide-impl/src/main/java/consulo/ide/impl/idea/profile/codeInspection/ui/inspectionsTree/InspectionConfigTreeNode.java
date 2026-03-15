@@ -19,8 +19,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
 import consulo.application.util.ClearableLazyValue;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -30,7 +29,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
   private final ClearableLazyValue<Boolean> myProperSetting = new ClearableLazyValue<Boolean>() {
-    @Nonnull
+    
     @Override
     protected Boolean compute() {
       ToolDescriptors descriptors = getDescriptors();
@@ -48,7 +47,7 @@ public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
     }
   };
 
-  public InspectionConfigTreeNode(@Nonnull Object userObject) {
+  public InspectionConfigTreeNode(Object userObject) {
     super(userObject);
   }
 

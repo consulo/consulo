@@ -15,7 +15,6 @@
  */
 package consulo.language.psi.stub;
 
-import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -25,7 +24,7 @@ import java.util.Map;
 public abstract class LexerBasedIdIndexer implements IdIndexer, IdAndToDoScannerBasedOnFilterLexer {
   
   @Override
-  @Nonnull
+  
   public final Map<IdIndexEntry,Integer> map(FileContent inputData) {
     return BaseFilterLexerUtil.scanContent(inputData, this).idMap;
   }

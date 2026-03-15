@@ -25,7 +25,6 @@ import consulo.sandboxPlugin.lang.psi.SandElements;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -39,9 +38,9 @@ public class SandParser implements PsiParser {
     myPairs = list;
   }
 
-  @Nonnull
+  
   @Override
-  public ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion) {
+  public ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion) {
     PsiBuilder.Marker mark = builder.mark();
     while (!builder.eof()) {
       boolean find = false;

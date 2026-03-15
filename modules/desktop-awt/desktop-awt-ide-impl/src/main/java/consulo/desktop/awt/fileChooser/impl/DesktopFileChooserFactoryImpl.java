@@ -25,28 +25,27 @@ import consulo.ui.TextBox;
 import consulo.desktop.awt.ui.impl.textBox.TextBoxWithTextField;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 @Singleton
 @ServiceImpl
 public class DesktopFileChooserFactoryImpl extends FileChooserFactoryImpl {
-  @Nonnull
+ 
   @Override
-  public FileTextField createFileTextField(@Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
+  public FileTextField createFileTextField(FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
     return new FileTextFieldImpl.Vfs(new JTextField(), getMacroMap(), parent, new LocalFsFinder.FileChooserFilter(descriptor, showHidden));
   }
 
   @Override
-  public void installFileCompletion(@Nonnull JTextField field, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
+  public void installFileCompletion(JTextField field, FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
     if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
       new FileTextFieldImpl.Vfs(field, getMacroMap(), parent, new LocalFsFinder.FileChooserFilter(descriptor, showHidden));
     }
   }
 
   @Override
-  public void installFileCompletion(@Nonnull TextBox textBox, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable consulo.disposer.Disposable parent) {
+  public void installFileCompletion(TextBox textBox, FileChooserDescriptor descriptor, boolean showHidden, consulo.disposer.@Nullable Disposable parent) {
     if(!(textBox instanceof TextBoxWithTextField)) {
       throw new UnsupportedOperationException(textBox + " is not TextBoxWithTextField");
     }

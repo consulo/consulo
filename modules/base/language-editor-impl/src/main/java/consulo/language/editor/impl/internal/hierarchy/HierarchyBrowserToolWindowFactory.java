@@ -28,7 +28,6 @@ import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class HierarchyBrowserToolWindowFactory implements ToolWindowFactory, DumbAware {
-    @Nonnull
+    
     @Override
     public String getId() {
         return ToolWindowId.HIERARCHY;
@@ -48,13 +47,13 @@ public class HierarchyBrowserToolWindowFactory implements ToolWindowFactory, Dum
     }
 
     @Override
-    public boolean shouldBeAvailable(@Nonnull Project project) {
+    public boolean shouldBeAvailable(Project project) {
         return false;
     }
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ContentManagerWatcher.watchContentManager(toolWindow, toolWindow.getContentManager());
     }
 
@@ -63,19 +62,19 @@ public class HierarchyBrowserToolWindowFactory implements ToolWindowFactory, Dum
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.RIGHT;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowhierarchy();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return UILocalize.toolWindowNameHierarchy();

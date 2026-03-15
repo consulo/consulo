@@ -21,7 +21,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,9 +29,9 @@ import jakarta.annotation.Nonnull;
 public interface DirectoryIndexExcludePolicy {
     ExtensionPointName<DirectoryIndexExcludePolicy> EP_NAME = ExtensionPointName.create(DirectoryIndexExcludePolicy.class);
 
-    @Nonnull
+    
     VirtualFile[] getExcludeRootsForProject();
 
-    @Nonnull
-    VirtualFilePointer[] getExcludeRootsForModule(@Nonnull ModuleRootLayer rootModel);
+    
+    VirtualFilePointer[] getExcludeRootsForModule(ModuleRootLayer rootModel);
 }

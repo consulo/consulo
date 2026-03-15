@@ -31,8 +31,7 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -43,17 +42,17 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   private final Map<AdditionalTabComponent, Content> myAdditionalContent = new HashMap<AdditionalTabComponent, Content>();
   private final SearchScope mySearchScope;
 
-  protected LogConsoleManagerBase(@Nonnull Project project, @Nonnull SearchScope searchScope) {
+  protected LogConsoleManagerBase(Project project, SearchScope searchScope) {
     myProject = project;
     mySearchScope = searchScope;
   }
 
   @Override
-  public void addLogConsole(@Nonnull String name, @Nonnull String path, @Nonnull Charset charset, long skippedContent, @Nonnull RunConfigurationBase runConfiguration) {
+  public void addLogConsole(String name, String path, Charset charset, long skippedContent, RunConfigurationBase runConfiguration) {
     addLogConsole(name, path, charset, skippedContent, getDefaultIcon(), runConfiguration);
   }
 
-  public void addLogConsole(final String name, final String path, @Nonnull Charset charset, final long skippedContent, Image icon, @Nullable RunProfile runProfile) {
+  public void addLogConsole(final String name, final String path, Charset charset, final long skippedContent, Image icon, @Nullable RunProfile runProfile) {
     doAddLogConsole(new LogConsoleImpl(myProject, new File(path), charset, skippedContent, name, false, mySearchScope) {
       @Override
       public boolean isActive() {
@@ -62,7 +61,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
     }, path, icon, runProfile);
   }
 
-  private void doAddLogConsole(@Nonnull final LogConsoleBase log, String id, Image icon, @Nullable RunProfile runProfile) {
+  private void doAddLogConsole(final LogConsoleBase log, String id, Image icon, @Nullable RunProfile runProfile) {
     if (runProfile instanceof RunConfigurationBase) {
       ((RunConfigurationBase)runProfile).customizeLogConsole(log);
     }
@@ -83,7 +82,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   }
 
   @Override
-  public void removeLogConsole(@Nonnull String path) {
+  public void removeLogConsole(String path) {
     Content content = getUi().findContent(path);
     if (content != null) {
       removeAdditionalTabComponent((LogConsoleBase)content.getComponent());
@@ -91,11 +90,11 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   }
 
   @Override
-  public void addAdditionalTabComponent(@Nonnull AdditionalTabComponent tabComponent, @Nonnull String id) {
+  public void addAdditionalTabComponent(AdditionalTabComponent tabComponent, String id) {
     addAdditionalTabComponent(tabComponent, id, getDefaultIcon());
   }
 
-  public Content addAdditionalTabComponent(@Nonnull AdditionalTabComponent tabComponent, @Nonnull String id, @Nullable Image icon) {
+  public Content addAdditionalTabComponent(AdditionalTabComponent tabComponent, String id, @Nullable Image icon) {
     Content logContent = getUi().createContent(id, (ComponentWithActions)tabComponent, tabComponent.getTabTitle(), icon,
                                                tabComponent.getPreferredFocusableComponent());
     myAdditionalContent.put(tabComponent, logContent);
@@ -104,7 +103,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   }
 
   @Override
-  public void removeAdditionalTabComponent(@Nonnull AdditionalTabComponent component) {
+  public void removeAdditionalTabComponent(AdditionalTabComponent component) {
     Disposer.dispose(component);
     Content content = myAdditionalContent.remove(component);
     if (!getUi().isDisposed()) {

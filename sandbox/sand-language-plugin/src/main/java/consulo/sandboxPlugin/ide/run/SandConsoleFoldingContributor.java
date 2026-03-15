@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.ui.console.ConsoleFoldingContributor;
 import consulo.execution.ui.console.ConsoleFoldingRegistrator;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class SandConsoleFoldingContributor implements ConsoleFoldingContributor {
   @Override
-  public void register(@Nonnull ConsoleFoldingRegistrator registrator) {
+  public void register(ConsoleFoldingRegistrator registrator) {
     registrator.addFolding("at java.util.stream.WhileOps");
   }
 }

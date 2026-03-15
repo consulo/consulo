@@ -21,7 +21,6 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 @Deprecated
 public class ProjectCodeStyleFacadeImpl extends CodeStyleFacadeImpl implements ProjectCodeStyleFacade {
   @Inject
-  public ProjectCodeStyleFacadeImpl(@Nonnull Project project) {
+  public ProjectCodeStyleFacadeImpl(Project project) {
     super(project);
   }
 }

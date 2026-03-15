@@ -21,8 +21,7 @@ import consulo.ui.ex.keymap.util.KeymapUtil;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -154,7 +153,7 @@ public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
 
   @Nullable
   @Override
-  public Iterable<MatcherTextRange> matchingFragments(@Nonnull String text) {
+  public Iterable<MatcherTextRange> matchingFragments(String text) {
     if (myMatcher instanceof MinusculeMatcher) {
       return ((MinusculeMatcher)myMatcher).matchingFragments(text);
     }
@@ -177,12 +176,12 @@ public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
   }
 
   @Override
-  public void addChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void addChangeListener(PropertyChangeListener listener) {
     myChangeSupport.addPropertyChangeListener(listener);
   }
 
   @Override
-  public void removeChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void removeChangeListener(PropertyChangeListener listener) {
     myChangeSupport.removePropertyChangeListener(listener);
   }
 
@@ -191,7 +190,7 @@ public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
   }
 
   @Override
-  public void findAndSelectElement(@Nonnull String searchQuery) {
+  public void findAndSelectElement(String searchQuery) {
 
   }
 

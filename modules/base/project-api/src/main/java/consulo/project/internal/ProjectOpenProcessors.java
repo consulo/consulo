@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -31,16 +30,16 @@ import java.util.List;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ProjectOpenProcessors {
 
-  @Nonnull
+  
   public static ProjectOpenProcessors getInstance() {
     return Application.get().getInstance(ProjectOpenProcessors.class);
   }
 
-  @Nonnull
+  
   List<ProjectOpenProcessor> getProcessors();
 
   @Nullable
-  default ProjectOpenProcessor findProcessor(@Nonnull File file) {
+  default ProjectOpenProcessor findProcessor(File file) {
     for (ProjectOpenProcessor provider : getProcessors()) {
       if (provider.canOpenProject(file)) {
         return provider;

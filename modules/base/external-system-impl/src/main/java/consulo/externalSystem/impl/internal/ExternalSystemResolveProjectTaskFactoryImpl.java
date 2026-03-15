@@ -21,7 +21,6 @@ import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.service.ExternalSystemResolveProjectTask;
 import consulo.externalSystem.service.ExternalSystemResolveProjectTaskFactory;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,9 +30,9 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class ExternalSystemResolveProjectTaskFactoryImpl implements ExternalSystemResolveProjectTaskFactory {
-    @Nonnull
+    
     @Override
-    public ExternalSystemResolveProjectTask createResolveProjectTask(@Nonnull ProjectSystemId externalSystemId, @Nonnull Project project, @Nonnull String projectPath, boolean isPreviewMode) {
+    public ExternalSystemResolveProjectTask createResolveProjectTask(ProjectSystemId externalSystemId, Project project, String projectPath, boolean isPreviewMode) {
         return new ExternalSystemResolveProjectTaskImpl(externalSystemId, project, projectPath, isPreviewMode);
     }
 }

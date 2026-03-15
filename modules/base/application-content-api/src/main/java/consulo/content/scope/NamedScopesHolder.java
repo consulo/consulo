@@ -25,8 +25,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +41,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     protected final Project myProject;
     private VirtualFile myProjectBaseDir;
 
-    public NamedScopesHolder(@Nonnull Project project) {
+    public NamedScopesHolder(Project project) {
         myProject = project;
     }
 
@@ -67,17 +66,17 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
      * @deprecated use {@link #addScopeListener(ScopeListener, Disposable)} instead
      */
     @Deprecated
-    public void addScopeListener(@Nonnull ScopeListener scopeListener) {
+    public void addScopeListener(ScopeListener scopeListener) {
         myScopeListeners.add(scopeListener);
     }
 
-    public void addScopeListener(@Nonnull ScopeListener scopeListener, @Nonnull Disposable parentDisposable) {
+    public void addScopeListener(ScopeListener scopeListener, Disposable parentDisposable) {
         myScopeListeners.add(scopeListener);
         Disposer.register(parentDisposable, () -> myScopeListeners.remove(scopeListener));
     }
 
     @Deprecated
-    public void removeScopeListener(@Nonnull ScopeListener scopeListener) {
+    public void removeScopeListener(ScopeListener scopeListener) {
         myScopeListeners.remove(scopeListener);
     }
 
@@ -87,7 +86,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         }
     }
 
-    @Nonnull
+    
     public NamedScope[] getScopes() {
         List<NamedScope> scopes = new ArrayList<>();
         List<NamedScope> list = getPredefinedScopes();
@@ -116,7 +115,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     }
 
     @Nullable
-    public static NamedScope getScope(@Nonnull Project project, String scopeId) {
+    public static NamedScope getScope(Project project, String scopeId) {
         NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
         for (NamedScopesHolder holder : holders) {
             NamedScope scope = holder.getScope(scopeId);
@@ -128,7 +127,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     }
 
     @Nullable
-    public static Pair<NamedScopesHolder, NamedScope> getScopeWithHolder(@Nonnull Project project, String scopeId) {
+    public static Pair<NamedScopesHolder, NamedScope> getScopeWithHolder(Project project, String scopeId) {
         NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
         for (NamedScopesHolder holder : holders) {
             NamedScope scope = holder.getScope(scopeId);
@@ -139,8 +138,8 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return null;
     }
 
-    @Nonnull
-    public static NamedScopesHolder[] getAllNamedScopeHolders(@Nonnull Project project) {
+    
+    public static NamedScopesHolder[] getAllNamedScopeHolders(Project project) {
         List<NamedScopesHolder> holders = new ArrayList<>();
         NamedScopesHolderProvider.EP.forEachExtensionSafe(project, namedScopesHolderProvider -> {
             NamedScopesHolder scopesHolder = namedScopesHolderProvider.getScopesHolder();
@@ -216,7 +215,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return getPredefinedScope(name);
     }
 
-    @Nonnull
+    
     public List<NamedScope> getPredefinedScopes() {
         return Collections.emptyList();
     }
@@ -226,13 +225,13 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return null;
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
 
-    @Nonnull
-    public final NamedScope createScope(@Nonnull String name, @Nullable PackageSet value) {
+    
+    public final NamedScope createScope(String name, @Nullable PackageSet value) {
         return new NamedScope(name, value);
     }
 }

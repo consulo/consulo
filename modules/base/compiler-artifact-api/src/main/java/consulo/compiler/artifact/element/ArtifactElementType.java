@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -36,7 +35,7 @@ import java.util.*;
  */
 @ExtensionImpl
 public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPackagingElement> {
-  @Nonnull
+  
   public static ArtifactElementType getInstance() {
     return getInstance(ArtifactElementType.class);
   }
@@ -46,20 +45,20 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     super("artifact", CompilerLocalize.elementTypeNameArtifact());
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
+  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
     return !getAvailableArtifacts(context, artifact, false).isEmpty();
   }
 
   @Override
-  @Nonnull
-  public List<? extends ArtifactPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
+  
+  public List<? extends ArtifactPackagingElement> chooseAndCreate(ArtifactEditorContext context, Artifact artifact, CompositePackagingElement<?> parent) {
     List<Artifact> artifacts = context.chooseArtifacts(getAvailableArtifacts(context, artifact, false), CompilerBundle.message("dialog.title.choose.artifacts"));
     List<ArtifactPackagingElement> elements = new ArrayList<>();
     for (Artifact selected : artifacts) {
@@ -69,8 +68,8 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     return elements;
   }
 
-  @Nonnull
-  public static List<? extends Artifact> getAvailableArtifacts(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, boolean notIncludedOnly) {
+  
+  public static List<? extends Artifact> getAvailableArtifacts(ArtifactEditorContext context, Artifact artifact, boolean notIncludedOnly) {
     Set<Artifact> result = new HashSet<>(Arrays.asList(context.getArtifactModel().getArtifacts()));
     if (notIncludedOnly) {
       ArtifactUtil.processPackagingElements(artifact, getInstance(), artifactPackagingElement -> {
@@ -93,8 +92,8 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
   }
 
   @Override
-  @Nonnull
-  public ArtifactPackagingElement createEmpty(@Nonnull Project project) {
+  
+  public ArtifactPackagingElement createEmpty(Project project) {
     return new ArtifactPackagingElement(ArtifactPointerManager.getInstance(project));
   }
 

@@ -20,27 +20,26 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;
 import consulo.diff.util.TextDiffType;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public class InlineHighlighterBuilder {
-  @Nonnull
+  
   private final Editor editor;
-  @Nonnull
+  
   private final TextDiffType type;
   private final int start;
   private final int end;
 
-  InlineHighlighterBuilder(@Nonnull Editor editor, int start, int end, @Nonnull TextDiffType type) {
+  InlineHighlighterBuilder(Editor editor, int start, int end, TextDiffType type) {
     this.editor = editor;
     this.type = type;
     this.start = start;
     this.end = end;
   }
 
-  @Nonnull
+  
   public List<RangeHighlighter> done() {
     TextAttributes attributes = DiffDrawUtil.getTextAttributes(type, editor, false);
 
@@ -52,7 +51,7 @@ public class InlineHighlighterBuilder {
     return Collections.singletonList(highlighter);
   }
 
-  private static void installEmptyRangeRenderer(@Nonnull RangeHighlighter highlighter, @Nonnull TextDiffType type) {
+  private static void installEmptyRangeRenderer(RangeHighlighter highlighter, TextDiffType type) {
     highlighter.setCustomRenderer(new DiffEmptyHighlighterRenderer(type));
   }
 }

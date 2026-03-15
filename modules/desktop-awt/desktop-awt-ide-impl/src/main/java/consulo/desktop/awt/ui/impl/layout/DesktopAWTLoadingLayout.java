@@ -25,7 +25,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.LoadingLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.Future;
@@ -58,7 +57,7 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
 
     @RequiredUIAccess
     @Override
-    public <Value> Future<Value> startLoading(@Nonnull Supplier<Value> valueGetter, @Nonnull BiConsumer<L, Value> uiSetter) {
+    public <Value> Future<Value> startLoading(Supplier<Value> valueGetter, BiConsumer<L, Value> uiSetter) {
         UIAccess uiAccess = UIAccess.current();
 
         startLoading();
@@ -81,7 +80,7 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
 
     @RequiredUIAccess
     @Override
-    public void startLoading(@Nonnull LocalizeValue loadingText) {
+    public void startLoading(LocalizeValue loadingText) {
         myInnerLayout.removeAll();
         toAWTComponent().setLoadingText(loadingText.getValue());
         forceUpdate();
@@ -89,7 +88,7 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
 
     @RequiredUIAccess
     @Override
-    public void stopLoading(@Nonnull Consumer<L> consumer) {
+    public void stopLoading(Consumer<L> consumer) {
         consumer.accept(myInnerLayout);
         toAWTComponent().stopLoading();
         forceUpdate();
@@ -102,7 +101,7 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
 
     @RequiredUIAccess
     @Override
-    public void setLoadingText(@Nonnull LocalizeValue loadingText) {
+    public void setLoadingText(LocalizeValue loadingText) {
         toAWTComponent().setLoadingText(loadingText.getValue());
     }
 }

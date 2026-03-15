@@ -26,18 +26,17 @@ import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
  */
 class WolfHighlightingPass extends ProgressableTextEditorHighlightingPass implements DumbAware {
-  WolfHighlightingPass(@Nonnull Project project, @Nonnull Document document, @Nonnull PsiFile file) {
+  WolfHighlightingPass(Project project, Document document, PsiFile file) {
     super(project, document, DaemonLocalize.passWolf().get(), file, null, TextRange.EMPTY_RANGE, false, HighlightInfoProcessor.getEmpty());
   }
 
   @Override
-  protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
+  protected void collectInformationWithProgress(ProgressIndicator progress) {
     WolfTheProblemSolver solver = WolfTheProblemSolver.getInstance(myProject);
     if (solver instanceof WolfTheProblemSolverImpl) {
       ((WolfTheProblemSolverImpl)solver).startCheckingIfVincentSolvedProblemsYet(progress, this);

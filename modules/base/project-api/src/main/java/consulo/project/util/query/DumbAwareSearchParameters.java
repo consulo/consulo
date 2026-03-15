@@ -18,7 +18,6 @@ package consulo.project.util.query;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A marker interface for {@link QueryExecutorBase} parameters which indicates that searches should only be executed when indexing is complete.
@@ -28,6 +27,6 @@ import jakarta.annotation.Nonnull;
  */
 public interface DumbAwareSearchParameters extends QueryParameters {
   @Override
-  @Nonnull
+  
   Project getProject();
 }

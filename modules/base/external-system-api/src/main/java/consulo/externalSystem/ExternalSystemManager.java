@@ -13,7 +13,6 @@ import consulo.externalSystem.task.ExternalSystemTaskManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -40,25 +39,25 @@ public interface ExternalSystemManager<
     /**
      * @return id of the external system represented by the current manager
      */
-    @Nonnull
+    
     ProjectSystemId getSystemId();
 
     /**
      * @return a strategy which can be queried for external system settings to use with the given project
      */
-    @Nonnull
+    
     Function<Project, Settings> getSettingsProvider();
 
     /**
      * @return a strategy which can be queried for external system local settings to use with the given project
      */
-    @Nonnull
+    
     Function<Project, LocalSettings> getLocalSettingsProvider();
 
     /**
      * @return a strategy which can be queried for external system execution settings to use with the given project
      */
-    @Nonnull
+    
     Function<Pair<Project, String/*linked project path*/>, ExecutionSettings> getExecutionSettingsProvider();
 
     /**
@@ -71,19 +70,19 @@ public interface ExternalSystemManager<
      *
      * @return class of the project resolver to use for the target external system
      */
-    @Nonnull
+    
     Supplier<? extends ExternalSystemProjectResolver<ExecutionSettings>> getProjectResolverFactory();
 
     /**
      * @return class of the build manager to use for the target external system
      * @see #getProjectResolverFactory()
      */
-    @Nonnull
+    
     Supplier<? extends ExternalSystemTaskManager<ExecutionSettings>> getTaskManagerFactory();
 
     /**
      * @return file chooser descriptor to use when adding new external project
      */
-    @Nonnull
+    
     FileChooserDescriptor getExternalProjectDescriptor();
 }

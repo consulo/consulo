@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -41,14 +40,14 @@ public class MuteBreakpointAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         return project != null && myHandler.isEnabled(project, e) && myHandler.isSelected(project, e);
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         Project project = e.getData(Project.KEY);
         if (project != null && myHandler.isEnabled(project, e)) {
             myHandler.setSelected(project, e, state);
@@ -56,7 +55,7 @@ public class MuteBreakpointAction extends ToggleAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabled(project != null && myHandler.isEnabled(project, e));

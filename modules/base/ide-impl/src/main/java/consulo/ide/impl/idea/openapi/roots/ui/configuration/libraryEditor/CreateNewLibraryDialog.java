@@ -27,7 +27,6 @@ import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.FormBuilder;
 import consulo.ide.setting.module.LibrariesConfigurator;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -39,11 +38,11 @@ public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
   private final NewLibraryEditor myLibraryEditor;
   private final ComboBox myLibraryLevelCombobox;
 
-  public CreateNewLibraryDialog(@Nonnull Project project,
-                                @Nonnull JComponent parent,
-                                @Nonnull LibrariesConfigurator librariesConfigurator,
-                                @Nonnull NewLibraryEditor libraryEditor,
-                                @Nonnull List<LibraryTable> libraryTables,
+  public CreateNewLibraryDialog(Project project,
+                                JComponent parent,
+                                LibrariesConfigurator librariesConfigurator,
+                                NewLibraryEditor libraryEditor,
+                                List<LibraryTable> libraryTables,
                                 int selectedTable) {
     super(parent, new LibraryRootsComponent(project, libraryEditor));
     myLibrariesConfigurator = librariesConfigurator;
@@ -65,14 +64,14 @@ public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
     init();
   }
 
-  @Nonnull
+  
   @Override
   protected LibraryTable.ModifiableModel getTableModifiableModel() {
     LibraryTable selectedTable = (LibraryTable)myLibraryLevelCombobox.getSelectedItem();
     return myLibrariesConfigurator.getModifiableLibraryTable(selectedTable);
   }
 
-  @Nonnull
+  
   public Library createLibrary() {
     LibraryTableBase.ModifiableModelEx modifiableModel = (LibraryTableBase.ModifiableModelEx)getTableModifiableModel();
     LibraryType<?> type = myLibraryEditor.getType();

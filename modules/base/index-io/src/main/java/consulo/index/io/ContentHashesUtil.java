@@ -3,8 +3,7 @@ package consulo.index.io;
 
 import consulo.util.io.DigestUtil;
 import consulo.util.lang.ThreadLocalCachedValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -16,19 +15,19 @@ import java.util.Objects;
 
 public class ContentHashesUtil {
   public static final ThreadLocalCachedValue<MessageDigest> HASHER_CACHE = new ThreadLocalCachedValue<MessageDigest>() {
-    @Nonnull
+   
     @Override
     public MessageDigest create() {
       return createHashDigest();
     }
 
     @Override
-    protected void init(@Nonnull MessageDigest value) {
+    protected void init(MessageDigest value) {
       value.reset();
     }
   };
 
-  @Nonnull
+ 
   public static MessageDigest createHashDigest() {
     return DigestUtil.sha1();
   }
@@ -36,11 +35,11 @@ public class ContentHashesUtil {
   private static final int SIGNATURE_LENGTH = 20;
 
   public static class HashEnumerator extends PersistentBTreeEnumerator<byte[]> {
-    public HashEnumerator(@Nonnull File contentsHashesFile) throws IOException {
+    public HashEnumerator(File contentsHashesFile) throws IOException {
       this(contentsHashesFile, null);
     }
 
-    public HashEnumerator(@Nonnull File contentsHashesFile, @Nullable PagedFileStorage.StorageLockContext storageLockContext) throws IOException {
+    public HashEnumerator(File contentsHashesFile, PagedFileStorage.@Nullable StorageLockContext storageLockContext) throws IOException {
       super(contentsHashesFile, new ContentHashesDescriptor(), 64 * 1024, storageLockContext);
     }
 
@@ -81,12 +80,12 @@ public class ContentHashesUtil {
 
   private static class ContentHashesDescriptor implements KeyDescriptor<byte[]>, DifferentSerializableBytesImplyNonEqualityPolicy {
     @Override
-    public void save(@Nonnull DataOutput out, byte[] value) throws IOException {
+    public void save(DataOutput out, byte[] value) throws IOException {
       out.write(value);
     }
 
     @Override
-    public byte[] read(@Nonnull DataInput in) throws IOException {
+    public byte[] read(DataInput in) throws IOException {
       byte[] b = new byte[SIGNATURE_LENGTH];
       in.readFully(b);
       return b;

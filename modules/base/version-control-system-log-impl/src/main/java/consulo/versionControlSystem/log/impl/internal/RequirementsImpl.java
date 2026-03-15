@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log.impl.internal;
 
 import consulo.versionControlSystem.log.VcsLogProviderRequirementsEx;
 import consulo.versionControlSystem.log.VcsRef;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -25,10 +24,10 @@ public class RequirementsImpl implements VcsLogProviderRequirementsEx {
 
   private final int myCommitCount;
   private final boolean myRefresh;
-  @Nonnull
+  
   private final Collection<VcsRef> myPreviousRefs;
 
-  public RequirementsImpl(int count, boolean refresh, @Nonnull Collection<VcsRef> previousRefs) {
+  public RequirementsImpl(int count, boolean refresh, Collection<VcsRef> previousRefs) {
     myCommitCount = count;
     myRefresh = refresh;
     myPreviousRefs = previousRefs;
@@ -44,7 +43,7 @@ public class RequirementsImpl implements VcsLogProviderRequirementsEx {
     return myRefresh;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<VcsRef> getPreviousRefs() {
     return myPreviousRefs;

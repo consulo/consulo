@@ -19,7 +19,6 @@ import consulo.codeEditor.TextChange;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Default {@link TextChange} implementation with mutable state.
@@ -43,7 +42,7 @@ public class TextChangeImpl implements TextChange {
    * @param start     start index (inclusive) of text range affected by the change encapsulated by the current object
    * @throws IllegalArgumentException     if given start index is invalid
    */
-  public TextChangeImpl(@Nonnull CharSequence text, int start) throws IllegalArgumentException {
+  public TextChangeImpl(CharSequence text, int start) throws IllegalArgumentException {
     this(text, start, start);
   }
 
@@ -58,7 +57,7 @@ public class TextChangeImpl implements TextChange {
    *                  interval by the text encapsulated by the current change. I.e. original text is replaced by the new one
    * @throws IllegalArgumentException     if given start or end index in invalid or they are inconsistent to each other
    */
-  public TextChangeImpl(@Nonnull CharSequence text, int start, int end) throws IllegalArgumentException {
+  public TextChangeImpl(CharSequence text, int start, int end) throws IllegalArgumentException {
     if (start < 0) {
       throw new IllegalArgumentException(String.format("Can't construct new %s object. Reason: given start index (%d) is negative. "
                                                        + "End index: %d, text: '%s'", getClass().getName(), start, end, text));
@@ -103,7 +102,7 @@ public class TextChangeImpl implements TextChange {
    * @return    text related to the change encapsulated by the current object
    */
   @Override
-  @Nonnull
+  
   public CharSequence getText() {
     return myText;
   }
@@ -119,7 +118,7 @@ public class TextChangeImpl implements TextChange {
    * @return    stored change text as a char array
    */
   @Override
-  @Nonnull
+  
   public char[] getChars() {
     if (myChars == null) {
       myChars = CharArrayUtil.fromSequence(myText);

@@ -5,8 +5,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ class AnnotatePreviousRevisionAction extends AnnotateRevisionAction {
     @Nullable
     private final List<VcsFileRevision> myRevisions;
 
-    public AnnotatePreviousRevisionAction(@Nonnull FileAnnotation annotation, @Nonnull AbstractVcs vcs) {
+    public AnnotatePreviousRevisionAction(FileAnnotation annotation, AbstractVcs vcs) {
         super(
             "Annotate Previous Revision",
             "Annotate successor of selected revision in new tab",

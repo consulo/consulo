@@ -24,7 +24,6 @@ import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.internal.DefaultVcsRootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,8 +39,8 @@ public class MappingsToRoots {
     myProject = project;
   }
 
-  @Nonnull
-  public VirtualFile[] getRootsUnderVcs(@Nonnull AbstractVcs vcs) {
+  
+  public VirtualFile[] getRootsUnderVcs(AbstractVcs vcs) {
     List<VirtualFile> result = myMappings.getMappingsAsFilesUnderVcs(vcs);
 
     AbstractVcs.RootsConvertor convertor = vcs.getCustomConvertor();

@@ -5,7 +5,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -21,7 +20,7 @@ public interface ExternalSystemProgressNotificationManager {
    * @return          <code>true</code> if given listener was not registered before for the given key;
    *                  <code>false</code> otherwise
    */
-  boolean addNotificationListener(@Nonnull ExternalSystemTaskNotificationListener listener);
+  boolean addNotificationListener(ExternalSystemTaskNotificationListener listener);
 
   /**
    * Allows to register given listener within the current manager for listening events from the task with the target id. 
@@ -31,7 +30,7 @@ public interface ExternalSystemProgressNotificationManager {
    * @return          <code>true</code> if given listener was not registered before for the given key;
    *                  <code>false</code> otherwise
    */
-  boolean addNotificationListener(@Nonnull ExternalSystemTaskId taskId, @Nonnull ExternalSystemTaskNotificationListener listener);
+  boolean addNotificationListener(ExternalSystemTaskId taskId, ExternalSystemTaskNotificationListener listener);
 
   /**
    * Allows to de-register given listener from the current manager
@@ -40,5 +39,5 @@ public interface ExternalSystemProgressNotificationManager {
    * @return          <code>true</code> if given listener was successfully de-registered;
    *                  <code>false</code> if given listener was not registered before
    */
-  boolean removeNotificationListener(@Nonnull ExternalSystemTaskNotificationListener listener);
+  boolean removeNotificationListener(ExternalSystemTaskNotificationListener listener);
 }

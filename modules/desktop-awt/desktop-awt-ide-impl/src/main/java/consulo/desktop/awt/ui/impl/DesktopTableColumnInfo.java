@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.TableColumn;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 /**

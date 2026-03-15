@@ -19,7 +19,6 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.AdvancedLabel;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -37,9 +36,9 @@ public class DesktopAdvancedLabelImpl extends SwingComponentDelegate<DesktopAdva
         return new MySimpleColoredComponent();
     }
 
-    @Nonnull
+    
     @Override
-    public AdvancedLabel updatePresentation(@Nonnull Consumer<TextItemPresentation> consumer) {
+    public AdvancedLabel updatePresentation(Consumer<TextItemPresentation> consumer) {
         toAWTComponent().clear();
 
         consumer.accept(new DesktopTextItemPresentationImpl(toAWTComponent()));

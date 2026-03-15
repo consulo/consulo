@@ -30,8 +30,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.util.concurrent.AsyncResult;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 
@@ -84,9 +83,9 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     return myContentUI;
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+  public AsyncResult<Void> getReady(Object requestor) {
     AsyncResult<Void> result = AsyncResult.undefined();
     myShowing.getReady(this).doWhenDone(() -> {
       ProjectIdeFocusManager.getInstance(myToolWindowManager.getProject()).doWhenFocusSettlesDown(() -> {
@@ -98,7 +97,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
   }
 
   @Override
-  public void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+  public void setTabDoubleClickActions(AnAction... actions) {
     myContentUI.setTabDoubleClickActions(actions);
   }
 

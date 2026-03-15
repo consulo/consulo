@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -34,7 +33,7 @@ public interface Splittable {
    */
   void setOrientation(boolean verticalSplit);
 
-  @Nonnull
+  
   Component asComponent();
 
   void setDragging(boolean dragging);

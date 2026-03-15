@@ -19,8 +19,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,15 +32,15 @@ import java.util.Map;
  */
 public class NotificationData {
 
-  @Nonnull
+  
   private String myTitle;
-  @Nonnull
+  
   private String myMessage;
-  @Nonnull
+  
   private NotificationCategory myNotificationCategory;
-  @Nonnull
+  
   private final NotificationSource myNotificationSource;
-  @Nonnull
+  
   private NotificationListener myListener;
   @Nullable
   private String myFilePath;
@@ -53,17 +52,17 @@ public class NotificationData {
 
   private final Map<String, NotificationListener> myListenerMap;
 
-  public NotificationData(@Nonnull String title,
-                          @Nonnull String message,
-                          @Nonnull NotificationCategory notificationCategory,
-                          @Nonnull NotificationSource notificationSource) {
+  public NotificationData(String title,
+                          String message,
+                          NotificationCategory notificationCategory,
+                          NotificationSource notificationSource) {
     this(title, message, notificationCategory, notificationSource, null, -1, -1, false);
   }
 
-  public NotificationData(@Nonnull String title,
-                          @Nonnull String message,
-                          @Nonnull NotificationCategory notificationCategory,
-                          @Nonnull NotificationSource notificationSource,
+  public NotificationData(String title,
+                          String message,
+                          NotificationCategory notificationCategory,
+                          NotificationSource notificationSource,
                           @Nullable String filePath,
                           int line,
                           int column,
@@ -75,7 +74,7 @@ public class NotificationData {
     myListenerMap = new HashMap<>();
     myListener = new NotificationListener.Adapter() {
       @Override
-      protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+      protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
         if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
 
         NotificationListener notificationListener = myListenerMap.get(event.getDescription());
@@ -90,39 +89,39 @@ public class NotificationData {
     myBalloonNotification = balloonNotification;
   }
 
-  @Nonnull
+  
   public String getTitle() {
     return myTitle;
   }
 
-  public void setTitle(@Nonnull String title) {
+  public void setTitle(String title) {
     myTitle = title;
   }
 
-  @Nonnull
+  
   public String getMessage() {
     return myMessage;
   }
 
-  public void setMessage(@Nonnull String message) {
+  public void setMessage(String message) {
     myMessage = message;
   }
 
-  @Nonnull
+  
   public NotificationCategory getNotificationCategory() {
     return myNotificationCategory;
   }
 
-  public void setNotificationCategory(@Nonnull NotificationCategory notificationCategory) {
+  public void setNotificationCategory(NotificationCategory notificationCategory) {
     myNotificationCategory = notificationCategory;
   }
 
-  @Nonnull
+  
   public NotificationSource getNotificationSource() {
     return myNotificationSource;
   }
 
-  @Nonnull
+  
   public NotificationListener getListener() {
     return myListener;
   }
@@ -136,7 +135,7 @@ public class NotificationData {
     myFilePath = filePath;
   }
 
-  @Nonnull
+  
   public Integer getLine() {
     return myLine;
   }
@@ -161,7 +160,7 @@ public class NotificationData {
     myBalloonNotification = balloonNotification;
   }
 
-  public void setListener(@Nonnull String listenerId, @Nonnull NotificationListener listener) {
+  public void setListener(String listenerId, NotificationListener listener) {
     myListenerMap.put(listenerId, listener);
   }
 

@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +45,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         UIAccess.assertIsUIThread();
 
         Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
@@ -90,27 +89,27 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
         }
     }
 
-    private void displayHint(@Nonnull DisplayedTypeInfo typeInfo, String informationHint) {
+    private void displayHint(DisplayedTypeInfo typeInfo, String informationHint) {
         Application.get().invokeLater(() -> {
             HintManager.getInstance().setRequestFocusForNextHint(myRequestFocus);
             typeInfo.showHint(informationHint);
         });
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public Map<PsiElement, ExpressionTypeProvider> getExpressions(@Nonnull PsiFile file, @Nonnull Editor editor) {
+    public Map<PsiElement, ExpressionTypeProvider> getExpressions(PsiFile file, Editor editor) {
         Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
         Set<ExpressionTypeProvider> handlers = getHandlers(file.getProject(), language, file.getViewProvider().getBaseLanguage());
         return getExpressions(file, editor, handlers);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private static Map<PsiElement, ExpressionTypeProvider> getExpressions(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Set<? extends ExpressionTypeProvider> handlers
+        PsiFile file,
+        Editor editor,
+        Set<? extends ExpressionTypeProvider> handlers
     ) {
         if (handlers.isEmpty()) {
             return Collections.emptyMap();
@@ -141,7 +140,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
         return map;
     }
 
-    @Nonnull
+    
     public static Set<ExpressionTypeProvider> getHandlers(Project project, Language... languages) {
         DumbService dumbService = DumbService.getInstance(project);
         return JBIterable.of(languages)
@@ -152,16 +151,16 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
     static final class DisplayedTypeInfo {
         private static volatile DisplayedTypeInfo ourCurrentInstance;
         final
-        @Nonnull
+        
         PsiElement myElement;
         final
-        @Nonnull
+        
         ExpressionTypeProvider<?> myProvider;
         final
-        @Nonnull
+        
         Editor myEditor;
 
-        DisplayedTypeInfo(@Nonnull PsiElement element, @Nonnull ExpressionTypeProvider<?> provider, @Nonnull Editor editor) {
+        DisplayedTypeInfo(PsiElement element, ExpressionTypeProvider<?> provider, Editor editor) {
             myElement = element;
             myProvider = provider;
             myEditor = editor;

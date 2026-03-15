@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +37,7 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TranslatingCompilerFilesMonitor {
-    @Nonnull
+    
     @Deprecated
     public static TranslatingCompilerFilesMonitor getInstance() {
         return Application.get().getInstance(TranslatingCompilerFilesMonitor.class);

@@ -30,7 +30,6 @@ import consulo.document.RangeMarker;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -43,7 +42,7 @@ public class SplitLineActionImpl extends EditorAction {
         }
 
         @Override
-        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
             return getEnterHandler().isEnabled(editor, caret, dataContext)
                 && !((EditorEx) editor).isEmbeddedIntoDialogWrapper();
         }

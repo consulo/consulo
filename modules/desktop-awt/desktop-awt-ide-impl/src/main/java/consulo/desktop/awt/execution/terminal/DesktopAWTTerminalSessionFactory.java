@@ -20,7 +20,6 @@ import consulo.execution.terminal.TerminalSession;
 import consulo.execution.terminal.TerminalSessionFactory;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -30,11 +29,11 @@ import java.util.function.Supplier;
 @ServiceImpl
 @Singleton
 public class DesktopAWTTerminalSessionFactory implements TerminalSessionFactory {
-  @Nonnull
+  
   @Override
-  public TerminalSession createLocal(@Nonnull String connectorName,
-                                     @Nonnull String workDirectory,
-                                     @Nonnull Supplier<String> shellPathGetter) {
+  public TerminalSession createLocal(String connectorName,
+                                     String workDirectory,
+                                     Supplier<String> shellPathGetter) {
     return new LocalTerminalDirectRunner(connectorName, workDirectory, shellPathGetter);
   }
 }

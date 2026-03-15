@@ -16,8 +16,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +39,7 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
     }
 
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters) {
+    public TooltipRenderer calcTooltipRenderer(Collection<? extends RangeHighlighter> highlighters) {
         LineTooltipRenderer bigRenderer = null;
         List<HighlightInfoImpl> infos = new SmartList<>();
         Collection<LocalizeValue> tooltips = new HashSet<>(); //do not show same tooltip twice
@@ -97,21 +96,21 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
         return bigRenderer;
     }
 
-    @Nonnull
+    
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull String text) {
+    public TooltipRenderer calcTooltipRenderer(String text) {
         return new DaemonTooltipRenderer(text, new Object[]{text});
     }
 
-    @Nonnull
+    
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull String text, int width) {
+    public TooltipRenderer calcTooltipRenderer(String text, int width) {
         return new DaemonTooltipRenderer(text, width, new Object[]{text});
     }
 
-    @Nonnull
+    
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull String text, @Nullable TooltipAction action, int width) {
+    public TooltipRenderer calcTooltipRenderer(String text, @Nullable TooltipAction action, int width) {
         if (action != null || Registry.is("ide.tooltip.show.with.actions")) {
             return new DaemonTooltipWithActionRenderer(
                 text,
@@ -124,9 +123,9 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
         return ErrorStripTooltipRendererProvider.super.calcTooltipRenderer(text, action, width);
     }
 
-    @Nonnull
+    
     @Override
-    public TrafficTooltipRenderer createTrafficTooltipRenderer(@Nonnull Runnable onHide, @Nonnull Editor editor) {
+    public TrafficTooltipRenderer createTrafficTooltipRenderer(Runnable onHide, Editor editor) {
         return new TrafficTooltipRendererImpl(onHide, editor);
     }
 }

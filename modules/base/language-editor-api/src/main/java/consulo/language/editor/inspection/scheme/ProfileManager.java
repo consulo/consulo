@@ -17,7 +17,6 @@ package consulo.language.editor.inspection.scheme;
 
 import consulo.content.scope.NamedScopesHolder;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -30,16 +29,16 @@ import java.util.Collection;
 public interface ProfileManager {
   NamedScopesHolder getScopesManager();
 
-  @Nonnull
+  
   Collection<? extends Profile> getProfiles();
 
-  Profile getProfile(@Nonnull String name, boolean returnRootProfileIfNamedIsAbsent);
+  Profile getProfile(String name, boolean returnRootProfileIfNamedIsAbsent);
 
-  Profile getProfile(@Nonnull String name);
+  Profile getProfile(String name);
 
-  void updateProfile(@Nonnull Profile profile);
+  void updateProfile(Profile profile);
 
-  @Nonnull
+  
   String[] getAvailableProfileNames();
 
   void deleteProfile(String name);

@@ -34,7 +34,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 
@@ -44,14 +43,14 @@ import java.util.Collections;
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt", categories = "Language Injection")
 public class EditInjectionSettingsAction implements IntentionAction, LowPriorityAction {
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return LanguageInjectAdvancedLocalize.intentionEditInjectionSettingsActionText();
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         int offset = editor.getCaretModel().getOffset();
         PsiFile psiFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(file, offset);
         if (psiFile == null) {
@@ -62,7 +61,7 @@ public class EditInjectionSettingsAction implements IntentionAction, LowPriority
     }
 
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         project.getApplication().runReadAction(() -> invokeImpl(project, editor, file));
     }
 

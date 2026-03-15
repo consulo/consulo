@@ -27,19 +27,18 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUtilEx;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
-import jakarta.annotation.Nonnull;
 
 public class ViewUpdateInfoNotification extends NotificationAction {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final UpdateInfoTree myTree;
 
     public ViewUpdateInfoNotification(
-        @Nonnull Project project,
-        @Nonnull UpdateInfoTree updateInfoTree,
-        @Nonnull LocalizeValue actionText,
-        @Nonnull Notification notification
+        Project project,
+        UpdateInfoTree updateInfoTree,
+        LocalizeValue actionText,
+        Notification notification
     ) {
         super(actionText);
         myProject = project;
@@ -49,12 +48,12 @@ public class ViewUpdateInfoNotification extends NotificationAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+    public void actionPerformed(AnActionEvent e, Notification notification) {
         focusUpdateInfoTree(myProject, myTree);
     }
 
     @RequiredUIAccess
-    public static void focusUpdateInfoTree(@Nonnull Project project, @Nonnull UpdateInfoTree updateInfoTree) {
+    public static void focusUpdateInfoTree(Project project, UpdateInfoTree updateInfoTree) {
         ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS).activate(
             () -> {
                 ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(project).getContentManager();

@@ -60,8 +60,7 @@ import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.TableModel;
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -82,7 +81,7 @@ import java.util.function.Supplier;
  */
 public class DesktopUIInternalImpl extends UIInternal {
     @Override
-    public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+    public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
         LaterInvocator.addModalityStateListener(listener, parentDisposable);
     }
 
@@ -137,17 +136,17 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public Image _ImageEffects_layered(@Nonnull Image[] images) {
+    public Image _ImageEffects_layered(Image[] images) {
         return new DesktopLayeredImageImpl(images);
     }
 
     @Override
-    public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+    public Image _ImageEffects_transparent(Image original, float alpha) {
         return new DesktopTransparentImageImpl(original, alpha);
     }
 
     @Override
-    public Image _ImageEffects_grayed(@Nonnull Image original) {
+    public Image _ImageEffects_grayed(Image original) {
         if (original instanceof DesktopDisabledImageImpl desktopDisabledImage) {
             return desktopDisabledImage;
         }
@@ -155,7 +154,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+    public Image _ImageEffects_appendRight(Image i0, Image i1) {
         return new DesktopAppendImageImpl(i0, i1);
     }
 
@@ -234,19 +233,19 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopMenuBarImpl();
     }
 
-    @Nonnull
+    
     @Override
     public StyleManager _StyleManager_get() {
         return DesktopStyleManagerImpl.ourInstance;
     }
 
-    @Nonnull
+    
     @Override
     public FontManager _FontManager_get() {
         return DesktopFontManagerImpl.ourInstance;
     }
 
-    @Nonnull
+    
     @Override
     public Window _Window_create(String title, WindowOptions options) {
         return new DesktopWindowWrapper(title, options);
@@ -361,7 +360,7 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopProgressBarImpl();
     }
 
-    @Nonnull
+    
     @Override
     public IntBox _Components_intBox(int value) {
         return new DesktopIntBoxImpl(value);
@@ -408,7 +407,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public UIAccess _UIAccess_get() {
         return AWTUIAccessImpl.ourInstance;
@@ -442,7 +441,7 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopFoldoutLayoutImpl(titleValue, component, show);
     }
 
-    @Nonnull
+    
     @Override
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
         return new DesktopStatedImageImpl<>(state, funcCall);
@@ -453,18 +452,18 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopTableColumnInfo<>(name, converter);
     }
 
-    @Nonnull
+    
     @Override
     public IconLibraryManager _IconLibraryManager_get() {
         return DesktopIconLibraryManagerImpl.ourInstance;
     }
 
     @Override
-    public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+    public ImageKey _ImageKey_of(String groupId, String imageId, int width, int height) {
         return new DesktopAWTImageKey(null, groupId, imageId, width, height);
     }
 
-    @Nonnull
+    
     @Override
     public TaskBar _TaskBar_get() {
         return DesktopTaskBarImpl.ourInstance;
@@ -476,7 +475,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <T> Table<T> _Table_create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
+    public <T> Table<T> _Table_create(Iterable<? extends TableColumn> columns, TableModel<T> model) {
         return new DesktopTableImpl<>(columns, model);
     }
 
@@ -490,50 +489,50 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopToggleSwitchImpl(selected);
     }
 
-    @Nonnull
+    
     @Override
     public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
         return new DesktopPasswordBoxImpl(passwordText);
     }
 
     @Override
-    public void _ShowNotifier_once(@Nonnull Component component, @Nonnull Runnable action) {
+    public void _ShowNotifier_once(Component component, Runnable action) {
         java.awt.Component awtComponent = TargetAWT.to(component);
 
         UiNotifyConnector.doWhenFirstShown(awtComponent, action);
     }
 
-    @Nonnull
+    
     @Override
     public AdvancedLabel _Components_advancedLabel() {
         return new DesktopAdvancedLabelImpl();
     }
 
-    @Nonnull
+    
     @Override
     public HtmlView _Components_htmlView() {
         return new DesktopAWTHtmlViewImpl();
     }
 
-    @Nonnull
+    
     @Override
-    public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(@Nonnull L innerLayout, @Nonnull Disposable parent) {
+    public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
         return new DesktopAWTLoadingLayout<>(innerLayout, parent);
     }
 
-    @Nonnull
+    
     @Override
     public ModalityState _ModalityState_any() {
         return ModalityStateImpl.ANY;
     }
 
-    @Nonnull
+    
     @Override
     public ModalityState _ModalityState_nonModal() {
         return ModalityStateImpl.NON_MODAL;
     }
 
-    @Nonnull
+    
     @Override
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
         return new DesktopDatePickerImpl(datePattern);

@@ -18,25 +18,24 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 import consulo.versionControlSystem.log.graph.LinearGraph;
 import consulo.versionControlSystem.log.impl.internal.util.Flags;
 import consulo.versionControlSystem.log.impl.internal.util.UnsignedBitSet;
-import jakarta.annotation.Nonnull;
 
 class GraphNodesVisibility {
-  @Nonnull
+  
   private final LinearGraph myLinearGraph;
-  @Nonnull
+  
   private UnsignedBitSet myNodeVisibilityById;
 
-  GraphNodesVisibility(@Nonnull LinearGraph linearGraph, @Nonnull UnsignedBitSet nodeVisibilityById) {
+  GraphNodesVisibility(LinearGraph linearGraph, UnsignedBitSet nodeVisibilityById) {
     myLinearGraph = linearGraph;
     myNodeVisibilityById = nodeVisibilityById;
   }
 
-  @Nonnull
+  
   UnsignedBitSet getNodeVisibilityById() {
     return myNodeVisibilityById;
   }
 
-  void setNodeVisibilityById(@Nonnull UnsignedBitSet nodeVisibilityById) {
+  void setNodeVisibilityById(UnsignedBitSet nodeVisibilityById) {
     myNodeVisibilityById = nodeVisibilityById;
   }
 

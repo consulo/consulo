@@ -27,8 +27,7 @@ import consulo.colorScheme.event.EditorColorsListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -68,12 +67,12 @@ public interface Filter {
       myResultItems = null;
     }
 
-    public Result(@Nonnull List<? extends ResultItem> resultItems) {
+    public Result(List<? extends ResultItem> resultItems) {
       super(-1, -1, null, null, null);
       myResultItems = resultItems;
     }
 
-    @Nonnull
+    
     public List<ResultItem> getResultItems() {
       List<? extends ResultItem> resultItems = myResultItems;
       if (resultItems == null) {
@@ -235,7 +234,7 @@ public interface Filter {
     }
 
     @Nullable
-    private static TextAttributes getGrayedHyperlinkAttributes(@Nonnull TextAttributesKey normalHyperlinkAttrsKey) {
+    private static TextAttributes getGrayedHyperlinkAttributes(TextAttributesKey normalHyperlinkAttrsKey) {
       EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
       TextAttributes grayedHyperlinkAttrs = GRAYED_BY_NORMAL_CACHE.get(normalHyperlinkAttrsKey);
       if (grayedHyperlinkAttrs == null) {
@@ -260,5 +259,5 @@ public interface Filter {
    * @return {@code null} if there was no match. Otherwise, an instance of {@link Result}
    */
   @Nullable
-  Result applyFilter(@Nonnull String line, int entireLength);
+  Result applyFilter(String line, int entireLength);
 }

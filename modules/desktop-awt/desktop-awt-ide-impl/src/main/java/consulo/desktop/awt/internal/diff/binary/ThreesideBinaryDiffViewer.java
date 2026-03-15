@@ -22,20 +22,19 @@ import consulo.diff.DiffContext;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.util.lang.EmptyRunnable;
-import jakarta.annotation.Nonnull;
 
 public class ThreesideBinaryDiffViewer extends ThreesideDiffViewer<BinaryEditorHolder> {
-    public ThreesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public ThreesideBinaryDiffViewer(DiffContext context, DiffRequest request) {
         super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
     }
 
     @Override
-    @Nonnull
-    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
+    
+    protected Runnable performRediff(ProgressIndicator indicator) {
         return EmptyRunnable.INSTANCE;
     }
 
-    public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public static boolean canShowRequest(DiffContext context, DiffRequest request) {
         return ThreesideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
     }
 }

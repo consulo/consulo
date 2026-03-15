@@ -18,7 +18,6 @@ package consulo.externalService.impl.internal.repository.api.pluginHistory;
 import consulo.externalService.impl.internal.WebServiceApi;
 import consulo.externalService.impl.internal.WebServiceApiSender;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,8 +29,8 @@ import java.util.Map;
 public class PluginHistoryManager {
     private static final Logger LOG = Logger.getInstance(PluginHistoryManager.class);
 
-    @Nonnull
-    public static PluginHistoryResponse fetchBatchHistory(@Nonnull PluginHistoryRequest request) {
+    
+    public static PluginHistoryResponse fetchBatchHistory(PluginHistoryRequest request) {
         try {
             return WebServiceApiSender.doPost(WebServiceApi.REPOSITORY_API, "history/request", request, PluginHistoryResponse.class);
         }
@@ -41,8 +40,8 @@ public class PluginHistoryManager {
         }
     }
 
-    @Nonnull
-    public static PluginHistoryEntry[] fetchHistory(@Nonnull String pluginId, @Nonnull String fromVersion, @Nonnull String toVersion) {
+    
+    public static PluginHistoryEntry[] fetchHistory(String pluginId, String fromVersion, String toVersion) {
         Map<String, String> params;
         String baseUrl;
         if (fromVersion.equals(toVersion)) {

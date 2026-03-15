@@ -26,8 +26,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
   private volatile RefModule myRefModule; // it's guaranteed that getModule() used after initialize()
@@ -57,7 +56,7 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
   }
 
   @Override
-  public void accept(@Nonnull RefVisitor visitor) {
+  public void accept(RefVisitor visitor) {
     ApplicationManager.getApplication().runReadAction(() -> visitor.visitDirectory(this));
   }
 
@@ -79,7 +78,7 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
   }
 
 
-  @Nonnull
+  
   @Override
   public String getQualifiedName() {
     return getName(); //todo relative name

@@ -15,7 +15,6 @@
  */
 package consulo.component.persist.scheme;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A scheme processor can implement this interface to provide a file extension different from default .xml.
@@ -27,7 +26,7 @@ public interface SchemeExtensionProvider {
   /**
    * @return The scheme file extension <b>with e leading dot</b>, for example ".ext".
    */
-  @Nonnull
+  
   String getSchemeExtension();
 
   /**

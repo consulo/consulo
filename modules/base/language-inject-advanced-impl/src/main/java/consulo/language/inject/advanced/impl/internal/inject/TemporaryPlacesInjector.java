@@ -27,7 +27,6 @@ import consulo.language.inject.advanced.TemporaryPlacesRegistry;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.util.lang.Trinity;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.Collections;
@@ -47,14 +46,14 @@ public class TemporaryPlacesInjector implements MultiHostInjector {
     myRegistry = registry;
   }
 
-  @Nonnull
+  
   @Override
   public Class<? extends PsiElement> getElementClass() {
     return PsiLanguageInjectionHost.class;
   }
 
   @Override
-  public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context) {
+  public void injectLanguages(MultiHostRegistrar registrar, PsiElement context) {
     if (!(context instanceof PsiLanguageInjectionHost) || !((PsiLanguageInjectionHost)context).isValidHost()) {
       return;
     }

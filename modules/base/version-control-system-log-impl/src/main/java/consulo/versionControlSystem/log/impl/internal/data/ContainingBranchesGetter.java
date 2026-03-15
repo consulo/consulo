@@ -26,8 +26,7 @@ import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.impl.internal.util.SequentialLimitedLifoExecutor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -41,21 +40,21 @@ public class ContainingBranchesGetter {
 
     private static final Logger LOG = Logger.getInstance(ContainingBranchesGetter.class);
 
-    @Nonnull
+    
     private final SequentialLimitedLifoExecutor<Task> myTaskExecutor;
-    @Nonnull
+    
     private final VcsLogDataImpl myLogData;
 
     // other fields accessed only from EDT
-    @Nonnull
+    
     private final List<Runnable> myLoadingFinishedListeners = new ArrayList<>();
-    @Nonnull
+    
     private SLRUMap<CommitId, List<String>> myCache = createCache();
-    @Nonnull
+    
     private Map<VirtualFile, ContainedInBranchCondition> myConditions = new HashMap<>();
     private int myCurrentBranchesChecksum;
 
-    ContainingBranchesGetter(@Nonnull VcsLogDataImpl logData, @Nonnull Disposable parentDisposable) {
+    ContainingBranchesGetter(VcsLogDataImpl logData, Disposable parentDisposable) {
         myLogData = logData;
         myTaskExecutor = new SequentialLimitedLifoExecutor<>(parentDisposable, 10, task -> {
             List<String> branches = task.getContainingBranches(myLogData);
@@ -91,12 +90,12 @@ public class ContainingBranchesGetter {
     /**
      * This task will be executed each time the calculating process completes.
      */
-    public void addTaskCompletedListener(@Nonnull Runnable runnable) {
+    public void addTaskCompletedListener(Runnable runnable) {
         LOG.assertTrue(EventQueue.isDispatchThread());
         myLoadingFinishedListeners.add(runnable);
     }
 
-    public void removeTaskCompletedListener(@Nonnull Runnable runnable) {
+    public void removeTaskCompletedListener(Runnable runnable) {
         LOG.assertTrue(EventQueue.isDispatchThread());
         myLoadingFinishedListeners.remove(runnable);
     }
@@ -113,7 +112,7 @@ public class ContainingBranchesGetter {
      * if it is not available, starts calculating in the background and returns null.
      */
     @Nullable
-    public List<String> requestContainingBranches(@Nonnull VirtualFile root, @Nonnull Hash hash) {
+    public List<String> requestContainingBranches(VirtualFile root, Hash hash) {
         LOG.assertTrue(EventQueue.isDispatchThread());
         List<String> refs = myCache.get(new CommitId(hash, root));
         if (refs == null) {
@@ -124,14 +123,14 @@ public class ContainingBranchesGetter {
     }
 
     @Nullable
-    public List<String> getContainingBranchesFromCache(@Nonnull VirtualFile root, @Nonnull Hash hash) {
+    public List<String> getContainingBranchesFromCache(VirtualFile root, Hash hash) {
         synchronized (myCache) {
             return myCache.get(new CommitId(hash, root));
         }
     }
 
-    @Nonnull
-    public Predicate<CommitId> getContainedInBranchCondition(@Nonnull String branchName, @Nonnull VirtualFile root) {
+    
+    public Predicate<CommitId> getContainedInBranchCondition(String branchName, VirtualFile root) {
         LOG.assertTrue(EventQueue.isDispatchThread());
 
         DataPack dataPack = myLogData.getDataPack();
@@ -161,18 +160,18 @@ public class ContainingBranchesGetter {
         return condition;
     }
 
-    @Nonnull
+    
     private static SLRUMap<CommitId, List<String>> createCache() {
         return new SLRUMap<>(1000, 1000);
     }
 
-    @Nonnull
-    public List<String> getContainingBranchesSynchronously(@Nonnull VirtualFile root, @Nonnull Hash hash) {
+    
+    public List<String> getContainingBranchesSynchronously(VirtualFile root, Hash hash) {
         return doGetContainingBranches(myLogData.getDataPack(), root, hash);
     }
 
-    @Nonnull
-    private List<String> doGetContainingBranches(@Nonnull DataPack dataPack, @Nonnull VirtualFile root, @Nonnull Hash hash) {
+    
+    private List<String> doGetContainingBranches(DataPack dataPack, VirtualFile root, Hash hash) {
         return new Task(root, hash, myCache, dataPack.getPermanentGraph(), dataPack.getRefsModel()).getContainingBranches(myLogData);
     }
 
@@ -199,8 +198,8 @@ public class ContainingBranchesGetter {
             this.refs = refs;
         }
 
-        @Nonnull
-        public List<String> getContainingBranches(@Nonnull VcsLogDataImpl logData) {
+        
+        public List<String> getContainingBranches(VcsLogDataImpl logData) {
             try {
                 VcsLogProvider provider = logData.getLogProvider(root);
                 if (graph != null && refs != null && VcsLogProperties.get(provider, VcsLogProperties.LIGHTWEIGHT_BRANCHES)) {
@@ -232,18 +231,18 @@ public class ContainingBranchesGetter {
     }
 
     private class ContainedInBranchCondition implements Predicate<CommitId> {
-        @Nonnull
+        
         private final Predicate<Integer> myCondition;
-        @Nonnull
+        
         private final String myBranch;
         private volatile boolean isDisposed = false;
 
-        public ContainedInBranchCondition(@Nonnull Predicate<Integer> condition, @Nonnull String branch) {
+        public ContainedInBranchCondition(Predicate<Integer> condition, String branch) {
             myCondition = condition;
             myBranch = branch;
         }
 
-        @Nonnull
+        
         public String getBranch() {
             return myBranch;
         }

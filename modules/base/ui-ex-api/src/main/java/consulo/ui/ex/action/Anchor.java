@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines possible positions of an action relative to another action.
@@ -45,7 +44,7 @@ public class Anchor {
 
   private final String myText;
 
-  private Anchor(@Nonnull String text) {
+  private Anchor(String text) {
     myText = text;
   }
 

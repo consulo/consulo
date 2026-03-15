@@ -18,8 +18,7 @@ package consulo.language.psi;
 import consulo.language.psi.resolve.ResolveCache;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -43,7 +42,7 @@ public abstract class CachingReference implements PsiReference {
     return false;
   }
 
-  @Nonnull
+  
   public static <T extends PsiElement> ElementManipulator<T> getManipulator(T currentElement){
     ElementManipulator<T> manipulator = ElementManipulators.getManipulator(currentElement);
     if (manipulator == null) {
@@ -56,7 +55,7 @@ public abstract class CachingReference implements PsiReference {
     private static final MyResolver INSTANCE = new MyResolver();
     @Override
     @Nullable
-    public PsiElement resolve(@Nonnull PsiReference ref, boolean incompleteCode) {
+    public PsiElement resolve(PsiReference ref, boolean incompleteCode) {
       return ((CachingReference)ref).resolveInner();
     }
   }

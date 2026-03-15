@@ -17,8 +17,7 @@ package consulo.content.internal.scope;
 
 import consulo.content.scope.NamedScope;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -34,7 +33,7 @@ public abstract class SingleCustomScopeProvider implements CustomScopesProvider 
   }
 
   @Override
-  public void acceptScopes(@Nonnull Consumer<NamedScope> consumer) {
+  public void acceptScopes(Consumer<NamedScope> consumer) {
     consumer.accept(myScope);
   }
 

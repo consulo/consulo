@@ -18,7 +18,6 @@ package consulo.credentialStorage.impl.internal.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.credentialStorage.localize.CredentialStorageLocalize;
 import consulo.project.ui.notification.*;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -32,7 +31,7 @@ public class PasswordSafeNotificationGroupContributor implements NotificationGro
         NotificationGroup.balloonGroup("passwordSafe", CredentialStorageLocalize.passwordSafeConfigurable());
 
     @Override
-    public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+    public void contribute(Consumer<NotificationGroup> registrator) {
         registrator.accept(GROUP);
     }
 }

@@ -28,7 +28,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.module.Module;
 import consulo.util.collection.FactoryMap;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Map;

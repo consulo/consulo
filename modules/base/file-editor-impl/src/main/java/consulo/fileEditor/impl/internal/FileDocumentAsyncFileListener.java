@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public final class FileDocumentAsyncFileListener implements AsyncFileListener {
     }
 
     @Override
-    public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+    public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
         List<VirtualFile> toRecompute = new ArrayList<>();
         Map<VirtualFile, Document> strongRefsToDocuments = new HashMap<>();
         List<VFileContentChangeEvent> contentChanges = ContainerUtil.findAll(events, VFileContentChangeEvent.class);

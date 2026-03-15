@@ -22,7 +22,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @SuppressWarnings("ExtensionImplIsNotAnnotatedInspection")
@@ -33,26 +32,26 @@ public class ArtifactRootElementType extends PackagingElementType<ArtifactRootEl
     super("root", LocalizeValue.empty());
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
+  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
     return false;
   }
 
   @Override
-  @Nonnull
-  public List<? extends ArtifactRootElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
+  
+  public List<? extends ArtifactRootElement<?>> chooseAndCreate(ArtifactEditorContext context, Artifact artifact, CompositePackagingElement<?> parent) {
     throw new UnsupportedOperationException("'create' not implemented in " + getClass().getName());
   }
 
   @Override
-  @Nonnull
-  public ArtifactRootElement<?> createEmpty(@Nonnull Project project) {
+  
+  public ArtifactRootElement<?> createEmpty(Project project) {
     return new ArtifactRootElementImpl();
   }
 }

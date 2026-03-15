@@ -21,8 +21,7 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ public class DesktopAWTPasswordSafePromptDialogImpl implements PasswordSafePromp
 
   @Nullable
   @Override
-  public String askPassword(String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword, String error, String promptLabel, String checkboxLabel) {
+  public String askPassword(String title, String message, Class<?> requestor, String key, boolean resetPassword, String error, String promptLabel, String checkboxLabel) {
     return PasswordSafePromptDialogImpl.askPassword(myProject, title, message, requestor, key, resetPassword, error, promptLabel, checkboxLabel);
   }
 }

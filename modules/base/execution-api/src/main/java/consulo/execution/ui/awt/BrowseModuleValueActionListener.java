@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextAccessor;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

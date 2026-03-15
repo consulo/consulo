@@ -33,7 +33,6 @@ import org.eclipse.swt.internal.win32.RECT;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -149,14 +148,14 @@ public class DesktopSwtToolWindowStripeButtonImpl extends SWTComponentDelegate<D
     super.initialize(component);
   }
 
-  @Nonnull
+  
   @Override
   public WindowInfo getWindowInfo() {
     return myInternalDecorator.getWindowInfo();
   }
 
   @Override
-  public void apply(@Nonnull WindowInfo windowInfo) {
+  public void apply(WindowInfo windowInfo) {
 
   }
 
@@ -166,7 +165,7 @@ public class DesktopSwtToolWindowStripeButtonImpl extends SWTComponentDelegate<D
 
   }
 
-  @Nonnull
+  
   @Override
   public Component getComponent() {
     return this;

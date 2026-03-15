@@ -20,15 +20,14 @@ import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModulesProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 19/04/2021
  */
 public interface ModulesConfigurator extends ModulesProvider {
-  @Nonnull
+  
   String getRealName(Module module);
 
   boolean isModuleModelCommitted();
@@ -38,7 +37,7 @@ public interface ModulesConfigurator extends ModulesProvider {
 
   ModifiableModuleModel getModuleModel();
 
-  @Nonnull
+  
   String getCompilerOutputUrl();
 
   void setCompilerOutputUrl(@Nullable String compilerOutputUrl);

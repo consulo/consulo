@@ -20,7 +20,6 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -54,7 +53,7 @@ public class StandardFileSystems {
     return VirtualFileManager.getInstance().getFileSystem(ZIP_PROTOCOL);
   });
 
-  @Nonnull
+  
   public static VirtualFileSystem local() {
     return ourLocal.get();
   }
@@ -68,7 +67,7 @@ public class StandardFileSystems {
     return zip();
   }
 
-  @Nonnull
+  
   public static ArchiveFileSystem zip() {
     return (ArchiveFileSystem)ourZip.get();
   }

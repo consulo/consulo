@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -28,13 +27,13 @@ class IdentityVirtualFilePointer extends VirtualFilePointerImpl implements Virtu
   private final String myUrl;
   private volatile int useCount;
 
-  IdentityVirtualFilePointer(VirtualFile file, @Nonnull String url) {
+  IdentityVirtualFilePointer(VirtualFile file, String url) {
     myFile = file;
     myUrl = url;
   }
 
   @Override
-  @Nonnull
+  
   public String getFileName() {
     return getUrl();
   }
@@ -45,13 +44,13 @@ class IdentityVirtualFilePointer extends VirtualFilePointerImpl implements Virtu
   }
 
   @Override
-  @Nonnull
+  
   public String getUrl() {
     return myUrl;
   }
 
   @Override
-  @Nonnull
+  
   public String getPresentableUrl() {
     return getUrl();
   }

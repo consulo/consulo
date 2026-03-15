@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Used to provide appropriate psiElements from usages in Find Usages popup.
@@ -38,7 +37,7 @@ public abstract class UsageToPsiElementProvider {
     public abstract PsiElement getAppropriateParentFrom(PsiElement element);
 
     @Nullable
-    public static PsiElement findAppropriateParentFrom(@Nonnull PsiElement element) {
+    public static PsiElement findAppropriateParentFrom(PsiElement element) {
         return EP_NAME.computeSafeIfAny(Application.get(), p -> p.getAppropriateParentFrom(element));
     }
 }

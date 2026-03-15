@@ -26,8 +26,7 @@ import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.impl.internal.AsyncEventSupport;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -64,21 +63,21 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
   private final AtomicLong myWriteActionCounter = new AtomicLong();
 
-  @Nonnull
+  
   private final Application myApplication;
 
   @Inject
-  public RefreshQueueImpl(@Nonnull Application application) {
+  public RefreshQueueImpl(Application application) {
     myApplication = application;
     application.addApplicationListener(new ApplicationListener() {
       @Override
-      public void writeActionStarted(@Nonnull Object action) {
+      public void writeActionStarted(Object action) {
         myWriteActionCounter.incrementAndGet();
       }
     }, this);
   }
 
-  public void execute(@Nonnull RefreshSessionImpl session) {
+  public void execute(RefreshSessionImpl session) {
     if (session.isAsynchronous()) {
       queueSession(session, session.getModality());
     }
@@ -98,7 +97,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  private void queueSession(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
+  private void queueSession(RefreshSessionImpl session, ModalityState modality) {
     myQueue.execute(() -> {
       startRefreshActivity();
       try {
@@ -121,7 +120,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     myEventCounter.eventHappened(session);
   }
 
-  protected void scheduleAsynchronousPreprocessing(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
+  protected void scheduleAsynchronousPreprocessing(RefreshSessionImpl session, ModalityState modality) {
     try {
       myEventProcessingQueue.execute(() -> {
         startRefreshActivity();
@@ -148,7 +147,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private synchronized void finishRefreshActivity() {
   }
 
-  private void processAndFireEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
+  private void processAndFireEvents(RefreshSessionImpl session, ModalityState modality) {
     while (true) {
       ProgressIndicator progress = new SensitiveProgressWrapper(new EmptyProgressIndicator());
       boolean success = ProgressIndicatorUtils.runWithWriteActionPriority(() -> tryProcessingEvents(session, modality), progress);
@@ -160,7 +159,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  protected void tryProcessingEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
+  protected void tryProcessingEvents(RefreshSessionImpl session, ModalityState modality) {
     List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
       VirtualFile file = e instanceof VFileCreateEvent vFileCreateEvent ? vFileCreateEvent.getParent() : e.getFile();
       return file == null || file.isValid();
@@ -179,7 +178,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     });
   }
 
-  private void doScan(@Nonnull RefreshSessionImpl session) {
+  private void doScan(RefreshSessionImpl session) {
     try {
       updateSessionMap(session, true);
       session.scan();
@@ -189,7 +188,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  private void updateSessionMap(@Nonnull RefreshSession session, boolean add) {
+  private void updateSessionMap(RefreshSession session, boolean add) {
     long id = session.getId();
     if (id != 0) {
       synchronized (mySessions) {
@@ -214,14 +213,14 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  @Nonnull
+  
   @Override
-  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
+  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, ModalityState state) {
     return new RefreshSessionImpl(async, recursively, finishRunnable, state);
   }
 
   @Override
-  public void processSingleEvent(@Nonnull VFileEvent event) {
+  public void processSingleEvent(VFileEvent event) {
     new RefreshSessionImpl(Collections.singletonList(event)).launch();
   }
 

@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.ScrollingModel;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;

@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.resolve;
 
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.TraceInfo;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,14 +14,14 @@ import java.util.stream.Collectors;
  */
 public class EmptyResolver implements ValuesOrderResolver {
   @Override
-  public @Nonnull Result resolve(@Nonnull TraceInfo info) {
+  public Result resolve(TraceInfo info) {
     final Map<Integer, TraceElement> orderBefore = info.getValuesOrderBefore();
     final Map<Integer, TraceElement> orderAfter = info.getValuesOrderAfter();
 
     return Result.of(toEmptyMap(orderBefore), toEmptyMap(orderAfter));
   }
 
-  private static @Nonnull Map<TraceElement, List<TraceElement>> toEmptyMap(@Nonnull Map<Integer, TraceElement> order) {
+  private static Map<TraceElement, List<TraceElement>> toEmptyMap(Map<Integer, TraceElement> order) {
     return order.keySet().stream().collect(Collectors.toMap(order::get, x -> Collections.emptyList()));
   }
 }

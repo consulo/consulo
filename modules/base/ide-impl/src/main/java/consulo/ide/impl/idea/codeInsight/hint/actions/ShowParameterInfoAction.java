@@ -26,7 +26,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ParameterInfo")
 public class ShowParameterInfoAction extends BaseCodeInsightAction implements DumbAware {
@@ -35,14 +34,14 @@ public class ShowParameterInfoAction extends BaseCodeInsightAction implements Du
         setEnabledInModalContext(true);
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new ShowParameterInfoHandler();
     }
 
     @Override
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
         return ShowParameterInfoHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()) != null;
     }

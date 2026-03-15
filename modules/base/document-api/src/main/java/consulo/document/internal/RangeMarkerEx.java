@@ -19,8 +19,7 @@ package consulo.document.internal;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.Segment;
-import jakarta.annotation.Nonnull;
 
 public interface RangeMarkerEx extends RangeMarker, Segment {
-  void documentChanged(@Nonnull DocumentEvent e);
+  void documentChanged(DocumentEvent e);
 }

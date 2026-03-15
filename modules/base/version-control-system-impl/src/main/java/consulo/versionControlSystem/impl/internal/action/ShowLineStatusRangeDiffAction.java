@@ -32,13 +32,12 @@ import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
     public ShowLineStatusRangeDiffAction(
-        @Nonnull LineStatusTrackerI lineStatusTracker,
-        @Nonnull VcsRange range,
+        LineStatusTrackerI lineStatusTracker,
+        VcsRange range,
         @Nullable Editor editor
     ) {
         super(lineStatusTracker, range);
@@ -52,7 +51,7 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DiffManager.getInstance().showDiff(e.getData(Project.KEY), createDiffData());
     }
 
@@ -76,15 +75,15 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
         );
     }
 
-    @Nonnull
-    private DiffContent createDiffContent(@Nonnull Document document, @Nonnull TextRange textRange, @Nullable VirtualFile file) {
+    
+    private DiffContent createDiffContent(Document document, TextRange textRange, @Nullable VirtualFile file) {
         Project project = myLineStatusTracker.getProject();
         DocumentContent content = DiffContentFactory.getInstance().create(project, document, file);
         return DiffContentFactory.getInstance().createFragment(project, content, textRange);
     }
 
-    @Nonnull
-    private static VcsRange expand(@Nonnull VcsRange range, @Nonnull Document document, @Nonnull Document uDocument) {
+    
+    private static VcsRange expand(VcsRange range, Document document, Document uDocument) {
         boolean canExpandBefore = range.getLine1() != 0 && range.getVcsLine1() != 0;
         boolean canExpandAfter = range.getLine2() < document.getLineCount() && range.getVcsLine2() < uDocument.getLineCount();
         int offset1 = range.getLine1() - (canExpandBefore ? 1 : 0);

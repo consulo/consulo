@@ -15,8 +15,7 @@
  */
 package consulo.application.util.matcher;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -29,12 +28,12 @@ public interface MatcherHolder {
   @Deprecated
   void setPatternMatcher(Matcher matcher);
 
-  static void associateMatcher(@Nonnull JComponent component, @Nullable Matcher matcher) {
+  static void associateMatcher(JComponent component, @Nullable Matcher matcher) {
     component.putClientProperty(MatcherHolder.class, matcher);
   }
 
   @Nullable
-  static Matcher getAssociatedMatcher(@Nonnull JComponent component) {
+  static Matcher getAssociatedMatcher(JComponent component) {
     return (Matcher)component.getClientProperty(MatcherHolder.class);
   }
 }

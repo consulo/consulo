@@ -2,7 +2,6 @@
 package consulo.application.util.query;
 
 import consulo.util.concurrent.AsyncFuture;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -20,13 +19,13 @@ public class InstanceofQuery<S, T> extends AbstractQuery<T> {
     }
 
     @Override
-    protected boolean processResults(@Nonnull Predicate<? super T> consumer) {
+    protected boolean processResults(Predicate<? super T> consumer) {
         return delegateProcessResults(myDelegate, new MyProcessor(consumer));
     }
 
-    @Nonnull
+    
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(Predicate<? super T> consumer) {
         return myDelegate.forEachAsync(new MyProcessor(consumer));
     }
 

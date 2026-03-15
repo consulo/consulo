@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInspection.ui;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -90,7 +89,7 @@ public class InspectionNodeInfo extends JPanel {
   //
   //}
 
-  public static String stripUIRefsFromInspectionDescription(@Nonnull String description) {
+  public static String stripUIRefsFromInspectionDescription(String description) {
     int descriptionEnd = description.indexOf("<!-- tooltip end -->");
     if (descriptionEnd < 0) {
       Pattern pattern = Pattern.compile(".*Use.*(the (panel|checkbox|checkboxes|field|button|controls).*below).*", Pattern.DOTALL);

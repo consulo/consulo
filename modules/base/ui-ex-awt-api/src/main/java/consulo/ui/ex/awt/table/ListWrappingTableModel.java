@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt.table;
 
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -28,8 +27,8 @@ public class ListWrappingTableModel extends AbstractTableModel {
   private final List<List<String>> list;
   private final List<String> columnNames = new ArrayList<String>();
 
-  public ListWrappingTableModel(@Nonnull List<List<String>> list,
-                                @Nonnull String... columnNames) {
+  public ListWrappingTableModel(List<List<String>> list,
+                                String... columnNames) {
     this.list = list;
     ContainerUtil.addAll(this.columnNames, columnNames);
   }
@@ -40,7 +39,7 @@ public class ListWrappingTableModel extends AbstractTableModel {
    * @param list       the rows of the table
    * @param columnName the name in the column header
    */
-  public ListWrappingTableModel(@Nonnull List<String> list, @Nonnull String columnName) {
+  public ListWrappingTableModel(List<String> list, String columnName) {
     this.list = new ArrayList<List<String>>();
     this.list.add(list);
     columnNames.add(columnName);

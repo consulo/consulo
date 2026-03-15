@@ -7,7 +7,6 @@ import consulo.execution.impl.internal.service.ServiceView;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 import static consulo.execution.impl.internal.service.ServiceViewActionProvider.getSelectedView;
 
@@ -23,20 +22,20 @@ public final class GroupByContributorAction extends ToggleAction implements Dumb
 //  }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     super.update(e);
     ServiceView selectedView = getSelectedView(e);
     e.getPresentation().setEnabled(selectedView != null);
   }
 
   @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
+  public boolean isSelected(AnActionEvent e) {
     ServiceView selectedView = getSelectedView(e);
     return selectedView != null && selectedView.isGroupByContributor();
   }
 
   @Override
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+  public void setSelected(AnActionEvent e, boolean state) {
     ServiceView selectedView = getSelectedView(e);
     if (selectedView != null) {
       selectedView.setGroupByContributor(state);

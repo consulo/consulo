@@ -22,30 +22,29 @@ import consulo.language.editor.inspection.reference.RefGraphAnnotator;
 import consulo.language.editor.internal.RefManagerInternal;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
  * @since 2005-12-28
  */
 public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalInspectionTool> {
-    public GlobalInspectionToolWrapper(@Nonnull GlobalInspectionTool globalInspectionTool, HighlightDisplayKey key) {
+    public GlobalInspectionToolWrapper(GlobalInspectionTool globalInspectionTool, HighlightDisplayKey key) {
         super(globalInspectionTool, key);
     }
 
-    private GlobalInspectionToolWrapper(@Nonnull GlobalInspectionToolWrapper other) {
+    private GlobalInspectionToolWrapper(GlobalInspectionToolWrapper other) {
         super(other);
     }
 
-    @Nonnull
+    
     @Override
     public GlobalInspectionToolWrapper createCopy() {
         return new GlobalInspectionToolWrapper(this);
     }
 
     @Override
-    public void initialize(@Nonnull GlobalInspectionContext context) {
+    public void initialize(GlobalInspectionContext context) {
         super.initialize(context);
         RefManagerInternal refManager = (RefManagerInternal) context.getRefManager();
         RefGraphAnnotator annotator = getTool().getAnnotator(refManager, getState());
@@ -56,8 +55,8 @@ public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalIns
     }
 
     @Override
-    @Nonnull
-    public JobDescriptor[] getJobDescriptors(@Nonnull GlobalInspectionContext context) {
+    
+    public JobDescriptor[] getJobDescriptors(GlobalInspectionContext context) {
         JobDescriptor[] additionalJobs = getTool().getAdditionalJobs();
         if (additionalJobs == null) {
             return getTool().isGraphNeeded() ? context.getStdJobDescriptors().BUILD_GRAPH_ONLY : JobDescriptor.EMPTY_ARRAY;

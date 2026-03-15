@@ -21,7 +21,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.PlainTextLikeFileType;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
-import jakarta.annotation.Nonnull;
 
 public class PlainTextFileType extends LanguageFileType implements PlainTextLikeFileType {
   public static final PlainTextFileType INSTANCE = new PlainTextFileType();
@@ -31,24 +30,24 @@ public class PlainTextFileType extends LanguageFileType implements PlainTextLike
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "PLAIN_TEXT";
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDescription() {
     return FileTypeLocalize.filetypePlaintextDescription();
   }
 
   @Override
-  @Nonnull
+  
   public String getDefaultExtension() {
     return "txt";
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return PlatformIconGroup.filetypesText();

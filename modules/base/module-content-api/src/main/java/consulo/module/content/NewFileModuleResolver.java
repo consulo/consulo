@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * If module is not directory based, creating new files will have problem for selecting module (which module use as owner)
@@ -35,11 +34,11 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NewFileModuleResolver {
     @Nullable
-    static Module resolveModule(@Nonnull Project project, @Nonnull VirtualFile parent, @Nonnull FileType newFileType) {
+    static Module resolveModule(Project project, VirtualFile parent, FileType newFileType) {
         return project.getExtensionPoint(NewFileModuleResolver.class)
             .computeSafeIfAny(it -> it.resolveModule(parent, newFileType));
     }
 
     @Nullable
-    Module resolveModule(@Nonnull VirtualFile directory, @Nonnull FileType fileType);
+    Module resolveModule(VirtualFile directory, FileType fileType);
 }

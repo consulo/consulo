@@ -3,7 +3,6 @@ package consulo.ui.ex.awt;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -16,7 +15,7 @@ public class FocusUtil {
    *
    * Add {@link PropertyChangeListener} listener to the current {@link KeyboardFocusManager} until the {@code parentDisposable} is disposed
    */
-  public static void addFocusOwnerListener(@Nonnull Disposable parentDisposable, @Nonnull PropertyChangeListener listener) {
+  public static void addFocusOwnerListener(Disposable parentDisposable, PropertyChangeListener listener) {
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(SWING_FOCUS_OWNER_PROPERTY, listener);
     Disposer.register(parentDisposable, () -> {
       KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(SWING_FOCUS_OWNER_PROPERTY, listener);

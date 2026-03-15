@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface ProjectStructureProblemsHolder {
-  void registerProblem(@Nonnull String message, @Nullable String description, @Nonnull ProjectStructureProblemType problemType,
-                       @Nonnull PlaceInProjectStructure place, @Nullable ConfigurationErrorQuickFix fix);
+  void registerProblem(String message, @Nullable String description, ProjectStructureProblemType problemType,
+                       PlaceInProjectStructure place, @Nullable ConfigurationErrorQuickFix fix);
 
-  void registerProblem(@Nonnull ProjectStructureProblemDescription description);
+  void registerProblem(ProjectStructureProblemDescription description);
 }

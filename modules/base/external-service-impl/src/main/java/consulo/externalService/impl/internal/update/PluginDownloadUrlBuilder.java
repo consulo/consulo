@@ -16,7 +16,6 @@
 package consulo.externalService.impl.internal.update;
 
 import consulo.container.plugin.PluginDescriptor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,6 +23,6 @@ import jakarta.annotation.Nonnull;
  */
 @FunctionalInterface
 public interface PluginDownloadUrlBuilder {
-    @Nonnull
+    
     String buildUrl(PluginDescriptor descriptor, int tryIndex);
 }

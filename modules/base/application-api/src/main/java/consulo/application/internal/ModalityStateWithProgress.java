@@ -17,12 +17,11 @@ package consulo.application.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-06-17
  */
 public interface ModalityStateWithProgress extends ModalityState {
-    ModalityState appendProgress(@Nonnull ProgressIndicator progress);
+    ModalityState appendProgress(ProgressIndicator progress);
 }

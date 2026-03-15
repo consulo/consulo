@@ -21,7 +21,6 @@ import consulo.util.dataholder.internal.keyFMap.KeyFMap;
 import consulo.util.dataholder.internal.keyFMap.OneElementFMap;
 import consulo.util.dataholder.internal.keyFMap.PairElementsFMap;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -36,7 +35,7 @@ class UserDataInterner {
     }
   };
 
-  static KeyFMap internUserData(@Nonnull KeyFMap map) {
+  static KeyFMap internUserData(KeyFMap map) {
     if (shouldIntern(map)) {
       MapReference key = new MapReference(map);
       synchronized (ourCache) {
@@ -50,7 +49,7 @@ class UserDataInterner {
     return map;
   }
 
-  private static boolean shouldIntern(@Nonnull KeyFMap map) {
+  private static boolean shouldIntern(KeyFMap map) {
     return map instanceof OneElementFMap ||
            map instanceof PairElementsFMap ||
            map instanceof ArrayBackedFMap && ((ArrayBackedFMap)map).getKeyIds().length <= 5;

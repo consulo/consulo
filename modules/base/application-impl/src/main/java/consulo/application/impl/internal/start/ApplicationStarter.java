@@ -48,8 +48,7 @@ import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +78,7 @@ public abstract class ApplicationStarter {
 
     protected PluginsInitializeInfo myPluginsInitializeInfo;
 
-    public ApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
+    public ApplicationStarter(CommandLineArgs args, StatCollector stat) {
         LOG.assertTrue(ourInstance == null);
         //noinspection AssignmentToStaticFieldFromInstanceMethod
         ourInstance = this;
@@ -91,7 +90,7 @@ public abstract class ApplicationStarter {
         initializeEnviroment(false, args, stat);
     }
 
-    @Nonnull
+    
     protected abstract Application createApplication(
         ComponentBinding componentBinding,
         boolean isHeadlessMode,
@@ -104,7 +103,7 @@ public abstract class ApplicationStarter {
         Runnable appInitializeMark,
         ApplicationEx app,
         boolean newConfigFolder,
-        @Nonnull CommandLineArgs args
+        CommandLineArgs args
     );
 
     protected boolean needSetVersionChecker() {
@@ -281,7 +280,7 @@ public abstract class ApplicationStarter {
         }
     }
 
-    @Nonnull
+    
     public static String getFrameClass() {
         String name = ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT);
         String wmClass = StringUtil.replaceChar(name, ' ', '-');

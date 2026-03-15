@@ -22,8 +22,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -46,15 +45,15 @@ public class BrowserUtil {
         return isAbsoluteURL(url) ? VirtualFileUtil.convertToURL(url) : new URL("file", "", url);
     }
 
-    public static void browse(@Nonnull VirtualFile file) {
+    public static void browse(VirtualFile file) {
         browse(VirtualFileUtil.toUri(file));
     }
 
-    public static void browse(@Nonnull File file) {
+    public static void browse(File file) {
         getBrowserLauncher().browse(file);
     }
 
-    public static void browse(@Nonnull URL url) {
+    public static void browse(URL url) {
         browse(url.toExternalForm());
     }
 
@@ -63,11 +62,11 @@ public class BrowserUtil {
     /**
      * @deprecated Use {@link #browse(String)}
      */
-    public static void launchBrowser(@Nonnull String url) {
+    public static void launchBrowser(String url) {
         browse(url);
     }
 
-    public static void browse(@Nonnull String url) {
+    public static void browse(String url) {
         getBrowserLauncher().browse(url, null);
     }
 
@@ -75,26 +74,26 @@ public class BrowserUtil {
         return BrowserLauncher.getInstance();
     }
 
-    public static void open(@Nonnull String url) {
+    public static void open(String url) {
         getBrowserLauncher().open(url);
     }
 
     /**
      * Main method: tries to launch a browser using every possible way
      */
-    public static void browse(@Nonnull URI uri) {
+    public static void browse(URI uri) {
         getBrowserLauncher().browse(uri);
     }
 
-    @Nonnull
+    
     @Deprecated
     @SuppressWarnings("UnusedDeclaration")
-    public static List<String> getOpenBrowserCommand(@Nonnull String browserPathOrName) {
+    public static List<String> getOpenBrowserCommand(String browserPathOrName) {
         return getOpenBrowserCommand(browserPathOrName, false);
     }
 
-    @Nonnull
-    public static List<String> getOpenBrowserCommand(@Nonnull String browserPathOrName, boolean newWindowIfPossible) {
+    
+    public static List<String> getOpenBrowserCommand(String browserPathOrName, boolean newWindowIfPossible) {
         if (new File(browserPathOrName).isFile()) {
             return Collections.singletonList(browserPathOrName);
         }

@@ -34,7 +34,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.VerticalLayout;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +89,7 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
     }
 
     @Override
-    @Nonnull
+    
     protected JComponent createEditor() {
         JPanel wholePanel = new JPanel(new VerticalLayout(JBUI.scale(5)));
 

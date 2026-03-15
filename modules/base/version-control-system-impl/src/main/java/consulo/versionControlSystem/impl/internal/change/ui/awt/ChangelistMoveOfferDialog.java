@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +41,7 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
   }
 
   @Override
-  @Nonnull
+  
   protected Action[] createActions() {
     setOKButtonText(CommonLocalize.buttonYes());
     setCancelButtonText(CommonLocalize.buttonNo());

@@ -18,16 +18,15 @@ package consulo.credentialStorage.impl.internal.ui;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.DialogWrapper;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 public class AuthenticationDialogImpl extends DialogWrapper {
   private final AuthenticationPanel panel;
 
-  public AuthenticationDialogImpl(@Nonnull Component component, String title, String description, String login, String password, boolean rememberPassword) {
+  public AuthenticationDialogImpl(Component component, String title, String description, String login, String password, boolean rememberPassword) {
     super(component, true);
     setTitle(title);
 

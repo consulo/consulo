@@ -16,7 +16,6 @@
 package consulo.virtualFileSystem.status;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
@@ -29,6 +28,6 @@ public interface FileStatusListener {
   default void fileStatusesChanged() {
   }
 
-  default void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
+  default void fileStatusChanged(VirtualFile virtualFile) {
   }
 }

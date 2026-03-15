@@ -32,8 +32,7 @@ import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
 import consulo.versionControlSystem.FormatChangedTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.FutureTask;
@@ -45,37 +44,37 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
     private static final Logger LOG = Logger.getInstance(RearrangeCodeProcessor.class);
     private SelectionModel mySelectionModel;
 
-    public RearrangeCodeProcessor(@Nonnull AbstractLayoutCodeProcessor previousProcessor) {
+    public RearrangeCodeProcessor(AbstractLayoutCodeProcessor previousProcessor) {
         super(previousProcessor, COMMAND_NAME.get(), PROGRESS_TEXT.get());
     }
 
-    public RearrangeCodeProcessor(@Nonnull AbstractLayoutCodeProcessor previousProcessor, @Nonnull SelectionModel selectionModel) {
+    public RearrangeCodeProcessor(AbstractLayoutCodeProcessor previousProcessor, SelectionModel selectionModel) {
         super(previousProcessor, COMMAND_NAME.get(), PROGRESS_TEXT.get());
         mySelectionModel = selectionModel;
     }
 
-    public RearrangeCodeProcessor(@Nonnull PsiFile file, @Nonnull SelectionModel selectionModel) {
+    public RearrangeCodeProcessor(PsiFile file, SelectionModel selectionModel) {
         super(file.getProject(), file, PROGRESS_TEXT.get(), COMMAND_NAME.get(), false);
         mySelectionModel = selectionModel;
     }
 
-    public RearrangeCodeProcessor(@Nonnull PsiFile file) {
+    public RearrangeCodeProcessor(PsiFile file) {
         super(file.getProject(), file, PROGRESS_TEXT.get(), COMMAND_NAME.get(), false);
     }
 
     @RequiredReadAction
     public RearrangeCodeProcessor(
-        @Nonnull Project project,
-        @Nonnull PsiFile[] files,
-        @Nonnull String commandName,
+        Project project,
+        PsiFile[] files,
+        String commandName,
         @Nullable Runnable postRunnable
     ) {
         super(project, files, PROGRESS_TEXT.get(), commandName, postRunnable, false);
     }
 
-    @Nonnull
+    
     @Override
-    protected FutureTask<Boolean> prepareTask(@Nonnull PsiFile file, boolean processChangedTextOnly) {
+    protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly) {
         return new FutureTask<>(() -> {
             try {
                 Collection<TextRange> ranges = getRangesToFormat(file, processChangedTextOnly);
@@ -104,8 +103,8 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
         });
     }
 
-    @Nonnull
-    private Runnable prepareRearrangeCommand(@Nonnull PsiFile file, @Nonnull Collection<TextRange> ranges) {
+    
+    private Runnable prepareRearrangeCommand(PsiFile file, Collection<TextRange> ranges) {
         ArrangementEngine engine = ServiceManager.getService(myProject, ArrangementEngine.class);
         return () -> {
             engine.arrange(file, ranges);
@@ -117,7 +116,7 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
     }
 
     @RequiredReadAction
-    public Collection<TextRange> getRangesToFormat(@Nonnull PsiFile file, boolean processChangedTextOnly)
+    public Collection<TextRange> getRangesToFormat(PsiFile file, boolean processChangedTextOnly)
         throws FilesTooBigForDiffException {
         if (mySelectionModel != null) {
             return getSelectedRanges(mySelectionModel);

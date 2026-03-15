@@ -20,7 +20,6 @@ import consulo.language.editor.todo.impl.internal.TodoPanel;
 import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 import static consulo.language.editor.todo.impl.internal.TodoPanel.TODO_PANEL_DATA_KEY;
 
@@ -40,7 +39,7 @@ public class TodoGroupByFlattenPackages extends TodoGroupByOptionAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
         e.getPresentation().setEnabled(todoPanel != null && todoPanel.isPackagesShown());

@@ -22,7 +22,6 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -31,7 +30,7 @@ public class LibraryNavigatable implements Navigatable {
   private final Module module;
   private OrderEntry element;
 
-  public LibraryNavigatable(@Nonnull Library library, @Nonnull Module module) {
+  public LibraryNavigatable(Library library, Module module) {
     this.module = module;
     for (OrderEntry entry : ModuleRootManager.getInstance(module).getOrderEntries()) {
       if (entry instanceof LibraryOrderEntry) {

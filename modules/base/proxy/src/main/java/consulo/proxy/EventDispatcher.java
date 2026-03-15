@@ -8,8 +8,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -29,23 +28,23 @@ public class EventDispatcher<T extends EventListener> {
     private T myMulticaster;
 
     private final DisposableList<T> myListeners = DisposableList.create();
-    @Nonnull
+    
     private final Class<T> myListenerClass;
     @Nullable
     private final Map<String, Object> myMethodReturnValues;
 
-    @Nonnull
-    public static <T extends EventListener> EventDispatcher<T> create(@Nonnull Class<T> listenerClass) {
+    
+    public static <T extends EventListener> EventDispatcher<T> create(Class<T> listenerClass) {
         return new EventDispatcher<>(listenerClass, null);
     }
 
-    @Nonnull
-    public static <T extends EventListener> EventDispatcher<T> create(@Nonnull Class<T> listenerClass, @Nonnull Map<String, Object> methodReturnValues) {
+    
+    public static <T extends EventListener> EventDispatcher<T> create(Class<T> listenerClass, Map<String, Object> methodReturnValues) {
         assertNonVoidMethodReturnValuesAreDeclared(methodReturnValues, listenerClass);
         return new EventDispatcher<>(listenerClass, methodReturnValues);
     }
 
-    private static void assertNonVoidMethodReturnValuesAreDeclared(@Nonnull Map<String, Object> methodReturnValues, @Nonnull Class<?> listenerClass) {
+    private static void assertNonVoidMethodReturnValuesAreDeclared(Map<String, Object> methodReturnValues, Class<?> listenerClass) {
         List<Method> declared = new ArrayList<>(ReflectionUtil.getClassPublicMethods(listenerClass));
         for (Map.Entry<String, Object> entry : methodReturnValues.entrySet()) {
             String methodName = entry.getKey();
@@ -68,13 +67,13 @@ public class EventDispatcher<T extends EventListener> {
         }
     }
 
-    private EventDispatcher(@Nonnull Class<T> listenerClass, @Nullable Map<String, Object> methodReturnValues) {
+    private EventDispatcher(Class<T> listenerClass, @Nullable Map<String, Object> methodReturnValues) {
         myListenerClass = listenerClass;
         myMethodReturnValues = methodReturnValues;
     }
 
-    @Nonnull
-    public static <T> T createMulticaster(@Nonnull Class<T> listenerClass, @Nullable Map<String, Object> methodReturnValues, Supplier<? extends Iterable<T>> listeners) {
+    
+    public static <T> T createMulticaster(Class<T> listenerClass, @Nullable Map<String, Object> methodReturnValues, Supplier<? extends Iterable<T>> listeners) {
         LOG.assertTrue(listenerClass.isInterface(), "listenerClass must be an interface");
         InvocationHandler handler = (proxy, method, args) -> {
             String methodName = method.getName();
@@ -109,7 +108,7 @@ public class EventDispatcher<T extends EventListener> {
         }
     }
 
-    @Nonnull
+    
     public T getMulticaster() {
         T multicaster = myMulticaster;
         if (multicaster == null) {
@@ -119,7 +118,7 @@ public class EventDispatcher<T extends EventListener> {
         return multicaster;
     }
 
-    private static <T> void dispatchVoidMethod(@Nonnull Iterable<? extends T> listeners, @Nonnull Method method, Object[] args) {
+    private static <T> void dispatchVoidMethod(Iterable<? extends T> listeners, Method method, Object[] args) {
         method.setAccessible(true);
 
         for (T listener : listeners) {
@@ -144,19 +143,19 @@ public class EventDispatcher<T extends EventListener> {
         }
     }
 
-    public void addListener(@Nonnull T listener) {
+    public void addListener(T listener) {
         myListeners.add(listener);
     }
 
-    public void addListener(@Nonnull T listener, @Nonnull Disposable parentDisposable) {
+    public void addListener(T listener, Disposable parentDisposable) {
         myListeners.add(listener, parentDisposable);
     }
 
-    public void addFirstListener(@Nonnull T listener, @Nonnull Disposable parentDisposable) {
+    public void addFirstListener(T listener, Disposable parentDisposable) {
         myListeners.add(0, listener, parentDisposable);
     }
 
-    public void removeListener(@Nonnull T listener) {
+    public void removeListener(T listener) {
         myListeners.remove(listener);
     }
 
@@ -164,13 +163,13 @@ public class EventDispatcher<T extends EventListener> {
         return !myListeners.isEmpty();
     }
 
-    @Nonnull
+    
     public List<T> getListeners() {
         return myListeners;
     }
 
     //@TestOnly
-    public void neuterMultiCasterWhilePerformanceTestIsRunningUntil(@Nonnull Disposable disposable) {
+    public void neuterMultiCasterWhilePerformanceTestIsRunningUntil(Disposable disposable) {
         T multicaster = myMulticaster;
         myMulticaster = createMulticaster(myListenerClass, myMethodReturnValues, List::of);
         Disposer.register(disposable, () -> myMulticaster = multicaster);

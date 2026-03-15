@@ -77,8 +77,7 @@ import consulo.util.collection.WeakList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -224,7 +223,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         DISPOSE
     }
 
-    private void debugState(@Nonnull String message, @Nonnull State... states) {
+    private void debugState(String message, State... states) {
         if (LOG.isDebugEnabled()) {
             LOG.debug(hashCode() + " - " + message);
             if (!Application.get().isDispatchThread()) {
@@ -242,11 +241,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     protected AbstractPopup() {
     }
 
-    @Nonnull
+   
     @SuppressWarnings("ReturnValueIgnored")
     protected AbstractPopup init(
         Project project,
-        @Nonnull JComponent component,
+        JComponent component,
         @Nullable JComponent preferredFocusedComponent,
         boolean requestFocus,
         boolean focusable,
@@ -258,7 +257,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         boolean cancelOnClickOutside,
         @Nullable Set<JBPopupListener> listeners,
         boolean useDimServiceForXYLocation,
-        @Nullable ComponentPopupBuilderImpl.CancelButtonInfo cancelButtonInfo,
+        ComponentPopupBuilderImpl.@Nullable CancelButtonInfo cancelButtonInfo,
         @Nullable MouseChecker cancelOnMouseOutCallback,
         boolean cancelOnWindow,
         @Nullable ActiveIcon titleIcon,
@@ -274,7 +273,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         @Nullable String adText,
         int adTextAlignment,
         boolean headerAlwaysFocusable,
-        @Nonnull List<? extends Pair<ActionListener, KeyStroke>> keyboardActions,
+        List<? extends Pair<ActionListener, KeyStroke>> keyboardActions,
         @Nullable Predicate<? super JBPopup> pinCallback,
         boolean mayBeParent,
         boolean showShadow,
@@ -282,8 +281,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         Color borderColor,
         boolean cancelOnWindowDeactivation,
         @Nullable Predicate<? super KeyEvent> keyEventHandler,
-        @Nonnull List<AnAction> headerLeftActions,
-        @Nonnull List<AnAction> headerRightActions
+        List<AnAction> headerLeftActions,
+        List<AnAction> headerRightActions
     ) {
         assert !requestFocus || focusable : "Incorrect argument combination: requestFocus=true focusable=false";
 
@@ -422,7 +421,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
 
-    @Nonnull
+   
     protected MyContentPanel createContentPanel(boolean resizable, Border border, boolean isToDrawMacCorner) {
         return new MyContentPanel(border);
     }
@@ -444,13 +443,13 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         myDimensionServiceKey = dimensionServiceKey;
     }
 
-    @Nonnull
+   
     public Border getPopupBorder() {
         return myPopupBorder;
     }
 
     @Override
-    public void setAdText(@Nonnull String s, int alignment) {
+    public void setAdText(String s, int alignment) {
         if (myAdComponent == null) {
             myAdComponent = HintUtil.createAdComponent(s, null, alignment);
             JPanel wrapper = new JPanel(new BorderLayout());
@@ -469,7 +468,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return getCenterOf(aContainer, content.getPreferredSize());
     }
 
-    private static Point getCenterOf(@Nonnull Component aContainer, @Nonnull Dimension contentSize) {
+    private static Point getCenterOf(Component aContainer, Dimension contentSize) {
         JComponent component = getTargetComponent(aContainer);
 
         Rectangle visibleBounds = component != null ? component.getVisibleRect() : new Rectangle(aContainer.getSize());
@@ -481,7 +480,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
-    public void showCenteredInCurrentWindow(@Nonnull ComponentManager project) {
+    public void showCenteredInCurrentWindow(ComponentManager project) {
         if (UiInterceptors.tryIntercept(this)) {
             return;
         }
@@ -494,7 +493,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Nullable
-    public static Window getCurrentWindow(@Nonnull Project project) {
+    public static Window getCurrentWindow(Project project) {
         Window window = null;
 
         WindowManagerEx manager = getWndManager();
@@ -535,7 +534,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     @RequiredUIAccess
-    public void showInCenterOf(@Nonnull Component aComponent) {
+    public void showInCenterOf(Component aComponent) {
         HelpTooltipImpl.setMasterPopup(aComponent, this);
         Point popupPoint = getCenterOf(aComponent, getPreferredContentSize());
         show(aComponent, popupPoint.x, popupPoint.y, false);
@@ -543,13 +542,13 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     @RequiredUIAccess
-    public void showUnderneathOf(@Nonnull Component aComponent) {
+    public void showUnderneathOf(Component aComponent) {
         show(new RelativePoint(aComponent, new Point(JBUIScale.scale(2), aComponent.getHeight())));
     }
 
     @Override
     @RequiredUIAccess
-    public void show(@Nonnull RelativePoint aPoint) {
+    public void show(RelativePoint aPoint) {
         if (UiInterceptors.tryIntercept(this)) {
             return;
         }
@@ -560,13 +559,13 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     @RequiredUIAccess
-    public void showInScreenCoordinates(@Nonnull Component owner, @Nonnull Point point) {
+    public void showInScreenCoordinates(Component owner, Point point) {
         show(owner, point.x, point.y, false);
     }
 
-    @Nonnull
+   
     @Override
-    public Point getBestPositionFor(@Nonnull DataContext dataContext) {
+    public Point getBestPositionFor(DataContext dataContext) {
         Editor editor = dataContext.getData(Editor.KEY);
         if (editor != null && editor.getComponent().isShowing()) {
             return getBestPositionFor(editor).getScreenPoint();
@@ -576,7 +575,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     @RequiredUIAccess
-    public void showInBestPositionFor(@Nonnull DataContext dataContext) {
+    public void showInBestPositionFor(DataContext dataContext) {
         Editor editor = dataContext.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         if (editor != null && editor.getComponent().isShowing()) {
             showInBestPositionFor(editor);
@@ -600,8 +599,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    @Nonnull
-    private RelativePoint relativePointByQuickSearch(@Nonnull DataContext dataContext) {
+   
+    private RelativePoint relativePointByQuickSearch(DataContext dataContext) {
         Rectangle dominantArea = dataContext.getData(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE);
 
         if (dominantArea != null) {
@@ -656,7 +655,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     //@Override
     @RequiredUIAccess
-    public void showInBestPositionFor(@Nonnull Editor editor) {
+    public void showInBestPositionFor(Editor editor) {
         // Intercept before the following assert; otherwise assertion may fail
         if (UiInterceptors.tryIntercept(this)) {
             return;
@@ -670,8 +669,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         show(getBestPositionFor(editor));
     }
 
-    @Nonnull
-    private RelativePoint getBestPositionFor(@Nonnull Editor editor) {
+   
+    private RelativePoint getBestPositionFor(Editor editor) {
         DataContext context = editor.getDataContext();
         Rectangle dominantArea = context.getData(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE);
         if (dominantArea != null && !myRequestFocus) {
@@ -683,8 +682,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    @Nonnull
-    private RelativePoint guessBestPopupLocation(@Nonnull Editor editor) {
+   
+    private RelativePoint guessBestPopupLocation(Editor editor) {
         RelativePoint preferredLocation = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
         Dimension targetSize = getSizeForPositioning();
         Point preferredPoint = preferredLocation.getScreenPoint();
@@ -698,8 +697,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return toRelativePoint(result, preferredLocation.getComponent());
     }
 
-    @Nonnull
-    private static RelativePoint toRelativePoint(@Nonnull Point screenPoint, @Nullable Component component) {
+   
+    private static RelativePoint toRelativePoint(Point screenPoint, @Nullable Component component) {
         if (component == null) {
             return RelativePoint.fromScreen(screenPoint);
         }
@@ -707,11 +706,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return new RelativePoint(component, screenPoint);
     }
 
-    @Nonnull
+   
     private static Point getLocationAboveEditorLineIfPopupIsClippedAtTheBottom(
-        @Nonnull Point originalLocation,
-        @Nonnull Dimension popupSize,
-        @Nonnull Editor editor
+        Point originalLocation,
+        Dimension popupSize,
+        Editor editor
     ) {
         Rectangle preferredBounds = new Rectangle(originalLocation, popupSize);
         Rectangle adjustedBounds = new Rectangle(preferredBounds);
@@ -764,7 +763,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     // positions are relative to screen
     @Nullable
-    private static Point fitToScreenAdjustingVertically(@Nonnull Point position, @Nonnull Dimension size) {
+    private static Point fitToScreenAdjustingVertically(Point position, Dimension size) {
         Rectangle screenRectangle = ScreenUtil.getScreenRectangle(position);
         Rectangle rectangle = new Rectangle(position, size);
         if (rectangle.height > screenRectangle.height || rectangle.x < screenRectangle.x || rectangle.x + rectangle.width > screenRectangle.x + screenRectangle.width) {
@@ -774,7 +773,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return rectangle.getLocation();
     }
 
-    @Nonnull
+   
     private Dimension getPreferredContentSize() {
         if (myForcedSize != null) {
             return myForcedSize;
@@ -914,19 +913,19 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     @RequiredUIAccess
-    public void show(@Nonnull Component owner) {
+    public void show(Component owner) {
         show(owner, -1, -1, true);
     }
 
     @Override
     @RequiredUIAccess
-    public void showBy(@Nonnull consulo.ui.Component component, @Nonnull InputDetails inputDetails) {
+    public void showBy(consulo.ui.Component component, InputDetails inputDetails) {
         Point2D positionOnScreen = inputDetails.getPositionOnScreen();
         show(TargetAWT.to(component), positionOnScreen.x(), positionOnScreen.y(), true);
     }
 
     @RequiredUIAccess
-    public void show(@Nonnull Component owner, int aScreenX, int aScreenY, boolean considerForcedXY) {
+    public void show(Component owner, int aScreenX, int aScreenY, boolean considerForcedXY) {
         if (UiInterceptors.tryIntercept(this)) {
             return;
         }
@@ -1498,7 +1497,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return new PopupComponent.Factory.AwtDefault();
     }
 
-    @Nonnull
+   
     @Override
     public JComponent getContent() {
         return myContent;
@@ -1585,7 +1584,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return pane.getHorizontalScrollBar();
     }
 
-    private void forHorizontalScrollBar(@Nonnull Consumer<? super JScrollBar> consumer) {
+    private void forHorizontalScrollBar(Consumer<? super JScrollBar> consumer) {
         JScrollBar bar = findHorizontalScrollBar();
         if (bar != null) {
             consumer.accept(bar);
@@ -1747,7 +1746,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
         @Nullable
         @Override
-        public Object getData(@Nonnull Key dataId) {
+        public Object getData(Key dataId) {
             return myDataProvider != null ? myDataProvider.getData(dataId) : null;
         }
 
@@ -1800,7 +1799,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
-    public void setLocation(@Nonnull Point screenPoint) {
+    public void setLocation(Point screenPoint) {
         if (myPopup == null) {
             myForcedLocation = screenPoint;
         }
@@ -1835,7 +1834,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return window;
     }
 
-    @Nonnull
+   
     @Override
     public Point getLocationOnScreen() {
         Window window = getContentWindow(myContent);
@@ -1850,11 +1849,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
-    public void setSize(@Nonnull Dimension size) {
+    public void setSize(Dimension size) {
         setSize(size, true);
     }
 
-    private void setSize(@Nonnull Dimension size, boolean adjustByContent) {
+    private void setSize(Dimension size, boolean adjustByContent) {
         if (isBusy()) {
             return;
         }
@@ -1918,7 +1917,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
-    public void setCaption(@Nonnull String title) {
+    public void setCaption(String title) {
         if (myCaption instanceof LabeledTitlePanel titlePanel) {
             titlePanel.setText(title);
         }
@@ -1983,7 +1982,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
-    public <T> T getUserData(@Nonnull Class<T> userDataClass) {
+    public <T> T getUserData(Class<T> userDataClass) {
         if (myUserData != null) {
             for (Object o : myUserData) {
                 if (userDataClass.isInstance(o)) {
@@ -2037,7 +2036,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return myCancelKeyEnabled;
     }
 
-    @Nonnull
+   
     public CaptionPanel getTitle() {
         return myCaption;
     }
@@ -2070,7 +2069,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    public void setWarning(@Nonnull LocalizeValue text) {
+    public void setWarning(LocalizeValue text) {
         JBLabel label = new JBLabel(text.get(), PlatformIconGroup.generalBalloonwarning(), SwingConstants.CENTER);
         label.setOpaque(true);
         Color color = TargetAWT.to(HintUtil.getInformationColor());
@@ -2080,12 +2079,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
-    public void addListener(@Nonnull JBPopupListener listener) {
+    public void addListener(JBPopupListener listener) {
         myListeners.add(listener);
     }
 
     @Override
-    public void removeListener(@Nonnull JBPopupListener listener) {
+    public void removeListener(JBPopupListener listener) {
         myListeners.remove(listener);
     }
 
@@ -2142,14 +2141,14 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
-    public void setDataProvider(@Nonnull DataProvider dataProvider) {
+    public void setDataProvider(DataProvider dataProvider) {
         if (myContent != null) {
             myContent.setDataProvider(dataProvider);
         }
     }
 
     @Override
-    public boolean dispatchKeyEvent(@Nonnull KeyEvent e) {
+    public boolean dispatchKeyEvent(KeyEvent e) {
         Predicate<? super KeyEvent> handler = myKeyEventHandler;
         if (handler != null && handler.test(e)) {
             return true;
@@ -2161,12 +2160,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return false;
     }
 
-    @Nonnull
+   
     public Dimension getHeaderPreferredSize() {
         return myHeaderPanel.getPreferredSize();
     }
 
-    @Nonnull
+   
     public Dimension getFooterPreferredSize() {
         return myAdComponent == null ? new Dimension(0, 0) : myAdComponent.getPreferredSize();
     }
@@ -2218,8 +2217,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return point == null ? null : new Rectangle(point, component.getSize());
     }
 
-    @Nonnull
-    public static List<JBPopup> getChildPopups(@Nonnull Component component) {
+   
+    public static List<JBPopup> getChildPopups(Component component) {
         return ContainerUtil.filter(
             all.toStrongList(),
             popup -> {
@@ -2240,7 +2239,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return myState == State.INIT;
     }
 
-    @Nonnull
+   
     @Override
     public Rectangle getConsumedScreenBounds() {
         return myWindow.getBounds();
@@ -2254,7 +2253,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     /**
      * Passed listener will be notified if popup is resized by user (using mouse)
      */
-    public void addResizeListener(@Nonnull Runnable runnable, @Nonnull Disposable parentDisposable) {
+    public void addResizeListener(Runnable runnable, Disposable parentDisposable) {
         myResizeListeners.add(runnable);
         Disposer.register(parentDisposable, () -> myResizeListeners.remove(runnable));
     }
@@ -2262,7 +2261,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     /**
      * @return {@code true} if focus moved to a popup window or its child window
      */
-    private static boolean isCancelNeeded(@Nonnull WindowEvent event, Window window) {
+    private static boolean isCancelNeeded(WindowEvent event, Window window) {
         if (window == null) {
             return true;
         }
@@ -2292,7 +2291,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return TargetAWT.to(size);
     }
 
-    @Nonnull
+   
     private static WindowStateService getWindowStateService(@Nullable Project project) {
         return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
     }

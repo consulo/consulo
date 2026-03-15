@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -41,7 +40,7 @@ public class DocumentationManagerHelper {
   public static final String JAVADOC_LOCATION_AND_SIZE = "javadoc.popup";
   public static final String NEW_JAVADOC_LOCATION_AND_SIZE = "javadoc.popup.new";
 
-  @Nonnull
+  
   public static DocumentationProvider getProviderFromElement(PsiElement element) {
     return getProviderFromElement(element, null);
   }
@@ -56,7 +55,7 @@ public class DocumentationManagerHelper {
     }
   }
 
-  @Nonnull
+  
   public static DocumentationProvider getProviderFromElement(@Nullable PsiElement element, @Nullable PsiElement originalElement) {
     if (element != null && !element.isValid()) {
       element = null;

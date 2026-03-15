@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -40,9 +39,9 @@ public abstract class FeatureUsageTracker {
 
     public abstract boolean isToBeAdvertisedInLookup(String featureId, ComponentManager project);
 
-    @Nonnull
+    
     public abstract InvocationCounter getCompletionStatistics();
 
-    @Nonnull
+    
     public abstract InvocationCounter getFixesStats();
 }

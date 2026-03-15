@@ -17,11 +17,10 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
 
 public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
   protected final boolean myIsMany;
-  @Nonnull
+  
   protected final Runnable myDialogShower;
   private final int myManyFileCount;
   private final int myManyDirectoryCount;
@@ -30,7 +29,7 @@ public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
                                             int filesSize,
                                             int dirsSize,
                                             boolean many,
-                                            @RequiredUIAccess @Nonnull Runnable shower) {
+                                            @RequiredUIAccess Runnable shower) {
     super(userObject);
     // if files presented in the same view recalculate number of dirs and files -> provide -1; otherwise use from model
     myManyFileCount = filesSize;
@@ -41,7 +40,7 @@ public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
 
 
   @Override
-  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     super.render(renderer, selected, expanded, hasFocus);
     if (isManyFiles()) {
       renderer.append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);

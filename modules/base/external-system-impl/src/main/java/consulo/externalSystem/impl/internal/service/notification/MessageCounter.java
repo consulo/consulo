@@ -20,8 +20,7 @@ import consulo.externalSystem.service.notification.NotificationCategory;
 import consulo.externalSystem.service.notification.NotificationSource;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,10 +34,10 @@ public class MessageCounter {
     private final Map<ProjectSystemId, Map<String/* group */, Map<NotificationSource, Object2IntMap<NotificationCategory>>>> map = new HashMap<>();
 
     public synchronized void increment(
-        @Nonnull String groupName,
-        @Nonnull NotificationSource source,
-        @Nonnull NotificationCategory category,
-        @Nonnull ProjectSystemId projectSystemId
+        String groupName,
+        NotificationSource source,
+        NotificationCategory category,
+        ProjectSystemId projectSystemId
     ) {
 
         Map<String, Map<NotificationSource, Object2IntMap<NotificationCategory>>> groupMap =
@@ -53,8 +52,8 @@ public class MessageCounter {
 
     public synchronized void remove(
         @Nullable String groupName,
-        @Nonnull NotificationSource notificationSource,
-        @Nonnull ProjectSystemId projectSystemId
+        NotificationSource notificationSource,
+        ProjectSystemId projectSystemId
     ) {
         Map<String, Map<NotificationSource, Object2IntMap<NotificationCategory>>> groupMap =
             map.computeIfAbsent(projectSystemId, p -> new HashMap<>());
@@ -75,9 +74,9 @@ public class MessageCounter {
 
     public synchronized int getCount(
         @Nullable String groupName,
-        @Nonnull NotificationSource notificationSource,
+        NotificationSource notificationSource,
         @Nullable NotificationCategory notificationCategory,
-        @Nonnull ProjectSystemId projectSystemId
+        ProjectSystemId projectSystemId
     ) {
         Map<String, Map<NotificationSource, Object2IntMap<NotificationCategory>>> groupMap = map.getOrDefault(projectSystemId, Map.of());
 

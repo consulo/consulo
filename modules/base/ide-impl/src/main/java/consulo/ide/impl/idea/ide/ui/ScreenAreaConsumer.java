@@ -2,12 +2,11 @@
 package consulo.ide.impl.idea.ide.ui;
 
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public interface ScreenAreaConsumer extends Disposable {
-  @Nonnull
+  
   Rectangle getConsumedScreenBounds();
 
   Window getUnderlyingWindow();

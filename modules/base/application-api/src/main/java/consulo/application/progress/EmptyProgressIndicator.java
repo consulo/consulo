@@ -22,13 +22,12 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EmptyProgressIndicator implements StandardProgressIndicator {
   private static final Logger LOG = Logger.getInstance(EmptyProgressIndicator.class);
 
-  @Nonnull
+  
   private final ModalityState myModalityState;
 
   private volatile boolean myIsRunning;
@@ -38,7 +37,7 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
     this(Application.get().getDefaultModalityState());
   }
 
-  public EmptyProgressIndicator(@Nonnull ModalityState modalityState) {
+  public EmptyProgressIndicator(ModalityState modalityState) {
     myModalityState = modalityState;
   }
 
@@ -125,7 +124,7 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  @Nonnull
+  
   public ModalityState getModalityState() {
     return myModalityState;
   }
@@ -153,7 +152,7 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
     return false;
   }
 
-  @Nonnull
+  
   public static ProgressIndicator notNullize(@Nullable ProgressIndicator indicator) {
     if (indicator != null) {
       return indicator;

@@ -19,10 +19,8 @@ import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -50,7 +48,7 @@ public class RegexpFilter implements Filter {
   private static final String LINE_STR = "line";
   private static final String COLUMN_STR = "column";
 
-  public RegexpFilter(Project project, @Nonnull String expression) {
+  public RegexpFilter(Project project, String expression) {
     myProject = project;
     validate(expression);
 

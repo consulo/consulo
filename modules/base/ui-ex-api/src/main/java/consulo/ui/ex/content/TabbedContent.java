@@ -17,7 +17,6 @@ package consulo.ui.ex.content;
 
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -28,9 +27,9 @@ import java.util.List;
 public interface TabbedContent extends Content {
   String SPLIT_PROPERTY_PREFIX = "tabbed.toolwindow.expanded.";
 
-  void addContent(@Nonnull JComponent content, @Nonnull String name, boolean selectTab);
+  void addContent(JComponent content, String name, boolean selectTab);
 
-  void removeContent(@Nonnull JComponent content);
+  void removeContent(JComponent content);
 
   /**
    * This method is used for preselecting popup menu items
@@ -49,7 +48,7 @@ public interface TabbedContent extends Content {
    */
   void selectContent(int index);
 
-  @Nonnull
+  
   List<Pair<String, JComponent>> getTabs();
 
   default boolean hasMultipleTabs() {
@@ -62,5 +61,5 @@ public interface TabbedContent extends Content {
 
   void split();
 
-  boolean findAndSelectContent(@Nonnull JComponent contentComponent);
+  boolean findAndSelectContent(JComponent contentComponent);
 }

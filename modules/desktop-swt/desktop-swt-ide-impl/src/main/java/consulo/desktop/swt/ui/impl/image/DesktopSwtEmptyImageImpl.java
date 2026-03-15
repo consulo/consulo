@@ -16,7 +16,6 @@
 package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.image.EmptyImage;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public class DesktopSwtEmptyImageImpl implements EmptyImage, DesktopSwtImage {
     return myWidth;
   }
 
-  @Nonnull
+  
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
     return new org.eclipse.swt.graphics.Image(null, getWidth(), getHeight());

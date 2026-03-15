@@ -28,8 +28,7 @@ import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -62,7 +61,7 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
     @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+    public JComponent createComponent(Disposable parentDisposable) {
         if (myPanel == null) {
             myPanel = new PluginsPanel();
             Disposer.register(parentDisposable, myPanel);
@@ -70,7 +69,7 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         return myPanel.getComponent();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return ExternalServiceLocalize.titlePlugins();
@@ -92,7 +91,7 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         return getId() + suffix;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return CONFIGURABLE_ID;

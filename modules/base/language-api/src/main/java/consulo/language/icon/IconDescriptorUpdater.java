@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,5 +27,5 @@ import jakarta.annotation.Nonnull;
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface IconDescriptorUpdater {
     @RequiredReadAction
-    void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags);
+    void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags);
 }

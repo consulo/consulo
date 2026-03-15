@@ -15,8 +15,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +45,7 @@ public class CopyReferenceUtil {
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static List<PsiElement> getElementsToCopy(@Nullable Editor editor, DataContext dataContext) {
         List<PsiElement> elements = new ArrayList<>();

@@ -22,8 +22,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -46,7 +45,7 @@ public abstract class UIFontManagerImpl implements UIFontManager, PersistentStat
     return myState.overrideFont;
   }
 
-  @Nonnull
+  
   @Override
   public String getFontName() {
     String fontName = myState.fontName;
@@ -92,7 +91,7 @@ public abstract class UIFontManagerImpl implements UIFontManager, PersistentStat
     myState.overrideFont = state.overrideFont;
   }
 
-  @Nonnull
+  
   private Pair<String, Integer> initSystemFontInfo() {
     if (mySystemFontInfo == null) {
       mySystemFontInfo = resolveSystemFontData();
@@ -100,6 +99,6 @@ public abstract class UIFontManagerImpl implements UIFontManager, PersistentStat
     return mySystemFontInfo;
   }
 
-  @Nonnull
+  
   protected abstract Pair<String, Integer> resolveSystemFontData();
 }

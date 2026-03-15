@@ -20,7 +20,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import consulo.application.CommonBundle;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

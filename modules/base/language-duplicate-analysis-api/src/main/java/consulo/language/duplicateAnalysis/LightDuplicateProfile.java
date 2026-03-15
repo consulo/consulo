@@ -18,13 +18,12 @@ package consulo.language.duplicateAnalysis;
 import consulo.language.ast.LighterAST;
 import consulo.language.ast.LighterASTNode;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public interface LightDuplicateProfile {
-  void process(@Nonnull LighterAST ast, @Nonnull Callback callback);
-  boolean acceptsFile(@Nonnull VirtualFile file);
+  void process(LighterAST ast, Callback callback);
+  boolean acceptsFile(VirtualFile file);
 
   interface Callback {
-    void process(int hash, int hash2, @Nonnull LighterAST ast, @Nonnull LighterASTNode... nodes);
+    void process(int hash, int hash2, LighterAST ast, LighterASTNode... nodes);
   }
 }

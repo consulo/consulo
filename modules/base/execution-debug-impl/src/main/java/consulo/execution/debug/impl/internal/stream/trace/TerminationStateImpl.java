@@ -5,8 +5,7 @@ import consulo.execution.debug.stream.trace.PrevAwareState;
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.Value;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,10 +19,10 @@ final class TerminationStateImpl extends StateBase implements PrevAwareState {
   private final StreamCall myPrevCall;
   private final Map<TraceElement, List<TraceElement>> myToPrev;
 
-  TerminationStateImpl(@Nonnull TraceElement result,
-                       @Nonnull StreamCall prevCall,
-                       @Nonnull List<TraceElement> elements,
-                       @Nonnull Map<TraceElement, List<TraceElement>> toPrevMapping) {
+  TerminationStateImpl(TraceElement result,
+                       StreamCall prevCall,
+                       List<TraceElement> elements,
+                       Map<TraceElement, List<TraceElement>> toPrevMapping) {
     super(elements);
     myResult = result;
     myPrevCall = prevCall;
@@ -36,12 +35,12 @@ final class TerminationStateImpl extends StateBase implements PrevAwareState {
   }
 
   @Override
-  public @Nonnull StreamCall getPrevCall() {
+  public StreamCall getPrevCall() {
     return myPrevCall;
   }
 
   @Override
-  public @Nonnull List<TraceElement> getPrevValues(@Nonnull TraceElement value) {
+  public List<TraceElement> getPrevValues(TraceElement value) {
     return myToPrev.getOrDefault(value, Collections.emptyList());
   }
 }

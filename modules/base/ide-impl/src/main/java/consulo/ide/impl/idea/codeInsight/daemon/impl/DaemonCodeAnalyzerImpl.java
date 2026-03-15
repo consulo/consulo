@@ -74,8 +74,7 @@ import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -99,13 +98,13 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     private static final Key<List<HighlightInfoImpl>> FILE_LEVEL_HIGHLIGHTS = Key.create("FILE_LEVEL_HIGHLIGHTS");
     private final Project myProject;
     private final DaemonCodeAnalyzerSettings mySettings;
-    @Nonnull
+    
     private final PsiDocumentManager myPsiDocumentManager;
     private DaemonProgressIndicator myUpdateProgress = new DaemonProgressIndicator(); //guarded by this
 
     private final UpdateRunnable myUpdateRunnable;
 
-    @Nonnull
+    
     private volatile Future<?> myUpdateRunnableFuture = CompletableFuture.completedFuture(null);
     private boolean myUpdateByTimerEnabled = true; // guarded by this
     private final Collection<VirtualFile> myDisabledHintsFiles = new HashSet<>();
@@ -123,7 +122,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     private final PassExecutorService myPassExecutorService;
 
     @Inject
-    public DaemonCodeAnalyzerImpl(@Nonnull Project project) {
+    public DaemonCodeAnalyzerImpl(Project project) {
         // DependencyValidationManagerImpl adds scope listener, so, we need to force service creation
         DependencyValidationManager.getInstance(project);
 
@@ -167,13 +166,13 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         myUpdateRunnableFuture.cancel(true);
     }
 
-    @Nonnull
+    
     @TestOnly
     @RequiredReadAction
     public static List<HighlightInfo> getHighlights(
-        @Nonnull Document document,
+        Document document,
         @Nullable HighlightSeverity minSeverity,
-        @Nonnull Project project
+        Project project
     ) {
         List<HighlightInfo> infos = new ArrayList<>();
         processHighlights(document, project, minSeverity, 0, document.getTextLength(), Processors.cancelableCollectProcessor(infos));
@@ -181,9 +180,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
-    @Nonnull
+    
     @TestOnly
-    public List<HighlightInfo> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file) {
+    public List<HighlightInfo> getFileLevelHighlights(Project project, PsiFile file) {
         VirtualFile vFile = file.getViewProvider().getVirtualFile();
         return Arrays.stream(FileEditorManager.getInstance(project).getEditors(vFile))
             .map(fileEditor -> fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS))
@@ -193,7 +192,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
-    public void cleanFileLevelHighlights(@Nonnull Project project, int group, PsiFile psiFile) {
+    public void cleanFileLevelHighlights(Project project, int group, PsiFile psiFile) {
         if (psiFile == null) {
             return;
         }
@@ -219,10 +218,10 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     @Override
     @RequiredUIAccess
     public void addFileLevelHighlight(
-        @Nonnull Project project,
+        Project project,
         int group,
-        @Nonnull HighlightInfo i,
-        @Nonnull PsiFile psiFile
+        HighlightInfo i,
+        PsiFile psiFile
     ) {
         HighlightInfoImpl info = (HighlightInfoImpl)i;
 
@@ -254,11 +253,11 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
-    @Nonnull
+    
     public List<HighlightInfo> runMainPasses(
-        @Nonnull PsiFile psiFile,
-        @Nonnull Document document,
-        @Nonnull ProgressIndicator progress
+        PsiFile psiFile,
+        Document document,
+        ProgressIndicator progress
     ) {
         Application app = myProject.getApplication();
         if (app.isDispatchThread()) {
@@ -316,7 +315,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     private volatile boolean mustWaitForSmartMode = true;
 
     @TestOnly
-    public void mustWaitForSmartMode(boolean mustWait, @Nonnull Disposable parent) {
+    public void mustWaitForSmartMode(boolean mustWait, Disposable parent) {
         boolean old = mustWaitForSmartMode;
         mustWaitForSmartMode = mustWait;
         Disposer.register(parent, () -> mustWaitForSmartMode = old);
@@ -325,11 +324,11 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     @TestOnly
     @RequiredUIAccess
     public void runPasses(
-        @Nonnull Application application,
-        @Nonnull PsiFile file,
-        @Nonnull Document document,
-        @Nonnull List<? extends TextEditor> textEditors,
-        @Nonnull int[] toIgnore,
+        Application application,
+        PsiFile file,
+        Document document,
+        List<? extends TextEditor> textEditors,
+        int[] toIgnore,
         boolean canChangeDocument,
         @Nullable Runnable callbackWhileWaiting
     ) throws ProcessCanceledException {
@@ -450,7 +449,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         if (!canChangeDocument) {
             myProject.getMessageBus().connect(disposable).subscribe(DaemonListener.class, new DaemonListener() {
                 @Override
-                public void daemonCancelEventOccurred(@Nonnull String reason) {
+                public void daemonCancelEventOccurred(String reason) {
                     throw new IllegalStateException("You must not cancel daemon inside highlighting test: " + reason);
                 }
             });
@@ -510,7 +509,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @Override
     @RequiredUIAccess
-    public void disableUpdateByTimer(@Nonnull Disposable parentDisposable) {
+    public void disableUpdateByTimer(Disposable parentDisposable) {
         setUpdateByTimerEnabled(false);
         myDisableCount.incrementAndGet();
         UIAccess.assertIsUIThread();
@@ -531,7 +530,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @Override
     @RequiredUIAccess
-    public void setImportHintsEnabled(@Nonnull PsiFile file, boolean value) {
+    public void setImportHintsEnabled(PsiFile file, boolean value) {
         VirtualFile vFile = file.getVirtualFile();
         if (value) {
             myDisabledHintsFiles.remove(vFile);
@@ -550,7 +549,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @Override
     @RequiredReadAction
-    public void setHighlightingEnabled(@Nonnull PsiFile file, boolean value) {
+    public void setHighlightingEnabled(PsiFile file, boolean value) {
         VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
         if (value) {
             myDisabledHighlightingFiles.remove(virtualFile);
@@ -581,7 +580,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @Override
     @RequiredReadAction
-    public boolean isImportHintsEnabled(@Nonnull PsiFile file) {
+    public boolean isImportHintsEnabled(PsiFile file) {
         return isAutohintsAvailable(file) && !myDisabledHintsFiles.contains(file.getVirtualFile());
     }
 
@@ -591,7 +590,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         return isHighlightingAvailable(file) && !(file instanceof PsiCompiledElement);
     }
 
-    @Nonnull
+    
     @Override
     public ProgressIndicator createDaemonProgressIndicator() {
         return new DaemonProgressIndicator();
@@ -611,7 +610,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @Override
     @RequiredReadAction
-    public void restart(@Nonnull PsiFile file) {
+    public void restart(PsiFile file) {
         Document document = myPsiDocumentManager.getCachedDocument(file);
         if (document == null) {
             return;
@@ -621,8 +620,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         stopProcess(true, reason);
     }
 
-    @Nonnull
-    public List<ProgressableTextEditorHighlightingPass> getPassesToShowProgressFor(@Nonnull Document document) {
+    
+    public List<ProgressableTextEditorHighlightingPass> getPassesToShowProgressFor(Document document) {
         List<HighlightingPass> allPasses = myPassExecutorService.getAllSubmittedPasses();
         return allPasses.stream()
             .map(p -> p instanceof ProgressableTextEditorHighlightingPass highlightingPass ? highlightingPass : null)
@@ -631,7 +630,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
             .collect(Collectors.toList());
     }
 
-    boolean isAllAnalysisFinished(@Nonnull PsiFile file) {
+    boolean isAllAnalysisFinished(PsiFile file) {
         if (myDisposed) {
             return false;
         }
@@ -642,7 +641,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
-    public boolean isErrorAnalyzingFinished(@Nonnull PsiFile file) {
+    public boolean isErrorAnalyzingFinished(PsiFile file) {
         if (myDisposed) {
             return false;
         }
@@ -653,7 +652,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
-    @Nonnull
+    
     public FileStatusMapImpl getFileStatusMap() {
         return myFileStatusMap;
     }
@@ -672,7 +671,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     // return true if the progress really was canceled
     @Override
-    public synchronized boolean stopProcess(boolean toRestartAlarm, @Nonnull String reason) {
+    public synchronized boolean stopProcess(boolean toRestartAlarm, String reason) {
         boolean canceled = cancelUpdateProgress(toRestartAlarm, reason);
         // optimisation: this check is to avoid too many re-schedules in case of thousands of events spikes
         boolean restart = toRestartAlarm && !myDisposed && myInitialized;
@@ -686,7 +685,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     // return true if the progress really was canceled
-    private synchronized boolean cancelUpdateProgress(boolean toRestartAlarm, @Nonnull String reason) {
+    private synchronized boolean cancelUpdateProgress(boolean toRestartAlarm, String reason) {
         DaemonProgressIndicator updateProgress = myUpdateProgress;
         if (myDisposed) {
             return false;
@@ -703,12 +702,12 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @RequiredReadAction
     static boolean processHighlightsNearOffset(
-        @Nonnull Document document,
-        @Nonnull Project project,
-        @Nonnull HighlightSeverity minSeverity,
+        Document document,
+        Project project,
+        HighlightSeverity minSeverity,
         int offset,
         boolean includeFixRange,
-        @Nonnull Predicate<? super HighlightInfo> processor
+        Predicate<? super HighlightInfo> processor
     ) {
         return processHighlights(
             document,
@@ -729,17 +728,17 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
     @Nullable
     @RequiredReadAction
-    public HighlightInfoImpl findHighlightByOffset(@Nonnull Document document, int offset, boolean includeFixRange) {
+    public HighlightInfoImpl findHighlightByOffset(Document document, int offset, boolean includeFixRange) {
         return findHighlightByOffset(document, offset, includeFixRange, HighlightSeverity.INFORMATION);
     }
 
     @Nullable
     @RequiredReadAction
     HighlightInfoImpl findHighlightByOffset(
-        @Nonnull Document document,
+        Document document,
         int offset,
         boolean includeFixRange,
-        @Nonnull HighlightSeverity minSeverity
+        HighlightSeverity minSeverity
     ) {
         List<HighlightInfoImpl> foundInfoList = new SmartList<>();
         processHighlightsNearOffset(
@@ -776,7 +775,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         return HighlightInfoComposite.create(foundInfoList);
     }
 
-    private static boolean isOffsetInsideHighlightInfo(int offset, @Nonnull HighlightInfo info, boolean includeFixRange) {
+    private static boolean isOffsetInsideHighlightInfo(int offset, HighlightInfo info, boolean includeFixRange) {
         RangeHighlighterEx highlighter = (RangeHighlighterEx)info.getHighlighter();
         if (highlighter == null || !highlighter.isValid()) {
             return false;
@@ -801,9 +800,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         return false;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public static List<LineMarkerInfo<?>> getLineMarkers(@Nonnull Document document, @Nonnull Project project) {
+    public static List<LineMarkerInfo<?>> getLineMarkers(Document document, Project project) {
         UIAccess.assertIsUIThread();
         List<LineMarkerInfo<?>> result = new ArrayList<>();
         LineMarkersUtil.processLineMarkers(
@@ -849,7 +848,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
-    public void loadState(@Nonnull Element state) {
+    public void loadState(Element state) {
         myDisabledHintsFiles.clear();
 
         Element element = state.getChild(DISABLE_HINTS_TAG);
@@ -870,7 +869,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     private static class UpdateRunnable implements Runnable {
         private Project myProject;
 
-        private UpdateRunnable(@Nonnull Project project) {
+        private UpdateRunnable(Project project) {
             myProject = project;
         }
 
@@ -975,8 +974,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         return HeavyProcessLatch.INSTANCE.isRunningAnythingBut(HeavyProcessLatch.Type.Syncing);
     }
 
-    @Nonnull
-    private synchronized DaemonProgressIndicator createUpdateProgress(@Nonnull Collection<FileEditor> fileEditors) {
+    
+    private synchronized DaemonProgressIndicator createUpdateProgress(Collection<FileEditor> fileEditors) {
         DaemonProgressIndicator old = myUpdateProgress;
         if (!old.isCanceled()) {
             old.cancel();
@@ -993,7 +992,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         private final Project myProject;
         private Collection<FileEditor> myFileEditors;
 
-        MyDaemonProgressIndicator(@Nonnull Project project, @Nonnull Collection<FileEditor> fileEditors) {
+        MyDaemonProgressIndicator(Project project, Collection<FileEditor> fileEditors) {
             myFileEditors = fileEditors;
             myProject = project;
         }
@@ -1009,18 +1008,18 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
 
     @Override
-    public void autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void autoImportReferenceAtCursor(Editor editor, PsiFile file) {
         file.getApplication().getExtensionPoint(ReferenceImporter.class)
             .anyMatchSafe(importer -> importer.autoImportReferenceAtCursor(editor, file));
     }
 
     @TestOnly
-    @Nonnull
+    
     public synchronized DaemonProgressIndicator getUpdateProgress() {
         return myUpdateProgress;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private Collection<FileEditor> getSelectedEditors() {
         UIAccess.assertIsUIThread();
@@ -1080,7 +1079,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @TestOnly
-    private static void wrap(@Nonnull ThrowableRunnable<?> runnable) {
+    private static void wrap(ThrowableRunnable<?> runnable) {
         try {
             runnable.run();
         }

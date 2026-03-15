@@ -18,7 +18,7 @@ package consulo.versionControlSystem.ui.awt;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.awt.dualView.DualView;
 import consulo.ui.ex.awt.dualView.TreeTableView;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

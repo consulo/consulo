@@ -18,9 +18,7 @@ package consulo.virtualFileSystem.internal.core.local;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,19 +27,19 @@ import java.io.IOException;
  * @author yole
  */
 public class CoreLocalFileSystem extends BaseVirtualFileSystem {
-  @Nonnull
+  
   @Override
   public String getProtocol() {
     return StandardFileSystems.FILE_PROTOCOL;
   }
 
   @Nullable
-  public VirtualFile findFileByIoFile(@Nonnull File ioFile) {
+  public VirtualFile findFileByIoFile(File ioFile) {
     return ioFile.exists() ? new CoreLocalVirtualFile(this, ioFile) : null;
   }
 
   @Override
-  public VirtualFile findFileByPath(@Nonnull @NonNls String path) {
+  public VirtualFile findFileByPath(String path) {
     return findFileByIoFile(new File(path));
   }
 
@@ -50,41 +48,41 @@ public class CoreLocalFileSystem extends BaseVirtualFileSystem {
   }
 
   @Override
-  public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
+  public VirtualFile refreshAndFindFileByPath(String path) {
     return findFileByPath(path);
   }
 
   @Override
-  public void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException {
+  public void deleteFile(Object requestor, VirtualFile vFile) throws IOException {
     throw new UnsupportedOperationException("deleteFile() not supported");
   }
 
   @Override
-  public void moveFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent) throws IOException {
+  public void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
     throw new UnsupportedOperationException("move() not supported");
   }
 
   @Override
-  public void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException {
+  public void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException {
     throw new UnsupportedOperationException("renameFile() not supported");
   }
 
   @Override
-  public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException {
+  public VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException {
     throw new UnsupportedOperationException("createChildFile() not supported");
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException {
+  public VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException {
     throw new UnsupportedOperationException("createChildDirectory() not supported");
   }
 
   @Override
   public VirtualFile copyFile(Object requestor,
-                                 @Nonnull VirtualFile virtualFile,
-                                 @Nonnull VirtualFile newParent,
-                                 @Nonnull String copyName) throws IOException {
+                                 VirtualFile virtualFile,
+                                 VirtualFile newParent,
+                                 String copyName) throws IOException {
     throw new UnsupportedOperationException("copyFile() not supported");
   }
 

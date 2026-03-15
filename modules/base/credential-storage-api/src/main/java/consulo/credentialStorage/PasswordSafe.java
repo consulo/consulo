@@ -4,8 +4,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -67,7 +66,7 @@ public interface PasswordSafe extends CredentialStore {
      * @deprecated Please use {@link #set(CredentialAttributes, Credentials)}
      */
     @Deprecated(forRemoval = true)
-    default void storePassword(@SuppressWarnings("unused") @Nullable Project project, @Nonnull Class<?> requestor, @Nonnull String key, @Nullable String value) {
+    default void storePassword(@SuppressWarnings("unused") @Nullable Project project, Class<?> requestor, String key, @Nullable String value) {
         set(new CredentialAttributes(requestor.getName(), key, requestor), value == null ? null : new Credentials(key, value));
     }
 
@@ -75,13 +74,13 @@ public interface PasswordSafe extends CredentialStore {
      * @deprecated use {@link #get(CredentialAttributes)} + {@link Credentials#getPasswordAsString()}
      */
     @Deprecated(forRemoval = true)
-    default @Nullable String getPassword(@SuppressWarnings("unused") @Nullable Project project, @Nonnull Class<?> requestor, @Nonnull String key) {
+    default @Nullable String getPassword(@SuppressWarnings("unused") @Nullable Project project, Class<?> requestor, String key) {
         var credentials = get(new CredentialAttributes(requestor.getName(), key, requestor));
         return credentials == null ? null : credentials.getPasswordAsString();
     }
 
     @Nullable
-    Credentials get(@Nonnull CredentialAttributes attributes);
+    Credentials get(CredentialAttributes attributes);
 
-    void set(@Nonnull CredentialAttributes attributes, @Nullable Credentials credentials);
+    void set(CredentialAttributes attributes, @Nullable Credentials credentials);
 }

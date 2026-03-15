@@ -31,17 +31,16 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class XFetchValueActionBase extends AnAction {
-    protected XFetchValueActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected XFetchValueActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         for (XValueNodeImpl node : XDebuggerTreeActionBase.getSelectedNodes(e.getDataContext())) {
             if (isEnabled(e, node)) {
                 return;
@@ -50,7 +49,7 @@ public abstract class XFetchValueActionBase extends AnAction {
         e.getPresentation().setEnabled(false);
     }
 
-    protected boolean isEnabled(@Nonnull AnActionEvent event, @Nonnull XValueNodeImpl node) {
+    protected boolean isEnabled(AnActionEvent event, XValueNodeImpl node) {
         if (node instanceof WatchNodeImpl || node.isComputed()) {
             event.getPresentation().setEnabled(true);
             return true;
@@ -60,7 +59,7 @@ public abstract class XFetchValueActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         List<XValueNodeImpl> nodes = XDebuggerTreeActionBase.getSelectedNodes(e.getDataContext());
         if (nodes.isEmpty()) {
             return;
@@ -75,9 +74,9 @@ public abstract class XFetchValueActionBase extends AnAction {
     }
 
     protected void addToCollector(
-        @Nonnull List<XValueNodeImpl> paths,
-        @Nonnull XValueNodeImpl valueNode,
-        @Nonnull ValueCollector valueCollector
+        List<XValueNodeImpl> paths,
+        XValueNodeImpl valueNode,
+        ValueCollector valueCollector
     ) {
         if (paths.size() > 1) { // multiselection - copy the whole node text, see IDEA-136722
             valueCollector.add(valueNode.getText().toString(), valueNode.getPath().getPathCount());
@@ -93,8 +92,8 @@ public abstract class XFetchValueActionBase extends AnAction {
         }
     }
 
-    @Nonnull
-    protected ValueCollector createCollector(@Nonnull AnActionEvent e) {
+    
+    protected ValueCollector createCollector(AnActionEvent e) {
         return new ValueCollector(XDebuggerTree.getTree(e.getDataContext()));
     }
 
@@ -108,11 +107,11 @@ public abstract class XFetchValueActionBase extends AnAction {
             myTree = tree;
         }
 
-        public void add(@Nonnull String value) {
+        public void add(String value) {
             values.add(value);
         }
 
-        public void add(@Nonnull String value, int indent) {
+        public void add(String value, int indent) {
             values.add(value);
             indents.put(values.size() - 1, indent);
         }
@@ -149,7 +148,7 @@ public abstract class XFetchValueActionBase extends AnAction {
             return index;
         }
 
-        public void evaluationComplete(int index, @Nonnull String value) {
+        public void evaluationComplete(int index, String value) {
             AppUIUtil.invokeOnEdt(() -> {
                 values.set(index, value);
                 finish();
@@ -163,7 +162,7 @@ public abstract class XFetchValueActionBase extends AnAction {
         private final int myValueIndex;
         private final ValueCollector myValueCollector;
 
-        public CopyValueEvaluationCallback(@Nonnull XValueNodeImpl node, @Nonnull ValueCollector valueCollector) {
+        public CopyValueEvaluationCallback(XValueNodeImpl node, ValueCollector valueCollector) {
             super(node, node.getTree().getProject());
 
             myValueCollector = valueCollector;
@@ -171,7 +170,7 @@ public abstract class XFetchValueActionBase extends AnAction {
         }
 
         @Override
-        protected void evaluationComplete(@Nonnull LocalizeValue value, @Nonnull Project project) {
+        protected void evaluationComplete(LocalizeValue value, Project project) {
             myValueCollector.evaluationComplete(myValueIndex, value.get());
         }
     }

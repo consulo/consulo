@@ -44,8 +44,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.*;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -74,8 +73,8 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
 
     @Override
-    @Nonnull
-    protected UsageViewDescriptor createUsageViewDescriptor(@Nonnull UsageInfo[] usages) {
+    
+    protected UsageViewDescriptor createUsageViewDescriptor(UsageInfo[] usages) {
         return new SafeDeleteUsageViewDescriptor(myElements);
     }
 
@@ -135,7 +134,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         return isAncestor;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     protected UsageInfo[] findUsages() {
@@ -200,7 +199,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
 
     @Override
     @RequiredUIAccess
-    protected boolean preprocessUsages(@Nonnull SimpleReference<UsageInfo[]> refUsages) {
+    protected boolean preprocessUsages(SimpleReference<UsageInfo[]> refUsages) {
         UsageInfo[] usages = refUsages.get();
         List<LocalizeValue> conflicts = new ArrayList<>();
 
@@ -369,7 +368,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
      * @return Map from elements to UsageHolders
      */
     @RequiredReadAction
-    private static Map<PsiElement, UsageHolder> sortUsages(@Nonnull UsageInfo[] usages) {
+    private static Map<PsiElement, UsageHolder> sortUsages(UsageInfo[] usages) {
         Map<PsiElement, UsageHolder> result = new HashMap<>();
 
         for (UsageInfo usage : usages) {
@@ -385,14 +384,14 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
 
 
     @Override
-    protected void refreshElements(@Nonnull PsiElement[] elements) {
+    protected void refreshElements(PsiElement[] elements) {
         LOG.assertTrue(elements.length == myElements.length);
         System.arraycopy(elements, 0, myElements, 0, elements.length);
     }
 
     @Override
     @RequiredReadAction
-    protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
+    protected boolean isPreviewUsages(UsageInfo[] usages) {
         return myPreviewNonCodeUsages && UsageViewUtil.reportNonRegularUsages(usages, myProject)
             || super.isPreviewUsages(filterToBeDeleted(usages));
     }
@@ -424,7 +423,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
 
     @Override
     @RequiredWriteAction
-    protected void performRefactoring(@Nonnull UsageInfo[] usages) {
+    protected void performRefactoring(UsageInfo[] usages) {
         try {
             for (UsageInfo usage : usages) {
                 if (usage instanceof SafeDeleteCustomUsageInfo safeDeleteCustomUsageInfo) {
@@ -453,10 +452,10 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         return RefactoringLocalize.safeDeleteCommand(RefactoringUIUtil.calculatePsiElementDescriptionList(myElements));
     }
 
-    @Nonnull
+    
     private LocalizeValue myCachedCommandName = LocalizeValue.empty();
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getCommandName() {
         if (myCachedCommandName.isEmpty()) {
@@ -497,7 +496,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
 
     @Override
     @RequiredReadAction
-    protected boolean isToBeChanged(@Nonnull UsageInfo usageInfo) {
+    protected boolean isToBeChanged(UsageInfo usageInfo) {
         if (usageInfo instanceof SafeDeleteReferenceUsageInfo safeDeleteReferenceUsageInfo) {
             return safeDeleteReferenceUsageInfo.isSafeDelete() && super.isToBeChanged(usageInfo);
         }
@@ -505,7 +504,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
 
     @RequiredReadAction
-    public static boolean validElement(@Nonnull PsiElement element) {
+    public static boolean validElement(PsiElement element) {
         if (element instanceof PsiFile) {
             return true;
         }
@@ -527,7 +526,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
 
     public static SafeDeleteProcessor createInstance(
-        @Nonnull Project project,
+        Project project,
         @Nullable Runnable prepareSuccessfulCallBack,
         PsiElement[] elementsToDelete,
         boolean isSearchInComments,

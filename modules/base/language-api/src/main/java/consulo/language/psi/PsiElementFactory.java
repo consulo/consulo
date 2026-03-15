@@ -21,8 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -35,7 +34,7 @@ public interface PsiElementFactory extends Predicate<IElementType> {
 
   @Nullable
   @RequiredReadAction
-  PsiElement createElement(@Nonnull ASTNode node);
+  PsiElement createElement(ASTNode node);
 
   @Override
   boolean test(IElementType elementType);

@@ -20,8 +20,7 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -32,7 +31,7 @@ public interface CodeStyleSettingsBase {
         return null;
     }
 
-    @Nonnull
+    
     public abstract Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings);
 
     /**
@@ -40,7 +39,7 @@ public interface CodeStyleSettingsBase {
      *
      * @return the display name of the configurable page.
      */
-    @Nonnull
+    
     default LocalizeValue getConfigurableDisplayName() {
         Language lang = getLanguage();
         return lang == null ? LocalizeValue.empty() : lang.getDisplayName();

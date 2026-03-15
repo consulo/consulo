@@ -4,7 +4,6 @@ package consulo.application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.ExceptionUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -19,8 +18,8 @@ public final class WriteThread {
    * @param runnable the action to run
    * @return a future representing the result of the scheduled computation
    */
-  @Nonnull
-  public static Future<Void> submit(@Nonnull Runnable runnable) {
+  
+  public static Future<Void> submit(Runnable runnable) {
     return submit(() -> {
       runnable.run();
       return null;
@@ -34,8 +33,8 @@ public final class WriteThread {
    * @param <T>        return type of scheduled computation
    * @return a future representing the result of the scheduled computation
    */
-  @Nonnull
-  public static <T> Future<T> submit(@Nonnull ThrowableComputable<? extends T, ?> computable) {
+  
+  public static <T> Future<T> submit(ThrowableComputable<? extends T, ?> computable) {
     CompletableFuture<T> future = new CompletableFuture<>();
     ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> {
       try {
@@ -54,7 +53,7 @@ public final class WriteThread {
    *
    * @param runnable the action to run
    */
-  public static void invokeAndWait(@Nonnull Runnable runnable) {
+  public static void invokeAndWait(Runnable runnable) {
     try {
       submit(runnable).get();
     }

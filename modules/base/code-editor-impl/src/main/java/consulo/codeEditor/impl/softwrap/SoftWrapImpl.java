@@ -18,7 +18,6 @@ package consulo.codeEditor.impl.softwrap;
 import consulo.codeEditor.SoftWrap;
 import consulo.codeEditor.internal.TextChangeImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * {@link SoftWrap} implementation that is built around {@link TextChangeImpl}.
@@ -32,7 +31,7 @@ public class SoftWrapImpl implements SoftWrap {
   private final int myIndentInColumns;
   private final int myIndentInPixels;
 
-  public SoftWrapImpl(@Nonnull TextChangeImpl change, int indentInColumns, int indentInPixels) {
+  public SoftWrapImpl(TextChangeImpl change, int indentInColumns, int indentInPixels) {
     myChange = change;
     myIndentInColumns = indentInColumns;
     myIndentInPixels = indentInPixels;
@@ -48,13 +47,13 @@ public class SoftWrapImpl implements SoftWrap {
     return myChange.getEnd();
   }
 
-  @Nonnull
+  
   @Override
   public CharSequence getText() {
     return myChange.getText();
   }
 
-  @Nonnull
+  
   @Override
   public char[] getChars() {
     return myChange.getChars();

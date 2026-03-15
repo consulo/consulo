@@ -26,8 +26,7 @@ import consulo.project.Project;
 import consulo.ui.ex.tree.SimpleTreeAnchorizerValue;
 import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.ui.ex.tree.TreeAnchorizerValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -46,7 +45,7 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
     public TreeAnchorizerValue<?> createAnchorValue(Object element) {
         if (element instanceof PsiElement psiElement) {
@@ -65,9 +64,9 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
         return super.createAnchorValue(element);
     }
 
-    @Nonnull
+    
     @Override
-    public Object createAnchor(@Nonnull Object element) {
+    public Object createAnchor(Object element) {
         if (element instanceof PsiElement psi) {
             return myApplication.runReadAction((Supplier<Object>) () -> {
                 if (!psi.isValid()) {
@@ -82,7 +81,7 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
     @Nullable
     @Override
     @RequiredReadAction
-    public Object retrieveElement(@Nonnull Object pointer) {
+    public Object retrieveElement(Object pointer) {
         if (pointer instanceof SmartPsiElementPointer smartPointer) {
             return myApplication.runReadAction((Supplier<Object>) smartPointer::getElement);
         }

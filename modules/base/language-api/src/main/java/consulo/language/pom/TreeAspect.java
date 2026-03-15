@@ -17,7 +17,6 @@ package consulo.language.pom;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.pom.event.PomModelEvent;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -28,7 +27,7 @@ public class TreeAspect implements PomModelAspect {
   }
 
   @Override
-  public void register(@Nonnull PomModelAspectRegistrator registrator) {
+  public void register(PomModelAspectRegistrator registrator) {
     registrator.register(TreeAspect.class, this, Set.of());
   }
 }

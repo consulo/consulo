@@ -16,29 +16,27 @@
 package consulo.diff.comparison.iterable;
 
 import consulo.application.util.diff.Diff;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("ConstantConditions")
 class DiffChangeDiffIterable extends ChangeDiffIterableBase {
-  @Nullable
-  private final Diff.Change myChange;
+  private final Diff.@Nullable Change myChange;
 
-  public DiffChangeDiffIterable(@Nullable Diff.Change change, int length1, int length2) {
+  public DiffChangeDiffIterable(Diff.@Nullable Change change, int length1, int length2) {
     super(length1, length2);
     myChange = change;
   }
 
-  @Nonnull
+ 
   @Override
   protected ChangeIterable createChangeIterable() {
     return new DiffChangeChangeIterable(myChange);
   }
 
   private static class DiffChangeChangeIterable implements ChangeIterable {
-    @Nullable private Diff.Change myChange;
+    private Diff.@Nullable Change myChange;
 
-    public DiffChangeChangeIterable(@Nullable Diff.Change change) {
+    public DiffChangeChangeIterable(Diff.@Nullable Change change) {
       myChange = change;
     }
 

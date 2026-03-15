@@ -15,7 +15,6 @@ import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.Promise;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +27,7 @@ public abstract class ServiceView extends JPanel implements Disposable {
   protected final ServiceViewUi myUi;
   private AutoScrollToSourceHandler myAutoScrollToSourceHandler;
 
-  protected ServiceView(LayoutManager layout, @Nonnull Project project, @Nonnull ServiceViewModel model, @Nonnull ServiceViewUi ui) {
+  protected ServiceView(LayoutManager layout, Project project, ServiceViewModel model, ServiceViewUi ui) {
     super(layout);
     myProject = project;
     myModel = model;
@@ -51,18 +50,18 @@ public abstract class ServiceView extends JPanel implements Disposable {
     return myUi;
   }
 
-  void saveState(@Nonnull ServiceViewState state) {
+  void saveState(ServiceViewState state) {
     myModel.saveState(state);
   }
 
-  @Nonnull
+  
   abstract List<ServiceViewItem> getSelectedItems();
 
-  abstract Promise<Void> select(@Nonnull Object service, @Nonnull Class<?> contributorClass);
+  abstract Promise<Void> select(Object service, Class<?> contributorClass);
 
-  abstract Promise<Void> expand(@Nonnull Object service, @Nonnull Class<?> contributorClass);
+  abstract Promise<Void> expand(Object service, Class<?> contributorClass);
 
-  abstract Promise<Void> extract(@Nonnull Object service, @Nonnull Class<?> contributorClass);
+  abstract Promise<Void> extract(Object service, Class<?> contributorClass);
 
   abstract void onViewSelected();
 
@@ -84,13 +83,13 @@ public abstract class ServiceView extends JPanel implements Disposable {
     myModel.setGroupByContributor(value);
   }
 
-  abstract List<Object> getChildrenSafe(@Nonnull List<Object> valueSubPath, @Nonnull Class<?> contributorClass);
+  abstract List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass);
 
-  void setAutoScrollToSourceHandler(@Nonnull AutoScrollToSourceHandler autoScrollToSourceHandler) {
+  void setAutoScrollToSourceHandler(AutoScrollToSourceHandler autoScrollToSourceHandler) {
     myAutoScrollToSourceHandler = autoScrollToSourceHandler;
   }
 
-  void onViewSelected(@Nonnull ServiceViewDescriptor descriptor) {
+  void onViewSelected(ServiceViewDescriptor descriptor) {
     descriptor.onNodeSelected(ContainerUtil.map(getSelectedItems(), ServiceViewItem::getValue));
     if (myAutoScrollToSourceHandler != null) {
       myAutoScrollToSourceHandler.onMouseClicked(this);
@@ -99,14 +98,14 @@ public abstract class ServiceView extends JPanel implements Disposable {
 
   public abstract void jumpToServices();
 
-  static ServiceView createView(@Nonnull Project project, @Nonnull ServiceViewModel viewModel, @Nonnull ServiceViewState viewState) {
+  static ServiceView createView(Project project, ServiceViewModel viewModel, ServiceViewState viewState) {
     setViewModelState(viewModel, viewState);
     ServiceView serviceView = createTreeView(project, viewModel, viewState);
     setDataProvider(serviceView);
     return serviceView;
   }
 
-  private static ServiceView createTreeView(@Nonnull Project project, @Nonnull ServiceViewModel model, @Nonnull ServiceViewState state) {
+  private static ServiceView createTreeView(Project project, ServiceViewModel model, ServiceViewState state) {
     return new ServiceTreeView(project, model, new ServiceViewTreeUi(state), state);
   }
 
@@ -172,7 +171,7 @@ public abstract class ServiceView extends JPanel implements Disposable {
     });
   }
 
-  private static void setViewModelState(@Nonnull ServiceViewModel viewModel, @Nonnull ServiceViewState viewState) {
+  private static void setViewModelState(ServiceViewModel viewModel, ServiceViewState viewState) {
     viewModel.setGroupByServiceGroups(viewState.groupByServiceGroups);
     viewModel.setGroupByContributor(viewState.groupByContributor);
   }

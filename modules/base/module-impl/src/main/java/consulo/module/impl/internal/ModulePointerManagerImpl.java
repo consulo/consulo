@@ -29,8 +29,7 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -74,7 +73,7 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
   @Nullable
   @Override
   @RequiredReadAction
-  protected Module findByName(@Nonnull String name) {
+  protected Module findByName(String name) {
     if (!myProject.isModulesReady()) {
       return null;
     }

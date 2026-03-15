@@ -29,19 +29,18 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> implements TreeLinkMouseListener.HaveTooltip {
 
-  @Nonnull
+  
   private final Project myProject;
   @Nullable
   private final ChangeNodeDecorator myDecorator;
 
-  protected ChangesBrowserChangeNode(@Nonnull Project project, @Nonnull Change userObject, @Nullable ChangeNodeDecorator decorator) {
+  protected ChangesBrowserChangeNode(Project project, Change userObject, @Nullable ChangeNodeDecorator decorator) {
     super(userObject);
     myProject = project;
     myDecorator = decorator;
@@ -58,7 +57,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
   }
 
   @Override
-  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     Change change = getUserObject();
     FilePath filePath = ChangesUtil.getFilePath(change);
     VirtualFile file = filePath.getVirtualFile();
@@ -98,7 +97,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
   }
 
   @Nullable
-  private Image getIcon(@Nonnull Change change, @Nonnull FilePath filePath) {
+  private Image getIcon(Change change, FilePath filePath) {
     Image result = change.getAdditionalIcon();
 
     if (result == null) {
@@ -108,7 +107,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     return result;
   }
 
-  private void appendSwitched(@Nonnull ChangesBrowserNodeRenderer renderer, @Nullable VirtualFile file) {
+  private void appendSwitched(ChangesBrowserNodeRenderer renderer, @Nullable VirtualFile file) {
     if (file != null && !myProject.isDefault()) {
       String branch = ChangeListManager.getInstance(myProject).getSwitchedBranch(file);
       if (branch != null) {

@@ -35,8 +35,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -174,7 +173,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
           }
 
           @Override
-          public boolean execute(@Nonnull PsiFileSystemItem element) {
+          public boolean execute(PsiFileSystemItem element) {
             return processor.test(element);
           }
         });

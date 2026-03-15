@@ -17,7 +17,7 @@ package consulo.codeEditor.util.popup;
 
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 

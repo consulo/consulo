@@ -24,7 +24,6 @@ import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.event.PsiTreeChangeListener;
 import consulo.project.Project;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -39,42 +38,42 @@ class UsageModelTracker implements Disposable {
 
     private final List<UsageModelTrackerListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-    UsageModelTracker(@Nonnull Project project) {
+    UsageModelTracker(Project project) {
         PsiTreeChangeListener myPsiListener = new PsiTreeChangeAdapter() {
             @Override
-            public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+            public void childAdded(PsiTreeChangeEvent event) {
                 doFire(event, false);
             }
 
             @Override
-            public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+            public void childRemoved(PsiTreeChangeEvent event) {
                 doFire(event, false);
             }
 
             @Override
-            public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+            public void childReplaced(PsiTreeChangeEvent event) {
                 doFire(event, false);
             }
 
             @Override
-            public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+            public void childrenChanged(PsiTreeChangeEvent event) {
                 doFire(event, false);
             }
 
             @Override
-            public void childMoved(@Nonnull PsiTreeChangeEvent event) {
+            public void childMoved(PsiTreeChangeEvent event) {
                 doFire(event, false);
             }
 
             @Override
-            public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+            public void propertyChanged(PsiTreeChangeEvent event) {
                 doFire(event, true);
             }
         };
         PsiManager.getInstance(project).addPsiTreeChangeListener(myPsiListener, this);
     }
 
-    private void doFire(@Nonnull PsiTreeChangeEvent event, boolean propertyChange) {
+    private void doFire(PsiTreeChangeEvent event, boolean propertyChange) {
         if (!(event.getFile() instanceof PsiCodeFragment)) {
             for (UsageModelTrackerListener listener : myListeners) {
                 listener.modelChanged(propertyChange);
@@ -86,7 +85,7 @@ class UsageModelTracker implements Disposable {
     public void dispose() {
     }
 
-    void addListener(@Nonnull UsageModelTrackerListener listener, @Nonnull Disposable parent) {
+    void addListener(UsageModelTrackerListener listener, Disposable parent) {
         myListeners.add(listener);
         Disposer.register(parent, () -> myListeners.remove(listener));
     }

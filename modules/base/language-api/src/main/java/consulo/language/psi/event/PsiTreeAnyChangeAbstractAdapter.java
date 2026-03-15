@@ -16,37 +16,36 @@
 package consulo.language.psi.event;
 
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class PsiTreeAnyChangeAbstractAdapter extends PsiTreeChangeAdapter {
     @Override
-    public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+    public void childAdded(PsiTreeChangeEvent event) {
         onChange(event.getFile());
     }
 
     @Override
-    public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+    public void childRemoved(PsiTreeChangeEvent event) {
         onChange(event.getFile());
     }
 
     @Override
-    public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+    public void childReplaced(PsiTreeChangeEvent event) {
         onChange(event.getFile());
     }
 
     @Override
-    public void childMoved(@Nonnull PsiTreeChangeEvent event) {
+    public void childMoved(PsiTreeChangeEvent event) {
         onChange(event.getFile());
     }
 
     @Override
-    public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+    public void childrenChanged(PsiTreeChangeEvent event) {
         onChange(event.getFile());
     }
 
     @Override
-    public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+    public void propertyChanged(PsiTreeChangeEvent event) {
         onChange(event.getFile());
     }
 

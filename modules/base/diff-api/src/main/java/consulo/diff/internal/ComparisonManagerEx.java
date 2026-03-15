@@ -20,7 +20,6 @@ import consulo.diff.comparison.iterable.DiffIterable;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.MergeWordFragment;
 import consulo.diff.util.MergeRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,9 +28,9 @@ import java.util.List;
  * @since 04-Jul-24
  */
 public interface ComparisonManagerEx extends ComparisonManager {
-  @Nonnull
-  List<DiffFragment> convertIntoDiffFragments(@Nonnull DiffIterable changes);
+  
+  List<DiffFragment> convertIntoDiffFragments(DiffIterable changes);
 
-  @Nonnull
-  List<MergeWordFragment> convertIntoMergeWordFragments(@Nonnull List<MergeRange> conflicts);
+  
+  List<MergeWordFragment> convertIntoMergeWordFragments(List<MergeRange> conflicts);
 }

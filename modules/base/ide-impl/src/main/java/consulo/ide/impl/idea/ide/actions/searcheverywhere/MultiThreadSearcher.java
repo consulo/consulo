@@ -14,7 +14,6 @@ import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
 import consulo.searchEverywhere.WeightedSearchEverywhereContributor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ConcurrencyUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -33,11 +32,11 @@ import static consulo.searchEverywhere.SEResultsEqualityProvider.SEEqualElements
 class MultiThreadSearcher implements SESearcher {
     private static final Logger LOG = Logger.getInstance(MultiThreadSearcher.class);
 
-    @Nonnull
+    
     private final Listener myListener;
-    @Nonnull
+    
     private final Executor myNotificationExecutor;
-    @Nonnull
+    
     private final SEResultsEqualityProvider myEqualityProvider;
 
     /**
@@ -49,9 +48,9 @@ class MultiThreadSearcher implements SESearcher {
      * @param equalityProviders    collection of equality providers that checks if found elements are already in the search results
      */
     MultiThreadSearcher(
-        @Nonnull Listener listener,
-        @Nonnull Executor notificationExecutor,
-        @Nonnull Collection<? extends SEResultsEqualityProvider> equalityProviders
+        Listener listener,
+        Executor notificationExecutor,
+        Collection<? extends SEResultsEqualityProvider> equalityProviders
     ) {
         myListener = listener;
         myNotificationExecutor = notificationExecutor;
@@ -60,8 +59,8 @@ class MultiThreadSearcher implements SESearcher {
 
     @Override
     public ProgressIndicator search(
-        @Nonnull Map<? extends SearchEverywhereContributor<?>, Integer> contributorsAndLimits,
-        @Nonnull String pattern
+        Map<? extends SearchEverywhereContributor<?>, Integer> contributorsAndLimits,
+        String pattern
     ) {
         LOG.debug("Search started for pattern [", pattern, "]");
 
@@ -118,9 +117,9 @@ class MultiThreadSearcher implements SESearcher {
 
     @Override
     public ProgressIndicator findMoreItems(
-        @Nonnull Map<? extends SearchEverywhereContributor<?>, Collection<SearchEverywhereFoundElementInfo>> alreadyFound,
-        @Nonnull String pattern,
-        @Nonnull SearchEverywhereContributor<?> contributor,
+        Map<? extends SearchEverywhereContributor<?>, Collection<SearchEverywhereFoundElementInfo>> alreadyFound,
+        String pattern,
+        SearchEverywhereContributor<?> contributor,
         int newLimit
     ) {
         ProgressIndicator indicator = new ProgressIndicatorBase();
@@ -140,7 +139,7 @@ class MultiThreadSearcher implements SESearcher {
         return indicator;
     }
 
-    @Nonnull
+    
     private static Runnable createSearchTask(
         String pattern,
         ResultsAccumulator accumulator,

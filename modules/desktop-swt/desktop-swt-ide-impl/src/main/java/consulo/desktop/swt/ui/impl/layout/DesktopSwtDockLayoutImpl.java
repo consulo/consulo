@@ -17,8 +17,7 @@ package consulo.desktop.swt.ui.impl.layout;
 
 import consulo.ui.StaticPosition;
 import consulo.ui.layout.DockLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.widgets.Layout;
 
 /**
@@ -36,7 +35,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtLayoutComponent<StaticPo
     }
 
     @Override
-    public BorderLayout.BorderData convertConstraintsToLayoutData(@Nonnull StaticPosition constraint) {
+    public BorderLayout.BorderData convertConstraintsToLayoutData(StaticPosition constraint) {
         switch (constraint) {
             case TOP:
                 return new BorderLayout.BorderData(BorderLayout.NORTH);

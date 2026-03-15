@@ -9,18 +9,17 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 public class EnableDisableIntentionAction extends AbstractEditIntentionSettingsAction {
   private final IntentionAction myAction;
 
-  public EnableDisableIntentionAction(@Nonnull IntentionAction action) {
+  public EnableDisableIntentionAction(IntentionAction action) {
     super(action);
     myAction = action;
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getText() {
     return IntentionManagerSettings.getInstance().isEnabled(myAction)
         ? CodeInsightLocalize.disableIntentionAction(myText)
@@ -28,7 +27,7 @@ public class EnableDisableIntentionAction extends AbstractEditIntentionSettingsA
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     IntentionManagerSettings mySettings = IntentionManagerSettings.getInstance();
     mySettings.setEnabled(myAction, !mySettings.isEnabled(myAction));
   }

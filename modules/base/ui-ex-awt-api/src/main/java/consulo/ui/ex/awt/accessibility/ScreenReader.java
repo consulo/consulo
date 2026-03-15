@@ -18,7 +18,6 @@ package consulo.ui.ex.awt.accessibility;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-import jakarta.annotation.Nonnull;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -103,7 +102,7 @@ public class ScreenReader {
    * Adds property change listener. Supported properties:
    * {@link #SCREEN_READER_ACTIVE_PROPERTY}
    */
-  public static void addPropertyChangeListener(@Nonnull String propertyName, @Nonnull Disposable parent, @Nonnull PropertyChangeListener listener) {
+  public static void addPropertyChangeListener(String propertyName, Disposable parent, PropertyChangeListener listener) {
     PCS.addPropertyChangeListener(propertyName, listener);
     Disposer.register(parent, () -> PCS.removePropertyChangeListener(propertyName, listener));
   }

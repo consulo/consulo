@@ -29,7 +29,6 @@ import consulo.language.psi.stub.FileContent;
 import consulo.util.lang.ThreadLocalCachedIntArray;
 import consulo.util.lang.text.TrigramBuilder;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -44,13 +43,13 @@ public class TrigramIndexImpl extends TrigramIndex implements CustomInputsIndexF
 
     private static final FileBasedIndex.InputFilter INPUT_FILTER = (project, file) -> isIndexable(file.getFileType());
 
-    @Nonnull
+    
     @Override
     public DataIndexer<Integer, Void, FileContent> getIndexer() {
         return new DataIndexer<>() {
             @Override
-            @Nonnull
-            public Map<Integer, Void> map(@Nonnull FileContent inputData) {
+            
+            public Map<Integer, Void> map(FileContent inputData) {
                 MyTrigramProcessor trigramProcessor = new MyTrigramProcessor();
                 TrigramBuilder.processTrigrams(inputData.getContentAsText(), trigramProcessor);
 
@@ -59,13 +58,13 @@ public class TrigramIndexImpl extends TrigramIndex implements CustomInputsIndexF
         };
     }
 
-    @Nonnull
+    
     @Override
     public KeyDescriptor<Integer> getKeyDescriptor() {
         return EnumeratorIntegerDescriptor.INSTANCE;
     }
 
-    @Nonnull
+    
     @Override
     public FileBasedIndex.InputFilter getInputFilter() {
         return INPUT_FILTER;
@@ -88,12 +87,12 @@ public class TrigramIndexImpl extends TrigramIndex implements CustomInputsIndexF
 
     private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();
 
-    @Nonnull
+    
     @Override
     public DataExternalizer<Collection<Integer>> createExternalizer() {
         return new DataExternalizer<Collection<Integer>>() {
             @Override
-            public void save(@Nonnull DataOutput out, @Nonnull Collection<Integer> value) throws IOException {
+            public void save(DataOutput out, Collection<Integer> value) throws IOException {
                 int numberOfValues = value.size();
 
                 int[] buffer = spareBufferLocal.getBuffer(numberOfValues);
@@ -111,9 +110,9 @@ public class TrigramIndexImpl extends TrigramIndex implements CustomInputsIndexF
                 }
             }
 
-            @Nonnull
+            
             @Override
-            public Collection<Integer> read(@Nonnull DataInput in) throws IOException {
+            public Collection<Integer> read(DataInput in) throws IOException {
                 int size = DataInputOutputUtil.readINT(in);
                 ArrayList<Integer> result = new ArrayList<>(size);
                 int prev = 0;

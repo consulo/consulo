@@ -35,7 +35,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 @Singleton
@@ -56,20 +55,20 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
     myApplication = application;
     myStateStorageManager = new StateStorageManagerImpl(new TrackingPathMacroSubstitutorImpl(pathMacroManager), ROOT_ELEMENT_NAME, application, () -> null,
                                                         () -> application.getInstance(PathMacrosService.class), StateStorageFacade.JAVA_IO) {
-      @Nonnull
+      
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {
         return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
       }
 
-      @Nonnull
+      
       @Override
       public StateSplitterEx createSplitter(Class<? extends StateSplitterEx> splitter) {
         return application.getUnbindedInstance(splitter);
       }
 
       @Override
-      protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull String fileSpec) {
+      protected TrackingPathMacroSubstitutor getMacroSubstitutor(String fileSpec) {
         if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.STORE_FILE)) return null;
         return super.getMacroSubstitutor(fileSpec);
       }
@@ -90,19 +89,19 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   }
 
   @Override
-  public void setOptionsPath(@Nonnull String path) {
+  public void setOptionsPath(String path) {
     myStateStorageManager.addMacro(StoragePathMacros.APP_CONFIG, path);
     myStateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, path + "/other" + DirectoryStorageData.DEFAULT_EXT);
   }
 
   @Override
-  public void setConfigPath(@Nonnull String configPath) {
+  public void setConfigPath(String configPath) {
     myStateStorageManager.addMacro(StoragePathMacros.ROOT_CONFIG, configPath);
     myConfigPath = configPath;
   }
 
   @Override
-  @Nonnull
+  
   public String getConfigPath() {
     String configPath = myConfigPath;
     if (configPath == null) {
@@ -113,12 +112,12 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   }
 
   @Override
-  @Nonnull
+  
   protected MessageBus getMessageBus() {
     return myApplication.getMessageBus();
   }
 
-  @Nonnull
+  
   @Override
   public StateStorageManager getStateStorageManager() {
     return myStateStorageManager;

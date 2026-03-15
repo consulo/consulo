@@ -19,7 +19,7 @@ import consulo.language.Language;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna

@@ -21,8 +21,7 @@ import consulo.application.presentation.TypePresentationService;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -33,7 +32,7 @@ public class TypePresentationServiceImpl extends TypePresentationService {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Image getIcon(@Nonnull Object o) {
+  public Image getIcon(Object o) {
     TypePresentationProvider provider = TypePresentationProvider.getPresentationProvider(o);
     if (provider != null) {
       return provider.getIcon(o);

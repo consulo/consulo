@@ -20,18 +20,17 @@ import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
  * @since 2013-08-01
  */
 public abstract class Injectable implements Comparable<Injectable> {
-  @Nonnull
+  
   public abstract String getId();
 
-  @Nonnull
+  
   public abstract LocalizeValue getDisplayName();
 
   @Nullable
@@ -39,13 +38,13 @@ public abstract class Injectable implements Comparable<Injectable> {
     return null;
   }
 
-  @Nonnull
+  
   public Image getIcon() {
     return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
   @Override
-  public int compareTo(@Nonnull Injectable o) {
+  public int compareTo(Injectable o) {
     return getDisplayName().compareTo(o.getDisplayName());
   }
 
@@ -57,7 +56,7 @@ public abstract class Injectable implements Comparable<Injectable> {
 
   public Language toLanguage() {
     return getLanguage() == null ? new Language(getId(), false) {
-      @Nonnull
+      
       @Override
       public LocalizeValue getDisplayName() {
         return Injectable.this.getDisplayName();
@@ -67,13 +66,13 @@ public abstract class Injectable implements Comparable<Injectable> {
 
   public static Injectable fromLanguage(final Language language) {
     return new Injectable() {
-      @Nonnull
+      
       @Override
       public String getId() {
         return language.getID();
       }
 
-      @Nonnull
+      
       @Override
       public LocalizeValue getDisplayName() {
         return language.getDisplayName();
@@ -86,7 +85,7 @@ public abstract class Injectable implements Comparable<Injectable> {
         return ft != null ? " (" + ft.getDisplayName() + ")" : null;
       }
 
-      @Nonnull
+      
       @Override
       public Image getIcon() {
         FileType ft = language.getAssociatedFileType();

@@ -26,8 +26,7 @@ import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -40,63 +39,63 @@ public abstract class TemplateManager {
         return project.getInstance(TemplateManager.class);
     }
 
-    public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template);
+    public abstract void startTemplate(Editor editor, Template template);
 
-    public abstract void startTemplate(@Nonnull Editor editor, String selectionString, @Nonnull Template template);
+    public abstract void startTemplate(Editor editor, String selectionString, Template template);
 
-    public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener);
+    public abstract void startTemplate(Editor editor, Template template, TemplateEditingListener listener);
 
     public abstract void startTemplate(
-        @Nonnull Editor editor,
-        @Nonnull Template template,
+        Editor editor,
+        Template template,
         boolean inSeparateCommand,
         Map<String, String> predefinedVarValues,
         @Nullable TemplateEditingListener listener
     );
 
     public abstract void startTemplate(
-        @Nonnull Editor editor,
-        @Nonnull Template template,
+        Editor editor,
+        Template template,
         TemplateEditingListener listener,
         BiPredicate<String, String> callback
     );
 
-    public abstract boolean startTemplate(@Nonnull Editor editor, char shortcutChar);
+    public abstract boolean startTemplate(Editor editor, char shortcutChar);
 
     @Deprecated
     @DeprecationInfo("use TemplateBuilderFactory")
-    public Template createTemplate(@Nonnull String key, String group) {
+    public Template createTemplate(String key, String group) {
         return TemplateBuilderFactory.getInstance().createRawTemplate(key, group);
     }
 
     @Deprecated
     @DeprecationInfo("use TemplateBuilderFactory")
-    public Template createTemplate(@Nonnull String key, String group, String text) {
+    public Template createTemplate(String key, String group, String text) {
         return TemplateBuilderFactory.getInstance().createRawTemplate(key, group, text);
     }
 
     @Nullable
-    public abstract Template getActiveTemplate(@Nonnull Editor editor);
+    public abstract Template getActiveTemplate(Editor editor);
 
     /**
      * Finished a live template in the given editor, if it's present
      *
      * @return whether a live template was present
      */
-    public abstract boolean finishTemplate(@Nonnull Editor editor);
+    public abstract boolean finishTemplate(Editor editor);
 
     @Nullable
-    public abstract TemplateState getTemplateState(@Nonnull Editor editor);
+    public abstract TemplateState getTemplateState(Editor editor);
 
     public abstract boolean isApplicable(Template template, Set<TemplateContextType> contextTypes);
 
-    public abstract List<? extends Template> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext);
+    public abstract List<? extends Template> listApplicableTemplates(TemplateActionContext templateActionContext);
 
-    public abstract List<? extends Template> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext);
+    public abstract List<? extends Template> listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext templateActionContext);
 
     @RequiredReadAction
-    @Nonnull
-    public abstract Set<TemplateContextType> getApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext);
+    
+    public abstract Set<TemplateContextType> getApplicableContextTypes(TemplateActionContext templateActionContext);
 
     public abstract Map<Template, String> findMatchingTemplates(
         PsiFile file,
@@ -113,7 +112,7 @@ public abstract class TemplateManager {
     );
 
     @RequiredReadAction
-    public boolean isApplicable(Template template, @Nonnull TemplateActionContext templateActionContext) {
+    public boolean isApplicable(Template template, TemplateActionContext templateActionContext) {
         return isApplicable(template, getApplicableContextTypes(templateActionContext));
     }
 

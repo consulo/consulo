@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -42,17 +41,17 @@ public class RerunFailedTestsAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(getAction(e, false));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         getAction(e, true);
     }
 
-    private static boolean getAction(@Nonnull AnActionEvent e, boolean execute) {
+    private static boolean getAction(AnActionEvent e, boolean execute) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return false;

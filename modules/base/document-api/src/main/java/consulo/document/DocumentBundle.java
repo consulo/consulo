@@ -18,7 +18,6 @@ package consulo.document;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public class DocumentBundle extends AbstractBundle {
     super("consulo.document.DocumentBundle");
   }
 
-  @Nonnull
+  
   public static String message(@PropertyKey(resourceBundle = "consulo.document.DocumentBundle") String key, Object... args) {
     return INSTANCE.getMessage(key, args);
   }

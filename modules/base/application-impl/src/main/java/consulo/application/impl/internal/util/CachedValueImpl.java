@@ -19,16 +19,15 @@ import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValue<T> {
     private final CachedValueProvider<T> myProvider;
 
-    public CachedValueImpl(@Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
+    public CachedValueImpl(CachedValueProvider<T> provider, CachedValuesFactory factory) {
         this(provider, false, factory);
     }
 
-    CachedValueImpl(@Nonnull CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
+    CachedValueImpl(CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
         super(trackValue, factory);
         myProvider = provider;
     }
@@ -38,7 +37,7 @@ public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValu
         return myProvider.compute();
     }
 
-    @Nonnull
+    
     @Override
     public CachedValueProvider<T> getValueProvider() {
         return myProvider;
@@ -50,7 +49,7 @@ public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValu
     }
 
     @Override
-    public boolean isFromMyProject(@Nonnull Project project) {
+    public boolean isFromMyProject(Project project) {
         return true;
     }
 }

@@ -9,8 +9,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +36,7 @@ public class AnimatedIcon implements Icon, Image {
   public static final Key<Boolean> ANIMATION_IN_RENDERER_ALLOWED = Key.create("ANIMATION_IN_RENDERER_ALLOWED");
 
   public interface Frame {
-    @Nonnull
+    
     Icon getIcon();
 
     int getDelay();
@@ -83,22 +82,22 @@ public class AnimatedIcon implements Icon, Image {
 
   //@ApiStatus.Internal
   public static class Blinking extends AnimatedIcon {
-    public Blinking(@Nonnull Image icon) {
+    public Blinking(Image icon) {
       this(1000, icon);
     }
 
-    public Blinking(int delay, @Nonnull Image icon) {
+    public Blinking(int delay, Image icon) {
       super(delay, icon, ImageEffects.grayed(icon));
     }
   }
 
   //@ApiStatus.Internal
   public static class Fading extends AnimatedIcon {
-    public Fading(@Nonnull Icon icon) {
+    public Fading(Icon icon) {
       this(1000, icon);
     }
 
-    public Fading(int period, @Nonnull Icon icon) {
+    public Fading(int period, Icon icon) {
       super(50, new Icon() {
         private final long time = System.currentTimeMillis();
 
@@ -143,22 +142,22 @@ public class AnimatedIcon implements Icon, Image {
   private long time;
   private int index;
 
-  public AnimatedIcon(int delay, @Nonnull Icon... icons) {
+  public AnimatedIcon(int delay, Icon... icons) {
     this(getFrames(delay, icons));
   }
 
-  public AnimatedIcon(int delay, @Nonnull Image... icons) {
+  public AnimatedIcon(int delay, Image... icons) {
     this(getFrames(delay, Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new)));
   }
 
-  public AnimatedIcon(@Nonnull Frame... frames) {
+  public AnimatedIcon(Frame... frames) {
     this.frames = frames;
     assert frames.length > 0 : "empty array";
     for (Frame frame : frames) assert frame != null : "null animation frame";
     time = System.currentTimeMillis();
   }
 
-  private static Frame[] getFrames(int delay, @Nonnull Icon... icons) {
+  private static Frame[] getFrames(int delay, Icon... icons) {
     int length = icons.length;
     assert length > 0 : "empty array";
     Frame[] frames = new Frame[length];
@@ -166,7 +165,7 @@ public class AnimatedIcon implements Icon, Image {
       Icon icon = icons[i];
       assert icon != null : "null icon";
       frames[i] = new Frame() {
-        @Nonnull
+        
         @Override
         public Icon getIcon() {
           return icon;
@@ -187,7 +186,7 @@ public class AnimatedIcon implements Icon, Image {
     time = current;
   }
 
-  @Nonnull
+  
   private Icon getUpdatedIcon() {
     int index = getCurrentIndex();
     return frames[index].getIcon();
@@ -200,7 +199,7 @@ public class AnimatedIcon implements Icon, Image {
     return index;
   }
 
-  private void requestRefresh(@Nullable Component c, @Nonnull UIAccess uiAccess) {
+  private void requestRefresh(@Nullable Component c, UIAccess uiAccess) {
     if (c != null && !requested.contains(c) && canRefresh(c)) {
       Frame frame = frames[index];
       int delay = frame.getDelay();
@@ -250,11 +249,11 @@ public class AnimatedIcon implements Icon, Image {
     return getIconHeight();
   }
 
-  protected boolean canRefresh(@Nonnull Component component) {
+  protected boolean canRefresh(Component component) {
     return component.isShowing();
   }
 
-  protected void doRefresh(@Nonnull Component component) {
+  protected void doRefresh(Component component) {
     component.repaint();
   }
 

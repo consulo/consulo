@@ -51,8 +51,7 @@ import consulo.ui.ex.errorTreeView.SimpleErrorData;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -191,7 +190,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    public void performCopy(@Nonnull DataContext dataContext) {
+    public void performCopy(DataContext dataContext) {
         ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
         if (descriptor != null) {
             String[] lines = descriptor.getElement().getText();
@@ -200,17 +199,17 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+    public boolean isCopyEnabled(DataContext dataContext) {
         return getSelectedNodeDescriptor() != null;
     }
 
     @Override
-    public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+    public boolean isCopyVisible(DataContext dataContext) {
         return true;
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (KEY == dataId) {
             return this;
         }
@@ -282,12 +281,12 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    public void addMessage(int type, @Nonnull String[] text, @Nullable VirtualFile file, int line, int column, @Nullable Object data) {
+    public void addMessage(int type, String[] text, @Nullable VirtualFile file, int line, int column, @Nullable Object data) {
         addMessage(type, text, null, file, line, column, data);
     }
 
     @Override
-    public void addMessage(int type, @Nonnull String[] text, @Nullable VirtualFile underFileGroup, @Nullable VirtualFile file, int line, int column, @Nullable Object data) {
+    public void addMessage(int type, String[] text, @Nullable VirtualFile underFileGroup, @Nullable VirtualFile file, int line, int column, @Nullable Object data) {
         if (myIsDisposed) {
             return;
         }
@@ -306,9 +305,9 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     @Override
     public void addMessage(
         int type,
-        @Nonnull String[] text,
+        String[] text,
         @Nullable String groupName,
-        @Nonnull Navigatable navigatable,
+        Navigatable navigatable,
         @Nullable String exportTextPrefix,
         @Nullable String rendererTextPrefix,
         @Nullable Object data
@@ -342,7 +341,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    @Nonnull
+    
     public JComponent getComponent() {
         return this;
     }
@@ -592,14 +591,14 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     private class RerunAction extends AnAction {
         private final Runnable myRerunAction;
 
-        public RerunAction(@Nonnull Runnable rerunAction) {
+        public RerunAction(Runnable rerunAction) {
             super(IdeLocalize.actionRefresh(), LocalizeValue.empty(), AllIcons.Actions.Rerun);
             myRerunAction = rerunAction;
         }
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             close();
 
             myRerunAction.run();
@@ -607,7 +606,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent event) {
+        public void update(AnActionEvent event) {
             Presentation presentation = event.getPresentation();
             presentation.setEnabled(canControlProcess() && isProcessStopped());
         }
@@ -620,7 +619,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (canControlProcess()) {
                 stopProcess();
             }
@@ -629,7 +628,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent event) {
+        public void update(AnActionEvent event) {
             Presentation presentation = event.getPresentation();
             presentation.setEnabled(canControlProcess() && !isProcessStopped());
             presentation.setVisible(canControlProcess());
@@ -651,12 +650,12 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return myConfiguration.SHOW_INFOS;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             if (myConfiguration.SHOW_INFOS != flag) {
                 myConfiguration.SHOW_INFOS = flag;
                 myBuilder.updateTree();
@@ -665,7 +664,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setTextValue(isSelected(e) ? IdeLocalize.actionHideInfos() : IdeLocalize.actionShowInfos());
         }
@@ -677,12 +676,12 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return myConfiguration.SHOW_WARNINGS;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             if (myConfiguration.SHOW_WARNINGS != flag) {
                 myConfiguration.SHOW_WARNINGS = flag;
                 myBuilder.updateTree();
@@ -691,7 +690,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setTextValue(isSelected(e) ? IdeLocalize.actionHideWarnings() : IdeLocalize.actionShowWarnings());
         }

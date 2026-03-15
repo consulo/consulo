@@ -17,8 +17,7 @@ import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.Objects;
@@ -31,7 +30,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
   DocumentUndoProvider() {
   }
 
-  @Nonnull
+  
   private static UndoManagerImpl getUndoManager(@Nullable Project project) {
     return (UndoManagerImpl)(project == null ? ApplicationUndoManager.getInstance() : ProjectUndoManager.getInstance(project));
   }
@@ -45,7 +44,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
   }
 
   @Override
-  public void beforeDocumentChange(@Nonnull DocumentEvent e) {
+  public void beforeDocumentChange(DocumentEvent e) {
     Document document = e.getDocument();
     if (!shouldProcess(document)) {
       return;
@@ -61,7 +60,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
     }
   }
 
-  private static void handleBeforeDocumentChange(@Nonnull UndoManagerImpl undoManager, @Nonnull Document document) {
+  private static void handleBeforeDocumentChange(UndoManagerImpl undoManager, Document document) {
     if (undoManager.isActive() && isUndoable(undoManager, document)
         && undoManager.isUndoOrRedoInProgress()
         && !Objects.equals(document.getUserData(UNDOING_EDITOR_CHANGE), Boolean.TRUE)) {
@@ -70,7 +69,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
   }
 
   @Override
-  public void documentChanged(@Nonnull DocumentEvent e) {
+  public void documentChanged(DocumentEvent e) {
     Document document = e.getDocument();
     if (!shouldProcess(document)) {
       return;
@@ -85,7 +84,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
     }
   }
 
-  private static void handleDocumentChanged(@Nonnull UndoManagerImpl undoManager, @Nonnull Document document, @Nonnull DocumentEvent e) {
+  private static void handleDocumentChanged(UndoManagerImpl undoManager, Document document, DocumentEvent e) {
     if (undoManager.isActive() && isUndoable(undoManager, document)) {
       registerUndoableAction(undoManager, e);
     }
@@ -94,7 +93,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
     }
   }
 
-  private static boolean shouldProcess(@Nonnull Document document) {
+  private static boolean shouldProcess(Document document) {
     if (!ApplicationManager.getApplication().isDispatchThread()) {
       // some light document
       return false;
@@ -106,7 +105,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
            && shouldRecordActions(document);
   }
 
-  private static boolean shouldRecordActions(@Nonnull Document document) {
+  private static boolean shouldRecordActions(Document document) {
     if (Objects.equals(document.getUserData(UndoConstants.DONT_RECORD_UNDO), Boolean.TRUE)) return false;
 
     VirtualFile vFile = FileDocumentManager.getInstance().getFile(document);
@@ -115,16 +114,16 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
         && !Objects.equals(vFile.getUserData(UndoConstants.DONT_RECORD_UNDO), Boolean.TRUE);
   }
 
-  private static void registerUndoableAction(@Nonnull UndoManagerImpl undoManager, @Nonnull DocumentEvent e) {
+  private static void registerUndoableAction(UndoManagerImpl undoManager, DocumentEvent e) {
     undoManager.undoableActionPerformed(new EditorChangeAction(e));
   }
 
-  private static void registerNonUndoableAction(@Nonnull UndoManagerImpl undoManager, @Nonnull Document document) {
+  private static void registerNonUndoableAction(UndoManagerImpl undoManager, Document document) {
     DocumentReference ref = DocumentReferenceManager.getInstance().create(document);
     undoManager.nonundoableActionPerformed(ref, false);
   }
 
-  private static boolean isUndoable(@Nonnull UndoManagerImpl undoManager, @Nonnull Document document) {
+  private static boolean isUndoable(UndoManagerImpl undoManager, Document document) {
     DocumentReference ref = DocumentReferenceManager.getInstance().create(document);
     VirtualFile file = ref.getFile();
 

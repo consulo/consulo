@@ -39,8 +39,7 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Maps;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -77,7 +76,7 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
     }
 
     @Override
-    public void register(@Nonnull Registrar registrar) {
+    public void register(Registrar registrar) {
         registrar.registerTextEditorHighlightingPass(
             this,
             null,
@@ -90,7 +89,7 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
     @Nullable
     @Override
     @RequiredReadAction
-    public TextEditorHighlightingPass createHighlightingPass(@Nonnull final PsiFile file, @Nonnull final Editor editor) {
+    public TextEditorHighlightingPass createHighlightingPass(final PsiFile file, final Editor editor) {
         long psiModificationCount = PsiManager.getInstance(myProject).getModificationTracker().getModificationCount();
         if (psiModificationCount == myPsiModificationCount) {
             return null; //optimization
@@ -109,9 +108,9 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
             true,
             new DefaultHighlightInfoProcessor()
         ) {
-            @Nonnull
+            
             @Override
-            List<LocalInspectionToolWrapper> getInspectionTools(@Nonnull InspectionProfileWrapper profile) {
+            List<LocalInspectionToolWrapper> getInspectionTools(InspectionProfileWrapper profile) {
                 List<LocalInspectionToolWrapper> tools = super.getInspectionTools(profile);
                 List<LocalInspectionToolWrapper> result = tools.stream()
                     .filter(LocalInspectionToolWrapper::runForWholeFile)
@@ -128,12 +127,12 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
             @Override
             @RequiredReadAction
             void inspectInjectedPsi(
-                @Nonnull List<PsiElement> elements,
+                List<PsiElement> elements,
                 boolean onTheFly,
-                @Nonnull ProgressIndicator indicator,
-                @Nonnull InspectionManager iManager,
+                ProgressIndicator indicator,
+                InspectionManager iManager,
                 boolean inVisibleRange,
-                @Nonnull List<LocalInspectionToolWrapper> wrappers
+                List<LocalInspectionToolWrapper> wrappers
             ) {
                 // already inspected in LIP
             }

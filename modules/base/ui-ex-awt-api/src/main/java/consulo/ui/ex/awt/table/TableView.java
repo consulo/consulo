@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.SortableColumnModel;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.*;
@@ -198,7 +197,7 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
     return row >= 0 && row < list.size() ? list.get(convertRowIndexToModel(row)) : null;
   }
 
-  @Nonnull
+  
   public List<Item> getSelectedObjects() {
     int[] selectedRows = getSelectedRows();
     if (selectedRows == null || (selectedRows.length == 0)) return Collections.emptyList();

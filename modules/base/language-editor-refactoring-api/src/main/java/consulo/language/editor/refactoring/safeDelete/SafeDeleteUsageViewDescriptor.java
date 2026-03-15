@@ -20,7 +20,6 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.UsageViewDescriptorAdapter;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewBundle;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -33,7 +32,7 @@ public class SafeDeleteUsageViewDescriptor extends UsageViewDescriptorAdapter {
   }
 
   @Override
-  @Nonnull
+  
   public PsiElement[] getElements() {
     return myElementsToDelete;
   }

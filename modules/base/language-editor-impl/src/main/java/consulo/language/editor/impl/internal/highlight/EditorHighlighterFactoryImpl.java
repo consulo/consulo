@@ -31,8 +31,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -42,16 +41,16 @@ import jakarta.annotation.Nullable;
 public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
   private static final Logger LOG = Logger.getInstance(EditorHighlighterFactoryImpl.class);
 
-  @Nonnull
+  
   @Override
-  public EditorHighlighter createEditorHighlighter(SyntaxHighlighter highlighter, @Nonnull EditorColorsScheme colors) {
+  public EditorHighlighter createEditorHighlighter(SyntaxHighlighter highlighter, EditorColorsScheme colors) {
     if (highlighter == null) highlighter = new DefaultSyntaxHighlighter();
     return new LexerEditorHighlighter(highlighter, colors);
   }
 
-  @Nonnull
+  
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull FileType fileType, @Nonnull EditorColorsScheme settings, Project project) {
+  public EditorHighlighter createEditorHighlighter(FileType fileType, EditorColorsScheme settings, Project project) {
     if (fileType instanceof LanguageFileType) {
       return EditorHighlighterProvider.forFileType(fileType).getEditorHighlighter(project, fileType, null, settings);
     }
@@ -60,15 +59,15 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
     return createEditorHighlighter(highlighter, settings);
   }
 
-  @Nonnull
+  
   @Override
-  public EditorHighlighter createEditorHighlighter(Project project, @Nonnull FileType fileType) {
+  public EditorHighlighter createEditorHighlighter(Project project, FileType fileType) {
     return createEditorHighlighter(fileType, EditorColorsManager.getInstance().getGlobalScheme(), project);
   }
 
-  @Nonnull
+  
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull VirtualFile vFile, @Nonnull EditorColorsScheme settings, @Nullable Project project) {
+  public EditorHighlighter createEditorHighlighter(VirtualFile vFile, EditorColorsScheme settings, @Nullable Project project) {
     FileType fileType = vFile.getFileType();
     if (fileType instanceof LanguageFileType) {
       LanguageFileType substFileType = substituteFileType(((LanguageFileType)fileType).getLanguage(), vFile, project);
@@ -107,21 +106,21 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
     return fileType;
   }
 
-  @Nonnull
+  
   @Override
-  public EditorHighlighter createEditorHighlighter(Project project, @Nonnull VirtualFile file) {
+  public EditorHighlighter createEditorHighlighter(Project project, VirtualFile file) {
     return createEditorHighlighter(file, EditorColorsManager.getInstance().getGlobalScheme(), project);
   }
 
-  @Nonnull
+  
   @Override
-  public EditorHighlighter createEditorHighlighter(Project project, @Nonnull String fileName) {
+  public EditorHighlighter createEditorHighlighter(Project project, String fileName) {
     return createEditorHighlighter(EditorColorsManager.getInstance().getGlobalScheme(), fileName, project);
   }
 
-  @Nonnull
+  
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull EditorColorsScheme settings, @Nonnull String fileName, @Nullable Project project) {
+  public EditorHighlighter createEditorHighlighter(EditorColorsScheme settings, String fileName, @Nullable Project project) {
     return createEditorHighlighter(new LightVirtualFile(fileName), settings, project);
   }
 }

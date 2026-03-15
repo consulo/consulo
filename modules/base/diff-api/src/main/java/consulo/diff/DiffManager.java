@@ -25,13 +25,12 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class DiffManager {
-  @Nonnull
+  
   public static DiffManager getInstance() {
     return Application.get().getInstance(DiffManager.class);
   }
@@ -41,17 +40,17 @@ public abstract class DiffManager {
   //
 
   @RequiredUIAccess
-  public abstract void showDiff(@Nullable Project project, @Nonnull DiffRequest request);
+  public abstract void showDiff(@Nullable Project project, DiffRequest request);
 
   @RequiredUIAccess
-  public abstract void showDiff(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
+  public abstract void showDiff(@Nullable Project project, DiffRequest request, DiffDialogHints hints);
 
   @RequiredUIAccess
-  public abstract void showDiff(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
+  public abstract void showDiff(@Nullable Project project, DiffRequestChain requests, DiffDialogHints hints);
 
-  @Nonnull
-  public abstract DiffRequestPanel createRequestPanel(@Nullable Project project, @Nonnull Disposable parent, @Nullable Window window);
+  
+  public abstract DiffRequestPanel createRequestPanel(@Nullable Project project, Disposable parent, @Nullable Window window);
 
   @RequiredUIAccess
-  public abstract void showMerge(@Nullable Project project, @Nonnull MergeRequest request);
+  public abstract void showMerge(@Nullable Project project, MergeRequest request);
 }

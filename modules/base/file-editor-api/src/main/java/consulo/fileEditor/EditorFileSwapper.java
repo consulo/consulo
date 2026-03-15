@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EditorFileSwapper {
@@ -37,7 +36,7 @@ public abstract class EditorFileSwapper {
     );
 
     @Nullable
-    public static TextEditor findSinglePsiAwareEditor(@Nonnull FileEditor[] fileEditors) {
+    public static TextEditor findSinglePsiAwareEditor(FileEditor[] fileEditors) {
         TextEditor res = null;
 
         for (FileEditor fileEditor : fileEditors) {

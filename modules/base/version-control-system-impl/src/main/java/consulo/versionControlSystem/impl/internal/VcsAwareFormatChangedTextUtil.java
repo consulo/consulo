@@ -35,8 +35,7 @@ import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -46,8 +45,8 @@ import java.util.List;
 @ServiceImpl
 public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
     @Override
-    @Nonnull
-    public List<TextRange> getChangedTextRanges(@Nonnull Project project, @Nonnull PsiFile file) throws FilesTooBigForDiffException {
+    
+    public List<TextRange> getChangedTextRanges(Project project, PsiFile file) throws FilesTooBigForDiffException {
         Document document = PsiDocumentManager.getInstance(project).getDocument(file);
         if (document == null) {
             return List.of();
@@ -80,7 +79,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
     }
 
     @Nullable
-    private static String getRevisionedContentFrom(@Nonnull Change change) {
+    private static String getRevisionedContentFrom(Change change) {
         ContentRevision revision = change.getBeforeRevision();
         if (revision == null) {
             return null;
@@ -96,7 +95,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
     }
 
     @Nullable
-    private static List<TextRange> getCachedChangedLines(@Nonnull Project project, @Nonnull Document document) {
+    private static List<TextRange> getCachedChangedLines(Project project, Document document) {
         LineStatusTrackerI tracker = LineStatusTrackerManagerI.getInstance(project).getLineStatusTracker(document);
         if (tracker != null && tracker.isValid()) {
             List<VcsRange> ranges = tracker.getRanges();
@@ -106,21 +105,21 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
         return null;
     }
 
-    @Nonnull
-    protected static List<TextRange> calculateChangedTextRanges(@Nonnull Document document,
-                                                                @Nonnull CharSequence contentFromVcs) throws FilesTooBigForDiffException {
+    
+    protected static List<TextRange> calculateChangedTextRanges(Document document,
+                                                                CharSequence contentFromVcs) throws FilesTooBigForDiffException {
         return getChangedTextRanges(document, getRanges(document, contentFromVcs));
     }
 
-    @Nonnull
-    private static List<VcsRange> getRanges(@Nonnull Document document,
-                                            @Nonnull CharSequence contentFromVcs) throws FilesTooBigForDiffException {
+    
+    private static List<VcsRange> getRanges(Document document,
+                                            CharSequence contentFromVcs) throws FilesTooBigForDiffException {
         Document documentFromVcs = ((EditorFactoryImpl) EditorFactory.getInstance()).createDocument(contentFromVcs, true, false);
         return RangesBuilder.createRanges(document, documentFromVcs);
     }
 
     @Override
-    public int calculateChangedLinesNumber(@Nonnull Document document, @Nonnull CharSequence contentFromVcs) {
+    public int calculateChangedLinesNumber(Document document, CharSequence contentFromVcs) {
         try {
             List<VcsRange> changedRanges = getRanges(document, contentFromVcs);
             int linesChanges = 0;
@@ -152,8 +151,8 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
         return 0;
     }
 
-    @Nonnull
-    private static List<TextRange> getChangedTextRanges(@Nonnull Document document, @Nonnull List<VcsRange> changedRanges) {
+    
+    private static List<TextRange> getChangedTextRanges(Document document, List<VcsRange> changedRanges) {
         List<TextRange> ranges = new ArrayList<>();
         for (VcsRange range : changedRanges) {
             if (range.getType() != VcsRange.DELETED) {
@@ -170,7 +169,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
     }
 
     @Override
-    public boolean isChangeNotTrackedForFile(@Nonnull Project project, @Nonnull PsiFile file) {
+    public boolean isChangeNotTrackedForFile(Project project, PsiFile file) {
         boolean isUnderVcs = VcsUtil.isFileUnderVcs(project, VcsUtil.getFilePath(file.getVirtualFile()));
         if (!isUnderVcs) {
             return true;

@@ -20,7 +20,6 @@ import consulo.execution.unscramble.StacktraceAnalyzer;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Default impl of stacktrace analyzer. Not support clipboard sync, and preferring for projects
@@ -30,19 +29,19 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(order = "last")
 public class RawStacktraceAnalyzer implements StacktraceAnalyzer {
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("<raw>");
   }
 
   @Override
-  public boolean isPreferredForProject(@Nonnull Project project) {
+  public boolean isPreferredForProject(Project project) {
     return true;
   }
 
   @Override
-  public boolean isStacktrace(@Nonnull String trace) {
+  public boolean isStacktrace(String trace) {
     return false;
   }
 }

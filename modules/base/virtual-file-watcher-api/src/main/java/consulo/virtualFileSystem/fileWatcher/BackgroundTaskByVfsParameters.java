@@ -16,17 +16,16 @@
 package consulo.virtualFileSystem.fileWatcher;
 
 import consulo.execution.CommonProgramRunConfigurationParameters;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 3:44/07.10.13
  */
 public interface BackgroundTaskByVfsParameters extends CommonProgramRunConfigurationParameters {
-  void setExePath(@Nonnull String path);
+  void setExePath(String path);
 
-  @Nonnull
+  
   String getExePath();
 
   void setOutPath(@Nullable String path);
@@ -34,7 +33,7 @@ public interface BackgroundTaskByVfsParameters extends CommonProgramRunConfigura
   @Nullable
   String getOutPath();
 
-  void set(@Nonnull BackgroundTaskByVfsParameters parameters);
+  void set(BackgroundTaskByVfsParameters parameters);
 
   boolean isShowConsole();
 

@@ -21,8 +21,7 @@ import consulo.document.util.Segment;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A pointer to a PSI element which can survive PSI reparse.
@@ -45,7 +44,7 @@ public interface SmartPsiElementPointer<E extends PsiElement> {
   @RequiredReadAction
   PsiFile getContainingFile();
 
-  @Nonnull
+  
   Project getProject();
 
   VirtualFile getVirtualFile();

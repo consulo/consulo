@@ -21,30 +21,29 @@ import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-12-23
  */
 public class PluginSorterAction extends ToggleAction implements DumbAware {
-    @Nonnull
+    
     private final PluginSorter myPluginSorter;
 
-    public PluginSorterAction(@Nonnull PluginSorter pluginSorter) {
+    public PluginSorterAction(PluginSorter pluginSorter) {
         super(pluginSorter.getSortName());
         myPluginSorter = pluginSorter;
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         PluginTab tab = e.getRequiredData(PluginTab.KEY);
         return tab.getSorter() == myPluginSorter;
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         PluginTab tab = e.getRequiredData(PluginTab.KEY);
 
         tab.reSort(state ? myPluginSorter : PluginSorter.DEFAULT_SORTER);

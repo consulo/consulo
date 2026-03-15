@@ -20,8 +20,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko on 11/30/2015.
@@ -43,7 +42,7 @@ class SilentProgressIndicator extends DelegatingProgressIndicator {
   public void setTextValue(LocalizeValue text) {
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getTextValue() {
     return LocalizeValue.empty();
@@ -53,7 +52,7 @@ class SilentProgressIndicator extends DelegatingProgressIndicator {
   public void setText2Value(LocalizeValue text) {
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText2Value() {
     return LocalizeValue.empty();

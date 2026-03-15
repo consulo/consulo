@@ -27,37 +27,36 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @ExtensionImpl
 public class HttpFileEditorProvider implements FileEditorProvider, DumbAware {
-  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public boolean accept(Project project, VirtualFile file) {
     return file instanceof HttpVirtualFile && !file.isDirectory();
   }
 
   @RequiredUIAccess
-  @Nonnull
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+  
+  public FileEditor createEditor(Project project, VirtualFile file) {
     return new HttpFileEditor(project, (HttpVirtualFile)file); 
   }
 
-  @Nonnull
-  public FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
+  
+  public FileEditorState readState(Element sourceElement, Project project, VirtualFile file) {
     return new TextEditorState();
   }
 
-  public void writeState(@Nonnull FileEditorState state, @Nonnull Project project, @Nonnull Element targetElement) {
+  public void writeState(FileEditorState state, Project project, Element targetElement) {
   }
 
-  @Nonnull
+  
   public String getEditorTypeId() {
     return "httpFileEditor";
   }
 
-  @Nonnull
+  
   public FileEditorPolicy getPolicy() {
     return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
   }

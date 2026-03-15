@@ -18,8 +18,7 @@ package consulo.build.ui.issue;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -29,15 +28,15 @@ import java.util.List;
  * from kotlin
  */
 public interface BuildIssue {
-  @Nonnull
+  
   String getTitle();
 
-  @Nonnull
+  
   String getDescription();
 
-  @Nonnull
+  
   List<BuildIssueQuickFix> getQuickFixes();
 
   @Nullable
-  Navigatable getNavigatable(@Nonnull Project project);
+  Navigatable getNavigatable(Project project);
 }

@@ -45,8 +45,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -72,7 +71,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getData(@Nonnull Key<T> dataId) {
+    public <T> T getData(Key<T> dataId) {
       int currentEventCount = IdeEventQueue.getInstance().getEventCount();
       if (myEventCount != -1 && myEventCount != currentEventCount) {
         LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " + currentEventCount);
@@ -85,7 +84,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    protected <T> T doGetData(@Nonnull Key<T> dataId) {
+    protected <T> T doGetData(Key<T> dataId) {
       Component component = getComponent();
       if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
         if (component == null) {
@@ -116,7 +115,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
       return (T)data;
     }
 
-    protected Object calcData(@Nonnull Key<?> dataId, Component component) {
+    protected Object calcData(Key<?> dataId, Component component) {
       return getDataManager().getData(dataId, component);
     }
   }
@@ -131,7 +130,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Nullable
-  private <T> T getData(@Nonnull Key<T> dataId, Component focusedComponent) {
+  private <T> T getData(Key<T> dataId, Component focusedComponent) {
     try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
       for (Component c = focusedComponent; c != null; c = c.getParent()) {
         DataProvider dataProvider = getDataProviderEx(c);
@@ -171,9 +170,9 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     return dataProvider;
   }
 
-  @Nonnull
+ 
   @Override
-  public AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext) {
+  public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
     return new DesktopAsyncDataContext(this, dataContext);
   }
 
@@ -183,7 +182,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Override
-  public DataContext getDataContext(@Nonnull Component component, int x, int y) {
+  public DataContext getDataContext(Component component, int x, int y) {
     if (x < 0 || x >= component.getWidth() || y < 0 || y >= component.getHeight()) {
       throw new IllegalArgumentException("wrong point: x=" + x + "; y=" + y);
     }
@@ -201,7 +200,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Override
-  @Nonnull
+ 
   public DataContext getDataContext() {
     return getDataContext(getFocusedComponent());
   }
@@ -252,7 +251,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   @Override
   @Nullable
   // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
-  protected <T> T getData(@Nonnull Key<T> dataId, consulo.ui.Component focusedComponent) {
+  protected <T> T getData(Key<T> dataId, consulo.ui.Component focusedComponent) {
     return getData(dataId, TargetAWT.to(focusedComponent));
   }
 

@@ -25,8 +25,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FilteringIterator;
 import consulo.util.collection.primitive.ints.IntStack;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -88,8 +87,8 @@ public class IJSwingUtilities extends JBSwingUtilities {
     return SwingUtilities.isDescendingFrom(focusedComponent, component);
   }
 
-  @Nonnull
-  public static Component getFocusedComponentInWindowOrSelf(@Nonnull Component component) {
+  
+  public static Component getFocusedComponentInWindowOrSelf(Component component) {
     Window window = UIUtil.getWindow(component);
     Component focusedComponent = window == null ? null : WindowManager.getInstance().getFocusedComponent(window);
     return focusedComponent != null ? focusedComponent : component;
@@ -200,7 +199,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
     return ContainerUtil.find(getParents(focusOwner), FilteringIterator.instanceOf(aClass));
   }
 
-  public static HyperlinkEvent createHyperlinkEvent(@Nullable String href, @Nonnull Object source) {
+  public static HyperlinkEvent createHyperlinkEvent(@Nullable String href, Object source) {
     URL url = null;
     try {
       url = new URL(href);

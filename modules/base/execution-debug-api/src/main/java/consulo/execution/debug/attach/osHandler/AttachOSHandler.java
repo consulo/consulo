@@ -8,8 +8,7 @@ import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.EnvironmentUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -22,18 +21,18 @@ public abstract class AttachOSHandler {
   private static final GeneralCommandLine ENV_COMMAND_LINE = new GeneralCommandLine("env");
 
   private Map<String, String> myEnvironment;
-  @Nonnull
+  
   private final OSType myOSType;
 
-  @Nonnull
+  
   protected final EnvironmentAwareHost myHost;
 
-  public AttachOSHandler(@Nonnull EnvironmentAwareHost host, @Nonnull OSType osType) {
+  public AttachOSHandler(EnvironmentAwareHost host, OSType osType) {
     myHost = host;
     myOSType = osType;
   }
 
-  @Nonnull
+  
   public OSType getOSType() {
     return myOSType;
   }
@@ -51,8 +50,8 @@ public abstract class AttachOSHandler {
     return myEnvironment.get(name);
   }
 
-  @Nonnull
-  public static AttachOSHandler getAttachOsHandler(@Nonnull EnvironmentAwareHost host) {
+  
+  public static AttachOSHandler getAttachOsHandler(EnvironmentAwareHost host) {
 
     try {
       OSType osType = computeOsType(host);
@@ -72,7 +71,7 @@ public abstract class AttachOSHandler {
     return new GenericAttachOSHandler(host);
   }
 
-  @Nonnull
+  
   private static OSType localComputeOsType() {
     if (Platform.current().os().isLinux()) {
       return OSType.LINUX;
@@ -89,8 +88,8 @@ public abstract class AttachOSHandler {
     return OSType.UNKNOWN;
   }
 
-  @Nonnull
-  private static OSType computeOsType(@Nonnull EnvironmentAwareHost host) throws ExecutionException {
+  
+  private static OSType computeOsType(EnvironmentAwareHost host) throws ExecutionException {
     if (host instanceof LocalAttachHost) {
       return localComputeOsType();
     }

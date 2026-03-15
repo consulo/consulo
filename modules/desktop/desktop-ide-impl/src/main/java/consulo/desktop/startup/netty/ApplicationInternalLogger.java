@@ -6,7 +6,6 @@ import io.netty.util.internal.logging.AbstractInternalLogger;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.Slf4JLoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -23,7 +22,7 @@ public class ApplicationInternalLogger extends AbstractInternalLogger {
     super(name);
   }
 
-  private void executeVoid(@Nonnull Consumer<InternalLogger> consumer) {
+  private void executeVoid(Consumer<InternalLogger> consumer) {
     if (myDelegateLogger != null) {
       consumer.accept(myDelegateLogger);
       return;
@@ -36,7 +35,7 @@ public class ApplicationInternalLogger extends AbstractInternalLogger {
     }
   }
 
-  private boolean executeBool(@Nonnull Function<InternalLogger, Boolean> f) {
+  private boolean executeBool(Function<InternalLogger, Boolean> f) {
     if (myDelegateLogger != null) {
       return f.apply(myDelegateLogger);
     }

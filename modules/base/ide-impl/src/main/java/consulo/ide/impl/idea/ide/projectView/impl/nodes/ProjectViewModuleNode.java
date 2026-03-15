@@ -30,7 +30,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.annotation.access.RequiredReadAction;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +42,7 @@ public class ProjectViewModuleNode extends AbstractModuleNode {
     }
 
     @Override
-    @Nonnull
+    
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
         Module module = getValue();

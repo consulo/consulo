@@ -25,8 +25,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -35,17 +34,17 @@ import java.util.*;
  * @author Rustam Vishnyakov
  */
 public class CustomFoldingRegionsPopup {
-    private final @Nonnull
+    private final 
     JBList myRegionsList;
-    private final @Nonnull
+    private final 
     JBPopup myPopup;
-    private final @Nonnull
+    private final 
     Editor myEditor;
 
     CustomFoldingRegionsPopup(
-        @Nonnull Collection<FoldingDescriptor> descriptors,
-        @Nonnull final Editor editor,
-        @Nonnull final Project project
+        Collection<FoldingDescriptor> descriptors,
+        final Editor editor,
+        final Project project
     ) {
         myEditor = editor;
         myRegionsList = new JBList();
@@ -82,14 +81,14 @@ public class CustomFoldingRegionsPopup {
     }
 
     private static class MyFoldingDescriptorWrapper {
-        private final @Nonnull
+        private final 
         FoldingDescriptor myDescriptor;
 
-        private MyFoldingDescriptorWrapper(@Nonnull FoldingDescriptor descriptor) {
+        private MyFoldingDescriptorWrapper(FoldingDescriptor descriptor) {
             myDescriptor = descriptor;
         }
 
-        @Nonnull
+        
         public FoldingDescriptor getDescriptor() {
             return myDescriptor;
         }
@@ -124,7 +123,7 @@ public class CustomFoldingRegionsPopup {
         return sorted;
     }
 
-    private static void navigateTo(@Nonnull Editor editor, @Nonnull PsiElement element) {
+    private static void navigateTo(Editor editor, PsiElement element) {
         int offset = element.getTextRange().getStartOffset();
         if (offset >= 0 && offset < editor.getDocument().getTextLength()) {
             editor.getCaretModel().removeSecondaryCarets();

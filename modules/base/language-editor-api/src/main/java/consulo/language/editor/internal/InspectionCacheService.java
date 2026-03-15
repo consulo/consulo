@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.editor.inspection.InspectionTool;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -51,7 +50,7 @@ public class InspectionCacheService {
         myApplication = application;
     }
 
-    @Nonnull
+    
     public InspectionCache get() {
         return myApplication.getExtensionPoint(InspectionTool.class).getOrBuildCache(CACHE_KEY);
     }

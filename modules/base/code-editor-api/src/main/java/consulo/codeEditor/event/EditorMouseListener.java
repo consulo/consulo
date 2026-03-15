@@ -6,7 +6,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.Editor;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -28,7 +27,7 @@ public interface EditorMouseListener extends EventListener {
    *
    * @param event the event containing information about the mouse press.
    */
-  default void mousePressed(@Nonnull EditorMouseEvent event) {
+  default void mousePressed(EditorMouseEvent event) {
   }
 
   /**
@@ -36,7 +35,7 @@ public interface EditorMouseListener extends EventListener {
    *
    * @param event the event containing information about the mouse click.
    */
-  default void mouseClicked(@Nonnull EditorMouseEvent event) {
+  default void mouseClicked(EditorMouseEvent event) {
   }
 
   /**
@@ -44,7 +43,7 @@ public interface EditorMouseListener extends EventListener {
    *
    * @param event the event containing information about the mouse release.
    */
-  default void mouseReleased(@Nonnull EditorMouseEvent event) {
+  default void mouseReleased(EditorMouseEvent event) {
   }
 
   /**
@@ -52,7 +51,7 @@ public interface EditorMouseListener extends EventListener {
    *
    * @param event the event containing information about the mouse movement.
    */
-  default void mouseEntered(@Nonnull EditorMouseEvent event) {
+  default void mouseEntered(EditorMouseEvent event) {
   }
 
   /**
@@ -60,6 +59,6 @@ public interface EditorMouseListener extends EventListener {
    *
    * @param event the event containing information about the mouse movement.
    */
-  default void mouseExited(@Nonnull EditorMouseEvent event) {
+  default void mouseExited(EditorMouseEvent event) {
   }
 }

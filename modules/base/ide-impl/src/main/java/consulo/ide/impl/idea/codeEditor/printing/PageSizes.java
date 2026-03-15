@@ -23,20 +23,19 @@ import java.util.*;
 import consulo.util.jdom.JDOMUtil;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 class PageSizes {
   private static final Logger LOG = Logger.getInstance(PageSizes.class);
   private static List myPageSizes = null;
   private static Map myNamesToPageSizes = null;
   private static final double MM_TO_INCH = 1/25.4;
-  @NonNls private static final String PAGE_SIZES_RESOURCE = "/PageSizes.xml";
-  @NonNls private static final String ELEMENT_SIZE = "size";
-  @NonNls private static final String ATTRIBUTE_NAME = "name";
-  @NonNls private static final String ATTRIBUTE_WIDTH = "width";
-  @NonNls private static final String ATTRIBUTE_HEIGHT = "height";
-  @NonNls private static final String ATTRIBUTE_UNIT = "unit";
-  @NonNls private static final String UNIT_MM = "mm";
+  private static final String PAGE_SIZES_RESOURCE = "/PageSizes.xml";
+  private static final String ELEMENT_SIZE = "size";
+  private static final String ATTRIBUTE_NAME = "name";
+  private static final String ATTRIBUTE_WIDTH = "width";
+  private static final String ATTRIBUTE_HEIGHT = "height";
+  private static final String ATTRIBUTE_UNIT = "unit";
+  private static final String UNIT_MM = "mm";
 
   public static String[] getNames() {
     init();

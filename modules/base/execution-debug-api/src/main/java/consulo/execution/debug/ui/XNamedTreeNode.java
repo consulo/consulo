@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.ui;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.TreeNode;
 
 /**

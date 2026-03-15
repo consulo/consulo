@@ -17,7 +17,7 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.application.Application;
 import consulo.ui.UIAccessScheduler;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;

@@ -18,12 +18,11 @@ package consulo.dataContext.internal;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 03/02/2022
  */
 public interface DataRuleHoler {
-  <T> GetDataRule<T> getDataRule(@Nonnull Key<T> dataId);
+  <T> GetDataRule<T> getDataRule(Key<T> dataId);
 }

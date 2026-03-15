@@ -26,7 +26,6 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +58,7 @@ public class ChooseStacktraceDialog extends DialogWrapper {
         myList.setCellRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(
-                @Nonnull JList<? extends Comment> list,
+                JList<? extends Comment> list,
                 Comment value,
                 int index,
                 boolean selected,

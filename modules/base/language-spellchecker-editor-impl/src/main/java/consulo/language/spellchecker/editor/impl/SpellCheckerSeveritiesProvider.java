@@ -27,7 +27,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -44,21 +43,21 @@ public class SpellCheckerSeveritiesProvider extends SeveritiesProvider {
             super(SpellcheckerSeverities.TYPO, TYPO_KEY);
         }
 
-        @Nonnull
+        
         @Override
         public Image getIcon() {
             return PlatformIconGroup.generalInspectionstypos();
         }
     }
 
-    @Nonnull
+    
     @Override
     public List<HighlightInfoType> getSeveritiesHighlightInfoTypes() {
         return List.of(new TYPO());
     }
 
     @Override
-    public ColorValue getTrafficRendererColor(@Nonnull TextAttributes textAttributes) {
+    public ColorValue getTrafficRendererColor(TextAttributes textAttributes) {
         return textAttributes.getErrorStripeColor();
     }
 

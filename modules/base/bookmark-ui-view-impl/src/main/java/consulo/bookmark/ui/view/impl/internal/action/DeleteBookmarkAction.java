@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "DeleteBookmark")
 public class DeleteBookmarkAction extends DumbAwareAction {
@@ -34,13 +33,13 @@ public class DeleteBookmarkAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
 
         BookmarkInContextInfo info = new BookmarkInContextInfo(e.getDataContext(), project).invoke();

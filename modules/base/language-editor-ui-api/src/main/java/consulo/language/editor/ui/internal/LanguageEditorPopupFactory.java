@@ -23,7 +23,6 @@ import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -38,10 +37,10 @@ public interface LanguageEditorPopupFactory {
     return Application.get().getInstance(LanguageEditorPopupFactory.class);
   }
 
-  @Nonnull
-  PsiElementListNavigator.NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title);
+  
+  PsiElementListNavigator.NavigateOrPopupBuilder builder(NavigatablePsiElement[] targets, String title);
 
-  @Nonnull
+  
   JBPopup getPsiElementPopup(Object[] elements,
                              Map<PsiElement, GotoRelatedItem> itemsMap,
                              String title,

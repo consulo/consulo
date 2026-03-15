@@ -23,8 +23,7 @@ import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.SyntheticElement;
 import consulo.platform.Platform;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene.Kudelevsky
@@ -33,20 +32,20 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
     @Nullable
     private final String myUrl;
 
-    public WebReference(@Nonnull PsiElement element) {
+    public WebReference(PsiElement element) {
         this(element, (String) null);
     }
 
-    public WebReference(@Nonnull PsiElement element, @Nullable String url) {
+    public WebReference(PsiElement element, @Nullable String url) {
         super(element, true);
         myUrl = url;
     }
 
-    public WebReference(@Nonnull PsiElement element, @Nonnull TextRange textRange) {
+    public WebReference(PsiElement element, TextRange textRange) {
         this(element, textRange, null);
     }
 
-    public WebReference(@Nonnull PsiElement element, TextRange textRange, @Nullable String url) {
+    public WebReference(PsiElement element, TextRange textRange, @Nullable String url) {
         super(element, textRange, true);
         myUrl = url;
     }
@@ -61,7 +60,7 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
         return myUrl != null ? myUrl : getValue();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Object[] getVariants() {
@@ -92,7 +91,7 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
             return getUrl();
         }
 
-        @Nonnull
+        
         @Override
         @RequiredReadAction
         public TextRange getTextRange() {

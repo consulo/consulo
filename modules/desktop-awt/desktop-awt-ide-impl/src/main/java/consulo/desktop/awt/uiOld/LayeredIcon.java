@@ -19,7 +19,6 @@ import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
@@ -47,7 +46,7 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
         myVShifts = new int[layerCount];
     }
 
-    public LayeredIcon(@Nonnull Icon... icons) {
+    public LayeredIcon(Icon... icons) {
         this(icons.length);
         for (int i = 0; i < icons.length; i++) {
             setIcon(icons[i], i);
@@ -67,13 +66,13 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
         myHeight = icon.myHeight;
     }
 
-    @Nonnull
+    
     @Override
     protected LayeredIcon copy() {
         return new LayeredIcon(this);
     }
 
-    @Nonnull
+    
     private Icon[] myScaledIcons() {
         if (myScaledIcons != null) {
             return myScaledIcons;
@@ -95,7 +94,7 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
         return myScaledIcons;
     }
 
-    @Nonnull
+    
     @Override
     public LayeredIcon withIconPreScaled(boolean preScaled) {
         super.withIconPreScaled(preScaled);

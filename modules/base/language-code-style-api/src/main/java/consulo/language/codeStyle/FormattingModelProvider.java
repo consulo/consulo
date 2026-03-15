@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows plugins to create an instance of the standard {@link FormattingModel} implementation.
@@ -35,7 +34,7 @@ public final class FormattingModelProvider {
      */
     public static FormattingModel createFormattingModelForPsiFile(
         PsiFile file,
-        @Nonnull Block rootBlock,
+        Block rootBlock,
         CodeStyleSettings settings
     ) {
         return Formatter.getInstance().createFormattingModelForPsiFile(file, rootBlock, settings);

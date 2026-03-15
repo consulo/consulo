@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.OptionsDialog;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,21 +31,21 @@ import java.awt.event.ActionEvent;
  * @author Dmitry Avdeev
  */
 class VcsConfirmationDialog extends OptionsDialog {
-    @Nonnull
+    
     private final String myOkText;
-    @Nonnull
+    
     private final String myCancelText;
     private final VcsShowConfirmationOption myOption;
     private final String myMessage;
     private final String myDoNotShowMessage;
 
-    VcsConfirmationDialog(@Nonnull Project project,
-                          @Nonnull String title,
-                          @Nonnull String okText,
-                          @Nonnull String cancelText,
-                          @Nonnull VcsShowConfirmationOption option,
-                          @Nonnull String message,
-                          @Nonnull String doNotShowMessage) {
+    VcsConfirmationDialog(Project project,
+                          String title,
+                          String okText,
+                          String cancelText,
+                          VcsShowConfirmationOption option,
+                          String message,
+                          String doNotShowMessage) {
         super(project);
         myOkText = okText;
         myCancelText = cancelText;
@@ -80,13 +79,13 @@ class VcsConfirmationDialog extends OptionsDialog {
         return panel;
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getDoNotShowMessage() {
         return myDoNotShowMessage == null ? LocalizeValue.empty() : LocalizeValue.localizeTODO(myDoNotShowMessage);
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         AbstractAction okAction = new AbstractAction(myOkText) {

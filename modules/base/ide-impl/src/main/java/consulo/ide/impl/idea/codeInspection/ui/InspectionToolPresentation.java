@@ -29,18 +29,17 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 public interface InspectionToolPresentation extends ProblemDescriptionsProcessor {
-  @Nonnull
-  InspectionNode createToolNode(@Nonnull GlobalInspectionContextImpl globalInspectionContext,
-                                @Nonnull InspectionNode node,
-                                @Nonnull InspectionRVContentProvider provider,
-                                @Nonnull InspectionTreeNode parentNode,
+  
+  InspectionNode createToolNode(GlobalInspectionContextImpl globalInspectionContext,
+                                InspectionNode node,
+                                InspectionRVContentProvider provider,
+                                InspectionTreeNode parentNode,
                                 boolean showStructure);
 
   void updateContent();
@@ -63,33 +62,33 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
 
   boolean isElementIgnored(RefEntity element);
 
-  @Nonnull
+  
   FileStatus getElementStatus(RefEntity element);
 
-  @Nonnull
+  
   Collection<RefEntity> getIgnoredRefElements();
 
   @Nullable
-  IntentionAction findQuickFixes(@Nonnull CommonProblemDescriptor descriptor, String hint);
+  IntentionAction findQuickFixes(CommonProblemDescriptor descriptor, String hint);
 
-  @Nonnull
+  
   HTMLComposerBase getComposer();
 
-  void exportResults(@Nonnull Element parentNode, @Nonnull RefEntity refEntity);
+  void exportResults(Element parentNode, RefEntity refEntity);
 
   Set<RefModule> getModuleProblems();
 
   @Nullable
-  QuickFixAction[] getQuickFixes(@Nonnull RefEntity[] refElements);
+  QuickFixAction[] getQuickFixes(RefEntity[] refElements);
 
-  @Nonnull
+  
   Map<RefEntity, CommonProblemDescriptor[]> getProblemElements();
 
-  @Nonnull
+  
   Collection<CommonProblemDescriptor> getProblemDescriptors();
 
-  @Nonnull
-  FileStatus getProblemStatus(@Nonnull CommonProblemDescriptor descriptor);
+  
+  FileStatus getProblemStatus(CommonProblemDescriptor descriptor);
 
   boolean isOldProblemsIncluded();
 
@@ -100,17 +99,17 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
 
   void ignoreCurrentElementProblem(RefEntity refEntity, CommonProblemDescriptor descriptor);
 
-  void addProblemElement(RefEntity refElement, boolean filterSuppressed, @Nonnull CommonProblemDescriptor... descriptions);
+  void addProblemElement(RefEntity refElement, boolean filterSuppressed, CommonProblemDescriptor... descriptions);
 
-  void ignoreProblem(@Nonnull CommonProblemDescriptor descriptor, @Nonnull QuickFix fix);
+  void ignoreProblem(CommonProblemDescriptor descriptor, QuickFix fix);
 
-  @Nonnull
+  
   GlobalInspectionContextBase getContext();
 
   void ignoreProblem(RefEntity refEntity, CommonProblemDescriptor problem, int idx);
 
   @Nullable
-  QuickFixAction[] extractActiveFixes(@Nonnull RefEntity[] refElements, @Nonnull Map<RefEntity, Set<QuickFix>> actions);
+  QuickFixAction[] extractActiveFixes(RefEntity[] refElements, Map<RefEntity, Set<QuickFix>> actions);
 
-  void exportResults(@Nonnull Element parentNode);
+  void exportResults(Element parentNode);
 }

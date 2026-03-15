@@ -15,7 +15,7 @@
  */
 package consulo.diff.request;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class NoDiffRequest extends MessageDiffRequest {
   public static NoDiffRequest INSTANCE = new NoDiffRequest();

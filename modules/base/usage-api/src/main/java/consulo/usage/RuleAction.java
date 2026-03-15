@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import consulo.usage.rule.UsageFilteringRuleListener;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -32,19 +31,19 @@ import jakarta.annotation.Nonnull;
 public abstract class RuleAction extends ToggleAction implements DumbAware {
     private boolean myState;
 
-    public RuleAction(@Nonnull LocalizeValue text, @Nonnull Image icon) {
+    public RuleAction(LocalizeValue text, Image icon) {
         super(text, LocalizeValue.empty(), icon);
         myState = getOptionValue();
     }
 
     @Deprecated
-    public RuleAction(@Nonnull UsageView view, @Nonnull LocalizeValue text, @Nonnull Image icon) {
+    public RuleAction(UsageView view, LocalizeValue text, Image icon) {
         super(text, LocalizeValue.empty(), icon);
         myState = getOptionValue();
     }
 
     @Deprecated
-    public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Image icon) {
+    public RuleAction(UsageView view, String text, Image icon) {
         super(text, null, icon);
         myState = getOptionValue();
     }
@@ -54,13 +53,13 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
     protected abstract void setOptionValue(boolean value);
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return myState;
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         setOptionValue(state);
         myState = state;
 

@@ -16,8 +16,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -30,7 +29,7 @@ public class FindInProjectManager {
     private final Project myProject;
     private volatile boolean myIsFindInProgress;
 
-    public static FindInProjectManager getInstance(@Nonnull Project project) {
+    public static FindInProjectManager getInstance(Project project) {
         return ServiceManager.getService(project, FindInProjectManager.class);
     }
 
@@ -43,7 +42,7 @@ public class FindInProjectManager {
      * @param model would be used for search if not null, otherwise shared (project-level) model would be used
      */
     @RequiredUIAccess
-    public void findInProject(@Nonnull DataContext dataContext, @Nullable FindModel model) {
+    public void findInProject(DataContext dataContext, @Nullable FindModel model) {
         FindManager findManager = FindManager.getInstance(myProject);
         FindModel findModel;
         if (model != null) {
@@ -68,12 +67,12 @@ public class FindInProjectManager {
         );
     }
 
-    public void findInPath(@Nonnull FindModel findModel) {
+    public void findInPath(FindModel findModel) {
         startFindInProject(findModel);
     }
 
     @SuppressWarnings("WeakerAccess")
-    protected void initModel(@Nonnull FindModel findModel, @Nonnull DataContext dataContext) {
+    protected void initModel(FindModel findModel, DataContext dataContext) {
         FindInProjectUtil.setDirectoryName(findModel, dataContext);
 
         String text = dataContext.getData(PlatformDataKeys.PREDEFINED_TEXT);
@@ -85,7 +84,7 @@ public class FindInProjectManager {
         }
     }
 
-    public void startFindInProject(@Nonnull FindModel findModel) {
+    public void startFindInProject(FindModel findModel) {
         if (findModel.getDirectoryName() != null && FindInProjectUtil.getDirectory(findModel) == null) {
             return;
         }

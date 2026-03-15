@@ -2,8 +2,7 @@
 package consulo.execution.impl.internal.service;
 
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +12,11 @@ import java.util.function.Predicate;
 final class ServiceModelFilter {
   private final List<ServiceViewFilter> myFilters = new CopyOnWriteArrayList<>();
 
-  void addFilter(@Nonnull ServiceViewFilter filter) {
+  void addFilter(ServiceViewFilter filter) {
     myFilters.add(filter);
   }
 
-  void removeFilter(@Nonnull ServiceViewFilter filter) {
+  void removeFilter(ServiceViewFilter filter) {
     ServiceViewFilter parent = filter.getParent();
     myFilters.remove(filter);
     for (ServiceViewFilter viewFilter : myFilters) {
@@ -27,15 +26,15 @@ final class ServiceModelFilter {
     }
   }
 
-  @Nonnull
-  List<? extends ServiceViewItem> filter(@Nonnull List<? extends ServiceViewItem> items, @Nonnull ServiceViewFilter targetFilter) {
+  
+  List<? extends ServiceViewItem> filter(List<? extends ServiceViewItem> items, ServiceViewFilter targetFilter) {
     if (items.isEmpty()) return items;
 
     List<ServiceViewFilter> filters = excludeTargetAndParents(targetFilter);
     return ContainerUtil.filter(items, item -> !ContainerUtil.exists(filters, filter -> filter.test(item)));
   }
 
-  private List<ServiceViewFilter> excludeTargetAndParents(@Nonnull ServiceViewFilter targetFilter) {
+  private List<ServiceViewFilter> excludeTargetAndParents(ServiceViewFilter targetFilter) {
     List<ServiceViewFilter> filters = new ArrayList<>(myFilters);
     do {
       filters.remove(targetFilter);

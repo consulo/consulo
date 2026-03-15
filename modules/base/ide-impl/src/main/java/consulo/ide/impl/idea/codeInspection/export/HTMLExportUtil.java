@@ -24,14 +24,12 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.IOException;
 
 public class HTMLExportUtil {
-  public static void writeFile(String folder, @NonNls String fileName, CharSequence buf, Project project) {
+  public static void writeFile(String folder, String fileName, CharSequence buf, Project project) {
     try {
       HTMLExporter.writeFileImpl(folder, fileName, buf);
     }
@@ -50,7 +48,7 @@ public class HTMLExportUtil {
     }
   }
 
-  public static void runExport(Project project, @Nonnull ThrowableRunnable<IOException> runnable) {
+  public static void runExport(Project project, ThrowableRunnable<IOException> runnable) {
     try {
       runnable.run();
     }

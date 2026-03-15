@@ -20,8 +20,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -92,7 +91,7 @@ public class CompositeDependencyCache implements DependencyCache {
 
     @Nullable
     @Override
-    public String relativePathToQName(@Nonnull String path, char separator) {
+    public String relativePathToQName(String path, char separator) {
         for (DependencyCache ourDependencyExtension : myDependencyCaches) {
             String s = ourDependencyExtension.relativePathToQName(path, separator);
             if (s != null) {
@@ -109,7 +108,7 @@ public class CompositeDependencyCache implements DependencyCache {
         }
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public <T extends DependencyCache> T findChild(Class<T> clazz) {
         for (DependencyCache dependencyCach : myDependencyCaches) {

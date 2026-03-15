@@ -5,7 +5,6 @@ import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ui.RemoteServersView;
 import consulo.remoteServer.runtime.ui.ServersTreeNodeSelector;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class RemoteServersViewImpl extends RemoteServersView {
     private final List<Pair<ServersTreeNodeSelector, Predicate<ServerConnection<?>>>> mySelectors = new CopyOnWriteArrayList<>();
 
     @Override
-    public void showServerConnection(@Nonnull ServerConnection<?> connection) {
+    public void showServerConnection(ServerConnection<?> connection) {
         ServersTreeNodeSelector selector = findSelector(connection);
         if (selector != null) {
             selector.select(connection);
@@ -35,7 +34,7 @@ public class RemoteServersViewImpl extends RemoteServersView {
     }
 
     @Override
-    public void showDeployment(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName) {
+    public void showDeployment(ServerConnection<?> connection, String deploymentName) {
         ServersTreeNodeSelector selector = findSelector(connection);
         if (selector != null) {
             selector.select(connection, deploymentName);
@@ -44,8 +43,8 @@ public class RemoteServersViewImpl extends RemoteServersView {
 
     @Override
     public void registerTreeNodeSelector(
-        @Nonnull ServersTreeNodeSelector selector,
-        @Nonnull Predicate<ServerConnection<?>> condition
+        ServersTreeNodeSelector selector,
+        Predicate<ServerConnection<?>> condition
     ) {
         mySelectors.add(Pair.create(selector, condition));
     }

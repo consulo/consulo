@@ -38,8 +38,7 @@ import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.hint.HintListener;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.FocusEvent;
@@ -77,7 +76,7 @@ public abstract class CompletionPhase implements Disposable {
     boolean replaced;
     private final ActionTracker myTracker;
 
-    CommittingDocuments(@Nullable CompletionProgressIndicator prevIndicator, @Nonnull Editor editor) {
+    CommittingDocuments(@Nullable CompletionProgressIndicator prevIndicator, Editor editor) {
       super(prevIndicator);
       myTracker = new ActionTracker(editor, this);
     }
@@ -108,10 +107,10 @@ public abstract class CompletionPhase implements Disposable {
     }
 
     // @ApiStatus.Internal
-    public static void scheduleAsyncCompletion(@Nonnull Editor _editor,
-                                               @Nonnull CompletionType completionType,
+    public static void scheduleAsyncCompletion(Editor _editor,
+                                               CompletionType completionType,
                                                @Nullable Predicate<? super PsiFile> condition,
-                                               @Nonnull Project project,
+                                               Project project,
                                                @Nullable CompletionProgressIndicator prevIndicator) {
       Editor topLevelEditor = EditorWindow.getTopLevelEditor(_editor);
       int offset = topLevelEditor.getCaretModel().getOffset();
@@ -195,7 +194,7 @@ public abstract class CompletionPhase implements Disposable {
       super(indicator);
       ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
         @Override
-        public void beforeWriteActionStart(@Nonnull Object action) {
+        public void beforeWriteActionStart(Object action) {
           if (!indicator.getLookup().isLookupDisposed() && !indicator.isCanceled()) {
             indicator.scheduleRestart();
           }
@@ -205,7 +204,7 @@ public abstract class CompletionPhase implements Disposable {
         // lookup is not visible, we have to check ourselves if editor retains focus
         ((EditorEx)indicator.getEditor()).addFocusListener(new FocusChangeListenerImpl() {
           @Override
-          public void focusLost(@Nonnull Editor editor, @Nonnull FocusEvent event) {
+          public void focusLost(Editor editor, FocusEvent event) {
             // When ScreenReader is active the lookup gets focus on show and we should not close it.
             if (ScreenReader.isActive() && indicator.getLookup() != null && event.getOppositeComponent() != null && indicator.getLookup().getComponent() != null &&
                 // Check the opposite is in the lookup ancestor
@@ -242,28 +241,28 @@ public abstract class CompletionPhase implements Disposable {
 
     protected ZombiePhase(@Nullable final LightweightHintImpl hint, CompletionProgressIndicator indicator) {
       super(indicator);
-      @Nonnull Editor editor = indicator.getEditor();
+      Editor editor = indicator.getEditor();
       final HintListener hintListener = new HintListener() {
         @Override
-        public void hintHidden(@Nonnull EventObject event) {
+        public void hintHidden(EventObject event) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };
       DocumentListener documentListener = new DocumentListener() {
         @Override
-        public void beforeDocumentChange(@Nonnull DocumentEvent e) {
+        public void beforeDocumentChange(DocumentEvent e) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };
       SelectionListener selectionListener = new SelectionListener() {
         @Override
-        public void selectionChanged(@Nonnull SelectionEvent e) {
+        public void selectionChanged(SelectionEvent e) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };
       CaretListener caretListener = new CaretListener() {
         @Override
-        public void caretPositionChanged(@Nonnull CaretEvent e) {
+        public void caretPositionChanged(CaretEvent e) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };

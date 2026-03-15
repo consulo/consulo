@@ -16,8 +16,7 @@ import consulo.util.collection.JBIterable;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -56,7 +55,7 @@ class DesktopAsyncDataContext extends DesktopDataManagerImpl.MyDataContext imple
             return new DataProvider() {
                 @Nullable
                 @Override
-                public Object getData(@Nonnull Key<?> dataKey) {
+                public Object getData(Key<?> dataKey) {
                     long start = System.currentTimeMillis();
                     try {
                         return provider.getData(dataKey);
@@ -73,7 +72,7 @@ class DesktopAsyncDataContext extends DesktopDataManagerImpl.MyDataContext imple
     }
 
     @Override
-    protected Object calcData(@Nonnull Key<?> dataId, Component focused) {
+    protected Object calcData(Key<?> dataId, Component focused) {
         try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
             for (WeakReference<Component> reference : myHierarchy) {
                 Component component = SoftReference.dereference(reference);

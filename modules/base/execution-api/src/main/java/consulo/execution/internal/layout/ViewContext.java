@@ -27,8 +27,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ViewContext extends Disposable {
   @Deprecated
@@ -46,7 +45,7 @@ public interface ViewContext extends Disposable {
   @Nullable
   Tab getTabFor(Grid grid);
 
-  View getStateFor(@Nonnull Content content);
+  View getStateFor(Content content);
 
   void saveUiState();
 
@@ -60,9 +59,9 @@ public interface ViewContext extends Disposable {
 
   RunnerLayoutUi getRunnerLayoutUi();
 
-  GridCell findCellFor(@Nonnull Content content);
+  GridCell findCellFor(Content content);
 
-  Grid findGridFor(@Nonnull Content content);
+  Grid findGridFor(Content content);
 
   ActionCallback select(Content content, boolean requestFocus);
 

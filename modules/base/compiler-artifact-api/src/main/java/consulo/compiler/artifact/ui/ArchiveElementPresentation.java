@@ -20,7 +20,6 @@ import consulo.compiler.artifact.element.ArchivePackagingElement;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -38,7 +37,7 @@ public class ArchiveElementPresentation extends PackagingElementPresentation {
   }
 
   @Override
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.PpJar);
     presentationData.addText(myElement.getArchiveFileName(), mainAttributes);
   }

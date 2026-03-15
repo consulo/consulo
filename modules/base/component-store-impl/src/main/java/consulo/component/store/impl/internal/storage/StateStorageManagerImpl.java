@@ -34,8 +34,7 @@ import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.*;
@@ -59,7 +58,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private final Lock myStorageLock = new ReentrantLock();
   private final Map<String, StateStorage> myStorages = new HashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
-  @Nonnull
+ 
   private final StateStorageFacade myStateStorageFacade;
   private final String myRootTagName;
   protected final Supplier<MessageBus> myMessageBusSupplier;
@@ -70,9 +69,9 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
                                  String rootTagName,
                                  @Nullable Disposable parentDisposable,
-                                 @Nonnull Supplier<MessageBus> messageBusSupplier,
-                                 @Nonnull Supplier<PathMacrosService> pathMacrosServiceSupplier,
-                                 @Nonnull StateStorageFacade stateStorageFacade) {
+                                 Supplier<MessageBus> messageBusSupplier,
+                                 Supplier<PathMacrosService> pathMacrosServiceSupplier,
+                                 StateStorageFacade stateStorageFacade) {
     myMessageBusSupplier = messageBusSupplier;
     myRootTagName = rootTagName;
     myPathMacrosServiceSupplier = pathMacrosServiceSupplier;
@@ -83,13 +82,13 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
   }
 
-  @Nonnull
+ 
   protected abstract String getConfigurationMacro(boolean directorySpec);
 
   @Override
-  @Nonnull
+ 
   @SuppressWarnings("deprecation")
-  public String buildFileSpec(@Nonnull Storage storage) {
+  public String buildFileSpec(Storage storage) {
     boolean directorySpec = !storage.stateSplitter().equals(StateSplitterEx.class);
 
     String file = storage.file();
@@ -110,8 +109,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   }
 
 
-  @Nonnull
-  private StateStorage createStateStorage(@Nonnull Storage storageSpec) {
+ 
+  private StateStorage createStateStorage(Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
       StateSplitterEx splitter = createSplitter(storageSpec.stateSplitter());
       return myStateStorageFacade
@@ -122,7 +121,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
   }
 
-  @Nonnull
+ 
   public abstract StateSplitterEx createSplitter(Class<? extends StateSplitterEx> splitter);
 
   @Override
@@ -131,7 +130,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   }
 
   @Override
-  public synchronized void addMacro(@Nonnull String macro, @Nonnull String expansion) {
+  public synchronized void addMacro(String macro, String expansion) {
     assert !macro.isEmpty();
     // backward compatibility
     if (macro.charAt(0) != '$') {
@@ -142,8 +141,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   }
 
   @Override
-  @Nonnull
-  public StateStorage getStateStorage(@Nonnull Storage storageSpec) {
+ 
+  public StateStorage getStateStorage(Storage storageSpec) {
     String key = buildFileSpec(storageSpec);
 
     myStorageLock.lock();
@@ -162,7 +161,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @Nullable
   @Override
-  public StateStorage getStateStorage(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+  public StateStorage getStateStorage(String fileSpec, RoamingType roamingType) {
     myStorageLock.lock();
     try {
       StateStorage stateStorage = myStorages.get(fileSpec);
@@ -177,8 +176,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
   }
 
-  @Nonnull
-  private Collection<VfsFileBasedStorage> getCachedFileStorages(@Nonnull Collection<String> fileSpecs) {
+ 
+  private Collection<VfsFileBasedStorage> getCachedFileStorages(Collection<String> fileSpecs) {
     if (fileSpecs.isEmpty()) {
       return Collections.emptyList();
     }
@@ -196,7 +195,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     return result == null ? Collections.<VfsFileBasedStorage>emptyList() : result;
   }
 
-  @Nonnull
+ 
   @Override
   public Collection<String> getStorageFileNames() {
     myStorageLock.lock();
@@ -209,7 +208,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   }
 
   @Override
-  public void clearStateStorage(@Nonnull String file) {
+  public void clearStateStorage(String file) {
     myStorageLock.lock();
     try {
       myStorages.remove(file);
@@ -219,8 +218,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
   }
 
-  @Nonnull
-  private StateStorage createFileStateStorage(@Nonnull String fileSpec, @Nullable RoamingType roamingType) {
+ 
+  private StateStorage createFileStateStorage(String fileSpec, @Nullable RoamingType roamingType) {
     String filePath = FileUtil.toSystemIndependentName(expandMacros(fileSpec));
 
     if (!ourHeadlessEnvironment && PathUtil.getFileName(filePath).lastIndexOf('.') < 0) {
@@ -252,15 +251,15 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     return myStreamProvider;
   }
 
-  protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull String fileSpec) {
+  protected TrackingPathMacroSubstitutor getMacroSubstitutor(String fileSpec) {
     return myPathMacroSubstitutor;
   }
 
   private static final Pattern MACRO_PATTERN = Pattern.compile("(\\$[^\\$]*\\$)");
 
   @Override
-  @Nonnull
-  public synchronized String expandMacros(@Nonnull String file) {
+ 
+  public synchronized String expandMacros(String file) {
     Matcher matcher = MACRO_PATTERN.matcher(file);
     while (matcher.find()) {
       String m = matcher.group(1);
@@ -276,9 +275,9 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     return expanded;
   }
 
-  @Nonnull
+ 
   @Override
-  public String collapseMacros(@Nonnull String path) {
+  public String collapseMacros(String path) {
     String result = path;
     for (String macro : myMacros.keySet()) {
       result = StringUtil.replace(result, myMacros.get(macro), macro);
@@ -286,7 +285,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     return result;
   }
 
-  @Nonnull
+ 
   @Override
   public ExternalizationSession startExternalization() {
     return new StateStorageManagerExternalizationSession();
@@ -296,7 +295,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     final Map<StateStorage, StateStorage.ExternalizationSession> mySessions = new LinkedHashMap<>();
 
     @Override
-    public void setState(@Nonnull Storage[] storageSpecs, @Nonnull Object component, @Nonnull String componentName, @Nonnull Object state) {
+    public void setState(Storage[] storageSpecs, Object component, String componentName, Object state) {
       for (Storage storageSpec : storageSpecs) {
         StateStorage stateStorage = getStateStorage(storageSpec);
         StateStorage.ExternalizationSession session = getExternalizationSession(stateStorage);
@@ -307,8 +306,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       }
     }
 
-    @Nullable
-    private StateStorage.ExternalizationSession getExternalizationSession(@Nonnull StateStorage stateStorage) {
+    private StateStorage.@Nullable ExternalizationSession getExternalizationSession(StateStorage stateStorage) {
       StateStorage.ExternalizationSession session = mySessions.get(stateStorage);
       if (session == null) {
         session = stateStorage.startExternalization();
@@ -319,7 +317,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       return session;
     }
 
-    @Nonnull
+   
     @Override
     public List<StateStorage.SaveSession> createSaveSessions(boolean force) {
       if (mySessions.isEmpty()) {

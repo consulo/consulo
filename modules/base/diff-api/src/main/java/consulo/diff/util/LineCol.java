@@ -17,7 +17,6 @@ package consulo.diff.util;
 
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import jakarta.annotation.Nonnull;
 
 public class LineCol {
   // counting from zero
@@ -58,31 +57,31 @@ public class LineCol {
     return String.format("{ line: %s, column: %s }", line, column);
   }
 
-  @Nonnull
-  public static LineCol fromOffset(@Nonnull Document document, int offset) {
+  
+  public static LineCol fromOffset(Document document, int offset) {
     int line = document.getLineNumber(offset);
     int column = offset - document.getLineStartOffset(line);
     return new LineCol(line, column);
   }
 
-  @Nonnull
-  public static LineCol fromCaret(@Nonnull Editor editor) {
+  
+  public static LineCol fromCaret(Editor editor) {
     return fromOffset(editor.getDocument(), editor.getCaretModel().getOffset());
   }
 
-  public static int toOffset(@Nonnull Document document, @Nonnull LineCol linecol) {
+  public static int toOffset(Document document, LineCol linecol) {
     return linecol.toOffset(document);
   }
 
-  public static int toOffset(@Nonnull Document document, int line, int col) {
+  public static int toOffset(Document document, int line, int col) {
     return new LineCol(line, col).toOffset(document);
   }
 
-  public int toOffset(@Nonnull Document document) {
+  public int toOffset(Document document) {
     return document.getLineStartOffset(line) + column;
   }
 
-  public int toOffset(@Nonnull Editor editor) {
+  public int toOffset(Editor editor) {
     return toOffset(editor.getDocument());
   }
 }

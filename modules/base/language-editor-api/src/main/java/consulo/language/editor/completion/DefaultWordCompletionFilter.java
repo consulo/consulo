@@ -17,13 +17,12 @@ package consulo.language.editor.completion;
 
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 class DefaultWordCompletionFilter implements WordCompletionElementFilter {
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
         return Language.ANY;

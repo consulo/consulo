@@ -9,8 +9,7 @@ import consulo.codeEditor.event.CaretListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.language.editor.inject.EditorWindow;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
@@ -36,13 +35,13 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
+    public void moveToLogicalPosition(LogicalPosition pos) {
         LogicalPosition hostPos = myEditorWindow.injectedToHost(pos);
         myDelegate.moveToLogicalPosition(hostPos);
     }
 
     @Override
-    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
+    public void moveToVisualPosition(VisualPosition pos) {
         LogicalPosition hostPos = myEditorWindow.injectedToHost(myEditorWindow.visualToLogicalPosition(pos));
         myDelegate.moveToLogicalPosition(hostPos);
     }
@@ -59,14 +58,14 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    @Nonnull
+    
     public LogicalPosition getLogicalPosition() {
         LogicalPosition hostPos = myDelegate.getLogicalPosition();
         return myEditorWindow.hostToInjected(hostPos);
     }
 
     @Override
-    @Nonnull
+    
     public VisualPosition getVisualPosition() {
         LogicalPosition logicalPosition = getLogicalPosition();
         return myEditorWindow.logicalToVisualPosition(logicalPosition);
@@ -85,10 +84,10 @@ class CaretModelWindow implements CaretModel {
     private final ListenerWrapperMap<CaretListener> myCaretListeners = new ListenerWrapperMap<>();
 
     @Override
-    public void addCaretListener(@Nonnull final CaretListener listener) {
+    public void addCaretListener(final CaretListener listener) {
         CaretListener wrapper = new CaretListener() {
             @Override
-            public void caretPositionChanged(@Nonnull CaretEvent e) {
+            public void caretPositionChanged(CaretEvent e) {
                 if (!myEditorWindow.getDocument().isValid()) {
                     return; // injected document can be destroyed by now
                 }
@@ -103,7 +102,7 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    public void removeCaretListener(@Nonnull CaretListener listener) {
+    public void removeCaretListener(CaretListener listener) {
         CaretListener wrapper = myCaretListeners.removeWrapper(listener);
         if (wrapper != null) {
             myDelegate.removeCaretListener(wrapper);
@@ -142,13 +141,13 @@ class CaretModelWindow implements CaretModel {
         return myDelegate.getMaxCaretCount();
     }
 
-    @Nonnull
+    
     @Override
     public Caret getCurrentCaret() {
         return createInjectedCaret(myDelegate.getCurrentCaret());
     }
 
-    @Nonnull
+    
     @Override
     public Caret getPrimaryCaret() {
         return createInjectedCaret(myDelegate.getPrimaryCaret());
@@ -159,7 +158,7 @@ class CaretModelWindow implements CaretModel {
         return myDelegate.getCaretCount();
     }
 
-    @Nonnull
+    
     @Override
     public List<Caret> getAllCarets() {
         List<Caret> hostCarets = myDelegate.getAllCarets();
@@ -172,7 +171,7 @@ class CaretModelWindow implements CaretModel {
 
     @Nullable
     @Override
-    public Caret getCaretAt(@Nonnull VisualPosition pos) {
+    public Caret getCaretAt(VisualPosition pos) {
         LogicalPosition hostPos = myEditorWindow.injectedToHost(myEditorWindow.visualToLogicalPosition(pos));
         Caret caret = myDelegate.getCaretAt(myHostEditor.logicalToVisualPosition(hostPos));
         return createInjectedCaret(caret);
@@ -180,20 +179,20 @@ class CaretModelWindow implements CaretModel {
 
     @Nullable
     @Override
-    public Caret addCaret(@Nonnull VisualPosition pos) {
+    public Caret addCaret(VisualPosition pos) {
         return addCaret(pos, true);
     }
 
     @Nullable
     @Override
-    public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
+    public Caret addCaret(VisualPosition pos, boolean makePrimary) {
         LogicalPosition hostPos = myEditorWindow.injectedToHost(myEditorWindow.visualToLogicalPosition(pos));
         Caret caret = myDelegate.addCaret(myHostEditor.logicalToVisualPosition(hostPos));
         return createInjectedCaret(caret);
     }
 
     @Override
-    public boolean removeCaret(@Nonnull Caret caret) {
+    public boolean removeCaret(Caret caret) {
         if (caret instanceof InjectedCaret) {
             caret = ((InjectedCaret) caret).myDelegate;
         }
@@ -206,13 +205,13 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates) {
+    public void setCaretsAndSelections(List<? extends CaretState> caretStates) {
         List<CaretState> convertedStates = convertCaretStates(caretStates);
         myDelegate.setCaretsAndSelections(convertedStates);
     }
 
     @Override
-    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection) {
+    public void setCaretsAndSelections(List<? extends CaretState> caretStates, boolean updateSystemSelection) {
         List<CaretState> convertedStates = convertCaretStates(caretStates);
         myDelegate.setCaretsAndSelections(convertedStates, updateSystemSelection);
     }
@@ -229,7 +228,7 @@ class CaretModelWindow implements CaretModel {
         return position == null ? null : myEditorWindow.injectedToHost(position);
     }
 
-    @Nonnull
+    
     @Override
     public List<CaretState> getCaretsAndSelections() {
         List<CaretState> caretsAndSelections = myDelegate.getCaretsAndSelections();
@@ -260,22 +259,22 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    public void runForEachCaret(@Nonnull CaretAction action) {
+    public void runForEachCaret(CaretAction action) {
         myDelegate.runForEachCaret(caret -> action.perform(createInjectedCaret(caret)));
     }
 
     @Override
-    public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
+    public void runForEachCaret(CaretAction action, boolean reverseOrder) {
         myDelegate.runForEachCaret(caret -> action.perform(createInjectedCaret(caret)), reverseOrder);
     }
 
     @Override
-    public void addCaretActionListener(@Nonnull CaretActionListener listener, @Nonnull Disposable disposable) {
+    public void addCaretActionListener(CaretActionListener listener, Disposable disposable) {
         myDelegate.addCaretActionListener(listener, disposable);
     }
 
     @Override
-    public void runBatchCaretOperation(@Nonnull Runnable runnable) {
+    public void runBatchCaretOperation(Runnable runnable) {
         myDelegate.runBatchCaretOperation(runnable);
     }
 }

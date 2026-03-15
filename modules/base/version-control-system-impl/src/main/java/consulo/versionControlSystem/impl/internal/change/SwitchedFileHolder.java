@@ -26,8 +26,7 @@ import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nullable;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -96,7 +95,7 @@ public class SwitchedFileHolder implements FileHolder {
     return myMap.isEmpty();
   }
 
-  @Nonnull
+  
   public Collection<VirtualFile> values() {
     return myMap.keySet();
   }
@@ -106,7 +105,7 @@ public class SwitchedFileHolder implements FileHolder {
     myMap.put(file, new Pair<>(recursive, branch));
   }
 
-  public void removeFile(@Nonnull VirtualFile file) {
+  public void removeFile(VirtualFile file) {
     myMap.remove(file);
   }
 
@@ -118,7 +117,7 @@ public class SwitchedFileHolder implements FileHolder {
     return result;
   }
 
-  public synchronized boolean containsFile(@Nonnull VirtualFile file) {
+  public synchronized boolean containsFile(VirtualFile file) {
     VirtualFile floor = myMap.floorKey(file);
     if (floor == null) return false;
     SortedMap<VirtualFile, Pair<Boolean, String>> floorMap = myMap.headMap(floor, true);

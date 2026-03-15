@@ -11,7 +11,6 @@ import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
 import consulo.util.lang.xml.CommonXmlStrings;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
     private static final LocalizeValue LINE_BREAK = LocalizeValue.of("<hr size=1 noshade>");
     private static final LocalizeValue HTML_END = LocalizeValue.of(CommonXmlStrings.HTML_END);
 
-    static HighlightInfoComposite create(@Nonnull List<? extends HighlightInfoImpl> infos) {
+    static HighlightInfoComposite create(List<? extends HighlightInfoImpl> infos) {
         // derive composite's offsets from an info with tooltip, if present
         HighlightInfoImpl anchorInfo = ContainerUtil.find(infos, info -> info.getToolTip().isNotEmpty());
         if (anchorInfo == null) {
@@ -30,7 +29,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         return new HighlightInfoComposite(infos, anchorInfo);
     }
 
-    private HighlightInfoComposite(@Nonnull List<? extends HighlightInfoImpl> infos, @Nonnull HighlightInfoImpl anchorInfo) {
+    private HighlightInfoComposite(List<? extends HighlightInfoImpl> infos, HighlightInfoImpl anchorInfo) {
         super(
             null,
             null,
@@ -71,7 +70,7 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         myQuickFixActionRanges = Lists.newLockFreeCopyOnWriteList(ranges);
     }
 
-    @Nonnull
+    
     private static LocalizeValue createCompositeDescription(List<? extends HighlightInfoImpl> infos) {
         List<LocalizeValue> result = new ArrayList<>();
         for (HighlightInfoImpl info : infos) {
@@ -90,8 +89,8 @@ class HighlightInfoComposite extends HighlightInfoImpl {
         return result.isEmpty() ? LocalizeValue.empty() : LocalizeValue.join(result.toArray(LocalizeValue[]::new));
     }
 
-    @Nonnull
-    private static LocalizeValue createCompositeTooltip(@Nonnull List<? extends HighlightInfoImpl> infos) {
+    
+    private static LocalizeValue createCompositeTooltip(List<? extends HighlightInfoImpl> infos) {
         List<LocalizeValue> result = new ArrayList<>(infos.size() * 2 + 1);
         result.add(HTML_START);
         boolean empty = true;

@@ -23,14 +23,13 @@ import consulo.externalService.update.UpdateSettings;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 04-Sep-16
  */
 public class FrameTitleUtil {
-  @Nonnull
+  
   public static String buildTitle() {
     ApplicationInfo applicationInfo = ApplicationInfo.getInstance();
 

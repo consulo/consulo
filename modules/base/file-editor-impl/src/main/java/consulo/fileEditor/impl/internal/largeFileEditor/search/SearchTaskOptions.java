@@ -2,7 +2,6 @@
 package consulo.fileEditor.impl.internal.largeFileEditor.search;
 
 import consulo.find.FindModel;
-import org.jetbrains.annotations.NonNls;
 
 import java.lang.reflect.Field;
 
@@ -80,7 +79,7 @@ public final class SearchTaskOptions implements Cloneable {
     }
 
     @Override
-    public @NonNls String toString() {
+    public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         Field[] fields = this.getClass().getDeclaredFields();
 

@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.util.containers;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,13 +39,13 @@ public class BidirectionalMultiMap<K, V> {
     myValue2Keys = value2Keys;
   }
 
-  @Nonnull
+  
   public Set<V> getValues(K key) {
     Set<V> set = myKey2Values.get(key);
     return set != null ? set : Collections.<V>emptySet();
   }
 
-  @Nonnull
+  
   public Set<K> getKeys(V value) {
     Set<K> set = myValue2Keys.get(value);
     return set != null ? set : Collections.<K>emptySet();

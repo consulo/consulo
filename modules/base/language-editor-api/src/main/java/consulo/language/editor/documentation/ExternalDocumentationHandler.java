@@ -4,8 +4,7 @@ package consulo.language.editor.documentation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implement additionally in your {@link DocumentationProvider}.
@@ -17,8 +16,8 @@ public interface ExternalDocumentationHandler {
 
   boolean canFetchDocumentationLink(String link);
 
-  @Nonnull
-  String fetchExternalDocumentation(@Nonnull String link, @Nullable PsiElement element);
+  
+  String fetchExternalDocumentation(String link, @Nullable PsiElement element);
 
   /**
    * Defines whether we will show external documentation
@@ -38,7 +37,7 @@ public interface ExternalDocumentationHandler {
    * @see DocumentationManagerProtocol
    */
   @Nullable
-  default String extractRefFromLink(@Nonnull String link) {
+  default String extractRefFromLink(String link) {
     return null;
   }
 }

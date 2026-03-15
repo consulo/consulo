@@ -23,7 +23,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.Sets;
 import gnu.trove.TIntHashSet;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -37,7 +36,7 @@ class FileLoadingTracker {
   private static final Set<String> ourPaths = Sets.newHashSet(getPathsToTrack(), FilePathHashingStrategy.create());
   private static final TIntHashSet ourLeafNameIds = new TIntHashSet(ourPaths.stream().mapToInt(path -> FileNameCache.storeName(StringUtil.getShortName(path, '/'))).toArray());
 
-  @Nonnull
+  
   private static List<String> getPathsToTrack() {
     try {
       return StringUtil.split(Registry.stringValue("file.system.trace.loading"), ";");
@@ -47,7 +46,7 @@ class FileLoadingTracker {
     }
   }
 
-  static void fileLoaded(@Nonnull VirtualDirectoryImpl parent, int nameId) {
+  static void fileLoaded(VirtualDirectoryImpl parent, int nameId) {
     if (ourLeafNameIds.contains(nameId)) {
       String path = parent.getPath() + "/" + FileNameCache.getVFileName(nameId).toString();
       if (ourPaths.contains(path)) {

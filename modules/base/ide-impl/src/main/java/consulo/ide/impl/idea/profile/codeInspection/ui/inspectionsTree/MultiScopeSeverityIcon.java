@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.profile.codeInspection.ui.ScopeOrderComparator;
 import consulo.ui.image.Image;
 
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 

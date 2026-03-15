@@ -34,9 +34,7 @@ import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +57,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
   }
 
   @Override
-  @Nonnull
+  
   public CompositeCommittedChangesProvider.CompositeChangeBrowserSettings createDefaultSettings() {
     Map<AbstractVcs, ChangeBrowserSettings> map = new HashMap<>();
     for(AbstractVcs vcs: myBaseVcss) {
@@ -94,7 +92,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public VcsCommittedListsZipper getZipper() {
     throw new UnsupportedOperationException();
   }
@@ -131,7 +129,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public VcsCommittedViewAuxiliary createActions(DecoratorManager manager, RepositoryLocation location) {
     JTabbedPane tabbedPane = null;
     List<AnAction> actions = null;
@@ -315,7 +313,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
 
     @Override
     public String getDimensionServiceKey() {
-      @NonNls StringBuilder result = new StringBuilder();
+      StringBuilder result = new StringBuilder();
       result.append("Composite");
       for(AbstractVcs vcs: myBaseVcss) {
         result.append(".").append(vcs.getDisplayName());

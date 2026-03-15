@@ -20,7 +20,6 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
 * @author Gregory.Shrago
@@ -31,7 +30,7 @@ public class InjectionPlace {
   public static final InjectionPlace[] EMPTY_ARRAY = new InjectionPlace[0];
 
   public static final ArrayFactory<InjectionPlace> ARRAY_FACTORY = new ArrayFactory<InjectionPlace>() {
-    @Nonnull
+    
     @Override
     public InjectionPlace[] create(int count) {
       return count == 0? EMPTY_ARRAY : new InjectionPlace[count];

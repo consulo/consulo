@@ -38,8 +38,7 @@ import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -381,7 +380,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
       }
     }
 
-    @Nonnull
+    
     private String generateWarningLabelText(ValidationResult configurationException) {
       return "<html><body><b>" + configurationException.getTitle() + ": </b>" + configurationException.getMessage() + "</body></html>";
     }

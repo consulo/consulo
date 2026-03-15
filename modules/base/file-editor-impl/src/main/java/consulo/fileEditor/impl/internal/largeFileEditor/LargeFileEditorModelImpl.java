@@ -31,7 +31,6 @@ import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,7 +88,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
 
         documentOfPagesModel.addDocumentListener(new DocumentListener() {
             @Override
-            public void documentChanged(@Nonnull DocumentEvent event) {
+            public void documentChanged(DocumentEvent event) {
                 fireHighlightedSearchResultsAreOutdated();
             }
         });
@@ -98,14 +97,14 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
 
         editor.getCaretModel().addCaretListener(new CaretListener() {
             @Override
-            public void caretPositionChanged(@Nonnull CaretEvent event) {
+            public void caretPositionChanged(CaretEvent event) {
                 fireRealCaretPositionChanged(event);
             }
         });
 
         editor.getSelectionModel().addSelectionListener(new SelectionListener() {
             @Override
-            public void selectionChanged(@Nonnull SelectionEvent e) {
+            public void selectionChanged(SelectionEvent e) {
                 fireRealSelectionChanged(e);
             }
         });
@@ -192,11 +191,11 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
     }
 
     @Override
-    public <T> void putUserDataToEditor(@Nonnull Key<T> key, T value) {
+    public <T> void putUserDataToEditor(Key<T> key, T value) {
         editor.putUserData(key, value);
     }
 
-    private void fireRealCaretPositionChanged(@Nonnull CaretEvent event) {
+    private void fireRealCaretPositionChanged(CaretEvent event) {
         if (isRealCaretAndSelectionCanAffectOnTarget) {
             reflectRealToTargetCaretPosition();
             isNeedToShowCaret = true;
@@ -853,7 +852,7 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
         }
     }
 
-    public void trySetHighlighter(@Nonnull EditorHighlighter highlighter) {
+    public void trySetHighlighter(EditorHighlighter highlighter) {
         if (editor instanceof EditorEx) {
             ((EditorEx) editor).setHighlighter(highlighter);
         }

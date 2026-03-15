@@ -51,8 +51,7 @@ import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Anton Katilin
@@ -62,7 +61,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance(TextEditorComponent.class);
 
   private final Project myProject;
-  @Nonnull
+  
   private final VirtualFile myFile;
 
   private final TextEditorImpl myTextEditor;
@@ -71,7 +70,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
    */
   private final Document myDocument;
 
-  @Nonnull
+  
   private final Editor myEditor;
 
   /**
@@ -87,7 +86,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
 
   private final TextEditorComponentContainer myTextEditorComponentContainer;
 
-  public TextEditorComponent(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull TextEditorImpl textEditor, @Nonnull TextEditorComponentContainerFactory editorFactory) {
+  public TextEditorComponent(Project project, VirtualFile file, TextEditorImpl textEditor, TextEditorComponentContainerFactory editorFactory) {
 
     myProject = project;
     myFile = file;
@@ -154,12 +153,12 @@ public class TextEditorComponent implements DataProvider, Disposable {
   /**
    * @return most recently used editor. This method never returns {@code null}.
    */
-  @Nonnull
+  
   public Editor getEditor() {
     return myEditor;
   }
 
-  @Nonnull
+  
   private Editor createEditor() {
     Editor editor = EditorFactory.getInstance().createEditor(myDocument, myProject, EditorKind.MAIN_EDITOR);
     ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeVisible(true);
@@ -242,7 +241,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
   }
 
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     Editor e = validateCurrentEditor();
     if (e == null || e.isDisposed()) return null;
 
@@ -295,7 +294,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
     @RequiredUIAccess
-    public void fileTypesChanged(@Nonnull FileTypeEvent event) {
+    public void fileTypesChanged(FileTypeEvent event) {
       assertThread();
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.
@@ -308,7 +307,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
    */
   private final class MyVirtualFileListener implements VirtualFileListener {
     @Override
-    public void propertyChanged(@Nonnull VirtualFilePropertyEvent e) {
+    public void propertyChanged(VirtualFilePropertyEvent e) {
       if (VirtualFile.PROP_NAME.equals(e.getPropertyName())) {
         // File can be invalidated after file changes name (extension also
         // can changes). The editor should be removed if it's invalid.
@@ -322,7 +321,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
 
     @Override
     @RequiredUIAccess
-    public void contentsChanged(@Nonnull VirtualFileEvent event) {
+    public void contentsChanged(VirtualFileEvent event) {
       if (event.isFromSave()) { // commit
         assertThread();
         VirtualFile file = event.getFile();
@@ -338,12 +337,12 @@ public class TextEditorComponent implements DataProvider, Disposable {
     myTextEditorComponentContainer.loadingFinished();
   }
 
-  @Nonnull
+  
   public TextEditorComponentContainer getComponentContainer() {
     return myTextEditorComponentContainer;
   }
 
-  @Nonnull
+  
   public VirtualFile getFile() {
     return myFile;
   }

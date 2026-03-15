@@ -23,7 +23,6 @@ import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LineNumberMacro extends Macro {
@@ -38,14 +37,14 @@ public class LineNumberMacro extends Macro {
   }
 
   @Override
-  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateResult(Expression[] params, ExpressionContext context) {
     int offset = context.getStartOffset();
     int line = context.getEditor().offsetToLogicalPosition(offset).line + 1;
     return new TextResult("" + line);
   }
 
   @Override
-  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateQuickResult(Expression[] params, ExpressionContext context) {
     return calculateResult(params, context);
   }
 

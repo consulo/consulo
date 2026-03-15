@@ -23,7 +23,6 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -41,6 +40,6 @@ public interface PsiViewerExtension {
 
     PsiElement createElement(Project project, String text);
 
-    @Nonnull
+    
     FileType getDefaultFileType();
 }

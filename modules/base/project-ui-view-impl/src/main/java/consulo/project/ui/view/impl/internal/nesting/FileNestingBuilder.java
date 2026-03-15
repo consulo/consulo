@@ -12,8 +12,7 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -38,7 +37,7 @@ public final class FileNestingBuilder {
     /**
      * Returns all possible nesting rules, including transitive rules
      */
-    public synchronized @Nonnull Collection<ProjectViewFileNestingService.NestingRule> getNestingRules() {
+    public synchronized Collection<ProjectViewFileNestingService.NestingRule> getNestingRules() {
         ProjectViewFileNestingService fileNestingService = ProjectViewFileNestingService.getInstance();
         List<ProjectViewFileNestingService.NestingRule> baseRules = fileNestingService.getRules();
         long modCount = fileNestingService.getModificationCount();
@@ -115,8 +114,8 @@ public final class FileNestingBuilder {
       As a result we get a number of separated parent-to-many-children sub-graphs, and use them to nest child files under parent file in Project View.
       One child still may have more than one parent. For real use cases it is not expected to happen, but anyway it's not a big problem, it will be shown as a subnode more than once.
      */
-    public @Nonnull <T> MultiMap<T, T> mapParentToChildren(@Nonnull Collection<? extends T> nodes,
-                                                           @Nonnull Function<? super T, String> fileNameFunc) {
+    public <T> MultiMap<T, T> mapParentToChildren(Collection<? extends T> nodes,
+                                                           Function<? super T, String> fileNameFunc) {
 
         Collection<ProjectViewFileNestingService.NestingRule> rules = getNestingRules();
         if (rules.isEmpty()) {
@@ -172,8 +171,8 @@ public final class FileNestingBuilder {
     /**
      * Returns [matching parent; matching child] pair
      */
-    public static Couple<Boolean> checkMatchingAsParentOrChild(@Nonnull ProjectViewFileNestingService.NestingRule rule,
-                                                               @Nonnull String fileName) {
+    public static Couple<Boolean> checkMatchingAsParentOrChild(ProjectViewFileNestingService.NestingRule rule,
+                                                               String fileName) {
         String parentFileSuffix = rule.getParentFileSuffix();
         String childFileSuffix = rule.getChildFileSuffix();
 
@@ -192,9 +191,9 @@ public final class FileNestingBuilder {
         return Couple.of(matchesParent, matchesChild);
     }
 
-    private static @Nonnull <T> Edge<T> getOrCreateEdge(@Nonnull Map<Pair<String, ProjectViewFileNestingService.NestingRule>, Edge<T>> baseNameAndRuleToEdge,
-                                                        @Nonnull String baseName,
-                                                        @Nonnull ProjectViewFileNestingService.NestingRule rule) {
+    private static <T> Edge<T> getOrCreateEdge(Map<Pair<String, ProjectViewFileNestingService.NestingRule>, Edge<T>> baseNameAndRuleToEdge,
+                                                        String baseName,
+                                                        ProjectViewFileNestingService.NestingRule rule) {
         Pair<String, ProjectViewFileNestingService.NestingRule> baseNameAndRule = Pair.create(baseName, rule);
 
         Edge<T> edge = baseNameAndRuleToEdge.get(baseNameAndRule);
@@ -205,9 +204,9 @@ public final class FileNestingBuilder {
         return edge;
     }
 
-    private static <T> void updateInfoIfEdgeComplete(@Nonnull MultiMap<T, T> parentToChildren,
-                                                     @Nonnull Set<? super T> allChildNodes,
-                                                     @Nonnull Edge<? extends T> edge) {
+    private static <T> void updateInfoIfEdgeComplete(MultiMap<T, T> parentToChildren,
+                                                     Set<? super T> allChildNodes,
+                                                     Edge<? extends T> edge) {
         if (edge.from != null && edge.to != null) { // if edge complete
             allChildNodes.add(edge.to);
             parentToChildren.remove(edge.to); // nodes that appear as a child shouldn't be a parent of another edge, corresponding edges removed

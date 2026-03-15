@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.MouseEvent;
 
@@ -52,7 +51,7 @@ public final class TimedDeadzone {
     return myMouseWithin && System.currentTimeMillis() - myTimeEntered < getLength();
   }
 
-  public void setLength(@Nonnull Length deadZone) {
+  public void setLength(Length deadZone) {
     myLength = deadZone;
   }
 

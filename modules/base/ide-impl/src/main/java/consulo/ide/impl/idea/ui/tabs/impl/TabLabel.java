@@ -38,8 +38,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.primitive.ints.BiIntConsumer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -240,7 +239,7 @@ public class TabLabel extends JPanel {
         }
     }
 
-    public void doTranslate(@Nonnull BiIntConsumer consumer) {
+    public void doTranslate(BiIntConsumer consumer) {
         if (!myTabs.isDropTarget(myInfo)) {
             if (myTabs.getSelectedInfo() != myInfo) {
                 consumer.accept(0, 0);
@@ -374,7 +373,7 @@ public class TabLabel extends JPanel {
         invalidateIfNeeded();
     }
 
-    @Nonnull
+    
     private Image buildLabelImage() {
         Image[] images = Arrays.stream(myIconInfos).map(iconInfo -> iconInfo.myImage).filter(Objects::nonNull).toArray(Image[]::new);
         return ImageEffects.layered(images);
@@ -424,8 +423,8 @@ public class TabLabel extends JPanel {
         }
     }
 
-    @Nonnull
-    public CompletableFuture<Boolean> updateTabActions(@Nonnull UIAccess uiAccess) {
+    
+    public CompletableFuture<Boolean> updateTabActions(UIAccess uiAccess) {
         if (myActionPanel == null) {
             return CompletableFuture.completedFuture(Boolean.FALSE);
         }

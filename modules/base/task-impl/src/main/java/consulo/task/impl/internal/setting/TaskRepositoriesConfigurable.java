@@ -23,8 +23,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -200,7 +199,7 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
         return LocalizeValue.localizeTODO("Servers");
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "tasks.servers";

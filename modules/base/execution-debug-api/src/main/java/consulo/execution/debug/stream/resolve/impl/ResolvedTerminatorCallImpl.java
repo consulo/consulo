@@ -5,8 +5,7 @@ import consulo.execution.debug.stream.resolve.ResolvedStreamCall;
 import consulo.execution.debug.stream.trace.NextAwareState;
 import consulo.execution.debug.stream.trace.PrevAwareState;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vitaliy.Bibaev
@@ -16,16 +15,16 @@ public class ResolvedTerminatorCallImpl implements ResolvedStreamCall.Terminator
   private final NextAwareState myStateBefore;
   private final PrevAwareState myStateAfter;
 
-  public ResolvedTerminatorCallImpl(@Nonnull TerminatorStreamCall call,
-                                    @Nonnull NextAwareState stateBefore,
-                                    @Nonnull PrevAwareState stateAfter) {
+  public ResolvedTerminatorCallImpl(TerminatorStreamCall call,
+                                    NextAwareState stateBefore,
+                                    PrevAwareState stateAfter) {
     myCall = call;
     myStateBefore = stateBefore;
     myStateAfter = stateAfter;
   }
 
   @Override
-  public @Nonnull TerminatorStreamCall getCall() {
+  public TerminatorStreamCall getCall() {
     return myCall;
   }
 
@@ -35,7 +34,7 @@ public class ResolvedTerminatorCallImpl implements ResolvedStreamCall.Terminator
   }
 
   @Override
-  public @Nonnull NextAwareState getStateBefore() {
+  public NextAwareState getStateBefore() {
     return myStateBefore;
   }
 }

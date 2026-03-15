@@ -19,14 +19,13 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class HighlightersRecycler {
   private final MultiMap<TextRange, RangeHighlighter> incinerator = new MultiMap<>();
 
-  public void recycleHighlighter(@Nonnull RangeHighlighter highlighter) {
+  public void recycleHighlighter(RangeHighlighter highlighter) {
     if (highlighter.isValid()) {
       incinerator.putValue(ProperTextRange.create(highlighter), highlighter);
     }
@@ -44,7 +43,7 @@ public class HighlightersRecycler {
     return null;
   }
 
-  @Nonnull
+  
   public Collection<? extends RangeHighlighter> forAllInGarbageBin() {
     return incinerator.values();
   }

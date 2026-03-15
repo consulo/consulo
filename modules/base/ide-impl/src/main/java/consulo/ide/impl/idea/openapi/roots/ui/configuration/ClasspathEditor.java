@@ -26,7 +26,6 @@ import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -56,13 +55,13 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public JComponent createComponentImpl(Disposable parentUIDisposable) {
     return myPanel = new ClasspathPanelImpl(getState());
   }
 
-  public void selectOrderEntry(@Nonnull OrderEntry entry) {
+  public void selectOrderEntry(OrderEntry entry) {
     myPanel.selectOrderEntry(entry);
   }
 

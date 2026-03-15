@@ -3,7 +3,6 @@ package consulo.application.util.query;
 
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -17,7 +16,7 @@ public class EmptyQuery<R> implements Query<R> {
     private static final EmptyQuery EMPTY_QUERY_INSTANCE = new EmptyQuery();
 
     @Override
-    @Nonnull
+    
     public Collection<R> findAll() {
         return Collections.emptyList();
     }
@@ -28,23 +27,23 @@ public class EmptyQuery<R> implements Query<R> {
     }
 
     @Override
-    public boolean forEach(@Nonnull Predicate<? super R> consumer) {
+    public boolean forEach(Predicate<? super R> consumer) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super R> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(Predicate<? super R> consumer) {
         return AsyncUtil.wrapBoolean(true);
     }
 
-    @Nonnull
+    
     @Override
-    public R[] toArray(@Nonnull R[] a) {
+    public R[] toArray(R[] a) {
         return findAll().toArray(a);
     }
 
-    @Nonnull
+    
     @Override
     public Iterator<R> iterator() {
         return findAll().iterator();

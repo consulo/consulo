@@ -18,8 +18,7 @@ package consulo.ui.ex.awt.util;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.ElementProducer;
 import consulo.util.collection.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -31,11 +30,11 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
     protected static final Logger LOG = Logger.getInstance(CollectionModelEditor.class);
 
     protected final E itemEditor;
-    @Nonnull
+    
     private final Supplier<T> myItemFactory;
     protected final ModelHelper helper = new ModelHelper();
 
-    protected CollectionModelEditor(@Nonnull E itemEditor, @Nonnull Supplier<T> itemFactory) {
+    protected CollectionModelEditor(E itemEditor, Supplier<T> itemFactory) {
         this.itemEditor = itemEditor;
         myItemFactory = itemFactory;
     }
@@ -53,10 +52,10 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
     /**
      * Mutable internal list of items (must not be exposed to client)
      */
-    @Nonnull
+    
     protected abstract List<T> getItems();
 
-    public void reset(@Nonnull List<T> originalItems) {
+    public void reset(List<T> originalItems) {
         helper.reset(originalItems);
     }
 
@@ -76,16 +75,16 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
         return false;
     }
 
-    public void processModifiedItems(@Nonnull BiConsumer<T, T> processor) {
+    public void processModifiedItems(BiConsumer<T, T> processor) {
         helper.process(processor);
     }
 
-    @Nonnull
-    public final T getMutable(@Nonnull T item) {
+    
+    public final T getMutable(T item) {
         return helper.getMutable(item, -1);
     }
 
-    protected boolean isEditable(@Nonnull T item) {
+    protected boolean isEditable(T item) {
         return true;
     }
 
@@ -104,19 +103,19 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
             originalToModified.clear();
         }
 
-        public void remove(@Nonnull T item) {
+        public void remove(T item) {
             T original = modifiedToOriginal.remove(item);
             if (original != null) {
                 originalToModified.remove(original);
             }
         }
 
-        public boolean isMutable(@Nonnull T item) {
+        public boolean isMutable(T item) {
             return modifiedToOriginal.containsKey(item) || !originalItems.contains(item);
         }
 
-        @Nonnull
-        public T getMutable(@Nonnull T item, int index) {
+        
+        public T getMutable(T item, int index) {
             if (isMutable(item) || !isEditable(item)) {
                 return item;
             }
@@ -136,18 +135,18 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
             return !modifiedToOriginal.isEmpty();
         }
 
-        public void process(@Nonnull BiConsumer<T, T> procedure) {
+        public void process(BiConsumer<T, T> procedure) {
             modifiedToOriginal.forEach(procedure);
         }
     }
 
-    protected void silentlyReplaceItem(@Nonnull T oldItem, @Nonnull T newItem, int index) {
+    protected void silentlyReplaceItem(T oldItem, T newItem, int index) {
         // silently replace item
         List<T> items = getItems();
         items.set(index == -1 ? Lists.indexOfIdentity(items, oldItem) : index, newItem);
     }
 
-    protected final boolean areSelectedItemsRemovable(@Nonnull ListSelectionModel selectionMode) {
+    protected final boolean areSelectedItemsRemovable(ListSelectionModel selectionMode) {
         int minSelectionIndex = selectionMode.getMinSelectionIndex();
         int maxSelectionIndex = selectionMode.getMaxSelectionIndex();
         if (minSelectionIndex < 0 || maxSelectionIndex < 0) {

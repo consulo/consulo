@@ -35,8 +35,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -48,14 +47,14 @@ public abstract class SmartEnterProcessor implements LanguageExtension {
     private static final ExtensionPointCacheKey<SmartEnterProcessor, ByLanguageValue<List<SmartEnterProcessor>>> KEY =
         ExtensionPointCacheKey.create("SmartEnterProcessor", LanguageOneToMany.build(false));
 
-    @Nonnull
-    public static List<SmartEnterProcessor> forLanguage(@Nonnull Language language) {
+    
+    public static List<SmartEnterProcessor> forLanguage(Language language) {
         return Application.get().getExtensionPoint(SmartEnterProcessor.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
-    public abstract boolean process(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile psiFile);
+    public abstract boolean process(Project project, Editor editor, PsiFile psiFile);
 
-    public boolean processAfterCompletion(@Nonnull Editor editor, @Nonnull PsiFile psiFile) {
+    public boolean processAfterCompletion(Editor editor, PsiFile psiFile) {
         return process(psiFile.getProject(), editor, psiFile);
     }
 
@@ -87,15 +86,15 @@ public abstract class SmartEnterProcessor implements LanguageExtension {
         return psiFile.findElementAt(offset);
     }
 
-    protected static boolean isUncommited(@Nonnull Project project) {
+    protected static boolean isUncommited(Project project) {
         return PsiDocumentManager.getInstance(project).hasUncommitedDocuments();
     }
 
-    protected void commit(@Nonnull Editor editor) {
+    protected void commit(Editor editor) {
         commitDocument(editor);
     }
 
-    public static void commitDocument(@Nonnull Editor editor) {
+    public static void commitDocument(Editor editor) {
         Project project = editor.getProject();
         PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
 

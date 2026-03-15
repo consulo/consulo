@@ -25,8 +25,7 @@ import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSetting
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.task.ExternalSystemTaskLocation;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
 
   private PsiElement mySourceElement;
   
-  public AbstractExternalSystemRuntimeConfigurationProducer(@Nonnull AbstractExternalSystemTaskConfigurationType type) {
+  public AbstractExternalSystemRuntimeConfigurationProducer(AbstractExternalSystemTaskConfigurationType type) {
     super(type);
   }
 
@@ -71,7 +70,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
   @Nullable
   @Override
   protected RunnerAndConfigurationSettings findExistingByElement(Location location,
-                                                                 @Nonnull List<RunnerAndConfigurationSettings> existingConfigurationsSettings,
+                                                                 List<RunnerAndConfigurationSettings> existingConfigurationsSettings,
                                                                  ConfigurationContext context) {
     if (!(location instanceof ExternalSystemTaskLocation)) {
       return null;
@@ -90,7 +89,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
     return null;
   }
 
-  private static boolean match(@Nonnull ExternalTaskExecutionInfo task, @Nonnull ExternalSystemTaskExecutionSettings settings) {
+  private static boolean match(ExternalTaskExecutionInfo task, ExternalSystemTaskExecutionSettings settings) {
     if (!task.getSettings().getExternalProjectPath().equals(settings.getExternalProjectPath())) {
       return false;
     }
@@ -99,7 +98,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
   }
 
   @Override
-  public int compareTo(@Nonnull RuntimeConfigurationProducer o) {
+  public int compareTo(RuntimeConfigurationProducer o) {
     return PREFERED;
   }
 }

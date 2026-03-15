@@ -40,8 +40,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
@@ -170,7 +169,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   }
 
   @Override
-  @Nonnull
+  
   public XLineBreakpointType<P> getType() {
     return myType;
   }

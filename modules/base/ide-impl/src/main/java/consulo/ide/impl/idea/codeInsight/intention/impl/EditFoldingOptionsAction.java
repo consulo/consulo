@@ -27,7 +27,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -35,19 +34,19 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "platform.edit.code.folding.settings", fileExtensions = "txt", categories = "Code Folding")
 public class EditFoldingOptionsAction implements IntentionAction {
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return ApplicationLocalize.editCodeFoldingOptions();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return editor.getFoldingModel().isOffsetCollapsed(editor.getCaretModel().getOffset());
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     UIAccess uiAccess = UIAccess.current();
     uiAccess.give(() -> ShowSettingsUtil.getInstance().showAndSelect(project, CodeFoldingConfigurable.class));
   }

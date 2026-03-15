@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +34,7 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public class TreeAnchorizer {
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Prefer injection")
     public static TreeAnchorizer getService() {
@@ -48,7 +47,7 @@ public class TreeAnchorizer {
         return element;
     }
 
-    @Nonnull
+    
     public TreeAnchorizerValue<?> createAnchorValue(Object element) {
         return new SimpleTreeAnchorizerValue(element);
     }
@@ -67,13 +66,13 @@ public class TreeAnchorizer {
         }
     }
 
-    @Nonnull
-    public static List<Object> anchorizeList(@Nonnull TreeAnchorizer treeAnchorizer, @Nonnull Collection<Object> elements) {
+    
+    public static List<Object> anchorizeList(TreeAnchorizer treeAnchorizer, Collection<Object> elements) {
         return ContainerUtil.map(elements, treeAnchorizer::createAnchor);
     }
 
-    @Nonnull
-    public static List<Object> retrieveList(@Nonnull TreeAnchorizer treeAnchorizer, Collection<Object> anchors) {
+    
+    public static List<Object> retrieveList(TreeAnchorizer treeAnchorizer, Collection<Object> anchors) {
         return ContainerUtil.mapNotNull(anchors, treeAnchorizer::retrieveElement);
     }
 }

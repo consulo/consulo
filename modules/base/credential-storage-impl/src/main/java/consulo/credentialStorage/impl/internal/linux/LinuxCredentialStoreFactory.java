@@ -7,12 +7,11 @@ import consulo.credentialStorage.internal.CredentialStoreFactory;
 import consulo.platform.Platform;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.util.jna.JnaLoader;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LinuxCredentialStoreFactory implements CredentialStoreFactory {
     @Override
-    public CredentialStore create(@Nonnull Platform platform) {
+    public CredentialStore create(Platform platform) {
         if (platform.os().isLinux()) {
             boolean preferWallet =
                 platform.os() instanceof UnixOperationSystem unix

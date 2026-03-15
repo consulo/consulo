@@ -24,8 +24,7 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -72,13 +71,13 @@ public class CompilerExcludedConfigurable implements ProjectConfigurable {
     myConfigurable.disposeUIResources();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return CompilerLocalize.actionsExcludeFromCompileText();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "project.propCompiler.excluded";

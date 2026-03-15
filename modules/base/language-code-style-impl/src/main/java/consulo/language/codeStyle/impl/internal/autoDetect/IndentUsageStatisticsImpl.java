@@ -19,7 +19,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,15 +40,15 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
   private List<IndentUsageInfo> myIndentUsages = new ArrayList<>();
   private Stack<IndentData> myParentIndents = new Stack<>(new IndentData(0, 0));
 
-  public IndentUsageStatisticsImpl(@Nonnull List<LineIndentInfo> lineInfos) {
+  public IndentUsageStatisticsImpl(List<LineIndentInfo> lineInfos) {
     myLineInfos = lineInfos;
     buildIndentToUsagesMap();
     myIndentUsages = toIndentUsageList(myIndentToUsagesMap);
     ContainerUtil.sort(myIndentUsages, DECREASING_ORDER);
   }
 
-  @Nonnull
-  private static List<IndentUsageInfo> toIndentUsageList(@Nonnull IntIntMap indentToUsages) {
+  
+  private static List<IndentUsageInfo> toIndentUsageList(IntIntMap indentToUsages) {
     List<IndentUsageInfo> indentUsageInfos = new ArrayList<>();
     indentToUsages.forEach((key, value) -> indentUsageInfos.add(new IndentUsageInfo(key, value)));
     return indentUsageInfos;
@@ -69,7 +68,7 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
     }
   }
 
-  @Nonnull
+  
   private IndentData findParentIndent(int indent) {
     while (myParentIndents.size() != 1 && myParentIndents.peek().indent > indent) {
       myParentIndents.pop();

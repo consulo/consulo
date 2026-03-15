@@ -32,8 +32,7 @@ import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -55,12 +54,12 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
 
     application.getMessageBus().connect(this).subscribe(AnActionListener.class, new AnActionListener() {
       @Override
-      public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+      public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
         cancelAllRequests();
       }
 
       @Override
-      public void beforeEditorTyping(char c, @Nonnull DataContext dataContext) {
+      public void beforeEditorTyping(char c, DataContext dataContext) {
         cancelAllRequests();
       }
     });
@@ -79,7 +78,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
   }
 
   @Override
-  public void scheduleAutoPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, @Nullable Predicate<? super PsiFile> condition) {
+  public void scheduleAutoPopup(Editor editor, CompletionType completionType, @Nullable Predicate<? super PsiFile> condition) {
     boolean alwaysAutoPopup = Boolean.TRUE.equals(editor.getUserData(ALWAYS_AUTO_POPUP));
     if (!CodeInsightSettings.getInstance().AUTO_POPUP_COMPLETION_LOOKUP && !alwaysAutoPopup) {
       return;
@@ -123,7 +122,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
 
   @Override
   @RequiredUIAccess
-  public void autoPopupParameterInfo(@Nonnull Editor editor, @Nullable Object highlightedMethod) {
+  public void autoPopupParameterInfo(Editor editor, @Nullable Object highlightedMethod) {
     if (DumbService.isDumb(myProject)) return;
     if (PowerSaveMode.isEnabled()) return;
 
@@ -159,7 +158,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
   }
 
   @Override
-  public void showCompletionPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
+  public void showCompletionPopup(Editor editor, CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
     new CodeCompletionHandlerBase(completionType, invokedExplicitly, autopopup, synchronous).invokeCompletion(myProject, editor);
   }
 
@@ -168,7 +167,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
   }
 
   @TestOnly
-  public void waitForDelayedActions(long timeout, @Nonnull TimeUnit unit) throws TimeoutException {
+  public void waitForDelayedActions(long timeout, TimeUnit unit) throws TimeoutException {
     long deadline = System.currentTimeMillis() + unit.toMillis(timeout);
     while (System.currentTimeMillis() < deadline) {
       if (myAlarm.isEmpty()) return;

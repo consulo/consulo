@@ -21,8 +21,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
 
@@ -42,7 +41,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
   @Language("RegExp")
   public static final String VALID_ID_PATTERN = "[a-zA-Z_0-9.-]+";
 
-  public static boolean isValidID(@Nonnull String id) {
+  public static boolean isValidID(String id) {
     return !id.isEmpty() && id.matches(VALID_ID_PATTERN);
   }
 
@@ -54,7 +53,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @return inspection tool ID.
    */
   @Pattern(VALID_ID_PATTERN)
-  @Nonnull
+  
   public String getID() {
     return getShortName();
   }
@@ -92,7 +91,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
   @Nullable
   @Deprecated
   @DeprecationInfo("Prefer #buildVisitor()")
-  public ProblemDescriptor[] checkFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager, boolean isOnTheFly) {
+  public ProblemDescriptor[] checkFile(PsiFile file, InspectionManager manager, boolean isOnTheFly) {
     return null;
   }
 
@@ -102,7 +101,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * {@link #buildVisitor(ProblemsHolder, boolean, LocalInspectionToolSession, Object)} method will not be called by inspection engine.
    */
   @RequiredReadAction
-  public boolean isAvailableForFile(@Nonnull PsiFile file) {
+  public boolean isAvailableForFile(PsiFile file) {
     return true;
   }
 
@@ -119,11 +118,11 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param state state from {@link #createStateProvider()} {@link PersistentStateComponent#getState()}
    * @return not-null visitor for this inspection.
    */
-  @Nonnull
-  public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder,
+  
+  public PsiElementVisitor buildVisitor(ProblemsHolder holder,
                                         boolean isOnTheFly,
-                                        @Nonnull LocalInspectionToolSession session,
-                                        @Nonnull Object state) {
+                                        LocalInspectionToolSession session,
+                                        Object state) {
     return buildVisitor(holder, isOnTheFly);
   }
 
@@ -137,8 +136,8 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param isOnTheFly true if inspection was run in non-batch mode
    * @return not-null visitor for this inspection.
    */
-  @Nonnull
-  public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, final boolean isOnTheFly) {
+  
+  public PsiElementVisitor buildVisitor(final ProblemsHolder holder, final boolean isOnTheFly) {
     return new PsiElementVisitor() {
       @Override
       @RequiredReadAction
@@ -166,24 +165,24 @@ public abstract class LocalInspectionTool extends InspectionTool {
     return (PsiFile)psiElement;
   }
 
-  public void inspectionStarted(@Nonnull LocalInspectionToolSession session, boolean isOnTheFly, Object state) {
+  public void inspectionStarted(LocalInspectionToolSession session, boolean isOnTheFly, Object state) {
     inspectionStarted(session, isOnTheFly);
   }
 
   @Deprecated
-  public void inspectionStarted(@Nonnull LocalInspectionToolSession session, boolean isOnTheFly) {
+  public void inspectionStarted(LocalInspectionToolSession session, boolean isOnTheFly) {
   }
 
-  public void inspectionFinished(@Nonnull LocalInspectionToolSession session, @Nonnull ProblemsHolder problemsHolder, @Nonnull Object state) {
+  public void inspectionFinished(LocalInspectionToolSession session, ProblemsHolder problemsHolder, Object state) {
     inspectionFinished(session, problemsHolder);
   }
 
   @Deprecated
-  public void inspectionFinished(@Nonnull LocalInspectionToolSession session, @Nonnull ProblemsHolder problemsHolder) {
+  public void inspectionFinished(LocalInspectionToolSession session, ProblemsHolder problemsHolder) {
     inspectionFinished(session);
   }
 
   @Deprecated
-  public void inspectionFinished(@Nonnull LocalInspectionToolSession session) {
+  public void inspectionFinished(LocalInspectionToolSession session) {
   }
 }

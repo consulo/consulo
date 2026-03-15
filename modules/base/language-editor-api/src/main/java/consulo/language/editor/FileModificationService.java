@@ -23,8 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -34,7 +33,7 @@ public abstract class FileModificationService {
     return Application.get().getInstance(FileModificationService.class);
   }
 
-  public abstract boolean preparePsiElementsForWrite(@Nonnull Collection<? extends PsiElement> elements);
+  public abstract boolean preparePsiElementsForWrite(Collection<? extends PsiElement> elements);
 
   public abstract boolean prepareFileForWrite(@Nullable PsiFile psiFile);
 
@@ -43,9 +42,9 @@ public abstract class FileModificationService {
     return prepareFileForWrite(file);
   }
 
-  public boolean preparePsiElementsForWrite(@Nonnull PsiElement... elements) {
+  public boolean preparePsiElementsForWrite(PsiElement... elements) {
     return preparePsiElementsForWrite(Arrays.asList(elements));
   }
 
-  public abstract boolean prepareVirtualFilesForWrite(@Nonnull Project project, @Nonnull Collection<VirtualFile> files);
+  public abstract boolean prepareVirtualFilesForWrite(Project project, Collection<VirtualFile> files);
 }

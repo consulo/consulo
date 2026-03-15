@@ -10,8 +10,7 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.List;
@@ -59,7 +58,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     return (PsiFileStub<?>)rootStub;
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
   public List<StubElement> getChildrenStubs() {
@@ -68,11 +67,11 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Override
   @Nullable
-  public <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(@Nonnull IStubElementType<S, P> elementType) {
+  public <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(IStubElementType<S, P> elementType) {
     return myStubList.findChildStubByType(id, elementType);
   }
 
-  public void setPsi(@Nonnull T psi) {
+  public void setPsi(T psi) {
     assert myPsi == null || myPsi == psi;
     myPsi = psi;
   }
@@ -92,9 +91,9 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     return ourPsiUpdater.compareAndSet(this, null, psi) ? psi : ObjectUtil.assertNotNull(myPsi);
   }
 
-  @Nonnull
+  
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, E[] array) {
+  public <E extends PsiElement> E[] getChildrenByType(IElementType elementType, E[] array) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(elementType, childrenStubs);
 
@@ -105,9 +104,9 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     return array;
   }
 
-  @Nonnull
+  
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, E[] array) {
+  public <E extends PsiElement> E[] getChildrenByType(TokenSet filter, E[] array) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(filter, childrenStubs);
 
@@ -118,9 +117,9 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     return array;
   }
 
-  @Nonnull
+  
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, @Nonnull IntFunction<E[]> f) {
+  public <E extends PsiElement> E[] getChildrenByType(IElementType elementType, IntFunction<E[]> f) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(elementType, childrenStubs);
 
@@ -180,9 +179,9 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     assert count == result.length;
   }
 
-  @Nonnull
+  
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, @Nonnull IntFunction<E[]> f) {
+  public <E extends PsiElement> E[] getChildrenByType(TokenSet filter, IntFunction<E[]> f) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(filter, childrenStubs);
 
@@ -196,7 +195,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Override
   @Nullable
-  public <E extends PsiElement> E getParentStubOfType(@Nonnull Class<E> parentClass) {
+  public <E extends PsiElement> E getParentStubOfType(Class<E> parentClass) {
     StubElement<?> parent = myParent;
     while (parent != null) {
       PsiElement psi = parent.getPsi();

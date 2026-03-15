@@ -23,8 +23,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -37,14 +36,14 @@ public abstract class FileIncludeManager {
     return project.getInstance(FileIncludeManager.class);
   }
 
-  public abstract VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly);
+  public abstract VirtualFile[] getIncludedFiles(VirtualFile file, boolean compileTimeOnly);
 
-  public abstract VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly, boolean recursively);
+  public abstract VirtualFile[] getIncludedFiles(VirtualFile file, boolean compileTimeOnly, boolean recursively);
 
-  public abstract VirtualFile[] getIncludingFiles(@Nonnull VirtualFile file, boolean compileTimeOnly);
+  public abstract VirtualFile[] getIncludingFiles(VirtualFile file, boolean compileTimeOnly);
 
   public abstract void processIncludingFiles(PsiFile context, Predicate<? super Pair<VirtualFile, FileIncludeInfo>> processor);
 
   @Nullable
-  public abstract PsiFileSystemItem resolveFileInclude(@Nonnull FileIncludeInfo info, @Nonnull PsiFile context);
+  public abstract PsiFileSystemItem resolveFileInclude(FileIncludeInfo info, PsiFile context);
 }

@@ -22,8 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -59,7 +58,7 @@ public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.w
         component.setText(myText.get());
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return myText;
@@ -67,7 +66,7 @@ public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.w
 
     @RequiredUIAccess
     @Override
-    public void setText(@Nonnull LocalizeValue text) {
+    public void setText(LocalizeValue text) {
         myText = text;
     }
 
@@ -84,7 +83,7 @@ public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.w
     }
 
     @Override
-    public void invoke(@Nonnull InputDetails inputDetails) {
+    public void invoke(InputDetails inputDetails) {
 
     }
 

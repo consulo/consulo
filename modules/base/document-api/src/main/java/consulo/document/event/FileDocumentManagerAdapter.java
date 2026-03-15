@@ -18,25 +18,24 @@ package consulo.document.event;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class FileDocumentManagerAdapter implements FileDocumentManagerListener {
   public void beforeAllDocumentsSaving() {
   }
 
-  public void beforeDocumentSaving(@Nonnull Document document) {
+  public void beforeDocumentSaving(Document document) {
   }
 
-  public void fileWithNoDocumentChanged(@Nonnull VirtualFile file) {
+  public void fileWithNoDocumentChanged(VirtualFile file) {
   }
 
-  public void beforeFileContentReload(VirtualFile file, @Nonnull Document document) {
+  public void beforeFileContentReload(VirtualFile file, Document document) {
   }
 
-  public void fileContentReloaded(VirtualFile file, @Nonnull Document document) {
+  public void fileContentReloaded(VirtualFile file, Document document) {
   }
 
-  public void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+  public void fileContentLoaded(VirtualFile file, Document document) {
   }
 
   public void unsavedDocumentsDropped() {

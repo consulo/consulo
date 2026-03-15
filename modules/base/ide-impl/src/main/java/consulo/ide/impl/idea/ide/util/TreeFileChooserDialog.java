@@ -57,8 +57,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -144,7 +143,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
             }
 
             @Override
-            public Object[] getChildElements(@Nonnull Object element) {
+            public Object[] getChildElements(Object element) {
                 return filterFiles(super.getChildElements(element));
             }
 
@@ -299,7 +298,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
     }
 
     @Override
-    public void selectFile(@Nonnull PsiFile file) {
+    public void selectFile(PsiFile file) {
         // Select element in the tree
         Application.get().invokeLater(
             () -> {
@@ -364,7 +363,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
     private final class MyGotoFileModel implements ChooseByNameModel {
         private final int myMaxSize = WindowManagerEx.getInstance().getFrame(myProject).getSize().width;
 
-        @Nonnull
+        
         @Override
         @RequiredReadAction
         public Object[] getElementsByName(String name, boolean checkBoxState, String pattern) {
@@ -409,7 +408,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
         }
 
         @Override
-        @Nonnull
+        
         public String[] getNames(boolean checkBoxState) {
             String[] fileNames;
             if (myFileType != null && myProject != null) {
@@ -462,7 +461,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
         }
 
         @Override
-        @Nonnull
+        
         public String[] getSeparators() {
             return new String[]{"/", "\\"};
         }

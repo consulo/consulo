@@ -18,8 +18,7 @@ package consulo.virtualFileSystem.util;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -27,10 +26,10 @@ import java.util.Map;
  */
 public interface PerFileMappingsEx<T> extends PerFileMappings<T> {
 
-  @Nonnull
+  
   Map<VirtualFile, T> getMappings();
 
-  void setMappings(@Nonnull Map<VirtualFile, T> mappings);
+  void setMappings(Map<VirtualFile, T> mappings);
 
   @Nullable
   T getDefaultMapping(@Nullable VirtualFile file);

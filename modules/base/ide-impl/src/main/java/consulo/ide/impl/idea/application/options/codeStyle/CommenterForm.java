@@ -29,8 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -67,7 +66,7 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
     }
 
     @RequiredUIAccess
-    public void reset(@Nonnull CodeStyleSettings settings) {
+    public void reset(CodeStyleSettings settings) {
         CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
         myLineCommentAtFirstColumnCb.setValue(langSettings.LINE_COMMENT_AT_FIRST_COLUMN);
         myBlockCommentAtFirstJBCheckBox.setValue(langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN);
@@ -75,14 +74,14 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
         myLineCommentAddSpaceCb.setEnabled(!langSettings.LINE_COMMENT_AT_FIRST_COLUMN);
     }
 
-    public void apply(@Nonnull CodeStyleSettings settings) {
+    public void apply(CodeStyleSettings settings) {
         CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
         langSettings.LINE_COMMENT_AT_FIRST_COLUMN = myLineCommentAtFirstColumnCb.getValue();
         langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN = myBlockCommentAtFirstJBCheckBox.getValue();
         langSettings.LINE_COMMENT_ADD_SPACE = myLineCommentAddSpaceCb.getValue();
     }
 
-    public boolean isModified(@Nonnull CodeStyleSettings settings) {
+    public boolean isModified(CodeStyleSettings settings) {
         CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
         return myLineCommentAtFirstColumnCb.getValue() != langSettings.LINE_COMMENT_AT_FIRST_COLUMN
             || myBlockCommentAtFirstJBCheckBox.getValue() != langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN

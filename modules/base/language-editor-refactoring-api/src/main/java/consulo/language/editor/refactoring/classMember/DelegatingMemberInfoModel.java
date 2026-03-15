@@ -17,8 +17,7 @@ package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author dsl
@@ -60,7 +59,7 @@ public class DelegatingMemberInfoModel<T extends PsiElement, M extends MemberInf
   }
 
   @Override
-  public int checkForProblems(@Nonnull M member) {
+  public int checkForProblems(M member) {
     return myDelegatingTarget.checkForProblems(member);
   }
 

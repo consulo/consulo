@@ -29,8 +29,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.usage.UsageViewUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -40,13 +39,13 @@ import javax.swing.*;
 @Deprecated
 @DeprecationInfo("Use CommonFindUsagesDialogDescriptor")
 public class CommonFindUsagesDialog extends AbstractFindUsagesDialog {
-    @Nonnull
+    
     protected final PsiElement myPsiElement;
     private final FindUsagesHandler myHandler;
 
-    public CommonFindUsagesDialog(@Nonnull PsiElement element,
-                                  @Nonnull Project project,
-                                  @Nonnull FindUsagesOptions findUsagesOptions,
+    public CommonFindUsagesDialog(PsiElement element,
+                                  Project project,
+                                  FindUsagesOptions findUsagesOptions,
                                   boolean toShowInNewTab,
                                   boolean mustOpenInNewTab,
                                   boolean isSingleFile,
@@ -73,7 +72,7 @@ public class CommonFindUsagesDialog extends AbstractFindUsagesDialog {
     }
 
     @Override
-    public void configureLabelComponent(@Nonnull SimpleColoredComponent coloredComponent) {
+    public void configureLabelComponent(SimpleColoredComponent coloredComponent) {
         coloredComponent.append(StringUtil.capitalize(UsageViewUtil.getType(myPsiElement)));
         coloredComponent.append(" ");
         coloredComponent.append(DescriptiveNameUtil.getDescriptiveName(myPsiElement), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);

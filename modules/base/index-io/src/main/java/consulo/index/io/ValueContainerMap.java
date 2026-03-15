@@ -18,7 +18,6 @@ package consulo.index.io;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.internal.ValueContainerImpl;
 
-import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.function.IntUnaryOperator;
 
@@ -26,21 +25,21 @@ import java.util.function.IntUnaryOperator;
  * @author Dmitry Avdeev
  */
 class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValueContainer<Value>> {
-  @Nonnull
+  
   private final DataExternalizer<Value> myValueExternalizer;
   private final boolean myKeyIsUniqueForIndexedFile;
 
-  ValueContainerMap(@Nonnull File file,
-                    @Nonnull KeyDescriptor<Key> keyKeyDescriptor,
-                    @Nonnull DataExternalizer<Value> valueExternalizer,
+  ValueContainerMap(File file,
+                    KeyDescriptor<Key> keyKeyDescriptor,
+                    DataExternalizer<Value> valueExternalizer,
                     boolean keyIsUniqueForIndexedFile,
-                    @Nonnull IntUnaryOperator inputRemapping) throws IOException {
+                    IntUnaryOperator inputRemapping) throws IOException {
     super(file, keyKeyDescriptor, new ValueContainerExternalizer<>(valueExternalizer, inputRemapping));
     myValueExternalizer = valueExternalizer;
     myKeyIsUniqueForIndexedFile = keyIsUniqueForIndexedFile;
   }
 
-  @Nonnull
+  
   Object getDataAccessLock() {
     return myEnumerator;
   }
@@ -64,24 +63,24 @@ class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValu
   }
 
   private static final class ValueContainerExternalizer<T> implements DataExternalizer<UpdatableValueContainer<T>> {
-    @Nonnull
+    
     private final DataExternalizer<T> myValueExternalizer;
-    @Nonnull
+    
     private final IntUnaryOperator myInputRemapping;
 
-    private ValueContainerExternalizer(@Nonnull DataExternalizer<T> valueExternalizer, @Nonnull IntUnaryOperator inputRemapping) {
+    private ValueContainerExternalizer(DataExternalizer<T> valueExternalizer, IntUnaryOperator inputRemapping) {
       myValueExternalizer = valueExternalizer;
       myInputRemapping = inputRemapping;
     }
 
     @Override
-    public void save(@Nonnull DataOutput out, @Nonnull UpdatableValueContainer<T> container) throws IOException {
+    public void save(DataOutput out, UpdatableValueContainer<T> container) throws IOException {
       container.saveTo(out, myValueExternalizer);
     }
 
-    @Nonnull
+    
     @Override
-    public UpdatableValueContainer<T> read(@Nonnull DataInput in) throws IOException {
+    public UpdatableValueContainer<T> read(DataInput in) throws IOException {
       ValueContainerImpl<T> valueContainer = new ValueContainerImpl<>();
 
       valueContainer.readFrom((DataInputStream)in, myValueExternalizer, myInputRemapping);

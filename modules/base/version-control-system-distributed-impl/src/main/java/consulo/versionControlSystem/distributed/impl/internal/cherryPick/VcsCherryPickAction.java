@@ -33,8 +33,7 @@ import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLog;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -48,7 +47,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         FileDocumentManager.getInstance().saveAllDocuments();
 
         Project project = e.getRequiredData(Project.KEY);
@@ -58,7 +57,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setVisible(true);
 
@@ -93,14 +92,14 @@ public class VcsCherryPickAction extends DumbAwareAction {
 
     @Nullable
     private static VcsCherryPicker getActiveCherryPicker(
-        @Nonnull List<VcsCherryPicker> cherryPickers,
-        @Nonnull Collection<VirtualFile> roots
+        List<VcsCherryPicker> cherryPickers,
+        Collection<VirtualFile> roots
     ) {
         return ContainerUtil.find(cherryPickers, picker -> picker.canHandleForRoots(roots));
     }
 
-    @Nonnull
-    private static Map<VirtualFile, List<Hash>> groupByRoot(@Nonnull List<CommitId> details) {
+    
+    private static Map<VirtualFile, List<Hash>> groupByRoot(List<CommitId> details) {
         Map<VirtualFile, List<Hash>> result = new HashMap<>();
         for (CommitId commit : details) {
             List<Hash> hashes = result.get(commit.getRoot());
@@ -113,12 +112,12 @@ public class VcsCherryPickAction extends DumbAwareAction {
         return result;
     }
 
-    @Nonnull
-    private static String concatActionNamesForAllAvailable(@Nonnull List<VcsCherryPicker> pickers) {
+    
+    private static String concatActionNamesForAllAvailable(List<VcsCherryPicker> pickers) {
         return StringUtil.join(pickers, VcsCherryPicker::getActionTitle, "/");
     }
 
-    @Nonnull
+    
     private static List<VcsCherryPicker> getActiveCherryPickersForProject(@Nullable Project project) {
         if (project != null) {
             ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);

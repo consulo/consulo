@@ -17,8 +17,7 @@ package consulo.content.library;
 
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.EventListener;
 import java.util.Iterator;
 
@@ -27,20 +26,20 @@ import java.util.Iterator;
  * @see consulo.project.content.library.ProjectLibraryTable
  */
 public interface LibraryTable {
-  @Nonnull
+  
   Library[] getLibraries();
 
   Library createLibrary();
 
   Library createLibrary(String name);
 
-  void removeLibrary(@Nonnull Library library);
+  void removeLibrary(Library library);
 
-  @Nonnull
+  
   Iterator<Library> getLibraryIterator();
 
   @Nullable
-  Library getLibraryByName(@Nonnull String name);
+  Library getLibraryByName(String name);
 
   String getTableLevel();
 
@@ -63,17 +62,17 @@ public interface LibraryTable {
 
     Library createLibrary(String name, @Nullable PersistentLibraryKind type);
 
-    void removeLibrary(@Nonnull Library library);
+    void removeLibrary(Library library);
 
     void commit();
 
-    @Nonnull
+    
     Iterator<Library> getLibraryIterator();
 
     @Nullable
-    Library getLibraryByName(@Nonnull String name);
+    Library getLibraryByName(String name);
 
-    @Nonnull
+    
     Library[] getLibraries();
 
     boolean isChanged();

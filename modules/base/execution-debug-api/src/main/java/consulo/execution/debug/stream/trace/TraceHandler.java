@@ -4,7 +4,6 @@ package consulo.execution.debug.stream.trace;
 import consulo.execution.debug.stream.trace.dsl.CodeBlock;
 import consulo.execution.debug.stream.trace.dsl.Expression;
 import consulo.execution.debug.stream.trace.dsl.VariableDeclaration;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -12,12 +11,12 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface TraceHandler {
-  @Nonnull
+  
   List<VariableDeclaration> additionalVariablesDeclaration();
 
-  @Nonnull
+  
   CodeBlock prepareResult();
 
-  @Nonnull
+  
   Expression getResultExpression();
 }

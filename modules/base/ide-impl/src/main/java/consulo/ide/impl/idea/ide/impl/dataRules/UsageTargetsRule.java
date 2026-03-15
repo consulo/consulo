@@ -23,15 +23,14 @@ import consulo.util.dataholder.Key;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetUtil;
 import consulo.usage.UsageView;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 @ExtensionImpl
 public class UsageTargetsRule implements GetDataRule<UsageTarget[]> {
-  @Nonnull
+  
   @Override
   public Key<UsageTarget[]> getKey() {
     return UsageView.USAGE_TARGETS_KEY;
@@ -39,7 +38,7 @@ public class UsageTargetsRule implements GetDataRule<UsageTarget[]> {
 
   @Override
   @Nullable
-  public UsageTarget[] getData(@Nonnull DataProvider dataProvider) {
+  public UsageTarget[] getData(DataProvider dataProvider) {
     return UsageTargetUtil.findUsageTargets(dataProvider);
   }
 }

@@ -16,7 +16,6 @@
 package consulo.fileEditor.structureView.tree;
 
 import consulo.navigation.ItemPresentation;
-import jakarta.annotation.Nonnull;
 
 /**
  * An element in a generic tree control displayed in the IDEA user interface.
@@ -31,7 +30,7 @@ public interface TreeElement {
    *
    * @return the element presentation.
    */
-  @Nonnull
+  
   ItemPresentation getPresentation();
 
   /**
@@ -39,6 +38,6 @@ public interface TreeElement {
    *
    * @return the list of children.
    */
-  @Nonnull
+  
   TreeElement[] getChildren();
 }

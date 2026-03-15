@@ -21,7 +21,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.WeakList;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -65,28 +64,28 @@ public class LowMemoryWatcher {
    * low memory notification functionality is needed. As soon as it's garbage-collected, the runnable won't receive any further notifications.
    */
   @Contract(pure = true) // to avoid ignoring the result
-  public static LowMemoryWatcher register(@Nonnull Runnable runnable, @Nonnull LowMemoryWatcherType notificationType) {
+  public static LowMemoryWatcher register(Runnable runnable, LowMemoryWatcherType notificationType) {
     return new LowMemoryWatcher(runnable, notificationType);
   }
 
   @Contract(pure = true) // to avoid ignoring the result
-  public static LowMemoryWatcher register(@Nonnull Runnable runnable) {
+  public static LowMemoryWatcher register(Runnable runnable) {
     return new LowMemoryWatcher(runnable, LowMemoryWatcherType.ALWAYS);
   }
 
   /**
    * Registers a runnable to run on low memory events. The notifications will be issued until parentDisposable is disposed.
    */
-  public static void register(@Nonnull Runnable runnable, @Nonnull LowMemoryWatcherType notificationType, @Nonnull Disposable parentDisposable) {
+  public static void register(Runnable runnable, LowMemoryWatcherType notificationType, Disposable parentDisposable) {
     LowMemoryWatcher watcher = new LowMemoryWatcher(runnable, notificationType);
     Disposer.register(parentDisposable, () -> watcher.stop());
   }
 
-  public static void register(@Nonnull Runnable runnable, @Nonnull Disposable parentDisposable) {
+  public static void register(Runnable runnable, Disposable parentDisposable) {
     register(runnable, LowMemoryWatcherType.ALWAYS, parentDisposable);
   }
 
-  private LowMemoryWatcher(@Nonnull Runnable runnable, @Nonnull LowMemoryWatcherType type) {
+  private LowMemoryWatcher(Runnable runnable, LowMemoryWatcherType type) {
     myRunnable = runnable;
     myType = type;
     ourListeners.add(this);

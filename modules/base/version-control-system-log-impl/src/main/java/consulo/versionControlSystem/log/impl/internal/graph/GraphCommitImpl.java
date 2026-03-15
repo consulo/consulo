@@ -18,19 +18,18 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 import consulo.util.collection.ArrayUtil;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.log.impl.internal.util.ImmutableList;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class GraphCommitImpl<CommitId> extends ImmutableList<CommitId> implements GraphCommit<CommitId> {
 
-  @Nonnull
+  
   private final CommitId myId;
-  @Nonnull
+  
   private final Object myParents;
   private final long myTimestamp;
 
-  public GraphCommitImpl(@Nonnull CommitId id, @Nonnull List<CommitId> parents, long timestamp) {
+  public GraphCommitImpl(CommitId id, List<CommitId> parents, long timestamp) {
     myId = id;
     myTimestamp = timestamp;
     if (parents.isEmpty()) {
@@ -45,13 +44,13 @@ public class GraphCommitImpl<CommitId> extends ImmutableList<CommitId> implement
     }
   }
 
-  @Nonnull
+  
   @Override
   public CommitId getId() {
     return myId;
   }
 
-  @Nonnull
+  
   @Override
   public List<CommitId> getParents() {
     return this;

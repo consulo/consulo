@@ -22,8 +22,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -36,5 +35,5 @@ import javax.swing.*;
 @DeprecationInfo("Remove it!")
 public interface ExternalSystemInternalAWTHelper {
     @RequiredUIAccess
-    void executeImportAction(@Nonnull Project project, @Nullable FileChooserDescriptor descriptor);
+    void executeImportAction(Project project, @Nullable FileChooserDescriptor descriptor);
 }

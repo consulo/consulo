@@ -32,8 +32,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         LOG.assertTrue(elements.length == 1);
         if (dataContext == null) {
             dataContext = DataManager.getInstance().getDataContext();
@@ -66,7 +65,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 
         PsiElement element = dataContext.getData(PsiElement.KEY);

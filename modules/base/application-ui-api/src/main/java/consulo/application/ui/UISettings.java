@@ -31,8 +31,7 @@ import consulo.ui.AntialiasingType;
 import consulo.ui.ex.ColorBlindness;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Transient;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -41,7 +40,7 @@ import jakarta.inject.Singleton;
 public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings> {
     private volatile static UISettings ourInstance;
 
-    @Nonnull
+    
     public static UISettings getInstance() {
         if (ourInstance != null) {
             return ourInstance;
@@ -58,7 +57,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
      *
      * @return persisted UISettings instance or default values.
      */
-    @Nonnull
+    
     public static UISettings getShadowInstance() {
         UISettings settings = getInstanceOrNull();
         return settings == null ? new UISettings() : settings;
@@ -175,7 +174,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
     @Deprecated
     @DeprecationInfo("Use UISettingsListener#TOPIC")
-    public void addUISettingsListener(@Nonnull UISettingsListener listener, @Nonnull Disposable parentDisposable) {
+    public void addUISettingsListener(UISettingsListener listener, Disposable parentDisposable) {
         Application.get().getMessageBus().connect(parentDisposable).subscribe(UISettingsListener.class, listener);
     }
 

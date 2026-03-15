@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface HighlightInfoFilter {
@@ -30,5 +29,5 @@ public interface HighlightInfoFilter {
     /**
      * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of highlighting in ANY file
      */
-    boolean accept(@Nonnull HighlightInfo highlightInfo, @Nullable PsiFile file);
+    boolean accept(HighlightInfo highlightInfo, @Nullable PsiFile file);
 }

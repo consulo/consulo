@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,13 +31,13 @@ public class DiffFileType implements FileType {
   private DiffFileType() {
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "DIFF";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription() {
     return DiffLocalize.filetypeDiffDescription();
@@ -54,7 +53,7 @@ public class DiffFileType implements FileType {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return PlatformIconGroup.actionsDiff();

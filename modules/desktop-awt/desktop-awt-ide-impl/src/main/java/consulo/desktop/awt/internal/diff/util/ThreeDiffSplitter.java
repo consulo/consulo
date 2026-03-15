@@ -19,20 +19,19 @@ import consulo.diff.util.Side;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class ThreeDiffSplitter extends JPanel {
-  @Nonnull
+ 
   private final List<Divider> myDividers;
-  @Nonnull
+ 
   private final List<? extends JComponent> myContents;
 
-  public ThreeDiffSplitter(@Nonnull List<? extends JComponent> components) {
+  public ThreeDiffSplitter(List<? extends JComponent> components) {
     myDividers = ContainerUtil.list(new Divider(), new Divider());
     myContents = components;
 
@@ -41,7 +40,7 @@ public class ThreeDiffSplitter extends JPanel {
   }
 
   @RequiredUIAccess
-  public void setPainter(@Nullable DiffSplitter.Painter painter, @Nonnull Side side) {
+  public void setPainter(DiffSplitter.@Nullable Painter painter, Side side) {
     getDivider(side).setPainter(painter);
   }
 
@@ -50,16 +49,16 @@ public class ThreeDiffSplitter extends JPanel {
     repaintDivider(Side.RIGHT);
   }
 
-  public void repaintDivider(@Nonnull Side side) {
+  public void repaintDivider(Side side) {
     getDivider(side).repaint();
   }
 
-  @Nonnull
-  private Divider getDivider(@Nonnull Side side) {
+ 
+  private Divider getDivider(Side side) {
     return myDividers.get(side.getIndex());
   }
 
-  private void addAll(@Nonnull List<? extends JComponent> components) {
+  private void addAll(List<? extends JComponent> components) {
     for (JComponent component : components) {
       add(component, -1);
     }
@@ -90,7 +89,7 @@ public class ThreeDiffSplitter extends JPanel {
   }
 
   private static class Divider extends JComponent {
-    @Nullable private DiffSplitter.Painter myPainter;
+    private DiffSplitter.@Nullable Painter myPainter;
 
     public Dimension getPreferredSize() {
       return JBUI.size(30, 1);
@@ -102,7 +101,7 @@ public class ThreeDiffSplitter extends JPanel {
     }
 
     @RequiredUIAccess
-    public void setPainter(@Nullable DiffSplitter.Painter painter) {
+    public void setPainter(DiffSplitter.@Nullable Painter painter) {
       myPainter = painter;
     }
   }

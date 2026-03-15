@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.reference;
 
 import consulo.ide.impl.idea.openapi.util.Getter;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 

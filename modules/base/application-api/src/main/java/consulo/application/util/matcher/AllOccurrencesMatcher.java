@@ -3,8 +3,7 @@ package consulo.application.util.matcher;
 
 import consulo.util.collection.FList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,24 +14,24 @@ import java.util.List;
 public class AllOccurrencesMatcher extends MinusculeMatcher {
   private final MinusculeMatcher delegate;
 
-  private AllOccurrencesMatcher(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
+  private AllOccurrencesMatcher(String pattern, NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
     delegate = new FixingLayoutMatcher(pattern, options, hardSeparators);
   }
 
-  @Nonnull
+  
   @Override
   public String getPattern() {
     return delegate.getPattern();
   }
 
   @Override
-  public int matchingDegree(@Nonnull String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
+  public int matchingDegree(String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
     return delegate.matchingDegree(name, valueStartCaseMatch, fragments);
   }
 
   @Nullable
   @Override
-  public FList<MatcherTextRange> matchingFragments(@Nonnull String name) {
+  public FList<MatcherTextRange> matchingFragments(String name) {
     FList<MatcherTextRange> match = delegate.matchingFragments(name);
     if (match != null && !match.isEmpty()) {
       List<FList<MatcherTextRange>> allMatchesReversed = new ArrayList<>();
@@ -61,7 +60,7 @@ public class AllOccurrencesMatcher extends MinusculeMatcher {
     return "AllOccurrencesMatcher{" + "delegate=" + delegate + '}';
   }
 
-  public static MinusculeMatcher create(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
+  public static MinusculeMatcher create(String pattern, NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
     return new AllOccurrencesMatcher(pattern, options, hardSeparators);
   }
 }

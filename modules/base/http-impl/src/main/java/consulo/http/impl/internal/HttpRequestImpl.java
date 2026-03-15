@@ -26,8 +26,7 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.CountingGZIPInputStream;
 import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -52,7 +51,7 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         myBuilder = builder;
     }
 
-    @Nonnull
+    
     @Override
     public String getURL() {
         if (myConnection != null) {
@@ -80,14 +79,14 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public HttpVersion version() {
         // TODO unsupported for now
         return HttpVersion.HTTP_1_1;
     }
 
-    @Nonnull
+    
     @Override
     public Map<String, List<String>> responseHeaders() throws IOException {
         URLConnection connection = getConnection();
@@ -105,7 +104,7 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         return headers;
     }
 
-    @Nonnull
+    
     public URLConnection getConnection() throws IOException {
         if (myConnection == null) {
             myConnection = HttpRequestBuilderFactoryImpl.openConnection(myBuilder);
@@ -125,7 +124,7 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         return getConnection().getContentType();
     }
 
-    @Nonnull
+    
     @Override
     public InputStream getInputStream() throws IOException {
         if (myInputStream == null) {
@@ -137,13 +136,13 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         return myInputStream;
     }
 
-    @Nonnull
+    
     @Override
     public BufferedReader getReader() throws IOException {
         return getReader(null);
     }
 
-    @Nonnull
+    
     @Override
     public BufferedReader getReader(@Nullable ProgressIndicator indicator) throws IOException {
         if (myReader == null) {
@@ -161,7 +160,7 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
     }
 
     @Override
-    @Nonnull
+    
     public byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException {
         int contentLength = getConnection().getContentLength();
         BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream(contentLength > 0 ? contentLength : HttpRequestBuilderFactoryImpl.BLOCK_SIZE);
@@ -169,7 +168,7 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         return ArrayUtil.realloc(out.getInternalBuffer(), out.size());
     }
 
-    @Nonnull
+    
     @Override
     public String readString(@Nullable ProgressIndicator indicator) throws IOException {
         Charset cs = HttpRequestBuilderFactoryImpl.getCharset(this);
@@ -178,8 +177,8 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
     }
 
     @Override
-    @Nonnull
-    public File saveToFile(@Nonnull File file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException {
+    
+    public File saveToFile(File file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException {
         FileUtil.createParentDirs(file);
 
         boolean deleteFile = true;

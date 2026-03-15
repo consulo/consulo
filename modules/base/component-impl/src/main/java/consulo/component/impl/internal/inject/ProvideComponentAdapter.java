@@ -19,7 +19,6 @@ package consulo.component.impl.internal.inject;
 import consulo.component.internal.inject.InjectingKey;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,7 +33,7 @@ class ProvideComponentAdapter<T> implements ComponentAdapter<T> {
     myValue = value;
   }
 
-  @Nonnull
+  
   @Override
   public Class getComponentClass() {
     return myInterfaceKey.getTargetClass();
@@ -47,7 +46,7 @@ class ProvideComponentAdapter<T> implements ComponentAdapter<T> {
   }
 
   @Override
-  public T getComponentInstance(@Nonnull InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException {
+  public T getComponentInstance(InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException {
     return myValue.get();
   }
 

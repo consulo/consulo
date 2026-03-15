@@ -18,22 +18,21 @@ package consulo.execution;
 
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2009-05-18
  */
 public abstract class BeforeRunTask<T extends BeforeRunTask> implements Cloneable {
-  @Nonnull
+  
   protected final Key<T> myProviderId;
   private boolean myIsEnabled;
 
-  protected BeforeRunTask(@Nonnull Key<T> providerId) {
+  protected BeforeRunTask(Key<T> providerId) {
     myProviderId = providerId;
   }
 
-  @Nonnull
+  
   public final Key<T> getProviderId() {
     return myProviderId;
   }

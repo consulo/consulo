@@ -31,9 +31,7 @@ import consulo.versionControlSystem.impl.internal.change.IgnoredPathPresentation
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -94,7 +92,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     updateControls();
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -245,13 +243,13 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
   }
 
   @Override
-  @NonNls
+  
   protected String getDimensionServiceKey() {
     return "IgnoreUnversionedDialog";
   }
 
   @RequiredUIAccess
-  public static void ignoreSelectedFiles(@Nonnull Project project, @Nonnull List<VirtualFile> files, @Nullable Runnable callback) {
+  public static void ignoreSelectedFiles(Project project, List<VirtualFile> files, @Nullable Runnable callback) {
     IgnoreUnversionedDialog dlg = new IgnoreUnversionedDialog(project);
     dlg.setFilesToIgnore(files);
 

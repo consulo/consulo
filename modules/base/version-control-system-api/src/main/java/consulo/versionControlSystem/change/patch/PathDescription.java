@@ -15,10 +15,9 @@
  */
 package consulo.versionControlSystem.change.patch;
 
-import jakarta.annotation.Nonnull;
 
 public interface PathDescription {
-  @Nonnull
+  
   String getPath();
   boolean isDirectory();
   long lastModified();

@@ -26,8 +26,7 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -103,8 +102,8 @@ public class InspectionCache {
         return wrappers;
     }
 
-    @Nonnull
-    public HighlightInfoType getControlledHighlightType(@Nonnull Language language, @Nonnull ProblemHighlightType type) {
+    
+    public HighlightInfoType getControlledHighlightType(Language language, ProblemHighlightType type) {
         Map<ProblemHighlightType, HighlightInfoType> map = myLikeToolMapping.get(language);
         if (map != null) {
             HighlightInfoType infoType = map.get(type);
@@ -141,7 +140,7 @@ public class InspectionCache {
             .put(type, new HighlightInfoTypeSeverityByKey(key, rawType.getAttributesKey()));
     }
 
-    private static String checkTool(@Nonnull LocalInspectionTool localInspectionTool) {
+    private static String checkTool(LocalInspectionTool localInspectionTool) {
         String message = null;
         try {
             String id = localInspectionTool.getID();
@@ -159,16 +158,16 @@ public class InspectionCache {
     }
 
     @Nullable
-    public HighlightDisplayKey register(@Nonnull String name, @Nonnull LocalizeValue displayName) {
+    public HighlightDisplayKey register(String name, LocalizeValue displayName) {
         return register(name, displayName, name);
     }
 
-    public HighlightDisplayKey find(@Nonnull String name) {
+    public HighlightDisplayKey find(String name) {
         return myHighlightDisplayNameToKeyMap.get(name);
     }
 
     @Nullable
-    public HighlightDisplayKey findById(@Nonnull String id) {
+    public HighlightDisplayKey findById(String id) {
         HighlightDisplayKey key = myHighlightDisplayIdToKeyMap.get(id);
         if (key != null) {
             return key;
@@ -182,9 +181,9 @@ public class InspectionCache {
 
     @Nullable
     public HighlightDisplayKey register(
-        @Nonnull String name,
-        @Nonnull LocalizeValue displayName,
-        @Nonnull String id,
+        String name,
+        LocalizeValue displayName,
+        String id,
         @Nullable String alternativeID
     ) {
         HighlightDisplayKey key = register(name, displayName, id);
@@ -194,7 +193,7 @@ public class InspectionCache {
         return key;
     }
 
-    @Nonnull
+    
     public LocalizeValue getDisplayNameByKey(@Nullable HighlightDisplayKey key) {
         if (key == null) {
             return LocalizeValue.empty();
@@ -205,7 +204,7 @@ public class InspectionCache {
     }
 
     @Nullable
-    public HighlightDisplayKey register(@Nonnull String name, @Nonnull LocalizeValue displayName, @Nonnull String id) {
+    public HighlightDisplayKey register(String name, LocalizeValue displayName, String id) {
         if (find(name) != null) {
             LOG.info("Key with name \'" + name + "\' already registered");
             return null;

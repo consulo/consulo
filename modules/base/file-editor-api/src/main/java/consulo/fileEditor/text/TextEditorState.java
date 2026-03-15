@@ -19,8 +19,7 @@ import consulo.document.Document;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -55,7 +54,7 @@ public final class TextEditorState implements FileEditorState {
    *
    * @param producer delayed folding info producer
    */
-  public void setDelayedFoldState(@Nonnull Supplier<CodeFoldingState> producer) {
+  public void setDelayedFoldState(Supplier<CodeFoldingState> producer) {
     myDelayedFoldInfoProducer = producer;
   }
 

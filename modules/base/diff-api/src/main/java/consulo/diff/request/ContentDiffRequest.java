@@ -17,7 +17,6 @@ package consulo.diff.request;
 
 import consulo.diff.content.DiffContent;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -25,13 +24,13 @@ import java.util.List;
  * 3 contents: left - middle - right (local - base - server)
  */
 public abstract class ContentDiffRequest extends DiffRequest {
-  @Nonnull
+  
   public abstract List<DiffContent> getContents();
 
   /**
    * @return contents names. Should have same length as {@link #getContents()}
    * Titles could be null.
    */
-  @Nonnull
+  
   public abstract List<String> getContentTitles();
 }

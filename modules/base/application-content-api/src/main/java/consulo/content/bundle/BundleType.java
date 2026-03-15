@@ -21,8 +21,7 @@ import consulo.platform.Platform;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -33,27 +32,27 @@ import java.util.function.Consumer;
  * @since 25/04/2023
  */
 public abstract class BundleType extends SdkType {
-    public BundleType(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
+    public BundleType(String id, LocalizeValue displayName, Image icon) {
         super(id, displayName, icon);
     }
 
-    public abstract void collectHomePaths(@Nonnull Platform platform, @Nonnull Consumer<Path> pathConsumer);
+    public abstract void collectHomePaths(Platform platform, Consumer<Path> pathConsumer);
 
-    public boolean canCreatePredefinedSdks(@Nonnull Platform platform) {
+    public boolean canCreatePredefinedSdks(Platform platform) {
         return false;
     }
 
-    public boolean isValidSdkHome(@Nonnull Platform platform, @Nonnull Path path) {
+    public boolean isValidSdkHome(Platform platform, Path path) {
         return getVersionString(platform, path) != null;
     }
 
-    @Nonnull
-    public String suggestSdkName(@Nonnull Platform platform, @Nullable String currentSdkName, @Nonnull Path path) {
+    
+    public String suggestSdkName(Platform platform, @Nullable String currentSdkName, Path path) {
         return getDisplayName().get() + " " + getVersionString(platform, path);
     }
 
     @Nullable
-    public abstract String getVersionString(@Nonnull Platform platform, @Nonnull Path path);
+    public abstract String getVersionString(Platform platform, Path path);
 
     /**
      * If a path selected in the file chooser is not a valid SDK home path, returns an adjusted version of the path that is again
@@ -62,13 +61,13 @@ public abstract class BundleType extends SdkType {
      * @param homePath the path selected in the file chooser.
      * @return the path to be used as the SDK home.
      */
-    @Nonnull
-    public Path adjustSelectedSdkHome(@Nonnull Platform platform, Path homePath) {
+    
+    public Path adjustSelectedSdkHome(Platform platform, Path homePath) {
         return homePath;
     }
 
-    @Nonnull
-    public FileChooserDescriptor getHomeChooserDescriptor(@Nonnull Platform platform) {
+    
+    public FileChooserDescriptor getHomeChooserDescriptor(Platform platform) {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
             @Override
             public void validateSelectedFiles(VirtualFile[] files) throws Exception {
@@ -93,14 +92,14 @@ public abstract class BundleType extends SdkType {
 
     // region obsolete stuff
 
-    @Nonnull
+    
     @Override
     @Deprecated
     public final FileChooserDescriptor getHomeChooserDescriptor() {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     @Deprecated
     public final String suggestSdkName(String currentSdkName, String sdkHome) {
@@ -120,7 +119,7 @@ public abstract class BundleType extends SdkType {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     @Deprecated
     public final Collection<String> suggestHomePaths() {

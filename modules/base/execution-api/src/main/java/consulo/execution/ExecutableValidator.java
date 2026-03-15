@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.io.CharsetToolkit;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -52,14 +51,14 @@ public abstract class ExecutableValidator {
 
     private static final Logger LOG = Logger.getInstance(ExecutableValidator.class);
 
-    @Nonnull
+    
     protected final Project myProject;
-    @Nonnull
+    
     protected final NotificationsManager myNotificationManager;
 
-    @Nonnull
+    
     private final String myNotificationErrorTitle;
-    @Nonnull
+    
     private final String myNotificationErrorDescription;
 
     /**
@@ -70,9 +69,9 @@ public abstract class ExecutableValidator {
      *                                     {@link #showSettingsAndExpireIfFixed(Notification)}
      */
     public ExecutableValidator(
-        @Nonnull Project project,
-        @Nonnull String notificationErrorTitle,
-        @Nonnull String notificationErrorDescription
+        Project project,
+        String notificationErrorTitle,
+        String notificationErrorDescription
     ) {
         myProject = project;
         myNotificationErrorTitle = notificationErrorTitle;
@@ -83,11 +82,11 @@ public abstract class ExecutableValidator {
     protected abstract String getCurrentExecutable();
 
     @Nullable
-    protected Notification validate(@Nonnull String executable) {
+    protected Notification validate(String executable) {
         return !isExecutableValid(executable) ? createDefaultNotification() : null;
     }
 
-    @Nonnull
+    
     protected ExecutableNotValidNotification createDefaultNotification() {
         return new ExecutableNotValidNotification();
     }
@@ -100,11 +99,11 @@ public abstract class ExecutableValidator {
      * @param executable Path to executable.
      * @return true if process with the supplied executable completed without errors and with exit code 0.
      */
-    protected boolean isExecutableValid(@Nonnull String executable) {
+    protected boolean isExecutableValid(String executable) {
         return doCheckExecutable(executable, Collections.<String>emptyList());
     }
 
-    protected static boolean doCheckExecutable(@Nonnull String executable, @Nonnull List<String> processParameters) {
+    protected static boolean doCheckExecutable(String executable, List<String> processParameters) {
         try {
             GeneralCommandLine commandLine = new GeneralCommandLine();
             commandLine.setExePath(executable);
@@ -136,7 +135,7 @@ public abstract class ExecutableValidator {
      * Expires the notification if user fixes the path from the opened Settings dialog.
      * Makes sure that there is always only one notification about the problem in the stack of notifications.
      */
-    private void showExecutableNotConfiguredNotification(@Nonnull Notification notification) {
+    private void showExecutableNotConfiguredNotification(Notification notification) {
         if (myProject.getApplication().isUnitTestMode() || myProject.getApplication().isHeadlessEnvironment()) {
             return;
         }
@@ -147,8 +146,8 @@ public abstract class ExecutableValidator {
         }
     }
 
-    @Nonnull
-    protected String prepareDescription(@Nonnull String description, boolean appendFixIt) {
+    
+    protected String prepareDescription(String description, boolean appendFixIt) {
         StringBuilder result = new StringBuilder();
         String executable = getCurrentExecutable();
 
@@ -165,7 +164,7 @@ public abstract class ExecutableValidator {
         return result.toString();
     }
 
-    protected void showSettingsAndExpireIfFixed(@Nonnull Notification notification) {
+    protected void showSettingsAndExpireIfFixed(Notification notification) {
         showSettings();
         if (validate(getCurrentExecutable()) == null) {
             notification.expire();
@@ -241,18 +240,18 @@ public abstract class ExecutableValidator {
             this(myNotificationErrorDescription);
         }
 
-        public ExecutableNotValidNotification(@Nonnull String description) {
+        public ExecutableNotValidNotification(String description) {
             this(prepareDescription(description, true), NotificationType.ERROR);
         }
 
-        public ExecutableNotValidNotification(@Nonnull String preparedDescription, @Nonnull NotificationType type) {
+        public ExecutableNotValidNotification(String preparedDescription, NotificationType type) {
             super(
                 NotificationService.getInstance()
                     .newOfType(ExecutionNotificationGroupHolder.EXTERNAL, type)
                     .content(LocalizeValue.localizeTODO(preparedDescription))
                     .hyperlinkListener(new NotificationListener.Adapter() {
                         @Override
-                        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+                        protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
                             showSettingsAndExpireIfFixed(notification);
                         }
                     })

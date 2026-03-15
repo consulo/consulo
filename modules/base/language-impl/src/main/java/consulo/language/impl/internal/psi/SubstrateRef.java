@@ -30,8 +30,7 @@ import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.Stub;
 import consulo.language.psi.stub.StubElement;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -39,7 +38,7 @@ import jakarta.annotation.Nullable;
 public abstract class SubstrateRef {
   private static final Logger LOG = Logger.getInstance(SubstrateRef.class);
 
-  @Nonnull
+  
   public abstract ASTNode getNode();
 
   @Nullable
@@ -54,13 +53,13 @@ public abstract class SubstrateRef {
 
   public abstract boolean isValid();
 
-  @Nonnull
+  
   public abstract PsiFile getContainingFile();
 
-  @Nonnull
-  public static SubstrateRef createInvalidRef(@Nonnull final StubBasedPsiElement<?> psi) {
+  
+  public static SubstrateRef createInvalidRef(final StubBasedPsiElement<?> psi) {
     return new SubstrateRef() {
-      @Nonnull
+      
       @Override
       public ASTNode getNode() {
         throw new PsiInvalidElementAccessException(psi);
@@ -71,7 +70,7 @@ public abstract class SubstrateRef {
         return false;
       }
 
-      @Nonnull
+      
       @Override
       public PsiFile getContainingFile() {
         throw new PsiInvalidElementAccessException(psi);
@@ -79,10 +78,10 @@ public abstract class SubstrateRef {
     };
   }
 
-  public static SubstrateRef createAstStrongRef(@Nonnull final ASTNode node) {
+  public static SubstrateRef createAstStrongRef(final ASTNode node) {
     return new SubstrateRef() {
 
-      @Nonnull
+      
       @Override
       public ASTNode getNode() {
         return node;
@@ -95,7 +94,7 @@ public abstract class SubstrateRef {
         return file != null && file.isValid();
       }
 
-      @Nonnull
+      
       @Override
       public PsiFile getContainingFile() {
         PsiFile file = SharedImplUtil.getContainingFile(node);
@@ -108,17 +107,17 @@ public abstract class SubstrateRef {
   public static class StubRef extends SubstrateRef {
     private final StubElement myStub;
 
-    public StubRef(@Nonnull StubElement stub) {
+    public StubRef(StubElement stub) {
       myStub = stub;
     }
 
-    @Nonnull
+    
     @Override
     public ASTNode getNode() {
       throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public Stub getStub() {
       return myStub;
@@ -132,7 +131,7 @@ public abstract class SubstrateRef {
       return psi != null && psi.isValid();
     }
 
-    @Nonnull
+    
     @Override
     public PsiFile getContainingFile() {
       PsiFileStub<?> stub = myStub.getContainingFileStub();
@@ -149,7 +148,7 @@ public abstract class SubstrateRef {
     }
 
     @RequiredReadAction
-    private PsiFile reportFileInvalidError(@Nonnull PsiFileStub<?> stub) {
+    private PsiFile reportFileInvalidError(PsiFileStub<?> stub) {
       ApplicationManager.getApplication().assertReadAccessAllowed();
 
       String reason = stub.getInvalidationReason();

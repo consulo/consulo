@@ -17,27 +17,26 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 
 import consulo.versionControlSystem.log.graph.LinearGraph;
 import consulo.versionControlSystem.log.graph.PermanentGraphInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class BaseController extends CascadeController {
-  public BaseController(@Nonnull PermanentGraphInfo permanentGraphInfo) {
+  public BaseController(PermanentGraphInfo permanentGraphInfo) {
     super(null, permanentGraphInfo);
   }
 
-  @Nonnull
+  
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(LinearGraphAnswer delegateAnswer) {
     throw new IllegalStateException();
   }
 
   @Nullable
   @Override
-  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(LinearGraphAction action) {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public LinearGraph getCompiledGraph() {
     return myPermanentGraphInfo.getLinearGraph();

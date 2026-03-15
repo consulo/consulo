@@ -22,8 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,24 +31,24 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
     private final HighlightInfoHolder myHolder;
     private PsiElement myLevel;
 
-    public CheckLevelHighlightInfoHolder(@Nonnull PsiFile file, @Nonnull HighlightInfoHolder holder) {
+    public CheckLevelHighlightInfoHolder(PsiFile file, HighlightInfoHolder holder) {
         super(file, List.of());
         myHolder = holder;
     }
 
-    @Nonnull
+    
     @Override
     public TextAttributesScheme getColorsScheme() {
         return myHolder.getColorsScheme();
     }
 
-    @Nonnull
+    
     @Override
     public PsiFile getContextFile() {
         return myHolder.getContextFile();
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return myHolder.getProject();
@@ -81,7 +80,7 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
     }
 
     @Override
-    public boolean addAll(@Nonnull Collection<? extends HighlightInfo> highlightInfos) {
+    public boolean addAll(Collection<? extends HighlightInfo> highlightInfos) {
         return myHolder.addAll(highlightInfos);
     }
 
@@ -90,13 +89,13 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
         return myHolder.size();
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfo get(int i) {
         return myHolder.get(i);
     }
 
-    @Nonnull
+    
     @Override
     public AnnotationSession getAnnotationSession() {
         return myHolder.getAnnotationSession();

@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -67,7 +66,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     });
   }
 
-  @Nonnull
+  
   public consulo.ui.Component getComponent() {
     return myTextBox;
   }
@@ -75,7 +74,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
   /**
    * @return unmodifiable Map instance
    */
-  @Nonnull
+  
   public Map<String, String> getEnvs() {
     return myData.getEnvs();
   }
@@ -84,16 +83,16 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
    * @param envs Map instance containing user-defined environment variables
    *             (iteration order should be reliable user-specified, like {@link LinkedHashMap} or {@link ImmutableMap})
    */
-  public void setEnvs(@Nonnull Map<String, String> envs) {
+  public void setEnvs(Map<String, String> envs) {
     setData(EnvironmentVariablesData.create(envs, myData.isPassParentEnvs()));
   }
 
-  @Nonnull
+  
   public EnvironmentVariablesData getData() {
     return myData;
   }
 
-  public void setData(@Nonnull EnvironmentVariablesData data) {
+  public void setData(EnvironmentVariablesData data) {
     EnvironmentVariablesData oldData = myData;
     myData = data;
     myTextBox.setValue(stringifyEnvs(data.getEnvs()));
@@ -102,8 +101,8 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     }
   }
 
-  @Nonnull
-  protected String stringifyEnvs(@Nonnull EnvironmentVariablesData evd) {
+  
+  protected String stringifyEnvs(EnvironmentVariablesData evd) {
     if (evd.getEnvs().isEmpty()) {
       return "";
     }
@@ -117,8 +116,8 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     return buf.toString();
   }
 
-  @Nonnull
-  private static String stringifyEnvs(@Nonnull Map<String, String> envs) {
+  
+  private static String stringifyEnvs(Map<String, String> envs) {
     if (envs.isEmpty()) {
       return "";
     }
@@ -154,7 +153,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     myListeners.getMulticaster().stateChanged(new ChangeEvent(this));
   }
 
-  public static void showParentEnvironmentDialog(@Nonnull Component parent) {
+  public static void showParentEnvironmentDialog(Component parent) {
     EnvVariablesTable table = new EnvVariablesTable();
     table.setValues(convertToVariables(new TreeMap<>(new GeneralCommandLine().getParentEnvironment()), true));
     table.getActionsPanel().setVisible(false);

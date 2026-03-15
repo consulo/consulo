@@ -17,8 +17,7 @@ package consulo.language.editor.inspection;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface BatchSuppressableTool {
   /**
@@ -27,7 +26,7 @@ public interface BatchSuppressableTool {
    * @param element the element to check
    * @return true if the inspection is suppressed, false otherwise.
    */
-  boolean isSuppressedFor(@Nonnull PsiElement element);
+  boolean isSuppressedFor(PsiElement element);
 
 
   /**
@@ -37,7 +36,7 @@ public interface BatchSuppressableTool {
    *                Inspections tool window
    * @return the list of suppression actions.
    */
-  @Nonnull
+  
   SuppressQuickFix[] getBatchSuppressActions(@Nullable PsiElement element);
 
 }

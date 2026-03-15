@@ -85,8 +85,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -104,7 +103,7 @@ public class CompileDriverImpl implements CompileDriver {
     // to be used in tests only for debug output
     public static volatile boolean ourDebugMode = false;
 
-    @Nonnull
+    
     private final Project myProject;
     private final Map<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> myGenerationCompilerModuleToOutputDirMap;
     // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
@@ -129,7 +128,7 @@ public class CompileDriverImpl implements CompileDriver {
     private static final long ONE_MINUTE_MS = 60L /*sec*/ * 1000L /*millisec*/;
 
     @RequiredReadAction
-    public CompileDriverImpl(@Nonnull Project project) {
+    public CompileDriverImpl(Project project) {
         myProject = project;
         myCachesDirectoryPath = CompilerPaths.getCacheStoreDirectory(myProject).getPath().replace('/', File.separatorChar);
         myShouldClearOutputDirectory = CompilerWorkspaceConfiguration.getInstance(myProject).isClearOutputDirectory();
@@ -246,7 +245,7 @@ public class CompileDriverImpl implements CompileDriver {
         return ExitStatus.UP_TO_DATE.equals(result.get());
     }
 
-    @Nonnull
+    
     private CompositeDependencyCache createDependencyCache() {
         return new CompositeDependencyCache(myProject, myCachesDirectoryPath);
     }
@@ -931,7 +930,7 @@ public class CompileDriverImpl implements CompileDriver {
     private static void walkChildren(VirtualFile from, CompileContext context) {
         VirtualFileUtil.visitChildrenRecursively(from, new VirtualFileVisitor() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (file.isDirectory()) {
                     context.getProgressIndicator().checkCanceled();
                     context.getProgressIndicator().setText2Value(LocalizeValue.of(file.getPresentableUrl()));
@@ -955,7 +954,7 @@ public class CompileDriverImpl implements CompileDriver {
         VirtualFileUtil.visitChildrenRecursively(file,
             new VirtualFileVisitor() {
                 @Override
-                public boolean visitFile(@Nonnull VirtualFile file) {
+                public boolean visitFile(VirtualFile file) {
                     try {
                         writer.write(VirtualFileUtil.getRelativePath(file, root, '/'));
                         writer.write('\n');
@@ -978,7 +977,7 @@ public class CompileDriverImpl implements CompileDriver {
         return new DataContext() {
             @Nullable
             @Override
-            public <T> T getData(@Nonnull Key<T> key) {
+            public <T> T getData(Key<T> key) {
                 return compileScope.getUserData(key);
             }
         };
@@ -1166,7 +1165,7 @@ public class CompileDriverImpl implements CompileDriver {
     public void executeCompileTask(
         CompileTask compileTask,
         CompileScope scope,
-        @Nonnull LocalizeValue contentName,
+        LocalizeValue contentName,
         Runnable onTaskFinished
     ) {
         CompileCounters counters = new CompileCounters();

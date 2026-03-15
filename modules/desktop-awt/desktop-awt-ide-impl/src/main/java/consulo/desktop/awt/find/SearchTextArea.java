@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -56,7 +55,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     private final ActionToolbar myPrefixToolbar;
     private final ActionToolbar mySuffixToolbar;
 
-    public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode) {
+    public SearchTextArea(JTextArea textArea, boolean searchMode) {
         super(new BorderLayout());
         myTextArea = textArea;
         mySearchMode = searchMode;
@@ -85,7 +84,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         }
         myTextArea.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
-            protected void textChanged(@Nonnull DocumentEvent e) {
+            protected void textChanged(DocumentEvent e) {
                 if (e.getType() == DocumentEvent.EventType.INSERT) {
                     myTextArea.putClientProperty(JUST_CLEARED_KEY, null);
                 }
@@ -149,7 +148,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     public CompletableFuture<?> updateAllAsync() {
         return CompletableFuture.allOf(myPrefixToolbar.updateActionsAsync(), mySuffixToolbar.updateActionsAsync());
     }
@@ -222,7 +221,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         updateScrollBar();
     }
 
-    @Nonnull
+    
     public JTextArea getTextArea() {
         return myTextArea;
     }
@@ -255,7 +254,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed("find.recent.search");
             FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(e.getRequiredData(Project.KEY));
             String[] recent = mySearchMode ? findInProjectSettings.getRecentFindStrings() : findInProjectSettings.getRecentReplaceStrings();
@@ -278,13 +277,13 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myTextArea.putClientProperty(JUST_CLEARED_KEY, !myTextArea.getText().isEmpty());
             myTextArea.setText("");
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(!StringUtil.isEmpty(myTextArea.getText()));
         }
     }
@@ -298,12 +297,12 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             new DefaultEditorKit.InsertBreakAction().actionPerformed(new ActionEvent(myTextArea, 0, "action"));
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myMultilineEnabled);
         }
     }

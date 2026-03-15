@@ -18,7 +18,6 @@ package consulo.web.gwt.client;
 import consulo.web.gwt.shared.ui.state.ApplicationState;
 import consulo.web.gwt.shared.ui.state.RGBColorShared;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ public class ApplicationHolder {
     myApplicationState = state;
   }
 
-  public RGBColorShared getComponentColor(@Nonnull String colorKey) {
+  public RGBColorShared getComponentColor(String colorKey) {
     RGBColorShared shared = myApplicationState.myComponentColors.get(colorKey);
     if (shared != null) {
       return shared;
@@ -41,7 +40,7 @@ public class ApplicationHolder {
     return new RGBColorShared();
   }
 
-  public RGBColorShared getSchemeColor(@Nonnull String colorKey) {
+  public RGBColorShared getSchemeColor(String colorKey) {
     RGBColorShared shared = myApplicationState.mySchemeColors.get(colorKey);
     if(shared != null) {
       return shared;

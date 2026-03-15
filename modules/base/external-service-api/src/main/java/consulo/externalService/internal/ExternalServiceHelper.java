@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalServiceHelper {
-    void openTipInBrowser(@Nonnull Pair<LocalizeValue, PluginDescriptor> tipInfo, Object browser);
+    void openTipInBrowser(Pair<LocalizeValue, PluginDescriptor> tipInfo, Object browser);
 
-    String markup(@Nonnull String textToMarkup, @Nullable String filter);
+    String markup(String textToMarkup, @Nullable String filter);
 }

@@ -16,9 +16,8 @@
 
 package consulo.index.io;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Iterator;
 
 /**
@@ -38,11 +37,11 @@ public abstract class ValueContainer<Value> {
     boolean contains(int id);
   }
 
-  @Nonnull
+  
   public abstract ValueIterator<Value> getValueIterator();
 
   public interface ValueIterator<Value> extends Iterator<Value> {
-    @Nonnull
+    
     IntIterator getInputIdsIterator();
 
     @Nullable
@@ -56,7 +55,7 @@ public abstract class ValueContainer<Value> {
     boolean perform(int id, T value);
   }
 
-  public final boolean forEach(@Nonnull ContainerAction<? super Value> action) {
+  public final boolean forEach(ContainerAction<? super Value> action) {
     for (ValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext(); ) {
       Value value = valueIterator.next();
       for (IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext(); ) {

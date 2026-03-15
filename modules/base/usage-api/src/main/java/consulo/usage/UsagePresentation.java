@@ -17,17 +17,16 @@ package consulo.usage;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public interface UsagePresentation {
-    @Nonnull
+    
     TextChunk[] getText();
 
-    @Nonnull
+    
     String getPlainText();
 
     @Nullable

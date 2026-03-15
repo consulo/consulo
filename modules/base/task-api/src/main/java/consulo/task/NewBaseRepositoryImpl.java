@@ -6,8 +6,7 @@ import consulo.http.adapter.httpclient4.HttpClient4Proxy;
 import consulo.task.util.RequestFailedException;
 import consulo.task.util.TaskUtil;
 import consulo.util.io.CharsetToolkit;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -55,7 +54,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
     super(other);
   }
 
-  @Nonnull
+  
   protected HttpClient getHttpClient() {
     HttpClient4Factory factory = Application.get().getInstance(HttpClient4Factory.class);
     HttpClientBuilder builder = factory.createBuilder()
@@ -77,7 +76,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
     return null;
   }
 
-  @Nonnull
+  
   private CredentialsProvider createCredentialsProvider() {
     CredentialsProvider provider = new BasicCredentialsProvider();
     // Basic authentication
@@ -92,7 +91,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
     return provider;
   }
 
-  @Nonnull
+  
   protected RequestConfig createRequestConfig() {
     TaskSettings tasksSettings = TaskSettings.getInstance();
     RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(3000).setSocketTimeout(tasksSettings.CONNECTION_TIMEOUT);
@@ -109,7 +108,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
    *
    * @return server's REST API path prefix
    */
-  @Nonnull
+  
   public String getRestApiPathPrefix() {
     return "";
   }
@@ -123,8 +122,8 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
    *
    * @return described URL
    */
-  @Nonnull
-  public String getRestApiUrl(@Nonnull Object... parts) {
+  
+  public String getRestApiUrl(Object... parts) {
     StringBuilder builder = new StringBuilder(getUrl());
     builder.append(getRestApiPathPrefix());
     if (builder.charAt(builder.length() - 1) == '/') {
@@ -162,7 +161,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
     // Request can be changed during test
     protected volatile HttpRequestBase myCurrentRequest;
 
-    public HttpTestConnection(@Nonnull HttpRequestBase request) {
+    public HttpTestConnection(HttpRequestBase request) {
       myCurrentRequest = request;
     }
 

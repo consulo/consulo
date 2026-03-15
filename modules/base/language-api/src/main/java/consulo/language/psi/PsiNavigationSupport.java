@@ -12,8 +12,7 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -28,22 +27,22 @@ public interface PsiNavigationSupport {
 
     @Nullable
     @RequiredReadAction
-    Navigatable getDescriptor(@Nonnull PsiElement element);
+    Navigatable getDescriptor(PsiElement element);
 
-    @Nonnull
+    
     @Deprecated
-    default Navigatable createNavigatable(@Nonnull Project project, @Nonnull VirtualFile vFile, int offset) {
+    default Navigatable createNavigatable(Project project, VirtualFile vFile, int offset) {
         return OpenFileDescriptorFactory.getInstance(project).newBuilder(vFile).offset(offset).build();
     }
 
     @RequiredReadAction
     boolean canNavigate(@Nullable PsiElement element);
 
-    void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus);
+    void navigateToDirectory(PsiDirectory psiDirectory, boolean requestFocus);
 
     @Deprecated
     @RequiredUIAccess
-    default void openDirectoryInSystemFileManager(@Nonnull File file) {
+    default void openDirectoryInSystemFileManager(File file) {
         Platform.current().openDirectoryInFileManager(file, UIAccess.current());
     }
 }

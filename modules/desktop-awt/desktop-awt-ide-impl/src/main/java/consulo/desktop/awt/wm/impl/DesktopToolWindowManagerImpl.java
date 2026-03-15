@@ -85,8 +85,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -121,7 +120,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
          * tool window depending on decoration type.
          */
         @Override
-        public void resized(@Nonnull ToolWindowInternalDecorator s) {
+        public void resized(ToolWindowInternalDecorator s) {
             DesktopInternalDecorator source = (DesktopInternalDecorator) s;
 
             if (!source.isShowing()) {
@@ -221,7 +220,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         });
         busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectClosed(Project project, UIAccess uiAccess) {
                 if (project == myProject) {
                     uiAccess.giveAndWaitIfNeed(DesktopToolWindowManagerImpl.this::projectClosed);
                 }
@@ -232,7 +231,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
         busConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
-            public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+            public void fileClosed(FileEditorManager source, VirtualFile file) {
                 getFocusManagerImpl(myProject).doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
                     @Override
                     @RequiredUIAccess
@@ -252,19 +251,19 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
 
-    @Nonnull
+    
     @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
         return new MyInternalDecoratorListener();
     }
 
-    @Nonnull
+    
     @Override
     protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
         return new DesktopStripeButton((DesktopInternalDecorator) internalDecorator, (DesktopToolWindowPanelImpl) myToolWindowPanel);
     }
 
-    @Nonnull
+    
     @Override
     protected ToolWindowEx createToolWindow(
         String id,
@@ -276,11 +275,11 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return new DesktopToolWindowImpl(this, id, displayName, canCloseContent, (JComponent) component, shouldBeAvailable);
     }
 
-    @Nonnull
+    
     @Override
     protected ToolWindowInternalDecorator createInternalDecorator(
         Project project,
-        @Nonnull WindowInfoImpl info,
+        WindowInfoImpl info,
         ToolWindowEx toolWindow,
         boolean dumbAware
     ) {
@@ -398,7 +397,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return getModifiersVKs(baseModifiers);
     }
 
-    @Nonnull
+    
     private static Set<Integer> getModifiersVKs(int mask) {
         Set<Integer> codes = new HashSet<>();
         if ((mask & InputEvent.SHIFT_MASK) > 0) {
@@ -457,7 +456,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         );
     }
 
-    @Nonnull
+    
     public DesktopToolWindowPanelImpl getToolWindowPanel() {
         return (DesktopToolWindowPanelImpl) myToolWindowPanel;
     }
@@ -529,7 +528,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return FileEditorManager.getInstance(project).getComponent();
     }
 
-    @Nonnull
+    
     @Override
     protected JLabel createInitializingLabel() {
         JLabel label = new JLabel("Initializing...", SwingConstants.CENTER);
@@ -630,7 +629,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public boolean canShowNotification(@Nonnull String toolWindowId) {
+    public boolean canShowNotification(String toolWindowId) {
         if (!Arrays.asList(getToolWindowIds()).contains(toolWindowId)) {
             return false;
         }
@@ -640,16 +639,16 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
+    public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
         notifyByBalloon(toolWindowId, type, htmlBody, null, null);
     }
 
     @Override
     @RequiredUIAccess
     public void notifyByBalloon(
-        @Nonnull String toolWindowId,
-        @Nonnull NotificationType type,
-        @Nonnull String text,
+        String toolWindowId,
+        NotificationType type,
+        String text,
         @Nullable Image icon,
         @Nullable HyperlinkListener listener
     ) {
@@ -865,11 +864,11 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void doContentRename(
-        @Nonnull DataContext context,
-        @Nonnull ToolWindow toolWindow,
+        DataContext context,
+        ToolWindow toolWindow,
         @Nullable Content content,
-        @Nonnull LocalizeValue labelText,
-        @Nonnull BiConsumer<Content, String> renameConsumer
+        LocalizeValue labelText,
+        BiConsumer<Content, String> renameConsumer
     ) {
         Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         if (component == null || content == null || !context.hasData(Content.KEY)) {
@@ -883,7 +882,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         Component baseLabel,
         Content content,
         LocalizeValue labelText,
-        @Nonnull BiConsumer<Content, String> renameConsumer
+        BiConsumer<Content, String> renameConsumer
     ) {
         JBTextField textField = new JBTextField(content.getDisplayName());
         textField.getEmptyText().setText(content.getDisplayName());
@@ -1013,12 +1012,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public boolean isMaximized(@Nonnull ToolWindow wnd) {
+    public boolean isMaximized(ToolWindow wnd) {
         return getToolWindowPanel().isMaximized(wnd);
     }
 
     @Override
-    public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
+    public void setMaximized(ToolWindow wnd, boolean maximized) {
         getToolWindowPanel().setMaximized(wnd, maximized);
     }
 
@@ -1088,7 +1087,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         /**
          * Creates floating decorator for specified floating decorator.
          */
-        private AddWindowedDecoratorCmd(@Nonnull DesktopInternalDecorator decorator, @Nonnull WindowInfoImpl info) {
+        private AddWindowedDecoratorCmd(DesktopInternalDecorator decorator, WindowInfoImpl info) {
             myWindowedDecorator = new DesktopWindowedDecorator(myProject, info.copy(), decorator);
             Window window = myWindowedDecorator.getFrame();
             Rectangle2D bounds = info.getFloatingBounds();
@@ -1160,7 +1159,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         private final String myId;
         private final DesktopToolWindowImpl myToolWindow;
 
-        private ToolWindowFocusWatcher(@Nonnull DesktopToolWindowImpl toolWindow) {
+        private ToolWindowFocusWatcher(DesktopToolWindowImpl toolWindow) {
             myId = toolWindow.getId();
             install(toolWindow.getComponent());
             myToolWindow = toolWindow;
@@ -1227,16 +1226,16 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     /**
      * Delegate method for compatibility with older versions of IDEA
      */
-    @Nonnull
-    public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
+    
+    public AsyncResult<Void> requestFocus(Component c, boolean forced) {
         return ProjectIdeFocusManager.getInstance(myProject).requestFocus(c, forced);
     }
 
-    public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
+    public void doWhenFocusSettlesDown(Runnable runnable) {
         ProjectIdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(runnable);
     }
 
-    @Nonnull
+    
     private static Rectangle2D getRootBounds(JFrame frame) {
         JRootPane rootPane = frame.getRootPane();
         Rectangle bounds = rootPane.getBounds();

@@ -31,8 +31,7 @@ import consulo.project.Project;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -40,9 +39,9 @@ public abstract class PostfixTemplatesUtils {
     private PostfixTemplatesUtils() {
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static PsiFile copyFile(@Nonnull PsiFile file, @Nonnull StringBuilder fileContentWithoutKey) {
+    public static PsiFile copyFile(PsiFile file, StringBuilder fileContentWithoutKey) {
         PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(file.getProject());
         FileType fileType = file.getFileType();
         Language language = LanguageUtil.getLanguageForPsi(file.getProject(), file.getVirtualFile(), fileType);
@@ -62,9 +61,9 @@ public abstract class PostfixTemplatesUtils {
     }
 
     @Nullable
-    public static TextRange surround(@Nonnull Surrounder surrounder,
-                                     @Nonnull Editor editor,
-                                     @Nonnull PsiElement expr) {
+    public static TextRange surround(Surrounder surrounder,
+                                     Editor editor,
+                                     PsiElement expr) {
         Project project = expr.getProject();
         PsiElement[] elements = {expr};
         if (surrounder.isApplicable(elements)) {
@@ -76,20 +75,20 @@ public abstract class PostfixTemplatesUtils {
         return null;
     }
 
-    public static void showErrorHint(@Nonnull Project project, @Nonnull Editor editor) {
+    public static void showErrorHint(Project project, Editor editor) {
         HintManager.getInstance().showErrorHint(editor, "Can't expand postfix template");
     }
 
     /**
      * Returns all templates registered in the provider, including the edited templates and builtin templates in their current state
      */
-    @Nonnull
-    public static Set<PostfixTemplate> getAvailableTemplates(@Nonnull PostfixTemplateProvider provider) {
+    
+    public static Set<PostfixTemplate> getAvailableTemplates(PostfixTemplateProvider provider) {
         return provider.getTemplates();
     }
 
-    @Nonnull
-    public static String getLangForProvider(@Nonnull PostfixTemplateProvider provider) {
+    
+    public static String getLangForProvider(PostfixTemplateProvider provider) {
         return provider.getLanguage().getID();
     }
 }

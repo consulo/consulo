@@ -7,7 +7,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * An interface used to support tracking of common PSI modifications. It has three main usage patterns:
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PsiModificationTracker extends ModificationTracker {
-    @Nonnull
+    
     static PsiModificationTracker getInstance(Project project) {
         return project.getInstance(PsiModificationTracker.class);
     }
@@ -54,6 +53,6 @@ public interface PsiModificationTracker extends ModificationTracker {
     @RequiredWriteAction
     void incCounter();
 
-    @Nonnull
+    
     ModificationTracker getModificationTracker();
 }

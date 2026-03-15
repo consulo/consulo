@@ -23,8 +23,7 @@ import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.util.collection.FList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -41,7 +40,7 @@ public class BetterPrefixMatcher extends PrefixMatcher {
     myMinMatchingDegree = minMatchingDegree;
   }
 
-  @Nonnull
+  
   public BetterPrefixMatcher improve(CompletionResult result) {
     int degree = RealPrefixMatchingWeigher.getBestMatchingDegree(result.getLookupElement(), result.getPrefixMatcher());
     if (degree <= myMinMatchingDegree) return this;
@@ -49,13 +48,13 @@ public class BetterPrefixMatcher extends PrefixMatcher {
     return createCopy(myOriginal, degree);
   }
 
-  @Nonnull
+  
   protected BetterPrefixMatcher createCopy(PrefixMatcher original, int degree) {
     return new BetterPrefixMatcher(original, degree);
   }
 
   @Override
-  public boolean prefixMatches(@Nonnull String name) {
+  public boolean prefixMatches(String name) {
     return prefixMatchesEx(name) == MatchingOutcome.BETTER_MATCH;
   }
 
@@ -90,16 +89,16 @@ public class BetterPrefixMatcher extends PrefixMatcher {
     return myOriginal.matchingDegree(string);
   }
 
-  @Nonnull
+  
   @Override
-  public PrefixMatcher cloneWithPrefix(@Nonnull String prefix) {
+  public PrefixMatcher cloneWithPrefix(String prefix) {
     return createCopy(myOriginal.cloneWithPrefix(prefix), myMinMatchingDegree);
   }
 
   public static class AutoRestarting extends BetterPrefixMatcher {
     private final CompletionResultSet myResult;
 
-    public AutoRestarting(@Nonnull CompletionResultSet result) {
+    public AutoRestarting(CompletionResultSet result) {
       this(result, result.getPrefixMatcher(), Integer.MIN_VALUE);
     }
 
@@ -108,7 +107,7 @@ public class BetterPrefixMatcher extends PrefixMatcher {
       myResult = result;
     }
 
-    @Nonnull
+    
     @Override
     protected BetterPrefixMatcher createCopy(PrefixMatcher original, int degree) {
       return new AutoRestarting(myResult, original, degree);

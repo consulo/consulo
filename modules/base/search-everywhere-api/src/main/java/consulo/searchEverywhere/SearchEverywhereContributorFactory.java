@@ -19,11 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnActionEvent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchEverywhereContributorFactory<Item> {
     @Nullable
-    SearchEverywhereContributor<Item> createContributor(@Nonnull AnActionEvent initEvent);
+    SearchEverywhereContributor<Item> createContributor(AnActionEvent initEvent);
 }

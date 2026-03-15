@@ -42,9 +42,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
@@ -66,7 +64,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   private XValuePresentation myValuePresentation;
 
   //todo[nik] annotate 'name' with @NotNull
-  public XValueNodeImpl(XDebuggerTree tree, @Nullable XDebuggerTreeNode parent, String name, @Nonnull XValue value) {
+  public XValueNodeImpl(XDebuggerTree tree, @Nullable XDebuggerTreeNode parent, String name, XValue value) {
     super(tree, parent, value);
     myName = name;
 
@@ -86,28 +84,28 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
-  public void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren) {
+  public void setPresentation(@Nullable Image icon, @Nullable String type, String value, boolean hasChildren) {
     XValueNodePresentationConfigurator.setPresentation(icon, type, value, hasChildren, this);
   }
 
   @Override
   public void setPresentation(
     @Nullable Image icon,
-    @NonNls @Nullable String type,
-    @NonNls @Nonnull String separator,
-    @NonNls @Nullable String value,
+    @Nullable String type,
+    String separator,
+    @Nullable String value,
     boolean hasChildren
   ) {
     XValueNodePresentationConfigurator.setPresentation(icon, type, separator, value, hasChildren, this);
   }
 
   @Override
-  public void setPresentation(@Nullable Image icon, @Nonnull XValuePresentation presentation, boolean hasChildren) {
+  public void setPresentation(@Nullable Image icon, XValuePresentation presentation, boolean hasChildren) {
     XValueNodePresentationConfigurator.setPresentation(icon, presentation, hasChildren, this);
   }
 
   @Override
-  public void applyPresentation(@Nullable Image icon, @Nonnull XValuePresentation valuePresentation, boolean hasChildren) {
+  public void applyPresentation(@Nullable Image icon, XValuePresentation valuePresentation, boolean hasChildren) {
     // extra check for obsolete nodes - tree root was changed
     // too dangerous to put this into isObsolete - it is called from anywhere, not only EDT
     if (isObsolete()) return;
@@ -177,7 +175,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
-  public void setFullValueEvaluator(@Nonnull XFullValueEvaluator fullValueEvaluator) {
+  public void setFullValueEvaluator(XFullValueEvaluator fullValueEvaluator) {
     invokeNodeUpdate(() -> {
       myFullValueEvaluator = fullValueEvaluator;
       XValueNodeImpl.this.fireNodeChanged();
@@ -211,11 +209,11 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
     }
   }
 
-  public static void buildText(@Nonnull XValuePresentation valuePresenter, @Nonnull ColoredTextContainer text) {
+  public static void buildText(XValuePresentation valuePresenter, ColoredTextContainer text) {
     buildText(valuePresenter, text, true);
   }
 
-  public static void buildText(@Nonnull XValuePresentation valuePresenter, @Nonnull ColoredTextContainer text, boolean appendSeparator) {
+  public static void buildText(XValuePresentation valuePresenter, ColoredTextContainer text, boolean appendSeparator) {
     if (appendSeparator) {
       XValuePresentationUtil.appendSeparator(text, valuePresenter.getSeparator());
     }

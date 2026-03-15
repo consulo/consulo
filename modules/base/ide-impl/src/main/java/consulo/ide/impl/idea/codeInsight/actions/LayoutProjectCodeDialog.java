@@ -34,8 +34,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,9 +73,9 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
     private JPanel myFiltersPanel;
     private JLabel myMaskWarningLabel;
 
-    public LayoutProjectCodeDialog(@Nonnull Project project,
-                                   @Nonnull String title,
-                                   @Nonnull String text,
+    public LayoutProjectCodeDialog(Project project,
+                                   String title,
+                                   String text,
                                    boolean enableOnlyVCSChangedTextCb) {
         super(project, false);
         myText = text;
@@ -169,7 +168,7 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
         setOKActionEnabled(true);
     }
 
-    private static boolean isMaskValid(@Nonnull String mask) {
+    private static boolean isMaskValid(String mask) {
         try {
             FindInProjectUtil.createFileMaskCondition(mask);
         }
@@ -180,7 +179,7 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
         return true;
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};

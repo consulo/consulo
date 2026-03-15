@@ -20,8 +20,7 @@ import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.change.ContentRevision;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -37,13 +36,13 @@ public class FakeRevision implements ContentRevision {
   public String getContent() { return null; }
 
   @Override
-  @Nonnull
+  
   public FilePath getFile() {
     return myFile;
   }
 
   @Override
-  @Nonnull
+  
   public VcsRevisionNumber getRevisionNumber() {
     return VcsRevisionNumber.NULL;
   }

@@ -33,7 +33,6 @@ import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -196,7 +195,7 @@ class ActionInfoPanel extends NonOpaquePanel implements Disposable {
     }
   }
 
-  @Nonnull
+  
   private List<JLabel> createLabels(List<Pair<String, Font>> textFragments, IdeFrame ideFrame) {
     int fontSize = PresentationAssistant.getInstance().getConfiguration().getFontSize();
 

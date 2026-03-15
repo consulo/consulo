@@ -2,8 +2,7 @@
 package consulo.codeEditor.internal.stickyLine;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents information about sticky line collected by {@link StickyLinesCollector}.
@@ -12,7 +11,7 @@ import jakarta.annotation.Nullable;
  */
 public record StickyLineInfo(int textOffset, int endOffset, @Nullable String debugText) {
 
-    public StickyLineInfo(@Nonnull TextRange textRange) {
+    public StickyLineInfo(TextRange textRange) {
         this(textRange.getStartOffset(), textRange.getEndOffset(), null);
     }
 

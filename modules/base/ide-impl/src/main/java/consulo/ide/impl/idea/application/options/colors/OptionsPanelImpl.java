@@ -31,7 +31,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -49,7 +48,7 @@ public class OptionsPanelImpl implements OptionsPanel {
 
     private final ColorAndFontOptions myOptions;
     private final SchemesPanel mySchemesProvider;
-    @Nonnull
+    
     private final LocalizeValue myCategoryName;
 
     private final PropertiesComponent myProperties;
@@ -59,14 +58,14 @@ public class OptionsPanelImpl implements OptionsPanel {
     private final JPanel myPanel;
 
     @RequiredUIAccess
-    public OptionsPanelImpl(ColorAndFontOptions options, SchemesPanel schemesProvider, @Nonnull LocalizeValue categoryName) {
+    public OptionsPanelImpl(ColorAndFontOptions options, SchemesPanel schemesProvider, LocalizeValue categoryName) {
         this(options, schemesProvider, categoryName, new ColorAndFontDescriptionPanel());
     }
 
     public OptionsPanelImpl(
         ColorAndFontOptions options,
         SchemesPanel schemesProvider,
-        @Nonnull LocalizeValue categoryName,
+        LocalizeValue categoryName,
         ColorDescriptionPanel optionsPanel
     ) {
         myPanel = new JPanel(new BorderLayout());
@@ -84,7 +83,7 @@ public class OptionsPanelImpl implements OptionsPanel {
             }
 
             @Override
-            public void onHyperLinkClicked(@Nonnull HyperlinkEvent e) {
+            public void onHyperLinkClicked(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     Settings settings = DataManager.getInstance().getDataContext(myPanel).getData(Settings.KEY);
                     String pageName = e.getDescription();

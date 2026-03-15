@@ -40,8 +40,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -94,7 +93,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   private final Animator myAnimator;
   @Nullable
   private final Timer myActivationWatcher;
-  @Nonnull
+  
   private State myState = State.EXPANDED;
   private double myProgress = 0;
   private boolean myActivated = false;
@@ -232,7 +231,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     }
   }
 
-  private void setState(@Nonnull State state) {
+  private void setState(State state) {
     myState = state;
     if (myState == State.EXPANDING && myActivationWatcher != null && !myActivationWatcher.isRunning()) {
       myActivationWatcher.start();

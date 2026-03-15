@@ -21,13 +21,12 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.PsiNamedElement;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class IdentifierUtil {
   @Nullable
   @RequiredReadAction
-  public static PsiElement getNameIdentifier(@Nonnull PsiElement element) {
+  public static PsiElement getNameIdentifier(PsiElement element) {
     if (element instanceof PsiNameIdentifierOwner) {
       return ((PsiNameIdentifierOwner)element).getNameIdentifier();
     }

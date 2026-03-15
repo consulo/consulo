@@ -17,16 +17,15 @@ package consulo.execution.ui.terminal;
 
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15/04/2023
  */
 public interface TerminalConsole extends Disposable {
-    @Nonnull
+    
     String getSessionName();
 
-    @Nonnull
+    
     Component getUIComponent();
 }

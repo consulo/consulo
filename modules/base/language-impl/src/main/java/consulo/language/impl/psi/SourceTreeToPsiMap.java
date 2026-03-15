@@ -19,8 +19,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class SourceTreeToPsiMap {
   private SourceTreeToPsiMap() { }
@@ -30,8 +29,8 @@ public class SourceTreeToPsiMap {
     return element == null ? null : element.getPsi();
   }
 
-  @Nonnull
-  public static <T extends PsiElement> T treeToPsiNotNull(@Nonnull ASTNode element) {
+  
+  public static <T extends PsiElement> T treeToPsiNotNull(ASTNode element) {
     PsiElement psi = element.getPsi();
     assert psi != null : element;
     //noinspection unchecked
@@ -43,8 +42,8 @@ public class SourceTreeToPsiMap {
     return psiElement == null ? null : psiElement.getNode();
   }
 
-  @Nonnull
-  public static TreeElement psiToTreeNotNull(@Nonnull PsiElement psiElement) {
+  
+  public static TreeElement psiToTreeNotNull(PsiElement psiElement) {
     ASTNode node = psiElement.getNode();
     assert node instanceof TreeElement : psiElement + ", " + node;
     return (TreeElement)node;

@@ -19,13 +19,12 @@ import consulo.language.statistician.Statistician;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public abstract class ProximityStatistician extends Statistician<PsiElement, ProximityLocation, ProximityStatistician> {
-  @Nonnull
+  
   @Override
   public Key<ProximityStatistician> getKey() {
     return PsiProximityComparator.STATISTICS_KEY;

@@ -23,7 +23,7 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents some data that probably can be compared with some other.

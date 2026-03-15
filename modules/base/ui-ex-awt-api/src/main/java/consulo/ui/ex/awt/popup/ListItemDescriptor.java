@@ -2,7 +2,7 @@
 package consulo.ui.ex.awt.popup;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ListItemDescriptor<T> {
     @Nullable

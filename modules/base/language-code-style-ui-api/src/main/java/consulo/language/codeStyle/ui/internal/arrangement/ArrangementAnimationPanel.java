@@ -19,8 +19,7 @@ import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,7 +31,7 @@ import java.awt.image.BufferedImage;
  */
 public class ArrangementAnimationPanel extends JPanel {
 
-  @Nonnull
+  
   private final JComponent myContent;
   private int myAnimationIterationStep;
 
@@ -48,7 +47,7 @@ public class ArrangementAnimationPanel extends JPanel {
   private boolean myDelayedAnimation;
   private boolean myAnimated;
 
-  public ArrangementAnimationPanel(@Nonnull JComponent content, boolean expand, boolean horizontal) {
+  public ArrangementAnimationPanel(JComponent content, boolean expand, boolean horizontal) {
     super(new GridBagLayout());
     myContent = content;
     myExpand = expand;

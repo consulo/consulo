@@ -26,8 +26,7 @@ import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -38,10 +37,10 @@ abstract class CodeStyleManagerRunnable<T> {
   protected FormattingModel myModel;
   protected TextRange mySignificantRange;
   private final CodeStyleManagerImpl myCodeStyleManager;
-  @Nonnull
+  
   private final FormattingMode myMode;
 
-  CodeStyleManagerRunnable(CodeStyleManagerImpl codeStyleManager, @Nonnull FormattingMode mode) {
+  CodeStyleManagerRunnable(CodeStyleManagerImpl codeStyleManager, FormattingMode mode) {
     myCodeStyleManager = codeStyleManager;
     myMode = mode;
   }
@@ -108,8 +107,8 @@ abstract class CodeStyleManagerRunnable<T> {
     return defaultValue;
   }
 
-  @Nonnull
-  private FormattingModel buildModel(@Nonnull FormattingModelBuilder builder, @Nonnull PsiFile file, @Nullable Document document) {
+  
+  private FormattingModel buildModel(FormattingModelBuilder builder, PsiFile file, @Nullable Document document) {
     FormattingModel model = CoreFormatterUtil.buildModel(builder, file, mySettings, myMode);
     if (document != null && useDocumentBaseFormattingModel()) {
       model = new DocumentBasedFormattingModel(model, document, myCodeStyleManager.getProject(), mySettings, file.getFileType(), file);
@@ -174,8 +173,8 @@ abstract class CodeStyleManagerRunnable<T> {
     return elementAtOffset instanceof PsiWhiteSpace || CharArrayUtil.containsOnlyWhiteSpaces(elementAtOffset.getChars());
   }
 
-  @Nonnull
-  private static TextRange extendRangeAtStartOffset(@Nonnull PsiFile file, @Nonnull TextRange range) {
+  
+  private static TextRange extendRangeAtStartOffset(PsiFile file, TextRange range) {
     int startOffset = range.getStartOffset();
     if (startOffset > 0) {
       String text = file.getText();

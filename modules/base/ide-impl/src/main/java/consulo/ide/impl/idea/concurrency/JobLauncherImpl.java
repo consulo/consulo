@@ -17,8 +17,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,17 +37,17 @@ public class JobLauncherImpl extends JobLauncher {
   static final int CORES_FORK_THRESHOLD = 1;
 
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {
+  public <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things, ProgressIndicator progress, Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     ApplicationEx app = (ApplicationEx)Application.get();
     return invokeConcurrentlyUnderProgress(things, progress, app.isReadAccessAllowed(), app.isInImpatientReader(), thingProcessor);
   }
 
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things,
+  public <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things,
                                                      ProgressIndicator progress,
                                                      boolean runInReadAction,
                                                      boolean failFastOnAcquireReadAction,
-                                                     @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {
+                                                     Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     // supply our own indicator even if we haven't given one - to support cancellation
     // use StandardProgressIndicator by default to avoid assertion in SensitiveProgressWrapper() ctr later
     ProgressIndicator wrapper = progress == null ? new StandardProgressIndicatorBase() : new SensitiveProgressWrapper(progress);
@@ -106,10 +105,10 @@ public class JobLauncherImpl extends JobLauncher {
 
   // if {@code things} are too few to be processed in the real pool, returns TRUE if processed successfully, FALSE if not
   // returns null if things need to be processed in the real pool
-  private static <T> Boolean processImmediatelyIfTooFew(@Nonnull List<? extends T> things,
-                                                        @Nonnull ProgressIndicator progress,
+  private static <T> Boolean processImmediatelyIfTooFew(List<? extends T> things,
+                                                        ProgressIndicator progress,
                                                         boolean runInReadAction,
-                                                        @Nonnull Predicate<? super T> thingProcessor) {
+                                                        Predicate<? super T> thingProcessor) {
     // commit can be invoked from within write action
     //if (runInReadAction && ApplicationManager.getApplication().isWriteAccessAllowed()) {
     //  throw new RuntimeException("Must not run invokeConcurrentlyUnderProgress() from under write action because of imminent deadlock");
@@ -141,9 +140,9 @@ public class JobLauncherImpl extends JobLauncher {
 
   // This implementation is not really async
 
-  @Nonnull
+  
   @Override
-  public Job<Void> submitToJobThread(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
+  public Job<Void> submitToJobThread(Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
     VoidForkJoinTask task = new VoidForkJoinTask(action, onDoneCallback);
     task.submit();
     return task;
@@ -189,7 +188,7 @@ public class JobLauncherImpl extends JobLauncher {
       }
     };
 
-    private VoidForkJoinTask(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
+    private VoidForkJoinTask(Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
       myAction = action;
       myOnDoneCallback = onDoneCallback;
     }
@@ -245,11 +244,11 @@ public class JobLauncherImpl extends JobLauncher {
    *
    * @return true if all elements processed successfully, false if at least one processor returned false or exception occurred
    */
-  public <T> boolean processQueue(@Nonnull final BlockingQueue<T> things,
-                                  @Nonnull final Queue<T> failedToProcess,
-                                  @Nonnull final ProgressIndicator progress,
-                                  @Nonnull final T tombStone,
-                                  @Nonnull final Predicate<? super T> thingProcessor) {
+  public <T> boolean processQueue(final BlockingQueue<T> things,
+                                  final Queue<T> failedToProcess,
+                                  final ProgressIndicator progress,
+                                  final T tombStone,
+                                  final Predicate<? super T> thingProcessor) {
     class MyTask implements Callable<Boolean> {
       private final int mySeq;
       private boolean result;

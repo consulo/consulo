@@ -20,9 +20,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -40,7 +38,7 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
   boolean isDateOmittable();
 
   @Nullable
-  @NonNls
+  
   String getHelpId();
 
   /**
@@ -70,6 +68,6 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
    * @param file File which history is requested or may be requested.
    * @return true if the VCS can show history for this file.
    */
-  boolean canShowHistoryFor(@Nonnull VirtualFile file);
+  boolean canShowHistoryFor(VirtualFile file);
 
 }

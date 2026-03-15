@@ -20,23 +20,22 @@ import consulo.language.editor.template.LiveTemplateLookupElement;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 public class LiveTemplateLookupElementImpl extends LiveTemplateLookupElement {
   private final Template myTemplate;
 
-  public LiveTemplateLookupElementImpl(@Nonnull Template template, boolean sudden) {
+  public LiveTemplateLookupElementImpl(Template template, boolean sudden) {
     super(template.getKey(), StringUtil.notNullize(template.getDescription()), sudden, false);
     myTemplate = template;
   }
 
-  @Nonnull
+  
   @Override
   public String getLookupString() {
     return myTemplate.getKey();
   }
 
-  @Nonnull
+  
   public Template getTemplate() {
     return myTemplate;
   }

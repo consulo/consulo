@@ -23,17 +23,16 @@ import consulo.project.Project;
 import consulo.usage.Usage;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfo2UsageAdapter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 
 public abstract class BackgroundUpdaterTask extends BackgroundUpdaterTaskBase<PsiElement> {
-    public BackgroundUpdaterTask(@Nullable Project project, @Nonnull String title, @Nullable Comparator<PsiElement> comparator) {
+    public BackgroundUpdaterTask(@Nullable Project project, String title, @Nullable Comparator<PsiElement> comparator) {
         super(project, title, comparator);
     }
 
-    protected static Comparator<PsiElement> createComparatorWrapper(@Nonnull Comparator<? super PsiElement> comparator) {
+    protected static Comparator<PsiElement> createComparatorWrapper(Comparator<? super PsiElement> comparator) {
         return (o1, o2) -> {
             int diff = comparator.compare(o1, o2);
             return diff == 0 ? AccessRule.read(() -> PsiUtilCore.compareElementsByPosition(o1, o2)) : Integer.valueOf(diff);
@@ -47,14 +46,14 @@ public abstract class BackgroundUpdaterTask extends BackgroundUpdaterTaskBase<Ps
     }
 
     @Override
-    public boolean updateComponent(@Nonnull PsiElement element, @Nullable Comparator comparator) {
+    public boolean updateComponent(PsiElement element, @Nullable Comparator comparator) {
         //Ensures that method with signature `updateComponent(PsiElement, Comparator)` is present in bytecode,
         //which is necessary for binary compatibility with some external plugins.
         return super.updateComponent(element, comparator);
     }
 
     @Override
-    public boolean updateComponent(@Nonnull PsiElement element) {
+    public boolean updateComponent(PsiElement element) {
         //Ensures that method with signature `updateComponent(PsiElement)` is present in bytecode,
         //which is necessary for binary compatibility with some external plugins.
         return super.updateComponent(element);

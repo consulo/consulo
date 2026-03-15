@@ -18,8 +18,7 @@ package consulo.versionControlSystem.distributed.push;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public abstract class PushTargetPanel<T extends PushTarget> extends JPanel {
@@ -27,7 +26,7 @@ public abstract class PushTargetPanel<T extends PushTarget> extends JPanel {
   /**
    * @param isActive true if appropriate repository changes will be pushed, a.e. if repository checked
    */
-  abstract public void render(@Nonnull ColoredTreeCellRenderer renderer,
+  abstract public void render(ColoredTreeCellRenderer renderer,
                               boolean isSelected,
                               boolean isActive,
                               @Nullable String forceRenderedText);
@@ -42,13 +41,13 @@ public abstract class PushTargetPanel<T extends PushTarget> extends JPanel {
   @Nullable
   public abstract ValidationInfo verify();
 
-  public abstract void setFireOnChangeAction(@Nonnull Runnable action);
+  public abstract void setFireOnChangeAction(Runnable action);
 
   /**
    * Add an ability to track edit field process
    */
-  public abstract void addTargetEditorListener(@Nonnull PushTargetEditorListener listener);
+  public abstract void addTargetEditorListener(PushTargetEditorListener listener);
 
-  public void forceUpdateEditableUiModel(@Nonnull String forcedText) {
+  public void forceUpdateEditableUiModel(String forcedText) {
   }
 }

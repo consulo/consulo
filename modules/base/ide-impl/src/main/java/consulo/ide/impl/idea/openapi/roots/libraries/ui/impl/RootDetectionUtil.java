@@ -34,8 +34,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -50,13 +49,13 @@ public class RootDetectionUtil {
     private RootDetectionUtil() {
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static List<OrderRoot> detectRoots(
-        @Nonnull Collection<VirtualFile> rootCandidates,
+        Collection<VirtualFile> rootCandidates,
         @Nullable Component parentComponent,
         @Nullable Project project,
-        @Nonnull LibraryRootsComponentDescriptor rootsComponentDescriptor
+        LibraryRootsComponentDescriptor rootsComponentDescriptor
     ) {
         return detectRoots(
             rootCandidates,
@@ -67,20 +66,20 @@ public class RootDetectionUtil {
         );
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static List<OrderRoot> detectRoots(
-        @Nonnull Collection<VirtualFile> rootCandidates,
+        Collection<VirtualFile> rootCandidates,
         @Nullable Component parentComponent,
         @Nullable Project project,
-        @Nonnull LibraryRootsDetector detector,
-        @Nonnull List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected
+        LibraryRootsDetector detector,
+        List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected
     ) {
         List<OrderRoot> result = new ArrayList<>();
         List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<>();
         new Task.Modal(project, LocalizeValue.localizeTODO("Scanning for Roots"), true) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     for (VirtualFile rootCandidate : rootCandidates) {
                         Collection<DetectedLibraryRoot> roots = detector.detectRoots(rootCandidate, indicator);
@@ -181,8 +180,8 @@ public class RootDetectionUtil {
         public ChooseRootTypeElementsDialog(
             Project project,
             List<String> names,
-            @Nonnull LocalizeValue title,
-            @Nonnull LocalizeValue description
+            LocalizeValue title,
+            LocalizeValue description
         ) {
             super(project, names, title, description, true);
         }
@@ -190,8 +189,8 @@ public class RootDetectionUtil {
         private ChooseRootTypeElementsDialog(
             Component parent,
             List<String> names,
-            @Nonnull LocalizeValue title,
-            @Nonnull LocalizeValue description
+            LocalizeValue title,
+            LocalizeValue description
         ) {
             super(parent, names, title, description, true);
         }

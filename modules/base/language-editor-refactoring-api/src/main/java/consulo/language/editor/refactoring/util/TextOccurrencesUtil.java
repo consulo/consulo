@@ -40,7 +40,6 @@ import consulo.logging.Logger;
 import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfoFactory;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.function.BiPredicate;
@@ -52,11 +51,11 @@ public class TextOccurrencesUtil {
   private TextOccurrencesUtil() {
   }
 
-  public static void addTextOccurences(@Nonnull PsiElement element,
-                                       @Nonnull String stringToSearch,
-                                       @Nonnull GlobalSearchScope searchScope,
-                                       @Nonnull final Collection<UsageInfo> results,
-                                       @Nonnull UsageInfoFactory factory) {
+  public static void addTextOccurences(PsiElement element,
+                                       String stringToSearch,
+                                       GlobalSearchScope searchScope,
+                                       final Collection<UsageInfo> results,
+                                       UsageInfoFactory factory) {
     processTextOccurences(element, stringToSearch, searchScope, new Processor<UsageInfo>() {
       @Override
       public boolean process(UsageInfo t) {
@@ -66,11 +65,11 @@ public class TextOccurrencesUtil {
     }, factory);
   }
 
-  public static boolean processTextOccurences(@Nonnull PsiElement element,
-                                              @Nonnull String stringToSearch,
-                                              @Nonnull GlobalSearchScope searchScope,
-                                              @Nonnull final Processor<UsageInfo> processor,
-                                              @Nonnull final UsageInfoFactory factory) {
+  public static boolean processTextOccurences(PsiElement element,
+                                              String stringToSearch,
+                                              GlobalSearchScope searchScope,
+                                              final Processor<UsageInfo> processor,
+                                              final UsageInfoFactory factory) {
     PsiSearchHelper helper = PsiSearchHelper.getInstance(element.getProject());
 
     return helper.processUsagesInNonJavaFiles(element, stringToSearch, new PsiNonJavaFileReferenceProcessor() {
@@ -94,8 +93,8 @@ public class TextOccurrencesUtil {
     }, searchScope);
   }
 
-  private static boolean processStringLiteralsContainingIdentifier(@Nonnull String identifier,
-                                                                   @Nonnull SearchScope searchScope,
+  private static boolean processStringLiteralsContainingIdentifier(String identifier,
+                                                                   SearchScope searchScope,
                                                                    PsiSearchHelper helper,
                                                                    final Processor<PsiElement> processor) {
     TextOccurenceProcessor occurenceProcessor = new TextOccurenceProcessor() {
@@ -114,10 +113,10 @@ public class TextOccurrencesUtil {
     return helper.processElementsWithWord(occurenceProcessor, searchScope, identifier, UsageSearchContext.IN_STRINGS, true);
   }
 
-  public static boolean processUsagesInStringsAndComments(@Nonnull PsiElement element,
-                                                          @Nonnull final String stringToSearch,
+  public static boolean processUsagesInStringsAndComments(PsiElement element,
+                                                          final String stringToSearch,
                                                           final boolean ignoreReferences,
-                                                          @Nonnull final BiPredicate<PsiElement, TextRange> processor) {
+                                                          final BiPredicate<PsiElement, TextRange> processor) {
     PsiSearchHelper helper = PsiSearchHelper.getInstance(element.getProject());
     SearchScope scope = PsiSearchScopeUtil.getUseScope(element);
     scope = GlobalSearchScope.projectScope(element.getProject()).intersectWith(scope);
@@ -131,10 +130,10 @@ public class TextOccurrencesUtil {
       helper.processCommentsContainingIdentifier(stringToSearch, scope, commentOrLiteralProcessor);
   }
 
-  public static void addUsagesInStringsAndComments(@Nonnull PsiElement element,
-                                                   @Nonnull String stringToSearch,
-                                                   @Nonnull final Collection<UsageInfo> results,
-                                                   @Nonnull final UsageInfoFactory factory) {
+  public static void addUsagesInStringsAndComments(PsiElement element,
+                                                   String stringToSearch,
+                                                   final Collection<UsageInfo> results,
+                                                   final UsageInfoFactory factory) {
     final Object lock = new Object();
     processUsagesInStringsAndComments(element, stringToSearch, false, new BiPredicate<PsiElement, TextRange>() {
       @Override
@@ -190,7 +189,7 @@ public class TextOccurrencesUtil {
     return true;
   }
 
-  public static boolean isSearchTextOccurencesEnabled(@Nonnull PsiElement element) {
+  public static boolean isSearchTextOccurencesEnabled(PsiElement element) {
     FindUsagesHandler handler = FindManager.getInstance(element.getProject()).getFindUsagesHandler(element, true);
     return FindUsagesUtil.isSearchForTextOccurrencesAvailable(element, false, handler);
   }
@@ -218,7 +217,7 @@ public class TextOccurrencesUtil {
   private static UsageInfoFactory createUsageInfoFactory(final PsiElement element, final String newQName) {
     return new UsageInfoFactory() {
       @Override
-      public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
+      public UsageInfo createUsageInfo(PsiElement usage, int startOffset, int endOffset) {
         int start = usage.getTextRange().getStartOffset();
         return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element, newQName);
       }

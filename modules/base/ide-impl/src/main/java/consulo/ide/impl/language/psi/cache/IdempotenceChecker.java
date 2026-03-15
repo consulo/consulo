@@ -21,11 +21,9 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadLocalRandom;
@@ -77,14 +75,14 @@ public final class IdempotenceChecker {
    * @param recomputeValue optionally, a way to recalculate the value one more time with {@link #isLoggingEnabled()} true,
    *                       and include the log collected via {@link #logTrace} into exception report.
    */
-  public static <T> void checkEquivalence(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue) {
+  public static <T> void checkEquivalence(@Nullable T existing, @Nullable T fresh, Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue) {
     String msg = checkValueEquivalence(existing, fresh);
     if (msg != null) {
       reportFailure(existing, fresh, providerClass, recomputeValue, msg);
     }
   }
 
-  private static <T> void reportFailure(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue, String msg) {
+  private static <T> void reportFailure(@Nullable T existing, @Nullable T fresh, Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue, String msg) {
     boolean shouldReport = ApplicationManager.getApplication().isUnitTestMode() || ourReportedValueClasses.add(providerClass);
     if (shouldReport) {
       if (recomputeValue != null) {
@@ -94,11 +92,11 @@ public final class IdempotenceChecker {
     }
   }
 
-  @Nonnull
-  private static <T> String recomputeWithLogging(@Nullable T existing, @Nullable T fresh, @Nonnull Supplier<? extends T> recomputeValue) {
+  
+  private static <T> String recomputeWithLogging(@Nullable T existing, @Nullable T fresh, Supplier<? extends T> recomputeValue) {
     ResultWithLog<T> rwl = computeWithLogging(recomputeValue);
     T freshest = rwl.result;
-    @NonNls String msg = "\n\nRecomputation gives " + objAndClass(freshest);
+    String msg = "\n\nRecomputation gives " + objAndClass(freshest);
     if (checkValueEquivalence(existing, freshest) == null) {
       msg += " which is equivalent to 'existing'";
     }
@@ -120,7 +118,7 @@ public final class IdempotenceChecker {
    * @return Both the computation result and the log
    * @see #logTrace(String)
    */
-  @Nonnull
+  
   public static <T> ResultWithLog<T> computeWithLogging(Supplier<? extends T> recomputeValue) {
     List<String> threadLog = ourLog.get();
     boolean outermost = threadLog == null;
@@ -140,7 +138,7 @@ public final class IdempotenceChecker {
   }
 
   private static
-  @NonNls
+  
   String objAndClass(Object o) {
     if (o == null) return "null";
 
@@ -208,7 +206,7 @@ public final class IdempotenceChecker {
     return o instanceof LinkedHashSet || o instanceof SortedSet;
   }
 
-  private static String whichIsField(@Nonnull @NonNls String field, @Nonnull Object existing, @Nonnull Object fresh, @Nullable String msg) {
+  private static String whichIsField(String field, Object existing, Object fresh, @Nullable String msg) {
     return msg == null ? null : appendDetail(msg, "which is " + field + " of " + existing + " and " + fresh);
   }
 
@@ -221,7 +219,7 @@ public final class IdempotenceChecker {
     return null;
   }
 
-  private static String checkCachedValueData(@Nonnull CachedValueBase.Data<?> existing, @Nonnull CachedValueBase.Data<?> fresh) {
+  private static String checkCachedValueData(CachedValueBase.Data<?> existing, CachedValueBase.Data<?> fresh) {
     Object[] deps1 = existing.getDependencies();
     Object[] deps2 = fresh.getDependencies();
     Object eValue = existing.get();
@@ -236,7 +234,7 @@ public final class IdempotenceChecker {
     return checkValueEquivalence(eValue, fValue);
   }
 
-  private static boolean isExpectedToHaveSaneEquals(@Nonnull Object existing) {
+  private static boolean isExpectedToHaveSaneEquals(Object existing) {
     return existing instanceof Comparable;
   }
 
@@ -253,7 +251,7 @@ public final class IdempotenceChecker {
     return null;
   }
 
-  private static boolean objectsOfDifferentClassesCanStillBeEquivalent(@Nonnull Object existing, @Nonnull Object fresh) {
+  private static boolean objectsOfDifferentClassesCanStillBeEquivalent(Object existing, Object fresh) {
     if (existing instanceof Map && fresh instanceof Map && isOrderedMap(existing) == isOrderedMap(fresh)) return true;
     if (existing instanceof Set && fresh instanceof Set && isOrderedSet(existing) == isOrderedSet(fresh)) return true;
     if (existing instanceof List && fresh instanceof List) return true;
@@ -264,20 +262,20 @@ public final class IdempotenceChecker {
   private static final Map<Class, Set<Class>> allSupersWithEquals = ConcurrentFactoryMap
           .createMap(clazz -> JBIterable.generate(clazz, Class::getSuperclass).filter(c -> c != Object.class && ReflectionUtil.getDeclaredMethod(c, "equals", Object.class) != null).toSet());
 
-  private static String checkPsiEquivalence(@Nonnull PsiElement existing, @Nonnull PsiElement fresh) {
+  private static String checkPsiEquivalence(PsiElement existing, PsiElement fresh) {
     if (!existing.equals(fresh) && !existing.isEquivalentTo(fresh) && !fresh.isEquivalentTo(existing) && (seemsToBeResolveTarget(existing) || seemsToBeResolveTarget(fresh))) {
       return reportProblem(existing, fresh);
     }
     return null;
   }
 
-  private static boolean seemsToBeResolveTarget(@Nonnull PsiElement psi) {
+  private static boolean seemsToBeResolveTarget(PsiElement psi) {
     if (psi.isPhysical()) return true;
     PsiElement nav = psi.getNavigationElement();
     return nav != null && nav.isPhysical();
   }
 
-  private static String checkCollectionElements(@Nonnull Collection<?> existing, @Nonnull Collection<?> fresh) {
+  private static String checkCollectionElements(Collection<?> existing, Collection<?> fresh) {
     if (fresh.isEmpty()) {
       return null; // for cases when an empty collection is cached and then filled lazily on request
     }
@@ -313,7 +311,7 @@ public final class IdempotenceChecker {
     return appendDetail("Non-idempotent computation: it returns different results when invoked multiple times or on different threads:", objAndClass(o1) + " != " + objAndClass(o2));
   }
 
-  private static String appendDetail(@NonNls String message, @NonNls String detail) {
+  private static String appendDetail(String message, String detail) {
     return message + "\n  " + StringUtil.trimLog(detail, 10_000);
   }
 
@@ -375,7 +373,7 @@ public final class IdempotenceChecker {
    * Log a message to help debug {@link #checkEquivalence} failures. When such a failure occurs, the computation can be re-run again
    * with this logging enabled, and the collected log will be included into exception message.
    */
-  public static void logTrace(@Nonnull @NonNls String message) {
+  public static void logTrace(String message) {
     List<String> log = ourLog.get();
     if (log != null) {
       log.add(message);

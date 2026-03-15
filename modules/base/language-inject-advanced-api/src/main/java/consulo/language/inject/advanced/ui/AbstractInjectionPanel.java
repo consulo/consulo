@@ -20,7 +20,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.language.inject.advanced.BaseInjection;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -35,13 +34,13 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	private final List<Field> myOtherPanels = new ArrayList<>(3);
 	private final List<Runnable> myUpdaters = new ArrayList<>(1);
 
-	@Nonnull
+	
 	private final Project myProject;
 
 	/**
 	 * The orignal item - must not be modified unless apply() is called.
 	 */
-	@Nonnull
+	
 	private final T myOrigInjection;
 
 	/**
@@ -49,7 +48,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	 */
 	private T myEditCopy;
 
-	protected AbstractInjectionPanel(@Nonnull T injection, @Nonnull Project project)
+	protected AbstractInjectionPanel(T injection, Project project)
 	{
 		myOrigInjection = injection;
 		myProject = project;
@@ -65,13 +64,13 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 		}
 	}
 
-	@Nonnull
+	
 	public Project getProject()
 	{
 		return myProject;
 	}
 
-	@Nonnull
+	
 	public T getOrigInjection()
 	{
 		return myOrigInjection;
@@ -86,7 +85,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 
 	@Override
 	@SuppressWarnings({"unchecked"})
-	public final void init(@Nonnull T copy)
+	public final void init(T copy)
 	{
 		myEditCopy = copy;
 

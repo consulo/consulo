@@ -18,7 +18,6 @@ package consulo.content;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -27,19 +26,19 @@ import java.util.EventListener;
  * @author dsl
  */
 public interface RootProvider {
-  @Nonnull
-  String[] getUrls(@Nonnull OrderRootType rootType);
+  
+  String[] getUrls(OrderRootType rootType);
 
-  @Nonnull
-  VirtualFile[] getFiles(@Nonnull OrderRootType rootType);
+  
+  VirtualFile[] getFiles(OrderRootType rootType);
 
   interface RootSetChangedListener extends EventListener {
     void rootSetChanged(RootProvider wrapper);
   }
 
-  void addRootSetChangedListener(@Nonnull RootSetChangedListener listener);
+  void addRootSetChangedListener(RootSetChangedListener listener);
 
-  void addRootSetChangedListener(@Nonnull RootSetChangedListener listener, @Nonnull Disposable parentDisposable);
+  void addRootSetChangedListener(RootSetChangedListener listener, Disposable parentDisposable);
 
-  void removeRootSetChangedListener(@Nonnull RootSetChangedListener listener);
+  void removeRootSetChangedListener(RootSetChangedListener listener);
 }

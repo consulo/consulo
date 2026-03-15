@@ -16,8 +16,7 @@
 package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeCellEditor;
 
@@ -26,7 +25,7 @@ import javax.swing.tree.TreeCellEditor;
  * @since 2014-03-26
  */
 public interface EditableMessageElement {
-  @Nonnull
+  
   TreeCellEditor getRightSelfEditor();
   @Nullable
   CustomizeColoredTreeCellRenderer getLeftSelfRenderer();

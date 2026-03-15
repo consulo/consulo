@@ -15,7 +15,6 @@
  */
 package consulo.component.internal.inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,13 +31,13 @@ public class LazyInjectingKey<T> implements InjectingKey<T> {
     myClassLoader = classLoader;
   }
 
-  @Nonnull
+  
   @Override
   public String getTargetClassName() {
     return myClassName;
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
   public Class<T> getTargetClass() {

@@ -36,8 +36,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
   }
 
   @Override
-  public void execute(@Nonnull Editor editor, DataContext dataContext) {
+  public void execute(Editor editor, DataContext dataContext) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: execute(editor='" + editor + "')");
     }
@@ -98,7 +97,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
    * @return null means unable to select
    */
   @Nullable
-  private static TextRange selectWord(@Nonnull Editor editor, @Nonnull Project project) {
+  private static TextRange selectWord(Editor editor, Project project) {
     Document document = editor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
     if (file instanceof PsiCompiledFile) {
@@ -173,7 +172,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
     return minimumRange.get();
   }
 
-  private static int adjustCaretOffset(@Nonnull Editor editor) {
+  private static int adjustCaretOffset(Editor editor) {
     int caretOffset = editor.getCaretModel().getOffset();
     if (caretOffset == 0) {
       return caretOffset;
@@ -192,7 +191,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
   }
 
   @Nullable
-  private static PsiElement findElementAt(@Nonnull PsiFile file, int caretOffset) {
+  private static PsiElement findElementAt(PsiFile file, int caretOffset) {
     PsiElement elementAt = file.findElementAt(caretOffset);
     if (elementAt != null && isLanguageExtension(file, elementAt)) {
       return file.getViewProvider().findElementAt(caretOffset, file.getLanguage());
@@ -200,7 +199,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
     return elementAt;
   }
 
-  private static boolean isLanguageExtension(@Nonnull PsiFile file, @Nonnull PsiElement elementAt) {
+  private static boolean isLanguageExtension(PsiFile file, PsiElement elementAt) {
     Language elementLanguage = elementAt.getLanguage();
     if (file.getLanguage() instanceof CompositeLanguage) {
       CompositeLanguage compositeLanguage = (CompositeLanguage) file.getLanguage();
@@ -219,7 +218,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET;

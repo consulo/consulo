@@ -21,8 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.PasswordBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -36,7 +35,7 @@ public class DesktopPasswordBoxImpl extends SwingValidableComponent<String, Desk
             super(text, 16);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopPasswordBoxImpl.this;

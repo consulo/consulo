@@ -20,8 +20,7 @@ import consulo.diff.DiffUserDataKeys;
 import consulo.diff.internal.GenericDataProvider;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
  */
 public class DiffUtil {
 
-  public static <T> void putDataKey(@Nonnull UserDataHolder holder, @Nonnull Key<T> key, @Nullable T value) {
+  public static <T> void putDataKey(UserDataHolder holder, Key<T> key, @Nullable T value) {
     DataProvider dataProvider = holder.getUserData(DiffUserDataKeys.DATA_PROVIDER);
     if (!(dataProvider instanceof GenericDataProvider)) {
       dataProvider = new GenericDataProvider(dataProvider);

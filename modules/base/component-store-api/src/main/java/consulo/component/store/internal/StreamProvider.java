@@ -1,8 +1,7 @@
 package consulo.component.store.internal;
 
 import consulo.component.persist.RoamingType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +18,7 @@ public abstract class StreamProvider {
   /**
    * fileSpec Only main fileSpec, not version
    */
-  public boolean isApplicable(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+  public boolean isApplicable(String fileSpec, RoamingType roamingType) {
     return true;
   }
 
@@ -28,18 +27,18 @@ public abstract class StreamProvider {
    * @param content bytes of content
    * @param roamingType
    */
-  public abstract void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, @Nonnull RoamingType roamingType) throws IOException;
+  public abstract void saveContent(String fileSpec, byte[] content, RoamingType roamingType) throws IOException;
 
   @Nullable
-  public abstract InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException;
+  public abstract InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException;
 
-  @Nonnull
-  public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+  
+  public Collection<String> listSubFiles(String fileSpec, RoamingType roamingType) {
     return Collections.emptyList();
   }
 
   /**
    * Delete file or directory
    */
-  public abstract void delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType);
+  public abstract void delete(String fileSpec, RoamingType roamingType);
 }

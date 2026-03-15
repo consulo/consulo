@@ -25,7 +25,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;

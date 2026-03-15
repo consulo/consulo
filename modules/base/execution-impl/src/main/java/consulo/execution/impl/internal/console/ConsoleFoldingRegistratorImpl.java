@@ -20,7 +20,6 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.execution.ui.console.ConsoleFoldingContributor;
 import consulo.execution.ui.console.ConsoleFoldingRegistrator;
 
-import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -35,7 +34,7 @@ public class ConsoleFoldingRegistratorImpl implements ConsoleFoldingRegistrator 
     return impl;
   });
 
-  @Nonnull
+  
   public static ConsoleFoldingRegistratorImpl last() {
     return Application.get().getExtensionPoint(ConsoleFoldingContributor.class).getOrBuildCache(REG_KEY);
   }
@@ -44,12 +43,12 @@ public class ConsoleFoldingRegistratorImpl implements ConsoleFoldingRegistrator 
   private final Set<String> myRemoveSet = new LinkedHashSet<>();
 
   @Override
-  public void addFolding(@Nonnull String line) {
+  public void addFolding(String line) {
     myAddSet.add(line);
   }
 
   @Override
-  public void removeFolding(@Nonnull String line) {
+  public void removeFolding(String line) {
     myRemoveSet.add(line);
   }
 

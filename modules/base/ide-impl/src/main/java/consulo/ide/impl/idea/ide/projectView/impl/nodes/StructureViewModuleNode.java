@@ -22,7 +22,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +33,7 @@ public class StructureViewModuleNode extends AbstractModuleNode {
         super(project, value, viewSettings);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
@@ -66,7 +65,7 @@ public class StructureViewModuleNode extends AbstractModuleNode {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         return false;
     }
 

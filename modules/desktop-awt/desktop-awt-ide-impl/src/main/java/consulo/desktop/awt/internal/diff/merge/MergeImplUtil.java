@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.LocalizeAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -44,12 +43,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class MergeImplUtil {
-    @Nonnull
+    
     public static Action createSimpleResolveAction(
-        @Nonnull MergeResult result,
-        @Nonnull MergeRequest request,
-        @Nonnull MergeContext context,
-        @Nonnull MergeViewer viewer
+        MergeResult result,
+        MergeRequest request,
+        MergeContext context,
+        MergeViewer viewer
     ) {
         LocalizeValue caption = getResolveActionTitle(result, request, context);
         return new LocalizeAction(caption) {
@@ -64,8 +63,8 @@ public class MergeImplUtil {
         };
     }
 
-    @Nonnull
-    public static LocalizeValue getResolveActionTitle(@Nonnull MergeResult result, @Nonnull MergeRequest request, @Nonnull MergeContext context) {
+    
+    public static LocalizeValue getResolveActionTitle(MergeResult result, MergeRequest request, MergeContext context) {
         Function<MergeResult, String> getter = DiffImplUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_ACTION_CAPTIONS);
         String message = getter != null ? getter.apply(result) : null;
         if (message != null) {
@@ -81,8 +80,8 @@ public class MergeImplUtil {
         };
     }
 
-    @Nonnull
-    public static List<String> notNullizeContentTitles(@Nonnull List<String> mergeContentTitles) {
+    
+    public static List<String> notNullizeContentTitles(List<String> mergeContentTitles) {
         String left = StringUtil.notNullize(ThreeSide.LEFT.select(mergeContentTitles), "Your Version");
         String base = StringUtil.notNullize(ThreeSide.BASE.select(mergeContentTitles), "Base Version");
         String right = StringUtil.notNullize(ThreeSide.RIGHT.select(mergeContentTitles), "Server Version");
@@ -90,10 +89,10 @@ public class MergeImplUtil {
     }
 
     public static class ProxyDiffContext extends DiffContext {
-        @Nonnull
+        
         private final MergeContext myMergeContext;
 
-        public ProxyDiffContext(@Nonnull MergeContext mergeContext) {
+        public ProxyDiffContext(MergeContext mergeContext) {
             myMergeContext = mergeContext;
         }
 
@@ -120,20 +119,20 @@ public class MergeImplUtil {
 
         @Nullable
         @Override
-        public <T> T getUserData(@Nonnull Key<T> key) {
+        public <T> T getUserData(Key<T> key) {
             return myMergeContext.getUserData(key);
         }
 
         @Override
-        public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
             myMergeContext.putUserData(key, value);
         }
     }
 
     public static boolean showExitWithoutApplyingChangesDialog(
-        @Nonnull MergeViewer viewer,
-        @Nonnull MergeRequest request,
-        @Nonnull MergeContext context
+        MergeViewer viewer,
+        MergeRequest request,
+        MergeContext context
     ) {
         Predicate<MergeViewer> customHandler = DiffImplUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_CANCEL_HANDLER);
         if (customHandler != null) {
@@ -144,9 +143,9 @@ public class MergeImplUtil {
     }
 
     public static boolean showExitWithoutApplyingChangesDialog(
-        @Nonnull JComponent component,
-        @Nonnull MergeRequest request,
-        @Nonnull MergeContext context
+        JComponent component,
+        MergeRequest request,
+        MergeContext context
     ) {
         LocalizeValue title = DiffLocalize.cancelVisualMergeDialogTitle();
         LocalizeValue message = DiffLocalize.mergeDialogExitWithoutApplyingChangesConfirmationMessage();

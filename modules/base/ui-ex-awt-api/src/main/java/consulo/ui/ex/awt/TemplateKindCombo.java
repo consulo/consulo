@@ -22,8 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -33,7 +32,7 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
     public TemplateKindCombo() {
         getComboBox().setRenderer(new ColoredListCellRenderer() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
                 if (value instanceof Trinity trinity) {
                     append((String)trinity.first);
                     setIcon((Image)trinity.second);
@@ -82,7 +81,7 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
         new AnAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 if (e.getInputEvent() instanceof KeyEvent keyEvent) {
                     int code = keyEvent.getKeyCode();
                     scrollBy(code == KeyEvent.VK_DOWN ? 1 : code == KeyEvent.VK_UP ? -1 : 0);

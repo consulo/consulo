@@ -21,40 +21,39 @@ import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
 public abstract class DiffContentFactoryEx extends DiffContentFactory {
-  @Nonnull
+  
   public static DiffContentFactoryEx getInstanceEx() {
     return (DiffContentFactoryEx)DiffContentFactory.getInstance();
   }
 
 
-  @Nonnull
-  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text, @Nonnull DiffFilePath filePath);
+  
+  public abstract DocumentContent create(@Nullable Project project, String text, DiffFilePath filePath);
 
 
-  @Nonnull
+  
   public abstract DiffContent createFromBytes(@Nullable Project project,
-                                              @Nonnull byte[] content,
-                                              @Nonnull DiffFilePath filePath) throws IOException;
+                                              byte[] content,
+                                              DiffFilePath filePath) throws IOException;
 
-  @Nonnull
+  
   public abstract DiffContent createFromBytes(@Nullable Project project,
-                                              @Nonnull byte[] content,
-                                              @Nonnull VirtualFile highlightFile) throws IOException;
+                                              byte[] content,
+                                              VirtualFile highlightFile) throws IOException;
 
 
-  @Nonnull
+  
   public abstract DocumentContent createDocumentFromBytes(@Nullable Project project,
-                                                          @Nonnull byte[] content,
-                                                          @Nonnull DiffFilePath filePath);
+                                                          byte[] content,
+                                                          DiffFilePath filePath);
 
-  @Nonnull
+  
   public abstract DocumentContent createDocumentFromBytes(@Nullable Project project,
-                                                          @Nonnull byte[] content,
-                                                          @Nonnull VirtualFile highlightFile);
+                                                          byte[] content,
+                                                          VirtualFile highlightFile);
 }

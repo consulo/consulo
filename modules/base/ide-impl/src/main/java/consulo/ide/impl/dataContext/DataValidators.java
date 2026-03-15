@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -43,7 +42,7 @@ public class DataValidators {
       myElementValidator = elementValidator;
     }
 
-    @Nonnull
+    
     @Override
     public Key<T[]> getKey() {
       throw new UnsupportedOperationException("should never called");
@@ -69,7 +68,7 @@ public class DataValidators {
   }
 
   private static final DataValidator<VirtualFile> VIRTUAL_FILE_VALIDATOR = new DataValidator<>() {
-    @Nonnull
+    
     @Override
     public Key<VirtualFile> getKey() {
       return VirtualFile.KEY;
@@ -82,7 +81,7 @@ public class DataValidators {
   };
 
   private static final DataValidator<Project> PROJECT_VALIDATOR = new DataValidator<>() {
-    @Nonnull
+    
     @Override
     public Key<Project> getKey() {
       return Project.KEY;

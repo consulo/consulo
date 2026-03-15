@@ -7,7 +7,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.KeyDescriptor;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -16,12 +15,12 @@ import jakarta.annotation.Nonnull;
 public interface StubIndexExtension<Key, Psi extends PsiElement> {
   ExtensionPointName<StubIndexExtension> EP_NAME = ExtensionPointName.create(StubIndexExtension.class);
 
-  @Nonnull
+  
   StubIndexKey<Key, Psi> getKey();
 
   int getVersion();
 
-  @Nonnull
+  
   KeyDescriptor<Key> getKeyDescriptor();
 
   int getCacheSize();

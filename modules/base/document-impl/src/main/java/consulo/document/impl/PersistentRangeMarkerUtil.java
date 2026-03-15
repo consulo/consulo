@@ -17,7 +17,6 @@ package consulo.document.impl;
 
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRangeScalarUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -33,7 +32,7 @@ public class PersistentRangeMarkerUtil {
      * @return {@code true} if target document range referenced by the given range marker should be translated via
      * diff algorithm; {@code false} otherwise
      */
-    public static boolean shouldTranslateViaDiff(@Nonnull DocumentEvent e, long range) {
+    public static boolean shouldTranslateViaDiff(DocumentEvent e, long range) {
         if (e.isWholeTextReplaced()) {
             // Perform translation if the whole text is replaced.
             return true;

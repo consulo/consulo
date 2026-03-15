@@ -23,7 +23,6 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -443,7 +442,7 @@ class PrintDialog extends DialogWrapper {
     linePlacementCombo.addItem(PrintSettings.FOOTER);
     linePlacementCombo.setRenderer(new ColoredListCellRenderer() {
       @Override
-      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
         String placement = PLACEMENT_MAP.get(value);
         if (placement != null) {
           append(placement);
@@ -463,7 +462,7 @@ class PrintDialog extends DialogWrapper {
     panel.add(new MyLabel(CodeEditorBundle.message("print.header.alignment.combobox")), gbConstraints);
     linePlacementCombo.setRenderer(new ColoredListCellRenderer() {
       @Override
-      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
         String aligment = ALIGNMENT_MAP.get(value);
         if(aligment != null) {
           append(aligment);
@@ -661,7 +660,7 @@ class PrintDialog extends DialogWrapper {
   }
 
   @Override
-  @Nonnull
+  
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), new ApplyAction(), getHelpAction()};
   }

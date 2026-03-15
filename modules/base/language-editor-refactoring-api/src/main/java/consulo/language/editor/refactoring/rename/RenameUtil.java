@@ -55,8 +55,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -67,7 +66,7 @@ public class RenameUtil {
     private RenameUtil() {
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static UsageInfo[] findUsages(
         PsiElement element,
@@ -233,7 +232,7 @@ public class RenameUtil {
         processor.renameElement(element, newName, usages, listener);
     }
 
-    public static void showErrorMessage(IncorrectOperationException e, PsiElement element, @Nonnull Project project) {
+    public static void showErrorMessage(IncorrectOperationException e, PsiElement element, Project project) {
         // may happen if the file or package cannot be renamed. e.g. locked by another application
         if (project.getApplication().isUnitTestMode()) {
             throw new RuntimeException(e);
@@ -249,7 +248,7 @@ public class RenameUtil {
 
     @RequiredWriteAction
     public static void doRenameGenericNamedElement(
-        @Nonnull PsiElement namedElement, String newName, UsageInfo[] usages,
+        PsiElement namedElement, String newName, UsageInfo[] usages,
         @Nullable RefactoringElementListener listener
     ) throws IncorrectOperationException {
         PsiWritableMetaData writableMetaData = namedElement instanceof PsiMetaOwner metaOwner
@@ -329,7 +328,7 @@ public class RenameUtil {
     }
 
     @RequiredWriteAction
-    public static void renameNonCodeUsages(@Nonnull Project project, @Nonnull NonCodeUsageInfo[] usages) {
+    public static void renameNonCodeUsages(Project project, NonCodeUsageInfo[] usages) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
         Map<Document, List<UsageOffset>> docsToOffsetsMap = new HashMap<>();
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);

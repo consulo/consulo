@@ -21,7 +21,7 @@ import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.RouterLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -56,9 +56,8 @@ public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, 
         setFlexGrow(1, newContent);
     }
 
-    @Nullable
     @Override
-    public consulo.ui.Component toUIComponent() {
+    public consulo.ui.@Nullable Component toUIComponent() {
         return myUIWindow;
     }
 }

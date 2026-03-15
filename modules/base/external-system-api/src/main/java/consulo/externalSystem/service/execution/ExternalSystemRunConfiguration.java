@@ -43,8 +43,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -60,12 +59,12 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
   private static final Logger LOG = Logger.getInstance(ExternalSystemRunConfiguration.class);
 
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
 
   private ExternalSystemTaskExecutionSettings mySettings = new ExternalSystemTaskExecutionSettings();
 
-  public ExternalSystemRunConfiguration(@Nonnull ProjectSystemId externalSystemId, Project project, ConfigurationFactory factory, String name) {
+  public ExternalSystemRunConfiguration(ProjectSystemId externalSystemId, Project project, ConfigurationFactory factory, String name) {
     super(project, factory, name);
     myExternalSystemId = externalSystemId;
     mySettings.setExternalSystemIdString(externalSystemId.getId());
@@ -98,12 +97,12 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
     element.addContent(XmlSerializer.serialize(mySettings));
   }
 
-  @Nonnull
+  
   public ExternalSystemTaskExecutionSettings getSettings() {
     return mySettings;
   }
 
-  @Nonnull
+  
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     SettingsEditorGroup<ExternalSystemRunConfiguration> group = new SettingsEditorGroup<>();
@@ -117,25 +116,25 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
   @Nullable
   @Override
-  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
     return new MyRunnableState(myExternalSystemId, mySettings, getProject(), DefaultDebugExecutor.EXECUTOR_ID.equals(executor.getId()));
   }
 
   public static class MyRunnableState implements RunProfileState {
 
-    @Nonnull
+    
     private final ProjectSystemId myExternalSystemId;
-    @Nonnull
+    
     private final ExternalSystemTaskExecutionSettings mySettings;
-    @Nonnull
+    
     private final Project myProject;
 
     private final int myDebugPort;
 
     public MyRunnableState(
-      @Nonnull ProjectSystemId externalSystemId,
-      @Nonnull ExternalSystemTaskExecutionSettings settings,
-      @Nonnull Project project,
+      ProjectSystemId externalSystemId,
+      ExternalSystemTaskExecutionSettings settings,
+      Project project,
       boolean debug
     ) {
       myExternalSystemId = externalSystemId;
@@ -164,7 +163,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
     @Nullable
     @Override
     @RequiredUIAccess
-    public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+    public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
       if (myProject.isDisposed()) return null;
 
       ExternalSystemApiUtil.updateRecentTasks(new ExternalTaskExecutionInfo(mySettings.clone(), executor.getId()), myProject);
@@ -201,7 +200,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
           private boolean myResetGreeting = true;
 
           @Override
-          public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
+          public void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut) {
             if (myResetGreeting) {
               processHandler.notifyTextAvailable("\r", ProcessOutputTypes.SYSTEM);
               myResetGreeting = false;
@@ -210,7 +209,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
           }
 
           @Override
-          public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) {
+          public void onFailure(ExternalSystemTaskId id, Exception e) {
             String exceptionMessage = ExceptionUtil.getMessage(e);
             String text = exceptionMessage == null ? e.toString() : exceptionMessage;
             processHandler.notifyTextAvailable(text + '\n', ProcessOutputTypes.STDERR);
@@ -218,7 +217,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
           }
 
           @Override
-          public void onEnd(@Nonnull ExternalSystemTaskId id) {
+          public void onEnd(ExternalSystemTaskId id) {
             String endDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
             LocalizeValue farewell = mySettings.getTaskNames().size() > 1
               ? ExternalSystemLocalize.runTextEndedMultipleTask(endDateTime, StringUtil.join(mySettings.getTaskNames(), " "))
@@ -250,7 +249,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
         private boolean myResetGreeting = true;
 
         @Override
-        public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
+        public void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut) {
           if (myResetGreeting) {
             notifyTextAvailable("\r", ProcessOutputTypes.SYSTEM);
             myResetGreeting = false;

@@ -1,8 +1,6 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileEditor.impl.internal.largeFileEditor;
 
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 public final class AbsoluteSymbolPosition {
     long pageNumber;
@@ -13,7 +11,7 @@ public final class AbsoluteSymbolPosition {
         this.symbolOffsetInPage = symbolOffsetInPage;
     }
 
-    void set(@Nonnull AbsoluteSymbolPosition from) {
+    void set(AbsoluteSymbolPosition from) {
         set(from.pageNumber, from.symbolOffsetInPage);
     }
 
@@ -58,7 +56,7 @@ public final class AbsoluteSymbolPosition {
     }
 
     @Override
-    public @NonNls String toString() {
+    public String toString() {
         return "(" + pageNumber + "," + symbolOffsetInPage + ")";
     }
 }

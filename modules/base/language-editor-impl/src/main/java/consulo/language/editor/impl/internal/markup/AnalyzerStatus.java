@@ -20,8 +20,7 @@ import consulo.application.util.NotNullLazyValue;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -41,31 +40,31 @@ public class AnalyzerStatus {
       return false;
     }
 
-    @Nonnull
+    
     @Override
     public List<AnAction> getActions() {
       return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public List<InspectionsLevel> getAvailableLevels() {
       return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public List<LanguageHighlightLevel> getHighlightLevels() {
       return Collections.emptyList();
     }
 
     @Override
-    public void setHighLightLevel(@Nonnull LanguageHighlightLevel newLevels) {
+    public void setHighLightLevel(LanguageHighlightLevel newLevels) {
 
     }
 
     @Override
-    public void fillHectorPanels(@Nonnull Container container, @Nonnull GridBag bag) {
+    public void fillHectorPanels(Container container, GridBag bag) {
 
     }
 
@@ -125,7 +124,7 @@ public class AnalyzerStatus {
     myControllerValue = NotNullLazyValue.createValue(controllerCreator);
   }
 
-  @Nonnull
+  
   public UIController getController() {
     return myControllerValue.getValue();
   }

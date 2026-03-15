@@ -21,8 +21,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Sets;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -37,7 +36,7 @@ import java.util.function.Predicate;
  * @param <E> the type of elements held in this list
  */
 public class DisposableWrapperList<E> extends AbstractList<E> {
-    @Nonnull
+    
     private final List<DisposableWrapper> myWrappedList = Lists.newLockFreeCopyOnWriteList();
 
     public DisposableWrapperList() {
@@ -61,8 +60,8 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
      * @return the disposable object representing the added element. Disposal of this object removes the element from
      * the list. Conversely, removal of the element from the list triggers disposal of its disposable object.
      */
-    @Nonnull
-    public Disposable add(E element, @Nonnull Disposable parentDisposable) {
+    
+    public Disposable add(E element, Disposable parentDisposable) {
         DisposableWrapper disposableWrapper = createDisposableWrapper(element, parentDisposable);
         myWrappedList.add(disposableWrapper);
         return disposableWrapper;
@@ -77,8 +76,8 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
      * @return the disposable object representing the added element. Disposal of this object removes the element from
      * the list. Conversely, removal of the element from the list triggers disposal of its disposable object.
      */
-    @Nonnull
-    public Disposable add(int index, E element, @Nonnull Disposable parentDisposable) {
+    
+    public Disposable add(int index, E element, Disposable parentDisposable) {
         DisposableWrapper disposableWrapper = createDisposableWrapper(element, parentDisposable);
         myWrappedList.add(index, disposableWrapper);
         return disposableWrapper;
@@ -86,13 +85,13 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
 
 
     @Override
-    public boolean addAll(@Nonnull Collection<? extends E> collection) {
+    public boolean addAll(Collection<? extends E> collection) {
         Collection<DisposableWrapper> disposableWrappers = wrapAll(collection);
         return myWrappedList.addAll(disposableWrappers);
     }
 
     @Override
-    public boolean addAll(int index, @Nonnull Collection<? extends E> collection) {
+    public boolean addAll(int index, Collection<? extends E> collection) {
         Collection<DisposableWrapper> disposableWrappers = wrapAll(collection);
         return myWrappedList.addAll(index, disposableWrappers);
     }
@@ -123,12 +122,12 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     }
 
     @Override
-    public boolean removeAll(@Nonnull Collection<?> objects) {
+    public boolean removeAll(Collection<?> objects) {
         return removeIf(objects::contains);
     }
 
     @Override
-    public boolean removeIf(@Nonnull Predicate<? super E> filter) {
+    public boolean removeIf(Predicate<? super E> filter) {
         Set<DisposableWrapper> removedWrappers = Sets.newHashSet(myWrappedList.size(), HashingStrategy.identity());
         boolean result = myWrappedList.removeIf(disposableWrapper -> {
             if (filter.test(disposableWrapper.delegate) && (disposableWrapper.makeUnique() || removedWrappers.contains(disposableWrapper))) {
@@ -145,7 +144,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     }
 
     @Override
-    public boolean retainAll(@Nonnull Collection<?> objects) {
+    public boolean retainAll(Collection<?> objects) {
         return removeIf(element -> !objects.contains(element));
     }
 
@@ -165,13 +164,13 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     }
 
     @Override
-    @Nonnull
+    
     public Iterator<E> iterator() {
         return new DisposableWrapperListIterator(0);
     }
 
     @Override
-    @Nonnull
+    
     public Object[] toArray() {
         Object[] elements = myWrappedList.toArray();
         if (elements.length == 0) {
@@ -184,8 +183,8 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     }
 
     @Override
-    @Nonnull
-    public <T> T[] toArray(@Nonnull T[] array) {
+    
+    public <T> T[] toArray(T[] array) {
         Object[] elements = myWrappedList.toArray();
         int len = elements.length;
         if (array.length < len) {
@@ -222,7 +221,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean containsAll(@Nonnull Collection<?> collection) {
+    public boolean containsAll(Collection<?> collection) {
         Collection<DisposableWrapper> disposableWrappers = wrapAll((Collection<? extends E>) collection);
         return myWrappedList.containsAll(disposableWrappers);
     }
@@ -240,32 +239,32 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     }
 
     @Override
-    @Nonnull
+    
     public ListIterator<E> listIterator() {
         return new DisposableWrapperListIterator(0);
     }
 
     @Override
-    @Nonnull
+    
     public ListIterator<E> listIterator(int index) {
         return new DisposableWrapperListIterator(index);
     }
 
     @Override
-    @Nonnull
+    
     public List<E> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    private DisposableWrapper createDisposableWrapper(E element, @Nonnull Disposable parentDisposable) {
+    
+    private DisposableWrapper createDisposableWrapper(E element, Disposable parentDisposable) {
         DisposableWrapper disposableWrapper = new DisposableWrapper(element, true);
         Disposer.register(parentDisposable, disposableWrapper);
         return disposableWrapper;
     }
 
-    @Nonnull
-    private Collection<DisposableWrapper> wrapAll(@Nonnull Collection<? extends E> collection) {
+    
+    private Collection<DisposableWrapper> wrapAll(Collection<? extends E> collection) {
         if (collection.isEmpty()) {
             return Collections.emptyList();
         }
@@ -287,15 +286,15 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     }
 
     private class DisposableWrapper extends AtomicBoolean implements Disposable {
-        @Nonnull
+        
         private final E delegate;
         private boolean removeFromContainer;
 
-        DisposableWrapper(@Nonnull E obj) {
+        DisposableWrapper(E obj) {
             this(obj, false);
         }
 
-        DisposableWrapper(@Nonnull E delegate, boolean removeFromContainer) {
+        DisposableWrapper(E delegate, boolean removeFromContainer) {
             this.delegate = delegate;
             this.removeFromContainer = removeFromContainer;
         }
@@ -347,7 +346,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     }
 
     private class DisposableWrapperListIterator implements ListIterator<E> {
-        @Nonnull
+        
         private final ListIterator<DisposableWrapper> myDelegate;
         @Nullable
         private DisposableWrapper myLastReturned;

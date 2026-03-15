@@ -28,7 +28,6 @@ import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.KeyWithDefaultValue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -43,7 +42,7 @@ public class SandOverrideMethodHandler implements OverrideMethodHandler {
 
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, Editor editor, PsiFile file) {
     SandClassNode parent = new SandClassNode();
 
     MemberChooserBuilder<ClassMember> builder = MemberChooserBuilder.create(new ClassMember[]{new SandClassMember(parent)});
@@ -57,7 +56,7 @@ public class SandOverrideMethodHandler implements OverrideMethodHandler {
     });
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return SandLanguage.INSTANCE;

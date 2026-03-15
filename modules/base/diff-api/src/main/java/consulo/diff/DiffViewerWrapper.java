@@ -18,10 +18,9 @@ package consulo.diff;
 import consulo.diff.FrameDiffTool.DiffViewer;
 import consulo.diff.request.DiffRequest;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 public interface DiffViewerWrapper {
   Key<DiffViewerWrapper> KEY = Key.create("Diff.DiffViewerWrapper");
 
-  DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request, @Nonnull DiffViewer wrappedViewer);
+  DiffViewer createComponent(DiffContext context, DiffRequest request, DiffViewer wrappedViewer);
 }

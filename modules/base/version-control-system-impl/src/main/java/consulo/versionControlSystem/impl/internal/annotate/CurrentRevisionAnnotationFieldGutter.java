@@ -28,7 +28,6 @@ import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.LineAnnotationAspect;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -66,7 +65,7 @@ class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter i
         return myTurnedOn ? value : "";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         LocalizeValue aspectTooltip = myAspect.getTooltipValue(line);

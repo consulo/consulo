@@ -4,8 +4,7 @@ package consulo.language.codeStyle.fileSet;
 import consulo.language.psi.PsiFile;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface FileSetDescriptor {
   /**
@@ -14,14 +13,14 @@ public interface FileSetDescriptor {
    * @param psiFile The PSI file to check against.
    * @return True if there is a match, false otherwise.
    */
-  boolean matches(@Nonnull PsiFile psiFile);
+  boolean matches(PsiFile psiFile);
 
   @Nullable
   default String getName() {
     return null;
   }
 
-  @Nonnull
+  
   String getType();
 
   @Nullable
@@ -29,7 +28,7 @@ public interface FileSetDescriptor {
 
   void setPattern(@Nullable String pattern);
 
-  @Nonnull
+  
   default State getState() {
     return new FileSetDescriptor.State(getType(), getName(), getPattern());
   }

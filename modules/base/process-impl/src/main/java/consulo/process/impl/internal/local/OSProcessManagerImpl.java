@@ -20,7 +20,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.process.internal.OSProcessManager;
 import consulo.process.internal.UnixProcessManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 import org.jvnet.winp.WinProcess;
 
@@ -33,7 +32,7 @@ public class OSProcessManagerImpl extends OSProcessManager {
   private static final Logger LOG = Logger.getInstance(OSProcessManagerImpl.class);
 
   @Override
-  public boolean killProcessTree(@Nonnull Process process) {
+  public boolean killProcessTree(Process process) {
     if (Platform.current().os().isWindows()) {
       try {
         WinProcess winProcess = createWinProcess(process);
@@ -50,8 +49,8 @@ public class OSProcessManagerImpl extends OSProcessManager {
     return false;
   }
 
-  @Nonnull
-  private static WinProcess createWinProcess(@Nonnull Process process) {
+  
+  private static WinProcess createWinProcess(Process process) {
     if (process instanceof RunnerWinProcess) {
       RunnerWinProcess runnerWinProcess = (RunnerWinProcess)process;
       return new WinProcess((int)runnerWinProcess.getOriginalProcess().pid());

@@ -23,8 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.text.JTextComponent;
 
@@ -32,17 +31,17 @@ import javax.swing.text.JTextComponent;
  * @author yole
  */
 public abstract class TextComponentEditorAction extends EditorAction {
-    protected TextComponentEditorAction(@Nonnull EditorActionHandler defaultHandler) {
+    protected TextComponentEditorAction(EditorActionHandler defaultHandler) {
         super(defaultHandler);
     }
 
-    protected TextComponentEditorAction(@Nonnull LocalizeValue text, EditorActionHandler defaultHandler) {
+    protected TextComponentEditorAction(LocalizeValue text, EditorActionHandler defaultHandler) {
         super(text, defaultHandler);
     }
 
     protected TextComponentEditorAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         EditorActionHandler defaultHandler
     ) {
         super(text, description, defaultHandler);
@@ -50,12 +49,12 @@ public abstract class TextComponentEditorAction extends EditorAction {
 
     @Override
     @Nullable
-    protected Editor getEditor(@Nonnull DataContext dataContext) {
+    protected Editor getEditor(DataContext dataContext) {
         return getEditorFromContext(dataContext);
     }
 
     @Nullable
-    public static Editor getEditorFromContext(@Nonnull DataContext dataContext) {
+    public static Editor getEditorFromContext(DataContext dataContext) {
         Editor editor = dataContext.getData(Editor.KEY);
         if (editor != null) {
             return editor;

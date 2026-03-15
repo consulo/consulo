@@ -32,8 +32,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -55,7 +54,7 @@ public class CreatePatchConfigurationPanel {
   private final Project myProject;
   @Nullable private File myCommonParentDir;
 
-  public CreatePatchConfigurationPanel(@Nonnull Project project) {
+  public CreatePatchConfigurationPanel(Project project) {
     myProject = project;
     initMainPanel();
 
@@ -82,7 +81,7 @@ public class CreatePatchConfigurationPanel {
     initEncodingCombo();
   }
 
-  public void selectBasePath(@Nonnull VirtualFile baseDir) {
+  public void selectBasePath(VirtualFile baseDir) {
     myBasePathField.setText(baseDir.getPresentableUrl());
   }
 
@@ -93,7 +92,7 @@ public class CreatePatchConfigurationPanel {
     myEncoding.setSelectedItem(projectCharset);
   }
 
-  @Nonnull
+  
   public Charset getEncoding() {
     return (Charset)myEncoding.getSelectedItem();
   }
@@ -130,7 +129,7 @@ public class CreatePatchConfigurationPanel {
     return UserHomeFileUtil.expandUserHome(myFileNameField.getText().trim());
   }
 
-  @Nonnull
+  
   public String getBaseDirName() {
     return UserHomeFileUtil.expandUserHome(myBasePathField.getText().trim());
   }

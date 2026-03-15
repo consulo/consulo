@@ -22,7 +22,6 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.content.bundle.SdkType;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -39,7 +38,7 @@ public class SdkTypeExtensionPreviewRecorder implements ExtensionPreviewRecorder
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+  public void analyze(Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(SdkType.class).forEachExtensionSafe(it -> {
       ExtensionPreview preview = ExtensionPreview.of(SdkType.class, it.getId(), it);
       recorder.accept(preview);

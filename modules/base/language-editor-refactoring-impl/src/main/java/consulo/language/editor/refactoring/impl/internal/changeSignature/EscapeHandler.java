@@ -23,8 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.changeSignature.inplace.InplaceChangeSignature;
 import consulo.ui.ex.action.IdeActions;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "changeSignatureEscape", order = "before hide-search")
 public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -57,7 +56,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_ESCAPE;

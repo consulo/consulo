@@ -25,7 +25,6 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -49,17 +48,17 @@ public class EvaluatingExpressionRootNode extends XValueContainerNode<Evaluating
     }
 
     @Override
-    public void computeChildren(@Nonnull final XCompositeNode node) {
+    public void computeChildren(final XCompositeNode node) {
       myDialog.startEvaluation(new XEvaluationCallbackBase() {
         @Override
-        public void evaluated(@Nonnull XValue result) {
+        public void evaluated(XValue result) {
           String name = XDebuggerLocalize.xdebuggerEvaluateResult().map(Presentation.NO_MNEMONIC).get();
           node.addChildren(XValueChildrenList.singleton(name, result), true);
           myDialog.evaluationDone();
         }
 
         @Override
-        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+        public void errorOccurred(LocalizeValue errorMessage) {
           node.setErrorMessage(errorMessage);
           myDialog.evaluationDone();
         }

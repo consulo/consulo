@@ -15,7 +15,6 @@
  */
 package consulo.awt.hacking;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.List;
  * @since 2019-11-20
  */
 public class DialogHacking {
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
   public static List<Dialog> modalDialogs() {
     try {

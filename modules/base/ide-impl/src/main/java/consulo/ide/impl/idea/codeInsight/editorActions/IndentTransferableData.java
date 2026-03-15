@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.datatransfer.DataFlavor;
 import java.io.Serializable;
@@ -9,7 +8,7 @@ import java.io.Serializable;
  * @author yole
  */
 public class IndentTransferableData implements TextBlockTransferableData, Serializable {
-  private static @NonNls DataFlavor ourFlavor;
+  private static DataFlavor ourFlavor;
 
   private final int myOffset;
 

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.function.Supplier;
 
@@ -35,7 +34,7 @@ public class OnePixelSplitter extends JBSplitter {
     init();
   }
 
-  public OnePixelSplitter(boolean vertical, @Nonnull String proportionKey, float defaultProportion) {
+  public OnePixelSplitter(boolean vertical, String proportionKey, float defaultProportion) {
     super(vertical, proportionKey, defaultProportion);
     init();
   }
@@ -45,7 +44,7 @@ public class OnePixelSplitter extends JBSplitter {
     init();
   }
 
-  public OnePixelSplitter(@Nonnull String proportionKey, float defaultProportion) {
+  public OnePixelSplitter(String proportionKey, float defaultProportion) {
     super(proportionKey, defaultProportion);
 
     init();

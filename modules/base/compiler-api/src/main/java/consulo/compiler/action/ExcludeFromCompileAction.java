@@ -24,8 +24,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -41,7 +40,7 @@ public abstract class ExcludeFromCompileAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VirtualFile file = getFile();
 
         if (file != null && file.isValid()) {
@@ -55,7 +54,7 @@ public abstract class ExcludeFromCompileAction extends AnAction {
     protected abstract VirtualFile getFile();
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(getFile() != null);
     }
 }

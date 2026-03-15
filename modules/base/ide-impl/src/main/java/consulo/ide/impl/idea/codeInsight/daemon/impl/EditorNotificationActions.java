@@ -14,12 +14,11 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
 class EditorNotificationActions {
-  public static void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
+  public static void collectActions(Editor hostEditor, PsiFile hostFile, IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
     Project project = hostEditor.getProject();
     if (project == null) return;
     FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);

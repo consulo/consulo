@@ -15,10 +15,8 @@
  */
 package consulo.virtualFileSystem;
 
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,7 +26,7 @@ import java.io.OutputStream;
  */
 public class StubVirtualFile extends VirtualFile {
   @Override
-  @Nonnull
+  
   public byte[] contentsToByteArray() throws IOException {
     throw new UnsupportedOperationException("contentsToByteArray is not implemented");
   }
@@ -39,7 +37,7 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFileSystem getFileSystem() {
     throw new UnsupportedOperationException("getFileSystem is not implemented");
   }
@@ -55,13 +53,13 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     throw new UnsupportedOperationException("getName is not implemented");
   }
 
   @Override
-  @Nonnull
+  
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new UnsupportedOperationException("getOutputStream is not implemented");
   }
@@ -73,7 +71,7 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public String getPath() {
     throw new UnsupportedOperationException("getPath is not implemented");
   }
@@ -84,7 +82,7 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public String getUrl() {
     throw new UnsupportedOperationException("getUrl is not implemented");
   }

@@ -25,8 +25,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Nikolay Matveev
@@ -45,7 +44,7 @@ public class FileNameMacro extends Macro {
   }
 
   @Override
-  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateResult(Expression[] params, ExpressionContext context) {
     PsiFile file = PsiDocumentManager.getInstance(context.getProject()).getPsiFile(context.getEditor().getDocument());
     if (file != null) {
       VirtualFile virtualFile = file.getVirtualFile();
@@ -57,7 +56,7 @@ public class FileNameMacro extends Macro {
   }
 
   @Nullable
-  protected TextResult calculateResult(@Nonnull VirtualFile virtualFile) {
+  protected TextResult calculateResult(VirtualFile virtualFile) {
     return new TextResult(virtualFile.getName());
   }
 }

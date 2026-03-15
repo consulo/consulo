@@ -5,8 +5,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Sergey Simonchik
@@ -18,17 +17,17 @@ public class GithubTagInfo {
   private Version myVersion;
   private boolean myRecentTag = false;
 
-  public GithubTagInfo(@Nonnull String name, @Nonnull String zipballUrl) {
+  public GithubTagInfo(String name, String zipballUrl) {
     myName = name;
     myZipballUrl = zipballUrl;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  @Nonnull
+  
   public String getZipballUrl() {
     return myZipballUrl;
   }
@@ -41,7 +40,7 @@ public class GithubTagInfo {
     return myRecentTag;
   }
 
-  @Nonnull
+  
   public Version getVersion() {
     if (myVersion == null) {
       myVersion = createVersionComponents();
@@ -49,7 +48,7 @@ public class GithubTagInfo {
     return myVersion;
   }
 
-  @Nonnull
+  
   private Version createVersionComponents() {
     String tagName = myName;
     if (tagName.startsWith("v.")) {
@@ -124,8 +123,8 @@ public class GithubTagInfo {
     private final String myLabel;
     private final int myLabelVersion;
 
-    public Version(@Nonnull IntList intComponents,
-                   @Nonnull String label,
+    public Version(IntList intComponents,
+                   String label,
                    int labelVersion) {
       myIntComponents.addAll(intComponents.toArray());
       myLabel = label;

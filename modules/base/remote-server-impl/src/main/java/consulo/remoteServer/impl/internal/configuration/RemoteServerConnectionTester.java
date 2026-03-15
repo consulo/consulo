@@ -10,23 +10,22 @@ import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.remoteServer.runtime.ServerConnector;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RemoteServerConnectionTester {
 
     public interface Callback {
-        void connectionTested(boolean wasConnected, @Nonnull String hadStatusText);
+        void connectionTested(boolean wasConnected, String hadStatusText);
     }
 
     private final RemoteServer<?> myServer;
 
-    public RemoteServerConnectionTester(@Nonnull RemoteServer<?> server) {
+    public RemoteServerConnectionTester(RemoteServer<?> server) {
         myServer = server;
     }
 
-    public void testConnection(@Nonnull Callback callback) {
+    public void testConnection(Callback callback) {
         final ServerConnection connection = ServerConnectionManager.getInstance().createTemporaryConnection(myServer);
         final AtomicReference<Boolean> connectedRef = new AtomicReference<>(null);
         final Semaphore semaphore = new Semaphore();
@@ -36,14 +35,14 @@ public class RemoteServerConnectionTester {
         connection.connectIfNeeded(new ServerConnector.ConnectionCallback() {
 
             @Override
-            public void connected(@Nonnull ServerRuntimeInstance serverRuntimeInstance) {
+            public void connected(ServerRuntimeInstance serverRuntimeInstance) {
                 connectedRef.set(true);
                 semaphore.up();
                 connection.disconnect();
             }
 
             @Override
-            public void errorOccurred(@Nonnull String errorMessage) {
+            public void errorOccurred(String errorMessage) {
                 connectedRef.set(false);
                 semaphore.up();
             }
@@ -51,7 +50,7 @@ public class RemoteServerConnectionTester {
 
         new Task.Backgroundable(null, CloudBundle.message("task.title.connecting"), true) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
                 while (!indicator.isCanceled()) {
                     if (semaphore.waitFor(500)) {

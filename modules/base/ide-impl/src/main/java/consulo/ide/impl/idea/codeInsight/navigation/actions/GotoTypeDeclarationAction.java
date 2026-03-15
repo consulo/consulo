@@ -35,8 +35,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.HashSet;
@@ -52,7 +51,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return this;
@@ -64,7 +63,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         if (!myApplication.getExtensionPoint(TypeDeclarationProvider.class).hasAnyExtensions()) {
             event.getPresentation().setVisible(false);
         }
@@ -75,7 +74,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
         int offset = editor.getCaretModel().getOffset();
@@ -94,7 +93,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
         }
     }
 
-    private static void navigate(@Nonnull Project project, @Nonnull PsiElement symbolType) {
+    private static void navigate(Project project, PsiElement symbolType) {
         PsiElement element = symbolType.getNavigationElement();
         assert element != null : "SymbolType :" + symbolType + "; file: " + symbolType.getContainingFile();
         VirtualFile file = element.getContainingFile().getVirtualFile();
@@ -159,7 +158,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
     @Nullable
     @RequiredReadAction
-    private static PsiElement[] getSymbolTypeDeclarations(@Nonnull PsiElement targetElement, Editor editor, int offset) {
+    private static PsiElement[] getSymbolTypeDeclarations(PsiElement targetElement, Editor editor, int offset) {
         for (TypeDeclarationProvider provider : targetElement.getApplication().getExtensionList(TypeDeclarationProvider.class)) {
             PsiElement[] result = provider.getSymbolTypeDeclarations(targetElement, editor, offset);
             if (result != null) {

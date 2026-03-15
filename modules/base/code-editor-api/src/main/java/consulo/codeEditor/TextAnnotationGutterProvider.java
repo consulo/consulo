@@ -22,8 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -47,7 +46,7 @@ public interface TextAnnotationGutterProvider {
     String getLineText(int line, Editor editor);
 
     //TODO: rename into getToolTip() after deprecation deletion
-    @Nonnull
+    
     default LocalizeValue getToolTipValue(int line, Editor editor) {
         return LocalizeValue.ofNullable(getToolTip(line, editor));
     }

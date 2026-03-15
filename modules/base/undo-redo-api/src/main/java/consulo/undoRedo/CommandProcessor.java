@@ -14,8 +14,7 @@ import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A class for defining 'command' scopes. Every undoable change should be executed as part of a command. Commands can nest, in such a case
@@ -25,18 +24,18 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CommandProcessor {
-    @Nonnull
+    
     public static CommandProcessor getInstance() {
         return Application.get().getInstance(CommandProcessor.class);
     }
 
-    @Nonnull
+    
     public abstract <T> RunnableCommandBuilder<T, ? extends RunnableCommandBuilder<T, ?>> newCommand();
 
     @Deprecated
     @DeprecationInfo("Use #newCommand().run(Runnable)")
     @RequiredUIAccess
-    public void executeCommand(@Nonnull @RequiredUIAccess Runnable runnable, @Nullable String name, @Nullable Object groupId) {
+    public void executeCommand(@RequiredUIAccess Runnable runnable, @Nullable String name, @Nullable Object groupId) {
         newCommand()
             .name(LocalizeValue.ofNullable(name))
             .groupId(groupId)
@@ -48,7 +47,7 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull @RequiredUIAccess Runnable runnable,
+        @RequiredUIAccess Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId
     ) {
@@ -64,7 +63,7 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull @RequiredUIAccess Runnable runnable,
+        @RequiredUIAccess Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId,
         @Nullable Document document
@@ -82,10 +81,10 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull @RequiredUIAccess Runnable runnable,
+        @RequiredUIAccess Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId,
-        @Nonnull UndoConfirmationPolicy confirmationPolicy
+        UndoConfirmationPolicy confirmationPolicy
     ) {
         newCommand()
             .project(project)
@@ -100,10 +99,10 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull @RequiredUIAccess Runnable command,
+        @RequiredUIAccess Runnable command,
         @Nullable String name,
         @Nullable Object groupId,
-        @Nonnull UndoConfirmationPolicy confirmationPolicy,
+        UndoConfirmationPolicy confirmationPolicy,
         @Nullable Document document
     ) {
         newCommand()
@@ -126,10 +125,10 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull @RequiredUIAccess Runnable command,
+        @RequiredUIAccess Runnable command,
         @Nullable String name,
         @Nullable Object groupId,
-        @Nonnull UndoConfirmationPolicy confirmationPolicy,
+        UndoConfirmationPolicy confirmationPolicy,
         boolean shouldRecordCommandForActiveDocument
     ) {
         newCommand()
@@ -141,7 +140,7 @@ public abstract class CommandProcessor {
             .run(command);
     }
 
-    public void setCurrentCommandName(@Nonnull LocalizeValue name) {
+    public void setCurrentCommandName(LocalizeValue name) {
         setCurrentCommandName(name.getNullIfEmpty());
     }
 
@@ -163,7 +162,7 @@ public abstract class CommandProcessor {
     public abstract boolean hasCurrentCommand();
 
     //TODO: rename into #getCurrentCommandName() after deprecation removal
-    @Nonnull
+    
     public LocalizeValue getCurrentCommandNameValue() {
         return LocalizeValue.ofNullable(getCurrentCommandName());
     }
@@ -186,7 +185,7 @@ public abstract class CommandProcessor {
      * with 'adjacent' command.
      */
     @RequiredUIAccess
-    public abstract void runUndoTransparentAction(@RequiredUIAccess @Nonnull Runnable action);
+    public abstract void runUndoTransparentAction(@RequiredUIAccess Runnable action);
 
     /**
      * @see #runUndoTransparentAction(Runnable)
@@ -195,21 +194,21 @@ public abstract class CommandProcessor {
 
     public abstract void markCurrentCommandAsGlobal(@Nullable Project project);
 
-    public abstract void addAffectedDocuments(@Nullable Project project, @Nonnull Document... docs);
+    public abstract void addAffectedDocuments(@Nullable Project project, Document... docs);
 
-    public abstract void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files);
-
-    /**
-     * @deprecated use {@link CommandListener#class}
-     */
-    @Deprecated
-    public abstract void addCommandListener(@Nonnull CommandListener listener);
+    public abstract void addAffectedFiles(@Nullable Project project, VirtualFile... files);
 
     /**
      * @deprecated use {@link CommandListener#class}
      */
     @Deprecated
-    public void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
+    public abstract void addCommandListener(CommandListener listener);
+
+    /**
+     * @deprecated use {@link CommandListener#class}
+     */
+    @Deprecated
+    public void addCommandListener(CommandListener listener, Disposable parentDisposable) {
         Application.get().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, listener);
     }
 
@@ -217,5 +216,5 @@ public abstract class CommandProcessor {
      * @deprecated use {@link CommandListener#class}
      */
     @Deprecated
-    public abstract void removeCommandListener(@Nonnull CommandListener listener);
+    public abstract void removeCommandListener(CommandListener listener);
 }

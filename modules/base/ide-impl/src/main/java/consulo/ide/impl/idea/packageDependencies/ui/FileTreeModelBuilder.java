@@ -40,8 +40,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -159,7 +158,7 @@ public class FileTreeModelBuilder {
             Task.Backgroundable backgroundable =
                 new Task.Backgroundable(project, AnalysisScopeLocalize.packageDependenciesBuildProcessTitle()) {
                     @Override
-                    public void run(@Nonnull ProgressIndicator indicator) {
+                    public void run(ProgressIndicator indicator) {
                         buildingRunnable.run();
                     }
 
@@ -267,14 +266,14 @@ public class FileTreeModelBuilder {
         return null;
     }
 
-    public @Nonnull
+    public 
     PackageDependenciesNode getFileParentNode(VirtualFile file) {
         LOG.assertTrue(file != null);
         VirtualFile containingDirectory = file.getParent();
         return getModuleDirNode(containingDirectory, myFileIndex.getModuleForFile(file), null);
     }
 
-    public boolean hasFileNode(@Nonnull VirtualFile file) {
+    public boolean hasFileNode(VirtualFile file) {
         return myModuleDirNodes.containsKey(file);
     }
 

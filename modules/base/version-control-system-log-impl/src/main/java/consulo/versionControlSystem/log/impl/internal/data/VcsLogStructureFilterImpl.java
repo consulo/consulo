@@ -26,31 +26,30 @@ import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import consulo.versionControlSystem.log.VcsLogStructureFilter;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
 
 public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStructureFilter {
-    @Nonnull
+    
     private final Collection<FilePath> myFiles;
 
-    public VcsLogStructureFilterImpl(@Nonnull Set<VirtualFile> files) {
+    public VcsLogStructureFilterImpl(Set<VirtualFile> files) {
         this(ContainerUtil.map(files, VcsUtil::getFilePath));
     }
 
-    public VcsLogStructureFilterImpl(@Nonnull Collection<FilePath> files) {
+    public VcsLogStructureFilterImpl(Collection<FilePath> files) {
         myFiles = files;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<FilePath> getFiles() {
         return myFiles;
     }
 
     @Override
-    public boolean matches(@Nonnull VcsCommitMetadata details) {
+    public boolean matches(VcsCommitMetadata details) {
         if (details instanceof VcsFullCommitDetails vcsFullCommitDetails) {
             for (Change change : vcsFullCommitDetails.getChanges()) {
                 ContentRevision before = change.getBeforeRevision();
@@ -69,7 +68,7 @@ public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStr
         }
     }
 
-    private boolean matches(@Nonnull String path) {
+    private boolean matches(String path) {
         return ContainerUtil.find(myFiles, file -> FileUtil.isAncestor(file.getPath(), path, false)) != null;
     }
 }

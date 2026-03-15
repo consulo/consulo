@@ -20,26 +20,25 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.pointer.NamedPointerManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ArtifactPointerManager extends NamedPointerManager<Artifact> {
-  @Nonnull
+  
   public static ArtifactPointerManager getInstance(Project project) {
     return project.getInstance(ArtifactPointerManager.class);
   }
 
-  @Nonnull
+  
   @Override
-  ArtifactPointer create(@Nonnull String name);
+  ArtifactPointer create(String name);
 
-  @Nonnull
+  
   @Override
-  ArtifactPointer create(@Nonnull Artifact value);
+  ArtifactPointer create(Artifact value);
 
-  @Nonnull
-  ArtifactPointer create(@Nonnull Artifact artifact, @Nonnull ArtifactModel artifactModel);
+  
+  ArtifactPointer create(Artifact artifact, ArtifactModel artifactModel);
 }

@@ -21,7 +21,6 @@ import consulo.compiler.artifact.element.ArchivePackageInfo;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -43,7 +42,7 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
     }
 
     @Override
-    public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
+    public void addFileCopyInstruction(VirtualFile file, String outputFileName) {
         String pathInJar = childPathInJar(outputFileName);
         if (myContext.addDestination(file, new ArchiveDestinationInfo(pathInJar, myArchivePackageInfo, myDestinationInfo))) {
             myArchivePackageInfo.addContent(pathInJar, file);
@@ -55,13 +54,13 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
     }
 
     @Override
-    public PackIntoArchiveInstructionCreator subFolder(@Nonnull String directoryName) {
+    public PackIntoArchiveInstructionCreator subFolder(String directoryName) {
         return new PackIntoArchiveInstructionCreator(myContext, myArchivePackageInfo, childPathInJar(directoryName), myDestinationInfo);
     }
 
-    @Nonnull
+    
     @Override
-    public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
+    public IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter) {
         ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
         String outputPath = myDestinationInfo.getOutputPath() + "/" + archiveFileName;
         if (!myContext.registerJarFile(archivePackageInfo, outputPath)) {

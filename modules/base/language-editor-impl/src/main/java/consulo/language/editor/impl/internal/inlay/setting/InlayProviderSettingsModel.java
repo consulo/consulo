@@ -11,7 +11,6 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -53,7 +52,7 @@ public abstract class InlayProviderSettingsModel {
         this.onChangeListener = listener;
     }
 
-    @Nonnull
+    
     public abstract LocalizeValue getName();
 
     public InlayGroup getGroup() {

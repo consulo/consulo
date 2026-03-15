@@ -27,8 +27,7 @@ import consulo.language.editor.highlight.NontrivialBraceMatcher;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,7 +72,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
   }
 
   @Override
-  public IElementType getOppositeBraceTokenType(@Nonnull IElementType type) {
+  public IElementType getOppositeBraceTokenType(IElementType type) {
     BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (type == pair.getRightBraceType()) return pair.getLeftBraceType();
@@ -105,7 +104,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
   }
 
   @Override
-  public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType) {
+  public boolean isPairedBracesAllowedBeforeType(IElementType lbraceType, @Nullable IElementType contextType) {
     return myMatcher.isPairedBracesAllowedBeforeType(lbraceType, contextType);
   }
 
@@ -115,8 +114,8 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
   }
 
   @Override
-  @Nonnull
-  public List<IElementType> getOppositeBraceTokenTypes(@Nonnull IElementType type) {
+  
+  public List<IElementType> getOppositeBraceTokenTypes(IElementType type) {
     List<IElementType> result = null;
 
     for (BracePair pair : myMatcher.getPairs()) {
@@ -135,14 +134,14 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
   }
 
   @Override
-  public boolean shouldStopMatch(boolean forward, @Nonnull IElementType braceType, @Nonnull HighlighterIterator iterator) {
+  public boolean shouldStopMatch(boolean forward, IElementType braceType, HighlighterIterator iterator) {
     if (myMatcher instanceof BraceMatcherTerminationAspect) {
       return ((BraceMatcherTerminationAspect)myMatcher).shouldStopMatch(forward, braceType, iterator);
     }
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return myLanguage;

@@ -29,7 +29,6 @@ import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +40,11 @@ public class Divider {
 
   public static class DividedElements {
     private final long modificationStamp;
-    @Nonnull
+    
     public final PsiFile root;
-    @Nonnull
+    
     private final TextRange restrictRange;
-    @Nonnull
+    
     private final TextRange priorityRange;
     public final List<PsiElement> inside = new ArrayList<>();
     final List<ProperTextRange> insideRanges = new ArrayList<>();
@@ -54,7 +53,7 @@ public class Divider {
     public final List<PsiElement> parents = new ArrayList<>();
     final List<ProperTextRange> parentRanges = new ArrayList<>();
 
-    private DividedElements(long modificationStamp, @Nonnull PsiFile root, @Nonnull TextRange restrictRange, @Nonnull TextRange priorityRange) {
+    private DividedElements(long modificationStamp, PsiFile root, TextRange restrictRange, TextRange priorityRange) {
       this.modificationStamp = modificationStamp;
       this.root = root;
       this.restrictRange = restrictRange;
@@ -64,11 +63,11 @@ public class Divider {
 
   private static final Key<Reference<DividedElements>> DIVIDED_ELEMENTS_KEY = Key.create("DIVIDED_ELEMENTS");
 
-  public static void divideInsideAndOutsideAllRoots(@Nonnull PsiFile file,
-                                                    @Nonnull TextRange restrictRange,
-                                                    @Nonnull TextRange priorityRange,
-                                                    @Nonnull Predicate<PsiFile> rootFilter,
-                                                    @Nonnull Consumer<DividedElements> processor) {
+  public static void divideInsideAndOutsideAllRoots(PsiFile file,
+                                                    TextRange restrictRange,
+                                                    TextRange priorityRange,
+                                                    Predicate<PsiFile> rootFilter,
+                                                    Consumer<DividedElements> processor) {
     FileViewProvider viewProvider = file.getViewProvider();
     for (Language language : viewProvider.getLanguages()) {
       PsiFile root = viewProvider.getPsi(language);
@@ -79,7 +78,7 @@ public class Divider {
     }
   }
 
-  public static void divideInsideAndOutsideInOneRoot(@Nonnull PsiFile root, @Nonnull TextRange restrictRange, @Nonnull TextRange priorityRange, @Nonnull Consumer<DividedElements> processor) {
+  public static void divideInsideAndOutsideInOneRoot(PsiFile root, TextRange restrictRange, TextRange priorityRange, Consumer<DividedElements> processor) {
     long modificationStamp = root.getModificationStamp();
     DividedElements cached = SoftReference.dereference(root.getUserData(DIVIDED_ELEMENTS_KEY));
     DividedElements elements;
@@ -97,15 +96,15 @@ public class Divider {
 
   private static final PsiElement HAVE_TO_GET_CHILDREN = PsiUtilCore.NULL_PSI_ELEMENT;
 
-  private static void divideInsideAndOutsideInOneRoot(@Nonnull PsiFile root,
-                                                      @Nonnull TextRange restrictRange,
-                                                      @Nonnull TextRange priorityRange,
-                                                      @Nonnull List<PsiElement> inside,
-                                                      @Nonnull List<ProperTextRange> insideRanges,
-                                                      @Nonnull List<PsiElement> outside,
-                                                      @Nonnull List<ProperTextRange> outsideRanges,
-                                                      @Nonnull List<PsiElement> outParents,
-                                                      @Nonnull List<ProperTextRange> outParentRanges,
+  private static void divideInsideAndOutsideInOneRoot(PsiFile root,
+                                                      TextRange restrictRange,
+                                                      TextRange priorityRange,
+                                                      List<PsiElement> inside,
+                                                      List<ProperTextRange> insideRanges,
+                                                      List<PsiElement> outside,
+                                                      List<ProperTextRange> outsideRanges,
+                                                      List<PsiElement> outParents,
+                                                      List<ProperTextRange> outParentRanges,
                                                       boolean includeParents) {
     int startOffset = restrictRange.getStartOffset();
     int endOffset = restrictRange.getEndOffset();

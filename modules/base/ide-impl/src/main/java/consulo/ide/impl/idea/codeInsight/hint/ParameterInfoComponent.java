@@ -25,8 +25,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -45,7 +44,7 @@ public class ParameterInfoComponent extends JPanel {
 
     private PsiElement myParameterOwner;
     private Object myHighlighted;
-    @Nonnull
+    
     private final ParameterInfoHandler myHandler;
 
     private final JPanel myMainPanel;
@@ -83,7 +82,7 @@ public class ParameterInfoComponent extends JPanel {
     public static ParameterInfoUIContextEx createContext(
         Object[] objects,
         Editor editor,
-        @Nonnull ParameterInfoHandler handler,
+        ParameterInfoHandler handler,
         int currentParameterIndex
     ) {
         return createContext(objects, editor, handler, currentParameterIndex, null);
@@ -93,7 +92,7 @@ public class ParameterInfoComponent extends JPanel {
     public static ParameterInfoUIContextEx createContext(
         Object[] objects,
         Editor editor,
-        @Nonnull ParameterInfoHandler handler,
+        ParameterInfoHandler handler,
         int currentParameterIndex,
         @Nullable PsiElement parameterOwner
     ) {
@@ -103,14 +102,14 @@ public class ParameterInfoComponent extends JPanel {
         return infoComponent.new MyParameterContext(false);
     }
 
-    ParameterInfoComponent(Object[] objects, Editor editor, @Nonnull ParameterInfoHandler handler) {
+    ParameterInfoComponent(Object[] objects, Editor editor, ParameterInfoHandler handler) {
         this(objects, editor, handler, false, false);
     }
 
     ParameterInfoComponent(
         Object[] objects,
         Editor editor,
-        @Nonnull ParameterInfoHandler handler,
+        ParameterInfoHandler handler,
         boolean requestFocus,
         boolean allowSwitchLabel
     ) {
@@ -636,9 +635,9 @@ public class ParameterInfoComponent extends JPanel {
 
         // flagsMap is supposed to use TEXT_RANGE_COMPARATOR
         private String setup(
-            @Nonnull String text,
-            @Nonnull TreeMap<TextRange, ParameterInfoUIContextEx.Flag> flagsMap,
-            @Nonnull Color background
+            String text,
+            TreeMap<TextRange, ParameterInfoUIContextEx.Flag> flagsMap,
+            Color background
         ) {
             if (flagsMap.isEmpty()) {
                 return doSetup(text, background);
@@ -649,7 +648,7 @@ public class ParameterInfoComponent extends JPanel {
             }
         }
 
-        private String doSetup(@Nonnull String text, @Nonnull Color background) {
+        private String doSetup(String text, Color background) {
             myLabel.setBackground(background);
             setBackground(background);
 
@@ -660,7 +659,7 @@ public class ParameterInfoComponent extends JPanel {
         }
 
         // flagsMap is supposed to use TEXT_RANGE_COMPARATOR
-        private String buildLabelText(@Nonnull String text, @Nonnull TreeMap<TextRange, ParameterInfoUIContextEx.Flag> flagsMap) {
+        private String buildLabelText(String text, TreeMap<TextRange, ParameterInfoUIContextEx.Flag> flagsMap) {
             StringBuilder labelText = new StringBuilder(text);
             Map<Integer, Integer> faultMap = new HashMap<>();
 
@@ -691,16 +690,16 @@ public class ParameterInfoComponent extends JPanel {
         }
     }
 
-    private static String getOpeningTag(@Nonnull String value) {
+    private static String getOpeningTag(String value) {
         return "<" + value + ">";
     }
 
-    private static String getClosingTag(@Nonnull String value) {
+    private static String getClosingTag(String value) {
         int index = value.indexOf(' ');
         return "</" + (0 <= index ? value.substring(0, index) : value) + ">";
     }
 
-    private static String getTagValue(@Nonnull ParameterInfoUIContextEx.Flag flag) {
+    private static String getTagValue(ParameterInfoUIContextEx.Flag flag) {
         if (flag == ParameterInfoUIContextEx.Flag.HIGHLIGHT) {
             return "b color=" + ColorUtil.toHex(HIGHLIGHTED_COLOR);
         }

@@ -26,8 +26,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,12 +38,12 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderTypeProvider {
-    @Nonnull
+    
     public static Predicate<ContentFolderTypeProvider> allExceptExcluded() {
         return typeProvider -> !(typeProvider instanceof ExcludedContentFolderTypeProvider);
     }
 
-    @Nonnull
+    
     public static Predicate<ContentFolderTypeProvider> onlyExcluded() {
         return typeProvider -> typeProvider instanceof ExcludedContentFolderTypeProvider;
     }
@@ -55,7 +54,7 @@ public abstract class ContentFolderTypeProvider {
         myId = id;
     }
 
-    @Nonnull
+    
     public String getId() {
         return myId;
     }
@@ -71,13 +70,13 @@ public abstract class ContentFolderTypeProvider {
      * @param dir child directory
      * @return icon of child directory
      */
-    @Nonnull
+    
     @RequiredReadAction
     public Image getChildDirectoryIcon(@Nullable VirtualFile dir, @Nullable ComponentManager project) {
         return getChildDirectoryIcon();
     }
 
-    @Nonnull
+    
     public Image getChildDirectoryIcon() {
         return PlatformIconGroup.nodesTreeopen();
     }
@@ -87,13 +86,13 @@ public abstract class ContentFolderTypeProvider {
         return null;
     }
 
-    @Nonnull
+    
     public abstract Image getIcon();
 
-    @Nonnull
+    
     public abstract LocalizeValue getName();
 
-    @Nonnull
+    
     public abstract ColorValue getGroupColor();
 
     @Override
@@ -115,8 +114,8 @@ public abstract class ContentFolderTypeProvider {
         return myId.hashCode();
     }
 
-    @Nonnull
-    public static List<ContentFolderTypeProvider> filter(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+    
+    public static List<ContentFolderTypeProvider> filter(Predicate<ContentFolderTypeProvider> predicate) {
         return Application.get().getExtensionPoint(ContentFolderTypeProvider.class).collectFiltered(predicate);
     }
 

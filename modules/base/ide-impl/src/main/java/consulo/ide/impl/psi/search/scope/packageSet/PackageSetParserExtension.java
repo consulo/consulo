@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.PackageSet;
 import consulo.content.scope.ParsingException;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna

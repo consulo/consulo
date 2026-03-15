@@ -27,7 +27,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

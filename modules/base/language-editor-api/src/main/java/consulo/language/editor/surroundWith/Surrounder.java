@@ -21,8 +21,7 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines a single template which can be used in Surround With.
@@ -36,7 +35,7 @@ public interface Surrounder {
    *
    * @return the template name
    */
-  @Nonnull
+  
   LocalizeValue getTemplateDescription();
 
   /**
@@ -45,7 +44,7 @@ public interface Surrounder {
    * @param elements the elements to be surrounded
    * @return true if the template is applicable to the elements, false otherwise.
    */
-  boolean isApplicable(@Nonnull PsiElement[] elements);
+  boolean isApplicable(PsiElement[] elements);
 
   /**
    * Performs the Surround With action on the specified range of elements.
@@ -56,7 +55,7 @@ public interface Surrounder {
    * @return range to select/to position the caret
    */
   @Nullable
-  TextRange surroundElements(@Nonnull Project project,
-                             @Nonnull Editor editor,
-                             @Nonnull PsiElement[] elements) throws IncorrectOperationException;
+  TextRange surroundElements(Project project,
+                             Editor editor,
+                             PsiElement[] elements) throws IncorrectOperationException;
 }

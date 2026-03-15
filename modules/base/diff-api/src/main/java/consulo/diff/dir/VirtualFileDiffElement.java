@@ -34,8 +34,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +48,7 @@ import java.util.concurrent.Callable;
 public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   private final VirtualFile myFile;
 
-  public VirtualFileDiffElement(@Nonnull VirtualFile file) {
+  public VirtualFileDiffElement(VirtualFile file) {
     myFile = file;
   }
 
@@ -58,7 +57,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
     return myFile.getPresentableUrl();
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myFile.getName();

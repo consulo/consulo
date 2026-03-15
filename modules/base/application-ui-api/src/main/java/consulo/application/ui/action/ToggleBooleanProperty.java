@@ -23,15 +23,14 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 public class ToggleBooleanProperty extends ToggleAction {
     private final AbstractProperty.AbstractPropertyContainer myProperties;
     private final AbstractProperty<Boolean> myProperty;
 
     public ToggleBooleanProperty(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         Image icon,
         AbstractProperty.AbstractPropertyContainer properties,
         BooleanProperty property
@@ -57,12 +56,12 @@ public class ToggleBooleanProperty extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return myProperty.get(myProperties);
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         myProperty.set(myProperties, state);
     }
 
@@ -76,8 +75,8 @@ public class ToggleBooleanProperty extends ToggleAction {
 
     public static abstract class Disablable extends ToggleBooleanProperty {
         public Disablable(
-            @Nonnull LocalizeValue text,
-            @Nonnull LocalizeValue description,
+            LocalizeValue text,
+            LocalizeValue description,
             Image icon,
             AbstractProperty.AbstractPropertyContainer properties,
             BooleanProperty property
@@ -103,7 +102,7 @@ public class ToggleBooleanProperty extends ToggleAction {
         protected abstract boolean isVisible();
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(isEnabled());
             e.getPresentation().setVisible(isVisible());

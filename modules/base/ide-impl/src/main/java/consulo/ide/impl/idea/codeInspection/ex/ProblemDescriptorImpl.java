@@ -24,8 +24,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -35,11 +34,11 @@ public class ProblemDescriptorImpl extends ProblemDescriptorBase implements Prob
 
     @RequiredReadAction
     public ProblemDescriptorImpl(
-        @Nonnull PsiElement startElement,
-        @Nonnull PsiElement endElement,
-        @Nonnull LocalizeValue descriptionTemplate,
+        PsiElement startElement,
+        PsiElement endElement,
+        LocalizeValue descriptionTemplate,
         LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         boolean isAfterEndOfLine,
         @Nullable TextRange rangeInElement,
         boolean onTheFly
@@ -49,11 +48,11 @@ public class ProblemDescriptorImpl extends ProblemDescriptorBase implements Prob
 
     @RequiredReadAction
     public ProblemDescriptorImpl(
-        @Nonnull PsiElement startElement,
-        @Nonnull PsiElement endElement,
-        @Nonnull LocalizeValue descriptionTemplate,
+        PsiElement startElement,
+        PsiElement endElement,
+        LocalizeValue descriptionTemplate,
         LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         boolean isAfterEndOfLine,
         @Nullable TextRange rangeInElement,
         @Nullable HintAction hintAction,
@@ -75,11 +74,11 @@ public class ProblemDescriptorImpl extends ProblemDescriptorBase implements Prob
 
     @RequiredReadAction
     public ProblemDescriptorImpl(
-        @Nonnull PsiElement startElement,
-        @Nonnull PsiElement endElement,
-        @Nonnull LocalizeValue descriptionTemplate,
+        PsiElement startElement,
+        PsiElement endElement,
+        LocalizeValue descriptionTemplate,
         LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         boolean isAfterEndOfLine,
         @Nullable TextRange rangeInElement,
         boolean tooltip,

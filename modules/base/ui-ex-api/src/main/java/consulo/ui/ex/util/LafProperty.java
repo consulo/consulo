@@ -18,8 +18,7 @@ package consulo.ui.ex.util;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,7 +36,7 @@ public final class LafProperty {
   /**
    * @deprecated use {@link #getListSelectionForeground(boolean)}
    */
-  @Nonnull
+  
   @Deprecated
   public static Color getListSelectionForeground() {
     return getListSelectionForeground(true);
@@ -47,7 +46,7 @@ public final class LafProperty {
     return UIManager.getColor("List.foreground");
   }
 
-  @Nonnull
+  
   public static Color getListSelectionForeground(boolean focused) {
     Color foreground = UIManager.getColor(focused ? "List.selectionForeground" : "List.selectionInactiveForeground");
     if (focused && foreground == null) foreground = UIManager.getColor("List[Selected].textForeground");  // Nimbus

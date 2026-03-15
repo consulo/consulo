@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.regex.Pattern;
 
@@ -36,7 +35,7 @@ public class IssueNavigationLink {
     myLinkRegexp = linkRegexp;
   }
 
-  @Nonnull
+  
   public String getIssueRegexp() {
     return myIssueRegexp;
   }
@@ -53,7 +52,7 @@ public class IssueNavigationLink {
     return myIssuePattern;
   }
 
-  @Nonnull
+  
   public String getLinkRegexp() {
     return myLinkRegexp;
   }

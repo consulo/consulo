@@ -20,8 +20,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Locale;
 
 /**
@@ -38,7 +37,7 @@ public class FileTemplateSettingsBase extends FileTemplatesLoader implements Per
   private static final String ATTRIBUTE_LIVE_TEMPLATE = "live-template-enabled";
   private static final String ATTRIBUTE_ENABLED = "enabled";
 
-  protected FileTemplateSettingsBase(@Nonnull FileTypeManager typeManager, @Nullable Project project) {
+  protected FileTemplateSettingsBase(FileTypeManager typeManager, @Nullable Project project) {
     super(typeManager, project);
   }
 

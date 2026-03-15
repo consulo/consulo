@@ -15,10 +15,9 @@
  */
 package consulo.versionControlSystem.update;
 
-import jakarta.annotation.Nonnull;
 
 public interface SequentialUpdatesContext {
-  @Nonnull
+  
   String getMessageWhenInterruptedBeforeStart();
 
   boolean shouldFail();

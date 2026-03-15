@@ -21,7 +21,6 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.ui.ex.wizard.WizardStep;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -29,14 +28,14 @@ import java.util.function.Consumer;
  * @since 2019-08-20
  */
 public interface NewModuleBuilderProcessor<C extends NewModuleWizardContext> {
-  @Nonnull
+  
   C createContext(boolean isNewProject);
 
-  default void buildSteps(@Nonnull Consumer<WizardStep<C>> consumer, @Nonnull C context) {
+  default void buildSteps(Consumer<WizardStep<C>> consumer, C context) {
     consumer.accept(new UnifiedProjectOrModuleNameStep<>(context));
   }
 
   @RequiredReadAction
-  default void process(@Nonnull C context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
+  default void process(C context, ContentEntry contentEntry, ModifiableRootModel modifiableRootModel) {
   }
 }

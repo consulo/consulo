@@ -32,7 +32,6 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -50,7 +49,7 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         RunDashboardManager runDashboardManager = RunDashboardManager.getInstance(project);
         Set<String> addedTypes = runDashboardManager.getTypes();
@@ -91,7 +90,7 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
             .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
             .setRenderer(new ColoredListCellRenderer() {
                 @Override
-                protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+                protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
                     if (value instanceof ConfigurationType configurationType) {
                         setIcon(configurationType.getIcon());
                         append(configurationType.getDisplayName().get());
@@ -119,7 +118,7 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 }

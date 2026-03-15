@@ -17,7 +17,6 @@ package consulo.language.psi;
 
 import consulo.application.Application;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,21 +29,21 @@ import java.util.function.Predicate;
  * @since 2013-04-02
  */
 public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType>> {
-  @Nonnull
-  public static <E extends Predicate<IElementType>> ElementTypeEntryExtensionCollector<E> create(@Nonnull Class<E> clazz) {
+  
+  public static <E extends Predicate<IElementType>> ElementTypeEntryExtensionCollector<E> create(Class<E> clazz) {
     return new ElementTypeEntryExtensionCollector<>(clazz);
   }
 
   private final Class<E> myExtensionClass;
 
-  private ElementTypeEntryExtensionCollector(@Nonnull Class<E> clazz) {
+  private ElementTypeEntryExtensionCollector(Class<E> clazz) {
     myExtensionClass = clazz;
   }
 
   private final Map<IElementType, E> myMap = new ConcurrentHashMap<>();
 
-  @Nonnull
-  public E getValue(@Nonnull IElementType elementType) {
+  
+  public E getValue(IElementType elementType) {
     return myMap.computeIfAbsent(elementType, it -> {
       E factory = Application.get().getExtensionPoint(myExtensionClass).findFirstSafe(e -> e.test(elementType));
       if (factory == null) {

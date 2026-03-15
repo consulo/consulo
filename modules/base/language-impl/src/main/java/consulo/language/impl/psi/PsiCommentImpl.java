@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-import jakarta.annotation.Nonnull;
 
 public class PsiCommentImpl extends PsiCoreCommentImpl implements PsiLanguageInjectionHost {
   public PsiCommentImpl(IElementType type, CharSequence text) {
@@ -33,12 +32,12 @@ public class PsiCommentImpl extends PsiCoreCommentImpl implements PsiLanguageInj
   }
 
   @Override
-  public PsiLanguageInjectionHost updateText(@Nonnull String text) {
+  public PsiLanguageInjectionHost updateText(String text) {
     return (PsiCommentImpl)replaceWithText(text);
   }
 
   @Override
-  @Nonnull
+  
   public LiteralTextEscaper<PsiCommentImpl> createLiteralTextEscaper() {
     return new CommentLiteralEscaper(this);
   }

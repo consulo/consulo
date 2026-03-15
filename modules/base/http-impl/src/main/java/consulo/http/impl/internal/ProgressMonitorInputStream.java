@@ -16,7 +16,6 @@
 package consulo.http.impl.internal;
 
 import consulo.application.progress.ProgressIndicator;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +27,7 @@ public final class ProgressMonitorInputStream extends InputStream {
   private double available;
   private long count;
 
-  public ProgressMonitorInputStream(@Nonnull ProgressIndicator indicator, @Nonnull InputStream in, int length) {
+  public ProgressMonitorInputStream(ProgressIndicator indicator, InputStream in, int length) {
     this.indicator = indicator;
     this.in = in;
     available = length;

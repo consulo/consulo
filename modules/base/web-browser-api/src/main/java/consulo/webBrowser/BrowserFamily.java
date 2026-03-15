@@ -8,8 +8,7 @@ import consulo.webBrowser.chrome.ChromeSettings;
 import consulo.webBrowser.firefox.FirefoxSettings;
 import consulo.webBrowser.icon.WebBrowserIconGroup;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public enum BrowserFamily implements Iconable {
     CHROME(WebBrowserLocalize.browsersChrome(), "chrome", "google-chrome", "Google Chrome", WebBrowserIconGroup.chrome()) {
@@ -35,11 +34,11 @@ public enum BrowserFamily implements Iconable {
     private final Image myIcon;
 
     BrowserFamily(
-        @Nonnull LocalizeValue name,
-        @Nonnull String windowsPath,
+        LocalizeValue name,
+        String windowsPath,
         @Nullable String unixPath,
         @Nullable String macPath,
-        @Nonnull Image icon
+        Image icon
     ) {
         myName = name;
         myWindowsPath = windowsPath;

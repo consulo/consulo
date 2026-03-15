@@ -24,7 +24,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import consulo.language.psi.search.DefinitionsScopedSearch;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "GotoImplementation")
 public class GotoImplementationAction extends BaseCodeInsightAction implements DumbAware {
@@ -32,7 +31,7 @@ public class GotoImplementationAction extends BaseCodeInsightAction implements D
         super(ActionLocalize.actionGotoimplementationText(), ActionLocalize.actionGotoimplementationDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new GotoImplementationHandler();
@@ -44,7 +43,7 @@ public class GotoImplementationAction extends BaseCodeInsightAction implements D
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         if (!DefinitionsScopedSearch.INSTANCE.hasAnyExecutors()) {
             event.getPresentation().setVisible(false);
         }

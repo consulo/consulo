@@ -19,7 +19,7 @@ package consulo.language.editor.highlight;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface XmlAwareBraceMatcher extends BraceMatcher {
   boolean isStrictTagMatching(FileType fileType, int braceGroupId);

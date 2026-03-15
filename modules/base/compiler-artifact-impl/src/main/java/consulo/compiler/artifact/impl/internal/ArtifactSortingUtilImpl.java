@@ -29,7 +29,6 @@ import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.GraphGenerator;
 import consulo.project.Project;
 import consulo.util.collection.primitive.ints.IntList;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -166,8 +165,8 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
                                               ArtifactElementType.getInstance(),
                                               new PackagingElementProcessor<>() {
                                                 @Override
-                                                public boolean process(@Nonnull ArtifactPackagingElement element,
-                                                                       @Nonnull PackagingElementPath path) {
+                                                public boolean process(ArtifactPackagingElement element,
+                                                                       PackagingElementPath path) {
                                                   String artifactName = element.getArtifactName();
                                                   if (myArtifactNames.contains(artifactName)) {
                                                     included.add(artifactName);

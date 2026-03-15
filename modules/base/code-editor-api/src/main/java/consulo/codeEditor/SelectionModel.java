@@ -6,8 +6,7 @@ import consulo.disposer.Disposer;
 import consulo.codeEditor.event.SelectionListener;
 import consulo.colorScheme.TextAttributes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides services for selecting text in the IDE's text editor and retrieving information about the selection.
@@ -145,14 +144,14 @@ public interface SelectionModel {
    *
    * @param listener the listener instance.
    */
-  void addSelectionListener(@Nonnull SelectionListener listener);
+  void addSelectionListener(SelectionListener listener);
 
   /**
    * Adds a listener for receiving information about selection changes, which is removed when the given disposable is disposed.
    *
    * @param listener the listener instance.
    */
-  default void addSelectionListener(@Nonnull SelectionListener listener, @Nonnull Disposable parentDisposable) {
+  default void addSelectionListener(SelectionListener listener, Disposable parentDisposable) {
     addSelectionListener(listener);
     Disposer.register(parentDisposable, () -> removeSelectionListener(listener));
   }
@@ -162,7 +161,7 @@ public interface SelectionModel {
    *
    * @param listener the listener instance.
    */
-  void removeSelectionListener(@Nonnull SelectionListener listener);
+  void removeSelectionListener(SelectionListener listener);
 
   /**
    * Selects the entire line of text at the caret position.
@@ -193,7 +192,7 @@ public interface SelectionModel {
    * @param blockEnd   the end of the rectangle to select.
    * @see #setSelection(int, int)
    */
-  void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd);
+  void setBlockSelection(LogicalPosition blockStart, LogicalPosition blockEnd);
 
   /**
    * Returns an array of start offsets in the document for ranges selected in the document currently. Works both for a single-caret and
@@ -201,7 +200,7 @@ public interface SelectionModel {
    *
    * @return an array of start offsets, array size is equal to the number of carets existing in the editor currently.
    */
-  @Nonnull
+  
   int[] getBlockSelectionStarts();
 
   /**
@@ -210,7 +209,7 @@ public interface SelectionModel {
    *
    * @return an array of start offsets, array size is equal to the number of carets existing in the editor currently.
    */
-  @Nonnull
+  
   int[] getBlockSelectionEnds();
 
   /**

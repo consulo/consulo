@@ -27,8 +27,7 @@ import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternChangeListener;
 import consulo.language.psi.search.TodoAttributes;
 import consulo.language.psi.search.TodoPattern;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -60,7 +59,7 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
     private final TodoConfigurationListener myTopic;
 
     @Inject
-    public TodoConfiguration(@Nonnull Application application) {
+    public TodoConfiguration(Application application) {
         myMessageBus = application.getMessageBus();
         resetToDefaultTodoPatterns();
         myTopic = myMessageBus.syncPublisher(TodoConfigurationListener.class);
@@ -87,21 +86,21 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
         return Application.get().getInstance(TodoConfiguration.class);
     }
 
-    @Nonnull
+    
     public TodoPattern[] getTodoPatterns() {
         return myTodoPatterns;
     }
 
-    @Nonnull
+    
     public IndexPattern[] getIndexPatterns() {
         return myIndexPatterns;
     }
 
-    public void setTodoPatterns(@Nonnull TodoPattern[] todoPatterns) {
+    public void setTodoPatterns(TodoPattern[] todoPatterns) {
         doSetTodoPatterns(todoPatterns, true);
     }
 
-    private void doSetTodoPatterns(@Nonnull TodoPattern[] todoPatterns, boolean shouldNotifyIndices) {
+    private void doSetTodoPatterns(TodoPattern[] todoPatterns, boolean shouldNotifyIndices) {
         TodoPattern[] oldTodoPatterns = myTodoPatterns;
         IndexPattern[] oldIndexPatterns = myIndexPatterns;
 
@@ -135,12 +134,12 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
     /**
      * @return all <code>TodoFilter</code>s.
      */
-    @Nonnull
+    
     public TodoFilter[] getTodoFilters() {
         return myTodoFilters;
     }
 
-    public void setTodoFilters(@Nonnull TodoFilter[] filters) {
+    public void setTodoFilters(TodoFilter[] filters) {
         TodoFilter[] oldFilters = myTodoFilters;
         myTodoFilters = filters;
         myTopic.propertyChanged(PROP_TODO_FILTERS, oldFilters, filters);

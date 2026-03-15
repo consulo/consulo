@@ -25,34 +25,33 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
  * @since 2025-04-24
  */
 public class NamedHierarchyScope implements HierarchyScope {
-    @Nonnull
+    
     private final NamedScope myNamedScope;
 
-    public NamedHierarchyScope(@Nonnull NamedScope namedScope) {
+    public NamedHierarchyScope(NamedScope namedScope) {
         myNamedScope = namedScope;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myNamedScope.getScopeId();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getPresentableName() {
         return myNamedScope.getPresentableName();
     }
 
     @Override
-    public boolean isInScope(PsiElement baseClass, @Nonnull PsiElement srcElement) {
+    public boolean isInScope(PsiElement baseClass, PsiElement srcElement) {
         PackageSet namedScopePattern = myNamedScope.getValue();
         if (namedScopePattern == null) {
             return false;
@@ -66,7 +65,7 @@ public class NamedHierarchyScope implements HierarchyScope {
         );
     }
 
-    @Nonnull
+    
     @Override
     public SearchScope getSearchScope(PsiElement thisClass) {
         return GlobalSearchScopes.filterScope(thisClass.getProject(), myNamedScope);
@@ -84,7 +83,7 @@ public class NamedHierarchyScope implements HierarchyScope {
         return myNamedScope.getScopeId().hashCode();
     }
 
-    public static HierarchyScope find(@Nonnull Project project, @Nonnull String scopeId) {
+    public static HierarchyScope find(Project project, String scopeId) {
         NamedScope namedScope = NamedScopesHolder.getScope(project, scopeId);
         return namedScope != null ? new NamedHierarchyScope(namedScope) : null;
     }

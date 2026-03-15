@@ -34,8 +34,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ProgramRunnerUtil {
     private static final Logger LOG = Logger.getInstance(ProgramRunnerUtil.class);
@@ -44,11 +43,11 @@ public class ProgramRunnerUtil {
     }
 
     @Nullable
-    public static ProgramRunner getRunner(@Nonnull String executorId, RunnerAndConfigurationSettings configuration) {
+    public static ProgramRunner getRunner(String executorId, RunnerAndConfigurationSettings configuration) {
         return configuration == null ? null : RunnerRegistry.getInstance().getRunner(executorId, configuration.getConfiguration());
     }
 
-    public static void executeConfiguration(@Nonnull ExecutionEnvironment environment, boolean showSettings, boolean assignNewId) {
+    public static void executeConfiguration(ExecutionEnvironment environment, boolean showSettings, boolean assignNewId) {
         if (ExecutorRegistry.getInstance().isStarting(environment)) {
             return;
         }
@@ -123,8 +122,8 @@ public class ProgramRunnerUtil {
     }
 
     public static void executeConfiguration(
-        @Nonnull RunnerAndConfigurationSettings configuration,
-        @Nonnull Executor executor
+        RunnerAndConfigurationSettings configuration,
+        Executor executor
     ) {
         ExecutionEnvironmentBuilder builder;
         try {
@@ -138,7 +137,7 @@ public class ProgramRunnerUtil {
         executeConfiguration(builder.contentToReuse(null).dataContext(null).activeTarget().build(), true, true);
     }
 
-    @Nonnull
+    
     public static Image getConfigurationIcon(RunnerAndConfigurationSettings settings, boolean invalid) {
         Image icon = getPrimaryIcon(settings);
 
@@ -149,7 +148,7 @@ public class ProgramRunnerUtil {
         return icon;
     }
 
-    @Nonnull
+    
     public static Image getPrimaryIcon(RunnerAndConfigurationSettings settings) {
         RunConfiguration configuration = settings.getConfiguration();
         ConfigurationFactory factory = settings.getFactory();

@@ -36,8 +36,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,14 +45,14 @@ import java.util.Map;
 
 public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
     @Override
-    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+    public boolean canDeleteElement(DataContext dataContext) {
         Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
         return modules != null;
     }
 
     @Override
     @RequiredUIAccess
-    public void deleteElement(@Nonnull DataContext dataContext) {
+    public void deleteElement(DataContext dataContext) {
         Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
         assert modules != null;
         Project project = dataContext.getData(Project.KEY);
@@ -93,17 +92,17 @@ public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
         return ProjectLocalize.moduleRemoveConfirmationPrompt(names, modules.length).get();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionTitleValue() {
         return LocalizeValue.localizeTODO("Remove Module");
     }
 
     public static void removeModule(
-        @Nonnull Module moduleToRemove,
+        Module moduleToRemove,
         @Nullable ModifiableRootModel modifiableRootModelToRemove,
-        @Nonnull Collection<ModifiableRootModel> otherModuleRootModels,
-        @Nonnull ModifiableModuleModel moduleModel
+        Collection<ModifiableRootModel> otherModuleRootModels,
+        ModifiableModuleModel moduleModel
     ) {
         // remove all dependencies on the module that is about to be removed
         for (ModifiableRootModel modifiableRootModel : otherModuleRootModels) {

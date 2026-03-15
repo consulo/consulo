@@ -1,8 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,11 +12,11 @@ import java.util.function.Function;
  * Utility class used to preserve index during 'map' operations
  */
 public final class ListSelection<T> {
-  @Nonnull
+  
   private final List<T> myList;
   private final int mySelectedIndex;
 
-  private ListSelection(@Nonnull List<T> list, int selectedIndex) {
+  private ListSelection(List<T> list, int selectedIndex) {
     myList = list;
     if (selectedIndex >= 0 && selectedIndex < list.size()) {
       mySelectedIndex = selectedIndex;
@@ -27,33 +26,33 @@ public final class ListSelection<T> {
     }
   }
 
-  @Nonnull
-  public static <V> ListSelection<V> createAt(@Nonnull List<V> list, int selectedIndex) {
+  
+  public static <V> ListSelection<V> createAt(List<V> list, int selectedIndex) {
     return new ListSelection<>(list, selectedIndex);
   }
 
-  @Nonnull
-  public static <V> ListSelection<V> create(@Nonnull List<V> list, @Nullable V selected) {
+  
+  public static <V> ListSelection<V> create(List<V> list, @Nullable V selected) {
     return createAt(list, list.indexOf(selected));
   }
 
-  @Nonnull
+  
   public static <V> ListSelection<V> create(V[] array, V selected) {
     return create(Arrays.asList(array), selected);
   }
 
-  @Nonnull
-  public static <V> ListSelection<V> createSingleton(@Nonnull V element) {
+  
+  public static <V> ListSelection<V> createSingleton(V element) {
     return createAt(Collections.singletonList(element), 0);
   }
 
-  @Nonnull
+  
   public static <V> ListSelection<V> empty() {
     return new ListSelection<>(Collections.emptyList(), -1);
   }
 
 
-  @Nonnull
+  
   public List<T> getList() {
     return myList;
   }
@@ -70,8 +69,8 @@ public final class ListSelection<T> {
    * Map all elements in the list and remove elements for which converter returned null.
    * If selected element was removed, select remaining element before it.
    */
-  @Nonnull
-  public <V> ListSelection<V> map(@Nonnull Function<? super T, ? extends V> convertor) {
+  
+  public <V> ListSelection<V> map(Function<? super T, ? extends V> convertor) {
     int newSelectionIndex = -1;
     List<V> result = new ArrayList<>();
     for (int i = 0; i < myList.size(); i++) {

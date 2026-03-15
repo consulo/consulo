@@ -14,7 +14,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +32,7 @@ public class OverrideFileTypeAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VirtualFile[] files = getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) == null);
         boolean enabled = files.length != 0;
         Presentation presentation = e.getPresentation();
@@ -47,7 +46,7 @@ public class OverrideFileTypeAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VirtualFile[] files = getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) == null);
         if (files.length == 0) {
             return;
@@ -96,8 +95,8 @@ public class OverrideFileTypeAction extends AnAction {
             .showInBestPositionFor(e.getDataContext());
     }
 
-    @Nonnull
-    static VirtualFile[] getContextFiles(@Nonnull AnActionEvent e, @Nonnull Predicate<? super VirtualFile> additionalPredicate) {
+    
+    static VirtualFile[] getContextFiles(AnActionEvent e, Predicate<? super VirtualFile> additionalPredicate) {
         VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (files == null) {
             return VirtualFile.EMPTY_ARRAY;
@@ -110,11 +109,11 @@ public class OverrideFileTypeAction extends AnAction {
 
     private static class ChangeToThisFileTypeAction extends AnAction {
         private final
-        @Nonnull
+        
         VirtualFile[] myFiles;
         private final FileType myType;
 
-        ChangeToThisFileTypeAction(@Nonnull LocalizeValue displayText, @Nonnull VirtualFile[] files, @Nonnull FileType type) {
+        ChangeToThisFileTypeAction(LocalizeValue displayText, VirtualFile[] files, FileType type) {
             super(
                 displayText,
                 ActionLocalize.actionChangetothisfiletypeactionDescription(type.getDescription()),
@@ -126,7 +125,7 @@ public class OverrideFileTypeAction extends AnAction {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             for (VirtualFile file : myFiles) {
                 if (file.isValid() && !file.isDirectory() && OverrideFileTypeManager.isOverridable(file.getFileType())) {
                     OverrideFileTypeManager.getInstance().addFile(file, myType);
@@ -135,7 +134,7 @@ public class OverrideFileTypeAction extends AnAction {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             boolean enabled = ContainerUtil.exists(
                 myFiles,
                 file -> file.isValid() && !file.isDirectory() && OverrideFileTypeManager.isOverridable(file.getFileType())

@@ -33,7 +33,6 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import org.jetbrains.annotations.TestOnly;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.ConnectException;
@@ -45,7 +44,7 @@ public final class NettyUtil {
   public static final int DEFAULT_CONNECT_ATTEMPT_COUNT = NettyKt.DEFAULT_CONNECT_ATTEMPT_COUNT;
   public static final int MIN_START_TIME = NettyKt.MIN_START_TIME;
 
-  public static void logAndClose(@Nonnull Throwable error, @Nonnull Logger log, @Nonnull Channel channel) {
+  public static void logAndClose(Throwable error, Logger log, Channel channel) {
     // don't report about errors while connecting
     // WEB-7727
     try {
@@ -62,7 +61,7 @@ public final class NettyUtil {
     }
   }
 
-  public static void log(@Nonnull Throwable throwable, @Nonnull Logger log) {
+  public static void log(Throwable throwable, Logger log) {
     if (isAsWarning(throwable)) {
       log.warn(throwable);
     }
@@ -71,7 +70,7 @@ public final class NettyUtil {
     }
   }
 
-  private static boolean isAsWarning(@Nonnull Throwable throwable) {
+  private static boolean isAsWarning(Throwable throwable) {
     String message = throwable.getMessage();
     if (message == null) {
       return false;
@@ -87,13 +86,13 @@ public final class NettyUtil {
     return nioClientBootstrap(new NioEventLoopGroup(1, PooledThreadExecutor.getInstance()));
   }
 
-  public static Bootstrap nioClientBootstrap(@Nonnull EventLoopGroup eventLoopGroup) {
+  public static Bootstrap nioClientBootstrap(EventLoopGroup eventLoopGroup) {
     Bootstrap bootstrap = new Bootstrap().group(eventLoopGroup).channel(NioSocketChannel.class);
     bootstrap.option(ChannelOption.TCP_NODELAY, true).option(ChannelOption.SO_KEEPALIVE, true);
     return bootstrap;
   }
 
-  public static void addHttpServerCodec(@Nonnull ChannelPipeline pipeline) {
+  public static void addHttpServerCodec(ChannelPipeline pipeline) {
     pipeline.addLast("httpRequestEncoder", new HttpResponseEncoder());
     // https://jetbrains.zendesk.com/agent/tickets/68315
     pipeline.addLast("httpRequestDecoder", new HttpRequestDecoder(16 * 1024, 16 * 1024, 8192));
@@ -113,7 +112,7 @@ public final class NettyUtil {
   }
 
   private static final class CorsHandlerDoNotUseOwnLogger extends CorsHandler {
-    public CorsHandlerDoNotUseOwnLogger(@Nonnull CorsConfig config) {
+    public CorsHandlerDoNotUseOwnLogger(CorsConfig config) {
       super(config);
     }
 
@@ -124,9 +123,9 @@ public final class NettyUtil {
   }
 
   @TestOnly
-  public static void awaitQuiescenceOfGlobalEventExecutor(long timeout, @Nonnull TimeUnit unit) {
+  public static void awaitQuiescenceOfGlobalEventExecutor(long timeout, TimeUnit unit) {
     try {
-      @Nonnull GlobalEventExecutor executor = GlobalEventExecutor.INSTANCE;
+      GlobalEventExecutor executor = GlobalEventExecutor.INSTANCE;
       executor.awaitInactivity(timeout, unit);
     }
     catch (InterruptedException ignored) {

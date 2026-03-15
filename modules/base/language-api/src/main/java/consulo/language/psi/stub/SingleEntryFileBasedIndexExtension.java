@@ -21,7 +21,6 @@ import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.KeyDescriptor;
-import jakarta.annotation.Nonnull;
 
 /**
  * Base implementation for indices that produce single value per single file
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
  * @author Eugene Zhuravlev
  */
 public abstract class SingleEntryFileBasedIndexExtension<V> extends FileBasedIndexExtension<Integer, V> {
-  @Nonnull
+  
   @Override
   public final KeyDescriptor<Integer> getKeyDescriptor() {
     return EnumeratorIntegerDescriptor.INSTANCE;
@@ -45,7 +44,7 @@ public abstract class SingleEntryFileBasedIndexExtension<V> extends FileBasedInd
     return 5;
   }
 
-  @Nonnull
+  
   @Override
   public abstract SingleEntryIndexer<V> getIndexer();
 
@@ -57,7 +56,7 @@ public abstract class SingleEntryFileBasedIndexExtension<V> extends FileBasedInd
   /**
    * Use this method to get key for extracting the value from index
    */
-  public static int getFileKey(@Nonnull VirtualFile file) {
+  public static int getFileKey(VirtualFile file) {
     return Math.abs(FileBasedIndex.getFileId(file));
   }
 }

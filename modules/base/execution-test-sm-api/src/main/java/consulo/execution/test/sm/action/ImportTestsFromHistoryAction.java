@@ -27,8 +27,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -68,7 +67,7 @@ public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
 
     @Nullable
     @Override
-    public VirtualFile getFile(@Nonnull Project project) {
+    public VirtualFile getFile(Project project) {
         return LocalFileSystem.getInstance().findFileByPath(TestStateStorage.getTestHistoryRoot(project).getPath() + "/" + myFileName);
     }
 }

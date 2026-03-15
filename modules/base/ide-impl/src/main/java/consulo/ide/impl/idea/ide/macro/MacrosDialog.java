@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SeparatorFactory;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -110,7 +109,7 @@ public final class MacrosDialog extends DialogWrapper {
   }
 
   @Override
-  @Nonnull
+  
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }

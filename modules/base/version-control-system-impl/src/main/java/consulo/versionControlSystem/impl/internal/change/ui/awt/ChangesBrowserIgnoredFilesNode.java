@@ -18,7 +18,6 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.impl.internal.change.ChangeListOwner;
-import jakarta.annotation.Nonnull;
 
 public class ChangesBrowserIgnoredFilesNode extends ChangesBrowserSpecificFilesNode {
 
@@ -30,7 +29,7 @@ public class ChangesBrowserIgnoredFilesNode extends ChangesBrowserSpecificFilesN
   }
 
   @Override
-  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     super.render(renderer, selected, expanded, hasFocus);
     if (myUpdatingMode) {
       appendUpdatingState(renderer);

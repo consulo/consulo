@@ -21,8 +21,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +44,7 @@ import java.awt.*;
  * <code>IdeFocusManager.getGlobalInstance()</code> can be used.
  */
 public interface IdeFocusManager extends FocusRequestor {
-    default AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable ComponentManager project) {
+    default AsyncResult<Void> requestFocusInProject(Component c, @Nullable ComponentManager project) {
         return requestFocus(c, false);
     }
 
@@ -56,31 +55,31 @@ public interface IdeFocusManager extends FocusRequestor {
      * @return suitable component to focus
      */
     @Nullable
-    public abstract JComponent getFocusTargetFor(@Nonnull JComponent comp);
+    public abstract JComponent getFocusTargetFor(JComponent comp);
 
 
     /**
      * Executes given runnable after all focus activities are finished
      */
-    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess @Nonnull Runnable runnable);
+    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess Runnable runnable);
 
-    default void doForceFocusWhenFocusSettlesDown(@Nonnull consulo.ui.Component component) {
+    default void doForceFocusWhenFocusSettlesDown(consulo.ui.Component component) {
         doWhenFocusSettlesDown(() -> requestFocus(component, true));
     }
 
-    default void doForceFocusWhenFocusSettlesDown(@Nonnull Component component) {
+    default void doForceFocusWhenFocusSettlesDown(Component component) {
         doWhenFocusSettlesDown(() -> requestFocus(component, true));
     }
 
     /**
      * Executes given runnable after all focus activities are finished, immediately or later with the given modaliy state
      */
-    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess @Nonnull Runnable runnable, @Nonnull ModalityState modality);
+    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess Runnable runnable, ModalityState modality);
 
     /**
      * Executes given runnable after all focus activities are finished
      */
-    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess @Nonnull ExpirableRunnable runnable);
+    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess ExpirableRunnable runnable);
 
 
     /**
@@ -92,7 +91,7 @@ public interface IdeFocusManager extends FocusRequestor {
     /**
      * Requests default focus. The method should not be called by the user code.
      */
-    @Nonnull
+    
     public abstract AsyncResult<Void> requestDefaultFocus(boolean forced);
 
     /**
@@ -110,7 +109,7 @@ public interface IdeFocusManager extends FocusRequestor {
      * Runs runnable for which <code>DataContext</code> will no be computed from the current focus owner,
      * but used the given one
      */
-    public abstract void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable);
+    public abstract void runOnOwnContext(DataContext context, Runnable runnable);
 
     /**
      * Returns last focused component for the given <code>IdeFrame</code>
@@ -130,13 +129,13 @@ public interface IdeFocusManager extends FocusRequestor {
      */
     public abstract void toFront(JComponent c);
 
-    @Nonnull
+    
     public static IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
         return ApplicationIdeFocusManager.getInstance().findInstanceByContext(context);
     }
 
-    @Nonnull
-    public static IdeFocusManager findInstanceByComponent(@Nonnull Component c) {
+    
+    public static IdeFocusManager findInstanceByComponent(Component c) {
         IdeFocusManager instance = findByComponent(c);
         return instance != null ? instance : findInstanceByContext(null);
     }
@@ -146,13 +145,13 @@ public interface IdeFocusManager extends FocusRequestor {
         return ApplicationIdeFocusManager.getInstance().findInstanceByComponent(c);
     }
 
-    @Nonnull
+    
     public static IdeFocusManager findInstance() {
         Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         return owner != null ? findInstanceByComponent(owner) : findInstanceByContext(null);
     }
 
-    @Nonnull
+    
     public static IdeFocusManager getGlobalInstance() {
         return ApplicationIdeFocusManager.getInstance();
     }

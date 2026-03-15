@@ -19,7 +19,6 @@ import consulo.container.plugin.PluginId;
 import consulo.platform.CpuArchitecture;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -58,8 +57,8 @@ public enum PlatformPluginId {
     private final boolean myWithJre;
 
     PlatformPluginId(
-        @Nonnull String id,
-        @Nonnull Predicate<PlatformOperatingSystem> osPredicate,
+        String id,
+        Predicate<PlatformOperatingSystem> osPredicate,
         CpuArchitecture architecture,
         boolean withJre
     ) {
@@ -69,7 +68,7 @@ public enum PlatformPluginId {
         myPluginId = PluginId.getId(id);
     }
 
-    @Nonnull
+    
     public static PlatformPluginId find() {
         boolean jreBuild = PlatformOrPluginUpdateChecker.isJreBuild();
         Platform platform = Platform.current();

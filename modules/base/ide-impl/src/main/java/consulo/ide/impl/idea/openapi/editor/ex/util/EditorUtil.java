@@ -50,8 +50,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -84,17 +83,17 @@ public final class EditorUtil {
         return editor instanceof EditorEx editorEx ? editorEx : null;
     }
 
-    public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
+    public static int getLastVisualLineColumnNumber(Editor editor, int line) {
         return EditorImplUtil.getLastVisualLineColumnNumber(editor, line);
     }
 
-    public static int getVisualLineEndOffset(@Nonnull Editor editor, int line) {
+    public static int getVisualLineEndOffset(Editor editor, int line) {
         VisualPosition endLineVisualPosition = new VisualPosition(line, getLastVisualLineColumnNumber(editor, line));
         LogicalPosition endLineLogicalPosition = editor.visualToLogicalPosition(endLineVisualPosition);
         return editor.logicalPositionToOffset(endLineLogicalPosition);
     }
 
-    public static float calcVerticalScrollProportion(@Nonnull Editor editor) {
+    public static float calcVerticalScrollProportion(Editor editor) {
         Rectangle viewArea = editor.getScrollingModel().getVisibleAreaOnScrollingFinished();
         if (viewArea.height == 0) {
             return 0;
@@ -104,7 +103,7 @@ public final class EditorUtil {
         return (location.y - viewArea.y) / (float) viewArea.height;
     }
 
-    public static void setVerticalScrollProportion(@Nonnull Editor editor, float proportion) {
+    public static void setVerticalScrollProportion(Editor editor, float proportion) {
         Rectangle viewArea = editor.getScrollingModel().getVisibleArea();
         LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
         Point caretLocation = editor.logicalPositionToXY(caretPosition);
@@ -113,12 +112,12 @@ public final class EditorUtil {
         editor.getScrollingModel().scrollVertically(yPos);
     }
 
-    public static void fillVirtualSpaceUntilCaret(@Nonnull Editor editor) {
+    public static void fillVirtualSpaceUntilCaret(Editor editor) {
         LogicalPosition position = editor.getCaretModel().getLogicalPosition();
         fillVirtualSpaceUntil(editor, position.column, position.line);
     }
 
-    public static void fillVirtualSpaceUntil(@Nonnull Editor editor, int columnNumber, int lineNumber) {
+    public static void fillVirtualSpaceUntil(Editor editor, int columnNumber, int lineNumber) {
         int offset = editor.logicalPositionToOffset(new LogicalPosition(lineNumber, columnNumber));
         String filler = EditorModificationUtil.calcStringToFillVirtualSpace(editor);
         if (!filler.isEmpty()) {
@@ -129,19 +128,19 @@ public final class EditorUtil {
         }
     }
 
-    public static int calcColumnNumber(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int offset) {
+    public static int calcColumnNumber(Editor editor, CharSequence text, int start, int offset) {
         return calcColumnNumber(editor, text, start, offset, getTabSize(editor));
     }
 
     public static int calcColumnNumber(@Nullable Editor editor,
-                                       @Nonnull CharSequence text,
+                                       CharSequence text,
                                        int start,
                                        int offset,
                                        int tabSize) {
         return EditorImplUtil.calcColumnNumber(editor, text, start, offset, tabSize);
     }
 
-    public static void setHandCursor(@Nonnull Editor view) {
+    public static void setHandCursor(Editor view) {
         Cursor c = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
         // XXX: Workaround, simply view.getContentComponent().setCursor(c) doesn't work
         if (view.getContentComponent().getCursor() != c) {
@@ -149,12 +148,12 @@ public final class EditorUtil {
         }
     }
 
-    @Nonnull
-    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, @Nonnull Editor editor) {
+    
+    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, Editor editor) {
         return EditorImplUtil.fontForChar(c, style, editor);
     }
 
-    public static Image scaleIconAccordingEditorFont(@Nonnull Image icon, Editor editor) {
+    public static Image scaleIconAccordingEditorFont(Image icon, Editor editor) {
         if (Registry.is("editor.scale.gutter.icons") && editor instanceof RealEditor) {
             float scale = ((RealEditor) editor).getScale();
             if (Math.abs(1f - scale) > 0.1f) {
@@ -164,23 +163,23 @@ public final class EditorUtil {
         return icon;
     }
 
-    public static int charWidth(char c, @JdkConstants.FontStyle int fontType, @Nonnull Editor editor) {
+    public static int charWidth(char c, @JdkConstants.FontStyle int fontType, Editor editor) {
         return EditorImplUtil.charWidth(c, fontType, editor);
     }
 
-    public static int getSpaceWidth(@JdkConstants.FontStyle int fontType, @Nonnull Editor editor) {
+    public static int getSpaceWidth(@JdkConstants.FontStyle int fontType, Editor editor) {
         return EditorImplUtil.getSpaceWidth(fontType, editor);
     }
 
-    public static int getPlainSpaceWidth(@Nonnull Editor editor) {
+    public static int getPlainSpaceWidth(Editor editor) {
         return getSpaceWidth(Font.PLAIN, editor);
     }
 
-    public static int getTabSize(@Nonnull Editor editor) {
+    public static int getTabSize(Editor editor) {
         return consulo.codeEditor.util.EditorUtil.getTabSize(editor);
     }
 
-    public static int nextTabStop(int x, @Nonnull Editor editor) {
+    public static int nextTabStop(int x, Editor editor) {
         int tabSize = getTabSize(editor);
         if (tabSize <= 0) {
             tabSize = 1;
@@ -188,7 +187,7 @@ public final class EditorUtil {
         return nextTabStop(x, editor, tabSize);
     }
 
-    public static int nextTabStop(int x, @Nonnull Editor editor, int tabSize) {
+    public static int nextTabStop(int x, Editor editor, int tabSize) {
         int leftInset = editor.getContentComponent().getInsets().left;
         return nextTabStop(x - leftInset, getSpaceWidth(Font.PLAIN, editor), tabSize) + leftInset;
     }
@@ -213,7 +212,7 @@ public final class EditorUtil {
         return (nTabs + 1) * tabSize;
     }
 
-    public static int textWidthInColumns(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int end, int x) {
+    public static int textWidthInColumns(Editor editor, CharSequence text, int start, int end, int x) {
         return EditorImplUtil.textWidthInColumns(editor, text, start, end, x);
     }
 
@@ -255,8 +254,8 @@ public final class EditorUtil {
      *                 from <code>[1; tab size]</code> (check {@link #nextTabStop(int, Editor)} for more details)
      * @return width in pixels required for target text representation
      */
-    public static int textWidth(@Nonnull Editor editor,
-                                @Nonnull CharSequence text,
+    public static int textWidth(Editor editor,
+                                CharSequence text,
                                 int start,
                                 int end,
                                 @JdkConstants.FontStyle int fontType,
@@ -283,11 +282,11 @@ public final class EditorUtil {
      * @return surrounding logical positions
      * @see #calcSurroundingRange(Editor, VisualPosition, VisualPosition)
      */
-    public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(@Nonnull Editor editor) {
+    public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(Editor editor) {
         return consulo.codeEditor.util.EditorUtil.calcCaretLineRange(editor);
     }
 
-    public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(@Nonnull Caret caret) {
+    public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(Caret caret) {
         return consulo.codeEditor.util.EditorUtil.calcCaretLineRange(caret);
     }
 
@@ -316,9 +315,9 @@ public final class EditorUtil {
      */
     @SuppressWarnings("AssignmentToForLoopParameter")
     @Deprecated
-    public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor,
-                                                                                                @Nonnull VisualPosition start,
-                                                                                                @Nonnull VisualPosition end) {
+    public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(Editor editor,
+                                                                                                VisualPosition start,
+                                                                                                VisualPosition end) {
         return consulo.codeEditor.util.EditorUtil.calcSurroundingRange(editor, start, end);
     }
 
@@ -326,7 +325,7 @@ public final class EditorUtil {
      * Finds the start offset of visual line at which given offset is located, not taking soft wraps into account.
      */
     @Deprecated
-    public static int getNotFoldedLineStartOffset(@Nonnull Editor editor, int offset) {
+    public static int getNotFoldedLineStartOffset(Editor editor, int offset) {
         return consulo.codeEditor.util.EditorUtil.getNotFoldedLineStartOffset(editor, offset);
     }
 
@@ -334,21 +333,21 @@ public final class EditorUtil {
      * Finds the end offset of visual line at which given offset is located, not taking soft wraps into account.
      */
     @Deprecated
-    public static int getNotFoldedLineEndOffset(@Nonnull Editor editor, int offset) {
+    public static int getNotFoldedLineEndOffset(Editor editor, int offset) {
         return consulo.codeEditor.util.EditorUtil.getNotFoldedLineEndOffset(editor, offset);
     }
 
     @Deprecated
-    public static void scrollToTheEnd(@Nonnull Editor editor) {
+    public static void scrollToTheEnd(Editor editor) {
         consulo.codeEditor.util.EditorUtil.scrollToTheEnd(editor);
     }
 
     @Deprecated
-    public static void scrollToTheEnd(@Nonnull Editor editor, boolean preferVerticalScroll) {
+    public static void scrollToTheEnd(Editor editor, boolean preferVerticalScroll) {
         consulo.codeEditor.util.EditorUtil.scrollToTheEnd(editor, preferVerticalScroll);
     }
 
-    public static boolean isChangeFontSize(@Nonnull MouseWheelEvent e) {
+    public static boolean isChangeFontSize(MouseWheelEvent e) {
         if (e.getWheelRotation() == 0) {
             return false;
         }
@@ -356,7 +355,7 @@ public final class EditorUtil {
             .isAltDown() && !e.isShiftDown();
     }
 
-    public static boolean inVirtualSpace(@Nonnull Editor editor, @Nonnull LogicalPosition logicalPosition) {
+    public static boolean inVirtualSpace(Editor editor, LogicalPosition logicalPosition) {
         return consulo.codeEditor.util.EditorUtil.inVirtualSpace(editor, logicalPosition);
     }
 
@@ -364,7 +363,7 @@ public final class EditorUtil {
         EditorFactory.getInstance().refreshAllEditors();
     }
 
-    @Nonnull
+    
     public static TextRange getSelectionInAnyMode(Editor editor) {
         SelectionModel selection = editor.getSelectionModel();
         int[] starts = selection.getBlockSelectionStarts();
@@ -374,19 +373,19 @@ public final class EditorUtil {
         return TextRange.create(start, end);
     }
 
-    public static int yPositionToLogicalLine(@Nonnull Editor editor, @Nonnull MouseEvent event) {
+    public static int yPositionToLogicalLine(Editor editor, MouseEvent event) {
         return yPositionToLogicalLine(editor, event.getY());
     }
 
-    public static int yPositionToLogicalLine(@Nonnull Editor editor, @Nonnull Point point) {
+    public static int yPositionToLogicalLine(Editor editor, Point point) {
         return yPositionToLogicalLine(editor, point.y);
     }
 
-    public static int yPositionToLogicalLine(@Nonnull Editor editor, int y) {
+    public static int yPositionToLogicalLine(Editor editor, int y) {
         return consulo.codeEditor.util.EditorUtil.yPositionToLogicalLine(editor, y);
     }
 
-    public static boolean isAtLineEnd(@Nonnull Editor editor, int offset) {
+    public static boolean isAtLineEnd(Editor editor, int offset) {
         return consulo.codeEditor.util.EditorUtil.isAtLineEnd(editor, offset);
     }
 
@@ -396,7 +395,7 @@ public final class EditorUtil {
      * This method will make sure interfering collapsed regions are expanded first, so that resulting selection range is exactly as
      * requested.
      */
-    public static void setSelectionExpandingFoldedRegionsIfNeeded(@Nonnull Editor editor, int startOffset, int endOffset) {
+    public static void setSelectionExpandingFoldedRegionsIfNeeded(Editor editor, int startOffset, int endOffset) {
         FoldingModel foldingModel = editor.getFoldingModel();
         FoldRegion startFoldRegion = foldingModel.getCollapsedRegionAtOffset(startOffset);
         if (startFoldRegion != null && (startFoldRegion.getStartOffset() == startOffset || startFoldRegion.isExpanded())) {
@@ -435,7 +434,7 @@ public final class EditorUtil {
      *
      * @see LogicalPosition#softWrapLinesOnCurrentLogicalLine
      */
-    public static int getSoftWrapCountAfterLineStart(@Nonnull Editor editor, @Nonnull LogicalPosition position) {
+    public static int getSoftWrapCountAfterLineStart(Editor editor, LogicalPosition position) {
         return consulo.codeEditor.util.EditorUtil.getSoftWrapCountAfterLineStart(editor, position);
     }
 
@@ -443,12 +442,12 @@ public final class EditorUtil {
         return consulo.codeEditor.util.EditorUtil.attributesImpactFontStyleOrColor(attributes);
     }
 
-    public static boolean isCurrentCaretPrimary(@Nonnull Editor editor) {
+    public static boolean isCurrentCaretPrimary(Editor editor) {
         return consulo.codeEditor.util.EditorUtil.isCurrentCaretPrimary(editor);
     }
 
     @RequiredUIAccess
-    public static void disposeWithEditor(@Nonnull Editor editor, @Nonnull Disposable disposable) {
+    public static void disposeWithEditor(Editor editor, Disposable disposable) {
         UIAccess.assertIsUIThread();
         if (Disposer.isDisposed(disposable)) {
             return;
@@ -462,7 +461,7 @@ public final class EditorUtil {
         Editor hostEditor = editor instanceof EditorWindow editorWindow ? editorWindow.getDelegate() : editor;
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
             @Override
-            public void editorReleased(@Nonnull EditorFactoryEvent event) {
+            public void editorReleased(EditorFactoryEvent event) {
                 if (event.getEditor() == hostEditor) {
                     Disposer.dispose(disposable);
                 }
@@ -470,14 +469,14 @@ public final class EditorUtil {
         }, disposable);
     }
 
-    public static void runBatchFoldingOperationOutsideOfBulkUpdate(@Nonnull Editor editor, @Nonnull Runnable operation) {
+    public static void runBatchFoldingOperationOutsideOfBulkUpdate(Editor editor, Runnable operation) {
         DocumentEx document = ObjectUtil.tryCast(editor.getDocument(), DocumentEx.class);
         if (document != null && document.isInBulkUpdate()) {
             MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
             disposeWithEditor(editor, connection::disconnect);
             connection.subscribe(DocumentBulkUpdateListener.class, new DocumentBulkUpdateListener.Adapter() {
                 @Override
-                public void updateFinished(@Nonnull Document doc) {
+                public void updateFinished(Document doc) {
                     if (doc == editor.getDocument()) {
                         editor.getFoldingModel().runBatchFoldingOperation(operation);
                         connection.disconnect();
@@ -490,7 +489,7 @@ public final class EditorUtil {
         }
     }
 
-    public static boolean isPrimaryCaretVisible(@Nonnull Editor editor) {
+    public static boolean isPrimaryCaretVisible(Editor editor) {
         Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
         Caret caret = editor.getCaretModel().getPrimaryCaret();
         Point caretPoint = editor.visualPositionToXY(caret.getVisualPosition());
@@ -507,12 +506,12 @@ public final class EditorUtil {
      *
      * @see Inlay#isRelatedToPrecedingText()
      */
-    @Nonnull
-    public static VisualPosition inlayAwareOffsetToVisualPosition(@Nonnull Editor editor, int offset) {
+    
+    public static VisualPosition inlayAwareOffsetToVisualPosition(Editor editor, int offset) {
         return consulo.codeEditor.util.EditorUtil.inlayAwareOffsetToVisualPosition(editor, offset);
     }
 
-    public static int getTotalInlaysHeight(@Nonnull List<? extends Inlay> inlays) {
+    public static int getTotalInlaysHeight(List<? extends Inlay> inlays) {
         return consulo.codeEditor.util.EditorUtil.getTotalInlaysHeight(inlays);
     }
 
@@ -520,7 +519,7 @@ public final class EditorUtil {
      * Virtual space (after line end, and after end of text), inlays and space between visual lines (where block inlays are located) is
      * excluded
      */
-    public static boolean isPointOverText(@Nonnull Editor editor, @Nonnull Point point) {
+    public static boolean isPointOverText(Editor editor, Point point) {
         return ReadAction.compute(() -> {
             VisualPosition visualPosition = editor.xyToVisualPosition(point);
             int visualLineStartY = editor.visualLineToY(visualPosition.line);
@@ -557,12 +556,12 @@ public final class EditorUtil {
      * the scope of {@link CaretModel#runForEachCaret(CaretAction)} call, there will be only one notification at the end of iteration over
      * carets.
      */
-    public static void addBulkSelectionListener(@Nonnull Editor editor, @Nonnull SelectionListener listener, @Nonnull Disposable disposable) {
+    public static void addBulkSelectionListener(Editor editor, SelectionListener listener, Disposable disposable) {
         Ref<Pair<int[], int[]>> selectionBeforeBulkChange = new Ref<>();
         Ref<Boolean> selectionChangedDuringBulkChange = new Ref<>();
         editor.getSelectionModel().addSelectionListener(new SelectionListener() {
             @Override
-            public void selectionChanged(@Nonnull SelectionEvent e) {
+            public void selectionChanged(SelectionEvent e) {
                 if (selectionBeforeBulkChange.isNull()) {
                     listener.selectionChanged(e);
                 }
@@ -594,17 +593,17 @@ public final class EditorUtil {
         }, disposable);
     }
 
-    public static EditorHighlighter createEmptyHighlighter(@Nullable Project project, @Nonnull Document document) {
+    public static EditorHighlighter createEmptyHighlighter(@Nullable Project project, Document document) {
         EditorHighlighter highlighter = new EmptyEditorHighlighter(new TextAttributes()) {
             @Override
-            @Nonnull
+            
             public HighlighterIterator createIterator(int startOffset) {
                 setText(document.getImmutableCharSequence());
                 return super.createIterator(startOffset);
             }
 
             @Override
-            public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
+            public void setColorScheme(EditorColorsScheme scheme) {
             }
         };
         highlighter.setEditor(new HighlighterClient() {

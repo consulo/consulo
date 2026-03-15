@@ -31,8 +31,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,11 +72,11 @@ public class ProjectImplUtil {
      * @param project cannot be null
      */
     @RequiredUIAccess
-    public static boolean closeAndDispose(@Nonnull Project project) {
+    public static boolean closeAndDispose(Project project) {
         return ProjectManagerEx.getInstanceEx().closeAndDispose(project);
     }
 
-    @Nonnull
+    
     private static AsyncResult<Integer> confirmOpenNewProjectAsync(Project projectToClose, UIAccess uiAccess, boolean isNewProject) {
         ProjectOpenSetting settings = ProjectOpenSetting.getInstance();
         int confirmOpenNewProject = settings.getConfirmOpenNewProject();
@@ -111,20 +110,20 @@ public class ProjectImplUtil {
         return AsyncResult.resolved(confirmOpenNewProject);
     }
 
-    @Nonnull
-    public static AsyncResult<Project> openAsync(@Nonnull String path,
+    
+    public static AsyncResult<Project> openAsync(String path,
                                                  @Nullable Project projectToCloseFinal,
                                                  boolean forceOpenInNewFrame,
-                                                 @Nonnull UIAccess uiAccess) {
+                                                 UIAccess uiAccess) {
         return openAsync(path, projectToCloseFinal, forceOpenInNewFrame, uiAccess, new ProjectOpenContext());
     }
 
-    @Nonnull
-    public static AsyncResult<Project> openAsync(@Nonnull String path,
+    
+    public static AsyncResult<Project> openAsync(String path,
                                                  @Nullable Project projectToCloseFinal,
                                                  boolean forceOpenInNewFrame,
-                                                 @Nonnull UIAccess uiAccess,
-                                                 @Nonnull ProjectOpenContext context) {
+                                                 UIAccess uiAccess,
+                                                 ProjectOpenContext context) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
         if (virtualFile == null) {

@@ -18,7 +18,6 @@ package consulo.execution.debug.impl.internal.evaluate;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.Tree;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +28,7 @@ import java.awt.*;
 public class DebuggerTreeWithHistoryPanel<D> extends DebuggerTreeWithHistoryContainer<D> {
   private final JPanel myMainPanel;
 
-  public DebuggerTreeWithHistoryPanel(@Nonnull D initialItem, @Nonnull DebuggerTreeCreator<D> creator, @Nonnull Project project) {
+  public DebuggerTreeWithHistoryPanel(D initialItem, DebuggerTreeCreator<D> creator, Project project) {
     super(initialItem, creator, project);
     myMainPanel = createMainPanel(myTreeCreator.createTree(initialItem));
   }

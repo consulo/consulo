@@ -24,8 +24,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.List;
 
@@ -34,8 +33,8 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
   ExtensionPointCacheKey<ParameterInfoHandler, ByLanguageValue<List<ParameterInfoHandler>>> KEY =
           ExtensionPointCacheKey.create("ParameterInfoHandler", LanguageOneToMany.build(false));
 
-  @Nonnull
-  static List<ParameterInfoHandler> forLanguage(@Nonnull Language language) {
+  
+  static List<ParameterInfoHandler> forLanguage(Language language) {
     return Application.get().getExtensionPoint(ParameterInfoHandler.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -50,10 +49,10 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
    * <p>Note: it is executed on non UI thread</p>
    */
   @Nullable
-  ParameterOwner findElementForParameterInfo(@Nonnull CreateParameterInfoContext context);
+  ParameterOwner findElementForParameterInfo(CreateParameterInfoContext context);
 
   // Usually context.showHint
-  void showParameterInfo(@Nonnull ParameterOwner element, @Nonnull CreateParameterInfoContext context);
+  void showParameterInfo(ParameterOwner element, CreateParameterInfoContext context);
 
   /**
    * <p>Hint has to be removed if method returns <code>null</code>.</p>
@@ -61,13 +60,13 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
    * <p>Note: it is executed on non-UI thread</p>
    */
   @Nullable
-  ParameterOwner findElementForUpdatingParameterInfo(@Nonnull UpdateParameterInfoContext context);
+  ParameterOwner findElementForUpdatingParameterInfo(UpdateParameterInfoContext context);
 
   /**
    * This method performs some extra action (e.g. show hints) with a result of execution of
    * {@link #findElementForUpdatingParameterInfo(UpdateParameterInfoContext)} on UI thread.
    */
-  default void processFoundElementForUpdatingParameterInfo(@Nullable ParameterOwner parameterOwner, @Nonnull UpdateParameterInfoContext context) {
+  default void processFoundElementForUpdatingParameterInfo(@Nullable ParameterOwner parameterOwner, UpdateParameterInfoContext context) {
   }
 
   /**
@@ -79,7 +78,7 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
    *
    * <p>Note: it is executed on non UI thread.</p>
    */
-  void updateParameterInfo(@Nonnull ParameterOwner parameterOwner, @Nonnull UpdateParameterInfoContext context);
+  void updateParameterInfo(ParameterOwner parameterOwner, UpdateParameterInfoContext context);
 
   /**
    * <p>This method is executed on UI thread and supposed only to update UI representation using
@@ -88,20 +87,20 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
    * <p>Don't perform any heavy calculations like resolve here: move it to {@link #findElementForParameterInfo(CreateParameterInfoContext)} or
    * {@link #updateParameterInfo(Object, UpdateParameterInfoContext)}.</p>
    */
-  void updateUI(ParameterType p, @Nonnull ParameterInfoUIContext context);
+  void updateUI(ParameterType p, ParameterInfoUIContext context);
 
   default boolean supportsOverloadSwitching() {
     return false;
   }
 
-  default void dispose(@Nonnull DeleteParameterInfoContext context) {
+  default void dispose(DeleteParameterInfoContext context) {
   }
 
   default boolean isWhitespaceSensitive() {
     return false;
   }
 
-  default void syncUpdateOnCaretMove(@Nonnull UpdateParameterInfoContext context) {
+  default void syncUpdateOnCaretMove(UpdateParameterInfoContext context) {
   }
 
   /**

@@ -20,46 +20,45 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.Content;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface LayoutViewOptions {
 
   String STARTUP = "startup";
 
-  @Nonnull
-  LayoutViewOptions setTopToolbar(@Nonnull ActionGroup actions, @Nonnull String place);
+  
+  LayoutViewOptions setTopToolbar(ActionGroup actions, String place);
 
-  @Nonnull
-  LayoutViewOptions setLeftToolbar(@Nonnull ActionGroup leftToolbar, @Nonnull String place);
+  
+  LayoutViewOptions setLeftToolbar(ActionGroup leftToolbar, String place);
 
-  @Nonnull
+  
   LayoutViewOptions setMinimizeActionEnabled(boolean enabled);
 
-  @Nonnull
+  
   LayoutViewOptions setMoveToGridActionEnabled(boolean enabled);
 
-  @Nonnull
-  LayoutViewOptions setAttractionPolicy(@Nonnull String contentId, LayoutAttractionPolicy policy);
+  
+  LayoutViewOptions setAttractionPolicy(String contentId, LayoutAttractionPolicy policy);
 
-  @Nonnull
-  LayoutViewOptions setConditionAttractionPolicy(@Nonnull String condition, LayoutAttractionPolicy policy);
+  
+  LayoutViewOptions setConditionAttractionPolicy(String condition, LayoutAttractionPolicy policy);
 
-  boolean isToFocus(@Nonnull Content content, @Nonnull String condition);
+  boolean isToFocus(Content content, String condition);
 
-  @Nonnull
-  LayoutViewOptions setToFocus(@Nullable Content content, @Nonnull String condition);
+  
+  LayoutViewOptions setToFocus(@Nullable Content content, String condition);
 
   AnAction getLayoutActions();
-  @Nonnull
+  
   AnAction[] getLayoutActionsList();
 
-  @Nonnull
-  LayoutViewOptions setTabPopupActions(@Nonnull ActionGroup group);
-  @Nonnull
-  LayoutViewOptions setAdditionalFocusActions(@Nonnull ActionGroup group);
+  
+  LayoutViewOptions setTabPopupActions(ActionGroup group);
+  
+  LayoutViewOptions setAdditionalFocusActions(ActionGroup group);
 
   AnAction getSettingsActions();
-  @Nonnull
+  
   AnAction[] getSettingsActionsList();
 }

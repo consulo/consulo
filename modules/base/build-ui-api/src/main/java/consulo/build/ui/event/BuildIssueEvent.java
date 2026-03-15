@@ -3,12 +3,11 @@ package consulo.build.ui.event;
 
 import consulo.build.ui.issue.BuildIssue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface BuildIssueEvent extends MessageEvent {
-  @Nonnull
+  
   BuildIssue getIssue();
 }

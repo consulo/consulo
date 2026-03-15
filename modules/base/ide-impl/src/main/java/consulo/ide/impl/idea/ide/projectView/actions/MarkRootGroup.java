@@ -22,8 +22,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class MarkRootGroup extends ActionGroup implements DumbAware {
         e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (e == null) {

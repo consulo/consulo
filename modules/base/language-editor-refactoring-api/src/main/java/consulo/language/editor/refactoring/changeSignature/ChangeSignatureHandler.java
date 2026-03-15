@@ -24,8 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Medvedev
@@ -41,7 +40,7 @@ public interface ChangeSignatureHandler extends RefactoringActionHandler {
 
     @Override
     @RequiredUIAccess
-    void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @Nullable DataContext dataContext);
+    void invoke(Project project, PsiElement[] elements, @Nullable DataContext dataContext);
 
     @Nullable
     String getTargetNotFoundMessage();

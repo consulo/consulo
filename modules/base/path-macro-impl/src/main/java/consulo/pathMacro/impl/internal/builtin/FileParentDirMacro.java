@@ -21,7 +21,7 @@ import consulo.pathMacro.PathMacroBundle;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FileParentDirMacro extends Macro {
   @Override

@@ -22,7 +22,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;

@@ -19,7 +19,6 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.extension.ExtensionWalker;
 import consulo.language.pom.PomModelAspect;
 import consulo.language.pom.PomModelAspectRegistrator;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -50,7 +49,7 @@ public class PomAspects implements PomModelAspectRegistrator {
   }
 
   @Override
-  public <P extends PomModelAspect> P getModelAspect(@Nonnull Class<P> clazz) {
+  public <P extends PomModelAspect> P getModelAspect(Class<P> clazz) {
     //noinspection unchecked
     return (P)myAspects.get(clazz);
   }

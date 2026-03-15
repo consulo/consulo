@@ -30,8 +30,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "CompareFileWithEditor")
 public class CompareFileWithEditorAction extends BaseShowDiffAction {
@@ -40,7 +39,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
     }
 
     @Override
-    protected boolean isAvailable(@Nonnull AnActionEvent e) {
+    protected boolean isAvailable(AnActionEvent e) {
         VirtualFile selectedFile = getSelectedFile(e);
         if (selectedFile == null) {
             return false;
@@ -51,7 +50,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
     }
 
     @Nullable
-    private static VirtualFile getSelectedFile(@Nonnull AnActionEvent e) {
+    private static VirtualFile getSelectedFile(AnActionEvent e) {
         VirtualFile[] array = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (array == null || array.length != 1 || array[0].isDirectory()) {
             return null;
@@ -61,7 +60,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
     }
 
     @Nullable
-    private static VirtualFile getEditingFile(@Nonnull AnActionEvent e) {
+    private static VirtualFile getEditingFile(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return null;
@@ -70,13 +69,13 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
         return FileEditorManager.getInstance(project).getCurrentFile();
     }
 
-    private static boolean canCompare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    private static boolean canCompare(VirtualFile file1, VirtualFile file2) {
         return !file1.equals(file2) && hasContent(file1) && hasContent(file2);
     }
 
     @Nullable
     @Override
-    protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
+    protected DiffRequest getDiffRequest(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         VirtualFile selectedFile = getSelectedFile(e);

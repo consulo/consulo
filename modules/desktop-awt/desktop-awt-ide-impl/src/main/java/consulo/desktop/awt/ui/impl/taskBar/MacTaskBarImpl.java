@@ -23,7 +23,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
@@ -69,7 +68,7 @@ public class MacTaskBarImpl extends DefaultJava9TaskBarImpl {
   private static Color PROGRESS_OUTLINE_COLOR = new Color(140, 139, 140);
 
   @Override
-  public boolean setProgress(@Nonnull consulo.ui.Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
+  public boolean setProgress(consulo.ui.Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
     assertIsDispatchThread();
 
     if (getAppImage() == null) return false;
@@ -124,7 +123,7 @@ public class MacTaskBarImpl extends DefaultJava9TaskBarImpl {
   }
 
   @Override
-  public boolean hideProgress(@Nonnull Window window, Object processId) {
+  public boolean hideProgress(Window window, Object processId) {
     assertIsDispatchThread();
 
     if (getAppImage() == null) return false;
@@ -138,7 +137,7 @@ public class MacTaskBarImpl extends DefaultJava9TaskBarImpl {
   }
 
   @Override
-  protected void setOkBadgeUnsupported(@Nonnull Window window, boolean visible) {
+  protected void setOkBadgeUnsupported(Window window, boolean visible) {
     assertIsDispatchThread();
 
     if (getAppImage() == null) return;

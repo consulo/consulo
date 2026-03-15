@@ -22,13 +22,12 @@ import consulo.colorScheme.ui.ColorAndFontDescriptionPanel;
 import consulo.colorScheme.ui.TextAttributesDescription;
 import consulo.ide.impl.idea.application.options.colors.*;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DiffColorAndFontPanelFactory implements ColorAndFontPanelFactory {
   @Override
-  @Nonnull
-  public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
+  
+  public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
     SchemesPanel schemesPanel = new SchemesPanel(options);
 
     CompositeColorDescriptionPanel descriptionPanel = new CompositeColorDescriptionPanel();
@@ -40,7 +39,7 @@ public class DiffColorAndFontPanelFactory implements ColorAndFontPanelFactory {
 
     schemesPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
       @Override
-      public void schemeChanged(@Nonnull Object source) {
+      public void schemeChanged(Object source) {
         previewPanel.setColorScheme(options.getSelectedScheme());
         optionsPanel.updateOptionsList();
       }
@@ -50,7 +49,7 @@ public class DiffColorAndFontPanelFactory implements ColorAndFontPanelFactory {
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getPanelDisplayName() {
     return getDiffGroup();
   }

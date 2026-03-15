@@ -8,8 +8,7 @@ import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.ActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -35,7 +34,7 @@ final class CtxEditors {
 
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {
             @Override
-            public void editorReleased(@Nonnull EditorFactoryEvent event) {
+            public void editorReleased(EditorFactoryEvent event) {
                 WeakReference<Component> cmpRef = ourEditors.remove(event.getEditor());
                 Component cmp = cmpRef != null ? cmpRef.get() : null;
                 if (cmp != null) {
@@ -47,7 +46,7 @@ final class CtxEditors {
         ourCustomizer = new Customizer(new TBPanel.CrossEscInfo(false, false)/*always replace esc for editor search*/, null);
     }
 
-    static void onUpdateEditorHeader(@Nonnull Editor editor) {
+    static void onUpdateEditorHeader(Editor editor) {
         initialize();
         if (ourEditorSearchActions == null) {
             return;

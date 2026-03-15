@@ -30,8 +30,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -44,14 +43,14 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
   public static final int LAYER = 10_000;
 
   private final List<RangeHighlighter> myFocusModeMarkup = new SmartList<>();
-  @Nonnull
+  
   private final DesktopEditorImpl myEditor;
   private RangeMarker myFocusModeRange;
 
   private final List<FocusModeModelListener> mySegmentListeners = new SmartList<>();
   private final RangeMarkerTree<FocusRegion> myFocusMarkerTree;
 
-  public FocusModeModelImpl(@Nonnull DesktopEditorImpl editor) {
+  public FocusModeModelImpl(DesktopEditorImpl editor) {
     myEditor = editor;
     myFocusMarkerTree = new RangeMarkerTree<>(editor.getDocument());
 
@@ -68,21 +67,21 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
     DesktopCaretModelImpl caretModel = myEditor.getCaretModel();
     caretModel.addCaretListener(new CaretListener() {
       @Override
-      public void caretAdded(@Nonnull CaretEvent event) {
+      public void caretAdded(CaretEvent event) {
         process(event);
       }
 
       @Override
-      public void caretPositionChanged(@Nonnull CaretEvent event) {
+      public void caretPositionChanged(CaretEvent event) {
         process(event);
       }
 
       @Override
-      public void caretRemoved(@Nonnull CaretEvent event) {
+      public void caretRemoved(CaretEvent event) {
         process(event);
       }
 
-      private void process(@Nonnull CaretEvent event) {
+      private void process(CaretEvent event) {
         Caret caret = event.getCaret();
         if (caret == caretModel.getPrimaryCaret()) {
           applyFocusMode(caret);
@@ -92,7 +91,7 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
 
     myEditor.getSelectionModel().addSelectionListener(new SelectionListener() {
       @Override
-      public void selectionChanged(@Nonnull SelectionEvent e) {
+      public void selectionChanged(SelectionEvent e) {
         myEditor.applyFocusMode();
       }
     });
@@ -102,7 +101,7 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
     return myFocusModeRange;
   }
 
-  public void applyFocusMode(@Nonnull Caret caret) {
+  public void applyFocusMode(Caret caret) {
     // Focus mode should not be applied when idea is used as rd server (for example, centaur mode).
     Application application = Application.get();
     if (application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
@@ -139,7 +138,7 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
     }
   }
 
-  public boolean isInFocusMode(@Nonnull RangeMarker region) {
+  public boolean isInFocusMode(RangeMarker region) {
     return myFocusModeRange != null && !intersects(myFocusModeRange, region);
   }
 
@@ -148,7 +147,7 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
    * <p>
    * Return pair or focus region and found / created status.
    */
-  @Nonnull
+  
   public FocusRegion createFocusRegion(int start, int end) {
     FocusRegion marker = new FocusRegion(myEditor, start, end);
     myFocusMarkerTree.addInterval(marker, start, end, false, false, true, 0);
@@ -180,7 +179,7 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
     Disposer.register(disposable, () -> mySegmentListeners.remove(newListener));
   }
 
-  @Nonnull
+  
   private Segment enlargeFocusRangeIfNeeded(Segment range) {
     int originalStart = range.getStartOffset();
     DocumentEx document = myEditor.getDocument();
@@ -196,7 +195,7 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
     return range;
   }
 
-  private void applyFocusMode(@Nonnull Segment focusRange) {
+  private void applyFocusMode(Segment focusRange) {
     EditorColorsScheme scheme = ObjectUtil.notNull(myEditor.getColorsScheme(), EditorColorsManager.getInstance().getGlobalScheme());
     ColorValue background = scheme.getDefaultBackground();
     //noinspection UseJBColor

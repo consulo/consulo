@@ -4,8 +4,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,7 +34,7 @@ public class ComboBoxWithHistory extends JComboBox {
         setModelFrom(items);
     }
 
-    public ComboBoxWithHistory(@Nonnull String historyId, Object[] items) {
+    public ComboBoxWithHistory(String historyId, Object[] items) {
         this(null, historyId, items);
     }
 

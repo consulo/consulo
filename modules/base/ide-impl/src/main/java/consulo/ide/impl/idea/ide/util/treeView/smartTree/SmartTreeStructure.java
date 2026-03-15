@@ -23,14 +23,13 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.fileEditor.structureView.tree.TreeModel;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
-import jakarta.annotation.Nonnull;
 
 public class SmartTreeStructure extends AbstractTreeStructure {
     protected final TreeModel myModel;
     protected final Project myProject;
     private TreeElementWrapper myRootElementWrapper;
 
-    public SmartTreeStructure(@Nonnull Project project, @Nonnull TreeModel model) {
+    public SmartTreeStructure(Project project, TreeModel model) {
         myModel = model;
         myProject = project;
     }
@@ -40,24 +39,24 @@ public class SmartTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    @Nonnull
-    public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+    
+    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         return (AbstractTreeNode)element;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public Object[] getChildElements(@Nonnull Object element) {
+    public Object[] getChildElements(Object element) {
         return ((AbstractTreeNode)element).getChildren().toArray();
     }
 
     @Override
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         return ((AbstractTreeNode)element).getParent();
     }
 
-    @Nonnull
+    
     @Override
     public Object getRootElement() {
         if (myRootElementWrapper == null) {
@@ -71,7 +70,7 @@ public class SmartTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public boolean isAlwaysLeaf(@Nonnull Object element) {
+    public boolean isAlwaysLeaf(Object element) {
         return ((AbstractTreeNode)element).isAlwaysLeaf();
     }
 

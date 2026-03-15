@@ -26,7 +26,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -51,7 +50,7 @@ public class ProjectNewElementAction extends NewElementAction {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull IdeView ideView) {
+    protected boolean isEnabled(AnActionEvent e, IdeView ideView) {
         ToolWindow toolWindow = e.getData(ToolWindow.KEY);
         if (toolWindow == null) {
             return false;

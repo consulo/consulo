@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.ui.roots.ScalableIconComponent;
 import consulo.ui.Component;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ class DesktopImageBoxImpl extends SwingComponentDelegate<ScalableIconComponent> 
             super(icon);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopImageBoxImpl.this;
@@ -42,7 +41,7 @@ class DesktopImageBoxImpl extends SwingComponentDelegate<ScalableIconComponent> 
 
     private final Image myIcon;
 
-    public DesktopImageBoxImpl(@Nonnull Image image) {
+    public DesktopImageBoxImpl(Image image) {
         myIcon = image;
     }
 
@@ -51,7 +50,7 @@ class DesktopImageBoxImpl extends SwingComponentDelegate<ScalableIconComponent> 
         return new MyScalableIconComponent(myIcon);
     }
 
-    @Nonnull
+    
     @Override
     public Image getImage() {
         return myIcon;

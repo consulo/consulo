@@ -18,8 +18,7 @@ package consulo.language.editor.completion.lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -28,7 +27,7 @@ public abstract class LookupElementAction {
   private final Image myIcon;
   private final String myText;
 
-  protected LookupElementAction(@Nullable Image icon, @Nonnull String text) {
+  protected LookupElementAction(@Nullable Image icon, String text) {
     myIcon = icon;
     myText = text;
   }

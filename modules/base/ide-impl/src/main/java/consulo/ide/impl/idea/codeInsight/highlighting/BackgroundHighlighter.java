@@ -31,7 +31,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
     }
 
     @Override
-    public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(final Project project, UIAccess uiAccess) {
         EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
 
         Alarm braceAlarm = new Alarm();
@@ -59,7 +58,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
 
         eventMulticaster.addCaretListener(new CaretListener() {
             @Override
-            public void caretPositionChanged(@Nonnull CaretEvent e) {
+            public void caretPositionChanged(CaretEvent e) {
                 if (e.getCaret() != e.getEditor().getCaretModel().getPrimaryCaret()) {
                     return;
                 }
@@ -82,7 +81,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         SelectionListener selectionListener = new SelectionListener() {
             @Override
             @RequiredUIAccess
-            public void selectionChanged(@Nonnull SelectionEvent e) {
+            public void selectionChanged(SelectionEvent e) {
                 braceAlarm.cancelAllRequests();
                 Editor editor = e.getEditor();
                 if (editor.getProject() != project) {
@@ -107,7 +106,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         DocumentListener documentListener = new DocumentListener() {
             @Override
             @RequiredUIAccess
-            public void documentChanged(@Nonnull DocumentEvent e) {
+            public void documentChanged(DocumentEvent e) {
                 braceAlarm.cancelAllRequests();
                 Editor[] editors = EditorFactory.getInstance().getEditors(e.getDocument(), project);
                 for (Editor editor : editors) {
@@ -124,7 +123,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         project.getMessageBus().connect().subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
             @RequiredUIAccess
-            public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
+            public void selectionChanged(FileEditorManagerEvent e) {
                 braceAlarm.cancelAllRequests();
 
                 FileEditor oldEditor = e.getOldEditor();
@@ -254,7 +253,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         }
     }
 
-    static void updateBraces(@Nonnull Editor editor, @Nonnull Alarm alarm) {
+    static void updateBraces(Editor editor, Alarm alarm) {
         if (editor.getDocument().isInBulkUpdate()) {
             return;
         }
@@ -264,7 +263,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         });
     }
 
-    private void clearBraces(@Nonnull Editor editor, @Nonnull Alarm braceAlarm) {
+    private void clearBraces(Editor editor, Alarm braceAlarm) {
         BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, braceAlarm, handler -> {
             handler.clearBraceHighlighters();
         });

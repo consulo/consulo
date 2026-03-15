@@ -60,8 +60,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -76,7 +75,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     private VirtualFile mySelectedFile;
     private FilePath mySelectedUrl;
     private final Tree myTree = new Tree();
-    @Nonnull
+    
     private final Project myProject;
     private final UpdatedFiles myUpdatedFiles;
     private UpdateRootNode myRoot;
@@ -101,8 +100,8 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     private Label myAfter;
 
     public UpdateInfoTreeImpl(
-        @Nonnull ContentManager contentManager,
-        @Nonnull Project project,
+        ContentManager contentManager,
+        Project project,
         UpdatedFiles updatedFiles,
         String rootName,
         ActionInfo actionInfo
@@ -117,7 +116,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
             }
 
             @Override
-            public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
+            public void fileStatusChanged(VirtualFile virtualFile) {
                 myTree.repaint();
             }
         };
@@ -251,7 +250,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (myTreeBrowser != null && myTreeBrowser.isVisible()) {
             return null;
         }
@@ -344,7 +343,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Nullable
-        private GroupTreeNode findParentGroupTreeNode(@Nonnull TreeNode treeNode) {
+        private GroupTreeNode findParentGroupTreeNode(TreeNode treeNode) {
             TreeNode currentNode = treeNode;
             while (currentNode != null && !(currentNode instanceof GroupTreeNode)) {
                 currentNode = currentNode.getParent();
@@ -446,12 +445,12 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return !myProject.isDisposed() && VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_PACKAGES;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             if (!myProject.isDisposed()) {
                 VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_PACKAGES = state;
                 updateTreeModel();
@@ -459,7 +458,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(!myGroupByChangeList);
         }
@@ -471,12 +470,12 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myGroupByChangeList;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myGroupByChangeList = state;
             VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_CHANGELIST = myGroupByChangeList;
             CardLayout cardLayout = (CardLayout) myCenterPanel.getLayout();
@@ -489,7 +488,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setVisible(myCanGroupByChangeList);
         }
@@ -543,26 +542,26 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myShowOnlyFilteredItems;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myShowOnlyFilteredItems = state;
             VcsConfiguration.getInstance(myProject).UPDATE_FILTER_BY_SCOPE = myShowOnlyFilteredItems;
             updateTreeModel();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(!myGroupByChangeList && getFilterScopeName() != null);
         }
     }
 
-    @Nonnull
-    private static FilePath getFilePath(@Nonnull VirtualFilePointer filePointer) {
+    
+    private static FilePath getFilePath(VirtualFilePointer filePointer) {
         return VcsUtil.getFilePath(filePointer.getPresentableUrl(), false);
     }
 }

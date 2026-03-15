@@ -58,8 +58,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.awt.event.InputEvent;
@@ -71,16 +70,16 @@ import java.util.*;
 public class GotoDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
     private static final Logger LOG = Logger.getInstance(GotoDeclarationAction.class);
 
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public GotoDeclarationAction(@Nonnull Application application) {
+    public GotoDeclarationAction(Application application) {
         super(ActionLocalize.actionGotodeclarationText(), ActionLocalize.actionGotodeclarationDescription());
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return this;
@@ -93,7 +92,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
         DumbService.getInstance(project).setAlternativeResolveEnabled(true);
@@ -135,13 +134,13 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     @Nullable
     private static PsiElementListCellRenderer<PsiElement> calcElementRender(
         @Nullable GotoDeclarationHandler declarationHandler,
-        @Nonnull PsiElement[] elements
+        PsiElement[] elements
     ) {
         return declarationHandler instanceof GotoDeclarationHandlerEx handlerEx ? handlerEx.createRender(elements) : null;
     }
 
     @RequiredReadAction
-    public static PsiNameIdentifierOwner findElementToShowUsagesOf(@Nonnull Editor editor, int offset) {
+    public static PsiNameIdentifierOwner findElementToShowUsagesOf(Editor editor, int offset) {
         PsiElement elementAt =
             TargetElementUtil.findTargetElement(editor, Set.of(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED), offset);
         return elementAt instanceof PsiNameIdentifierOwner nameIdentifierOwner ? nameIdentifierOwner : null;
@@ -180,10 +179,10 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
     @RequiredReadAction
     public static boolean chooseAmbiguousTarget(
-        @Nonnull Editor editor,
+        Editor editor,
         int offset,
-        @Nonnull PsiElementProcessor<PsiElement> processor,
-        @Nonnull String titlePattern,
+        PsiElementProcessor<PsiElement> processor,
+        String titlePattern,
         @Nullable PsiElement[] elements
     ) {
         return chooseAmbiguousTarget(editor, offset, processor, titlePattern, elements, null);
@@ -192,10 +191,10 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     // returns true if processor is run or is going to be run after showing popup
     @RequiredReadAction
     public static boolean chooseAmbiguousTarget(
-        @Nonnull Editor editor,
+        Editor editor,
         int offset,
-        @Nonnull PsiElementProcessor<PsiElement> processor,
-        @Nonnull String titlePattern,
+        PsiElementProcessor<PsiElement> processor,
+        String titlePattern,
         @Nullable PsiElement[] elements,
         @Nullable PsiElementListCellRenderer<PsiElement> renderer
     ) {
@@ -262,7 +261,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return targets.length == 1 ? targets[0] : null;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static Pair<PsiElement[], GotoDeclarationHandler> findAllTargetElementsInfo(Project project, Editor editor, int offset) {
         if (TargetElementUtil.inVirtualSpace(editor, offset)) {
@@ -279,7 +278,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return findTargetElementsNoVSWithHandler(project, editor, offset, lookupAccepted).getFirst();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static Pair<PsiElement[], GotoDeclarationHandler> findTargetElementsNoVSWithHandler(
         Project project,
@@ -340,7 +339,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         InputEvent inputEvent = event.getInputEvent();
         boolean isMouseShortcut = inputEvent instanceof MouseEvent && ActionPlaces.MOUSE_SHORTCUT.equals(event.getPlace());
 

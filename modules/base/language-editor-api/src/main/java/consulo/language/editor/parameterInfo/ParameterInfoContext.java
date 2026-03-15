@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public interface ParameterInfoContext {
   Project getProject();
@@ -29,6 +28,6 @@ public interface ParameterInfoContext {
 
   int getOffset();
 
-  @Nonnull
+  
   Editor getEditor();
 }

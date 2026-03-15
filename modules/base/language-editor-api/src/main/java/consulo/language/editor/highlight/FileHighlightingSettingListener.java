@@ -20,7 +20,6 @@ import consulo.annotation.component.TopicAPI;
 import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Listener for Highlighting settings modified from the 'Hector Inspector' slider.
@@ -32,5 +31,5 @@ public interface FileHighlightingSettingListener {
    * @param root    element in the PSI tree for which the settings has changed
    * @param setting new value for the highlighting level
    */
-  void settingChanged(@Nonnull PsiElement root, @Nonnull FileHighlightingSetting setting);
+  void settingChanged(PsiElement root, FileHighlightingSetting setting);
 }

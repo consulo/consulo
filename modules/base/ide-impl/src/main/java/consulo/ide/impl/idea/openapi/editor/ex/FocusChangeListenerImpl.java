@@ -4,17 +4,16 @@ package consulo.ide.impl.idea.openapi.editor.ex;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.FocusChangeListener;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author tav
  */
 public class FocusChangeListenerImpl implements FocusChangeListener {
   @Override
-  public void focusGained(@Nonnull Editor editor) {
+  public void focusGained(Editor editor) {
   }
 
   @Override
-  public void focusLost(@Nonnull Editor editor) {
+  public void focusLost(Editor editor) {
   }
 }

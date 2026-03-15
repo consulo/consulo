@@ -21,8 +21,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 
 /**
@@ -33,12 +32,12 @@ import java.io.File;
  */
 public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
 
-  @Nonnull
+  
   public static final DefaultExternalSystemUiAware INSTANCE = new DefaultExternalSystemUiAware();
 
-  @Nonnull
+  
   @Override
-  public String getProjectRepresentationName(@Nonnull String targetProjectPath, @Nullable String rootProjectPath) {
+  public String getProjectRepresentationName(String targetProjectPath, @Nullable String rootProjectPath) {
     return new File(targetProjectPath).getParentFile().getName();
   }
 
@@ -48,13 +47,13 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public Image getProjectIcon() {
     return Application.get().getIcon();
   }
 
-  @Nonnull
+  
   @Override
   public Image getTaskIcon() {
     return PlatformIconGroup.nodesTask();

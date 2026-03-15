@@ -24,8 +24,7 @@ import consulo.platform.Platform;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -40,9 +39,9 @@ public class DeploymentUtilImpl {
     private static final Logger LOG = Logger.getInstance(DeploymentUtilImpl.class);
 
     public static void copyFile(
-        @Nonnull File fromFile,
-        @Nonnull File toFile,
-        @Nonnull CompileContext context,
+        File fromFile,
+        File toFile,
+        CompileContext context,
         @Nullable Set<String> writtenPaths,
         @Nullable FileFilter fileFilter
     ) throws IOException {

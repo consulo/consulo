@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -38,7 +37,7 @@ import javax.swing.tree.DefaultTreeModel;
 public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
   public static final String ID = "Favorites";
 
-  public FavoritesViewTreeBuilder(@Nonnull Project project, JTree tree, DefaultTreeModel treeModel, ProjectAbstractTreeStructureBase treeStructure) {
+  public FavoritesViewTreeBuilder(Project project, JTree tree, DefaultTreeModel treeModel, ProjectAbstractTreeStructureBase treeStructure) {
     super(project, tree, treeModel, treeStructure, new FavoriteComparator());
     MessageBusConnection bus = myProject.getMessageBus().connect(this);
     ProjectViewPsiTreeChangeListener psiTreeChangeListener = new ProjectViewPsiTreeChangeListener(myProject) {
@@ -70,7 +69,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     };
     bus.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
-      public void rootsChanged(@Nonnull ModuleRootEvent event) {
+      public void rootsChanged(ModuleRootEvent event) {
         queueUpdate(true);
       }
     });
@@ -86,12 +85,12 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
       }
 
       @Override
-      public void listAdded(@Nonnull String listName) {
+      public void listAdded(String listName) {
         updateFromRoot();
       }
 
       @Override
-      public void listRemoved(@Nonnull String listName) {
+      public void listRemoved(String listName) {
         updateFromRoot();
       }
     };
@@ -99,7 +98,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     FavoritesManagerImpl.getInstance(myProject).addFavoritesListener(favoritesListener, this);
   }
 
-  @Nonnull
+  
   public FavoritesTreeStructure getStructure() {
     AbstractTreeStructure structure = getTreeStructure();
     assert structure instanceof FavoritesTreeStructure;
@@ -117,7 +116,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     updateFromRootCB();
   }
 
-  @Nonnull
+  
   public ActionCallback updateFromRootCB() {
     getStructure().rootsChanged();
     if (isDisposed()) return ActionCallback.DONE;
@@ -125,7 +124,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     return queueUpdate();
   }
 
-  @Nonnull
+  
   @Override
   public Promise<Object> selectAsync(Object element, VirtualFile file, boolean requestFocus) {
     DefaultMutableTreeNode node = findSmartFirstLevelNodeByElement(element);
@@ -150,7 +149,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
   }
 
   @Override
-  protected Object findNodeByElement(@Nonnull Object element) {
+  protected Object findNodeByElement(Object element) {
     Object node = findSmartFirstLevelNodeByElement(element);
     if (node != null) return node;
     return super.findNodeByElement(element);
@@ -198,7 +197,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     }
 
     @Override
-    public void fileStatusChanged(@Nonnull VirtualFile vFile) {
+    public void fileStatusChanged(VirtualFile vFile) {
       PsiElement element = PsiUtilCore.findFileSystemItem(myProject, vFile);
       if (element != null && !addSubtreeToUpdateByElement(element) && element instanceof PsiFile && ((PsiFile)element).getFileType() == InternalStdFileTypes.JAVA) {
         addSubtreeToUpdateByElement(((PsiFile)element).getContainingDirectory());

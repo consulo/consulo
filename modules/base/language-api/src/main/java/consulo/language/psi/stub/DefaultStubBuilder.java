@@ -26,8 +26,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.BooleanStack;
 import consulo.util.collection.Stack;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -37,12 +36,12 @@ public class DefaultStubBuilder implements StubBuilder {
 
   @RequiredReadAction
   @Override
-  public StubElement buildStubTree(@Nonnull PsiFile file) {
+  public StubElement buildStubTree(PsiFile file) {
     return buildStubTreeFor(file.getNode(), createStubForFile(file));
   }
 
-  @Nonnull
-  protected StubElement createStubForFile(@Nonnull PsiFile file) {
+  
+  protected StubElement createStubForFile(PsiFile file) {
     @SuppressWarnings("unchecked") PsiFileStubImpl stub = new PsiFileStubImpl(file);
     return stub;
   }
@@ -51,12 +50,12 @@ public class DefaultStubBuilder implements StubBuilder {
    * @deprecated override and invoke {@link #skipChildProcessingWhenBuildingStubs(ASTNode, ASTNode)} (to be removed in IDEA 2017)
    * Note to implementers: always keep in sync with {@linkplain #skipChildProcessingWhenBuildingStubs(ASTNode, ASTNode)}.
    */
-  protected boolean skipChildProcessingWhenBuildingStubs(@Nonnull PsiElement parent, @Nonnull PsiElement element) {
+  protected boolean skipChildProcessingWhenBuildingStubs(PsiElement parent, PsiElement element) {
     return false;
   }
 
-  @Nonnull
-  protected final StubElement buildStubTreeFor(@Nonnull ASTNode root, @Nonnull StubElement parentStub) {
+  
+  protected final StubElement buildStubTreeFor(ASTNode root, StubElement parentStub) {
     new StubBuildingWalkingVisitor(root, parentStub).buildStubTree();
     return parentStub;
   }
@@ -65,7 +64,7 @@ public class DefaultStubBuilder implements StubBuilder {
    * Note to implementers: always keep in sync with {@linkplain #skipChildProcessingWhenBuildingStubs(PsiElement, PsiElement)}.
    */
   @Override
-  public boolean skipChildProcessingWhenBuildingStubs(@Nonnull ASTNode parent, @Nonnull ASTNode node) {
+  public boolean skipChildProcessingWhenBuildingStubs(ASTNode parent, ASTNode node) {
     return false;
   }
 

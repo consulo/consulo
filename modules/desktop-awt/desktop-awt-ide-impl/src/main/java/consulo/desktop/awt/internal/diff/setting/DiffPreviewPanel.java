@@ -32,8 +32,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -97,13 +96,13 @@ class DiffPreviewPanel implements PreviewPanel {
       myContents = Arrays.asList(DiffPreviewProvider.getContents());
     }
 
-    @Nonnull
+    
     @Override
     public List<DiffContent> getContents() {
       return myContents;
     }
 
-    @Nonnull
+    
     @Override
     public List<String> getContentTitles() {
       return Arrays.asList(null, null, null);
@@ -149,20 +148,20 @@ class DiffPreviewPanel implements PreviewPanel {
   }
 
   @Override
-  public void addListener(@Nonnull ColorAndFontSettingsListener listener) {
+  public void addListener(ColorAndFontSettingsListener listener) {
     myDispatcher.addListener(listener);
   }
 
   private final class EditorMouseListener implements EditorMouseMotionListener {
-    @Nonnull
+    
     private final ThreeSide mySide;
 
-    private EditorMouseListener(@Nonnull ThreeSide side) {
+    private EditorMouseListener(ThreeSide side) {
       mySide = side;
     }
 
     @Override
-    public void mouseMoved(@Nonnull EditorMouseEvent e) {
+    public void mouseMoved(EditorMouseEvent e) {
       int line = e.getLogicalPosition().line;
       Cursor cursor = getChange(mySide, line) != null || getFoldRegion(mySide, line) != null ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : null;
       ((EditorEx)e.getEditor()).setCustomCursor(DiffPreviewPanel.class, cursor);
@@ -170,25 +169,25 @@ class DiffPreviewPanel implements PreviewPanel {
   }
 
   private final class EditorClickListener implements CaretListener, consulo.codeEditor.event.EditorMouseListener {
-    @Nonnull
+    
     private final ThreeSide mySide;
 
-    private EditorClickListener(@Nonnull ThreeSide side) {
+    private EditorClickListener(ThreeSide side) {
       mySide = side;
     }
 
     @Override
-    public void mouseClicked(@Nonnull EditorMouseEvent e) {
+    public void mouseClicked(EditorMouseEvent e) {
       selectColorForLine(mySide, e.getLogicalPosition().line);
     }
 
     @Override
-    public void caretPositionChanged(@Nonnull CaretEvent e) {
+    public void caretPositionChanged(CaretEvent e) {
       selectColorForLine(mySide, e.getNewPosition().line);
     }
   }
 
-  private void selectColorForLine(@Nonnull ThreeSide side, int line) {
+  private void selectColorForLine(ThreeSide side, int line) {
     SimpleThreesideDiffChange change = getChange(side, line);
     if (change != null) {
       TextDiffTypeImpl diffType = ObjectUtil.tryCast(change.getDiffType(), TextDiffTypeImpl.class);
@@ -205,7 +204,7 @@ class DiffPreviewPanel implements PreviewPanel {
   }
 
   @Nullable
-  private SimpleThreesideDiffChange getChange(@Nonnull ThreeSide side, int line) {
+  private SimpleThreesideDiffChange getChange(ThreeSide side, int line) {
     for (SimpleThreesideDiffChange change : myViewer.getChanges()) {
       int startLine = change.getStartLine(side);
       int endLine = change.getEndLine(side);
@@ -217,7 +216,7 @@ class DiffPreviewPanel implements PreviewPanel {
   }
 
   @Nullable
-  private FoldRegion getFoldRegion(@Nonnull ThreeSide side, int line) {
+  private FoldRegion getFoldRegion(ThreeSide side, int line) {
     EditorEx editor = myViewer.getEditor(side);
     Document document = editor.getDocument();
     for (FoldRegion region : editor.getFoldingModel().getAllFoldRegions()) {
@@ -238,7 +237,7 @@ class DiffPreviewPanel implements PreviewPanel {
     Disposer.dispose(myViewer);
   }
 
-  @Nonnull
+  
   @TestOnly
   public SimpleThreesideDiffViewer testGetViewer() {
     return myViewer;

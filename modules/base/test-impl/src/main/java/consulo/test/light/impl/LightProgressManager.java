@@ -19,8 +19,7 @@ import consulo.application.progress.*;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -45,12 +44,12 @@ public class LightProgressManager extends ProgressManager {
   }
 
   @Override
-  public void runProcess(@Nonnull Runnable process, @Nullable ProgressIndicator progress) throws ProcessCanceledException {
+  public void runProcess(Runnable process, @Nullable ProgressIndicator progress) throws ProcessCanceledException {
     process.run();
   }
 
   @Override
-  public <T> T runProcess(@Nonnull Supplier<T> process, @Nullable ProgressIndicator progress) throws ProcessCanceledException {
+  public <T> T runProcess(Supplier<T> process, @Nullable ProgressIndicator progress) throws ProcessCanceledException {
     return process.get();
   }
 
@@ -65,13 +64,13 @@ public class LightProgressManager extends ProgressManager {
   }
 
   @Override
-  public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+  public void executeNonCancelableSection(Runnable runnable) {
     runnable.run();
   }
 
   @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
-                                                     @Nonnull String progressTitle,
+  public boolean runProcessWithProgressSynchronously(Runnable process,
+                                                     String progressTitle,
                                                      boolean canBeCanceled,
                                                      @Nullable ComponentManager project) {
     process.run();
@@ -79,49 +78,49 @@ public class LightProgressManager extends ProgressManager {
   }
 
   @Override
-  public <T, E extends Exception> T runProcessWithProgressSynchronously(@Nonnull ThrowableComputable<T, E> process,
-                                                                        @Nonnull String progressTitle,
+  public <T, E extends Exception> T runProcessWithProgressSynchronously(ThrowableComputable<T, E> process,
+                                                                        String progressTitle,
                                                                         boolean canBeCanceled,
                                                                         @Nullable ComponentManager project) throws E {
     return process.get();
   }
 
   @Override
-  public void runProcessWithProgressAsynchronously(@Nonnull ComponentManager project,
-                                                   @Nonnull String progressTitle,
-                                                   @Nonnull Runnable process,
+  public void runProcessWithProgressAsynchronously(ComponentManager project,
+                                                   String progressTitle,
+                                                   Runnable process,
                                                    @Nullable Runnable successRunnable,
                                                    @Nullable Runnable canceledRunnable) {
     process.run();
   }
 
   @Override
-  public void runProcessWithProgressAsynchronously(@Nonnull ComponentManager project,
-                                                   @Nonnull String progressTitle,
-                                                   @Nonnull Runnable process,
+  public void runProcessWithProgressAsynchronously(ComponentManager project,
+                                                   String progressTitle,
+                                                   Runnable process,
                                                    @Nullable Runnable successRunnable,
                                                    @Nullable Runnable canceledRunnable,
-                                                   @Nonnull PerformInBackgroundOption option) {
+                                                   PerformInBackgroundOption option) {
     process.run();
   }
 
   @Override
-  public void run(@Nonnull Task task) {
+  public void run(Task task) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task, @Nonnull ProgressIndicator progressIndicator) {
+  public void runProcessWithProgressAsynchronously(Task.Backgroundable task, ProgressIndicator progressIndicator) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void executeProcessUnderProgress(@Nonnull Runnable process, @Nullable ProgressIndicator progress) throws ProcessCanceledException {
+  public void executeProcessUnderProgress(Runnable process, @Nullable ProgressIndicator progress) throws ProcessCanceledException {
     process.run();
   }
 
   @Override
-  public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
+  public boolean runInReadActionWithWriteActionPriority(Runnable action, @Nullable ProgressIndicator indicator) {
     action.run();
     return true;
   }
@@ -132,7 +131,7 @@ public class LightProgressManager extends ProgressManager {
   }
 
   @Override
-  public <T, E extends Throwable> T computePrioritized(@Nonnull ThrowableComputable<T, E> computable) throws E {
+  public <T, E extends Throwable> T computePrioritized(ThrowableComputable<T, E> computable) throws E {
     return computable.get();
   }
 

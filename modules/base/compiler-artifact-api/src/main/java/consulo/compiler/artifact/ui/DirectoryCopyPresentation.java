@@ -24,7 +24,6 @@ import consulo.util.io.PathUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -54,7 +53,7 @@ public class DirectoryCopyPresentation extends PackagingElementPresentation {
     return mySourceFileName;
   }
 
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.CopyOfFolder);
     if (myFile == null || !myFile.isDirectory()) {
       mainAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;

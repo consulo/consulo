@@ -19,7 +19,6 @@ import consulo.configurable.ConfigurableSession;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -29,7 +28,7 @@ import java.util.Objects;
 public class ConfigurableSessionHolder {
   public static ConfigurableSession ourCurrentSession;
 
-  @Nonnull
+  
   @RequiredUIAccess
   public static ConfigurableSession get() {
     UIAccess.assertIsUIThread();

@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -54,7 +53,7 @@ public abstract class DependencyMemberInfoModel<T extends PsiElement, M extends 
   }
 
   @Override
-  public int checkForProblems(@Nonnull M memberInfo) {
+  public int checkForProblems(M memberInfo) {
     if (memberInfo.isChecked()) return OK;
     T member = memberInfo.getMember();
 

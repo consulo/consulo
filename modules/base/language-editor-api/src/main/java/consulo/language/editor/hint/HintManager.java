@@ -9,8 +9,7 @@ import consulo.codeEditor.Editor;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
@@ -67,70 +66,70 @@ public interface HintManager {
     }
 
     @RequiredUIAccess
-    void showHint(@Nonnull JComponent component, @Nonnull RelativePoint p, @HideFlags int flags, int timeout);
+    void showHint(JComponent component, RelativePoint p, @HideFlags int flags, int timeout);
 
     @RequiredUIAccess
-    default void showErrorHint(@Nonnull Editor editor, @Nonnull LocalizeValue text) {
+    default void showErrorHint(Editor editor, LocalizeValue text) {
         showErrorHint(editor, text.get());
     }
 
     @RequiredUIAccess
-    default void showErrorHint(@Nonnull Editor editor, @Nonnull LocalizeValue text, @PositionFlags short position) {
+    default void showErrorHint(Editor editor, LocalizeValue text, @PositionFlags short position) {
         showErrorHint(editor, text.get(), position);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
-    void showErrorHint(@Nonnull Editor editor, @Nonnull String text);
+    void showErrorHint(Editor editor, String text);
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
-    void showErrorHint(@Nonnull Editor editor, @Nonnull String text, @PositionFlags short position);
+    void showErrorHint(Editor editor, String text, @PositionFlags short position);
 
     @RequiredUIAccess
-    default void showInformationHint(@Nonnull Editor editor, @Nonnull LocalizeValue text) {
+    default void showInformationHint(Editor editor, LocalizeValue text) {
         showInformationHint(editor, text, ABOVE);
     }
 
     @RequiredUIAccess
-    default void showInformationHint(@Nonnull Editor editor, @Nonnull LocalizeValue text, @PositionFlags short position) {
+    default void showInformationHint(Editor editor, LocalizeValue text, @PositionFlags short position) {
         showInformationHint(editor, text.get(), position);
     }
 
     @RequiredUIAccess
-    default void showInformationHint(@Nonnull Editor editor, @Nonnull LocalizeValue text, @Nullable HyperlinkListener listener) {
+    default void showInformationHint(Editor editor, LocalizeValue text, @Nullable HyperlinkListener listener) {
         showInformationHint(editor, text.get(), listener);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
-    default void showInformationHint(@Nonnull Editor editor, @Nonnull String text) {
+    default void showInformationHint(Editor editor, String text) {
         showInformationHint(editor, text, ABOVE);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
-    void showInformationHint(@Nonnull Editor editor, @Nonnull String text, @PositionFlags short position);
+    void showInformationHint(Editor editor, String text, @PositionFlags short position);
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
-    void showInformationHint(@Nonnull Editor editor, @Nonnull String text, @Nullable HyperlinkListener listener);
+    void showInformationHint(Editor editor, String text, @Nullable HyperlinkListener listener);
 
     @RequiredUIAccess
-    void showInformationHint(@Nonnull Editor editor, @Nonnull JComponent component);
+    void showInformationHint(Editor editor, JComponent component);
 
     @RequiredUIAccess
     default void showQuestionHint(
-        @Nonnull Editor editor,
-        @Nonnull LocalizeValue hintText,
+        Editor editor,
+        LocalizeValue hintText,
         int offset1,
         int offset2,
-        @Nonnull QuestionAction action
+        QuestionAction action
     ) {
         showQuestionHint(editor, hintText.get(), offset1, offset2, action);
     }
@@ -138,15 +137,15 @@ public interface HintManager {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
-    void showQuestionHint(@Nonnull Editor editor, @Nonnull String hintText, int offset1, int offset2, @Nonnull QuestionAction action);
+    void showQuestionHint(Editor editor, String hintText, int offset1, int offset2, QuestionAction action);
 
     @RequiredUIAccess
     boolean hideHints(@HideFlags int mask, boolean onlyOne, boolean editorChanged);
 
     @RequiredUIAccess
     default void showErrorHint(
-        @Nonnull Editor editor,
-        @Nonnull LocalizeValue hintText,
+        Editor editor,
+        LocalizeValue hintText,
         int offset1,
         int offset2,
         @PositionFlags short constraint,
@@ -160,8 +159,8 @@ public interface HintManager {
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
     void showErrorHint(
-        @Nonnull Editor editor,
-        @Nonnull String hintText,
+        Editor editor,
+        String hintText,
         int offset1,
         int offset2,
         @PositionFlags short constraint,

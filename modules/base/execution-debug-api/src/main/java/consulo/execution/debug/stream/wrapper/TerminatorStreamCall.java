@@ -2,13 +2,12 @@
 package consulo.execution.debug.stream.wrapper;
 
 import consulo.execution.debug.stream.trace.impl.handler.type.GenericType;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface TerminatorStreamCall extends StreamCall, TypeBeforeAware {
-  @NotNull
+  
   GenericType getResultType();
 
   Boolean returnsVoid();

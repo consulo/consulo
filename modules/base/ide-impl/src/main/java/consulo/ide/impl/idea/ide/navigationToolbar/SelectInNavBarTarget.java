@@ -30,7 +30,6 @@ import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.NavBarRootPaneExtension;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -94,7 +93,7 @@ public class SelectInNavBarTarget extends SelectInTargetPsiWrapper implements Du
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return ProjectUIViewLocalize.selectInNavBar();

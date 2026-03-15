@@ -12,8 +12,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +28,8 @@ public class ChainResolver {
 
     private final AtomicReference<ChainsSearchResult> mySearchResult = new AtomicReference<>(new ChainsSearchResult(0, -1, null));
 
-    @Nonnull
-    public ChainStatus tryFindChain(@Nonnull PsiElement elementAtDebugger) {
+    
+    public ChainStatus tryFindChain(PsiElement elementAtDebugger) {
         ChainsSearchResult result = mySearchResult.get();
         if (result.isSuitableFor(elementAtDebugger)) {
             return result.getChainsStatus();
@@ -42,8 +41,8 @@ public class ChainResolver {
         return result.getChainsStatus();
     }
 
-    @Nonnull
-    List<StreamChainWithLibrary> getChains(@Nonnull PsiElement elementAtDebugger) {
+    
+    List<StreamChainWithLibrary> getChains(PsiElement elementAtDebugger) {
         ChainsSearchResult result = mySearchResult.get();
         if (!result.isSuitableFor(elementAtDebugger) || result.getChainsStatus() != ChainStatus.FOUND) {
             LOG.error("Cannot build chains: " + result.getChainsStatus());
@@ -65,12 +64,12 @@ public class ChainResolver {
     }
 
     public static class StreamChainWithLibrary {
-        @Nonnull
+        
         public final StreamChain chain;
-        @Nonnull
+        
         public final LibrarySupportProvider provider;
 
-        StreamChainWithLibrary(@Nonnull StreamChain chain, @Nonnull LibrarySupportProvider provider) {
+        StreamChainWithLibrary(StreamChain chain, LibrarySupportProvider provider) {
             this.chain = chain;
             this.provider = provider;
         }
@@ -81,7 +80,7 @@ public class ChainResolver {
         private final long offset;
         private final long fileModificationStamp;
 
-        @Nonnull
+        
         private volatile ChainStatus chainsStatus = ChainStatus.COMPUTING;
 
         ChainsSearchResult(long elementHash, long offset, @Nullable PsiFile containingFile) {
@@ -90,7 +89,7 @@ public class ChainResolver {
             this.fileModificationStamp = getModificationStamp(containingFile);
         }
 
-        @Nonnull
+        
         ChainStatus getChainsStatus() {
             return chainsStatus;
         }
@@ -105,7 +104,7 @@ public class ChainResolver {
             chainsStatus = ChainStatus.LANGUAGE_NOT_SUPPORTED;
         }
 
-        boolean isSuitableFor(@Nonnull PsiElement element) {
+        boolean isSuitableFor(PsiElement element) {
             return elementHash == element.hashCode() &&
                 offset == element.getTextOffset() &&
                 fileModificationStamp == getModificationStamp(element.getContainingFile());
@@ -115,15 +114,15 @@ public class ChainResolver {
             return file == null ? -1 : file.getModificationStamp();
         }
 
-        @Nonnull
-        static ChainsSearchResult of(@Nonnull PsiElement element) {
+        
+        static ChainsSearchResult of(PsiElement element) {
             return new ChainsSearchResult(element.hashCode(), element.getTextOffset(), element.getContainingFile());
         }
     }
 
     private static void checkChainsExistenceInBackground(
-        @Nonnull PsiElement elementAtDebugger,
-        @Nonnull ChainsSearchResult searchResult
+        PsiElement elementAtDebugger,
+        ChainsSearchResult searchResult
     ) {
         List<LibrarySupportProvider> extensions = forLanguage(elementAtDebugger.getLanguage());
         if (extensions.isEmpty()) {
@@ -158,8 +157,8 @@ public class ChainResolver {
         }
     }
 
-    @Nonnull
-    private static List<LibrarySupportProvider> forLanguage(@Nonnull Language language) {
+    
+    private static List<LibrarySupportProvider> forLanguage(Language language) {
         return Application.get().getExtensionList(LibrarySupportProvider.class)
             .stream()
             .filter(it -> Objects.equals(language.getID(), it.getLanguageId()))

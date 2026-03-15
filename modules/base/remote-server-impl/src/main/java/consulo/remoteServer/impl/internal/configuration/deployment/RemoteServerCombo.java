@@ -14,8 +14,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -33,11 +32,11 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
     private final CollectionComboBoxModel<ServerItem> myServerListModel;
     private String myServerNameReminder;
 
-    public RemoteServerCombo(@Nonnull ServerType<S> serverType) {
+    public RemoteServerCombo(ServerType<S> serverType) {
         this(serverType, new CollectionComboBoxModel<>());
     }
 
-    private RemoteServerCombo(@Nonnull ServerType<S> serverType, @Nonnull CollectionComboBoxModel<ServerItem> model) {
+    private RemoteServerCombo(ServerType<S> serverType, CollectionComboBoxModel<ServerItem> model) {
         super(new ComboBox<>(model));
         myServerType = serverType;
         myServerListModel = model;
@@ -51,7 +50,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         //noinspection unchecked
         getComboBox().setRenderer(new ColoredListCellRenderer<ServerItem>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList<? extends ServerItem> list, ServerItem value,
+            protected void customizeCellRenderer(JList<? extends ServerItem> list, ServerItem value,
                                                  int index, boolean selected, boolean focused) {
                 if (value == null) {
                     return;
@@ -86,18 +85,18 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         return myServerType;
     }
 
-    protected @Nonnull List<TransientItem> getActionItems() {
+    protected List<TransientItem> getActionItems() {
         return Collections.singletonList(new CreateNewServerItem());
     }
 
-    protected @Nullable ServerItem getMissingServerItem(@Nonnull String serverName) {
+    protected @Nullable ServerItem getMissingServerItem(String serverName) {
         return new MissingServerItem(serverName);
     }
 
     /**
      * @return item with <code>result.getServerName() == null</code>
      */
-    protected @Nonnull ServerItem getNoServersItem() {
+    protected ServerItem getNoServersItem() {
         return new NoServersItem();
     }
 
@@ -152,7 +151,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         }
     }
 
-    protected final boolean editServer(@Nonnull RemoteServerListConfigurable configurable) {
+    protected final boolean editServer(RemoteServerListConfigurable configurable) {
         boolean isOk = false;
 //        boolean isOk = ShowSettingsUtil.getInstance().editConfigurable(this, configurable);
 //        if (isOk) {
@@ -208,19 +207,19 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         getComboBox().setSelectedItem(itemToSelect);
     }
 
-    protected @Nonnull List<RemoteServer<S>> getSortedServers() {
+    protected List<RemoteServer<S>> getSortedServers() {
         List<RemoteServer<S>> result = new ArrayList<>(RemoteServersManager.getInstance().getServers(myServerType));
         result.sort(SERVERS_COMPARATOR);
         return result;
     }
 
     @Override
-    public void addChangeListener(@Nonnull ChangeListener changeListener) {
+    public void addChangeListener(ChangeListener changeListener) {
         myChangeListeners.add(changeListener);
     }
 
     @Override
-    public void removeChangeListener(@Nonnull ChangeListener changeListener) {
+    public void removeChangeListener(ChangeListener changeListener) {
         myChangeListeners.remove(changeListener);
     }
 
@@ -228,7 +227,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         @Nullable
         String getServerName();
 
-        void render(@Nonnull SimpleColoredComponent ui);
+        void render(SimpleColoredComponent ui);
 
         void onItemChosen();
 
@@ -248,7 +247,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
     private class CreateNewServerItem implements TransientItem {
 
         @Override
-        public void render(@Nonnull SimpleColoredComponent ui) {
+        public void render(SimpleColoredComponent ui) {
             ui.setIcon(Image.empty(myServerType.getIcon().getWidth(), myServerType.getIcon().getHeight()));
             ui.append(CloudBundle.message("remote.server.combo.create.new.server"), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
@@ -303,7 +302,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         }
 
         @Override
-        public void render(@Nonnull SimpleColoredComponent ui) {
+        public void render(SimpleColoredComponent ui) {
             RemoteServer<?> server = findRemoteServer();
             SimpleTextAttributes attributes = server == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES;
             ui.setIcon(server == null ? null : myServerType.getIcon());
@@ -313,12 +312,12 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
 
     protected class MissingServerItem extends ServerItemImpl {
 
-        public MissingServerItem(@Nonnull String serverName) {
+        public MissingServerItem(String serverName) {
             super(serverName);
         }
 
         @Override
-        @Nonnull
+        
         public String getServerName() {
             String result = super.getServerName();
             assert result != null;
@@ -326,7 +325,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         }
 
         @Override
-        public void render(@Nonnull SimpleColoredComponent ui) {
+        public void render(SimpleColoredComponent ui) {
             ui.setIcon(myServerType.getIcon());
             ui.append(getServerName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
         }
@@ -338,7 +337,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
         }
 
         @Override
-        public void render(@Nonnull SimpleColoredComponent ui) {
+        public void render(SimpleColoredComponent ui) {
             ui.setIcon(null);
             ui.append(CloudBundle.message("remote.server.combo.no.servers"), SimpleTextAttributes.ERROR_ATTRIBUTES);
         }

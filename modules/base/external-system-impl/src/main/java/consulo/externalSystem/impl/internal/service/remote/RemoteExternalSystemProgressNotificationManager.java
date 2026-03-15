@@ -1,6 +1,5 @@
 package consulo.externalSystem.impl.internal.service.remote;
 
-import jakarta.annotation.Nonnull;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
 
@@ -19,45 +18,45 @@ public interface RemoteExternalSystemProgressNotificationManager extends Remote 
 
   RemoteExternalSystemProgressNotificationManager NULL_OBJECT = new RemoteExternalSystemProgressNotificationManager() {
     @Override
-    public void onQueued(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+    public void onQueued(ExternalSystemTaskId id) throws RemoteException {
     }
 
     @Override
-    public void onStart(@Nonnull ExternalSystemTaskId id) {
+    public void onStart(ExternalSystemTaskId id) {
     }
 
     @Override
-    public void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) {
+    public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
     }
 
     @Override
-    public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
+    public void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut) {
     }
 
     @Override
-    public void onEnd(@Nonnull ExternalSystemTaskId id) {
+    public void onEnd(ExternalSystemTaskId id) {
     }
 
     @Override
-    public void onSuccess(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+    public void onSuccess(ExternalSystemTaskId id) throws RemoteException {
     }
 
     @Override
-    public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) throws RemoteException {
+    public void onFailure(ExternalSystemTaskId id, Exception e) throws RemoteException {
     }
   };
 
-  void onQueued(@Nonnull ExternalSystemTaskId id) throws RemoteException;
+  void onQueued(ExternalSystemTaskId id) throws RemoteException;
 
-  void onStart(@Nonnull ExternalSystemTaskId id) throws RemoteException;
+  void onStart(ExternalSystemTaskId id) throws RemoteException;
 
-  void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) throws RemoteException;
+  void onStatusChange(ExternalSystemTaskNotificationEvent event) throws RemoteException;
 
-  void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) throws RemoteException;
+  void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut) throws RemoteException;
 
-  void onEnd(@Nonnull ExternalSystemTaskId id) throws RemoteException;
+  void onEnd(ExternalSystemTaskId id) throws RemoteException;
 
-  void onSuccess(@Nonnull ExternalSystemTaskId id) throws RemoteException;
+  void onSuccess(ExternalSystemTaskId id) throws RemoteException;
 
-  void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) throws RemoteException;
+  void onFailure(ExternalSystemTaskId id, Exception e) throws RemoteException;
 }

@@ -23,8 +23,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,8 +37,8 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param root root of a content
    * @return new content entry
    */
-  @Nonnull
-  ContentEntry addContentEntry(@Nonnull VirtualFile root);
+  
+  ContentEntry addContentEntry(VirtualFile root);
 
   /**
    * Adds the specified directory as a content root.
@@ -47,8 +46,8 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param url root of a content
    * @return new content entry
    */
-  @Nonnull
-  ContentEntry addContentEntry(@Nonnull String url);
+  
+  ContentEntry addContentEntry(String url);
 
   /**
    * Adds file as single content entry. Can used only when module don't have base dir
@@ -56,8 +55,8 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param file target file
    * @return new content entry
    */
-  @Nonnull
-  default ContentEntry addSingleContentEntry(@Nonnull VirtualFile file) {
+  
+  default ContentEntry addSingleContentEntry(VirtualFile file) {
     return addContentEntry(file);
   }
 
@@ -67,8 +66,8 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param url url of file
    * @return new content entry
    */
-  @Nonnull
-  default ContentEntry addSingleContentEntry(@Nonnull String url) {
+  
+  default ContentEntry addSingleContentEntry(String url) {
     return addContentEntry(url);
   }
 
@@ -77,14 +76,14 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    *
    * @param entry the content root to remove.
    */
-  void removeContentEntry(@Nonnull ContentEntry entry);
+  void removeContentEntry(ContentEntry entry);
 
   /**
    * Appends an order entry to the classpath.
    *
    * @param orderEntry the order entry to add.
    */
-  void addOrderEntry(@Nonnull OrderEntry orderEntry);
+  void addOrderEntry(OrderEntry orderEntry);
 
   /**
    * Creates an entry for a given library and adds it to order
@@ -92,11 +91,11 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param library the library for which the entry is created.
    * @return newly created order entry for the library
    */
-  @Nonnull
-  LibraryOrderEntry addLibraryEntry(@Nonnull Library library);
+  
+  LibraryOrderEntry addLibraryEntry(Library library);
 
-  @Nonnull
-  ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@Nonnull ModuleExtensionWithSdk<?> moduleExtension);
+  
+  ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(ModuleExtensionWithSdk<?> moduleExtension);
 
   /**
    * Adds an entry for invalid library.
@@ -105,35 +104,35 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param level
    * @return
    */
-  @Nonnull
-  LibraryOrderEntry addInvalidLibrary(@Nonnull String name, @Nonnull String level);
+  
+  LibraryOrderEntry addInvalidLibrary(String name, String level);
 
-  @Nonnull
-  ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module);
+  
+  ModuleOrderEntry addModuleOrderEntry(Module module);
 
-  @Nonnull
-  <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(@Nonnull CustomOrderEntryTypeProvider<M> type, @Nonnull M model);
+  
+  <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(CustomOrderEntryTypeProvider<M> type, M model);
 
-  @Nonnull
-  ModuleOrderEntry addInvalidModuleEntry(@Nonnull String name);
-
-  @Nullable
-  LibraryOrderEntry findLibraryOrderEntry(@Nonnull Library library);
+  
+  ModuleOrderEntry addInvalidModuleEntry(String name);
 
   @Nullable
-  ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@Nonnull ModuleExtension extension);
+  LibraryOrderEntry findLibraryOrderEntry(Library library);
+
+  @Nullable
+  ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(ModuleExtension extension);
 
   /**
    * Removes order entry from an order.
    *
    * @param orderEntry
    */
-  void removeOrderEntry(@Nonnull OrderEntry orderEntry);
+  void removeOrderEntry(OrderEntry orderEntry);
 
   /**
    * @param newOrder
    */
-  void rearrangeOrderEntries(@Nonnull OrderEntry[] newOrder);
+  void rearrangeOrderEntries(OrderEntry[] newOrder);
 
   <T extends OrderEntry> void replaceEntryOfType(Class<T> entryClass, T entry);
 
@@ -143,6 +142,6 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    *
    * @return library table to be modified
    */
-  @Nonnull
+  
   LibraryTable getModuleLibraryTable();
 }

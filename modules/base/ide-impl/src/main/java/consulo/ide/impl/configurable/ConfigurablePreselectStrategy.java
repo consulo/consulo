@@ -18,8 +18,7 @@ package consulo.ide.impl.configurable;
 import consulo.configurable.Configurable;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -28,12 +27,12 @@ import java.util.Objects;
  * @since 14/05/2023
  */
 public interface ConfigurablePreselectStrategy {
-  @Nonnull
-  static ConfigurablePreselectStrategy lastStored(@Nonnull Project project) {
+  
+  static ConfigurablePreselectStrategy lastStored(Project project) {
     return new DefaultConfigurablePreselectStrategy(project);
   }
 
-  @Nonnull
+  
   static ConfigurablePreselectStrategy preOrNotSelected(@Nullable Configurable configurable) {
     if (configurable == null) {
       return notSelected();
@@ -43,14 +42,14 @@ public interface ConfigurablePreselectStrategy {
     return configurables -> configurable;
   }
 
-  @Nonnull
+  
   static ConfigurablePreselectStrategy notSelected() {
     return configurables -> BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION;
   }
 
   @Nullable
-  Configurable get(@Nonnull Configurable[] configurables);
+  Configurable get(Configurable[] configurables);
 
-  default void save(@Nonnull Configurable configurable) {
+  default void save(Configurable configurable) {
   }
 }

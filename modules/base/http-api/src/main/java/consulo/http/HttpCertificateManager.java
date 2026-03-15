@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.http.ssl.HttpConfirmingTrustManagerHttp;
-import jakarta.annotation.Nonnull;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
@@ -71,16 +70,16 @@ public interface HttpCertificateManager {
    *
    * @return instance of SSLContext with described behavior or default SSL context in case of error
    */
-  @Nonnull
+  
   SSLContext getSslContext();
 
-  @Nonnull
+  
   SSLContext getSystemSslContext();
 
-  @Nonnull
+  
   HostnameVerifier getHostnameVerifier();
 
-  @Nonnull
+  
   HttpConfirmingTrustManagerHttp getTrustManager();
 
   KeyManager[] getDefaultKeyManagers();

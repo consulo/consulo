@@ -5,12 +5,11 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 //@ApiStatus.Experimental
 public interface BuildEventPresentationData {
-  @Nonnull
+  
   Image getNodeIcon();
 
   @Nullable ExecutionConsole getExecutionConsole();

@@ -16,20 +16,19 @@
 package consulo.ui.ex.awt.speedSearch;
 
 import consulo.ui.ex.awt.ScrollingUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Function;
 
 public class ListSpeedSearch<T> extends SpeedSearchBase<JList<T>> {
-    @Nonnull
-    public static <T> ListSpeedSearch<T> installOn(@Nonnull JList<T> list) {
+    
+    public static <T> ListSpeedSearch<T> installOn(JList<T> list) {
         return installOn(list, null);
     }
 
-    @Nonnull
-    public static <T> ListSpeedSearch<T> installOn(@Nonnull JList<T> list, @Nullable Function<? super T, String> convertor) {
+    
+    public static <T> ListSpeedSearch<T> installOn(JList<T> list, @Nullable Function<? super T, String> convertor) {
         ListSpeedSearch<T> search = new ListSpeedSearch<>(list, null, convertor);
         search.setupListeners();
         return search;
@@ -70,7 +69,7 @@ public class ListSpeedSearch<T> extends SpeedSearchBase<JList<T>> {
         return myComponent.getSelectedIndex();
     }
 
-    @Nonnull
+    
     @Override
     protected Object[] getAllElements() {
         return getAllListElements(myComponent);

@@ -17,10 +17,8 @@ package consulo.virtualFileSystem;
 
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -36,7 +34,7 @@ public class FileAttribute {
   private final int myVersion;
   private final boolean myFixedSize;
 
-  public FileAttribute(@NonNls @Nonnull String id) {
+  public FileAttribute(String id) {
     this(id, UNDEFINED_VERSION, false);
   }
 
@@ -44,29 +42,29 @@ public class FileAttribute {
    * @deprecated
    * @see #FileAttribute(String, int, boolean)
    */
-  public FileAttribute(@NonNls @Nonnull String id, int version) {
+  public FileAttribute(String id, int version) {
     this(id, version, false);
   }
 
-  public FileAttribute(@NonNls @Nonnull String id, int version, boolean fixedSize) {
+  public FileAttribute(String id, int version, boolean fixedSize) {
     this(version, fixedSize, id);
     boolean added = ourRegisteredIds.add(id);
     assert added : "Attribute id='" + id+ "' is not unique";
   }
 
-  private FileAttribute(int version, boolean fixedSize,@Nonnull String id) {
+  private FileAttribute(int version, boolean fixedSize,String id) {
     myId = id;
     myVersion = version;
     myFixedSize = fixedSize;
   }
 
   @Nullable
-  public DataInputStream readAttribute(@Nonnull VirtualFile file) {
+  public DataInputStream readAttribute(VirtualFile file) {
     return ManagingFS.getInstance().readAttribute(file, this);
   }
 
-  @Nonnull
-  public DataOutputStream writeAttribute(@Nonnull VirtualFile file) {
+  
+  public DataOutputStream writeAttribute(VirtualFile file) {
     return ManagingFS.getInstance().writeAttribute(file, this);
   }
 
@@ -84,7 +82,7 @@ public class FileAttribute {
     }
   }
 
-  public void writeAttributeBytes(VirtualFile file, @Nonnull byte[] bytes) throws IOException {
+  public void writeAttributeBytes(VirtualFile file, byte[] bytes) throws IOException {
     writeAttributeBytes(file, bytes, 0, bytes.length);
   }
 
@@ -95,7 +93,7 @@ public class FileAttribute {
     }
   }
 
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
@@ -104,7 +102,7 @@ public class FileAttribute {
     return myFixedSize;
   }
 
-  @Nonnull
+  
   public FileAttribute newVersion(int newVersion) {
     return new FileAttribute(newVersion, myFixedSize, myId);
   }

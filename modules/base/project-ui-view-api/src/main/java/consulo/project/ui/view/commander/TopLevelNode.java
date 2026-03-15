@@ -21,7 +21,6 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -39,7 +38,7 @@ public class TopLevelNode extends AbstractTreeNode {
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     return Collections.emptyList();
   }

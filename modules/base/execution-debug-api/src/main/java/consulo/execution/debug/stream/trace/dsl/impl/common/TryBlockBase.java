@@ -5,7 +5,7 @@ import consulo.execution.debug.stream.trace.dsl.CodeBlock;
 import consulo.execution.debug.stream.trace.dsl.StatementFactory;
 import consulo.execution.debug.stream.trace.dsl.TryBlock;
 import consulo.execution.debug.stream.trace.dsl.Variable;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;

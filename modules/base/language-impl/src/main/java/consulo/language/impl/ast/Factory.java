@@ -26,14 +26,13 @@ import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class Factory  {
   private Factory() {}
 
-  @Nonnull
-  public static LeafElement createSingleLeafElement(@Nonnull IElementType type, CharSequence buffer, int startOffset, int endOffset, CharTable table, PsiManager manager, PsiFile originalFile) {
+  
+  public static LeafElement createSingleLeafElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, CharTable table, PsiManager manager, PsiFile originalFile) {
     DummyHolder dummyHolder = DummyHolderFactory.createHolder(manager, table, type.getLanguage());
     dummyHolder.setOriginalFile(originalFile);
 
@@ -46,8 +45,8 @@ public class Factory  {
     return newElement;
   }
 
-  @Nonnull
-  public static LeafElement createSingleLeafElement(@Nonnull IElementType type, CharSequence buffer, int startOffset, int endOffset, CharTable table, PsiManager manager, boolean generatedFlag) {
+  
+  public static LeafElement createSingleLeafElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, CharTable table, PsiManager manager, boolean generatedFlag) {
     FileElement holderElement = DummyHolderFactory.createHolder(manager, table, type.getLanguage()).getTreeElement();
     LeafElement newElement = ASTFactory.leaf(type, holderElement.getCharTable().intern(
             buffer, startOffset, endOffset));
@@ -56,23 +55,23 @@ public class Factory  {
     return newElement;
   }
 
-  @Nonnull
-  public static LeafElement createSingleLeafElement(@Nonnull IElementType type, CharSequence buffer, CharTable table, PsiManager manager) {
+  
+  public static LeafElement createSingleLeafElement(IElementType type, CharSequence buffer, CharTable table, PsiManager manager) {
     return createSingleLeafElement(type, buffer, 0, buffer.length(), table, manager);
   }
 
-  @Nonnull
-  public static LeafElement createSingleLeafElement(@Nonnull IElementType type, CharSequence buffer, int startOffset, int endOffset, @Nullable CharTable table, PsiManager manager) {
+  
+  public static LeafElement createSingleLeafElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, @Nullable CharTable table, PsiManager manager) {
     return createSingleLeafElement(type, buffer, startOffset, endOffset, table, manager, true);
   }
 
-  @Nonnull
-  public static CompositeElement createErrorElement(@Nonnull LocalizeValue description) {
+  
+  public static CompositeElement createErrorElement(LocalizeValue description) {
     return new PsiErrorElementImpl(description);
   }
 
-  @Nonnull
-  public static CompositeElement createCompositeElement(@Nonnull IElementType type,
+  
+  public static CompositeElement createCompositeElement(IElementType type,
                                                         CharTable charTableByTree,
                                                         PsiManager manager) {
     FileElement treeElement = DummyHolderFactory.createHolder(manager, null, charTableByTree).getTreeElement();

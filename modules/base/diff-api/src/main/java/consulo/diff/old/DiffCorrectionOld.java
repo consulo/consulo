@@ -18,7 +18,6 @@ package consulo.diff.old;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -30,10 +29,10 @@ public interface DiffCorrectionOld {
   class TrueLineBlocks implements DiffCorrectionOld, FragmentProcessor<FragmentsCollector> {
     private static final Logger LOG = Logger.getInstance(TrueLineBlocks.class);
     private final DiffPolicyOld myDiffPolicy;
-    @Nonnull
+    
     private final ComparisonPolicyOld myComparisonPolicy;
 
-    public TrueLineBlocks(@Nonnull ComparisonPolicyOld comparisonPolicy) {
+    public TrueLineBlocks(ComparisonPolicyOld comparisonPolicy) {
       myDiffPolicy = new DiffPolicyOld.LineBlocks(comparisonPolicy);
       myComparisonPolicy = comparisonPolicy;
     }
@@ -46,7 +45,7 @@ public interface DiffCorrectionOld {
     }
 
     @Override
-    public void process(@Nonnull DiffFragmentOld fragment, @Nonnull FragmentsCollector collector) throws FilesTooBigForDiffException {
+    public void process(DiffFragmentOld fragment, FragmentsCollector collector) throws FilesTooBigForDiffException {
       DiffString text1 = fragment.getText1();
       DiffString text2 = fragment.getText2();
       if (!fragment.isEqual()) {
@@ -79,7 +78,7 @@ public interface DiffCorrectionOld {
     }
 
     @Override
-    public void process(@Nonnull DiffFragmentOld fragment, @Nonnull FragmentsCollector collector) throws FilesTooBigForDiffException {
+    public void process(DiffFragmentOld fragment, FragmentsCollector collector) throws FilesTooBigForDiffException {
       if (!fragment.isChange()) {
         collector.add(fragment);
         return;
@@ -121,7 +120,7 @@ public interface DiffCorrectionOld {
   }
 
   interface FragmentProcessor<Collector> {
-    void process(@Nonnull DiffFragmentOld fragment, @Nonnull Collector collector) throws FilesTooBigForDiffException;
+    void process(DiffFragmentOld fragment, Collector collector) throws FilesTooBigForDiffException;
   }
 
   class BaseFragmentRunner<ActualRunner extends BaseFragmentRunner> {
@@ -219,7 +218,7 @@ public interface DiffCorrectionOld {
     }
 
     @Override
-    public void process(@Nonnull DiffFragmentOld fragment, @Nonnull FragmentBuffer buffer) {
+    public void process(DiffFragmentOld fragment, FragmentBuffer buffer) {
       if (fragment.isOneSide()) buffer.markIfNone(DEFAULT_MODE);
       else buffer.add(fragment);
     }
@@ -238,7 +237,7 @@ public interface DiffCorrectionOld {
     }
 
     @Override
-    public void process(@Nonnull DiffFragmentOld fragment, @Nonnull FragmentBuffer buffer) {
+    public void process(DiffFragmentOld fragment, FragmentBuffer buffer) {
       if (fragment.isEqual()) buffer.markIfNone(EQUAL_MODE);
       else if (ComparisonPolicyOld.TRIM_SPACE.isEqual(fragment)) buffer.markIfNone(FORMATTING_MODE);
       else  buffer.add(fragment);
@@ -268,7 +267,7 @@ public interface DiffCorrectionOld {
     }
 
     @Override
-    public void process(@Nonnull DiffFragmentOld fragment, @Nonnull FragmentBuffer buffer) {
+    public void process(DiffFragmentOld fragment, FragmentBuffer buffer) {
       if (fragment.isEqual()) buffer.add(fragment);
       else if (fragment.isOneSide()) {
         DiffString text = FragmentSide.chooseSide(fragment).getText(fragment);

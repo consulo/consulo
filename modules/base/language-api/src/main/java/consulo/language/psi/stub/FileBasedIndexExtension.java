@@ -9,7 +9,6 @@ import consulo.index.io.IndexExtension;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
 
   private static final int DEFAULT_CACHE_SIZE = 1024;
 
-  @Nonnull
+  
   @Override
   public abstract ID<K, V> getName();
 
@@ -38,7 +37,7 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
    * Note that check only file's extension is usually error-prone way and prefer to check {@link VirtualFile#getFileType()}:
    * for example user can enforce language file as plain text one.
    */
-  @Nonnull
+  
   public abstract FileBasedIndex.InputFilter getInputFilter();
 
   public abstract boolean dependsOnFileContent();
@@ -62,7 +61,7 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
    * <p>
    * Use carefully, because indexing large files may influence index update speed dramatically.
    */
-  @Nonnull
+  
   public Collection<FileType> getFileTypesWithSizeLimitNotApplicable() {
     return List.of();
   }

@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.usage.UsagePreviewPanel;
 import consulo.usage.UsagePreviewPanelFactory;
 import consulo.usage.UsageViewPresentation;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -32,13 +31,13 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class UsagePreviewPanelFactoryImpl implements UsagePreviewPanelFactory {
-    @Nonnull
+    
     @Override
-    public UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation, boolean isEditor) {
+    public UsagePreviewPanel createPreviewPanel(Project project, UsageViewPresentation presentation, boolean isEditor) {
         return new consulo.ide.impl.idea.usages.impl.UsagePreviewPanel(project, presentation, isEditor);
     }
 
-    @Nonnull
+    
     @Override
     public UsageViewPresentation createEmpUsageViewPresentation() {
         return FindInProjectUtil.setupViewPresentation(false, new FindModel());

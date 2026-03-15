@@ -33,8 +33,7 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,19 +47,19 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
 
     @Nullable
     @Override
-    public Image getIcon(@Nonnull VirtualFile file) {
+    public Image getIcon(VirtualFile file) {
         return PlatformIconGroup.nodesFolder();
     }
 
     @Override
-    public boolean canOpenProject(@Nonnull File file) {
+    public boolean canOpenProject(File file) {
         return true;
     }
 
     // TODO unify with NewOrImportModuleUtil ?
-    @Nonnull
+    
     @Override
-    public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context) {
+    public AsyncResult<Project> doOpenProjectAsync(VirtualFile virtualFile, UIAccess uiAccess, ProjectOpenContext context) {
         ProjectManager projectManager = ProjectManager.getInstance();
         String projectFilePath = virtualFile.getPath();
         String projectName = virtualFile.getName();

@@ -17,7 +17,6 @@ package consulo.externalSystem.ui.awt;
 
 import consulo.externalSystem.ui.ExternalSystemNodeDescriptor;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -27,11 +26,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 @SuppressWarnings("unchecked")
 public class ExternalSystemNode<T> extends DefaultMutableTreeNode {
 
-  public ExternalSystemNode(@Nonnull ExternalSystemNodeDescriptor<T> descriptor) {
+  public ExternalSystemNode(ExternalSystemNodeDescriptor<T> descriptor) {
     super(descriptor);
   }
 
-  @Nonnull
+  
   public ExternalSystemNodeDescriptor<T> getDescriptor() {
     return (ExternalSystemNodeDescriptor<T>)getUserObject();
   }

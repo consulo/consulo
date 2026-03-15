@@ -15,8 +15,7 @@ import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoManager;
 import consulo.util.lang.ExceptionUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -24,13 +23,13 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class CommandProcessorImpl extends CoreCommandProcessor {
     @Inject
-    public CommandProcessorImpl(@Nonnull Application application) {
+    public CommandProcessorImpl(Application application) {
         super(application);
     }
 
     @RequiredUIAccess
     @Override
-    protected void finishCommand(@Nonnull CommandToken command, @Nullable Throwable throwable) {
+    protected void finishCommand(CommandToken command, @Nullable Throwable throwable) {
         if (myCurrentCommand != command) {
             return;
         }
@@ -79,12 +78,12 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
     }
 
     @Override
-    public void addAffectedDocuments(Project project, @Nonnull Document... docs) {
+    public void addAffectedDocuments(Project project, Document... docs) {
         getUndoManager(project).addAffectedDocuments(docs);
     }
 
     @Override
-    public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
+    public void addAffectedFiles(Project project, VirtualFile... files) {
         getUndoManager(project).addAffectedFiles(files);
     }
 }

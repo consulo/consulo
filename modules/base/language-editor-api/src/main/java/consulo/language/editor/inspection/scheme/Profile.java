@@ -17,7 +17,6 @@ package consulo.language.editor.inspection.scheme;
 
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.component.util.pointer.Named;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 @Deprecated
 public interface Profile extends JDOMExternalizable, Comparable<Profile>, Named {
-  void copyFrom(@Nonnull Profile profile);
+  void copyFrom(Profile profile);
 
   void setLocal(boolean isLocal);
 
@@ -41,14 +40,14 @@ public interface Profile extends JDOMExternalizable, Comparable<Profile>, Named 
 
   void setProjectLevel(boolean isProjectLevel);
 
-  void setName(@Nonnull String name);
+  void setName(String name);
 
   @Override
-  @Nonnull
+  
   String getName();
 
-  void setProfileManager(@Nonnull ProfileManager profileManager);
+  void setProfileManager(ProfileManager profileManager);
 
-  @Nonnull
+  
   ProfileManager getProfileManager();
 }

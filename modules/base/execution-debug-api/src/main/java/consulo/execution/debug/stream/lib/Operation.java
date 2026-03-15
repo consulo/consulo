@@ -3,18 +3,17 @@ package consulo.execution.debug.stream.lib;
 
 import consulo.execution.debug.stream.resolve.ValuesOrderResolver;
 import consulo.execution.debug.stream.trace.CallTraceInterpreter;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface Operation {
-  @Nonnull
+  
   String getName();
 
-  @Nonnull
+  
   CallTraceInterpreter getTraceInterpreter();
 
-  @Nonnull
+  
   ValuesOrderResolver getValuesOrderResolver();
 }

@@ -18,8 +18,7 @@ package consulo.language.inject.advanced.pattern;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,6 +29,6 @@ public interface PatternClassProvider {
   @Nullable
   String getAlias();
 
-  @Nonnull
+  
   Class<?> getPatternClass();
 }

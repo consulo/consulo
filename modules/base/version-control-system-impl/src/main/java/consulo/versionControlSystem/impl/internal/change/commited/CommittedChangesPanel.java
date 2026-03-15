@@ -45,9 +45,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -82,7 +80,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
                                CommittedChangesProvider provider,
                                ChangeBrowserSettings settings,
                                @Nullable RepositoryLocation location,
-                               @jakarta.annotation.Nullable ActionGroup extraActions) {
+                               @Nullable ActionGroup extraActions) {
     super(new BorderLayout());
     mySettings = settings;
     myProject = project;
@@ -154,7 +152,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     ProgressManager.getInstance().run(new Task.Backgroundable(myProject, "Loading changes", true, BackgroundFromStartOption.getInstance()) {
 
       @Override
-      public void run(@Nonnull final ProgressIndicator indicator) {
+      public void run(final ProgressIndicator indicator) {
         try {
           AsynchConsumer<List<CommittedChangeList>> appender = new AsynchConsumer<List<CommittedChangeList>>() {
             @Override
@@ -221,7 +219,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     });
   }
 
-  @NonNls
+  
   private void refreshChangesFromCache(boolean cacheOnly) {
     CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
     cache.hasCachesForAnyRoot(notEmpty -> {
@@ -252,11 +250,11 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
       }
     }
 
-    public boolean filter(@Nonnull CommittedChangeList cl) {
+    public boolean filter(CommittedChangeList cl) {
       return changeListMatches(cl, myParts);
     }
 
-    private static boolean changeListMatches(@Nonnull CommittedChangeList changeList, String[] filterWords) {
+    private static boolean changeListMatches(CommittedChangeList changeList, String[] filterWords) {
       for (String word : filterWords) {
         String comment = changeList.getComment();
         String committer = changeList.getCommitterName();
@@ -357,7 +355,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     }
 
     @Override
-    @Nonnull
+    
     public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
       FilterHelper filterHelper = new FilterHelper(myFilterComponent.getFilter());
       List<CommittedChangeList> result = new ArrayList<CommittedChangeList>();

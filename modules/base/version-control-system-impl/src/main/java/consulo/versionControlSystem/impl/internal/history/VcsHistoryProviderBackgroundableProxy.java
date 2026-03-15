@@ -34,8 +34,7 @@ import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public class VcsHistoryProviderBackgroundableProxy {
   }
 
   public void executeAppendableSession(VcsKey vcsKey, FilePath filePath, VcsAppendableHistorySessionPartner partner,
-                                       @jakarta.annotation.Nullable VcsBackgroundableActions actionKey, boolean canUseCache, boolean canUseLastRevisionCheck) {
+                                       @Nullable VcsBackgroundableActions actionKey, boolean canUseCache, boolean canUseLastRevisionCheck) {
     doExecuteAppendableSession(vcsKey, filePath, null, partner, actionKey, canUseCache, canUseLastRevisionCheck);
   }
 
@@ -169,7 +168,7 @@ public class VcsHistoryProviderBackgroundableProxy {
                              final BackgroundableActionEnabledHandler handler,
                              final VcsAppendableHistorySessionPartner cachedPartner, final boolean canUseLastRevisionCheck) {
     ProgressManager.getInstance().run(new Task.Backgroundable(myProject, VcsBundle.message("loading.file.history.progress"), true) {
-      public void run(@Nonnull ProgressIndicator indicator) {
+      public void run(ProgressIndicator indicator) {
         indicator.setText(VcsUtil.getPathForProgressPresentation(filePath.getIOFile()));
         indicator.setIndeterminate(true);
         try {
@@ -310,7 +309,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private VcsAbstractHistorySession getSessionFromCacheWithLastRevisionCheck(FilePath filePath, VcsKey vcsKey) {
     ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
     if (pi != null) {

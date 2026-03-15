@@ -21,7 +21,6 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.util.lang.ImmutableCharSequence;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Combined text/caret model that is used to record oncoming changes before acquiring
@@ -39,7 +38,7 @@ public interface ActionPlan {
    *
    * @return text content.
    */
-  @Nonnull
+  
   ImmutableCharSequence getText();
 
   /**

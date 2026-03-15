@@ -22,7 +22,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -31,14 +30,14 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class SandAdditionalEditorAppearanceSettingProvider implements AdditionalEditorAppearanceSettingProvider {
-  @Nonnull
+  
   @Override
   public LocalizeValue getLabelName() {
     return LocalizeValue.localizeTODO("Sand");
   }
 
   @Override
-  public void fillProperties(@Nonnull SimpleConfigurableByProperties.PropertyBuilder builder, Consumer<Component> layoutBuilder) {
+  public void fillProperties(SimpleConfigurableByProperties.PropertyBuilder builder, Consumer<Component> layoutBuilder) {
     CheckBox testSand = CheckBox.create(LocalizeValue.localizeTODO("TestSand"));
     layoutBuilder.accept(testSand);
   }

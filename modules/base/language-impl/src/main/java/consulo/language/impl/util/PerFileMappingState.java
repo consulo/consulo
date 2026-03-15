@@ -18,8 +18,7 @@ package consulo.language.impl.util;
 import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
  * from kotlin
  */
 final class PerFileMappingState {
-  @Nonnull
+  
   public static List<PerFileMappingState> read(Element element, String valueAttributeName) {
     List<Element> entries = element.getChildren("file");
     if (entries.isEmpty()) {
@@ -63,22 +62,22 @@ final class PerFileMappingState {
     return element;
   }
 
-  @Nonnull
+  
   private final String url;
   @Nullable
   private final String value;
 
-  public PerFileMappingState(@Nonnull String url) {
+  public PerFileMappingState(String url) {
     this.url = url;
     this.value = null;
   }
 
-  public PerFileMappingState(@Nonnull String url, @Nullable String value) {
+  public PerFileMappingState(String url, @Nullable String value) {
     this.url = url;
     this.value = value;
   }
 
-  @Nonnull
+  
   public String getUrl() {
     return url;
   }

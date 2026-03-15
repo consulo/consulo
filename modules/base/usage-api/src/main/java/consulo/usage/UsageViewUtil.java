@@ -33,8 +33,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,12 +51,12 @@ public class UsageViewUtil {
         return ActionManager.getInstance().getKeyboardShortcut("ShowSettingsAndFindUsages");
     }
 
-    public static KeyboardShortcut getShowUsagesWithSettingsShortcut(@Nonnull UsageTarget[] targets) {
+    public static KeyboardShortcut getShowUsagesWithSettingsShortcut(UsageTarget[] targets) {
         ConfigurableUsageTarget configurableTarget = getConfigurableTarget(targets);
         return configurableTarget == null ? getShowUsagesWithSettingsShortcut() : configurableTarget.getShortcut();
     }
 
-    public static ConfigurableUsageTarget getConfigurableTarget(@Nonnull UsageTarget[] targets) {
+    public static ConfigurableUsageTarget getConfigurableTarget(UsageTarget[] targets) {
         ConfigurableUsageTarget configurableUsageTarget = null;
         if (targets.length != 0) {
             NavigationItem target = targets[0];
@@ -82,7 +81,7 @@ public class UsageViewUtil {
         return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewLongNameLocation.INSTANCE);
     }
 
-    public static String getType(@Nonnull PsiElement psiElement) {
+    public static String getType(PsiElement psiElement) {
         return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewTypeLocation.INSTANCE);
     }
 
@@ -120,7 +119,7 @@ public class UsageViewUtil {
     }
 
     @RequiredReadAction
-    public static UsageInfo[] removeDuplicatedUsages(@Nonnull UsageInfo[] usages) {
+    public static UsageInfo[] removeDuplicatedUsages(UsageInfo[] usages) {
         Set<UsageInfo> set = new LinkedHashSet<>(Arrays.asList(usages));
 
         // Replace duplicates of move rename usage infos in injections from non code usages of master files
@@ -178,19 +177,19 @@ public class UsageViewUtil {
         return set.toArray(new UsageInfo[set.size()]);
     }
 
-    @Nonnull
-    public static UsageInfo[] toUsageInfoArray(@Nonnull Collection<? extends UsageInfo> collection) {
+    
+    public static UsageInfo[] toUsageInfoArray(Collection<? extends UsageInfo> collection) {
         int size = collection.size();
         return size == 0 ? UsageInfo.EMPTY_ARRAY : collection.toArray(new UsageInfo[size]);
     }
 
-    @Nonnull
-    public static PsiElement[] toElements(@Nonnull UsageInfo[] usageInfos) {
+    
+    public static PsiElement[] toElements(UsageInfo[] usageInfos) {
         return ContainerUtil.map2Array(usageInfos, PsiElement.class, UsageInfo::getElement);
     }
 
     @RequiredReadAction
-    public static void navigateTo(@Nonnull UsageInfo info, boolean requestFocus) {
+    public static void navigateTo(UsageInfo info, boolean requestFocus) {
         int offset = info.getNavigationOffset();
         VirtualFile file = info.getVirtualFile();
         Project project = info.getProject();

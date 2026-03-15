@@ -31,7 +31,6 @@ import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -50,7 +49,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
 
     @Inject
     @RequiredUIAccess
-    public UsageViewContentManagerImpl(@Nonnull Project project, @Nonnull ToolWindowManager toolWindowManager) {
+    public UsageViewContentManagerImpl(Project project, ToolWindowManager toolWindowManager) {
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.FIND, true, ToolWindowAnchor.BOTTOM, project, true);
         //toolWindow.setHelpId(UsageViewImpl.HELP_ID);
         toolWindow.setDisplayName(FindLocalize.toolwindowFindDisplayName());
@@ -59,12 +58,12 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
 
         DumbAwareToggleAction toggleNewTabAction = new DumbAwareToggleAction(FindLocalize.findOpenInNewTabAction()) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return FindSettings.getInstance().isShowResultsInSeparateView();
             }
 
             @Override
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 FindSettings.getInstance().setShowResultsInSeparateView(state);
             }
         };
@@ -76,12 +75,12 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
                 PlatformIconGroup.objectbrowserSorted()
             ) {
                 @Override
-                public boolean isSelected(@Nonnull AnActionEvent e) {
+                public boolean isSelected(AnActionEvent e) {
                     return UsageViewSettings.getInstance().isSortAlphabetically();
                 }
 
                 @Override
-                public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+                public void setSelected(AnActionEvent e, boolean state) {
                     UsageViewSettings.getInstance().setSortAlphabetically(state);
                     project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
                 }
@@ -93,12 +92,12 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
             PlatformIconGroup.generalAutoscrolltosource()
         ) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return UsageViewSettings.getInstance().isAutoScrollToSource();
             }
 
             @Override
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 UsageViewSettings.getInstance().setAutoScrollToSource(state);
             }
         };
@@ -111,33 +110,33 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         myFindContentManager.addContentManagerListener(new ContentManagerListener() {
             @Override
             @RequiredUIAccess
-            public void contentRemoved(@Nonnull ContentManagerEvent event) {
+            public void contentRemoved(ContentManagerEvent event) {
                 event.getContent().release();
             }
         });
         ContentManagerWatcher.watchContentManager(toolWindow, myFindContentManager);
     }
 
-    @Nonnull
+    
     @Override
     public Content addContent(
-        @Nonnull String contentName,
+        String contentName,
         boolean reusable,
-        @Nonnull JComponent component,
+        JComponent component,
         boolean toOpenInNewTab,
         boolean isLockable
     ) {
         return addContent(contentName, null, null, reusable, component, toOpenInNewTab, isLockable);
     }
 
-    @Nonnull
+    
     @Override
     public Content addContent(
-        @Nonnull String contentName,
+        String contentName,
         String tabName,
         String toolwindowTitle,
         boolean reusable,
-        @Nonnull JComponent component,
+        JComponent component,
         boolean toOpenInNewTab,
         boolean isLockable
     ) {
@@ -203,7 +202,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
     }
 
     @Override
-    public void closeContent(@Nonnull Content content) {
+    public void closeContent(Content content) {
         myFindContentManager.removeContent(content, true);
         content.release();
     }

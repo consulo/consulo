@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,16 +36,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem> {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final SpeedSearch mySpeedSearch;
 
     RecentLocationsRenderer(
-        @Nonnull Project project,
-        @Nonnull SpeedSearch speedSearch,
-        @Nonnull RecentLocationsDataModel data,
-        @Nonnull JBCheckBox checkBox
+        Project project,
+        SpeedSearch speedSearch,
+        RecentLocationsDataModel data,
+        JBCheckBox checkBox
     ) {
         myProject = project;
         mySpeedSearch = speedSearch;
@@ -76,18 +75,18 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
         return panel;
     }
 
-    @Nonnull
-    private static ColorValue getBackgroundColor(@Nonnull EditorColorsScheme colorsScheme, boolean selected) {
+    
+    private static ColorValue getBackgroundColor(EditorColorsScheme colorsScheme, boolean selected) {
         return selected ? HintUtil.getRecentLocationsSelectionColor(colorsScheme) : colorsScheme.getDefaultBackground();
     }
 
-    @Nonnull
+    
     private static JComponent createTitleComponent(
-        @Nonnull Project project,
-        @Nonnull JList<? extends RecentLocationItem> list,
-        @Nonnull SpeedSearch speedSearch,
-        @Nonnull PlaceInfo placeInfo,
-        @Nonnull EditorColorsScheme colorsScheme,
+        Project project,
+        JList<? extends RecentLocationItem> list,
+        SpeedSearch speedSearch,
+        PlaceInfo placeInfo,
+        EditorColorsScheme colorsScheme,
         boolean selected
     ) {
         JComponent title = JBUI.Panels.simplePanel()
@@ -100,8 +99,8 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
         return title;
     }
 
-    @Nonnull
-    private static JPanel createSeparatorLine(@Nonnull EditorColorsScheme colorsScheme) {
+    
+    private static JPanel createSeparatorLine(EditorColorsScheme colorsScheme) {
         Color color = TargetAWT.to(colorsScheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR));
         if (color == null) {
             color = JBColor.namedColor("Group.separatorColor", new JBColor(Gray.xCD, Gray.x51));
@@ -110,12 +109,12 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
         return JBUI.Panels.simplePanel().withBorder(JBUI.Borders.customLine(color, 1, 0, 0, 0));
     }
 
-    @Nonnull
+    
     private static JComponent setupEditorComponent(
-        @Nonnull EditorEx editor,
-        @Nonnull String text,
-        @Nonnull SpeedSearch speedSearch,
-        @Nonnull EditorColorsScheme colorsScheme,
+        EditorEx editor,
+        String text,
+        SpeedSearch speedSearch,
+        EditorColorsScheme colorsScheme,
         boolean selected
     ) {
         Iterable<MatcherTextRange> ranges = speedSearch.matchingFragments(text);
@@ -143,13 +142,13 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
         return editor.getComponent();
     }
 
-    @Nonnull
+    
     private static SimpleColoredComponent createTitleTextComponent(
-        @Nonnull Project project,
-        @Nonnull JList<? extends RecentLocationItem> list,
-        @Nonnull SpeedSearch speedSearch,
-        @Nonnull PlaceInfo placeInfo,
-        @Nonnull EditorColorsScheme colorsScheme,
+        Project project,
+        JList<? extends RecentLocationItem> list,
+        SpeedSearch speedSearch,
+        PlaceInfo placeInfo,
+        EditorColorsScheme colorsScheme,
         boolean selected
     ) {
         SimpleColoredComponent titleTextComponent = new SimpleColoredComponent();
@@ -184,20 +183,20 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     }
 
     @Nullable
-    private static Image fetchIcon(@Nonnull Project project, @Nonnull PlaceInfo placeInfo) {
+    private static Image fetchIcon(Project project, PlaceInfo placeInfo) {
         return VfsIconUtil.getIcon(placeInfo.getFile(), Iconable.ICON_FLAG_READ_STATUS, project);
     }
 
-    @Nonnull
-    private static SimpleTextAttributes createFileNameTextAttributes(@Nonnull EditorColorsScheme colorsScheme, boolean selected) {
+    
+    private static SimpleTextAttributes createFileNameTextAttributes(EditorColorsScheme colorsScheme, boolean selected) {
         TextAttributes textAttributes = createDefaultTextAttributesWithBackground(colorsScheme, getBackgroundColor(colorsScheme, selected));
         textAttributes.setFontType(Font.BOLD);
 
         return TextAttributesUtil.fromTextAttributes(textAttributes);
     }
 
-    @Nonnull
-    private static SimpleTextAttributes createBreadcrumbsTextAttributes(@Nonnull EditorColorsScheme colorsScheme, boolean selected) {
+    
+    private static SimpleTextAttributes createBreadcrumbsTextAttributes(EditorColorsScheme colorsScheme, boolean selected) {
         ColorValue backgroundColor = getBackgroundColor(colorsScheme, selected);
         TextAttributes attributes = colorsScheme.getAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
         if (attributes != null) {
@@ -212,10 +211,10 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
         return TextAttributesUtil.fromTextAttributes(createDefaultTextAttributesWithBackground(colorsScheme, backgroundColor));
     }
 
-    @Nonnull
+    
     private static TextAttributes createDefaultTextAttributesWithBackground(
-        @Nonnull EditorColorsScheme colorsScheme,
-        @Nonnull ColorValue backgroundColor
+        EditorColorsScheme colorsScheme,
+        ColorValue backgroundColor
     ) {
         TextAttributes defaultTextAttributes = new TextAttributes();
         TextAttributes textAttributes = colorsScheme.getAttributes(HighlighterColors.TEXT);
@@ -227,15 +226,15 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
         return defaultTextAttributes;
     }
 
-    @Nonnull
-    private static TextAttributes createEmptyTextForegroundTextAttributes(@Nonnull EditorColorsScheme colorsScheme) {
+    
+    private static TextAttributes createEmptyTextForegroundTextAttributes(EditorColorsScheme colorsScheme) {
         TextAttributes unusedAttributes = colorsScheme.getAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
         return unusedAttributes != null ? unusedAttributes : TextAttributesUtil.toTextAttributes(SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }
 
     @Override
     protected void customizeCellRenderer(
-        @Nonnull JList<? extends RecentLocationItem> list,
+        JList<? extends RecentLocationItem> list,
         RecentLocationItem value,
         int index,
         boolean selected,
@@ -243,7 +242,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     ) {
     }
 
-    private static void selectSearchResultsInEditor(@Nonnull Editor editor, @Nonnull Iterator<? extends MatcherTextRange> resultIterator) {
+    private static void selectSearchResultsInEditor(Editor editor, Iterator<? extends MatcherTextRange> resultIterator) {
         if (!editor.getCaretModel().supportsMultipleCarets()) {
             return;
         }

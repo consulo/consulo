@@ -2,7 +2,7 @@
 package consulo.execution.debug.stream.trace.dsl.impl.common;
 
 import consulo.execution.debug.stream.trace.dsl.*;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 

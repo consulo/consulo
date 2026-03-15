@@ -18,7 +18,6 @@ package consulo.component.internal.inject;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.Closeable;
 import java.util.*;
@@ -50,12 +49,12 @@ public abstract class BindingLoader<B> implements Closeable {
     myLocked.set(true);
   }
 
-  @Nonnull
+  
   protected abstract Class<B> getBindingClass();
 
-  protected abstract void process(@Nonnull B binding);
+  protected abstract void process(B binding);
 
-  private void loadInLegacyMode(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Set<Class> processed) {
+  private void loadInLegacyMode(PluginDescriptor pluginDescriptor, Set<Class> processed) {
     ServiceLoader<B> loader = ServiceLoader.load(getBindingClass(), pluginDescriptor.getPluginClassLoader());
 
     for (B binding : loader) {
@@ -80,7 +79,7 @@ public abstract class BindingLoader<B> implements Closeable {
     }
   }
 
-  private void loadInModuleMode(@Nonnull ModuleLayer moduleLayer, @Nonnull PluginDescriptor pluginDescriptor, @Nonnull Set<Class> processed) {
+  private void loadInModuleMode(ModuleLayer moduleLayer, PluginDescriptor pluginDescriptor, Set<Class> processed) {
     ServiceLoader<B> loader = ServiceLoader.load(moduleLayer, getBindingClass());
 
     Iterator<ServiceLoader.Provider<B>> iterator = loader.stream().iterator();

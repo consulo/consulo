@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.json.JsonService;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,15 +31,15 @@ import jakarta.annotation.Nonnull;
 public class GsonJsonService implements JsonService {
   private final Gson myGson = new GsonBuilder().setPrettyPrinting().create();
 
-  @Nonnull
+  
   @Override
-  public String toJson(@Nonnull Object value) {
+  public String toJson(Object value) {
     return myGson.toJson(value);
   }
 
-  @Nonnull
+  
   @Override
-  public <T> T fromJson(@Nonnull String json, @Nonnull Class<T> clazz) {
+  public <T> T fromJson(String json, Class<T> clazz) {
     return myGson.fromJson(json, clazz);
   }
 }

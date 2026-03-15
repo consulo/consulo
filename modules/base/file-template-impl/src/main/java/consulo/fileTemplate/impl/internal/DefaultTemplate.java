@@ -16,8 +16,7 @@
 package consulo.fileTemplate.impl.internal;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -36,9 +35,9 @@ public class DefaultTemplate {
     private final String myText;
     private final String myDescriptionText;
 
-    public DefaultTemplate(@Nonnull String name,
-                           @Nonnull String extension,
-                           @Nonnull FileTemplateStreamProvider templateURL,
+    public DefaultTemplate(String name,
+                           String extension,
+                           FileTemplateStreamProvider templateURL,
                            @Nullable FileTemplateStreamProvider descriptionURL) {
         myName = name;
         myExtension = extension;
@@ -80,12 +79,12 @@ public class DefaultTemplate {
         return myDescriptionURL;
     }
 
-    @Nonnull
+    
     public String getText() {
         return myText;
     }
 
-    @Nonnull
+    
     public String getDescriptionText() {
         return myDescriptionText;
     }

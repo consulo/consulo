@@ -21,7 +21,6 @@ import consulo.util.io.FileAttributes;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
 import consulo.virtualFileSystem.util.FilePathHashingStrategy;
-import jakarta.annotation.Nonnull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,20 +36,20 @@ public class FileImplUtil {
 
     public static final HashingStrategy<CharSequence> PATH_CHAR_SEQUENCE_HASHING_STRATEGY = FilePathHashingStrategy.createForCharSequence();
 
-    public static boolean canWrite(@Nonnull String path) {
+    public static boolean canWrite(String path) {
         FileAttributes attributes = FileSystemUtil.getAttributes(path);
         return attributes != null && attributes.isWritable();
     }
 
-    public static void setReadOnlyAttribute(@Nonnull String path, boolean readOnlyFlag) {
+    public static void setReadOnlyAttribute(String path, boolean readOnlyFlag) {
         boolean writableFlag = !readOnlyFlag;
         if (!new File(path).setWritable(writableFlag, false) && canWrite(path) != writableFlag) {
             LOG.warn("Can't set writable attribute of '" + path + "' to '" + readOnlyFlag + "'");
         }
     }
 
-    @Nonnull
-    public static byte[] loadBytes(@Nonnull InputStream stream) throws IOException {
+    
+    public static byte[] loadBytes(InputStream stream) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         FileUtil.copy(stream, buffer);
         return buffer.toByteArray();

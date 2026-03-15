@@ -19,14 +19,13 @@ import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @author max
  */
 public class ExternalLanguageAnnotators {
-  @Nonnull
+  
   public static List<ExternalAnnotator> allForFile(Language language, PsiFile file) {
     List<ExternalAnnotator> annotators = ExternalAnnotator.forLanguage(language);
     List<ExternalAnnotatorsFilter> filters = ExternalAnnotatorsFilter.EXTENSION_POINT_NAME.getExtensionList();

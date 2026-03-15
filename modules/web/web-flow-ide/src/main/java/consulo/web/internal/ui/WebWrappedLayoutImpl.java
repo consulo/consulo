@@ -24,8 +24,7 @@ import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.SingleComponentLayout;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
         }
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
@@ -57,12 +56,12 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
     }
 
     @Override
-    public void remove(@Nonnull Component component) {
+    public void remove(Component component) {
         getVaadinComponent().removeIfContent(TargetVaddin.to(component));
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public WrappedLayout set(@Nullable Component component) {
         if (component != null) {

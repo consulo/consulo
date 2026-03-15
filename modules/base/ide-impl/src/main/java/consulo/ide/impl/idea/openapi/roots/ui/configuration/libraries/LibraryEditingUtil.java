@@ -43,8 +43,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -145,7 +144,7 @@ public class LibraryEditingUtil {
         }
     }
 
-    public static LibraryTablePresentation getLibraryTablePresentation(@Nonnull Project project, @Nonnull String level) {
+    public static LibraryTablePresentation getLibraryTablePresentation(Project project, String level) {
         if (level.equals(LibraryEx.MODULE_LEVEL)) {
             return ModuleLibraryTablePresentation.INSTANCE;
         }
@@ -173,7 +172,7 @@ public class LibraryEditingUtil {
         Consumer<LibraryType> action
     ) {
         return new BaseListPopupStep<LibraryType>(IdeLocalize.popupTitleSelectLibraryType().get(), getSuitableTypes(classpathPanel)) {
-            @Nonnull
+            
             @Override
             public String getTextFor(LibraryType value) {
                 String createActionName = value != null ? value.getCreateActionName() : null;
@@ -192,7 +191,7 @@ public class LibraryEditingUtil {
         };
     }
 
-    public static List<Module> getSuitableModules(@Nonnull Project project, @Nullable LibraryKind kind, @Nullable Library library) {
+    public static List<Module> getSuitableModules(Project project, @Nullable LibraryKind kind, @Nullable Library library) {
         List<Module> modules = new ArrayList<>();
         LibraryType type = kind == null ? null : LibraryKindRegistry.getInstance().findLibraryTypeByKindId(kind.getKindId());
 
@@ -214,8 +213,8 @@ public class LibraryEditingUtil {
 
     @RequiredUIAccess
     public static void showDialogAndAddLibraryToDependencies(
-        @Nonnull Library library,
-        @Nonnull Project project,
+        Library library,
+        Project project,
         boolean allowEmptySelection
     ) {
         ProjectStructureValidator.showDialogAndAddLibraryToDependencies(library, project, allowEmptySelection);

@@ -41,8 +41,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -60,13 +59,13 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
         setEnabledInModalContext(true);
     }
 
-    protected BaseRunConfigurationAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected BaseRunConfigurationAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
         setPopup(true);
         setEnabledInModalContext(true);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return e != null ? getChildren(e.getDataContext()) : EMPTY_ARRAY;
@@ -102,7 +101,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
         return EMPTY_ARRAY;
     }
 
-    @Nonnull
+    
     private List<ConfigurationFromContext> getConfigurationsFromContext(ConfigurationContext context) {
         List<ConfigurationFromContext> fromContext = context.getConfigurationsFromContext();
         if (fromContext == null) {
@@ -124,7 +123,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         RunnerAndConfigurationSettings existing = context.findExisting();
@@ -140,7 +139,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
                     .createListPopup(new BaseListPopupStep<ConfigurationFromContext>(ExecutionLocalize.configurationActionChooserTitle()
                         .get(), producers) {
                         @Override
-                        @Nonnull
+                        
                         public String getTextFor(ConfigurationFromContext producer) {
                             return producer.getConfigurationType().getDisplayName().get();
                         }
@@ -200,7 +199,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());
         Presentation presentation = event.getPresentation();
         RunnerAndConfigurationSettings existing = context.findExisting();
@@ -241,5 +240,5 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
         return ProgramRunnerUtil.shortenName(configuration.getName(), 0);
     }
 
-    protected abstract void updatePresentation(Presentation presentation, @Nonnull String actionText, ConfigurationContext context);
+    protected abstract void updatePresentation(Presentation presentation, String actionText, ConfigurationContext context);
 }

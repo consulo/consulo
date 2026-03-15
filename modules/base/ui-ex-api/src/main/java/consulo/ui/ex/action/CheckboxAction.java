@@ -23,8 +23,7 @@ import consulo.ui.CheckBoxStyle;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -33,22 +32,22 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
     protected CheckboxAction() {
     }
 
-    protected CheckboxAction(@Nonnull LocalizeValue text) {
+    protected CheckboxAction(LocalizeValue text) {
         super(text);
     }
 
-    protected CheckboxAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected CheckboxAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
-    protected CheckboxAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected CheckboxAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public CheckBox createCustomComponent(Presentation presentation, @Nonnull String place) {
+    public CheckBox createCustomComponent(Presentation presentation, String place) {
         LocalizeValue textValue = presentation.getTextValue();
 
         CheckBox checkBox = CheckBox.create(textValue);
@@ -80,7 +79,7 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
         return checkBox;
     }
 
-    @Nonnull
+    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.EDT;
@@ -88,7 +87,7 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         Component property = e.getPresentation().getClientProperty(COMPONENT_KEY);
         if (property instanceof CheckBox checkBox) {

@@ -20,7 +20,6 @@ import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public class ModalityPerProjectEAPDescriptor extends EarlyAccessProgramDescripto
     return EarlyAccessProgramManager.is(ModalityPerProjectEAPDescriptor.class);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("Modality per project");

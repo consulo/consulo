@@ -18,7 +18,6 @@ package consulo.codeEditor.action;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Interface for actions activated by typing in the editor.
@@ -34,5 +33,5 @@ public interface TypedActionHandler {
    * @param charTyped   the typed character.
    * @param dataContext the current data context.
    */
-  void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext);
+  void execute(Editor editor, char charTyped, DataContext dataContext);
 }

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.lang.function.BooleanConsumer;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BooleanSupplier;
 
@@ -54,7 +53,7 @@ public interface ApplicationFileColorManager {
         return enabled;
     }
 
-    @Nonnull
+    
     static ApplicationFileColorManager getInstance() {
         return Application.get().getInstance(ApplicationFileColorManager.class);
     }

@@ -19,31 +19,30 @@ import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class DiffWindow extends DiffWindowBase {
-  @Nonnull
+  
   private final DiffRequestChain myRequestChain;
 
-  public DiffWindow(@Nullable Project project, @Nonnull DiffRequestChain requestChain, @Nonnull DiffDialogHints hints) {
+  public DiffWindow(@Nullable Project project, DiffRequestChain requestChain, DiffDialogHints hints) {
     super(project, hints);
     myRequestChain = requestChain;
   }
 
-  @Nonnull
+  
   @Override
   protected DiffRequestProcessor createProcessor() {
     return new MyCacheDiffRequestChainProcessor(myProject, myRequestChain);
   }
 
   private class MyCacheDiffRequestChainProcessor extends CacheDiffRequestChainProcessor {
-    public MyCacheDiffRequestChainProcessor(@Nullable Project project, @Nonnull DiffRequestChain requestChain) {
+    public MyCacheDiffRequestChainProcessor(@Nullable Project project, DiffRequestChain requestChain) {
       super(project, requestChain);
     }
 
     @Override
-    protected void setWindowTitle(@Nonnull String title) {
+    protected void setWindowTitle(String title) {
       getWrapper().setTitle(title);
     }
 

@@ -34,8 +34,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -135,7 +133,7 @@ public class PatchProjectUtil {
   public static void iterate(VirtualFile contentRoot, final ContentIterator iterator, final ProjectFileIndex idx) {
     VirtualFileUtil.visitChildrenRecursively(contentRoot, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@Nonnull VirtualFile file) {
+      public boolean visitFile(VirtualFile file) {
         if (!iterator.processFile(file)) return false;
         if (idx.getModuleForFile(file) == null) return false;  // already excluded
         return true;
@@ -143,7 +141,7 @@ public class PatchProjectUtil {
     });
   }
 
-  public static Map<Pattern, Set<Pattern>> loadPatterns(@NonNls String propertyKey) {
+  public static Map<Pattern, Set<Pattern>> loadPatterns(String propertyKey) {
     Map<Pattern, Set<Pattern>> result = new HashMap<Pattern, Set<Pattern>>();
     String patterns = System.getProperty(propertyKey);
     if (patterns != null) {

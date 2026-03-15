@@ -17,7 +17,6 @@ package consulo.versionControlSystem.distributed.push;
 
 import consulo.versionControlSystem.distributed.repository.Repository;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Provider for outgoing commits
@@ -35,7 +34,7 @@ public abstract class OutgoingCommitsProvider<Repo extends Repository, Source ex
    *                E.g. if authentication is needed to collect outgoing changes, then the method should silently show the corresponding
    *                request in the error field of the OutgoingResult.
    */
-  @Nonnull
-  public abstract OutgoingResult getOutgoingCommits(@Nonnull Repo repository, @Nonnull PushSpec<Source, Target> pushSpec, boolean initial);
+  
+  public abstract OutgoingResult getOutgoingCommits(Repo repository, PushSpec<Source, Target> pushSpec, boolean initial);
 
 }

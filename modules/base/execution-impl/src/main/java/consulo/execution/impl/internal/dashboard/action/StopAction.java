@@ -16,7 +16,6 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.Content;
 import consulo.util.collection.JBIterable;
-import jakarta.annotation.Nonnull;
 
 import static consulo.execution.impl.internal.dashboard.action.RunDashboardActionUtils.getLeafTargets;
 
@@ -35,7 +34,7 @@ public final class StopAction extends DumbAwareAction {
 //  }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     Presentation presentation = e.getPresentation();
     if (project == null) {
@@ -54,7 +53,7 @@ public final class StopAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     for (RunDashboardRunConfigurationNode node : getLeafTargets(e)) {
       ExecutionManagerImpl.stopProcess(node.getDescriptor());
     }

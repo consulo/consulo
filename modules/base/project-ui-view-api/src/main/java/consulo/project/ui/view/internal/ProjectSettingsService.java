@@ -24,8 +24,7 @@ import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -43,7 +42,7 @@ public class ProjectSettingsService {
     }
 
     @RequiredUIAccess
-    public void openLibrary(@Nonnull Library library) {
+    public void openLibrary(Library library) {
     }
 
     public void openArtifact(@Nullable Object artifact) {
@@ -74,7 +73,7 @@ public class ProjectSettingsService {
     }
 
     @RequiredUIAccess
-    public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
+    public void openModuleDependenciesSettings(Module module, @Nullable OrderEntry orderEntry) {
     }
 
     public final boolean canOpenModuleDependenciesSettings() {
@@ -83,7 +82,7 @@ public class ProjectSettingsService {
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public void openLibraryOrSdkSettings(@Nonnull OrderEntry orderEntry) {
+    public void openLibraryOrSdkSettings(OrderEntry orderEntry) {
     }
 
     @RequiredUIAccess

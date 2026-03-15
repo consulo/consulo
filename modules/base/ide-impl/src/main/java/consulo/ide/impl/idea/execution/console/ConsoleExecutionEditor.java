@@ -26,8 +26,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -41,7 +40,7 @@ public class ConsoleExecutionEditor implements Disposable {
   private final MessageBusConnection myBusConnection;
   private final ConsolePromptDecorator myConsolePromptDecorator;
 
-  public ConsoleExecutionEditor(@Nonnull LanguageConsoleImpl.Helper helper) {
+  public ConsoleExecutionEditor(LanguageConsoleImpl.Helper helper) {
     myHelper = helper;
     EditorFactory editorFactory = EditorFactory.getInstance();
     myEditorDocument = helper.getDocument();
@@ -62,7 +61,7 @@ public class ConsoleExecutionEditor implements Disposable {
 
   private final FocusChangeListener myFocusListener = new FocusChangeListener() {
     @Override
-    public void focusGained(@Nonnull Editor editor) {
+    public void focusGained(Editor editor) {
       myCurrentEditor = (EditorEx)editor;
       if (GeneralSettings.getInstance().isSaveOnFrameDeactivation()) {
         FileDocumentManager.getInstance().saveAllDocuments();
@@ -70,7 +69,7 @@ public class ConsoleExecutionEditor implements Disposable {
     }
 
     @Override
-    public void focusLost(@Nonnull Editor editor) {
+    public void focusLost(Editor editor) {
     }
   };
 
@@ -82,7 +81,7 @@ public class ConsoleExecutionEditor implements Disposable {
     myConsolePromptDecorator.update();
   }
 
-  @Nonnull
+  
   public final VirtualFile getVirtualFile() {
     return myHelper.virtualFile;
   }
@@ -91,7 +90,7 @@ public class ConsoleExecutionEditor implements Disposable {
     return myConsoleEditor;
   }
 
-  @Nonnull
+  
   public EditorEx getCurrentEditor() {
     return ObjectUtil.notNull(myCurrentEditor, myConsoleEditor);
   }
@@ -104,7 +103,7 @@ public class ConsoleExecutionEditor implements Disposable {
     return myConsoleEditor.getComponent();
   }
 
-  @Nonnull
+  
   public ConsolePromptDecorator getConsolePromptDecorator() {
     return myConsolePromptDecorator;
   }
@@ -133,12 +132,12 @@ public class ConsoleExecutionEditor implements Disposable {
     return myConsolePromptDecorator.getMainPrompt();
   }
 
-  @Nonnull
+  
   public ConsoleViewContentType getPromptAttributes() {
     return myConsolePromptDecorator.getPromptAttributes();
   }
 
-  public void setPromptAttributes(@Nonnull ConsoleViewContentType textAttributes) {
+  public void setPromptAttributes(ConsoleViewContentType textAttributes) {
     myConsolePromptDecorator.setPromptAttributes(textAttributes);
   }
 
@@ -167,7 +166,7 @@ public class ConsoleExecutionEditor implements Disposable {
   private void installEditorFactoryListener() {
     FileEditorManagerListener fileEditorListener = new FileEditorManagerListener() {
       @Override
-      public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+      public void fileOpened(FileEditorManager source, VirtualFile file) {
         if (myConsoleEditor == null || !Comparing.equal(file, getVirtualFile())) {
           return;
         }
@@ -188,7 +187,7 @@ public class ConsoleExecutionEditor implements Disposable {
       }
 
       @Override
-      public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+      public void fileClosed(FileEditorManager source, VirtualFile file) {
         if (!Comparing.equal(file, getVirtualFile())) {
           return;
         }
@@ -215,7 +214,7 @@ public class ConsoleExecutionEditor implements Disposable {
 
   }
 
-  public void setInputText(@Nonnull String query) {
+  public void setInputText(String query) {
     UndoUtil.writeInRunUndoTransparentAction(() -> myConsoleEditor.getDocument().setText(StringUtil.convertLineSeparators(query)));
   }
 }

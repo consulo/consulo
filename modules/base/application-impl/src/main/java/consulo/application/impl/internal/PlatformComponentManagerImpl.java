@@ -27,8 +27,7 @@ import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StateComponentInfo;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,9 +39,9 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
   private IComponentStore myComponentStore;
 
   protected PlatformComponentManagerImpl(@Nullable ComponentManager parent,
-                                         @Nonnull String name,
-                                         @Nonnull ComponentScope componentScope,
-                                         @Nonnull ComponentBinding componentBinding) {
+                                         String name,
+                                         ComponentScope componentScope,
+                                         ComponentBinding componentBinding) {
     super(parent, name, componentScope, componentBinding, true);
   }
 
@@ -50,7 +49,7 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
   }
 
   @Override
-  public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
+  public boolean initializeIfStorableComponent(Object component, boolean service, boolean lazy) {
     if (!lazy) {
       myCreatedNotLazyServicesCount.incrementAndGet();
     }
@@ -82,7 +81,7 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
     return result;
   }
 
-  public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+  public void executeNonCancelableSection(Runnable runnable) {
     runnable.run();
   }
 

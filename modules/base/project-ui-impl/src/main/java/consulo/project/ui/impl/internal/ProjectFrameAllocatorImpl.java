@@ -25,7 +25,6 @@ import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -49,7 +48,7 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
 
     @RequiredUIAccess
     @Override
-    public Object allocateFrame(@Nonnull ProjectOpenContext context) {
+    public Object allocateFrame(ProjectOpenContext context) {
         IdeFrameState state = context.getUserData(IdeFrameState.KEY);
 
         IdeFrameEx frame = myWindowManager.allocateFrame(myProject, state);

@@ -9,8 +9,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +35,7 @@ public class Advertiser implements LookupAdvertiser {
     myNextLabel.setForeground(JBCurrentTheme.Link.linkColor());
     new ClickListener() {
       @Override
-      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+      public boolean onClick(MouseEvent e, int clickCount) {
         myCurrentItem.incrementAndGet();
         updateAdvertisements();
         return true;
@@ -96,7 +95,7 @@ public class Advertiser implements LookupAdvertiser {
   }
 
   @RequiredUIAccess
-  public void addAdvertisement(@Nonnull String text, @Nullable Image icon) {
+  public void addAdvertisement(String text, @Nullable Image icon) {
     UIAccess.assertIsUIThread();
     myTexts.add(new Item(text, icon));
     updateAdvertisements();
@@ -175,7 +174,7 @@ public class Advertiser implements LookupAdvertiser {
     private final String text;
     private final Image icon;
 
-    private Item(@Nonnull String text, @Nullable Image icon) {
+    private Item(String text, @Nullable Image icon) {
       this.text = text;
       this.icon = icon;
     }

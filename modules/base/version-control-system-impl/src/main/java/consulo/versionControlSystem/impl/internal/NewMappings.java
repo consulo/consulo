@@ -35,8 +35,7 @@ import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -139,7 +138,7 @@ public class NewMappings implements VcsMapping, Disposable {
     mappingsChanged();
   }
 
-  private void keepActiveVcs(@Nonnull Runnable runnable) {
+  private void keepActiveVcs(Runnable runnable) {
     MyVcsActivator activator;
     synchronized (myLock) {
       if (!myActivated) {
@@ -242,7 +241,7 @@ public class NewMappings implements VcsMapping, Disposable {
   }
 
   @Nullable
-  public String getVcsFor(@Nonnull VirtualFile file) {
+  public String getVcsFor(VirtualFile file) {
     VcsDirectoryMapping mapping = getMappingFor(file);
     if (mapping == null) {
       return null;
@@ -251,7 +250,7 @@ public class NewMappings implements VcsMapping, Disposable {
   }
 
   private boolean fileMatchesMapping(
-    @Nonnull VirtualFile file,
+    VirtualFile file,
     Object matchContext,
     String systemIndependentPath,
     VcsDirectoryMapping mapping
@@ -262,8 +261,8 @@ public class NewMappings implements VcsMapping, Disposable {
     return FileUtil.startsWith(systemIndependentPath, mapping.systemIndependentPath());
   }
 
-  @Nonnull
-  public List<VirtualFile> getMappingsAsFilesUnderVcs(@Nonnull AbstractVcs vcs) {
+  
+  public List<VirtualFile> getMappingsAsFilesUnderVcs(AbstractVcs vcs) {
     List<VirtualFile> result = new ArrayList<>();
     String vcsName = vcs.getName();
 
@@ -527,7 +526,7 @@ public class NewMappings implements VcsMapping, Disposable {
     mappingsChanged();
   }
 
-  @Nonnull
+  
   public List<VirtualFile> getDefaultRoots() {
     synchronized (myLock) {
       String defaultVcs = haveDefaultMapping();

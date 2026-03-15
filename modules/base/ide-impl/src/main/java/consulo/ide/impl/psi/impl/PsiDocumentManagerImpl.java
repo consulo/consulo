@@ -36,8 +36,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -53,7 +52,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     private final boolean myUnitTestMode = Application.get().isUnitTestMode();
 
     @Inject
-    public PsiDocumentManagerImpl(@Nonnull Project project, @Nonnull DocumentCommitProcessor documentCommitProcessor) {
+    public PsiDocumentManagerImpl(Project project, DocumentCommitProcessor documentCommitProcessor) {
         super(project, documentCommitProcessor);
 
         EditorFactory.getInstance().getEventMulticaster().addDocumentListener(this, this);
@@ -64,7 +63,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
             FileDocumentManagerListener.class,
             new FileDocumentManagerListener() {
                 @Override
-                public void fileContentLoaded(@Nonnull VirtualFile virtualFile, @Nonnull Document document) {
+                public void fileContentLoaded(VirtualFile virtualFile, Document document) {
                     PsiFile psiFile =
                         ReadAction.compute(() -> myProject.isDisposed() || !virtualFile.isValid() ? null : getCachedPsiFile(virtualFile));
                     fireDocumentCreated(document, psiFile);
@@ -76,7 +75,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     @Nullable
     @Override
     @RequiredReadAction
-    public PsiFile getPsiFile(@Nonnull Document document) {
+    public PsiFile getPsiFile(Document document) {
         PsiFile psiFile = super.getPsiFile(document);
         if (myUnitTestMode) {
             VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
@@ -96,7 +95,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
 
     @Override
     @RequiredUIAccess
-    public void documentChanged(@Nonnull DocumentEvent event) {
+    public void documentChanged(DocumentEvent event) {
         super.documentChanged(event);
         // optimisation: avoid documents piling up during batch processing
         if (isUncommited(event.getDocument()) && FileDocumentManagerImpl.areTooManyDocumentsInTheQueue(myUncommittedDocuments)) {
@@ -131,7 +130,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     }
 
     @Override
-    protected void beforeDocumentChangeOnUnlockedDocument(@Nonnull FileViewProvider viewProvider) {
+    protected void beforeDocumentChangeOnUnlockedDocument(FileViewProvider viewProvider) {
         PostprocessReformattingAspect.getInstance(myProject).assertDocumentChangeIsAllowed(viewProvider);
         super.beforeDocumentChangeOnUnlockedDocument(viewProvider);
     }
@@ -139,9 +138,9 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     @Override
     @RequiredUIAccess
     protected boolean finishCommitInWriteAction(
-        @Nonnull Document document,
-        @Nonnull List<? extends BooleanSupplier> finishProcessors,
-        @Nonnull List<? extends BooleanSupplier> reparseInjectedProcessors,
+        Document document,
+        List<? extends BooleanSupplier> finishProcessors,
+        List<? extends BooleanSupplier> reparseInjectedProcessors,
         boolean synchronously,
         boolean forceNoPsiCommit
     ) {
@@ -156,14 +155,14 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
 
     @Override
     @RequiredReadAction
-    public boolean isDocumentBlockedByPsi(@Nonnull Document doc) {
+    public boolean isDocumentBlockedByPsi(Document doc) {
         FileViewProvider viewProvider = getCachedViewProvider(doc);
         return viewProvider != null && PostprocessReformattingAspect.getInstance(myProject).isViewProviderLocked(viewProvider);
     }
 
     @Override
     @RequiredReadAction
-    public void doPostponedOperationsAndUnblockDocument(@Nonnull Document doc) {
+    public void doPostponedOperationsAndUnblockDocument(Document doc) {
         if (doc instanceof DocumentWindow docWindow) {
             doc = docWindow.getDelegate();
         }
@@ -174,16 +173,16 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public List<BooleanSupplier> reparseChangedInjectedFragments(
-        @Nonnull Document hostDocument,
-        @Nonnull PsiFile hostPsiFile,
-        @Nonnull TextRange hostChangedRange,
-        @Nonnull ProgressIndicator indicator,
-        @Nonnull ASTNode oldRoot,
-        @Nonnull ASTNode newRoot
+        Document hostDocument,
+        PsiFile hostPsiFile,
+        TextRange hostChangedRange,
+        ProgressIndicator indicator,
+        ASTNode oldRoot,
+        ASTNode newRoot
     ) {
         InjectedLanguageManagerInternal injectedLanguageManager = (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(myProject);
         List<DocumentWindow> changedInjected =
@@ -231,18 +230,18 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
 
     @Override
     @RequiredUIAccess
-    public void reparseFiles(@Nonnull Collection<? extends VirtualFile> files, boolean includeOpenFiles) {
+    public void reparseFiles(Collection<? extends VirtualFile> files, boolean includeOpenFiles) {
         FileContentUtil.reparseFiles(myProject, files, includeOpenFiles);
     }
 
-    @Nonnull
+    
     @Override
-    protected DocumentWindow freezeWindow(@Nonnull DocumentWindow document) {
+    protected DocumentWindow freezeWindow(DocumentWindow document) {
         return InjectedLanguageManager.getInstance(myProject).freezeWindow(document);
     }
 
     @Override
-    public void associatePsi(@Nonnull Document document, @Nullable PsiFile file) {
+    public void associatePsi(Document document, @Nullable PsiFile file) {
         if (file != null) {
             VirtualFile vFile = file.getViewProvider().getVirtualFile();
             Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(vFile);

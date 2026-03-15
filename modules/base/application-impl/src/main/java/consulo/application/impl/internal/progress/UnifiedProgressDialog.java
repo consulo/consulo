@@ -24,7 +24,6 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
@@ -50,7 +49,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
     }
 
     @Override
-    public void startBlocking(@Nonnull CompletableFuture<?> stopCondition, @Nonnull Predicate<AWTEvent> isCancellationEvent) {
+    public void startBlocking(CompletableFuture<?> stopCondition, Predicate<AWTEvent> isCancellationEvent) {
         System.out.println("startBlocking");
     }
 

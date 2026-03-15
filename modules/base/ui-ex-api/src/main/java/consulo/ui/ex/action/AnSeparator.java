@@ -20,8 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a separator.
@@ -30,30 +29,30 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @SuppressWarnings("deprecation")
     private static final AnSeparator ourInstance = new AnSeparator();
 
-    @Nonnull
+    
     public static AnSeparator getInstance() {
         return ourInstance;
     }
 
-    @Nonnull
+    
     public static AnSeparator create() {
         return ourInstance;
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue)")
     public static AnSeparator create(@Nullable String text) {
         return create(StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
     }
 
-    @Nonnull
+    
     @SuppressWarnings("deprecation")
-    public static AnSeparator create(@Nonnull LocalizeValue textValue) {
+    public static AnSeparator create(LocalizeValue textValue) {
         return textValue.isEmpty() ? ourInstance : new AnSeparator(textValue);
     }
 
-    @Nonnull
+    
     private final LocalizeValue myTextValue;
 
     @Deprecated
@@ -70,7 +69,7 @@ public final class AnSeparator extends AnAction implements DumbAware {
 
     @Deprecated
     @DeprecationInfo("Use #create()")
-    public AnSeparator(@Nonnull LocalizeValue textValue) {
+    public AnSeparator(LocalizeValue textValue) {
         myTextValue = textValue;
     }
 
@@ -81,14 +80,14 @@ public final class AnSeparator extends AnAction implements DumbAware {
         return StringUtil.nullize(myTextValue.getValue());
     }
 
-    @Nonnull
+    
     public LocalizeValue getTextValue() {
         return myTextValue;
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         throw new UnsupportedOperationException();
     }
 

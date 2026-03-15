@@ -25,7 +25,6 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -41,11 +40,11 @@ class ContentTabLabel extends BaseLabel {
     private class CloseContentAction extends AdditionalIcon {
         private static final String ACTION_NAME = "Close tab";
 
-        public CloseContentAction(@Nonnull Image regularIcon, @Nonnull Image hoveredImage) {
+        public CloseContentAction(Image regularIcon, Image hoveredImage) {
             super(regularIcon, hoveredImage);
         }
 
-        @Nonnull
+        
         @Override
         public Rectangle getRectangle() {
             return new Rectangle(getX(), 0, getIconWidth(), getHeight());
@@ -61,7 +60,7 @@ class ContentTabLabel extends BaseLabel {
             return canBeClosed();
         }
 
-        @Nonnull
+        
         @Override
         public Runnable getAction() {
             return () -> {
@@ -80,7 +79,7 @@ class ContentTabLabel extends BaseLabel {
             return UISettings.getShadowInstance().getCloseTabButtonOnTheRight() || !UISettings.getShadowInstance().getShowCloseButton();
         }
 
-        @Nonnull
+        
         @Override
         public String getTooltip() {
             if (getContent().isPinned()) {
@@ -218,7 +217,7 @@ class ContentTabLabel extends BaseLabel {
         return icon.contains(point);
     }
 
-    ContentTabLabel(@Nonnull Content content, @Nonnull TabContentLayout layout) {
+    ContentTabLabel(Content content, TabContentLayout layout) {
         super(layout.myUi);
         myLayout = layout;
         myContent = content;
@@ -363,7 +362,7 @@ class ContentTabLabel extends BaseLabel {
         return myUi.myWindow.getContentManager();
     }
 
-    @Nonnull
+    
     @Override
     public Content getContent() {
         return myContent;

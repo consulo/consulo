@@ -18,7 +18,6 @@ package consulo.language.editor.completion;
 
 import consulo.language.editor.completion.lookup.LookupElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -27,7 +26,7 @@ public class AutoCompletionDecision {
   public static final AutoCompletionDecision SHOW_LOOKUP = new AutoCompletionDecision();
   public static final AutoCompletionDecision CLOSE_LOOKUP = new AutoCompletionDecision();
 
-  public static AutoCompletionDecision insertItem(@Nonnull LookupElement element) {
+  public static AutoCompletionDecision insertItem(LookupElement element) {
     return new InsertItem(element);
   }
 

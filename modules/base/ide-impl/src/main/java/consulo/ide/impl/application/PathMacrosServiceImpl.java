@@ -22,8 +22,7 @@ import consulo.application.macro.PathMacros;
 import consulo.component.store.internal.PathMacrosService;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -35,7 +34,7 @@ import java.util.Set;
 @ServiceImpl
 public class PathMacrosServiceImpl extends PathMacrosService {
   @Override
-  public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {
+  public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, PathMacros pathMacros) {
     return PathMacrosCollectorImpl.getMacroNames(root, filter, pathMacros);
   }
 }

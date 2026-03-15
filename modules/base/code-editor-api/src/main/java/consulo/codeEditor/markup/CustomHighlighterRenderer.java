@@ -16,7 +16,6 @@
 package consulo.codeEditor.markup;
 
 import consulo.codeEditor.Editor;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -28,7 +27,7 @@ import java.awt.*;
  * @author max
  */
 public interface CustomHighlighterRenderer {
-    void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g);
+    void paint(Editor editor, RangeHighlighter highlighter, Graphics g);
 
     /**
      * @deprecated please use {@link #getOrder()} instead
@@ -45,7 +44,7 @@ public interface CustomHighlighterRenderer {
      *
      * @see CustomHighlighterOrder
      */
-    default @Nonnull CustomHighlighterOrder getOrder() {
+    default CustomHighlighterOrder getOrder() {
         if (isForeground()) {
             return CustomHighlighterOrder.AFTER_TEXT;
         }

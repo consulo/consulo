@@ -19,16 +19,15 @@ import consulo.application.Application;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.io.BaseOutputReader;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 07/11/2022
  */
 public interface ProcessHandlerBuilder {
-  @Nonnull
+  
   @Deprecated
-  static ProcessHandlerBuilder create(@Nonnull GeneralCommandLine commandLine) {
+  static ProcessHandlerBuilder create(GeneralCommandLine commandLine) {
     return Application.get().getInstance(ProcessHandlerBuilderFactory.class).newBuilder(commandLine);
   }
 
@@ -37,34 +36,34 @@ public interface ProcessHandlerBuilder {
    *
    * {@link #build()} will return object instance of {@link BinaryProcessHandler}
    */
-  @Nonnull
+  
   ProcessHandlerBuilder binary();
 
-  @Nonnull
+  
   ProcessHandlerBuilder colored();
 
   /**
    * {@link #build()} will return object instance of {@link KillableProcessHandler}
    */
-  @Nonnull
+  
   ProcessHandlerBuilder killable();
 
   /**
    * {@link BaseOutputReader.Options#forMostlySilentProcess()}
    */
-  @Nonnull
+  
   ProcessHandlerBuilder silentReader();
 
   /**
    * {@link BaseOutputReader.Options#BLOCKING}
    */
-  @Nonnull
+  
   ProcessHandlerBuilder blockingReader();
 
-  @Nonnull
-  ProcessHandlerBuilder consoleType(@Nonnull ProcessConsoleType type);
+  
+  ProcessHandlerBuilder consoleType(ProcessConsoleType type);
 
-  @Nonnull
+  
   ProcessHandlerBuilder shouldDestroyProcessRecursively(boolean destroyRecursive);
 
   /**
@@ -72,9 +71,9 @@ public interface ProcessHandlerBuilder {
    *
    * @param killProcessSoftly true, if graceful process termination should be attempted first (i.e. soft kill)
    */
-  @Nonnull
+  
   ProcessHandlerBuilder shouldKillProcessSoftly(boolean killProcessSoftly);
 
-  @Nonnull
+  
   ProcessHandler build() throws ExecutionException;
 }

@@ -13,8 +13,7 @@ import consulo.process.io.BaseOutputReader;
 import consulo.process.io.ProcessIOExecutorService;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -44,7 +43,7 @@ public class BaseOSProcessHandler extends LocalProcessHandler<Process> {
   /**
    * {@code commandLine} must not be empty (for correct thread attribution in the stacktrace)
    */
-  public BaseOSProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
+  public BaseOSProcessHandler(Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
     myProcessStart = new Throwable("Process creation:");
 
@@ -55,15 +54,15 @@ public class BaseOSProcessHandler extends LocalProcessHandler<Process> {
   }
 
   @Override
-  @Nonnull
-  public Future<?> executeTask(@Nonnull Runnable task) {
+  
+  public Future<?> executeTask(Runnable task) {
     return ProcessIOExecutorService.INSTANCE.submit(task);
   }
 
   /**
    * Override this method to fine-tune {@link BaseOutputReader} behavior.
    */
-  @Nonnull
+  
   protected BaseOutputReader.Options readerOptions() {
     if (Boolean.getBoolean("output.reader.blocking.mode")) {
       return BaseOutputReader.Options.BLOCKING;
@@ -85,7 +84,7 @@ public class BaseOSProcessHandler extends LocalProcessHandler<Process> {
 
     addProcessListener(new ProcessListener() {
       @Override
-      public void startNotified(@Nonnull ProcessEvent event) {
+      public void startNotified(ProcessEvent event) {
         try {
           BaseDataReader stdOutReader = createOutputDataReader();
           BaseDataReader stdErrReader = processHasSeparateErrorStream() ? createErrorDataReader() : null;
@@ -117,28 +116,28 @@ public class BaseOSProcessHandler extends LocalProcessHandler<Process> {
     super.startNotify();
   }
 
-  @Nonnull
+  
   protected BaseDataReader createErrorDataReader() {
     return new SimpleOutputReader(createProcessErrReader(), ProcessOutputTypes.STDERR, readerOptions(), "error stream of " + myPresentableName);
   }
 
-  @Nonnull
+  
   protected BaseDataReader createOutputDataReader() {
     return new SimpleOutputReader(createProcessOutReader(), ProcessOutputTypes.STDOUT, readerOptions(), "output stream of " + myPresentableName);
   }
 
-  @Nonnull
+  
   protected Reader createProcessOutReader() {
     return createInputStreamReader(myProcess.getInputStream());
   }
 
-  @Nonnull
+  
   protected Reader createProcessErrReader() {
     return createInputStreamReader(myProcess.getErrorStream());
   }
 
-  @Nonnull
-  private Reader createInputStreamReader(@Nonnull InputStream streamToRead) {
+  
+  private Reader createInputStreamReader(InputStream streamToRead) {
     Charset charset = getCharset();
     if (charset == null) charset = Charset.defaultCharset();
     return new BaseInputStreamReader(streamToRead, charset);
@@ -147,20 +146,20 @@ public class BaseOSProcessHandler extends LocalProcessHandler<Process> {
   protected class SimpleOutputReader extends BaseOutputReader {
     private final Key<?> myProcessOutputType;
 
-    public SimpleOutputReader(Reader reader, Key<?> outputType, Options options, @Nonnull String presentableName) {
+    public SimpleOutputReader(Reader reader, Key<?> outputType, Options options, String presentableName) {
       super(reader, options);
       myProcessOutputType = outputType;
       start(presentableName);
     }
 
-    @Nonnull
+    
     @Override
-    protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
+    protected Future<?> executeOnPooledThread(Runnable runnable) {
       return BaseOSProcessHandler.this.executeTask(runnable);
     }
 
     @Override
-    protected void onTextAvailable(@Nonnull String text) {
+    protected void onTextAvailable(String text) {
       notifyTextAvailable(text, myProcessOutputType);
     }
 

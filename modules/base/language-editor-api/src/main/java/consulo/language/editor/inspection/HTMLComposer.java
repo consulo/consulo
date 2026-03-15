@@ -20,16 +20,15 @@ import consulo.language.editor.inspection.reference.RefElement;
 import consulo.localize.LocalizeValue;
 import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author anna
  * @since 2007-01-08
  */
 public abstract class HTMLComposer {
-  public abstract void appendElementReference(StringBuffer buf, RefElement refElement, String linkText, @NonNls String frameName);
+  public abstract void appendElementReference(StringBuffer buf, RefElement refElement, String linkText, String frameName);
 
-  public abstract void appendElementReference(StringBuffer buf, String url, String linkText, @NonNls String frameName);
+  public abstract void appendElementReference(StringBuffer buf, String url, String linkText, String frameName);
 
   public abstract void appendElementInReferences(StringBuffer buf, RefElement refElement);
 
@@ -41,11 +40,11 @@ public abstract class HTMLComposer {
 
   @Deprecated
   @DeprecationInfo("Use appendHeading(..., LocalizeValue)")
-  public static void appendHeading(@NonNls StringBuffer buf, String name) {
+  public static void appendHeading(StringBuffer buf, String name) {
     buf.append("&nbsp;&nbsp;<font style=\"font-weight:bold; color:").append(StyleManager.get().getCurrentStyle().isDark() ? "#A5C25C" : "#005555").append(";\">").append(name).append("</font>");
   }
 
-  public static void appendHeading(@NonNls StringBuffer buf, LocalizeValue name) {
+  public static void appendHeading(StringBuffer buf, LocalizeValue name) {
     buf.append("&nbsp;&nbsp;<font style=\"font-weight:bold; color:").append(StyleManager.get().getCurrentStyle().isDark() ? "#A5C25C" : "#005555").append(";\">").append(name).append("</font>");
   }
 
@@ -53,13 +52,13 @@ public abstract class HTMLComposer {
 
   public abstract String composeNumereables(int n, String statement, String singleEnding, String multipleEnding);
 
-  public abstract void startList(@NonNls StringBuffer buf);
+  public abstract void startList(StringBuffer buf);
 
-  public abstract void doneList(@NonNls StringBuffer buf);
+  public abstract void doneList(StringBuffer buf);
 
-  public abstract void startListItem(@NonNls StringBuffer buf);
+  public abstract void startListItem(StringBuffer buf);
 
-  public static void appendAfterHeaderIndention(@NonNls StringBuffer buf) {
+  public static void appendAfterHeaderIndention(StringBuffer buf) {
     buf.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
   }
 

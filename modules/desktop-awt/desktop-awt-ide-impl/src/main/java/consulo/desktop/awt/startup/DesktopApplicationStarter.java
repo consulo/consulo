@@ -70,8 +70,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -90,7 +89,7 @@ import java.util.concurrent.ForkJoinPool;
 public class DesktopApplicationStarter extends ApplicationStarter {
     private static final Logger LOG = Logger.getInstance(DesktopApplicationStarter.class);
 
-    public DesktopApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
+    public DesktopApplicationStarter(CommandLineArgs args, StatCollector stat) {
         super(args, stat);
 
         FatalErrorReporter.INSTANCE = new DefaultIdeaErrorLogger();
@@ -116,7 +115,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     protected Application createApplication(
         ComponentBinding componentBinding,
@@ -198,7 +197,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         Runnable appInitializeMark,
         ApplicationEx app,
         boolean newConfigFolder,
-        @Nonnull CommandLineArgs args
+        CommandLineArgs args
     ) {
         IdeEventQueue.getInstance().addIdleTimeCounterRequest();
 
@@ -325,7 +324,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                     .hyperlinkListener(new NotificationListener() {
                         @Override
                         @RequiredUIAccess
-                        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+                        public void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
                             notification.expire();
 
                             String description = event.getDescription();

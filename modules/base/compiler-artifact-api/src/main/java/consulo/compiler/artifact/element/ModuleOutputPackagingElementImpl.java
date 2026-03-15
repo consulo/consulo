@@ -39,10 +39,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +49,7 @@ import java.util.List;
  * @author nik
  */
 public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOutputPackagingElementImpl.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
-  @NonNls
+  
   public static final String MODULE_NAME_ATTRIBUTE = "name";
 
   protected NamedPointer<Module> myModulePointer;
@@ -72,10 +70,10 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext,
-                                                     @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext,
+                                                     ArtifactType artifactType) {
     Module module = findModule(resolvingContext);
     if (module != null) {
       VirtualFile output = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(myContentFolderType);
@@ -85,7 +83,7 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
     }
   }
 
-  @Nonnull
+  
   @Override
   public Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context) {
     Module module = NamedPointerUtil.get(myModulePointer);
@@ -103,20 +101,20 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
     return roots;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return "module:" + getModuleName();
   }
 
-  @Nonnull
+  
   @Override
   public PackagingElementOutputKind getFilesKind(PackagingElementResolvingContext context) {
     return PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES;
   }
 
   @Override
-  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
+  public boolean isEqualTo(PackagingElement<?> element) {
     return element.getClass() == getClass() &&
            myModulePointer != null &&
            myModulePointer.equals(((ModuleOutputPackagingElementImpl)element).myModulePointer) &&
@@ -144,14 +142,14 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
     return NamedPointerUtil.getName(myModulePointer);
   }
 
-  @Nonnull
+  
   @Override
   public ContentFolderTypeProvider getContentFolderType() {
     return myContentFolderType;
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(ArtifactEditorContext context) {
     return new DelegatedPackagingElementPresentation(new ModuleElementPresentation(myModulePointer, context, myContentFolderType));
   }
 

@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -175,7 +174,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     myIdleFuture.cancel(false);
   }
 
-  @Nonnull
+  
   @Override
   public TimeTrackingManager.Config getState() {
     return myConfig;

@@ -17,8 +17,7 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 
 import consulo.versionControlSystem.log.graph.LiteLinearGraph;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,10 +32,10 @@ public class FragmentGenerator {
         private final Integer myUpRedNode;
         @Nullable
         private final Integer myDownRedNode;
-        @Nonnull
+        
         private final Set<Integer> myMiddleGreenNodes;
 
-        private GreenFragment(@Nullable Integer upRedNode, @Nullable Integer downRedNode, @Nonnull Set<Integer> middleGreenNodes) {
+        private GreenFragment(@Nullable Integer upRedNode, @Nullable Integer downRedNode, Set<Integer> middleGreenNodes) {
             myUpRedNode = upRedNode;
             myDownRedNode = downRedNode;
             myMiddleGreenNodes = middleGreenNodes;
@@ -52,23 +51,23 @@ public class FragmentGenerator {
             return myDownRedNode;
         }
 
-        @Nonnull
+        
         public Set<Integer> getMiddleGreenNodes() {
             return myMiddleGreenNodes;
         }
     }
 
-    @Nonnull
+    
     private final LiteLinearGraph myGraph;
-    @Nonnull
+    
     private final Predicate<Integer> myRedNodes;
 
-    public FragmentGenerator(@Nonnull LiteLinearGraph graph, @Nonnull Predicate<Integer> redNodes) {
+    public FragmentGenerator(LiteLinearGraph graph, Predicate<Integer> redNodes) {
         myGraph = graph;
         myRedNodes = redNodes;
     }
 
-    @Nonnull
+    
     public Set<Integer> getMiddleNodes(int upNode, int downNode, boolean strict) {
         Set<Integer> downWalk = getWalkNodes(upNode, false, integer -> integer > downNode);
         Set<Integer> upWalk = getWalkNodes(downNode, true, integer -> integer < upNode);
@@ -106,7 +105,7 @@ public class FragmentGenerator {
         return null;
     }
 
-    @Nonnull
+    
     public GreenFragment getGreenFragmentForCollapse(int startNode, int maxWalkSize) {
         if (myRedNodes.test(startNode)) {
             return new GreenFragment(null, null, Collections.<Integer>emptySet());
@@ -133,7 +132,7 @@ public class FragmentGenerator {
         return new GreenFragment(upRedNode, downRedNode, middleNodes);
     }
 
-    @Nonnull
+    
     private Set<Integer> getWalkNodes(int startNode, boolean isUp, Predicate<Integer> stopFunction) {
         Set<Integer> walkNodes = new HashSet<>();
 
@@ -149,12 +148,12 @@ public class FragmentGenerator {
         return walkNodes;
     }
 
-    @Nonnull
+    
     private List<Integer> getNodes(int nodeIndex, boolean isUp) {
         return myGraph.getNodes(nodeIndex, LiteLinearGraph.NodeFilter.filter(isUp));
     }
 
-    @Nonnull
+    
     private static Predicate<Integer> createStopFunction(int maxNodeCount) {
         return new Predicate<>() {
             private int count = maxNodeCount;

@@ -19,16 +19,15 @@ import consulo.dataContext.DataProvider;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
 public class VcsLogPanel extends JBPanel implements DataProvider {
-  @Nonnull
+  
   private final VcsLogManager myManager;
 
-  public VcsLogPanel(@Nonnull VcsLogManager manager, @Nonnull VcsLogUiImpl logUi) {
+  public VcsLogPanel(VcsLogManager manager, VcsLogUiImpl logUi) {
     super(new BorderLayout());
     myManager = manager;
     add(logUi.getMainFrame().getMainComponent(), BorderLayout.CENTER);
@@ -36,7 +35,7 @@ public class VcsLogPanel extends JBPanel implements DataProvider {
 
   @Nullable
   @Override
-  public Object getData(@Nonnull Key dataId) {
+  public Object getData(Key dataId) {
     if (VcsLogInternalDataKeys.LOG_MANAGER == dataId) {
       return myManager;
     }

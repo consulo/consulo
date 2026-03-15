@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

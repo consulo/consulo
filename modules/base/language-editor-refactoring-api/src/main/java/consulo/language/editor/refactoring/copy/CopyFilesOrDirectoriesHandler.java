@@ -43,8 +43,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -103,7 +102,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
 
     @Nullable
     @RequiredReadAction
-    private static PsiDirectory tryNotNullizeDirectory(@Nonnull Project project, @Nullable PsiDirectory defaultTargetDirectory) {
+    private static PsiDirectory tryNotNullizeDirectory(Project project, @Nullable PsiDirectory defaultTargetDirectory) {
         if (defaultTargetDirectory == null) {
             VirtualFile root = ArrayUtil.getFirstElement(ProjectRootManager.getInstance(project).getContentRoots());
             if (root == null) {
@@ -127,7 +126,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     }
 
     @RequiredUIAccess
-    private static void doCopyAsFiles(PsiElement[] elements, @Nullable PsiDirectory defaultTargetDirectory, @Nonnull Project project) {
+    private static void doCopyAsFiles(PsiElement[] elements, @Nullable PsiDirectory defaultTargetDirectory, Project project) {
         PsiDirectory targetDirectory;
         String newName;
         boolean openInEditor;
@@ -247,9 +246,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
      */
     @RequiredUIAccess
     private static void copyImpl(
-        @Nonnull VirtualFile[] files,
+        VirtualFile[] files,
         @Nullable String newName,
-        @Nonnull PsiDirectory targetDirectory,
+        PsiDirectory targetDirectory,
         boolean doClone,
         boolean openInEditor
     ) {
@@ -306,9 +305,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     @Nullable
     @RequiredUIAccess
     public static PsiFile copyToDirectory(
-        @Nonnull PsiFileSystemItem elementToCopy,
+        PsiFileSystemItem elementToCopy,
         @Nullable String newName,
-        @Nonnull PsiDirectory targetDirectory
+        PsiDirectory targetDirectory
     ) throws IncorrectOperationException, IOException {
         return copyToDirectory(elementToCopy, newName, targetDirectory, null, null);
     }
@@ -322,9 +321,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     @Nullable
     @RequiredUIAccess
     public static PsiFile copyToDirectory(
-        @Nonnull PsiFileSystemItem elementToCopy,
+        PsiFileSystemItem elementToCopy,
         @Nullable String newName,
-        @Nonnull PsiDirectory targetDirectory,
+        PsiDirectory targetDirectory,
         @Nullable int[] choice,
         @Nullable String title
     ) throws IncorrectOperationException, IOException {
@@ -399,7 +398,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     }
 
     @Nullable
-    public static PsiDirectory resolveDirectory(@Nonnull PsiDirectory defaultTargetDirectory) {
+    public static PsiDirectory resolveDirectory(PsiDirectory defaultTargetDirectory) {
         Project project = defaultTargetDirectory.getProject();
         Boolean showDirsChooser =
             defaultTargetDirectory.getCopyableUserData(RefactoringInternalHelper.COPY_PASTE_DELEGATE_SHOW_CHOOSER_KEY);

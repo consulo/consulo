@@ -23,8 +23,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
@@ -42,9 +41,9 @@ public interface ModifiableModel extends Profile {
 
   void enableTool(String inspectionTool, NamedScope namedScope, Project project);
 
-  void disableTool(String inspectionTool, NamedScope namedScope, @Nonnull Project project);
+  void disableTool(String inspectionTool, NamedScope namedScope, Project project);
 
-  void setErrorLevel(HighlightDisplayKey key, @Nonnull HighlightDisplayLevel level, Project project);
+  void setErrorLevel(HighlightDisplayKey key, HighlightDisplayLevel level, Project project);
 
   HighlightDisplayLevel getErrorLevel(HighlightDisplayKey inspectionToolKey, PsiElement element);
 
@@ -58,7 +57,7 @@ public interface ModifiableModel extends Profile {
 
   void setModified(boolean toolsSettingsChanged);
 
-  boolean isProperSetting(@Nonnull String toolId);
+  boolean isProperSetting(String toolId);
 
   void resetToBase(Project project);
 
@@ -73,13 +72,13 @@ public interface ModifiableModel extends Profile {
   /**
    * @return tool by shortName and scope
    */
-  <T extends InspectionTool> T getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
+  <T extends InspectionTool> T getUnwrappedTool(String shortName, PsiElement element);
 
   /**
    * @return nullable if tool by shortName not found
    */
   @Nullable
-  <S> S getToolState(@Nonnull String shortName, @Nonnull PsiElement element);
+  <S> S getToolState(String shortName, PsiElement element);
 
   InspectionToolWrapper[] getInspectionTools(PsiElement element);
 
@@ -93,7 +92,7 @@ public interface ModifiableModel extends Profile {
 
   void lockProfile(boolean isLocked);
 
-  void disableTool(@Nonnull String toolId, @Nonnull PsiElement element);
+  void disableTool(String toolId, PsiElement element);
 
   void disableTool(String inspectionTool, Project project);
 }

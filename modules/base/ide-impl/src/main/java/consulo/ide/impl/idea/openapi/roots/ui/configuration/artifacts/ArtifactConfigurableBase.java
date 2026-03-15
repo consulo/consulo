@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.localize.LocalizeValue;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -60,7 +59,7 @@ public abstract class ArtifactConfigurableBase extends ProjectStructureElementCo
     return ProjectLocalize.bannerSloganArtifact0(getArtifact().getName()).get();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.of(getArtifact().getName());

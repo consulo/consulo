@@ -17,10 +17,9 @@
 package consulo.language.duplicateAnalysis;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 public interface DuplocateVisitor {
-  void visitNode(@Nonnull PsiElement node);
+  void visitNode(PsiElement node);
 
   /**
    * Is not invoked when index is used

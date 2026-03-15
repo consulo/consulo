@@ -21,8 +21,7 @@ import consulo.container.plugin.PluginId;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -34,9 +33,9 @@ public abstract class ActionManagerEx extends ActionManager {
         return (ActionManagerEx) getInstance();
     }
 
-    public abstract void fireBeforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event);
+    public abstract void fireBeforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event);
 
-    public abstract void fireAfterActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event);
+    public abstract void fireAfterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event);
 
     public abstract void fireBeforeEditorTyping(char c, DataContext dataContext);
 
@@ -95,7 +94,7 @@ public abstract class ActionManagerEx extends ActionManager {
 
     public abstract boolean isTransparentOnlyActionsUpdateNow();
 
-    public abstract boolean performDumbAwareUpdate(@Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed);
+    public abstract boolean performDumbAwareUpdate(AnAction action, AnActionEvent e, boolean beforeActionPerformed);
 
     public void fireBeforeActionPerformed(String actionId, InputEvent event) {
         AnAction action = getAction(actionId);
@@ -106,20 +105,20 @@ public abstract class ActionManagerEx extends ActionManager {
         }
     }
 
-    @Nonnull
+    
     public abstract ActionPopupMenu createActionPopupMenu(
-        @Nonnull String place,
-        @Nonnull ActionGroup group,
+        String place,
+        ActionGroup group,
         @Nullable PresentationFactory presentationFactory
     );
 
-    public void addActionPopup(@Nonnull Object menu) {
+    public void addActionPopup(Object menu) {
     }
 
-    public void removeActionPopup(@Nonnull Object menu) {
+    public void removeActionPopup(Object menu) {
     }
 
-    @Nonnull
+    
     public Set<String> getActionIds() {
         return Set.of();
     }
@@ -130,6 +129,6 @@ public abstract class ActionManagerEx extends ActionManager {
     public void loadActions() {
     }
 
-    public void preloadActions(@Nonnull ProgressIndicator indicator) {
+    public void preloadActions(ProgressIndicator indicator) {
     }
 }

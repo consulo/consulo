@@ -65,8 +65,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -99,7 +98,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Override
-    public void toggleLineBreakpoint(@Nonnull Project project, @Nonnull VirtualFile file, int line, boolean temporary) {
+    public void toggleLineBreakpoint(Project project, VirtualFile file, int line, boolean temporary) {
         XLineBreakpointType<?> breakpointType = XLineBreakpointTypeResolver.forFile(project, file, line);
         if (breakpointType != null) {
             toggleLineBreakpoint(project, breakpointType, file, line, temporary);
@@ -108,15 +107,15 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
     @Override
     @RequiredReadAction
-    public boolean canPutBreakpointAt(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
+    public boolean canPutBreakpointAt(Project project, VirtualFile file, int line) {
         return XLineBreakpointTypeResolver.forFile(project, file, line) != null;
     }
 
     @Override
     public <P extends XBreakpointProperties> void toggleLineBreakpoint(
-        @Nonnull Project project,
-        @Nonnull XLineBreakpointType<P> type,
-        @Nonnull VirtualFile file,
+        Project project,
+        XLineBreakpointType<P> type,
+        VirtualFile file,
         int line,
         boolean temporary
     ) {
@@ -126,11 +125,11 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         }
     }
 
-    @Nonnull
+    
     public static <P extends XBreakpointProperties> AsyncResult<XLineBreakpoint> toggleAndReturnLineBreakpoint(
-        @Nonnull final Project project,
-        @Nonnull final XLineBreakpointType<P> type,
-        @Nonnull XSourcePosition position,
+        final Project project,
+        final XLineBreakpointType<P> type,
+        XSourcePosition position,
         final boolean temporary,
         @Nullable final Editor editor
     ) {
@@ -204,7 +203,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
                             "Create breakpoint for",
                             variants
                         ) {
-                            @Nonnull
+                            
                             @Override
                             public String getTextFor(XLineBreakpointType.XLineBreakpointVariant value) {
                                 return value.getText();
@@ -257,9 +256,9 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     public static <P extends XBreakpointProperties> XLineBreakpoint toggleAndReturnLineBreakpoint(
-        @Nonnull Project project,
-        @Nonnull XLineBreakpointType<P> type,
-        @Nonnull VirtualFile file,
+        Project project,
+        XLineBreakpointType<P> type,
+        VirtualFile file,
         int line,
         boolean temporary
     ) {
@@ -283,7 +282,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Override
-    public <B extends XBreakpoint<?>> XBreakpointType<B, ?> findBreakpointType(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass) {
+    public <B extends XBreakpoint<?>> XBreakpointType<B, ?> findBreakpointType(Class<? extends XBreakpointType<B, ?>> typeClass) {
         if (myBreakpointTypeByClass == null) {
             myBreakpointTypeByClass = new HashMap<>();
             for (XBreakpointType<?, ?> breakpointType : XBreakpointUtil.getBreakpointTypes()) {
@@ -311,7 +310,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Nullable
-    public static XSourcePosition getCaretPosition(@Nonnull Project project, DataContext context) {
+    public static XSourcePosition getCaretPosition(Project project, DataContext context) {
         Editor editor = getEditor(project, context);
         if (editor == null) {
             return null;
@@ -323,8 +322,8 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         return XSourcePositionImpl.create(file, line);
     }
 
-    @Nonnull
-    public static Collection<XSourcePosition> getAllCaretsPositions(@Nonnull Project project, DataContext context) {
+    
+    public static Collection<XSourcePosition> getAllCaretsPositions(Project project, DataContext context) {
         Editor editor = getEditor(project, context);
         if (editor == null) {
             return Collections.emptyList();
@@ -345,7 +344,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Nullable
-    private static Editor getEditor(@Nonnull Project project, DataContext context) {
+    private static Editor getEditor(Project project, DataContext context) {
         Editor editor = context.getData(Editor.KEY);
         if (editor == null) {
             return FileEditorManager.getInstance(project).getSelectedTextEditor();
@@ -383,7 +382,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
     @RequiredReadAction
     @Override
-    public void iterateLine(@Nonnull Project project, @Nonnull Document document, int line, @Nonnull Processor<PsiElement> processor) {
+    public void iterateLine(Project project, Document document, int line, Processor<PsiElement> processor) {
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
         if (file == null) {
             return;
@@ -425,7 +424,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     @RequiredReadAction
     @Override
     @Nullable
-    public PsiElement findContextElement(@Nonnull VirtualFile virtualFile, int offset, @Nonnull Project project) {
+    public PsiElement findContextElement(VirtualFile virtualFile, int offset, Project project) {
         if (!virtualFile.isValid()) {
             return null;
         }
@@ -465,23 +464,23 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Override
-    public void disableValueLookup(@Nonnull Editor editor) {
+    public void disableValueLookup(Editor editor) {
         ValueLookupManagerImpl.DISABLE_VALUE_LOOKUP.set(editor, Boolean.TRUE);
     }
 
     @Nullable
-    public static Editor createEditor(@Nonnull OpenFileDescriptor descriptor) {
+    public static Editor createEditor(OpenFileDescriptor descriptor) {
         return descriptor.canNavigate()
             ? FileEditorManager.getInstance((Project) descriptor.getProject()).openTextEditor(descriptor, false) : null;
     }
 
-    @Nonnull
+    
     @Override
-    public XExpression createExpression(@Nonnull String text, Language language, String custom, EvaluationMode mode) {
+    public XExpression createExpression(String text, Language language, String custom, EvaluationMode mode) {
         return new XExpressionImpl(text, language, custom, mode);
     }
 
-    public static Image getVerifiedIcon(@Nonnull XBreakpoint breakpoint) {
+    public static Image getVerifiedIcon(XBreakpoint breakpoint) {
         return breakpoint.getSuspendPolicy() == SuspendPolicy.NONE
             ? ExecutionDebugIconGroup.breakpointBreakpointunsuspendentvalid()
             : ExecutionDebugIconGroup.breakpointBreakpointvalid();

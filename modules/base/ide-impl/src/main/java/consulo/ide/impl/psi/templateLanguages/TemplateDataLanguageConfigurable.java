@@ -33,8 +33,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 /**
@@ -43,11 +42,11 @@ import jakarta.inject.Inject;
 @ExtensionImpl
 public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<Language> implements ProjectConfigurable {
   @Inject
-  public TemplateDataLanguageConfigurable(@Nonnull Project project, @Nonnull TemplateDataLanguageMappings templateDataLanguageMappings) {
+  public TemplateDataLanguageConfigurable(Project project, TemplateDataLanguageMappings templateDataLanguageMappings) {
     super(project, templateDataLanguageMappings);
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "template.data.language.configurable";
@@ -59,14 +58,14 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LanguageLocalize.templateDataLanguageConfigurable();
   }
 
   @Override
-  protected <S> Object getParameter(@Nonnull Key<S> key) {
+  protected <S> Object getParameter(Key<S> key) {
     if (key == DESCRIPTION) return LangBundle.message("dialog.template.data.language.caption", Application.get().getName());
     if (key == MAPPING_TITLE) return LangBundle.message("template.data.language.configurable.tree.table.title");
     if (key == OVERRIDE_QUESTION) return LangBundle.message("template.data.language.override.warning.text");
@@ -75,13 +74,13 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
   }
 
   @Override
-  protected void renderValue(@Nullable Object target, @Nonnull Language language, @Nonnull ColoredTextContainer renderer) {
+  protected void renderValue(@Nullable Object target, Language language, ColoredTextContainer renderer) {
     renderer.append(language.getDisplayName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     renderer.setIcon(ObjectUtil.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
   }
 
   @Override
-  protected void renderDefaultValue(Object target, @Nonnull ColoredTextContainer renderer) {
+  protected void renderDefaultValue(Object target, ColoredTextContainer renderer) {
     Language language = TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName((VirtualFile)target);
     if (language == null) return;
     renderer.append(language.getDisplayName(), SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);

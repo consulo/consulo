@@ -24,7 +24,6 @@ import consulo.language.util.proximity.ProximityWeigher;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.NotNullLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -34,7 +33,7 @@ import java.util.function.Function;
 @ExtensionImpl(id = "openedInEditor")
 public class OpenedInEditorWeigher extends ProximityWeigher {
   private static final NotNullLazyKey<VirtualFile[], ProximityLocation> OPENED_EDITORS = NotNullLazyKey.create("openedEditors", new Function<ProximityLocation, VirtualFile[]>() {
-    @Nonnull
+    
     @Override
     public VirtualFile[] apply(ProximityLocation location) {
       return FileEditorManager.getInstance(location.getProject()).getOpenFiles();
@@ -42,7 +41,7 @@ public class OpenedInEditorWeigher extends ProximityWeigher {
   });
 
   @Override
-  public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
+  public Comparable weigh(PsiElement element, ProximityLocation location) {
     if (location.getProject() == null){
       return null;
     }

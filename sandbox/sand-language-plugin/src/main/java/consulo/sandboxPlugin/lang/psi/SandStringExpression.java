@@ -20,14 +20,13 @@ import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 16-Jul-22
  */
 public class SandStringExpression extends ASTWrapperPsiElement implements PsiLanguageInjectionHost {
-  public SandStringExpression(@Nonnull ASTNode node) {
+  public SandStringExpression(ASTNode node) {
     super(node);
   }
 
@@ -37,11 +36,11 @@ public class SandStringExpression extends ASTWrapperPsiElement implements PsiLan
   }
 
   @Override
-  public PsiLanguageInjectionHost updateText(@Nonnull String text) {
+  public PsiLanguageInjectionHost updateText(String text) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper() {
     return LiteralTextEscaper.createSimple(this);

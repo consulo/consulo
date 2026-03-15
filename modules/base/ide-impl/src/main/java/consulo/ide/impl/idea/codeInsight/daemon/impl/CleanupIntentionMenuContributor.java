@@ -9,21 +9,20 @@ import consulo.language.editor.internal.intention.IntentionMenuContributor;
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 @ExtensionImpl(id = "cleanup", order = "after gutter")
 public class CleanupIntentionMenuContributor implements IntentionMenuContributor {
   @Override
-  public void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
+  public void collectActions(Editor hostEditor, PsiFile hostFile, IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
     boolean cleanup = appendCleanupCode(intentions.inspectionFixesToShow, hostFile);
     if (!cleanup) {
       appendCleanupCode(intentions.errorFixesToShow, hostFile);
     }
   }
 
-  private static boolean appendCleanupCode(@Nonnull List<IntentionActionDescriptor> actionDescriptors, @Nonnull PsiFile file) {
+  private static boolean appendCleanupCode(List<IntentionActionDescriptor> actionDescriptors, PsiFile file) {
     for (IntentionActionDescriptor descriptor : actionDescriptors) {
       if (descriptor.canCleanup(file)) {
         IntentionManager manager = IntentionManager.getInstance();

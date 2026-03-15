@@ -35,8 +35,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.versionControlSystem.FormatChangedTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -57,12 +56,12 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     super(project, COMMAND_NAME, PROGRESS_TEXT, processChangedTextOnly);
   }
 
-  public ReformatCodeProcessor(@Nonnull PsiFile file, @Nonnull SelectionModel selectionModel) {
+  public ReformatCodeProcessor(PsiFile file, SelectionModel selectionModel) {
     super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
     mySelectionModel = selectionModel;
   }
 
-  public ReformatCodeProcessor(AbstractLayoutCodeProcessor processor, @Nonnull SelectionModel selectionModel) {
+  public ReformatCodeProcessor(AbstractLayoutCodeProcessor processor, SelectionModel selectionModel) {
     super(processor, COMMAND_NAME, PROGRESS_TEXT);
     mySelectionModel = selectionModel;
   }
@@ -87,7 +86,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     }
   }
 
-  public ReformatCodeProcessor(@Nonnull PsiFile file, boolean processChangedTextOnly) {
+  public ReformatCodeProcessor(PsiFile file, boolean processChangedTextOnly) {
     super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
   }
 
@@ -105,8 +104,8 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
   }
 
   @Override
-  @Nonnull
-  protected FutureTask<Boolean> prepareTask(@Nonnull PsiFile file, boolean processChangedTextOnly)
+  
+  protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly)
           throws IncorrectOperationException
   {
     return new FutureTask<>(() -> {
@@ -152,7 +151,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     });
   }
 
-  private void prepareUserNotificationMessage(@Nonnull Document document, @Nonnull CharSequence before) {
+  private void prepareUserNotificationMessage(Document document, CharSequence before) {
     LOG.assertTrue(getInfoCollector() != null);
     int number = FormatChangedTextUtil.getInstance().calculateChangedLinesNumber(document, before);
     if (number > 0) {
@@ -161,7 +160,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     }
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   private Collection<TextRange> getRangesToFormat(boolean processChangedTextOnly, PsiFile file) throws FilesTooBigForDiffException {
     if (mySelectionModel != null) {

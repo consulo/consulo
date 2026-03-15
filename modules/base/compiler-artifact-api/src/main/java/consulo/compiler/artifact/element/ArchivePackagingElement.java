@@ -22,9 +22,7 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -34,25 +32,25 @@ public abstract class ArchivePackagingElement extends CompositePackagingElement<
 
   protected String myArchiveFileName;
 
-  public ArchivePackagingElement(@Nonnull PackagingElementType<? extends ArchivePackagingElement> type) {
+  public ArchivePackagingElement(PackagingElementType<? extends ArchivePackagingElement> type) {
     super(type);
   }
 
-  public ArchivePackagingElement(@Nonnull PackagingElementType<? extends ArchivePackagingElement> type, @Nonnull String archiveFileName) {
+  public ArchivePackagingElement(PackagingElementType<? extends ArchivePackagingElement> type, String archiveFileName) {
     super(type);
     myArchiveFileName = archiveFileName;
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(ArtifactEditorContext context) {
     return new ArchiveElementPresentation(this);
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext,
-                                                     @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext,
+                                                     ArtifactType artifactType) {
     computeChildrenInstructions(creator.archive(myArchiveFileName, getPackageWriter()), resolvingContext, compilerContext, artifactType);
   }
 
@@ -83,12 +81,12 @@ public abstract class ArchivePackagingElement extends CompositePackagingElement<
   }
 
   @Override
-  public void rename(@Nonnull String newName) {
+  public void rename(String newName) {
     myArchiveFileName = newName;
   }
 
   @Override
-  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
+  public boolean isEqualTo(PackagingElement<?> element) {
     return element instanceof ArchivePackagingElement && ((ArchivePackagingElement)element).getArchiveFileName().equals(myArchiveFileName);
   }
 

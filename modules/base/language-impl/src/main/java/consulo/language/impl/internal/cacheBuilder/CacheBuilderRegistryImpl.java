@@ -23,8 +23,7 @@ import consulo.language.cacheBuilder.CacheBuilderRegistry;
 import consulo.language.cacheBuilder.FileWordsScannerProvider;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -45,7 +44,7 @@ public class CacheBuilderRegistryImpl extends CacheBuilderRegistry {
 
     @Override
     @Nullable
-    public WordsScanner getCacheBuilder(@Nonnull FileType fileType) {
+    public WordsScanner getCacheBuilder(FileType fileType) {
         ExtensionPoint<FileWordsScannerProvider> extensionPoint = myApplication.getExtensionPoint(FileWordsScannerProvider.class);
         Map<FileType, WordsScanner> map = extensionPoint.getOrBuildCache(FileWordsScannerProvider.SCANNERS);
         return map.get(fileType);

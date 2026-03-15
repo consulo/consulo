@@ -21,7 +21,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,19 +29,19 @@ import jakarta.annotation.Nonnull;
 public interface ModuleExtension<T extends ModuleExtension> extends PersistentStateComponent<Element> {
   ModuleExtension[] EMPTY_ARRAY = new ModuleExtension[0];
 
-  @Nonnull
+  
   String getId();
 
   boolean isEnabled();
 
-  @Nonnull
+  
   Module getModule();
 
-  @Nonnull
+  
   default Project getProject() {
     return getModule().getProject();
   }
 
   @RequiredReadAction
-  void commit(@Nonnull T mutableModuleExtension);
+  void commit(T mutableModuleExtension);
 }

@@ -41,8 +41,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.WindowWrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -61,20 +60,20 @@ public class DiffManagerImpl extends DiffManagerEx {
 
     @Override
     @RequiredUIAccess
-    public void showDiff(@Nullable Project project, @Nonnull DiffRequest request) {
+    public void showDiff(@Nullable Project project, DiffRequest request) {
         showDiff(project, request, DiffDialogHints.DEFAULT);
     }
 
     @Override
     @RequiredUIAccess
-    public void showDiff(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
+    public void showDiff(@Nullable Project project, DiffRequest request, DiffDialogHints hints) {
         DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
         showDiff(project, requestChain, hints);
     }
 
     @Override
     @RequiredUIAccess
-    public void showDiff(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
+    public void showDiff(@Nullable Project project, DiffRequestChain requests, DiffDialogHints hints) {
         if (ExternalDiffTool.isDefault()) {
             ExternalDiffTool.show(project, requests, hints);
             return;
@@ -85,20 +84,20 @@ public class DiffManagerImpl extends DiffManagerEx {
 
     @Override
     @RequiredUIAccess
-    public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request) {
+    public void showDiffBuiltin(@Nullable Project project, DiffRequest request) {
         showDiffBuiltin(project, request, DiffDialogHints.DEFAULT);
     }
 
     @Override
     @RequiredUIAccess
-    public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
+    public void showDiffBuiltin(@Nullable Project project, DiffRequest request, DiffDialogHints hints) {
         DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
         showDiffBuiltin(project, requestChain, hints);
     }
 
     @Override
     @RequiredUIAccess
-    public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
+    public void showDiffBuiltin(@Nullable Project project, DiffRequestChain requests, DiffDialogHints hints) {
         DiffEditorTabFilesManager diffEditorTabFilesManager = project != null ? DiffEditorTabFilesManager.getInstance(project) : null;
         if (diffEditorTabFilesManager != null
             && DiffSettingsHolder.DiffSettings.getSettings().isShowDiffInEditor()
@@ -117,21 +116,21 @@ public class DiffManagerImpl extends DiffManagerEx {
         return DialogWrapper.findInstance(ProjectIdeFocusManager.getInstance(project).getFocusOwner()) != null;
     }
 
-    @Nonnull
+    
     @Override
-    public DiffRequestPanel createRequestPanel(@Nullable Project project, @Nonnull Disposable parent, @Nullable Window window) {
+    public DiffRequestPanel createRequestPanel(@Nullable Project project, Disposable parent, @Nullable Window window) {
         DiffRequestPanelImpl panel = new DiffRequestPanelImpl(project, window);
         Disposer.register(parent, panel);
         return panel;
     }
 
-    @Nonnull
+    
     @Override
     public List<DiffTool> getDiffTools() {
         return myApplication.getExtensionList(DiffTool.class);
     }
 
-    @Nonnull
+    
     @Override
     public List<MergeTool> getMergeTools() {
         return myApplication.getExtensionList(MergeTool.class);
@@ -139,7 +138,7 @@ public class DiffManagerImpl extends DiffManagerEx {
 
     @Override
     @RequiredUIAccess
-    public void showMerge(@Nullable Project project, @Nonnull MergeRequest request) {
+    public void showMerge(@Nullable Project project, MergeRequest request) {
         if (ExternalMergeTool.isDefault()) {
             ExternalMergeTool.show(project, request);
             return;
@@ -150,7 +149,7 @@ public class DiffManagerImpl extends DiffManagerEx {
 
     @Override
     @RequiredUIAccess
-    public void showMergeBuiltin(@Nullable Project project, @Nonnull MergeRequest request) {
+    public void showMergeBuiltin(@Nullable Project project, MergeRequest request) {
         new MergeWindow(project, request).show();
     }
 }

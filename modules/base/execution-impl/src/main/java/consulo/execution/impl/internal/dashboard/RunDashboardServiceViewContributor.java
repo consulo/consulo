@@ -48,8 +48,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -71,15 +70,15 @@ public final class RunDashboardServiceViewContributor
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
-    public ServiceViewDescriptor getViewDescriptor(@Nonnull Project project) {
+    public ServiceViewDescriptor getViewDescriptor(Project project) {
         return new RunDashboardContributorViewDescriptor(project);
     }
 
-    @Nonnull
+    
     @Override
-    public List<RunConfigurationContributor> getServices(@Nonnull Project project) {
+    public List<RunConfigurationContributor> getServices(Project project) {
         RunDashboardManagerImpl runDashboardManager = (RunDashboardManagerImpl)RunDashboardManager.getInstance(project);
         return ContainerUtil.map(
             runDashboardManager.getRunConfigurations(),
@@ -94,15 +93,15 @@ public final class RunDashboardServiceViewContributor
         );
     }
 
-    @Nonnull
+    
     @Override
-    public ServiceViewDescriptor getServiceDescriptor(@Nonnull Project project, @Nonnull RunConfigurationContributor contributor) {
+    public ServiceViewDescriptor getServiceDescriptor(Project project, RunConfigurationContributor contributor) {
         return contributor.getViewDescriptor(project);
     }
 
-    @Nonnull
+    
     @Override
-    public List<GroupingNode> getGroups(@Nonnull RunConfigurationContributor contributor) {
+    public List<GroupingNode> getGroups(RunConfigurationContributor contributor) {
         List<GroupingNode> result = new ArrayList<>();
         SimpleReference<GroupingNode> parentGroupNode = SimpleReference.create();
 
@@ -123,9 +122,9 @@ public final class RunDashboardServiceViewContributor
         return result;
     }
 
-    @Nonnull
+    
     @Override
-    public ServiceViewDescriptor getGroupDescriptor(@Nonnull GroupingNode node) {
+    public ServiceViewDescriptor getGroupDescriptor(GroupingNode node) {
         RunDashboardGroup group = node.getGroup();
         return group instanceof FolderDashboardGroupingRule.FolderDashboardGroup
             ? new RunDashboardFolderGroupViewDescriptor(node)
@@ -194,7 +193,7 @@ public final class RunDashboardServiceViewContributor
     }
 
     @Nullable
-    private static RunDashboardRunConfigurationNode getRunConfigurationNode(@Nonnull DnDEvent event, @Nonnull Project project) {
+    private static RunDashboardRunConfigurationNode getRunConfigurationNode(DnDEvent event, Project project) {
         Object object = event.getAttachedObject();
         if (!(object instanceof DataProvider dataProvider)) {
             return null;
@@ -260,7 +259,7 @@ public final class RunDashboardServiceViewContributor
             return handler == null ? null : handler.hashCode();
         }
 
-        @Nonnull
+        
         @Override
         public ItemPresentation getContentPresentation() {
             Content content = myNode.getContent();
@@ -283,7 +282,7 @@ public final class RunDashboardServiceViewContributor
             return RunDashboardServiceViewContributor.getPopupActions();
         }
 
-        @Nonnull
+        
         @Override
         public ItemPresentation getPresentation() {
             return myNode.getPresentation();
@@ -384,7 +383,7 @@ public final class RunDashboardServiceViewContributor
         }
 
         @Override
-        public boolean canDrop(@Nonnull DnDEvent event, @Nonnull Position position) {
+        public boolean canDrop(DnDEvent event, Position position) {
             if (position != Position.INTO) {
                 return getRunConfigurationNode(event, myNode.getConfigurationSettings().getConfiguration().getProject()) != null;
             }
@@ -397,7 +396,7 @@ public final class RunDashboardServiceViewContributor
         }
 
         @Override
-        public void drop(@Nonnull DnDEvent event, @Nonnull Position position) {
+        public void drop(DnDEvent event, Position position) {
             if (position != Position.INTO) {
                 Project project = myNode.getConfigurationSettings().getConfiguration().getProject();
                 RunDashboardRunConfigurationNode node = getRunConfigurationNode(event, project);
@@ -485,7 +484,7 @@ public final class RunDashboardServiceViewContributor
             return RunDashboardServiceViewContributor.getPopupActions();
         }
 
-        @Nonnull
+        
         @Override
         public ItemPresentation getPresentation() {
             return myPresentationData;
@@ -566,13 +565,13 @@ public final class RunDashboardServiceViewContributor
         }
 
         @Override
-        public boolean canDrop(@Nonnull DnDEvent event, @Nonnull ServiceViewDnDDescriptor.Position position) {
+        public boolean canDrop(DnDEvent event, ServiceViewDnDDescriptor.Position position) {
             return position == Position.INTO
                 && getRunConfigurationNode(event, ((FolderDashboardGroupingRule.FolderDashboardGroup)myGroup).getProject()) != null;
         }
 
         @Override
-        public void drop(@Nonnull DnDEvent event, @Nonnull ServiceViewDnDDescriptor.Position position) {
+        public void drop(DnDEvent event, ServiceViewDnDDescriptor.Position position) {
             Project project = ((FolderDashboardGroupingRule.FolderDashboardGroup)myGroup).getProject();
             RunDashboardRunConfigurationNode node = getRunConfigurationNode(event, project);
             if (node == null) {
@@ -593,31 +592,31 @@ public final class RunDashboardServiceViewContributor
     static final class RunConfigurationContributor implements ServiceViewProvidingContributor<AbstractTreeNode<?>, RunConfigurationNode> {
         private final RunConfigurationNode myNode;
 
-        RunConfigurationContributor(@Nonnull RunConfigurationNode node) {
+        RunConfigurationContributor(RunConfigurationNode node) {
             myNode = node;
         }
 
-        @Nonnull
+        
         @Override
         public RunConfigurationNode asService() {
             return myNode;
         }
 
-        @Nonnull
+        
         @Override
-        public ServiceViewDescriptor getViewDescriptor(@Nonnull Project project) {
+        public ServiceViewDescriptor getViewDescriptor(Project project) {
             return new RunConfigurationServiceViewDescriptor(myNode);
         }
 
-        @Nonnull
+        
         @Override
-        public List<AbstractTreeNode<?>> getServices(@Nonnull Project project) {
+        public List<AbstractTreeNode<?>> getServices(Project project) {
             return new ArrayList<>(myNode.getChildren());
         }
 
-        @Nonnull
+        
         @Override
-        public ServiceViewDescriptor getServiceDescriptor(@Nonnull Project project, @Nonnull AbstractTreeNode service) {
+        public ServiceViewDescriptor getServiceDescriptor(Project project, AbstractTreeNode service) {
             return new ServiceViewDescriptor() {
                 @Override
                 public ActionGroup getToolbarActions() {
@@ -629,7 +628,7 @@ public final class RunDashboardServiceViewContributor
                     return RunDashboardServiceViewContributor.getPopupActions();
                 }
 
-                @Nonnull
+                
                 @Override
                 public ItemPresentation getPresentation() {
                     return service.getPresentation();
@@ -674,7 +673,7 @@ public final class RunDashboardServiceViewContributor
         implements ServiceViewToolWindowDescriptor {
         private final Project myProject;
 
-        RunDashboardContributorViewDescriptor(@Nonnull Project project) {
+        RunDashboardContributorViewDescriptor(Project project) {
             super("Run Dashboard", PlatformIconGroup.actionsExecute());
             myProject = project;
         }
@@ -700,17 +699,17 @@ public final class RunDashboardServiceViewContributor
         }
 
         @Override
-        public @Nonnull String getToolWindowId() {
+        public String getToolWindowId() {
             return getId();
         }
 
         @Override
-        public @Nonnull Image getToolWindowIcon() {
+        public Image getToolWindowIcon() {
             return PlatformIconGroup.toolwindowsToolwindowrun();
         }
 
         @Override
-        public @Nonnull String getStripeTitle() {
+        public String getStripeTitle() {
             String title = getToolWindowId();
             return title;
         }

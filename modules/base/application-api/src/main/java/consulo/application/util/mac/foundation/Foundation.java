@@ -19,8 +19,7 @@ import com.sun.jna.*;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Proxy;
@@ -67,7 +66,7 @@ public class Foundation {
     return myFoundationLibrary.sel_registerName(s);
   }
 
-  @Nonnull
+  
   private static Object[] prepInvoke(ID id, Pointer selector, Object[] args) {
     Object[] invokArgs = new Object[args.length + 2];
     invokArgs[0] = id;
@@ -153,19 +152,19 @@ public class Foundation {
     return myFoundationLibrary.objc_getMetaClass(className);
   }
 
-  public static boolean isPackageAtPath(@Nonnull String path) {
+  public static boolean isPackageAtPath(String path) {
     ID workspace = invoke("NSWorkspace", "sharedWorkspace");
     ID result = invoke(workspace, createSelector("isFilePackageAtPath:"), nsString(path));
 
     return result.intValue() == 1;
   }
 
-  public static boolean isPackageAtPath(@Nonnull File file) {
+  public static boolean isPackageAtPath(File file) {
     if (!file.isDirectory()) return false;
     return isPackageAtPath(file.getPath());
   }
 
-  public static ID nsString(@Nonnull String s) {
+  public static ID nsString(String s) {
     // Use a byte[] rather than letting jna do the String -> char* marshalling itself.
     // Turns out about 10% quicker for long strings.
     try {
@@ -471,13 +470,13 @@ public class Foundation {
     return result;
   }
 
-  public static ID createDict(@Nonnull String[] keys, @Nonnull Object[] values) {
+  public static ID createDict(String[] keys, Object[] values) {
     ID nsKeys = invoke("NSArray", "arrayWithObjects:", convertTypes(keys));
     ID nsData = invoke("NSArray", "arrayWithObjects:", convertTypes(values));
     return invoke("NSDictionary", "dictionaryWithObjects:forKeys:", nsData, nsKeys);
   }
 
-  private static Object[] convertTypes(@Nonnull Object[] v) {
+  private static Object[] convertTypes(Object[] v) {
     Object[] result = new Object[v.length];
     for (int i = 0; i < v.length; i++) {
       result[i] = convertType(v[i]);
@@ -485,7 +484,7 @@ public class Foundation {
     return result;
   }
 
-  private static Object convertType(@Nonnull Object o) {
+  private static Object convertType(Object o) {
     if (o instanceof Pointer || o instanceof ID) {
       return o;
     }

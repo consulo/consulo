@@ -23,7 +23,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.internal.VcsRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,20 +31,20 @@ import java.util.List;
 public class RangesBuilder {
   private static final Logger LOG = Logger.getInstance(RangesBuilder.class);
 
-  @Nonnull
-  public static List<VcsRange> createRanges(@Nonnull Document current, @Nonnull Document vcs) throws FilesTooBigForDiffException {
+  
+  public static List<VcsRange> createRanges(Document current, Document vcs) throws FilesTooBigForDiffException {
     return createRanges(current, vcs, false);
   }
 
-  @Nonnull
-  public static List<VcsRange> createRanges(@Nonnull Document current, @Nonnull Document vcs, boolean innerWhitespaceChanges)
+  
+  public static List<VcsRange> createRanges(Document current, Document vcs, boolean innerWhitespaceChanges)
           throws FilesTooBigForDiffException {
     return createRanges(DiffImplUtil.getLines(current), DiffImplUtil.getLines(vcs), 0, 0, innerWhitespaceChanges);
   }
 
-  @Nonnull
-  public static List<VcsRange> createRanges(@Nonnull List<String> current,
-                                            @Nonnull List<String> vcs,
+  
+  public static List<VcsRange> createRanges(List<String> current,
+                                            List<String> vcs,
                                             int shift,
                                             int vcsShift,
                                             boolean innerWhitespaceChanges) throws FilesTooBigForDiffException {
@@ -64,7 +63,7 @@ public class RangesBuilder {
     return result;
   }
 
-  private static VcsRange createOn(@Nonnull Diff.Change change, int shift, int vcsShift) {
+  private static VcsRange createOn(Diff.Change change, int shift, int vcsShift) {
     int offset1 = shift + change.line1;
     int offset2 = offset1 + change.inserted;
 
@@ -74,11 +73,11 @@ public class RangesBuilder {
     return new VcsRange(offset1, offset2, uOffset1, uOffset2);
   }
 
-  private static VcsRange createOnSmart(@Nonnull Diff.Change change,
+  private static VcsRange createOnSmart(Diff.Change change,
                                         int shift,
                                         int vcsShift,
-                                        @Nonnull List<String> current,
-                                        @Nonnull List<String> vcs) throws FilesTooBigForDiffException {
+                                        List<String> current,
+                                        List<String> vcs) throws FilesTooBigForDiffException {
     byte type = getChangeType(change);
 
     int offset1 = shift + change.line1;
@@ -134,7 +133,7 @@ public class RangesBuilder {
     return new VcsRange(offset1, offset2, uOffset1, uOffset2, inner);
   }
 
-  private static byte getChangeType(@Nonnull Diff.Change change) {
+  private static byte getChangeType(Diff.Change change) {
     if ((change.deleted > 0) && (change.inserted > 0)) return VcsRange.MODIFIED;
     if ((change.deleted > 0)) return VcsRange.DELETED;
     if ((change.inserted > 0)) return VcsRange.INSERTED;
@@ -143,16 +142,16 @@ public class RangesBuilder {
   }
 
   private static class LineWrapper {
-    @Nonnull
+    
     private final String myLine;
     private final int myHash;
 
-    public LineWrapper(@Nonnull String line) {
+    public LineWrapper(String line) {
       myLine = line;
       myHash = StringUtil.stringHashCodeIgnoreWhitespaces(line);
     }
 
-    @Nonnull
+    
     public String getLine() {
       return myLine;
     }

@@ -26,7 +26,6 @@ import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +45,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
 
   private List<RawTextWithMarkup> myResult;
 
-  @Nonnull
+  
   @Override
   public List<RawTextWithMarkup> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets) {
     if (!RichCopySettings.getInstance().isEnabled()) {
@@ -141,7 +140,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     myResult = null;
   }
 
-  private static void logInitial(@Nonnull Editor editor, @Nonnull int[] startOffsets, @Nonnull int[] endOffsets, int indentSymbolsToStrip, int firstLineStartOffset) {
+  private static void logInitial(Editor editor, int[] startOffsets, int[] endOffsets, int indentSymbolsToStrip, int firstLineStartOffset) {
     if (!LOG.isDebugEnabled()) {
       return;
     }
@@ -165,13 +164,13 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
                           indentSymbolsToStrip, firstLineStartOffset, buffer));
   }
 
-  private static void logSyntaxInfo(@Nonnull SyntaxInfo info) {
+  private static void logSyntaxInfo(SyntaxInfo info) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Constructed syntax info: " + info);
     }
   }
 
-  private static Pair<Integer/* start offset to use */, Integer /* indent symbols to strip */> calcIndentSymbolsToStrip(@Nonnull Document document, int startOffset, int endOffset) {
+  private static Pair<Integer/* start offset to use */, Integer /* indent symbols to strip */> calcIndentSymbolsToStrip(Document document, int startOffset, int endOffset) {
     int startLine = document.getLineNumber(startOffset);
     int endLine = document.getLineNumber(endOffset);
     CharSequence text = document.getCharsSequence();

@@ -20,10 +20,9 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.CommonBundle;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ResourceBundle;
@@ -37,7 +36,7 @@ import java.util.ResourceBundle;
 public class RefactoringBundle {
   private static Reference<ResourceBundle> ourBundle;
 
-  @NonNls private static final String BUNDLE = "consulo.language.editor.refactoring.RefactoringBundle";
+  private static final String BUNDLE = "consulo.language.editor.refactoring.RefactoringBundle";
 
   private RefactoringBundle() {
   }

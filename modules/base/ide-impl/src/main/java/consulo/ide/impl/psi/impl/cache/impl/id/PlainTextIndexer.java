@@ -21,14 +21,13 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.search.UsageSearchContext;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 @ExtensionImpl
 public class PlainTextIndexer implements IdIndexer {
   @Override
-  @Nonnull
-  public Map<IdIndexEntry, Integer> map(@Nonnull FileContent inputData) {
+  
+  public Map<IdIndexEntry, Integer> map(FileContent inputData) {
     IdDataConsumer consumer = new IdDataConsumer();
     CharSequence chars = inputData.getContentAsText();
     IdTableBuilding.scanWords((chars11, charsArray, start, end) -> {
@@ -42,7 +41,7 @@ public class PlainTextIndexer implements IdIndexer {
     return consumer.getResult();
   }
 
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     return PlainTextFileType.INSTANCE;

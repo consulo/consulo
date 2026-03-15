@@ -33,8 +33,7 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.Indenter;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class ChromeSettingsConfigurable implements Configurable {
 
     private final String myDefaultUserDirPath;
 
-    public ChromeSettingsConfigurable(@Nonnull ChromeSettings settings) {
+    public ChromeSettingsConfigurable(ChromeSettings settings) {
         mySettings = settings;
         myDefaultUserDirPath = getDefaultUserDataPath();
     }
@@ -60,7 +59,7 @@ public class ChromeSettingsConfigurable implements Configurable {
     @RequiredUIAccess
     @Nullable
     @Override
-    public Component createUIComponent(@Nonnull Disposable parentDisposable) {
+    public Component createUIComponent(Disposable parentDisposable) {
         if (myLayout == null) {
             myLayout = VerticalLayout.create();
 
@@ -155,7 +154,7 @@ public class ChromeSettingsConfigurable implements Configurable {
         myLayout = null;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Chrome Settings");

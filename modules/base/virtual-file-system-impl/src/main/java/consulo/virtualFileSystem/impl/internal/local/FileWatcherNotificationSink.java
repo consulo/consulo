@@ -17,8 +17,7 @@ package consulo.virtualFileSystem.impl.internal.local;
 
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -26,19 +25,19 @@ import java.util.Collection;
  * @author dslomov
  */
 public interface FileWatcherNotificationSink {
-  void notifyManualWatchRoots(@Nonnull Collection<String> roots);
+  void notifyManualWatchRoots(Collection<String> roots);
 
-  void notifyMapping(@Nonnull Collection<? extends Pair<String, String>> mapping);
+  void notifyMapping(Collection<? extends Pair<String, String>> mapping);
 
-  void notifyDirtyPath(@Nonnull String path);
+  void notifyDirtyPath(String path);
 
-  void notifyPathCreatedOrDeleted(@Nonnull String path);
+  void notifyPathCreatedOrDeleted(String path);
 
-  void notifyDirtyDirectory(@Nonnull String path);
+  void notifyDirtyDirectory(String path);
 
-  void notifyDirtyPathRecursive(@Nonnull String path);
+  void notifyDirtyPathRecursive(String path);
 
   void notifyReset(@Nullable String path);
 
-  void notifyUserOnFailure(@Nonnull LocalizeValue cause);
+  void notifyUserOnFailure(LocalizeValue cause);
 }

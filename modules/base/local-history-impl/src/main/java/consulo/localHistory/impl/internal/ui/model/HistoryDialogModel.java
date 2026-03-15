@@ -31,8 +31,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.patch.PatchCreator;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -187,7 +186,7 @@ public abstract class HistoryDialogModel {
     return new Change(d.getLeftContentRevision(myGateway), d.getRightContentRevision(myGateway));
   }
 
-  public void createPatch(String path, String basePath, boolean isReverse, @Nonnull Charset charset) throws VcsException, IOException {
+  public void createPatch(String path, String basePath, boolean isReverse, Charset charset) throws VcsException, IOException {
     PatchCreator.create(myProject, basePath, getChanges(), path, isReverse, null, charset);
   }
 

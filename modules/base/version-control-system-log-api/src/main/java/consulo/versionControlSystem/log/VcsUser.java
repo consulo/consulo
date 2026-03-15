@@ -15,16 +15,15 @@
  */
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Encapsulates information about a VcsUser - author or committer to the VCS.
  */
 public interface VcsUser {
 
-  @Nonnull
+  
   String getName();
 
-  @Nonnull
+  
   String getEmail();
 }

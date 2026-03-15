@@ -63,8 +63,7 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -118,16 +117,16 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         }
     });
 
-    @Nonnull
+   
     private LocalTask myActiveTask = createDefaultTask();
     private Future<?> myCacheRefreshTimer;
 
     private volatile boolean myUpdating;
     private final Config myConfig = new Config();
     private final ChangeListListener myChangeListListener;
-    @Nonnull
+   
     private final ChangeListManager myChangeListManager;
-    @Nonnull
+   
     private final NotificationService myNotificationService;
 
     private final List<TaskRepository> myRepositories = new ArrayList<>();
@@ -136,11 +135,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
     @Inject
     public TaskManagerImpl(
-        @Nonnull Application application,
-        @Nonnull Project project,
-        @Nonnull WorkingContextManager contextManager,
-        @Nonnull ChangeListManager changeListManager,
-        @Nonnull NotificationService notificationService
+        Application application,
+        Project project,
+        WorkingContextManager contextManager,
+        ChangeListManager changeListManager,
+        NotificationService notificationService
     ) {
         myProject = project;
         myContextManager = contextManager;
@@ -176,7 +175,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public void addRepository(@Nonnull TaskRepository repository) {
+    public void addRepository(TaskRepository repository) {
         List<TaskRepository> newRepositories = new ArrayList<>(myRepositories.size() + 1);
         newRepositories.addAll(myRepositories);
         newRepositories.add(repository);
@@ -225,11 +224,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public void addTaskListener(@Nonnull TaskListener listener, @Nonnull Disposable parentDisposable) {
+    public void addTaskListener(TaskListener listener, Disposable parentDisposable) {
         myDispatcher.addListener(listener, parentDisposable);
     }
 
-    @Nonnull
+   
     @Override
     public LocalTask getActiveTask() {
         return myActiveTask;
@@ -241,7 +240,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return myTasks.get(id);
     }
 
-    @Nonnull
+   
     @Override
     public List<Task> getIssues(@Nullable String query) {
         return getIssues(query, true);
@@ -258,7 +257,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         int offset,
         int limit,
         boolean withClosed,
-        @Nonnull ProgressIndicator indicator,
+        ProgressIndicator indicator,
         boolean forceRequest
     ) {
         List<Task> tasks = getIssuesFromRepositories(query, offset, limit, withClosed, forceRequest, indicator);
@@ -281,7 +280,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
     @Nullable
     @Override
-    public Task updateIssue(@Nonnull String id) {
+    public Task updateIssue(String id) {
         for (TaskRepository repository : getAllRepositories()) {
             if (repository.extractId(id) == null) {
                 continue;
@@ -325,11 +324,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public LocalTaskImpl createLocalTask(@Nonnull String summary) {
+    public LocalTaskImpl createLocalTask(String summary) {
         return createTask(LOCAL_TASK_ID_FORMAT.format(myConfig.localTasksCounter++), summary);
     }
 
-    private static LocalTaskImpl createTask(@Nonnull String id, @Nonnull String summary) {
+    private static LocalTaskImpl createTask(String id, String summary) {
         LocalTaskImpl task = new LocalTaskImpl(id, summary);
         Date date = new Date();
         task.setCreated(date);
@@ -338,7 +337,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public LocalTask activateTask(@Nonnull Task origin, boolean clearContext) {
+    public LocalTask activateTask(Task origin, boolean clearContext) {
         LocalTask activeTask = getActiveTask();
         if (origin.equals(activeTask)) {
             return activeTask;
@@ -432,7 +431,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return new VcsTaskHandler.TaskInfo(next.getKey(), next.getValue());
     }
 
-    public void createBranch(LocalTask task, LocalTask previousActive, String name, @Nullable VcsTaskHandler.TaskInfo branchFrom) {
+    public void createBranch(LocalTask task, LocalTask previousActive, String name, VcsTaskHandler.@Nullable TaskInfo branchFrom) {
         VcsTaskHandler[] handlers = VcsTaskHandler.getAllHandlers(myProject);
         for (VcsTaskHandler handler : handlers) {
             VcsTaskHandler.TaskInfo[] info = handler.getCurrentTasks();
@@ -487,7 +486,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
                         "Updating " + task.getPresentableId()
                     ) {
                         @Override
-                        public void run(@Nonnull ProgressIndicator indicator) {
+                        public void run(ProgressIndicator indicator) {
                             updateIssue(task.getId());
                         }
                     }));
@@ -512,7 +511,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     public boolean testConnection(final TaskRepository repository) {
         TestConnectionTask task = new TestConnectionTask("Test connection") {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 indicator.setText("Connecting to " + repository.getUrl() + "...");
                 indicator.setFraction(0);
                 indicator.setIndeterminate(true);
@@ -576,7 +575,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return e == null;
     }
 
-    @Nonnull
+   
     @Override
     public Config getState() {
         myConfig.tasks = ContainerUtil.map(myTasks.values(), LocalTaskImpl::new);
@@ -787,7 +786,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         int limit,
         boolean withClosed,
         boolean forceRequest,
-        @Nonnull ProgressIndicator cancelled
+        ProgressIndicator cancelled
     ) {
         List<Task> issues = null;
         for (TaskRepository repository : getAllRepositories()) {
@@ -879,7 +878,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public boolean isLocallyClosed(@Nonnull LocalTask localTask) {
+    public boolean isLocallyClosed(LocalTask localTask) {
         if (isVcsEnabled()) {
             List<ChangeListInfo> lists = localTask.getChangeLists();
             if (lists.isEmpty()) {
@@ -896,7 +895,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
     @Nullable
     @Override
-    public LocalTask getAssociatedTask(@Nonnull LocalChangeList list) {
+    public LocalTask getAssociatedTask(LocalChangeList list) {
         for (LocalTask task : getLocalTasks()) {
             for (ChangeListInfo changeListInfo : task.getChangeLists()) {
                 if (changeListInfo.id.equals(list.getId())) {
@@ -908,7 +907,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public void trackContext(@Nonnull LocalChangeList changeList) {
+    public void trackContext(LocalChangeList changeList) {
         ChangeListInfo changeListInfo = new ChangeListInfo(changeList);
         String changeListName = changeList.getName();
         LocalTaskImpl task = createLocalTask(changeListName);
@@ -920,7 +919,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public void disassociateFromTask(@Nonnull LocalChangeList changeList) {
+    public void disassociateFromTask(LocalChangeList changeList) {
         ChangeListInfo changeListInfo = new ChangeListInfo(changeList);
         for (LocalTask localTask : getLocalTasks()) {
             if (localTask.getChangeLists().contains(changeListInfo)) {
@@ -929,7 +928,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         }
     }
 
-    public void createChangeList(@Nonnull LocalTask task, String name) {
+    public void createChangeList(LocalTask task, String name) {
         String comment = TaskUtil.getChangeListComment(task);
         createChangeList(task, name, comment);
     }
@@ -959,8 +958,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    @Nonnull
-    public String constructDefaultBranchName(@Nonnull Task task) {
+   
+    public String constructDefaultBranchName(Task task) {
         return task.isIssue() ? TaskUtil.formatTask(task, myConfig.branchNameFormat) : task.getSummary();
     }
 
@@ -1022,8 +1021,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     private abstract class TestConnectionTask extends consulo.application.progress.Task.Modal {
         protected Exception myException;
 
-        @Nullable
-        protected TaskRepository.CancellableConnection myConnection;
+        protected TaskRepository.@Nullable CancellableConnection myConnection;
 
         public TestConnectionTask(String title) {
             super(TaskManagerImpl.this.myProject, title, true);

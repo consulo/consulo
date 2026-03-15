@@ -24,8 +24,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -43,11 +42,11 @@ public class CommandMerger {
   private EditorAndState myStateAfter;
   private UndoConfirmationPolicy myUndoConfirmationPolicy = UndoConfirmationPolicy.DEFAULT;
 
-  CommandMerger(@Nonnull UndoManagerImpl manager) {
+  CommandMerger(UndoManagerImpl manager) {
     myManager = manager;
   }
 
-  CommandMerger(@Nonnull UndoManagerImpl manager, boolean isTransparent) {
+  CommandMerger(UndoManagerImpl manager, boolean isTransparent) {
     myManager = manager;
     myTransparent = isTransparent;
   }
@@ -56,7 +55,7 @@ public class CommandMerger {
     return myCommandName;
   }
 
-  public void addAction(@Nonnull UndoableAction action) {
+  public void addAction(UndoableAction action) {
     myCurrentActions.add(action);
     DocumentReference[] refs = action.getAffectedDocuments();
     if (refs != null) {
@@ -65,7 +64,7 @@ public class CommandMerger {
     myForcedGlobal |= action.isGlobal();
   }
 
-  public void commandFinished(String commandName, Object groupId, @Nonnull CommandMerger nextCommandToMerge) {
+  public void commandFinished(String commandName, Object groupId, CommandMerger nextCommandToMerge) {
     if (!shouldMerge(groupId, nextCommandToMerge)) {
       flushCurrentCommand();
       myManager.compact();
@@ -81,7 +80,7 @@ public class CommandMerger {
     if (myCommandName == null) myCommandName = commandName;
   }
 
-  private boolean shouldMerge(Object groupId, @Nonnull CommandMerger nextCommandToMerge) {
+  private boolean shouldMerge(Object groupId, CommandMerger nextCommandToMerge) {
     if (isTransparent() || nextCommandToMerge.isTransparent()) {
       return !hasActions() || !nextCommandToMerge.hasActions() || myAllAffectedDocuments.equals(nextCommandToMerge.myAllAffectedDocuments);
     }
@@ -92,7 +91,7 @@ public class CommandMerger {
     return groupId != null && Comparing.equal(lastGroupId, groupId);
   }
 
-  private void merge(@Nonnull CommandMerger nextCommandToMerge) {
+  private void merge(CommandMerger nextCommandToMerge) {
     setBeforeState(nextCommandToMerge.myStateBefore);
     myStateAfter = nextCommandToMerge.myStateAfter;
     if (myTransparent) { // todo write test
@@ -167,7 +166,7 @@ public class CommandMerger {
     myUndoConfirmationPolicy = UndoConfirmationPolicy.DEFAULT;
   }
 
-  private void clearRedoStacks(@Nonnull CommandMerger nextMerger) {
+  private void clearRedoStacks(CommandMerger nextMerger) {
     myManager.getRedoStacksHolder().clearStacks(isGlobal(), nextMerger.myAllAffectedDocuments);
   }
 
@@ -243,7 +242,7 @@ public class CommandMerger {
     return true;
   }
 
-  public boolean isUndoAvailable(@Nonnull Collection<DocumentReference> refs) {
+  public boolean isUndoAvailable(Collection<DocumentReference> refs) {
     if (hasNonUndoableActions()) {
       return false;
     }
@@ -287,12 +286,12 @@ public class CommandMerger {
     myStateAfter = state;
   }
 
-  void addAdditionalAffectedDocuments(@Nonnull Collection<DocumentReference> refs) {
+  void addAdditionalAffectedDocuments(Collection<DocumentReference> refs) {
     myAllAffectedDocuments.addAll(refs);
     myAdditionalAffectedDocuments.addAll(refs);
   }
 
-  void invalidateActionsFor(@Nonnull DocumentReference ref) {
+  void invalidateActionsFor(DocumentReference ref) {
     if (myAllAffectedDocuments.contains(ref)) {
       myValid = false;
     }

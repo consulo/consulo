@@ -19,18 +19,17 @@ import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.content.scope.NamedScope;
 
-import jakarta.annotation.Nonnull;
 
 public class ScopeAttributesUtil {
-  @Nonnull
-  public static TextAttributesKey getScopeTextAttributeKey(@Nonnull NamedScope scope) {
+  
+  public static TextAttributesKey getScopeTextAttributeKey(NamedScope scope) {
     return TextAttributesKey.find("SCOPE_KEY_" + scope.getScopeId());
   }
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use #getScopeTextAttributeKey(NamedScope)")
-  public static TextAttributesKey getScopeTextAttributeKey(@Nonnull String scope) {
+  public static TextAttributesKey getScopeTextAttributeKey(String scope) {
     return TextAttributesKey.find("SCOPE_KEY_" + scope);
   }
 }

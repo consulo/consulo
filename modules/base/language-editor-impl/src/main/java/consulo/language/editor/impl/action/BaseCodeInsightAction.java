@@ -29,8 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseCodeInsightAction extends CodeInsightAction {
     private final boolean myLookForInjectedEditor;
@@ -43,23 +42,23 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
         myLookForInjectedEditor = lookForInjectedEditor;
     }
 
-    protected BaseCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected BaseCodeInsightAction(LocalizeValue text, LocalizeValue description) {
         this(text, description, true);
     }
 
-    protected BaseCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, boolean lookForInjectedEditor) {
+    protected BaseCodeInsightAction(LocalizeValue text, LocalizeValue description, boolean lookForInjectedEditor) {
         super(text, description);
         myLookForInjectedEditor = lookForInjectedEditor;
     }
 
-    protected BaseCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+    protected BaseCodeInsightAction(LocalizeValue text, LocalizeValue description, Image icon) {
         this(text, description, icon, true);
     }
 
     protected BaseCodeInsightAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
-        @Nonnull Image icon,
+        LocalizeValue text,
+        LocalizeValue description,
+        Image icon,
         boolean lookForInjectedEditor
     ) {
         super(text, description, icon);
@@ -69,7 +68,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     @Nullable
     @Override
     @RequiredUIAccess
-    protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project, boolean forUpdate) {
+    protected Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
         Editor editor = getBaseEditor(dataContext, project);
         if (!myLookForInjectedEditor) {
             return editor;
@@ -78,12 +77,12 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     }
 
     @RequiredUIAccess
-    public static Editor getInjectedEditor(@Nonnull Project project, Editor editor) {
+    public static Editor getInjectedEditor(Project project, Editor editor) {
         return getInjectedEditor(project, editor, true);
     }
 
     @RequiredUIAccess
-    public static Editor getInjectedEditor(@Nonnull Project project, Editor editor, boolean commit) {
+    public static Editor getInjectedEditor(Project project, Editor editor, boolean commit) {
         Editor injectedEditor = editor;
         if (editor != null) {
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
@@ -104,7 +103,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);
         if (project == null) {

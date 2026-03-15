@@ -24,7 +24,6 @@ import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.StandardTargetWeights;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -57,7 +56,7 @@ public class ProjectViewSelectInExplorerTarget implements SelectInTarget, DumbAw
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return RevealFileAction.getActionName();

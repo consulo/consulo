@@ -6,8 +6,7 @@ import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.credentialStorage.impl.internal.PasswordSafeSettings;
 import consulo.credentialStorage.localize.CredentialStorageLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 @ExtensionImpl
@@ -30,7 +29,7 @@ public class PasswordSafeConfigurable extends IdeaConfigurableBase<PasswordSafeC
         return StandardConfigurableIds.GENERAL_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public PasswordSafeSettings getSettings() {
         return settings;

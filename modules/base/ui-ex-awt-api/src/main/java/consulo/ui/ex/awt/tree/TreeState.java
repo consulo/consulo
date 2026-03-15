@@ -29,8 +29,7 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -141,22 +140,22 @@ public class TreeState implements JDOMExternalizable {
     }
   }
 
-  @Nonnull
-  public static TreeState createOn(@Nonnull JTree tree, @Nonnull DefaultMutableTreeNode treeNode) {
+  
+  public static TreeState createOn(JTree tree, DefaultMutableTreeNode treeNode) {
     return createOn(tree, new TreePath(treeNode.getPath()));
   }
 
-  @Nonnull
-  public static TreeState createOn(@Nonnull JTree tree, @Nonnull TreePath rootPath) {
+  
+  public static TreeState createOn(JTree tree, TreePath rootPath) {
     return new TreeState(createPaths(tree, TreeUtil.collectExpandedPaths(tree, rootPath)), createPaths(tree, TreeUtil.collectSelectedPaths(tree, rootPath)));
   }
 
-  @Nonnull
-  public static TreeState createOn(@Nonnull JTree tree) {
+  
+  public static TreeState createOn(JTree tree) {
     return new TreeState(createPaths(tree, TreeUtil.collectExpandedPaths(tree)), new ArrayList<>());
   }
 
-  @Nonnull
+  
   public static TreeState createFrom(@Nullable Element element) {
     TreeState state = new TreeState(new ArrayList<>(), new ArrayList<>());
     try {
@@ -186,13 +185,13 @@ public class TreeState implements JDOMExternalizable {
     element.addContent(root);
   }
 
-  @Nonnull
-  private static List<List<PathElement>> createPaths(@Nonnull JTree tree, @Nonnull List<? extends TreePath> paths) {
+  
+  private static List<List<PathElement>> createPaths(JTree tree, List<? extends TreePath> paths) {
     return JBIterable.from(paths).filter(o -> o.getPathCount() > 1 || tree.isRootVisible()).map(o -> createPath(tree.getModel(), o)).toList();
   }
 
-  @Nonnull
-  private static List<PathElement> createPath(@Nonnull TreeModel model, @Nonnull TreePath treePath) {
+  
+  private static List<PathElement> createPath(TreeModel model, TreePath treePath) {
     Object prev = null;
     int count = treePath.getPathCount();
     PathElement[] result = new PathElement[count];
@@ -206,7 +205,7 @@ public class TreeState implements JDOMExternalizable {
     return Arrays.asList(result);
   }
 
-  @Nonnull
+  
   private static String calcId(@Nullable Object userObject) {
     if (userObject == null) return "";
     Object value = userObject instanceof NodeDescriptorProvidingKey
@@ -223,18 +222,18 @@ public class TreeState implements JDOMExternalizable {
     return StringUtil.notNullize(userObject.toString());
   }
 
-  @Nonnull
+  
   private static String calcType(@Nullable Object userObject) {
     if (userObject == null) return "";
     String name = userObject.getClass().getName();
     return Integer.toHexString(StringHash.murmur(name, 31)) + ":" + StringUtil.getShortName(name);
   }
 
-  public void applyTo(@Nonnull JTree tree) {
+  public void applyTo(JTree tree) {
     applyTo(tree, tree.getModel().getRoot());
   }
 
-  public void applyTo(@Nonnull JTree tree, @Nullable Object root) {
+  public void applyTo(JTree tree, @Nullable Object root) {
     LOG.debug(new IllegalStateException("restore paths"));
     if (visit(tree)) return; // AsyncTreeModel#accept
     if (root == null) return;
@@ -257,7 +256,7 @@ public class TreeState implements JDOMExternalizable {
     }
   }
 
-  private void applyExpandedTo(@Nonnull TreeFacade tree, @Nonnull TreePath rootPath, @Nonnull ProgressIndicator indicator) {
+  private void applyExpandedTo(TreeFacade tree, TreePath rootPath, ProgressIndicator indicator) {
     indicator.checkCanceled();
     if (rootPath.getPathCount() <= 0) return;
 
@@ -269,7 +268,7 @@ public class TreeState implements JDOMExternalizable {
     }
   }
 
-  private void applySelectedTo(@Nonnull JTree tree) {
+  private void applySelectedTo(JTree tree) {
     List<TreePath> selection = new ArrayList<>();
     for (List<PathElement> path : mySelectedPaths) {
       TreeModel model = tree.getModel();
@@ -288,7 +287,7 @@ public class TreeState implements JDOMExternalizable {
 
 
   @Nullable
-  private static TreePath findMatchedChild(@Nonnull TreeModel model, @Nonnull TreePath treePath, @Nonnull PathElement pathElement) {
+  private static TreePath findMatchedChild(TreeModel model, TreePath treePath, PathElement pathElement) {
     Object parent = treePath.getLastPathComponent();
     int childCount = model.getChildCount(parent);
     if (childCount <= 0) return null;
@@ -342,7 +341,7 @@ public class TreeState implements JDOMExternalizable {
 
     final JTree tree;
 
-    TreeFacade(@Nonnull JTree tree) {
+    TreeFacade(JTree tree) {
       this.tree = tree;
     }
 
@@ -365,7 +364,7 @@ public class TreeState implements JDOMExternalizable {
     }
 
     @Override
-    public ActionCallback expand(@Nonnull TreePath treePath) {
+    public ActionCallback expand(TreePath treePath) {
       tree.expandPath(treePath);
       return ActionCallback.DONE;
     }
@@ -438,7 +437,7 @@ public class TreeState implements JDOMExternalizable {
    * Note that the specified consumer must resolve async promise at the end.
    */
   @Deprecated
-  public static void expand(@Nonnull JTree tree, @Nonnull Consumer<? super AsyncPromise<Void>> consumer) {
+  public static void expand(JTree tree, Consumer<? super AsyncPromise<Void>> consumer) {
     Promise<Void> expanding = UIUtil.getClientProperty(tree, EXPANDING);
     LOG.debug("EXPANDING: ", expanding);
     if (expanding == null) expanding = Promises.resolvedPromise();
@@ -449,21 +448,21 @@ public class TreeState implements JDOMExternalizable {
     });
   }
 
-  private static boolean isSelectionNeeded(List<TreePath> list, @Nonnull JTree tree, AsyncPromise<Void> promise) {
+  private static boolean isSelectionNeeded(List<TreePath> list, JTree tree, AsyncPromise<Void> promise) {
     if (list != null && tree.isSelectionEmpty()) return true;
     if (promise != null) promise.setResult(null);
     return false;
   }
 
-  private Promise<List<TreePath>> expand(@Nonnull JTree tree) {
+  private Promise<List<TreePath>> expand(JTree tree) {
     return TreeUtil.promiseExpand(tree, myExpandedPaths.stream().map(elements -> new Visitor(elements)));
   }
 
-  private Promise<List<TreePath>> select(@Nonnull JTree tree) {
+  private Promise<List<TreePath>> select(JTree tree) {
     return TreeUtil.promiseSelect(tree, mySelectedPaths.stream().map(elements -> new Visitor(elements)));
   }
 
-  private boolean visit(@Nonnull JTree tree) {
+  private boolean visit(JTree tree) {
     TreeModel model = tree.getModel();
     if (!(model instanceof TreeVisitor.Acceptor)) return false;
 
@@ -482,9 +481,9 @@ public class TreeState implements JDOMExternalizable {
       this.elements = elements;
     }
 
-    @Nonnull
+    
     @Override
-    public Action visit(@Nonnull TreePath path) {
+    public Action visit(TreePath path) {
       int count = path.getPathCount();
       if (count > elements.size()) return Action.SKIP_CHILDREN;
       boolean matches = elements.get(count - 1).isMatchTo(path.getLastPathComponent());

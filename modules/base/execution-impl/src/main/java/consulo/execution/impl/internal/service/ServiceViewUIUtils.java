@@ -9,7 +9,6 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -24,7 +23,7 @@ public final class ServiceViewUIUtils {
     return false; // TODO enable it?
   }
 
-  public static @Nonnull JComponent wrapServicesAligned(@Nonnull ActionToolbar toolbar) {
+  public static JComponent wrapServicesAligned(ActionToolbar toolbar) {
     JComponent toolbarComponent = toolbar.getComponent();
     toolbarComponent.setBorder(JBUI.Borders.empty());
     return new NonOpaquePanel(toolbarComponent) {
@@ -53,7 +52,7 @@ public final class ServiceViewUIUtils {
     }
 
     @Override
-    public void selectionChanged(@Nonnull ContentManagerEvent event) {
+    public void selectionChanged(ContentManagerEvent event) {
       JComponent toolbarWrapper = myToolbarWrapperSupplier.get();
       if (toolbarWrapper == null) return;
 

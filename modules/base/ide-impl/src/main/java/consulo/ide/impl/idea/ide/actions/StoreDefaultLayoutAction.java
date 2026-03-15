@@ -25,7 +25,6 @@ import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
@@ -38,14 +37,14 @@ public class StoreDefaultLayoutAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ToolWindowLayout layout = ToolWindowManagerEx.getInstanceEx(project).getLayout();
         WindowManagerEx.getInstanceEx().setLayout(layout);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         event.getPresentation().setEnabled(event.hasData(Project.KEY));
     }
 }

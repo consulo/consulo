@@ -31,7 +31,6 @@ import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class TaskProjectConfiguration implements PersistentStateComponent<TaskPr
   }
 
   @Inject
-  public TaskProjectConfiguration(@Nonnull TaskManager manager) {
+  public TaskProjectConfiguration(TaskManager manager) {
     myManager = manager;
   }
 

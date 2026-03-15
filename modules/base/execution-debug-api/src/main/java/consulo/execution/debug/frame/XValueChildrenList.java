@@ -16,8 +16,6 @@
 package consulo.execution.debug.frame;
 
 import consulo.util.collection.SmartList;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,21 +28,21 @@ import java.util.List;
  * @see XCompositeNode#addChildren(XValueChildrenList, boolean)
  */
 public class XValueChildrenList {
-  public static XValueChildrenList singleton(String name, @Nonnull XValue value) {
+  public static XValueChildrenList singleton(String name, XValue value) {
     return new XValueChildrenList(Collections.singletonList(name), Collections.singletonList(value));
   }
 
-  public static XValueChildrenList singleton(@Nonnull XNamedValue value) {
+  public static XValueChildrenList singleton(XNamedValue value) {
     return new XValueChildrenList(Collections.singletonList(value.getName()), Collections.<XValue>singletonList(value));
   }
 
-  public static XValueChildrenList bottomGroup(@Nonnull XValueGroup group) {
+  public static XValueChildrenList bottomGroup(XValueGroup group) {
     XValueChildrenList list = new XValueChildrenList();
     list.addBottomGroup(group);
     return list;
   }
 
-  public static XValueChildrenList topGroups(@Nonnull List<XValueGroup> topGroups) {
+  public static XValueChildrenList topGroups(List<XValueGroup> topGroups) {
     return new XValueChildrenList(Collections.emptyList(), Collections.emptyList(), topGroups);
   }
 
@@ -67,18 +65,18 @@ public class XValueChildrenList {
     this(names, values, new SmartList<>());
   }
 
-  private XValueChildrenList(@Nonnull List<String> names, @Nonnull List<XValue> values, @Nonnull List<XValueGroup> topGroups) {
+  private XValueChildrenList(List<String> names, List<XValue> values, List<XValueGroup> topGroups) {
     myNames = names;
     myValues = values;
     myTopGroups = topGroups;
   }
 
-  public void add(@NonNls String name, @Nonnull XValue value) {
+  public void add(String name, XValue value) {
     myNames.add(name);
     myValues.add(value);
   }
 
-  public void add(@Nonnull XNamedValue value) {
+  public void add(XNamedValue value) {
     myNames.add(value.getName());
     myValues.add(value);
   }
@@ -86,14 +84,14 @@ public class XValueChildrenList {
   /**
    * Adds a node representing group of values to the top of a node children list
    */
-  public void addTopGroup(@Nonnull XValueGroup group) {
+  public void addTopGroup(XValueGroup group) {
     myTopGroups.add(group);
   }
 
   /**
    * Adds a node representing group of values to the bottom of a node children list
    */
-  public void addBottomGroup(@Nonnull XValueGroup group) {
+  public void addBottomGroup(XValueGroup group) {
     myBottomGroups.add(group);
   }
 

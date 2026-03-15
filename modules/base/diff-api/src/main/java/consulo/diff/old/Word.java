@@ -20,25 +20,24 @@ import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
 public class Word {
   private static final Logger LOG = Logger.getInstance(Word.class);
-  @Nonnull
+  
   private final DiffString myBaseText;
-  @Nonnull
+  
   private final TextRange myRange;
-  @Nonnull
+  
   private final DiffString myText;
 
   @TestOnly
-  public Word(@Nonnull String baseText, @Nonnull TextRange range) {
+  public Word(String baseText, TextRange range) {
     this(DiffString.create(baseText), range);
   }
 
-  public Word(@Nonnull DiffString baseText, @Nonnull TextRange range) {
+  public Word(DiffString baseText, TextRange range) {
     myBaseText = baseText;
     myRange = range;
     myText = myBaseText.substring(myRange.getStartOffset(), myRange.getEndOffset());
@@ -56,12 +55,12 @@ public class Word {
     return getText().equals(other.getText());
   }
 
-  @Nonnull
+  
   public DiffString getText() {
     return myText;
   }
 
-  @Nonnull
+  
   public DiffString getPrefix(int fromPosition) {
     LOG.assertTrue(fromPosition >= 0, fromPosition);
     int wordStart = myRange.getStartOffset();

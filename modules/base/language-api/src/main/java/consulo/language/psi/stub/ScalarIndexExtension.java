@@ -19,7 +19,6 @@ package consulo.language.psi.stub;
 import consulo.index.io.VoidDataExternalizer;
 import consulo.index.io.data.DataExternalizer;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A specialization of FileBasedIndexExtension allowing to create a mapping [DataObject -> List of files containing this object]
@@ -33,7 +32,7 @@ public abstract class ScalarIndexExtension<K> extends FileBasedIndexExtension<K,
   @Deprecated
   public static final DataExternalizer<Void> VOID_DATA_EXTERNALIZER = VoidDataExternalizer.INSTANCE;
 
-  @Nonnull
+  
   @Override
   public final DataExternalizer<Void> getValueExternalizer() {
     return VoidDataExternalizer.INSTANCE;

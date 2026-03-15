@@ -24,8 +24,7 @@ import consulo.util.io.PathUtil;
 import consulo.util.lang.Comparing;
 import consulo.webBrowser.*;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 
 import javax.swing.*;
@@ -108,7 +107,7 @@ final class BrowserSettingsPanel {
                 item.setSpecificSettings(value.createBrowserSpecificSettings());
             }
 
-            @Nonnull
+            
             @Override
             public TableCellRenderer getRenderer(ConfigurableWebBrowser item) {
                 return IconTableCellRenderer.ICONABLE;
@@ -183,14 +182,14 @@ final class BrowserSettingsPanel {
         });
 
         TableModelEditor.DialogItemEditor<ConfigurableWebBrowser> itemEditor = new TableModelEditor.DialogItemEditor<>() {
-            @Nonnull
+            
             @Override
             public Class<ConfigurableWebBrowser> getItemClass() {
                 return ConfigurableWebBrowser.class;
             }
 
             @Override
-            public ConfigurableWebBrowser clone(@Nonnull ConfigurableWebBrowser item, boolean forInPlaceEditing) {
+            public ConfigurableWebBrowser clone(ConfigurableWebBrowser item, boolean forInPlaceEditing) {
                 return new ConfigurableWebBrowser(
                     forInPlaceEditing ? item.getId() : UUID.randomUUID(),
                     item.getFamily(),
@@ -204,8 +203,8 @@ final class BrowserSettingsPanel {
             @Override
             @RequiredUIAccess
             public void edit(
-                @Nonnull ConfigurableWebBrowser browser,
-                @Nonnull Function<ConfigurableWebBrowser, ConfigurableWebBrowser> mutator,
+                ConfigurableWebBrowser browser,
+                Function<ConfigurableWebBrowser, ConfigurableWebBrowser> mutator,
                 boolean isAdd
             ) {
                 BrowserSpecificSettings settings = cloneSettings(browser);
@@ -219,7 +218,7 @@ final class BrowserSettingsPanel {
             }
 
             @Nullable
-            private BrowserSpecificSettings cloneSettings(@Nonnull ConfigurableWebBrowser browser) {
+            private BrowserSpecificSettings cloneSettings(ConfigurableWebBrowser browser) {
                 BrowserSpecificSettings settings = browser.getSpecificSettings();
                 if (settings == null) {
                     return null;
@@ -232,17 +231,17 @@ final class BrowserSettingsPanel {
             }
 
             @Override
-            public void applyEdited(@Nonnull ConfigurableWebBrowser oldItem, @Nonnull ConfigurableWebBrowser newItem) {
+            public void applyEdited(ConfigurableWebBrowser oldItem, ConfigurableWebBrowser newItem) {
                 oldItem.setSpecificSettings(newItem.getSpecificSettings());
             }
 
             @Override
-            public boolean isEditable(@Nonnull ConfigurableWebBrowser browser) {
+            public boolean isEditable(ConfigurableWebBrowser browser) {
                 return browser.getSpecificSettings() != null;
             }
 
             @Override
-            public boolean isRemovable(@Nonnull ConfigurableWebBrowser item) {
+            public boolean isRemovable(ConfigurableWebBrowser item) {
                 return !WebBrowserManagerImpl.getInstance().isPredefinedBrowser(item);
             }
         };
@@ -265,12 +264,12 @@ final class BrowserSettingsPanel {
         browsersEditor = new TableModelEditor<>(COLUMNS, itemEditor, "No web browsers configured", ConfigurableWebBrowser::new)
             .modelListener(new TableModelEditor.DataChangedListener<>() {
                 @Override
-                public void tableChanged(@Nonnull TableModelEvent event) {
+                public void tableChanged(TableModelEvent event) {
                     update();
                 }
 
                 @Override
-                public void dataChanged(@Nonnull ColumnInfo<ConfigurableWebBrowser, ?> columnInfo, int rowIndex) {
+                public void dataChanged(ColumnInfo<ConfigurableWebBrowser, ?> columnInfo, int rowIndex) {
                     if (columnInfo == PATH_COLUMN_INFO || columnInfo == ACTIVE_COLUMN_INFO) {
                         update();
                     }
@@ -288,7 +287,7 @@ final class BrowserSettingsPanel {
     }
 
     @RequiredUIAccess
-    private void updateCustomPathTextFieldValue(@Nonnull DefaultBrowserPolicy browser) {
+    private void updateCustomPathTextFieldValue(DefaultBrowserPolicy browser) {
         if (browser == DefaultBrowserPolicy.ALTERNATIVE) {
             myAlternativeBrowserPathBox.setValue(customPathValue);
         }
@@ -314,7 +313,7 @@ final class BrowserSettingsPanel {
         myAlternativeBrowserPathBox.setValue("");
     }
 
-    @Nonnull
+    
     public JPanel getComponent() {
         return root;
     }
@@ -386,7 +385,7 @@ final class BrowserSettingsPanel {
         return DefaultBrowserPolicy.ALTERNATIVE;
     }
 
-    public void selectBrowser(@Nonnull WebBrowser browser) {
+    public void selectBrowser(WebBrowser browser) {
         if (browser instanceof ConfigurableWebBrowser configurableWebBrowser) {
             browsersEditor.selectItem(configurableWebBrowser);
         }

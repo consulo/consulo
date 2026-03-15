@@ -17,30 +17,29 @@ package consulo.index.io;
 
 import consulo.index.io.data.DataEnumeratorEx;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
 public class PersistentEnumeratorDelegate<Data> implements DataEnumeratorEx<Data>, Closeable, Forceable {
-  @Nonnull
+ 
   protected final PersistentEnumeratorBase<Data> myEnumerator;
 
-  public PersistentEnumeratorDelegate(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
+  public PersistentEnumeratorDelegate(File file, KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
     this(file, dataDescriptor, initialSize, null);
   }
 
-  public PersistentEnumeratorDelegate(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext)
+  public PersistentEnumeratorDelegate(File file, KeyDescriptor<Data> dataDescriptor, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext)
           throws IOException {
     myEnumerator = useBtree() ? new PersistentBTreeEnumerator<>(file, dataDescriptor, initialSize, lockContext) : new PersistentEnumerator<>(file, dataDescriptor, initialSize);
   }
 
-  public PersistentEnumeratorDelegate(@Nonnull File file,
-                                      @Nonnull KeyDescriptor<Data> dataDescriptor,
+  public PersistentEnumeratorDelegate(File file,
+                                      KeyDescriptor<Data> dataDescriptor,
                                       int initialSize,
-                                      @Nullable PagedFileStorage.StorageLockContext lockContext,
+                                      PagedFileStorage.@Nullable StorageLockContext lockContext,
                                       int version) throws IOException {
     myEnumerator = useBtree() ? new PersistentBTreeEnumerator<>(file, dataDescriptor, initialSize, lockContext, version) : new PersistentEnumerator<>(file, dataDescriptor, initialSize, null, version);
   }
@@ -103,7 +102,7 @@ public class PersistentEnumeratorDelegate<Data> implements DataEnumeratorEx<Data
     return myEnumerator.traverseAllRecords(recordsProcessor);
   }
 
-  public Collection<Data> getAllDataObjects(@Nullable PersistentEnumeratorBase.DataFilter filter) throws IOException {
+  public Collection<Data> getAllDataObjects(PersistentEnumeratorBase.@Nullable DataFilter filter) throws IOException {
     return myEnumerator.getAllDataObjects(filter);
   }
 }

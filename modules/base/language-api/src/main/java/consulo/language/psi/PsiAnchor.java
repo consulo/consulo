@@ -17,8 +17,7 @@ package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.internal.psi.PsiAnchorHardReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,15 +33,15 @@ public interface PsiAnchor {
 
     int getEndOffset();
 
-    @Nonnull
-    static PsiAnchor createHard(@Nonnull PsiElement element) {
+    
+    static PsiAnchor createHard(PsiElement element) {
         return new PsiAnchorHardReference(element);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     @Deprecated
-    static PsiAnchor create(@Nonnull PsiElement element) {
+    static PsiAnchor create(PsiElement element) {
         PsiUtilCore.ensureValid(element);
 
         PsiAnchorFactory factory = element.getProject().getInstance(PsiAnchorFactory.class);

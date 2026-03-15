@@ -17,7 +17,7 @@ package consulo.localHistory.impl.internal;
 
 import consulo.application.util.matcher.NameUtil;
 import consulo.localHistory.impl.internal.change.*;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

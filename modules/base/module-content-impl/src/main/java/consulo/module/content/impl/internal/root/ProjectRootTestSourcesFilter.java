@@ -21,12 +21,11 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ProjectRootTestSourcesFilter extends TestSourcesFilter {
   @Override
-  public boolean isTestSource(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public boolean isTestSource(VirtualFile file, Project project) {
     return ProjectFileIndex.getInstance(project).isInTestSourceContent(file);
   }
 }

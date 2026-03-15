@@ -48,8 +48,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import gnu.trove.TIntArrayList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -106,7 +105,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         void commit();
     }
 
-    protected PerFileConfigurableBase(@Nonnull Project project, @Nonnull PerFileMappingsEx<T> mappings) {
+    protected PerFileConfigurableBase(Project project, PerFileMappingsEx<T> mappings) {
         myProject = project;
         myMappings = mappings;
         myProjectMapping =
@@ -116,9 +115,9 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     }
 
     @Nullable
-    protected abstract <S> Object getParameter(@Nonnull Key<S> key);
+    protected abstract <S> Object getParameter(Key<S> key);
 
-    @Nonnull
+    
     protected List<Trinity<String, Supplier<T>, Consumer<T>>> getDefaultMappings() {
         return List.of();
     }
@@ -135,12 +134,12 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return chosen;
     }
 
-    protected abstract void renderValue(@Nullable Object target, @Nonnull T t, @Nonnull ColoredTextContainer renderer);
+    protected abstract void renderValue(@Nullable Object target, T t, ColoredTextContainer renderer);
 
-    protected void renderDefaultValue(@Nullable Object target, @Nonnull ColoredTextContainer renderer) {
+    protected void renderDefaultValue(@Nullable Object target, ColoredTextContainer renderer) {
     }
 
-    private <S> S param(@Nonnull Key<S> key) {
+    private <S> S param(Key<S> key) {
         Object o = getParameter(key);
         if (o == null && key instanceof KeyWithDefaultValue) {
             return ((KeyWithDefaultValue<S>) key).getDefaultValue();
@@ -149,7 +148,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return s;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public JComponent createComponent() {
@@ -158,7 +157,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         myTable = new JBTable(myModel = new MyModel<>(param(TARGET_TITLE), param(MAPPING_TITLE))) {
             @SuppressWarnings("unchecked")
             @Override
-            public String getToolTipText(@Nonnull MouseEvent event) {
+            public String getToolTipText(MouseEvent event) {
                 Point point = event.getPoint();
                 int row = rowAtPoint(point);
                 int col = columnAtPoint(point);
@@ -265,7 +264,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         IdeaFileChooser.chooseFiles(descriptor, myProject, myTable, toSelect, this::doAddFiles);
     }
 
-    private void doAddFiles(@Nonnull List<? extends VirtualFile> files) {
+    private void doAddFiles(List<? extends VirtualFile> files) {
         Set<VirtualFile> chosen = new HashSet<>(files);
         if (chosen.isEmpty()) {
             return;
@@ -434,11 +433,11 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return map;
     }
 
-    public void selectFile(@Nonnull VirtualFile virtualFile) {
+    public void selectFile(VirtualFile virtualFile) {
         selectFile(virtualFile, true);
     }
 
-    public void selectFile(@Nonnull VirtualFile virtualFile, boolean addIfMissing) {
+    public void selectFile(VirtualFile virtualFile, boolean addIfMissing) {
         VirtualFile file = virtualFile instanceof VirtualFileWindow virtualFileWindow ? virtualFileWindow.getDelegate() : virtualFile;
         int[] rows = findRow(file, addIfMissing, false);
         if (rows.length == 0 && addIfMissing) {
@@ -526,7 +525,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
             @Override
             protected void customizeCellRenderer(
-                @Nonnull JTable table,
+                JTable table,
                 @Nullable Object value,
                 boolean selected,
                 boolean hasFocus,
@@ -545,7 +544,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
             @Override
             protected void customizeCellRenderer(
-                @Nonnull JTable table,
+                JTable table,
                 @Nullable Object value,
                 boolean selected,
                 boolean hasFocus,
@@ -581,7 +580,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                 panel.setText(startValue.getPath());
                 panel.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
                     @Override
-                    protected void textChanged(@Nonnull DocumentEvent e) {
+                    protected void textChanged(DocumentEvent e) {
                         newPath = panel.getTextField().getText();
                     }
                 });
@@ -662,13 +661,13 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         });
     }
 
-    @Nonnull
-    protected JPanel createActionPanel(@Nullable Object target, @Nonnull Value<T> value) {
+    
+    protected JPanel createActionPanel(@Nullable Object target, Value<T> value) {
         return createActionPanel(target, value, false);
     }
 
-    @Nonnull
-    private JPanel createActionPanel(@Nullable Object target, @Nonnull Value<T> value, boolean editor) {
+    
+    private JPanel createActionPanel(@Nullable Object target, Value<T> value, boolean editor) {
         AnAction changeAction = createValueAction(target, value);
         JComponent comboComponent =
             ((CustomComponentAction) changeAction).createCustomComponent(changeAction.getTemplatePresentation(), ActionPlaces.UNKNOWN);
@@ -755,7 +754,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         );
     }
 
-    private String renderValue(@Nullable Object value, @Nonnull String nullValue) {
+    private String renderValue(@Nullable Object value, String nullValue) {
         if (value == null) {
             return nullValue;
         }
@@ -767,7 +766,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         }
     }
 
-    protected void renderTarget(@Nullable Object target, @Nonnull ColoredTextContainer renderer) {
+    protected void renderTarget(@Nullable Object target, ColoredTextContainer renderer) {
         VirtualFile file = target instanceof VirtualFile virtualFile ? virtualFile : null;
         if (file != null) {
             renderer.setIcon(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, myProject));
@@ -787,8 +786,8 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         }
     }
 
-    @Nonnull
-    protected final AnAction createValueAction(@Nullable Object target, @Nonnull Value<T> value) {
+    
+    protected final AnAction createValueAction(@Nullable Object target, Value<T> value) {
         return new ComboBoxAction() {
             void updateText(Presentation p) {
                 String text = renderValue(value.get(), StringUtil.notNullize(getNullValueText(target)));
@@ -796,23 +795,23 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 updateText(getTemplatePresentation());
             }
 
-            @Nonnull
+            
             @Override
             protected DefaultActionGroup createPopupActionGroup(JComponent button) {
                 throw new UnsupportedOperationException();
             }
 
-            @Nonnull
+            
             @Override
             public JBPopup createPopup(
-                @Nonnull JComponent component,
-                @Nonnull DataContext context,
-                @Nonnull Presentation presentation,
-                @Nonnull Runnable onDispose
+                JComponent component,
+                DataContext context,
+                Presentation presentation,
+                Runnable onDispose
             ) {
                 JBPopup popup = createValueEditorPopup(target, value.get(), onDispose, context, o -> {
                     value.set(o);
@@ -823,21 +822,21 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
             @Nullable
             @Override
-            public String getTooltipText(@Nonnull ComboBoxButton button) {
+            public String getTooltipText(ComboBoxButton button) {
                 boolean cellEditor = UIUtil.uiParents(button.getComponent(), true).take(4).filter(JBTable.class).first() != null;
                 return cellEditor ? null : getToolTipFor(value.get());
             }
         };
     }
 
-    @Nonnull
+    
     protected JBPopup createValueEditorPopup(
         @Nullable Object target,
         @Nullable T value,
         @Nullable Runnable onDispose,
-        @Nonnull DataContext dataContext,
-        @Nonnull Consumer<? super T> onChosen,
-        @Nonnull Runnable onCommit
+        DataContext dataContext,
+        Consumer<? super T> onChosen,
+        Runnable onCommit
     ) {
         return createValueEditorActionListPopup(target, onDispose, dataContext, chosen -> {
             onChosen.accept(chosen);
@@ -845,12 +844,12 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         });
     }
 
-    @Nonnull
+    
     protected final JBPopup createValueEditorActionListPopup(
         @Nullable Object target,
         @Nullable Runnable onDispose,
-        @Nonnull DataContext dataContext,
-        @Nonnull Consumer<? super T> onChosen
+        DataContext dataContext,
+        Consumer<? super T> onChosen
     ) {
         ActionGroup group = createActionListGroup(target, onChosen);
         return JBPopupFactory.getInstance().createActionGroupPopup(null, group, dataContext, false, false, false, onDispose, 30, null);
@@ -871,7 +870,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return param(NULL_TEXT);
     }
 
-    @Nonnull
+    
     protected Collection<T> getValueVariants(@Nullable Object target) {
         if (myMappings instanceof PerFileMappingsBase) {
             return ((PerFileMappingsBase<T>) myMappings).getAvailableValues();
@@ -879,8 +878,8 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    protected ActionGroup createActionListGroup(@Nullable Object target, @Nonnull Consumer<? super T> onChosen) {
+    
+    protected ActionGroup createActionListGroup(@Nullable Object target, Consumer<? super T> onChosen) {
         DefaultActionGroup group = new DefaultActionGroup();
         String clearText = getClearValueText(target);
         Function<T, AnAction> choseAction = t -> {
@@ -888,7 +887,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             AnAction a = new DumbAwareAction(renderValue(t, nullValue), "", getActionListIcon(target, t)) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     onChosen.accept(t);
                 }
             };

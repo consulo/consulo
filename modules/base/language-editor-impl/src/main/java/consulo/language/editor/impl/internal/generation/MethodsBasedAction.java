@@ -32,7 +32,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -54,7 +53,7 @@ public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHand
     }
 
     @Override
-    protected final boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected final boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
         T codeInsightActionHandler =
             myApplication.getExtensionPoint(myHandlerType).getOrBuildCache(myExtensionCacheKey).get(language);
@@ -62,7 +61,7 @@ public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHand
     }
 
     @Override
-    public final void update(@Nonnull AnActionEvent event) {
+    public final void update(AnActionEvent event) {
         if (myApplication.getExtensionPoint(myHandlerType).hasAnyExtensions()) {
             event.getPresentation().setVisible(true);
             super.update(event);
@@ -74,7 +73,7 @@ public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHand
 
     @RequiredUIAccess
     @Override
-    public final void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public final void invoke(Project project, Editor editor, PsiFile file) {
         if (!LanguageEditorUtil.checkModificationAllowed(editor)) {
             return;
         }
@@ -97,7 +96,7 @@ public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHand
         return false;
     }
 
-    @Nonnull
+    
     @Override
     protected final CodeInsightActionHandler getHandler() {
         return this;

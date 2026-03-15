@@ -5,8 +5,7 @@ package consulo.codeEditor.markup;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.ui.color.ColorValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 
@@ -39,7 +38,7 @@ public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
      */
     void setTextAttributes(@Nullable TextAttributes textAttributes);
 
-    default void copyFrom(@Nonnull RangeHighlighterEx other) {
+    default void copyFrom(RangeHighlighterEx other) {
         setAfterEndOfLine(other.isAfterEndOfLine());
         setGreedyToLeft(other.isGreedyToLeft());
         setGreedyToRight(other.isGreedyToRight());

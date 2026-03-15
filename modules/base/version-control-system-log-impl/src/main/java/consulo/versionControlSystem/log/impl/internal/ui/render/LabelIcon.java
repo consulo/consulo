@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,14 +31,14 @@ import java.awt.image.BufferedImage;
 // TODO [VISTALL] we need impl UI Image, due we don't have unified impl
 public class LabelIcon implements Icon, Image {
   private final int mySize;
-  @Nonnull
+  
   private final Color[] myColors;
-  @Nonnull
+  
   private final Color myBgColor;
-  @Nonnull
+  
   private final BufferedImage myImage;
 
-  public LabelIcon(int size, @Nonnull Color bgColor, @Nonnull Color... colors) {
+  public LabelIcon(int size, Color bgColor, Color... colors) {
     mySize = size;
     myBgColor = bgColor;
     myColors = colors;
@@ -53,7 +52,7 @@ public class LabelIcon implements Icon, Image {
     UIUtil.drawImage(g, myImage, x, y, null);
   }
 
-  private void paintIcon(@Nonnull Graphics2D g2) {
+  private void paintIcon(Graphics2D g2) {
     GraphicsConfig config = GraphicsUtil.setupAAPainting(g2);
 
     float scale = mySize / 8.0f;

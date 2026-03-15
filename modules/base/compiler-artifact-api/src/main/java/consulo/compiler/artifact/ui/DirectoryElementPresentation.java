@@ -20,7 +20,6 @@ import consulo.compiler.artifact.element.DirectoryPackagingElement;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -38,7 +37,7 @@ public class DirectoryElementPresentation extends PackagingElementPresentation {
   }
 
   @Override
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.TreeClosed);
     presentationData.addText(myElement.getDirectoryName(), mainAttributes);
   }

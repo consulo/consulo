@@ -19,8 +19,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public interface LineStatusTrackerI {
 
     boolean isRangeModified(int line1, int line2);
 
-    @Nonnull
+    
     Document getVcsDocument();
 
     boolean isValid();
@@ -58,19 +57,19 @@ public interface LineStatusTrackerI {
     @Nullable
     VcsRange getPrevRange(int line);
 
-    @Nonnull
-    CharSequence getVcsContent(@Nonnull VcsRange range);
+    
+    CharSequence getVcsContent(VcsRange range);
 
-    @Nonnull
+    
     Document getDocument();
 
-    @Nonnull
-    TextRange getVcsTextRange(@Nonnull VcsRange range);
+    
+    TextRange getVcsTextRange(VcsRange range);
 
-    @Nonnull
-    TextRange getCurrentTextRange(@Nonnull VcsRange range);
+    
+    TextRange getCurrentTextRange(VcsRange range);
 
-    @Nonnull
+    
     VirtualFile getVirtualFile();
 
     @Nullable

@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,13 +26,13 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ExperimentalPluginsDescriptor extends EarlyAccessProgramDescriptor {
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Experimental Plugins");
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("Allow install experimental plugins");

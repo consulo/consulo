@@ -27,8 +27,7 @@ import consulo.language.codeStyle.internal.FormattingProgressCallback;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +69,8 @@ public class ApplyChangesState extends State {
      */
     @SuppressWarnings({"deprecation"})
     private void applyChangesAtRewriteMode(
-        @Nonnull List<LeafBlockWrapper> blocksToModify,
-        @Nonnull FormattingModel model
+        List<LeafBlockWrapper> blocksToModify,
+        FormattingModel model
     ) {
         FormattingDocumentModel documentModel = model.getDocumentModel();
         Document document = documentModel.getDocument();

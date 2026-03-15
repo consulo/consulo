@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.style.StyleManager;
 import consulo.util.collection.ImmutableMapBuilder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -48,7 +47,7 @@ import java.util.*;
 @ServiceImpl
 @State(name = "FileColors", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class FileColorManagerImpl implements FileColorManager, PersistentStateComponent<Element> {
-    @Nonnull
+    
     private final ApplicationFileColorManager myApplicationFileColorManager;
     private final Project myProject;
     private final FileColorsModel myModel;
@@ -64,7 +63,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
         .build();
 
     @Inject
-    public FileColorManagerImpl(@Nonnull ApplicationFileColorManager applicationFileColorManager, @Nonnull Project project) {
+    public FileColorManagerImpl(ApplicationFileColorManager applicationFileColorManager, Project project) {
         myApplicationFileColorManager = applicationFileColorManager;
         myProject = project;
         myModel = new FileColorsModel(project);
@@ -117,7 +116,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
 
     @Override
     @Nullable
-    public Color getColor(@Nonnull String name) {
+    public Color getColor(String name) {
         Color color = ourDefaultColors.get(name);
         return color == null ? ColorUtil.fromHex(name, null) : color;
     }
@@ -147,7 +146,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
     }
 
     @Override
-    public boolean isColored(@Nonnull String scopeName, boolean shared) {
+    public boolean isColored(String scopeName, boolean shared) {
         return myModel.isColored(scopeName, shared);
     }
 
@@ -171,7 +170,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
 
     @Override
     @Nullable
-    public Color getFileColor(@Nonnull VirtualFile file) {
+    public Color getFileColor(VirtualFile file) {
         initProjectLevelConfigurations();
 
         if (!file.isValid()) {
@@ -184,7 +183,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
 
     @Override
     @Nullable
-    public Color getScopeColor(@Nonnull String scopeName) {
+    public Color getScopeColor(String scopeName) {
         initProjectLevelConfigurations();
 
         String colorName = myModel.getScopeColor(scopeName, myProject);
@@ -192,7 +191,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
     }
 
     @Override
-    public boolean isShared(@Nonnull String scopeName) {
+    public boolean isShared(String scopeName) {
         return myModel.isProjectLevel(scopeName);
     }
 

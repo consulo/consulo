@@ -12,7 +12,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -26,7 +25,7 @@ public class ConfigureFilesNestingAction extends DumbAwareAction {
         myProjectViewSharedSettings = projectViewSharedSettings;
     }
 
-    @Nonnull
+    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;

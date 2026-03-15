@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -42,7 +41,7 @@ public final class FlattenPackagesAction extends ToggleAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -54,12 +53,12 @@ public final class FlattenPackagesAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent event) {
+    public boolean isSelected(AnActionEvent event) {
         return DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES;
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+    public void setSelected(AnActionEvent event, boolean flag) {
         DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES = flag;
         myUpdate.run();
     }

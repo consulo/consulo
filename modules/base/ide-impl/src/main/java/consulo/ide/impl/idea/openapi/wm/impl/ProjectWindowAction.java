@@ -24,8 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,12 +39,12 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
 
   private ProjectWindowAction myPrevious;
   private ProjectWindowAction myNext;
-  @Nonnull
+  
   private final String myProjectName;
-  @Nonnull
+  
   private final String myProjectLocation;
 
-  public ProjectWindowAction(@Nonnull String projectName, @Nonnull String projectLocation, ProjectWindowAction previous) {
+  public ProjectWindowAction(String projectName, String projectLocation, ProjectWindowAction previous) {
     super();
     myProjectName = projectName;
     myProjectLocation = projectLocation;
@@ -82,12 +81,12 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
     return myNext;
   }
 
-  @Nonnull
+  
   public String getProjectLocation() {
     return myProjectLocation;
   }
 
-  @Nonnull
+  
   public String getProjectName() {
     return myProjectName;
   }

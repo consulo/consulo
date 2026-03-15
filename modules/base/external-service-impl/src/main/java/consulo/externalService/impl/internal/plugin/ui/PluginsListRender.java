@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -163,7 +162,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         return myPanel;
     }
 
-    protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginDescriptor) {
+    protected void updatePresentation(boolean isSelected, PluginDescriptor pluginDescriptor) {
         PluginDescriptor installed = PluginManager.findPlugin(pluginDescriptor.getPluginId());
         if (PluginsPanel.isDownloaded(pluginDescriptor)
             || installed != null && InstalledPluginsState.getInstance().wasUpdated(installed.getPluginId())) {

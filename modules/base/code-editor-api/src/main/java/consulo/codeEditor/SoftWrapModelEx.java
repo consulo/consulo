@@ -17,7 +17,6 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.event.SoftWrapChangeListener;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +56,7 @@ public interface SoftWrapModelEx extends SoftWrapModel {
    * @param lineHeight    line height used at editor
    * @return              painted drawing width
    */
-  int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
+  int paint(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
 
   /**
    * Allows to ask for the minimal width in pixels required for painting of the given type.
@@ -65,7 +64,7 @@ public interface SoftWrapModelEx extends SoftWrapModel {
    * @param drawingType   target drawing type
    * @return              width in pixels required for the painting of the given type
    */
-  int getMinDrawingWidthInPixels(@Nonnull SoftWrapDrawingType drawingType);
+  int getMinDrawingWidthInPixels(SoftWrapDrawingType drawingType);
 
   /**
    * Registers given listener within the current model
@@ -73,7 +72,7 @@ public interface SoftWrapModelEx extends SoftWrapModel {
    * @param listener    listener to register
    * @return            <code>true</code> if given listener was not registered before; <code>false</code> otherwise
    */
-  boolean addSoftWrapChangeListener(@Nonnull SoftWrapChangeListener listener);
+  boolean addSoftWrapChangeListener(SoftWrapChangeListener listener);
 
   /**
    * IJ editor defines a notion of {@link EditorSettings#getAdditionalColumnsCount() additional columns}. They define additional

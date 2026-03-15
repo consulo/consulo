@@ -19,8 +19,7 @@ import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -30,7 +29,7 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
     private final String myPrompt;
     private final String myHelpId;
 
-    protected SimpleChooseByNameModel(@Nonnull Project project, @Nonnull String prompt, @Nullable String helpId) {
+    protected SimpleChooseByNameModel(Project project, String prompt, @Nullable String helpId) {
         myProject = project;
         myPrompt = prompt;
         myHelpId = helpId;
@@ -60,7 +59,7 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
         return InspectionLocalize.nothingFound().get();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getCheckBoxName() {
         return LocalizeValue.empty();
@@ -75,19 +74,19 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
     public void saveInitialCheckBoxState(boolean state) {
     }
 
-    @Nonnull
+    
     @Override
     public String[] getNames(boolean checkBoxState) {
         return getNames();
     }
 
-    @Nonnull
+    
     @Override
     public Object[] getElementsByName(String name, boolean checkBoxState, String pattern) {
         return getElementsByName(name, pattern);
     }
 
-    @Nonnull
+    
     @Override
     public String[] getSeparators() {
         return ArrayUtil.EMPTY_STRING_ARRAY;

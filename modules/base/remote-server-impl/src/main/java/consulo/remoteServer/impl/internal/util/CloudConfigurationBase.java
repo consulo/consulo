@@ -10,8 +10,7 @@ import consulo.remoteServer.configuration.ServerConfigurationBase;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Transient;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -121,12 +120,12 @@ public class CloudConfigurationBase<Self extends CloudConfigurationBase<Self>>
     protected static void doSetSafeValue(@Nullable CredentialAttributes credentialAttributes,
                                          @Nullable String credentialUser,
                                          @Nullable String secretValue,
-                                         @Nonnull Consumer<? super String> unsafeSetter) {
+                                         Consumer<? super String> unsafeSetter) {
 
         CloudConfigurationUtil.doSetSafeValue(credentialAttributes, credentialUser, secretValue, unsafeSetter);
     }
 
-    protected static String doGetSafeValue(@Nullable CredentialAttributes credentialAttributes, @Nonnull Supplier<String> unsafeGetter) {
+    protected static String doGetSafeValue(@Nullable CredentialAttributes credentialAttributes, Supplier<String> unsafeGetter) {
         return CloudConfigurationUtil.doGetSafeValue(credentialAttributes, unsafeGetter);
     }
 

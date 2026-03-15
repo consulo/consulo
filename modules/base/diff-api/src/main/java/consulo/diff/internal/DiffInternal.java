@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.util.TextDiffType;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,5 +29,5 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DiffInternal {
-    List<RangeHighlighter> createInlineHighlighter(@Nonnull Editor editor, int start, int end, @Nonnull TextDiffType type);
+    List<RangeHighlighter> createInlineHighlighter(Editor editor, int start, int end, TextDiffType type);
 }

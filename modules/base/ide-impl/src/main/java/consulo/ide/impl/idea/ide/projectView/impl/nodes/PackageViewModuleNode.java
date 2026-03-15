@@ -24,7 +24,6 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import consulo.language.content.LanguageContentFolderScopes;
 
 import java.util.Arrays;
@@ -41,7 +40,7 @@ public class PackageViewModuleNode extends AbstractModuleNode {
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Collection<AbstractTreeNode> getChildren() {
         Collection<AbstractTreeNode> result = PackageNodeUtil.createPackageViewChildrenOnFiles(
             Arrays.asList(
@@ -59,7 +58,7 @@ public class PackageViewModuleNode extends AbstractModuleNode {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         Module module = getValue();
         return module != null && !module.isDisposed()
             && (ModuleUtilCore.moduleContainsFile(module, file, false) || ModuleUtilCore.moduleContainsFile(module, file, true));

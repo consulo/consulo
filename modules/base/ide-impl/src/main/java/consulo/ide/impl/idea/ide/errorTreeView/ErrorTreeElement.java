@@ -18,8 +18,7 @@ package consulo.ide.impl.idea.ide.errorTreeView;
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -34,11 +33,11 @@ public abstract class ErrorTreeElement {
     this(ErrorTreeElementKind.GENERIC);
   }
 
-  protected ErrorTreeElement(@Nonnull ErrorTreeElementKind kind) {
+  protected ErrorTreeElement(ErrorTreeElementKind kind) {
     myKind = kind;
   }
 
-  @Nonnull
+  
   public ErrorTreeElementKind getKind() {
     return myKind;
   }

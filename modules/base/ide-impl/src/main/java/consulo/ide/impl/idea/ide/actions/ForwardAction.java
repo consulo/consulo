@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Forward")
 public class ForwardAction extends AnAction implements DumbAware {
@@ -34,13 +33,13 @@ public class ForwardAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         IdeDocumentHistory.getInstance(project).forward();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabled(
             project != null && !project.isDisposed() && IdeDocumentHistory.getInstance(project).isForwardAvailable()

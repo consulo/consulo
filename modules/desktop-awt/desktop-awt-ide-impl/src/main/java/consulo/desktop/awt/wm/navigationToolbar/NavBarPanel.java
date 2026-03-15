@@ -66,8 +66,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -108,7 +107,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     private boolean myDisposed = false;
     private RelativePoint myLocationCache;
 
-    public NavBarPanel(@Nonnull Project project, boolean docked) {
+    public NavBarPanel(Project project, boolean docked) {
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
         myProject = project;
         myModel = createModel();
@@ -444,12 +443,12 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         }
     }
 
-    void installPopupHandler(@Nonnull JComponent component, int index) {
+    void installPopupHandler(JComponent component, int index) {
         ActionManager actionManager = ActionManager.getInstance();
         PopupHandler.installPopupHandler(
             component,
             new ActionGroup() {
-                @Nonnull
+                
                 @Override
                 public AnAction[] getChildren(@Nullable AnActionEvent e) {
                     if (e == null) {
@@ -687,7 +686,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     @Nullable
     @Override
     @RequiredReadAction
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         Object data = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
             .computeSafeIfAny(extension -> extension.getData(dataId, this::getDataInner));
         return data != null ? data : getDataInner(dataId);
@@ -699,7 +698,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         return getDataImpl(dataId, this, this::getSelection);
     }
 
-    @Nonnull
+    
     JBIterable<?> getSelection() {
         Object value = myModel.getSelectedValue();
         if (value != null) {
@@ -710,7 +709,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     }
 
     @RequiredReadAction
-    Object getDataImpl(Key<?> dataId, @Nonnull JComponent source, @Nonnull Supplier<? extends JBIterable<?>> selection) {
+    Object getDataImpl(Key<?> dataId, JComponent source, Supplier<? extends JBIterable<?>> selection) {
         if (Project.KEY == dataId) {
             return !myProject.isDisposed() ? myProject : null;
         }
@@ -781,8 +780,8 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         return null;
     }
 
-    @Nonnull
-    private CopyPasteSupport getCopyPasteDelegator(@Nonnull JComponent source) {
+    
+    private CopyPasteSupport getCopyPasteDelegator(JComponent source) {
         String key = "NavBarPanel.copyPasteDelegator";
         Object result = source.getClientProperty(key);
         if (!(result instanceof CopyPasteSupport)) {
@@ -922,7 +921,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     }
 
     @Override
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < myList.size(); i++) {
             NavBarItem each = myList.get(i);
@@ -959,7 +958,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         }
     }
 
-    @Nonnull
+    
     public NavBarUI getNavBarUI() {
         return NavBarUIManager.getUI();
     }

@@ -2,12 +2,11 @@
 package consulo.execution.service;
 
 import consulo.ui.ex.awt.dnd.DnDEvent;
-import jakarta.annotation.Nonnull;
 
 public interface ServiceViewDnDDescriptor {
-  boolean canDrop(@Nonnull DnDEvent event, @Nonnull Position position);
+  boolean canDrop(DnDEvent event, Position position);
 
-  void drop(@Nonnull DnDEvent event, @Nonnull Position position);
+  void drop(DnDEvent event, Position position);
 
   enum Position {
     ABOVE,

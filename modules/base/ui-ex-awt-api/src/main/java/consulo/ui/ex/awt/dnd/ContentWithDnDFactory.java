@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.function.Consumer;
@@ -35,7 +34,7 @@ public interface ContentWithDnDFactory {
         return Application.get().getInstance(ContentWithDnDFactory.class);
     }
 
-    @Nonnull
+    
     Content createContentWithDnd(JComponent component,
                                  String displayName,
                                  boolean isLockable,

@@ -4,7 +4,6 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;
 
-import jakarta.annotation.Nonnull;
 
 import static consulo.language.ast.TokenType.BAD_CHARACTER;
 
@@ -19,13 +18,13 @@ public class TemplateDataHighlighterWrapper implements SyntaxHighlighter {
   }
 
   @Override
-  @Nonnull
+  
   public Lexer getHighlightingLexer() {
     return myHighlighter.getHighlightingLexer();
   }
 
   @Override
-  @Nonnull
+  
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     if (tokenType == BAD_CHARACTER) {
       return new TextAttributesKey[0];

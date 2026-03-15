@@ -26,8 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -54,7 +53,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     private boolean myInheritOutput = true;
     private boolean myExcludeOutput = true;
 
-    @Nonnull
+    
     private final Map<String, VirtualFilePointer> myVirtualFilePointers = new LinkedHashMap<>();
     private final CompilerConfiguration myCompilerConfiguration;
 
@@ -85,7 +84,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     }
 
     @Override
-    public void setCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl) {
+    public void setCompilerOutputUrl(ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl) {
         if (myInheritOutput) {
             throw new IllegalArgumentException();
         }
@@ -98,7 +97,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
 
     @Override
     @Nullable
-    public String getCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType) {
+    public String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType) {
         if (!myInheritOutput) {
             VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
             if (virtualFilePointer != null) {
@@ -118,7 +117,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
 
     @Nullable
     @Override
-    public VirtualFile getCompilerOutput(@Nonnull ContentFolderTypeProvider contentFolderType) {
+    public VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType) {
         if (!myInheritOutput) {
             VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
             if (virtualFilePointer != null) {
@@ -133,9 +132,9 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
         return compilerOutput.findFileByRelativePath(getRelativePathForProvider(contentFolderType, myModule));
     }
 
-    @Nonnull
+    
     @Override
-    public VirtualFilePointer getCompilerOutputPointer(@Nonnull ContentFolderTypeProvider contentFolderType) {
+    public VirtualFilePointer getCompilerOutputPointer(ContentFolderTypeProvider contentFolderType) {
         if (myInheritOutput) {
             throw new IllegalArgumentException("Then module is inherit output dir - output virtual file pointer not exists");
         }

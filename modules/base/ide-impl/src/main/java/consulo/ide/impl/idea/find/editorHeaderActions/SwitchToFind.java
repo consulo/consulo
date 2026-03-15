@@ -11,7 +11,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -20,7 +19,7 @@ import javax.swing.*;
  * @since 2011-03-05
  */
 public class SwitchToFind extends AnAction implements DumbAware {
-  public SwitchToFind(@Nonnull JComponent shortcutHolder) {
+  public SwitchToFind(JComponent shortcutHolder) {
     AnAction findAction = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND);
     if (findAction != null) {
       registerCustomShortcutSet(findAction.getShortcutSet(), shortcutHolder);
@@ -28,7 +27,7 @@ public class SwitchToFind extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     if (KeymapUtil.isEmacsKeymap()) {
       // Emacs users are accustomed to the editor that executes 'find next' on subsequent pressing of shortcut that
       // activates 'incremental search'. Hence, we do the similar hack here for them.
@@ -41,7 +40,7 @@ public class SwitchToFind extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     if (KeymapUtil.isEmacsKeymap()) {
       // Emacs users are accustomed to the editor that executes 'find next' on subsequent pressing of shortcut that
       // activates 'incremental search'. Hence, we do the similar hack here for them.

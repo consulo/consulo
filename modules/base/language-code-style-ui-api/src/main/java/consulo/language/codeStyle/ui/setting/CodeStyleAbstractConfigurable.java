@@ -24,8 +24,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Set;
@@ -37,7 +36,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
     private final LocalizeValue myDisplayName;
 
     public CodeStyleAbstractConfigurable(
-        @Nonnull CodeStyleSettings settings,
+        CodeStyleSettings settings,
         CodeStyleSettings cloneSettings,
         LocalizeValue displayName
     ) {
@@ -46,7 +45,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
         myDisplayName = displayName;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return myDisplayName;
@@ -54,7 +53,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    public JComponent createComponent(Disposable uiDisposable) {
         myPanel = createPanel(myCloneSettings);
         return myPanel.getPanel();
     }
@@ -105,7 +104,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
         return myPanel;
     }
 
-    public void setModel(@Nonnull CodeStyleSchemesModel model) {
+    public void setModel(CodeStyleSchemesModel model) {
         if (myPanel != null) {
             myPanel.setModel(model);
         }
@@ -119,7 +118,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
         myPanel.onSomethingChanged();
     }
 
-    @Nonnull
+    
     @Override
     public Set<String> processListOptions() {
         return myPanel.processListOptions();

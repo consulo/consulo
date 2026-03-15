@@ -32,8 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
@@ -41,13 +40,13 @@ import jakarta.annotation.Nullable;
 public class MoveModulesToGroupAction extends AnAction {
     protected final ModuleGroup myModuleGroup;
 
-    public MoveModulesToGroupAction(@Nullable ModuleGroup moduleGroup, @Nonnull LocalizeValue title, @Nonnull LocalizeValue description) {
+    public MoveModulesToGroupAction(@Nullable ModuleGroup moduleGroup, LocalizeValue title, LocalizeValue description) {
         super(title, description);
         myModuleGroup = moduleGroup;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
 
         LocalizeValue description = IdeLocalize.messageMoveModulesToGroup(whatToMove(modules), myModuleGroup.presentableText());
@@ -60,7 +59,7 @@ public class MoveModulesToGroupAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
         doMove(modules, myModuleGroup, e.getDataContext());
     }

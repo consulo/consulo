@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.project.internal.ProjectFrameAllocator;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(order = "after InitToolWindows")
 public class IdeFrameInitializeActitivy implements PostStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         ProjectFrameAllocator allocator = project.getInstance(ProjectFrameAllocator.class);
 
         uiAccess.give(allocator::initializeFrame);

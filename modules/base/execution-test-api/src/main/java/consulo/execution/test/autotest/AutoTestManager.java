@@ -27,7 +27,6 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -38,18 +37,18 @@ import jakarta.annotation.Nonnull;
 @State(name = "AutoTestManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class AutoTestManager extends AbstractAutoTestManager {
 
-  @Nonnull
+  
   public static AutoTestManager getInstance(Project project) {
     return project.getInstance(AutoTestManager.class);
   }
 
   @Inject
-  public AutoTestManager(@Nonnull Project project) {
+  public AutoTestManager(Project project) {
     super(project);
   }
 
   @Override
-  @Nonnull
+  
   protected AutoTestWatcher createWatcher(Project project) {
     return new DelayedDocumentWatcher(project, myDelayMillis, this::restartAllAutoTests, file -> {
       if (ScratchUtil.isScratch(file)) {

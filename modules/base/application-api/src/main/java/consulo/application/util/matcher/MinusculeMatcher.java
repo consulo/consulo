@@ -3,8 +3,7 @@ package consulo.application.util.matcher;
 
 import consulo.util.collection.FList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Iterator;
 
 /**
@@ -21,36 +20,36 @@ abstract public class MinusculeMatcher implements Matcher {
   MinusculeMatcher() {
   }
 
-  @Nonnull
+  
   abstract public String getPattern();
 
   @Override
-  public boolean matches(@Nonnull String name) {
+  public boolean matches(String name) {
     return matchingFragments(name) != null;
   }
 
-  public FList<MatcherTextRange> matchingFragments(@Nonnull String name) {
+  public FList<MatcherTextRange> matchingFragments(String name) {
     throw new UnsupportedOperationException();
   }
 
-  public int matchingDegree(@Nonnull String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
+  public int matchingDegree(String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
     throw new UnsupportedOperationException();
   }
 
-  public int matchingDegree(@Nonnull String name, boolean valueStartCaseMatch) {
+  public int matchingDegree(String name, boolean valueStartCaseMatch) {
     return matchingDegree(name, valueStartCaseMatch, matchingFragments(name));
   }
 
-  public int matchingDegree(@Nonnull String name) {
+  public int matchingDegree(String name) {
     return matchingDegree(name, false);
   }
 
-  public boolean isStartMatch(@Nonnull String name) {
+  public boolean isStartMatch(String name) {
     FList<MatcherTextRange> fragments = matchingFragments(name);
     return fragments != null && isStartMatch(fragments);
   }
 
-  public static boolean isStartMatch(@Nonnull Iterable<? extends MatcherTextRange> fragments) {
+  public static boolean isStartMatch(Iterable<? extends MatcherTextRange> fragments) {
     Iterator<? extends MatcherTextRange> iterator = fragments.iterator();
     return !iterator.hasNext() || iterator.next().getStartOffset() == 0;
   }

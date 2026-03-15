@@ -20,8 +20,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributesScheme;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,8 +29,8 @@ import jakarta.annotation.Nullable;
 public class SeverityRegistrarUtil {
     public static TextAttributes getAttributesByType(
         @Nullable PsiElement element,
-        @Nonnull HighlightInfoType type,
-        @Nonnull TextAttributesScheme colorsScheme
+        HighlightInfoType type,
+        TextAttributesScheme colorsScheme
     ) {
         SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(element != null ? element.getProject() : null);
         TextAttributes textAttributes = severityRegistrar.getTextAttributesBySeverity(type.getSeverity(element));

@@ -18,30 +18,29 @@ package consulo.language.util;
 
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public interface FlyweightCapableTreeStructure<T> {
-  @Nonnull
+  
   T getRoot();
 
   @Nullable
-  T getParent(@Nonnull T node);
+  T getParent(T node);
 
-  @Nonnull
-  T prepareForGetChildren(@Nonnull T node);
+  
+  T prepareForGetChildren(T node);
 
-  int getChildren(@Nonnull T parent, @Nonnull SimpleReference<T[]> into);
+  int getChildren(T parent, SimpleReference<T[]> into);
 
   void disposeChildren(T[] nodes, int count);
 
-  @Nonnull
-  CharSequence toString(@Nonnull T node);
+  
+  CharSequence toString(T node);
 
-  int getStartOffset(@Nonnull T node);
+  int getStartOffset(T node);
 
-  int getEndOffset(@Nonnull T node);
+  int getEndOffset(T node);
 }

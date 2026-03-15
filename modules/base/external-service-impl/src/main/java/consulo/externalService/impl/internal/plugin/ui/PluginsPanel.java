@@ -41,8 +41,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -114,7 +113,7 @@ public class PluginsPanel implements Disposable {
         myTabbedPane.putClientProperty("JTabbedPane.trailingComponent", toolbar.getComponent());
     }
 
-    public static boolean isDownloaded(@Nonnull PluginDescriptor node) {
+    public static boolean isDownloaded(PluginDescriptor node) {
         if (node instanceof PluginNode pluginNode && pluginNode.getInstallStatus() == PluginNode.STATUS_DOWNLOADED) {
             return true;
         }
@@ -156,7 +155,7 @@ public class PluginsPanel implements Disposable {
         return myTabbedPane.getSelectedIndex();
     }
 
-    @Nonnull
+    
     public PluginTab getSelected() {
         int index = getSelectedIndex();
 

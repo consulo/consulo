@@ -25,7 +25,6 @@ import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -38,8 +37,8 @@ public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements
 
     @Override
     protected void fillActions(Project project,
-                               @Nonnull ActionGroup.Builder group,
-                               @Nonnull DataContext dataContext) {
+                               ActionGroup.Builder group,
+                               DataContext dataContext) {
         AnAction[] actions = getGroup().getChildren(null);
         for (AnAction action : actions) {
             group.add(action);
@@ -48,7 +47,7 @@ public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
         FeatureUsageTracker.getInstance().triggerFeatureUsed("ui.scheme.quickswitch");
     }

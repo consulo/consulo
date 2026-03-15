@@ -16,8 +16,7 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchDefaultExecutor;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchMode;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -33,7 +32,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         String text = ClipboardUtil.getTextInClipboard();
         // allow to apply from clipboard even if we do not detect it as a patch, because during applying we parse content more precisely
@@ -42,7 +41,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsLocalize.patchApplyCannotApplyNow().get())) {
             return;
@@ -55,7 +54,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
     }
 
     public static class MyApplyPatchFromClipboardDialog extends ApplyPatchDifferentiatedDialog {
-        public MyApplyPatchFromClipboardDialog(@Nonnull Project project, @Nonnull String clipboardText) {
+        public MyApplyPatchFromClipboardDialog(Project project, String clipboardText) {
             super(
                 project,
                 new ApplyPatchDefaultExecutor(project),
@@ -78,7 +77,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
             return createAnalyzeOnTheFlyOptionPanel();
         }
 
-        @Nonnull
+        
         private static JCheckBox createAnalyzeOnTheFlyOptionPanel() {
             JCheckBox removeOptionCheckBox =
                 new JCheckBox(VcsLocalize.patchApplyAnalyzeFromClipboardOnTheFlyCheckbox().get());

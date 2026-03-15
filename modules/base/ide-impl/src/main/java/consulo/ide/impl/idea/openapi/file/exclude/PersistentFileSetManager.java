@@ -13,7 +13,6 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.internal.CachedFileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -30,7 +29,7 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
 
   private final Map<VirtualFile, String> myMap = new HashMap<>();
 
-  boolean addFile(@Nonnull VirtualFile file, @Nonnull FileType type) {
+  boolean addFile(VirtualFile file, FileType type) {
     if (!(file instanceof VirtualFileWithId)) {
       throw new IllegalArgumentException("file must be instanceof VirtualFileWithId but got: " + file + " (" + file.getClass() + ")");
     }
@@ -45,7 +44,7 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
     return true;
   }
 
-  boolean removeFile(@Nonnull VirtualFile file) {
+  boolean removeFile(VirtualFile file) {
     boolean isRemoved = myMap.remove(file) != null;
     if (isRemoved) {
       onFileSettingsChanged(Collections.singleton(file));
@@ -53,11 +52,11 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
     return isRemoved;
   }
 
-  String getFileValue(@Nonnull VirtualFile file) {
+  String getFileValue(VirtualFile file) {
     return myMap.get(file);
   }
 
-  private static void onFileSettingsChanged(@Nonnull Collection<? extends VirtualFile> files) {
+  private static void onFileSettingsChanged(Collection<? extends VirtualFile> files) {
     // later because component load could be performed in background
     ApplicationManager.getApplication().invokeLater(() -> {
       WriteAction.run(() -> CachedFileType.clearCache());
@@ -65,7 +64,7 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
     });
   }
 
-  @Nonnull
+  
   Collection<VirtualFile> getFiles() {
     return myMap.keySet();
   }
@@ -88,7 +87,7 @@ abstract class PersistentFileSetManager implements PersistentStateComponent<Elem
   }
 
   @Override
-  public void loadState(@Nonnull Element state) {
+  public void loadState(Element state) {
     Set<VirtualFile> oldFiles = new HashSet<>(getFiles());
     myMap.clear();
     for (Element fileElement : state.getChildren(FILE_ELEMENT)) {

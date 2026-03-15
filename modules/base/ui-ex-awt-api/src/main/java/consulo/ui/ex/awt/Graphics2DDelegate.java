@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -65,7 +64,7 @@ public class Graphics2DDelegate extends Graphics2D{
     myDelegate.copyArea(x, y, width, height, dx, dy);
   }
 
-  @Nonnull
+  
   @Override
   public Graphics create() {
     return new Graphics2DDelegate((Graphics2D)myDelegate.create());

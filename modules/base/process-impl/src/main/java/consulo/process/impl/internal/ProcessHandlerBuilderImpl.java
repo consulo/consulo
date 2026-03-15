@@ -23,7 +23,6 @@ import consulo.process.impl.internal.local.*;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.internal.SudoBuilder;
 import consulo.process.io.BaseOutputReader;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -43,67 +42,67 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
 
   private final GeneralCommandLine myCommandLine;
 
-  public ProcessHandlerBuilderImpl(@Nonnull GeneralCommandLine commandLine) {
+  public ProcessHandlerBuilderImpl(GeneralCommandLine commandLine) {
     myCommandLine = commandLine;
   }
 
-  @Nonnull
+  
   @Override
   public ProcessHandlerBuilder binary() {
     myBinary = true;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public ProcessHandlerBuilder colored() {
     myColored = true;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public ProcessHandlerBuilder killable() {
     myKillable = true;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public ProcessHandlerBuilder silentReader() {
     myReaderOptions = BaseOutputReader.Options.forMostlySilentProcess();
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public ProcessHandlerBuilder blockingReader() {
     myReaderOptions = BaseOutputReader.Options.BLOCKING;
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public ProcessHandlerBuilder consoleType(@Nonnull ProcessConsoleType type) {
+  public ProcessHandlerBuilder consoleType(ProcessConsoleType type) {
     myConsoleType = type;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public ProcessHandlerBuilder shouldDestroyProcessRecursively(boolean destoryRecursive) {
     myShouldDestroyProcessRecursively = destoryRecursive;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public ProcessHandlerBuilder shouldKillProcessSoftly(boolean killProcessSoftly) {
     myShouldKillProcessSoftly = killProcessSoftly;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public ProcessHandler build() throws ExecutionException {
     GeneralCommandLine line = myCommandLine;
@@ -158,13 +157,13 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
     return processHandler;
   }
 
-  private ProcessHandler createLocalProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  private ProcessHandler createLocalProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
     OSProcessHandler processHandler = null;
 
     if (myKillable) {
       if (myColored) {
         processHandler = new KillableColoredProcessHandlerImpl(commandLine) {
-          @Nonnull
+          
           @Override
           protected BaseOutputReader.Options readerOptions() {
             if (myReaderOptions != null) {
@@ -176,7 +175,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
       }
       else {
         processHandler = new KillableProcessHandlerImpl(commandLine) {
-          @Nonnull
+          
           @Override
           protected BaseOutputReader.Options readerOptions() {
             if (myReaderOptions != null) {
@@ -190,7 +189,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
     else {
       if (myColored) {
         processHandler = new ColoredProcessHandlerImpl(commandLine) {
-          @Nonnull
+          
           @Override
           protected BaseOutputReader.Options readerOptions() {
             if (myReaderOptions != null) {
@@ -202,7 +201,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
       }
       else {
         processHandler = new OSProcessHandler(commandLine) {
-          @Nonnull
+          
           @Override
           protected BaseOutputReader.Options readerOptions() {
             if (myReaderOptions != null) {

@@ -4,29 +4,28 @@ package consulo.language.controlFlow.base;
 import consulo.language.controlFlow.ControlFlowBuilder;
 import consulo.language.controlFlow.TransparentInstruction;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TransparentInstructionImpl extends InstructionBaseImpl implements TransparentInstruction {
 
-    private final @Nonnull String myMarkerName;
+    private final String myMarkerName;
     private final int myNum;
 
-    public TransparentInstructionImpl(@Nonnull ControlFlowBuilder builder,
+    public TransparentInstructionImpl(ControlFlowBuilder builder,
                                       @Nullable PsiElement element,
-                                      @Nonnull String markerName) {
+                                      String markerName) {
         super(element);
         myMarkerName = markerName;
         myNum = builder.transparentInstructionCount++;
     }
 
     @Override
-    public @Nonnull String getElementPresentation() {
+    public String getElementPresentation() {
         return super.getElementPresentation() + "(" + myMarkerName + ")";
     }
 
     @Override
-    protected @Nonnull String id() {
+    protected String id() {
         return "t" + num();
     }
 

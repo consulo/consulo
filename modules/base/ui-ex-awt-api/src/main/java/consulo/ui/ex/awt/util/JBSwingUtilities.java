@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.util;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,9 +60,9 @@ public class JBSwingUtilities {
     return SwingUtilities.isRightMouseButton(anEvent);
   }
 
-  @Nonnull
+  
   @Deprecated
-  public static Graphics2D runGlobalCGTransform(@Nonnull JComponent c, @Nonnull Graphics g) {
+  public static Graphics2D runGlobalCGTransform(JComponent c, Graphics g) {
     return (Graphics2D) g;
   }
 }

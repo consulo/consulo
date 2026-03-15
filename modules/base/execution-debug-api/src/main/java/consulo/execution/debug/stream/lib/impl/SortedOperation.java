@@ -16,10 +16,9 @@
 package consulo.execution.debug.stream.lib.impl;
 
 import consulo.execution.debug.stream.resolve.IdentityResolver;
-import jakarta.annotation.Nonnull;
 
 public class SortedOperation extends OrderBasedOperation {
-  public SortedOperation(@Nonnull String name) {
+  public SortedOperation(String name) {
     super(name, new IdentityResolver());
   }
 }

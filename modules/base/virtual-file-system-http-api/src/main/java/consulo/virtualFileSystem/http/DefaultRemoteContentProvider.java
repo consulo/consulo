@@ -24,7 +24,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -39,12 +38,12 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
     private static final int READ_TIMEOUT = 60 * 1000;
 
     @Override
-    public boolean canProvideContent(@Nonnull String url) {
+    public boolean canProvideContent(String url) {
         return true;
     }
 
     @Override
-    public void saveContent(String url, @Nonnull File file, @Nonnull DownloadingCallback callback) {
+    public void saveContent(String url, File file, DownloadingCallback callback) {
         ApplicationManager.getApplication().executeOnPooledThread((Runnable) () -> downloadContent(url, file, callback));
     }
 
@@ -117,7 +116,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
     }
 
     @Override
-    public boolean isUpToDate(@Nonnull String url, @Nonnull VirtualFile local) {
+    public boolean isUpToDate(String url, VirtualFile local) {
         return false;
     }
 }

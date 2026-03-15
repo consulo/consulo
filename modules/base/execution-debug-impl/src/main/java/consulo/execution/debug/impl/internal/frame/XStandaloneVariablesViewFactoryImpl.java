@@ -21,7 +21,6 @@ import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XStandaloneVariablesView;
 import consulo.execution.debug.frame.XStandaloneVariablesViewFactory;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -40,7 +39,7 @@ public class XStandaloneVariablesViewFactoryImpl implements XStandaloneVariables
     }
 
     @Override
-    public XStandaloneVariablesView create(@Nonnull XDebuggerEditorsProvider editorsProvider, @Nonnull XStackFrame stackFrame) {
+    public XStandaloneVariablesView create(XDebuggerEditorsProvider editorsProvider, XStackFrame stackFrame) {
         return new XStandaloneVariablesViewImpl(myProject, editorsProvider, stackFrame);
     }
 }

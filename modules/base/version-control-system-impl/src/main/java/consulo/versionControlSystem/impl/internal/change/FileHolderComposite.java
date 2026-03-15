@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.FileHolder;
 import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class FileHolderComposite implements FileHolder {
     }
   }
 
-  public FileHolder add(@Nonnull FileHolder fileHolder, boolean copy) {
+  public FileHolder add(FileHolder fileHolder, boolean copy) {
     FileHolder added = copy ? fileHolder.copy() : fileHolder;
     myHolders.put(fileHolder.getType(), added);
     return added;

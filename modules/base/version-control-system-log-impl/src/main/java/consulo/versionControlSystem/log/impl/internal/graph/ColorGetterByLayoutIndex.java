@@ -23,25 +23,24 @@ import consulo.versionControlSystem.log.graph.GraphNode;
 import consulo.versionControlSystem.log.graph.PermanentGraphInfo;
 import consulo.versionControlSystem.log.graph.LinearGraphUtils;
 import consulo.versionControlSystem.log.graph.NormalEdge;
-import jakarta.annotation.Nonnull;
 
 public class ColorGetterByLayoutIndex<CommitId> {
-  @Nonnull
+  
   private final LinearGraph myLinearGraph;
-  @Nonnull
+  
   private final PermanentGraphInfo<CommitId> myPermanentGraphInfo;
-  @Nonnull
+  
   private final GraphColorManager<CommitId> myColorManager;
 
-  public ColorGetterByLayoutIndex(@Nonnull LinearGraph linearGraph,
-                                  @Nonnull PermanentGraphInfo<CommitId> permanentGraphInfo,
-                                  @Nonnull GraphColorManager<CommitId> colorManager) {
+  public ColorGetterByLayoutIndex(LinearGraph linearGraph,
+                                  PermanentGraphInfo<CommitId> permanentGraphInfo,
+                                  GraphColorManager<CommitId> colorManager) {
     myLinearGraph = linearGraph;
     myPermanentGraphInfo = permanentGraphInfo;
     myColorManager = colorManager;
   }
 
-  public int getColorId(@Nonnull GraphElement element) {
+  public int getColorId(GraphElement element) {
     int upNodeIndex, downNodeIndex;
     if (element instanceof GraphNode) {
       upNodeIndex = ((GraphNode)element).getNodeIndex();

@@ -20,8 +20,7 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -32,12 +31,12 @@ public class StubOutputStream extends DataOutputStream {
   private final AbstractStringEnumerator myNameStorage;
   private final byte[] myStringIOBuffer = IOUtil.allocReadWriteUTFBuffer();
 
-  public StubOutputStream(@Nonnull OutputStream out, @Nonnull AbstractStringEnumerator nameStorage) {
+  public StubOutputStream(OutputStream out, AbstractStringEnumerator nameStorage) {
     super(out);
     myNameStorage = nameStorage;
   }
 
-  public void writeUTFFast(@Nonnull String arg) throws IOException {
+  public void writeUTFFast(String arg) throws IOException {
     IOUtil.writeUTFFast(myStringIOBuffer, this, arg);
   }
 

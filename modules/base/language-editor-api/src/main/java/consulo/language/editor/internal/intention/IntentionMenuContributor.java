@@ -8,7 +8,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * Contributes actions to be shown in the Alt-Enter menu. Note that this is a low-level extensibility mechanism not designed to
@@ -20,9 +19,9 @@ public interface IntentionMenuContributor {
     ExtensionPointName<IntentionMenuContributor> EP_NAME = ExtensionPointName.create(IntentionMenuContributor.class);
 
     void collectActions(
-        @Nonnull Editor hostEditor,
-        @Nonnull PsiFile hostFile,
-        @Nonnull IntentionsInfo intentions,
+        Editor hostEditor,
+        PsiFile hostFile,
+        IntentionsInfo intentions,
         int passIdToShowIntentionsFor,
         int offset
     );

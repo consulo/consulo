@@ -77,8 +77,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,15 +87,15 @@ import java.util.*;
 public class TextMergeViewer implements MergeTool.MergeViewer {
     private static final Logger LOG = Logger.getInstance(TextMergeViewer.class);
 
-    @Nonnull
+    
     private final MergeContext myMergeContext;
-    @Nonnull
+    
     private final TextMergeRequest myMergeRequest;
 
-    @Nonnull
+    
     private final MyThreesideViewer myViewer;
 
-    public TextMergeViewer(@Nonnull MergeContext context, @Nonnull TextMergeRequest request) {
+    public TextMergeViewer(MergeContext context, TextMergeRequest request) {
         myMergeContext = context;
         myMergeRequest = request;
 
@@ -108,8 +107,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         myViewer = new MyThreesideViewer(diffContext, diffRequest);
     }
 
-    @Nonnull
-    private static List<DiffContent> getDiffContents(@Nonnull TextMergeRequest mergeRequest) {
+    
+    private static List<DiffContent> getDiffContents(TextMergeRequest mergeRequest) {
         List<DocumentContent> contents = mergeRequest.getContents();
 
         DocumentContent left = ThreeSide.LEFT.select(contents);
@@ -119,8 +118,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         return Arrays.asList(left, output, right);
     }
 
-    @Nonnull
-    private static List<String> getDiffContentTitles(@Nonnull TextMergeRequest mergeRequest) {
+    
+    private static List<String> getDiffContentTitles(TextMergeRequest mergeRequest) {
         List<String> titles = MergeImplUtil.notNullizeContentTitles(mergeRequest.getContentTitles());
         titles.set(ThreeSide.BASE.getIndex(), "Result");
         return titles;
@@ -130,7 +129,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     // Impl
     //
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return myViewer.getComponent();
@@ -142,7 +141,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         return myViewer.getPreferredFocusedComponent();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public MergeTool.ToolbarComponents init() {
@@ -157,9 +156,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         return components;
     }
 
-    @Nullable
     @Override
-    public MergeTool.ActionRecord getResolveAction(@Nonnull MergeResult result) {
+    public MergeTool.@Nullable ActionRecord getResolveAction(MergeResult result) {
         return myViewer.getResolveAction(result);
     }
 
@@ -173,7 +171,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     // Getters
     //
 
-    @Nonnull
+    
     public MyThreesideViewer getViewer() {
         return myViewer;
     }
@@ -183,23 +181,23 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     //
 
     public class MyThreesideViewer extends ThreesideTextDiffViewerEx {
-        @Nonnull
+        
         private final MergeModelBase myModel;
 
-        @Nonnull
+        
         private final ModifierProvider myModifierProvider;
-        @Nonnull
+        
         private final MyInnerDiffWorker myInnerDiffWorker;
 
         // all changes - both applied and unapplied ones
-        @Nonnull
+        
         private final List<TextMergeChange> myAllMergeChanges = new ArrayList<>();
 
         private boolean myInitialRediffStarted;
         private boolean myInitialRediffFinished;
         private boolean myContentModified;
 
-        public MyThreesideViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
+        public MyThreesideViewer(DiffContext context, ContentDiffRequest request) {
             super(context, request);
 
             myModel = new MyMergeModel(getProject(), getEditor().getDocument());
@@ -229,7 +227,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             super.onDispose();
         }
 
-        @Nonnull
+        
         @Override
         protected List<AnAction> createToolbarActions() {
             List<AnAction> group = new ArrayList<>();
@@ -251,7 +249,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             return group;
         }
 
-        @Nonnull
+        
         @Override
         protected List<AnAction> createEditorPopupActions() {
             List<AnAction> group = new ArrayList<>();
@@ -281,9 +279,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             return group;
         }
 
-        @Nullable
         @SuppressWarnings("RequiredXAction")
-        public MergeTool.ActionRecord getResolveAction(@Nonnull MergeResult result) {
+        public MergeTool.@Nullable ActionRecord getResolveAction(MergeResult result) {
             return new MergeTool.ActionRecord(
                 MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext),
                 () -> {
@@ -352,9 +349,9 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             doRediff();
         }
 
-        @Nonnull
+        
         @Override
-        protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
+        protected Runnable performRediff(ProgressIndicator indicator) {
             throw new UnsupportedOperationException();
         }
 
@@ -373,7 +370,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                     private Runnable myCallback;
 
                     @Override
-                    public void run(@Nonnull ProgressIndicator indicator) {
+                    public void run(ProgressIndicator indicator) {
                         myCallback = doPerformRediff(indicator);
                     }
 
@@ -384,7 +381,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                     }
 
                     @Override
-                    public void onThrowable(@Nonnull Throwable throwable) {
+                    public void onThrowable(Throwable throwable) {
                         myMergeContext.finishMerge(MergeResult.CANCEL);
                     }
 
@@ -400,8 +397,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         @RequiredUIAccess
-        @Nonnull
-        protected Runnable doPerformRediff(@Nonnull ProgressIndicator indicator) {
+        
+        protected Runnable doPerformRediff(ProgressIndicator indicator) {
             try {
                 indicator.checkCanceled();
 
@@ -446,10 +443,10 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
         }
 
-        @Nonnull
+        
         private Runnable apply(
-            @Nonnull List<MergeLineFragment> fragments,
-            @Nonnull List<MergeConflictType> conflictTypes
+            List<MergeLineFragment> fragments,
+            List<MergeConflictType> conflictTypes
         ) {
             return () -> {
                 //noinspection RequiredXAction
@@ -510,10 +507,10 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         //
 
         private class MyInnerDiffWorker {
-            @Nonnull
+            
             private final Set<TextMergeChange> myScheduled = new HashSet<>();
 
-            @Nonnull
+            
             private final Alarm myAlarm = new Alarm(MyThreesideViewer.this);
             @Nullable
             private ProgressIndicator myProgress;
@@ -521,12 +518,12 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             private boolean myEnabled = false;
 
             @RequiredUIAccess
-            public void scheduleRediff(@Nonnull TextMergeChange change) {
+            public void scheduleRediff(TextMergeChange change) {
                 scheduleRediff(Collections.singletonList(change));
             }
 
             @RequiredUIAccess
-            public void scheduleRediff(@Nonnull Collection<TextMergeChange> changes) {
+            public void scheduleRediff(Collection<TextMergeChange> changes) {
                 if (!myEnabled) {
                     return;
                 }
@@ -573,7 +570,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
 
             @RequiredUIAccess
-            private void putChanges(@Nonnull Collection<TextMergeChange> changes) {
+            private void putChanges(Collection<TextMergeChange> changes) {
                 for (TextMergeChange change : changes) {
                     if (change.isResolved()) {
                         continue;
@@ -612,9 +609,9 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
 
             private void performRediff(
-                @Nonnull List<TextMergeChange> scheduled,
-                @Nonnull List<InnerChunkData> data,
-                @Nonnull ProgressIndicator indicator
+                List<TextMergeChange> scheduled,
+                List<InnerChunkData> data,
+                ProgressIndicator indicator
             ) {
                 List<MergeInnerDifferences> result = new ArrayList<>(data.size());
                 for (InnerChunkData chunkData : data) {
@@ -652,7 +649,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
         @Override
         @RequiredUIAccess
-        protected void onBeforeDocumentChange(@Nonnull DocumentEvent e) {
+        protected void onBeforeDocumentChange(DocumentEvent e) {
             super.onBeforeDocumentChange(e);
             if (myInitialRediffFinished) {
                 myContentModified = true;
@@ -663,7 +660,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             myContentPanel.repaintDividers();
         }
 
-        private void onChangeResolved(@Nonnull TextMergeChange change) {
+        private void onChangeResolved(TextMergeChange change) {
             if (change.isResolved()) {
                 onChangeRemoved(change);
             }
@@ -699,7 +696,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
         }
 
-        @Nonnull
+        
         private HighlightPolicy getHighlightPolicy() {
             HighlightPolicy policy = getTextSettings().getHighlightPolicy();
             if (policy == HighlightPolicy.BY_WORD_SPLIT) {
@@ -715,35 +712,35 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         // Getters
         //
 
-        @Nonnull
+        
         public MergeModelBase getModel() {
             return myModel;
         }
 
-        @Nonnull
+        
         @Override
         public List<TextMergeChange> getAllChanges() {
             return myAllMergeChanges;
         }
 
-        @Nonnull
+        
         @Override
         public List<TextMergeChange> getChanges() {
             return ContainerUtil.filter(myAllMergeChanges, mergeChange -> !mergeChange.isResolved());
         }
 
-        @Nonnull
+        
         @Override
-        protected DiffDividerDrawUtil.DividerPaintable getDividerPaintable(@Nonnull Side side) {
+        protected DiffDividerDrawUtil.DividerPaintable getDividerPaintable(Side side) {
             return new MyDividerPaintable(side);
         }
 
-        @Nonnull
+        
         public ModifierProvider getModifierProvider() {
             return myModifierProvider;
         }
 
-        @Nonnull
+        
         public EditorEx getEditor() {
             return getEditor(ThreeSide.BASE);
         }
@@ -782,7 +779,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             @Nullable String commandName,
             boolean underBulkUpdate,
             @Nullable List<TextMergeChange> affected,
-            @Nonnull Runnable task
+            Runnable task
         ) {
             newMergeCommand(affected)
                 .name(LocalizeValue.ofNullable(commandName))
@@ -795,13 +792,13 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         public void executeMergeCommand(
             @Nullable String commandName,
             @Nullable List<TextMergeChange> affected,
-            @Nonnull Runnable task
+            Runnable task
         ) {
             executeMergeCommand(commandName, false, affected, task);
         }
 
         @RequiredUIAccess
-        public void markChangeResolved(@Nonnull TextMergeChange change) {
+        public void markChangeResolved(TextMergeChange change) {
             if (change.isResolved()) {
                 return;
             }
@@ -813,7 +810,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         @RequiredUIAccess
-        public void markChangeResolved(@Nonnull TextMergeChange change, @Nonnull Side side) {
+        public void markChangeResolved(TextMergeChange change, Side side) {
             if (change.isResolved(side)) {
                 return;
             }
@@ -826,7 +823,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         @RequiredUIAccess
-        public void ignoreChange(@Nonnull TextMergeChange change, @Nonnull Side side, boolean resolveChange) {
+        public void ignoreChange(TextMergeChange change, Side side, boolean resolveChange) {
             if (!change.isConflict() || resolveChange) {
                 markChangeResolved(change);
             }
@@ -836,7 +833,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         @RequiredWriteAction
-        public void replaceChange(@Nonnull TextMergeChange change, @Nonnull Side side, boolean resolveChange) {
+        public void replaceChange(TextMergeChange change, Side side, boolean resolveChange) {
             if (change.isResolved(side)) {
                 return;
             }
@@ -878,7 +875,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         @Nullable
-        public CharSequence resolveConflictUsingInnerDifferences(@Nonnull TextMergeChange change) {
+        public CharSequence resolveConflictUsingInnerDifferences(TextMergeChange change) {
             if (!change.isConflict()) {
                 return null;
             }
@@ -923,7 +920,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
         @RequiredUIAccess
         @RequiredWriteAction
-        public void resolveConflictedChange(@Nonnull TextMergeChange change) {
+        public void resolveConflictedChange(TextMergeChange change) {
             CharSequence newContent = resolveConflictUsingInnerDifferences(change);
             if (newContent == null) {
                 return;
@@ -935,7 +932,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         private class MyMergeModel extends MergeModelBase<TextMergeChange.State> {
-            public MyMergeModel(@Nullable Project project, @Nonnull Document document) {
+            public MyMergeModel(@Nullable Project project, Document document) {
                 super(project, document);
             }
 
@@ -947,7 +944,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 myInnerDiffWorker.scheduleRediff(change);
             }
 
-            @Nonnull
+            
             @Override
             @RequiredUIAccess
             protected TextMergeChange.State storeChangeState(int index) {
@@ -957,7 +954,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
             @Override
             @RequiredUIAccess
-            protected void restoreChangeState(@Nonnull TextMergeChange.State state) {
+            protected void restoreChangeState(TextMergeChange.State state) {
                 super.restoreChangeState(state);
                 TextMergeChange change = myAllMergeChanges.get(state.myIndex);
 
@@ -968,10 +965,9 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 }
             }
 
-            @Nullable
             @Override
             @RequiredUIAccess
-            protected TextMergeChange.State processDocumentChange(int index, int oldLine1, int oldLine2, int shift) {
+            protected TextMergeChange.@Nullable State processDocumentChange(int index, int oldLine1, int oldLine2, int shift) {
                 TextMergeChange.State state = super.processDocumentChange(index, oldLine1, oldLine2, shift);
 
                 TextMergeChange mergeChange = myAllMergeChanges.get(index);
@@ -989,7 +985,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         //
 
         @Nullable
-        private TextMergeChange getFirstUnresolvedChange(boolean acceptConflicts, @Nonnull ThreeSide side) {
+        private TextMergeChange getFirstUnresolvedChange(boolean acceptConflicts, ThreeSide side) {
             for (TextMergeChange change : getAllChanges()) {
                 if (change.isResolved()) {
                     continue;
@@ -1006,7 +1002,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         @RequiredUIAccess
-        private void applyNonConflictedChanges(@Nonnull ThreeSide side) {
+        private void applyNonConflictedChanges(ThreeSide side) {
             newMergeCommand(null)
                 .name(DiffLocalize.mergeDialogApplyNonConflictedChangesCommand())
                 .inBulkUpdate()
@@ -1038,13 +1034,13 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 super(getTextSettings());
             }
 
-            @Nonnull
+            
             @Override
             protected HighlightPolicy getCurrentSetting() {
                 return getHighlightPolicy();
             }
 
-            @Nonnull
+            
             @Override
             protected List<HighlightPolicy> getAvailableSettings() {
                 return Arrays.asList(HighlightPolicy.BY_LINE, HighlightPolicy.BY_WORD);
@@ -1066,7 +1062,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 if (myShortcut) {
                     // consume shortcut even if there are nothing to do - avoid calling some other action
                     e.getPresentation().setEnabledAndVisible(true);
@@ -1095,7 +1091,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Editor editor = e.getData(Editor.KEY);
                 ThreeSide side = getEditorSide(editor);
                 if (editor == null || side == null) {
@@ -1113,7 +1109,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                     .run(() -> apply(side, selectedChanges));
             }
 
-            private boolean isSomeChangeSelected(@Nonnull ThreeSide side) {
+            private boolean isSomeChangeSelected(ThreeSide side) {
                 EditorEx editor = getEditor(side);
                 List<Caret> carets = editor.getCaretModel().getAllCarets();
                 if (carets.size() != 1) {
@@ -1141,9 +1137,9 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 return false;
             }
 
-            @Nonnull
+            
             @RequiredUIAccess
-            private List<TextMergeChange> getSelectedChanges(@Nonnull ThreeSide side) {
+            private List<TextMergeChange> getSelectedChanges(ThreeSide side) {
                 BitSet lines = DiffImplUtil.getSelectedLines(getEditor(side));
                 List<TextMergeChange> changes = getChanges();
 
@@ -1162,54 +1158,54 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 return affectedChanges;
             }
 
-            @Nonnull
-            protected LocalizeValue getTextValue(@Nonnull ThreeSide side) {
+            
+            protected LocalizeValue getTextValue(ThreeSide side) {
                 return LocalizeValue.ofNullable(getText(side));
             }
 
             @Deprecated
             @DeprecationInfo("Use #getTextValue()")
-            protected String getText(@Nonnull ThreeSide side) {
+            protected String getText(ThreeSide side) {
                 return getTextValue(side).get();
             }
 
-            protected abstract boolean isVisible(@Nonnull ThreeSide side);
+            protected abstract boolean isVisible(ThreeSide side);
 
-            protected abstract boolean isEnabled(@Nonnull TextMergeChange change);
+            protected abstract boolean isEnabled(TextMergeChange change);
 
             @RequiredWriteAction
-            protected abstract void apply(@Nonnull ThreeSide side, @Nonnull List<TextMergeChange> changes);
+            protected abstract void apply(ThreeSide side, List<TextMergeChange> changes);
         }
 
         private class IgnoreSelectedChangesSideAction extends ApplySelectedChangesActionBase {
-            @Nonnull
+            
             private final Side mySide;
 
-            public IgnoreSelectedChangesSideAction(@Nonnull Side side, boolean shortcut) {
+            public IgnoreSelectedChangesSideAction(Side side, boolean shortcut) {
                 super(shortcut);
                 mySide = side;
                 ActionImplUtil.copyFrom(this, mySide.select("Diff.IgnoreLeftSide", "Diff.IgnoreRightSide"));
             }
 
-            @Nonnull
+            
             @Override
-            protected LocalizeValue getTextValue(@Nonnull ThreeSide side) {
+            protected LocalizeValue getTextValue(ThreeSide side) {
                 return LocalizeValue.localizeTODO("Ignore");
             }
 
             @Override
-            protected boolean isVisible(@Nonnull ThreeSide side) {
+            protected boolean isVisible(ThreeSide side) {
                 return side == mySide.select(ThreeSide.LEFT, ThreeSide.RIGHT);
             }
 
             @Override
-            protected boolean isEnabled(@Nonnull TextMergeChange change) {
+            protected boolean isEnabled(TextMergeChange change) {
                 return !change.isResolved(mySide);
             }
 
             @RequiredWriteAction
             @Override
-            protected void apply(@Nonnull ThreeSide side, @Nonnull List<TextMergeChange> changes) {
+            protected void apply(ThreeSide side, List<TextMergeChange> changes) {
                 for (TextMergeChange change : changes) {
                     ignoreChange(change, mySide, false);
                 }
@@ -1222,25 +1218,25 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 getTemplatePresentation().setIcon(AllIcons.Diff.Remove);
             }
 
-            @Nonnull
+            
             @Override
-            protected LocalizeValue getTextValue(@Nonnull ThreeSide side) {
+            protected LocalizeValue getTextValue(ThreeSide side) {
                 return LocalizeValue.localizeTODO("Ignore");
             }
 
             @Override
-            protected boolean isVisible(@Nonnull ThreeSide side) {
+            protected boolean isVisible(ThreeSide side) {
                 return side == ThreeSide.BASE;
             }
 
             @Override
-            protected boolean isEnabled(@Nonnull TextMergeChange change) {
+            protected boolean isEnabled(TextMergeChange change) {
                 return !change.isResolved();
             }
 
             @Override
             @RequiredWriteAction
-            protected void apply(@Nonnull ThreeSide side, @Nonnull List<TextMergeChange> changes) {
+            protected void apply(ThreeSide side, List<TextMergeChange> changes) {
                 for (TextMergeChange change : changes) {
                     markChangeResolved(change);
                 }
@@ -1248,36 +1244,36 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         private class ApplySelectedChangesAction extends ApplySelectedChangesActionBase {
-            @Nonnull
+            
             private final Side mySide;
 
-            public ApplySelectedChangesAction(@Nonnull Side side, boolean shortcut) {
+            public ApplySelectedChangesAction(Side side, boolean shortcut) {
                 super(shortcut);
                 mySide = side;
                 ActionImplUtil.copyFrom(this, mySide.select("Diff.ApplyLeftSide", "Diff.ApplyRightSide"));
             }
 
-            @Nonnull
+            
             @Override
-            protected LocalizeValue getTextValue(@Nonnull ThreeSide side) {
+            protected LocalizeValue getTextValue(ThreeSide side) {
                 return side != ThreeSide.BASE
                     ? LocalizeValue.localizeTODO("Accept")
                     : LocalizeValue.ofNullable(getTemplatePresentation().getText());
             }
 
             @Override
-            protected boolean isVisible(@Nonnull ThreeSide side) {
+            protected boolean isVisible(ThreeSide side) {
                 return side == ThreeSide.BASE || side == mySide.select(ThreeSide.LEFT, ThreeSide.RIGHT);
             }
 
             @Override
-            protected boolean isEnabled(@Nonnull TextMergeChange change) {
+            protected boolean isEnabled(TextMergeChange change) {
                 return !change.isResolved(mySide);
             }
 
             @RequiredWriteAction
             @Override
-            protected void apply(@Nonnull ThreeSide side, @Nonnull List<TextMergeChange> changes) {
+            protected void apply(ThreeSide side, List<TextMergeChange> changes) {
                 for (int i = changes.size() - 1; i >= 0; i--) {
                     replaceChange(changes.get(i), mySide, false);
                 }
@@ -1285,33 +1281,33 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         private class ResolveSelectedChangesAction extends ApplySelectedChangesActionBase {
-            @Nonnull
+            
             private final Side mySide;
 
-            public ResolveSelectedChangesAction(@Nonnull Side side) {
+            public ResolveSelectedChangesAction(Side side) {
                 super(false);
                 mySide = side;
             }
 
-            @Nonnull
+            
             @Override
-            protected LocalizeValue getTextValue(@Nonnull ThreeSide side) {
+            protected LocalizeValue getTextValue(ThreeSide side) {
                 return mySide.select(LocalizeValue.localizeTODO("Resolve using Left"), LocalizeValue.localizeTODO("Resolve using Right"));
             }
 
             @Override
-            protected boolean isVisible(@Nonnull ThreeSide side) {
+            protected boolean isVisible(ThreeSide side) {
                 return side == ThreeSide.BASE;
             }
 
             @Override
-            protected boolean isEnabled(@Nonnull TextMergeChange change) {
+            protected boolean isEnabled(TextMergeChange change) {
                 return !change.isResolved(mySide);
             }
 
             @RequiredWriteAction
             @Override
-            protected void apply(@Nonnull ThreeSide side, @Nonnull List<TextMergeChange> changes) {
+            protected void apply(ThreeSide side, List<TextMergeChange> changes) {
                 for (int i = changes.size() - 1; i >= 0; i--) {
                     replaceChange(changes.get(i), mySide, true);
                 }
@@ -1319,23 +1315,23 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
 
         public class ApplyNonConflictsAction extends DumbAwareAction {
-            @Nonnull
+            
             private final ThreeSide mySide;
 
-            public ApplyNonConflictsAction(@Nonnull ThreeSide side) {
+            public ApplyNonConflictsAction(ThreeSide side) {
                 String id = side.select("Diff.ApplyNonConflicts.Left", "Diff.ApplyNonConflicts", "Diff.ApplyNonConflicts.Right");
                 ActionImplUtil.copyFrom(this, id);
                 mySide = side;
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(getFirstUnresolvedChange(false, mySide) != null);
             }
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 applyNonConflictedChanges(mySide);
             }
         }
@@ -1345,15 +1341,15 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         //
 
         private class MyDividerPaintable implements DiffDividerDrawUtil.DividerPaintable {
-            @Nonnull
+            
             private final Side mySide;
 
-            public MyDividerPaintable(@Nonnull Side side) {
+            public MyDividerPaintable(Side side) {
                 mySide = side;
             }
 
             @Override
-            public void process(@Nonnull Handler handler) {
+            public void process(Handler handler) {
                 ThreeSide left = mySide.select(ThreeSide.LEFT, ThreeSide.BASE);
                 ThreeSide right = mySide.select(ThreeSide.BASE, ThreeSide.RIGHT);
                 for (TextMergeChange mergeChange : myAllMergeChanges) {
@@ -1388,10 +1384,10 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     }
 
     private static class InnerChunkData {
-        @Nonnull
+        
         public final List<CharSequence> text;
 
-        public InnerChunkData(@Nonnull TextMergeChange change, @Nonnull List<Document> documents) {
+        public InnerChunkData(TextMergeChange change, List<Document> documents) {
             text = ThreeSide.map(
                 side -> !change.isChange(side) || change.isResolved(side) ? null : getChunkContent(change, documents, side)
             );
@@ -1400,9 +1396,9 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         @Nullable
         @RequiredWriteAction
         private static CharSequence getChunkContent(
-            @Nonnull TextMergeChange change,
-            @Nonnull List<Document> documents,
-            @Nonnull ThreeSide side
+            TextMergeChange change,
+            List<Document> documents,
+            ThreeSide side
         ) {
             int startLine = change.getStartLine(side);
             int endLine = change.getEndLine(side);

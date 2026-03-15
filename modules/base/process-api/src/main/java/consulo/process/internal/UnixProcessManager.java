@@ -21,7 +21,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,7 +64,7 @@ public class UnixProcessManager {
   private UnixProcessManager() { }
 
   @Deprecated
-  public static int getProcessId(@Nonnull Process process) {
+  public static int getProcessId(Process process) {
     return (int)process.pid();
   }
 
@@ -85,15 +84,15 @@ public class UnixProcessManager {
     }
   }
 
-  public static boolean sendSigIntToProcessTree(@Nonnull Process process) {
+  public static boolean sendSigIntToProcessTree(Process process) {
     return sendSignalToProcessTree(process, SIGINT);
   }
 
-  public static boolean sendSigKillToProcessTree(@Nonnull Process process) {
+  public static boolean sendSigKillToProcessTree(Process process) {
     return sendSignalToProcessTree(process, SIGKILL);
   }
 
-  public static boolean sendSignalToProcessTree(@Nonnull Process process, int signal) {
+  public static boolean sendSignalToProcessTree(Process process, int signal) {
     try {
       return sendSignalToProcessTree(getProcessId(process), signal);
     }
@@ -267,7 +266,7 @@ public class UnixProcessManager {
   }
 
   /** @deprecated to be removed in IDEA 2018 */
-  public static int getProcessPid(@Nonnull Process process) {
+  public static int getProcessPid(Process process) {
     return getProcessId(process);
   }
 }

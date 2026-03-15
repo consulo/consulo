@@ -21,7 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.document.util.TextRange;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole

@@ -7,8 +7,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessAdapter;
 import consulo.process.util.CapturingProcessRunner;
 import consulo.process.util.ProcessOutput;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -20,7 +19,7 @@ import java.nio.charset.Charset;
 public final class CapturingProcessHandler extends OSProcessHandler {
   private final CapturingProcessRunner myProcessRunner;
 
-  public CapturingProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public CapturingProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
     myProcessRunner = new CapturingProcessRunner(this, this::createProcessAdapter);
   }
@@ -28,7 +27,7 @@ public final class CapturingProcessHandler extends OSProcessHandler {
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public CapturingProcessHandler(@Nonnull Process process, @Nullable Charset charset, /*@NotNull*/ String commandLine) {
+  public CapturingProcessHandler(Process process, @Nullable Charset charset, /*@NotNull*/ String commandLine) {
     super(process, commandLine, charset);
     myProcessRunner = new CapturingProcessRunner(this, this::createProcessAdapter);
   }
@@ -42,7 +41,7 @@ public final class CapturingProcessHandler extends OSProcessHandler {
     return myCharset != null ? myCharset : super.getCharset();
   }
 
-  @Nonnull
+  
   public ProcessOutput runProcess() {
     return myProcessRunner.runProcess();
   }
@@ -66,18 +65,18 @@ public final class CapturingProcessHandler extends OSProcessHandler {
     return myProcessRunner.runProcess(timeoutInMilliseconds, destroyOnTimeout);
   }
 
-  @Nonnull
-  public ProcessOutput runProcessWithProgressIndicator(@Nonnull ProgressIndicator indicator) {
+  
+  public ProcessOutput runProcessWithProgressIndicator(ProgressIndicator indicator) {
     return myProcessRunner.runProcess(indicator);
   }
 
-  @Nonnull
-  public ProcessOutput runProcessWithProgressIndicator(@Nonnull ProgressIndicator indicator, int timeoutInMilliseconds) {
+  
+  public ProcessOutput runProcessWithProgressIndicator(ProgressIndicator indicator, int timeoutInMilliseconds) {
     return myProcessRunner.runProcess(indicator, timeoutInMilliseconds);
   }
 
-  @Nonnull
-  public ProcessOutput runProcessWithProgressIndicator(@Nonnull ProgressIndicator indicator, int timeoutInMilliseconds, boolean destroyOnTimeout) {
+  
+  public ProcessOutput runProcessWithProgressIndicator(ProgressIndicator indicator, int timeoutInMilliseconds, boolean destroyOnTimeout) {
     return myProcessRunner.runProcess(indicator, timeoutInMilliseconds, destroyOnTimeout);
   }
 }

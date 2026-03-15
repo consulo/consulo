@@ -17,8 +17,7 @@ package consulo.language.codeStyle.internal;
 
 import consulo.application.progress.SequentialTask;
 import consulo.language.codeStyle.Block;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -38,7 +37,7 @@ public interface FormattingProgressCallback {
    * @param wrapped   wrapped code block
    * @see FormattingStateId#WRAPPING_BLOCKS
    */
-  void afterWrappingBlock(@Nonnull LeafBlockWrapper wrapped);
+  void afterWrappingBlock(LeafBlockWrapper wrapped);
 
   /**
    * Notifies current indicator that given {@link LeafBlockWrapper wrapped code block} is processed, i.e. its
@@ -47,7 +46,7 @@ public interface FormattingProgressCallback {
    * @param block     processed wrapped block which white space if adjusted
    * @see FormattingStateId#PROCESSING_BLOCKS
    */
-  void afterProcessingBlock(@Nonnull LeafBlockWrapper block);
+  void afterProcessingBlock(LeafBlockWrapper block);
 
   /**
    * Notifies current indicator that changes from the given {@link LeafBlockWrapper wrapped code blocks} are about to be flushed
@@ -57,7 +56,7 @@ public interface FormattingProgressCallback {
    *                            to be flushed to the underlying document
    * @see FormattingStateId#APPLYING_CHANGES
    */
-  void beforeApplyingFormatChanges(@Nonnull Collection<LeafBlockWrapper> modifiedBlocks);
+  void beforeApplyingFormatChanges(Collection<LeafBlockWrapper> modifiedBlocks);
 
   /**
    * Notifies current indicator that change from the given {@link LeafBlockWrapper wrapped code block} is successfully flushed
@@ -66,7 +65,7 @@ public interface FormattingProgressCallback {
    * @param block     {@link LeafBlockWrapper wrapped code block} which change is successfully flushed to the underlying document
    * @see FormattingStateId#APPLYING_CHANGES
    */
-  void afterApplyingChange(@Nonnull LeafBlockWrapper block);
+  void afterApplyingChange(LeafBlockWrapper block);
 
   /**
    * Allows to define an actual formatting task to process.
@@ -88,26 +87,26 @@ public interface FormattingProgressCallback {
    * @return              <code>true</code> if given callback is successfully registered for the given event type;
    *                      <code>false</code> otherwise
    */
-  boolean addCallback(@Nonnull EventType eventType, @Nonnull Runnable callback);
+  boolean addCallback(EventType eventType, Runnable callback);
   
   /**
    * <a hrep="http://en.wikipedia.org/wiki/Null_Object_pattern">Null object</a> for {@link FormattingProgressCallback}. 
    */
   FormattingProgressCallback EMPTY = new FormattingProgressCallback() {
     @Override
-    public void afterWrappingBlock(@Nonnull LeafBlockWrapper wrapped) {
+    public void afterWrappingBlock(LeafBlockWrapper wrapped) {
     }
 
     @Override
-    public void afterProcessingBlock(@Nonnull LeafBlockWrapper block) {
+    public void afterProcessingBlock(LeafBlockWrapper block) {
     }
 
     @Override
-    public void beforeApplyingFormatChanges(@Nonnull Collection<LeafBlockWrapper> modifiedBlocks) {
+    public void beforeApplyingFormatChanges(Collection<LeafBlockWrapper> modifiedBlocks) {
     }
 
     @Override
-    public void afterApplyingChange(@Nonnull LeafBlockWrapper block) {
+    public void afterApplyingChange(LeafBlockWrapper block) {
     }
 
     @Override
@@ -115,7 +114,7 @@ public interface FormattingProgressCallback {
     }
 
     @Override
-    public boolean addCallback(@Nonnull EventType eventType, @Nonnull Runnable callback) {
+    public boolean addCallback(EventType eventType, Runnable callback) {
       return false;
     }
   };

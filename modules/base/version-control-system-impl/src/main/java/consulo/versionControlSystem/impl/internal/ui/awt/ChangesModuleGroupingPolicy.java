@@ -27,7 +27,7 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNo
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesGroupingPolicy;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.io.File;

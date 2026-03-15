@@ -29,8 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -56,7 +55,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "eap";
@@ -68,7 +67,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
         return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return IdeLocalize.eapConfigurableName();
@@ -77,7 +76,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
     @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+    public JComponent createComponent(Disposable parentDisposable) {
         myCheckBoxes = new LinkedHashMap<>();
 
         JPanel panel = new JPanel(new VerticalFlowLayout());

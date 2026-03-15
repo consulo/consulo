@@ -31,8 +31,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,7 +44,7 @@ import java.util.List;
 public class PsiFileReferenceHelper extends FileReferenceHelper {
 
   @Override
-  public PsiFileSystemItem findRoot(Project project, @Nonnull VirtualFile file) {
+  public PsiFileSystemItem findRoot(Project project, VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     VirtualFile contentRootForFile = index.getSourceRootForFile(file);
     if (contentRootForFile == null) contentRootForFile = index.getContentRootForFile(file);
@@ -57,14 +56,14 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  @Nonnull
-  public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
+  
+  public Collection<PsiFileSystemItem> getRoots(Module module) {
     return getContextsForModule(module, "", GlobalSearchScope.moduleWithDependenciesScope(module));
   }
 
   @Override
-  @Nonnull
-  public Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file) {
+  
+  public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
     PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     if (item != null) {
       PsiFileSystemItem parent = item.getParent();
@@ -93,18 +92,18 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  public boolean isMine(Project project, @Nonnull VirtualFile file) {
+  public boolean isMine(Project project, VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     return index.isInSourceContent(file);
   }
 
   @Override
-  @Nonnull
-  public String trimUrl(@Nonnull String url) {
+  
+  public String trimUrl(String url) {
     return url.trim();
   }
 
-  static Collection<PsiFileSystemItem> getContextsForModule(@Nonnull Module module, @Nonnull String packageName, @Nullable GlobalSearchScope scope) {
+  static Collection<PsiFileSystemItem> getContextsForModule(Module module, String packageName, @Nullable GlobalSearchScope scope) {
     List<PsiFileSystemItem> result = null;
     Query<VirtualFile> query = DirectoryIndex.getInstance(module.getProject()).getDirectoriesByPackageName(packageName, false);
     PsiManager manager = null;

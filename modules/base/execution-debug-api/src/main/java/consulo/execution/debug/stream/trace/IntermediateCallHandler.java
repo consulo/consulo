@@ -2,7 +2,6 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface IntermediateCallHandler extends TraceHandler, CallTransformer<IntermediateStreamCall> {
-  @Nonnull
+  
   List<IntermediateStreamCall> additionalCallsBefore();
 
   /**
@@ -26,11 +25,11 @@ public interface IntermediateCallHandler extends TraceHandler, CallTransformer<I
    * @return List of methods, that should be called right after the current method and which are "inseparable".
    * It means it is impossible to insert a peek call between them, without breaking type chain.
    */
-  @Nonnull
+  
   default List<IntermediateStreamCall> additionalInseparableCalls() {
     return Collections.emptyList();
   }
 
-  @Nonnull
+  
   List<IntermediateStreamCall> additionalCallsAfter();
 }

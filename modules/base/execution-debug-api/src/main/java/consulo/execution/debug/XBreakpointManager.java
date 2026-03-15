@@ -26,8 +26,7 @@ import consulo.execution.debug.event.XBreakpointListener;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -37,73 +36,73 @@ import java.util.Collection;
  * @author nik
  */
 public interface XBreakpointManager {
-    @Nonnull
+    
     @RequiredWriteAction
     <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(XBreakpointType<XBreakpoint<T>, T> type, @Nullable T properties);
 
-    @Nonnull
+    
     <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type,
-                                                                           @Nonnull String fileUrl,
+                                                                           String fileUrl,
                                                                            int line,
                                                                            @Nullable T properties,
                                                                            boolean temporary);
 
-    @Nonnull
+    
     <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type,
-                                                                           @Nonnull String fileUrl,
+                                                                           String fileUrl,
                                                                            int line,
                                                                            @Nullable T properties);
 
-    void removeBreakpoint(@Nonnull XBreakpoint<?> breakpoint);
+    void removeBreakpoint(XBreakpoint<?> breakpoint);
 
-    @Nonnull
+    
     XBreakpoint<?>[] getAllBreakpoints();
 
-    @Nonnull
-    <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@Nonnull XBreakpointType<B, ?> type);
+    
+    <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(XBreakpointType<B, ?> type);
 
-    @Nonnull
-    <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass);
+    
+    <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(Class<? extends XBreakpointType<B, ?>> typeClass);
 
     @Nullable
-    <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(@Nonnull XLineBreakpointType<P> type,
-                                                                              @Nonnull VirtualFile file,
+    <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(XLineBreakpointType<P> type,
+                                                                              VirtualFile file,
                                                                               int line);
 
-    boolean isDefaultBreakpoint(@Nonnull XBreakpoint<?> breakpoint);
+    boolean isDefaultBreakpoint(XBreakpoint<?> breakpoint);
 
     @Nullable
-    <B extends XBreakpoint<?>> B getDefaultBreakpoint(@Nonnull XBreakpointType<B, ?> type);
+    <B extends XBreakpoint<?>> B getDefaultBreakpoint(XBreakpointType<B, ?> type);
 
-    <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type,
-                                                                                           @Nonnull XBreakpointListener<B> listener);
+    <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(XBreakpointType<B, P> type,
+                                                                                           XBreakpointListener<B> listener);
 
-    <B extends XBreakpoint<P>, P extends XBreakpointProperties> void removeBreakpointListener(@Nonnull XBreakpointType<B, P> type,
-                                                                                              @Nonnull XBreakpointListener<B> listener);
+    <B extends XBreakpoint<P>, P extends XBreakpointProperties> void removeBreakpointListener(XBreakpointType<B, P> type,
+                                                                                              XBreakpointListener<B> listener);
 
-    <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type,
-                                                                                           @Nonnull XBreakpointListener<B> listener,
+    <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(XBreakpointType<B, P> type,
+                                                                                           XBreakpointListener<B> listener,
                                                                                            Disposable parentDisposable);
 
     @Deprecated
     @DeprecationInfo("Use MessageBus for listeners")
-    void addBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener);
+    void addBreakpointListener(XBreakpointListener<XBreakpoint<?>> listener);
 
     @Deprecated
     @DeprecationInfo("Use MessageBus for listeners")
-    void removeBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener);
+    void removeBreakpointListener(XBreakpointListener<XBreakpoint<?>> listener);
 
     @Deprecated
     @DeprecationInfo("Use MessageBus for listeners")
-    void addBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener, @Nonnull Disposable parentDisposable);
+    void addBreakpointListener(XBreakpointListener<XBreakpoint<?>> listener, Disposable parentDisposable);
 
-    void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
+    void updateBreakpointPresentation(XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
 
-    @Nonnull
+    
     Project getProject();
 
-    @Nonnull
+    
     XDependentBreakpointManager getDependentBreakpointManager();
 
-    void editBreakpoint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Object breakpoint, @Nonnull GutterIconRenderer breakpointGutterRenderer);
+    void editBreakpoint(Project project, Editor editor, Object breakpoint, GutterIconRenderer breakpointGutterRenderer);
 }

@@ -19,7 +19,6 @@ import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelListener;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -36,12 +35,12 @@ public class DesktopComboBoxModelWrapper<E> extends AbstractListModel<E> impleme
     if (model instanceof MutableListModel) {
       ((MutableListModel)model).adddListener(new MutableListModelListener() {
         @Override
-        public void itemAdded(@Nonnull Object item) {
+        public void itemAdded(Object item) {
           fireContentsChanged(this, -1, -1);
         }
 
         @Override
-        public void itemRemoved(@Nonnull Object item) {
+        public void itemRemoved(Object item) {
           fireContentsChanged(this, -1, -1);
         }
       });

@@ -29,37 +29,36 @@ import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class BranchFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogBranchFilter> {
-    @Nonnull
+    
     private final VcsLogUiImpl myUi;
     private VcsLogClassicFilterUi.BranchFilterModel myBranchFilterModel;
 
     public BranchFilterPopupComponent(
-        @Nonnull VcsLogUiImpl ui,
-        @Nonnull MainVcsLogUiProperties uiProperties,
-        @Nonnull VcsLogClassicFilterUi.BranchFilterModel filterModel
+        VcsLogUiImpl ui,
+        MainVcsLogUiProperties uiProperties,
+        VcsLogClassicFilterUi.BranchFilterModel filterModel
     ) {
         super("Branch", uiProperties, filterModel);
         myUi = ui;
         myBranchFilterModel = filterModel;
     }
 
-    @Nonnull
+    
     @Override
-    protected String getText(@Nonnull VcsLogBranchFilter filter) {
+    protected String getText(VcsLogBranchFilter filter) {
         return MultipleValueFilterPopupComponent.displayableText(myFilterModel.getFilterValues(filter));
     }
 
     @Nullable
     @Override
-    protected String getToolTip(@Nonnull VcsLogBranchFilter filter) {
+    protected String getToolTip(VcsLogBranchFilter filter) {
         return MultipleValueFilterPopupComponent.tooltip(myFilterModel.getFilterValues(filter));
     }
 
@@ -68,7 +67,7 @@ public class BranchFilterPopupComponent extends MultipleValueFilterPopupComponen
         return true;
     }
 
-    @Nonnull
+    
     @Override
     protected ListPopup createPopupMenu() {
         ActionGroup actionGroup = createActionGroup();
@@ -92,18 +91,18 @@ public class BranchFilterPopupComponent extends MultipleValueFilterPopupComponen
         return actionGroup.build();
     }
 
-    @Nonnull
+    
     @Override
     protected List<List<String>> getRecentValuesFromSettings() {
         return myUiProperties.getRecentlyFilteredBranchGroups();
     }
 
     @Override
-    protected void rememberValuesInSettings(@Nonnull Collection<String> values) {
+    protected void rememberValuesInSettings(Collection<String> values) {
         myUiProperties.addRecentlyFilteredBranchGroup(new ArrayList<>(values));
     }
 
-    @Nonnull
+    
     @Override
     protected List<String> getAllValues() {
         return ContainerUtil.map(myFilterModel.getDataPack().getRefs().getBranches(), VcsRef::getName);
@@ -111,30 +110,30 @@ public class BranchFilterPopupComponent extends MultipleValueFilterPopupComponen
 
     private class MyBranchPopupBuilder extends BranchPopupBuilder {
         protected MyBranchPopupBuilder(
-            @Nonnull VcsLogDataPack dataPack,
+            VcsLogDataPack dataPack,
             @Nullable Collection<VirtualFile> visibleRoots,
             @Nullable List<List<String>> recentItems
         ) {
             super(dataPack, visibleRoots, recentItems);
         }
 
-        @Nonnull
+        
         @Override
-        public AnAction createAction(@Nonnull String name) {
+        public AnAction createAction(String name) {
             return new PredefinedValueAction(name) {
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     myFilterModel.setFilter(myFilterModel.createFilter(myValues)); // does not add to recent
                 }
             };
         }
 
         @Override
-        protected void createRecentAction(@Nonnull DefaultActionGroup actionGroup, @Nonnull List<String> recentItem) {
+        protected void createRecentAction(DefaultActionGroup actionGroup, List<String> recentItem) {
             actionGroup.add(new PredefinedValueAction(recentItem));
         }
 
-        @Nonnull
+        
         @Override
         protected AnAction createCollapsedAction(String actionName) {
             return new PredefinedValueAction(actionName); // adds to recent

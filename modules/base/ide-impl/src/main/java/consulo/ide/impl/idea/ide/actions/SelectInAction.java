@@ -36,7 +36,6 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,7 +50,7 @@ public class SelectInAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.select.in");
         SelectInContext context = SelectInContextImpl.createContext(e);
         if (context == null) {
@@ -61,7 +60,7 @@ public class SelectInAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         event.getPresentation().setEnabledAndVisible(SelectInContextImpl.createContext(event) != null);
     }
 
@@ -90,7 +89,7 @@ public class SelectInAction extends AnAction implements DumbAware {
         private final SelectInContext mySelectInContext;
         private final List<SelectInTarget> myVisibleTargets;
 
-        public SelectInActionsStep(@Nonnull Collection<SelectInTarget> targetVector, SelectInContext selectInContext) {
+        public SelectInActionsStep(Collection<SelectInTarget> targetVector, SelectInContext selectInContext) {
             mySelectInContext = selectInContext;
             myVisibleTargets = new ArrayList<>();
             for (SelectInTarget target : targetVector) {
@@ -100,7 +99,7 @@ public class SelectInAction extends AnAction implements DumbAware {
         }
 
         @Override
-        @Nonnull
+        
         public String getTextFor(SelectInTarget value) {
             LocalizeValue text = value.getActionText();
             int n = myVisibleTargets.indexOf(value);
@@ -164,7 +163,7 @@ public class SelectInAction extends AnAction implements DumbAware {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
         }
     }
 }

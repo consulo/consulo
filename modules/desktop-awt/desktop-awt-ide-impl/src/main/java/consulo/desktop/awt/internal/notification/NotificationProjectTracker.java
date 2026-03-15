@@ -29,7 +29,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ShutDownTracker;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -56,7 +55,7 @@ public class NotificationProjectTracker implements Disposable {
     protected LogModel myProjectModel;
 
     @Inject
-    public NotificationProjectTracker(@Nonnull Project project, EventLog eventLog) {
+    public NotificationProjectTracker(Project project, EventLog eventLog) {
         myProject = project;
         myEventLog = eventLog;
         myProjectModel = new LogModel(project.getApplication(), project);
@@ -94,7 +93,7 @@ public class NotificationProjectTracker implements Disposable {
         doPrintNotification(notification, console);
     }
 
-    private void doPrintNotification(@Nonnull Notification notification, @Nonnull EventLogConsole console) {
+    private void doPrintNotification(Notification notification, EventLogConsole console) {
         StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
             if (!ShutDownTracker.isShutdownHookRunning() && !myProject.isDisposed()) {
                 myProject.getApplication().runReadAction(() -> console.doPrintNotification(notification));
@@ -103,14 +102,14 @@ public class NotificationProjectTracker implements Disposable {
     }
 
     @RequiredUIAccess
-    protected void showNotification(@Nonnull String groupId, @Nonnull List<String> ids) {
+    protected void showNotification(String groupId, List<String> ids) {
         ToolWindow eventLog = EventLog.getEventLog(myProject);
         if (eventLog != null) {
             EventLog.activate(eventLog, groupId, () -> myEventLogConsole.showNotification(ids));
         }
     }
 
-    protected void clearNMore(@Nonnull Collection<String> groups) {
+    protected void clearNMore(Collection<String> groups) {
         myEventLogConsole.clearNMore();
     }
 }

@@ -11,7 +11,6 @@ import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * stores injection registration info temporarily
@@ -19,23 +18,23 @@ import jakarta.annotation.Nonnull;
  * to the moment of {@link MultiHostRegistrar#doneInjecting()}
  */
 class PlaceInfo {
-  @Nonnull
+  
   final String prefix;
-  @Nonnull
+  
   final String suffix;
-  @Nonnull
+  
   final PsiLanguageInjectionHost host;
-  @Nonnull
+  
   final TextRange registeredRangeInsideHost;
-  @Nonnull
+  
   final LiteralTextEscaper<? extends PsiLanguageInjectionHost> myEscaper;
-  @Nonnull
+  
   final String myHostText;
   ProperTextRange rangeInDecodedPSI;
   TextRange rangeInHostElement;
   Segment newInjectionHostRange;
 
-  PlaceInfo(@Nonnull String prefix, @Nonnull String suffix, @Nonnull PsiLanguageInjectionHost host, @Nonnull TextRange registeredRangeInsideHost) {
+  PlaceInfo(String prefix, String suffix, PsiLanguageInjectionHost host, TextRange registeredRangeInsideHost) {
     this.prefix = prefix;
     this.suffix = suffix;
     this.host = host;

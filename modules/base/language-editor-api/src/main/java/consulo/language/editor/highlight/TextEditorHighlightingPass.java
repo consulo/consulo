@@ -16,8 +16,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +25,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
     @Nullable
     protected final Document myDocument;
-    @Nonnull
+    
     protected final Project myProject;
     private final boolean myRunIntentionPassAfter;
     private final long myInitialDocStamp;
@@ -37,7 +36,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     private volatile boolean myDumb;
     private EditorColorsScheme myColorsScheme;
 
-    protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document, boolean runIntentionPassAfter) {
+    protected TextEditorHighlightingPass(Project project, @Nullable Document document, boolean runIntentionPassAfter) {
         myDocument = document;
         myProject = project;
         myRunIntentionPassAfter = runIntentionPassAfter;
@@ -45,13 +44,13 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         myInitialPsiStamp = PsiModificationTracker.getInstance(myProject).getModificationCount();
     }
 
-    protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document) {
+    protected TextEditorHighlightingPass(Project project, @Nullable Document document) {
         this(project, document, true);
     }
 
     @RequiredReadAction
     @Override
-    public final void collectInformation(@Nonnull ProgressIndicator progress) {
+    public final void collectInformation(ProgressIndicator progress) {
         if (!isValid()) {
             return; //Document has changed.
         }
@@ -113,7 +112,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         doApplyInformationToEditor();
     }
 
-    public abstract void doCollectInformation(@Nonnull ProgressIndicator progress);
+    public abstract void doCollectInformation(ProgressIndicator progress);
 
     public abstract void doApplyInformationToEditor();
 
@@ -125,17 +124,17 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         myId = id;
     }
 
-    @Nonnull
+    
     public List<HighlightInfo> getInfos() {
         return Collections.emptyList();
     }
 
-    @Nonnull
+    
     public final int[] getCompletionPredecessorIds() {
         return myCompletionPredecessorIds;
     }
 
-    public final void setCompletionPredecessorIds(@Nonnull int[] completionPredecessorIds) {
+    public final void setCompletionPredecessorIds(int[] completionPredecessorIds) {
         myCompletionPredecessorIds = completionPredecessorIds;
     }
 
@@ -144,12 +143,12 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         return myDocument;
     }
 
-    @Nonnull
+    
     public final int[] getStartingPredecessorIds() {
         return myStartingPredecessorIds;
     }
 
-    public final void setStartingPredecessorIds(@Nonnull int[] startingPredecessorIds) {
+    public final void setStartingPredecessorIds(int[] startingPredecessorIds) {
         myStartingPredecessorIds = startingPredecessorIds;
     }
 

@@ -22,8 +22,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 
@@ -32,7 +31,7 @@ import java.util.Comparator;
  * @since 2022-02-13
  */
 public interface SeverityRegistrar extends Comparator<HighlightSeverity> {
-    @Nonnull
+    
     public static SeverityRegistrar getSeverityRegistrar(@Nullable Project project) {
         return project == null
             ? Application.get().getInstance(InspectionProfileManager.class).getSeverityRegistrar()
@@ -45,13 +44,13 @@ public interface SeverityRegistrar extends Comparator<HighlightSeverity> {
     HighlightSeverity getSeverityByIndex(int i);
 
     @Nullable
-    TextAttributes getTextAttributesBySeverity(@Nonnull HighlightSeverity severity);
+    TextAttributes getTextAttributesBySeverity(HighlightSeverity severity);
 
     @Nullable
-    HighlightSeverity getSeverity(@Nonnull String name);
+    HighlightSeverity getSeverity(String name);
 
-    boolean isSeverityValid(@Nonnull String severityName);
+    boolean isSeverityValid(String severityName);
 
-    @Nonnull
-    HighlightInfoType getHighlightInfoTypeBySeverity(@Nonnull HighlightSeverity severity);
+    
+    HighlightInfoType getHighlightInfoTypeBySeverity(HighlightSeverity severity);
 }

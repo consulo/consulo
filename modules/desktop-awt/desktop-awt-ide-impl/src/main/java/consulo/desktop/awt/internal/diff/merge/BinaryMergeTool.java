@@ -28,8 +28,7 @@ import consulo.diff.request.SimpleDiffRequest;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -38,15 +37,15 @@ import java.util.List;
 public class BinaryMergeTool implements MergeTool {
     public static final BinaryMergeTool INSTANCE = new BinaryMergeTool();
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+    public MergeViewer createComponent(MergeContext context, MergeRequest request) {
         return new BinaryMergeViewer(context, (ThreesideMergeRequest)request);
     }
 
     @Override
-    public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+    public boolean canShow(MergeContext context, MergeRequest request) {
         if (!(request instanceof ThreesideMergeRequest)) {
             return false;
         }
@@ -62,20 +61,20 @@ public class BinaryMergeTool implements MergeTool {
     }
 
     public static class BinaryMergeViewer implements MergeViewer {
-        @Nonnull
+        
         private final MergeContext myMergeContext;
-        @Nonnull
+        
         private final ThreesideMergeRequest myMergeRequest;
 
-        @Nonnull
+        
         private final DiffContext myDiffContext;
-        @Nonnull
+        
         private final ContentDiffRequest myDiffRequest;
 
-        @Nonnull
+        
         private final MyThreesideViewer myViewer;
 
-        public BinaryMergeViewer(@Nonnull MergeContext context, @Nonnull ThreesideMergeRequest request) {
+        public BinaryMergeViewer(MergeContext context, ThreesideMergeRequest request) {
             myMergeContext = context;
             myMergeRequest = request;
 
@@ -89,13 +88,13 @@ public class BinaryMergeTool implements MergeTool {
             myViewer = new MyThreesideViewer(myDiffContext, myDiffRequest);
         }
 
-        @Nonnull
-        private static List<DiffContent> getDiffContents(@Nonnull ThreesideMergeRequest mergeRequest) {
+        
+        private static List<DiffContent> getDiffContents(ThreesideMergeRequest mergeRequest) {
             return ContainerUtil.newArrayList(mergeRequest.getContents());
         }
 
-        @Nonnull
-        private static List<String> getDiffContentTitles(@Nonnull ThreesideMergeRequest mergeRequest) {
+        
+        private static List<String> getDiffContentTitles(ThreesideMergeRequest mergeRequest) {
             return MergeImplUtil.notNullizeContentTitles(mergeRequest.getContentTitles());
         }
 
@@ -103,7 +102,7 @@ public class BinaryMergeTool implements MergeTool {
         // Impl
         //
 
-        @Nonnull
+        
         @Override
         public JComponent getComponent() {
             return myViewer.getComponent();
@@ -115,7 +114,7 @@ public class BinaryMergeTool implements MergeTool {
             return myViewer.getPreferredFocusedComponent();
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
         public ToolbarComponents init() {
@@ -133,7 +132,7 @@ public class BinaryMergeTool implements MergeTool {
 
         @Nullable
         @Override
-        public ActionRecord getResolveAction(@Nonnull MergeResult result) {
+        public ActionRecord getResolveAction(MergeResult result) {
             if (result == MergeResult.RESOLVED) {
                 return null;
             }
@@ -160,7 +159,7 @@ public class BinaryMergeTool implements MergeTool {
         // Getters
         //
 
-        @Nonnull
+        
         public MyThreesideViewer getViewer() {
             return myViewer;
         }
@@ -170,7 +169,7 @@ public class BinaryMergeTool implements MergeTool {
         //
 
         private static class MyThreesideViewer extends ThreesideBinaryDiffViewer {
-            public MyThreesideViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+            public MyThreesideViewer(DiffContext context, DiffRequest request) {
                 super(context, request);
             }
 

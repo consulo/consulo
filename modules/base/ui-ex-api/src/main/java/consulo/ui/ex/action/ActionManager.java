@@ -23,8 +23,7 @@ import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -41,7 +40,7 @@ public abstract class ActionManager {
     /**
      * Fetches the instance of ActionManager implementation.
      */
-    @Nonnull
+    
     public static ActionManager getInstance() {
         return Application.get().getInstance(ActionManager.class);
     }
@@ -56,7 +55,7 @@ public abstract class ActionManager {
      * @param group Group from which the actions for the menu are taken.
      * @return An instance of <code>ActionPopupMenu</code>
      */
-    public abstract ActionPopupMenu createActionPopupMenu(String place, @Nonnull ActionGroup group);
+    public abstract ActionPopupMenu createActionPopupMenu(String place, ActionGroup group);
 
     /**
      * @see ActionToolbarFactory
@@ -72,11 +71,11 @@ public abstract class ActionManager {
      * @throws java.lang.IllegalArgumentException if <code>actionId</code> is <code>null</code>
      * @see IdeActions
      */
-    public abstract AnAction getAction(@Nonnull String actionId);
+    public abstract AnAction getAction(String actionId);
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
-    public <T extends AnAction> T getAction(@Nonnull Class<T> actionClass) {
+    public <T extends AnAction> T getAction(Class<T> actionClass) {
         ActionImpl annotation = actionClass.getAnnotation(ActionImpl.class);
         if (annotation == null) {
             throw new IllegalArgumentException("Action Class is not annotated by @ActionImpl");
@@ -91,7 +90,7 @@ public abstract class ActionManager {
      * is not registered
      * @throws java.lang.IllegalArgumentException if <code>action</code> is <code>null</code>
      */
-    public abstract String getId(@Nonnull AnAction action);
+    public abstract String getId(AnAction action);
 
     /**
      * Registers the specified action with the specified id. Note that IDEA's keymaps
@@ -100,7 +99,7 @@ public abstract class ActionManager {
      * @param actionId Id to associate with the action
      * @param action   Action to register
      */
-    public abstract void registerAction(@Nonnull String actionId, @Nonnull AnAction action);
+    public abstract void registerAction(String actionId, AnAction action);
 
     /**
      * Registers the specified action with the specified id.
@@ -110,7 +109,7 @@ public abstract class ActionManager {
      * @param pluginId Identifier of the plugin owning the action. Used to show the actions in the
      *                 correct place under the "Plugins" node in the "Keymap" settings pane and similar dialogs.
      */
-    public abstract void registerAction(@Nonnull String actionId, @Nonnull AnAction action, @Nullable PluginId pluginId);
+    public abstract void registerAction(String actionId, AnAction action, @Nullable PluginId pluginId);
 
     public abstract String[] getPluginActions(PluginId pluginId);
 
@@ -119,7 +118,7 @@ public abstract class ActionManager {
      *
      * @param actionId Id of the action to be unregistered
      */
-    public abstract void unregisterAction(@Nonnull String actionId);
+    public abstract void unregisterAction(String actionId);
 
     /**
      * Returns the list of all registered action IDs with the specified prefix.
@@ -127,7 +126,7 @@ public abstract class ActionManager {
      * @return all action <code>id</code>s which have the specified prefix.
      * @since 5.1
      */
-    public abstract String[] getActionIds(@Nonnull String idPrefix);
+    public abstract String[] getActionIds(String idPrefix);
 
     /**
      * Checks if the specified action ID represents an action group and not an individual action.
@@ -138,7 +137,7 @@ public abstract class ActionManager {
      * @return true if the ID represents an action group, false otherwise.
      * @since 5.1
      */
-    public abstract boolean isGroup(@Nonnull String actionId);
+    public abstract boolean isGroup(String actionId);
 
     public abstract AnAction getActionOrStub(String id);
 
@@ -151,7 +150,7 @@ public abstract class ActionManager {
     public abstract void removeTransparentTimerListener(TimerListener listener);
 
     public abstract ActionCallback tryToExecute(
-        @Nonnull AnAction action, @Nonnull InputEvent inputEvent, @Nullable Component contextComponent,
+        AnAction action, InputEvent inputEvent, @Nullable Component contextComponent,
         @Nullable String place, boolean now
     );
 
@@ -173,5 +172,5 @@ public abstract class ActionManager {
     }
 
     @Nullable
-    public abstract KeyboardShortcut getKeyboardShortcut(@Nonnull String actionId);
+    public abstract KeyboardShortcut getKeyboardShortcut(String actionId);
 }

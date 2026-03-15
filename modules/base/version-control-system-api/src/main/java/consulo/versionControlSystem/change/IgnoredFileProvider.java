@@ -18,9 +18,8 @@ package consulo.versionControlSystem.change;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.versionControlSystem.FilePath;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface IgnoredFileProvider {
-  boolean isIgnoredFilePath(@Nonnull FilePath filePath);
+  boolean isIgnoredFilePath(FilePath filePath);
 }

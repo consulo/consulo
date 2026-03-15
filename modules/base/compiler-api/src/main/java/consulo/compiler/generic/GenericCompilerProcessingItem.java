@@ -15,8 +15,7 @@
  */
 package consulo.compiler.generic;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -27,7 +26,7 @@ public class GenericCompilerProcessingItem<Item extends CompileItem<?, SourceSta
     private final OutputState myCachedOutputState;
 
     public GenericCompilerProcessingItem(
-        @Nonnull Item item,
+        Item item,
         @Nullable SourceState cachedSourceState,
         @Nullable OutputState cachedOutputState
     ) {
@@ -36,7 +35,7 @@ public class GenericCompilerProcessingItem<Item extends CompileItem<?, SourceSta
         myCachedOutputState = cachedOutputState;
     }
 
-    @Nonnull
+    
     public Item getItem() {
         return myItem;
     }

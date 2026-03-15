@@ -22,12 +22,11 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.spellcheker.tokenizer.splitter.IdentifierTokenSplitter;
 
-import jakarta.annotation.Nonnull;
 
 public class PsiIdentifierOwnerTokenizer extends Tokenizer<PsiNameIdentifierOwner> {
     @Override
     @RequiredReadAction
-    public void tokenize(@Nonnull PsiNameIdentifierOwner element, TokenConsumer consumer) {
+    public void tokenize(PsiNameIdentifierOwner element, TokenConsumer consumer) {
         PsiElement identifier = element.getNameIdentifier();
         if (identifier == null) {
             return;

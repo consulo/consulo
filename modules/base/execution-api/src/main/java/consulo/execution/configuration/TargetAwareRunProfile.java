@@ -18,12 +18,11 @@ package consulo.execution.configuration;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.ExecutionTargetProvider;
 
-import jakarta.annotation.Nonnull;
 
 public interface TargetAwareRunProfile extends RunProfile {
   /**
    * Checks if this configuration supports running on the provided target (see {@link ExecutionTarget} for details).
    * @param target target provided by {@link ExecutionTargetProvider}
    */
-  boolean canRunOn(@Nonnull ExecutionTarget target);
+  boolean canRunOn(ExecutionTarget target);
 }

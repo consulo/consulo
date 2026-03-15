@@ -15,7 +15,7 @@
  */
 package consulo.compiler;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 

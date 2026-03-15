@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.lookup.LookupElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "stats", order = "after priority")
 public class StatisticsWeigher extends CompletionWeigher {
     @Override
-    public Comparable weigh(@Nonnull LookupElement item, @Nonnull CompletionLocation location) {
+    public Comparable weigh(LookupElement item, CompletionLocation location) {
         throw new UnsupportedOperationException();
     }
 }

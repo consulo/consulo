@@ -26,8 +26,6 @@ import consulo.virtualFileSystem.status.impl.internal.FileStatusManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.index.io.CompressionUtil;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 public class EditorChangeAction extends BasicUndoableAction {
   private final int myOffset;
@@ -42,10 +40,10 @@ public class EditorChangeAction extends BasicUndoableAction {
     this((DocumentEx)e.getDocument(), e.getOffset(), e.getOldFragment(), e.getNewFragment(), e.getOldTimeStamp());
   }
 
-  public EditorChangeAction(@Nonnull DocumentEx document,
+  public EditorChangeAction(DocumentEx document,
                             int offset,
-                            @Nonnull CharSequence oldString,
-                            @Nonnull CharSequence newString,
+                            CharSequence oldString,
+                            CharSequence newString,
                             long oldTimeStamp) {
     super(document);
     myOffset = offset;
@@ -94,7 +92,7 @@ public class EditorChangeAction extends BasicUndoableAction {
     refreshFileStatus();
   }
 
-  private void exchangeStrings(@Nonnull CharSequence newString, @Nonnull CharSequence oldString) {
+  private void exchangeStrings(CharSequence newString, CharSequence oldString) {
     DocumentEx d = getDocument();
 
     if (newString.length() > 0 && oldString.length() == 0) {
@@ -128,7 +126,7 @@ public class EditorChangeAction extends BasicUndoableAction {
   }
 
   @Override
-  @NonNls
+  
   public String toString() {
     return "editor change: '" + myOldString + "' to '" + myNewString + "'" + " at: " + myOffset;
   }

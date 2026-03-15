@@ -22,8 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.MasterDetailsStateService;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -41,7 +40,7 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
     myProfilesPanel = new CopyrightProfilesPanel(project, masterDetailsStateService);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Copyright");
@@ -104,7 +103,7 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "copyright";
   }

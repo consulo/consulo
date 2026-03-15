@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -40,7 +39,7 @@ public class XDebuggerTreeState {
   private Rectangle myLastVisibleNodeRect;
 
   @RequiredUIAccess
-  private XDebuggerTreeState(@Nonnull XDebuggerTree tree) {
+  private XDebuggerTreeState(XDebuggerTree tree) {
     UIAccess.assertIsUIThread();
     XDebuggerTreeNode root = tree.getRoot();
     myRootInfo = root != null ? new NodeInfo("", "", tree.isPathSelected(root.getPath())) : null;
@@ -50,7 +49,7 @@ public class XDebuggerTreeState {
   }
 
   @RequiredUIAccess
-  public XDebuggerTreeRestorer restoreState(@Nonnull XDebuggerTree tree) {
+  public XDebuggerTreeRestorer restoreState(XDebuggerTree tree) {
     UIAccess.assertIsUIThread();
     XDebuggerTreeRestorer restorer = null;
     if (myRootInfo != null) {
@@ -60,7 +59,7 @@ public class XDebuggerTreeState {
     return restorer;
   }
 
-  public static XDebuggerTreeState saveState(@Nonnull XDebuggerTree tree) {
+  public static XDebuggerTreeState saveState(XDebuggerTree tree) {
     return new XDebuggerTreeState(tree);
   }
 
@@ -111,7 +110,7 @@ public class XDebuggerTreeState {
       mySelected = selected;
     }
 
-    public void addChild(@Nonnull NodeInfo child) {
+    public void addChild(NodeInfo child) {
       if (myChildren == null) {
         myChildren = new MultiMap<>();
       }

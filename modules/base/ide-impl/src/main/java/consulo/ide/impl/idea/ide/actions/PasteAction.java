@@ -23,7 +23,6 @@ import consulo.ui.ex.PasteProvider;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_PASTE)
 public class PasteAction extends AnAction implements DumbAware {
@@ -32,7 +31,7 @@ public class PasteAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();
 
@@ -48,7 +47,7 @@ public class PasteAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         PasteProvider provider = e.getRequiredData(PasteProvider.KEY);
         if (provider.isPasteEnabled(dataContext)) {

@@ -13,7 +13,6 @@ import consulo.language.scratch.ScratchFileService;
 import consulo.project.Project;
 import consulo.project.util.query.QueryExecutorBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -30,8 +29,8 @@ public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference
 
     @Override
     public void processQuery(
-        @Nonnull ReferencesSearch.SearchParameters queryParameters,
-        @Nonnull Predicate<? super PsiReference> consumer
+        ReferencesSearch.SearchParameters queryParameters,
+        Predicate<? super PsiReference> consumer
     ) {
         SearchScope scope = queryParameters.getScopeDeterminedByUser();
         PsiElement element = queryParameters.getElementToSearch();

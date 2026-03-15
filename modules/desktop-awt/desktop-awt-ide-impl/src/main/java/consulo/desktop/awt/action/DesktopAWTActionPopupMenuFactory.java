@@ -19,8 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -39,19 +38,19 @@ public class DesktopAWTActionPopupMenuFactory implements ActionPopupMenuFactory 
     }
 
     @Override
-    public ActionPopupMenu createActionPopupMenu(String place, @Nonnull ActionGroup group) {
+    public ActionPopupMenu createActionPopupMenu(String place, ActionGroup group) {
         return new DesktopActionPopupMenuImpl(place, group, myActionManager, null);
     }
 
     @Override
-    public ActionPopupMenu createActionPopupMenu(@Nonnull String place,
-                                                 @Nonnull ActionGroup group,
+    public ActionPopupMenu createActionPopupMenu(String place,
+                                                 ActionGroup group,
                                                  @Nullable PresentationFactory presentationFactory) {
         return new DesktopActionPopupMenuImpl(place, group, myActionManager, presentationFactory);
     }
 
     @Override
-    public ActionPopupMenu createActionPopupMenuForceHide(String place, @Nonnull ActionGroup group) {
+    public ActionPopupMenu createActionPopupMenuForceHide(String place, ActionGroup group) {
         return new DesktopActionPopupMenuImpl(place, group, myActionManager, new MenuItemPresentationFactory(true));
     }
 }

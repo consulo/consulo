@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.dnd;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.dnd.FileFlavorProvider;
 import consulo.ui.ex.awt.tree.TreePathUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;

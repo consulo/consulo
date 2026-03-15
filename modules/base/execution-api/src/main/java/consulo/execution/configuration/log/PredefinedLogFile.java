@@ -20,16 +20,14 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class PredefinedLogFile implements JDOMExternalizable {
-  @NonNls private static final String ID_ATTRIBUTE = "id";
-  @NonNls private static final String ENABLED_ATTRIBUTE = "enabled";
+  private static final String ID_ATTRIBUTE = "id";
+  private static final String ENABLED_ATTRIBUTE = "enabled";
   private String myId;
   private boolean myEnabled;
 
@@ -42,7 +40,7 @@ public class PredefinedLogFile implements JDOMExternalizable {
     myId = logFile.myId;
   }
 
-  public PredefinedLogFile(@Nonnull @NonNls String id, boolean enabled) {
+  public PredefinedLogFile(String id, boolean enabled) {
     myEnabled = enabled;
     myId = id;
   }

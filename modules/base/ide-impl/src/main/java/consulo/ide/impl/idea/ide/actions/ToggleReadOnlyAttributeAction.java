@@ -31,7 +31,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
@@ -42,11 +41,11 @@ import java.util.ArrayList;
  */
 @ActionImpl(id = "ToggleReadOnlyAttribute")
 public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware {
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public ToggleReadOnlyAttributeAction(@Nonnull Application application) {
+    public ToggleReadOnlyAttributeAction(Application application) {
         super(ActionLocalize.actionTogglereadonlyattributeText(), ActionLocalize.actionTogglereadonlyattributeDescription());
         myApplication = application;
     }
@@ -64,7 +63,7 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VirtualFile[] files = getFiles(e.getDataContext());
         e.getPresentation().setEnabled(files.length > 0);
         if (files.length > 0) {
@@ -92,7 +91,7 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myApplication.runWriteAction(() -> {
             // Save all documents. We won't be able to save changes to the files that became read-only afterwards.
             FileDocumentManager.getInstance().saveAllDocuments();

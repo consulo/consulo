@@ -22,7 +22,6 @@ import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.versionControlSystem.log.impl.internal.data.RefsModel;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -35,14 +34,14 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
   private static final Logger LOG = Logger.getInstance(GraphColorManagerImpl.class);
   static final int DEFAULT_COLOR = 0;
 
-  @Nonnull
+  
   private final HeadsComparator myHeadsComparator;
-  @Nonnull
+  
   private final RefsModel myRefsModel;
 
-  public GraphColorManagerImpl(@Nonnull RefsModel refsModel,
-                               @Nonnull Function<Integer, Hash> hashGetter,
-                               @Nonnull Map<VirtualFile, VcsLogRefManager> refManagers) {
+  public GraphColorManagerImpl(RefsModel refsModel,
+                               Function<Integer, Hash> hashGetter,
+                               Map<VirtualFile, VcsLogRefManager> refManagers) {
     myRefsModel = refsModel;
 
     myHeadsComparator = new HeadsComparator(refsModel, refManagers, hashGetter);
@@ -69,14 +68,14 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
   }
 
   public static class HeadsComparator implements Comparator<Integer> {
-    @Nonnull
+    
     private final RefsModel myRefsModel;
-    @Nonnull
+    
     private final Map<VirtualFile, VcsLogRefManager> myRefManagers;
-    @Nonnull
+    
     private final Function<Integer, Hash> myHashGetter;
 
-    @Nonnull
+    
     private final SequencedMap<Integer, Integer> myErrorWasReported = new LinkedHashMap<>(10) {
       @Override
       protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
@@ -84,9 +83,9 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
       }
     };
 
-    public HeadsComparator(@Nonnull RefsModel refsModel,
-                           @Nonnull Map<VirtualFile, VcsLogRefManager> refManagers,
-                           @Nonnull Function<Integer, Hash> hashGetter) {
+    public HeadsComparator(RefsModel refsModel,
+                           Map<VirtualFile, VcsLogRefManager> refManagers,
+                           Function<Integer, Hash> hashGetter) {
       myRefsModel = refsModel;
       myRefManagers = refManagers;
       myHashGetter = hashGetter;

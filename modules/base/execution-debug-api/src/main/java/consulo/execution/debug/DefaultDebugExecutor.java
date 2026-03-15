@@ -25,7 +25,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class DefaultDebugExecutor extends Executor implements RunCurrentFileExecutor {
     public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 
-    @Nonnull
+    
     @Override
     public String getToolWindowId() {
         return ToolWindowId.DEBUG;
@@ -46,42 +45,42 @@ public class DefaultDebugExecutor extends Executor implements RunCurrentFileExec
     }
 
     @Override
-    @Nonnull
+    
     public Image getIcon() {
         return ExecutionDebugIconGroup.actionStartdebugger();
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getActionName() {
         return UILocalize.toolWindowNameDebug();
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return EXECUTOR_ID;
     }
 
-    @Nonnull
+    
     @Override
     public String getContextActionId() {
         return "DebugClass";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getStartActionText() {
         return XDebuggerLocalize.debuggerRunnerStartActionText();
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getStartActiveText(@Nonnull String configurationName) {
+    public LocalizeValue getStartActiveText(String configurationName) {
         return XDebuggerLocalize.debuggerRunnerStartActionText0(configurationName);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return XDebuggerLocalize.stringDebuggerRunnerDescription();

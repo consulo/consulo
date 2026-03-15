@@ -22,7 +22,6 @@ import consulo.language.inject.advanced.pattern.PatternClassProvider;
 import consulo.language.inject.advanced.pattern.PatternCompiler;
 import consulo.language.inject.advanced.pattern.PatternCompilerFactory;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -49,16 +48,16 @@ public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
 
   private final Map<List<Class>, PatternCompiler> myCompilers = ConcurrentFactoryMap.createMap(PatternCompilerImpl::new);
 
-  @Nonnull
+  
   @Override
   public Class[] getPatternClasses(String alias) {
     return myClasses.get(alias);
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
-  public <T> PatternCompiler<T> getPatternCompiler(@Nonnull Class[] patternClasses) {
+  public <T> PatternCompiler<T> getPatternCompiler(Class[] patternClasses) {
     return myCompilers.get(List.of(patternClasses));
   }
 }

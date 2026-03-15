@@ -22,7 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

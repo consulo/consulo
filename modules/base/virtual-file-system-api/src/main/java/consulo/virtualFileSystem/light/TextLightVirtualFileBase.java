@@ -19,7 +19,6 @@ import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.nio.charset.Charset;
 
@@ -35,12 +34,12 @@ public abstract class TextLightVirtualFileBase extends LightVirtualFileBase {
     super(name, fileType, modificationStamp);
   }
 
-  public void setContent(Object requestor, @Nonnull CharSequence content, boolean fireEvent) {
+  public void setContent(Object requestor, CharSequence content, boolean fireEvent) {
     setContent(content);
     setModificationStamp(LocalTimeCounter.currentTime());
   }
 
-  protected void setContent(@Nonnull CharSequence content) {
+  protected void setContent(CharSequence content) {
     assert !myReadOnly;
     //StringUtil.assertValidSeparators(content);
     myContent = content;
@@ -57,7 +56,7 @@ public abstract class TextLightVirtualFileBase extends LightVirtualFileBase {
   }
 
   @Override
-  @Nonnull
+  
   public OutputStream getOutputStream(Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
     return VirtualFileUtil.outputStreamAddingBOM(new ByteArrayOutputStream() {
       @Override
@@ -76,14 +75,14 @@ public abstract class TextLightVirtualFileBase extends LightVirtualFileBase {
   }
 
   @Override
-  @Nonnull
+  
   public byte[] contentsToByteArray() throws IOException {
     Charset charset = getCharset();
     String s = getContent().toString();
     return s.getBytes(charset.name());
   }
 
-  @Nonnull
+  
   public CharSequence getContent() {
     return myContent;
   }

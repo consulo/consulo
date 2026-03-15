@@ -18,7 +18,6 @@ package consulo.application.internal;
 import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 
-import jakarta.annotation.Nonnull;
 
 public interface ApplicationWithIntentWriteLock extends Application {
   /**
@@ -26,7 +25,7 @@ public interface ApplicationWithIntentWriteLock extends Application {
    *
    * @param invokedClassFqn fully qualified name of the class requiring the write-intent lock.
    */
-  default void acquireWriteIntentLock(@Nonnull String invokedClassFqn) {
+  default void acquireWriteIntentLock(String invokedClassFqn) {
     throw new UnsupportedOperationException();
   }
 
@@ -42,7 +41,7 @@ public interface ApplicationWithIntentWriteLock extends Application {
    * <p>
    * This method is used to implement higher-level API. Please do not use it directly.
    */
-  default <T, E extends Throwable> T runUnlockingIntendedWrite(@Nonnull ThrowableComputable<T, E> action) throws E {
+  default <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableComputable<T, E> action) throws E {
     return action.compute();
   }
 
@@ -56,7 +55,7 @@ public interface ApplicationWithIntentWriteLock extends Application {
    *
    * @param action the action to run
    */
-  default void runIntendedWriteActionOnCurrentThread(@Nonnull Runnable action) {
+  default void runIntendedWriteActionOnCurrentThread(Runnable action) {
     action.run();
   }
 }

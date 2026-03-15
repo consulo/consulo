@@ -20,7 +20,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,7 +76,7 @@ public interface StructureView extends Disposable {
    */
   void storeState();
 
-  @Nonnull
+  
   StructureViewModel getTreeModel();
 
   interface Scrollable extends StructureView {

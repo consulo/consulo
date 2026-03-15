@@ -43,7 +43,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.event.AncestorEvent;
 
@@ -52,7 +51,7 @@ import javax.swing.event.AncestorEvent;
  */
 @ExtensionImpl
 public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAware {
-    @Nonnull
+    
     @Override
     public String getId() {
         return EventLog.NOTIFICATIONS_TOOLWINDOW_ID;
@@ -60,13 +59,13 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         NotificationProjectTracker tracker = NotificationProjectTracker.getInstance(project);
         createContent(project, toolWindow, tracker.getEventLogConsole(), "");
         tracker.initDefaultContent();
     }
 
-    @Nonnull
+    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.RIGHT;
@@ -77,13 +76,13 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsNotifications();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectUILocalize.toolwindowNotificationsDisplayName();
@@ -95,7 +94,7 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
 
         SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true) {
             @Override
-            public Object getData(@Nonnull Key dataId) {
+            public Object getData(Key dataId) {
                 return (HelpManager.HELP_ID == dataId) ? EventLog.HELP_ID : super.getData(dataId);
             }
         };
@@ -126,12 +125,12 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS = state;
         }
     }
@@ -150,7 +149,7 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             ShowSettingsUtil.getInstance().showAndSelect(myProject, NotificationsConfigurable.class);
         }
     }

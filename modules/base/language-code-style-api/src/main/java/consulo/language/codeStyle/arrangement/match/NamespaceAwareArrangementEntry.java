@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle.arrangement.match;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov

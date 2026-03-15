@@ -4,8 +4,7 @@ package consulo.index.io.forward;
 import consulo.index.io.KeyValueStore;
 import consulo.util.io.ByteArraySequence;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
@@ -14,10 +13,10 @@ import java.io.IOException;
 public interface ForwardIndex extends KeyValueStore<Integer, ByteArraySequence> {
   @Nullable
   @Override
-  ByteArraySequence get(@Nonnull Integer key) throws IOException;
+  ByteArraySequence get(Integer key) throws IOException;
 
   @Override
-  void put(@Nonnull Integer key, @Nullable ByteArraySequence value) throws IOException;
+  void put(Integer key, @Nullable ByteArraySequence value) throws IOException;
 
   void clear() throws IOException;
 }

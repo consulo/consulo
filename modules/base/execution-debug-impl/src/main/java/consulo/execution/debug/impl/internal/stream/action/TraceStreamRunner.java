@@ -29,8 +29,7 @@ import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Collections;
@@ -42,8 +41,8 @@ import java.util.stream.Stream;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class TraceStreamRunner {
-    @Nonnull
-    public static TraceStreamRunner getInstance(@Nonnull Project project) {
+    
+    public static TraceStreamRunner getInstance(Project project) {
         return project.getInstance(TraceStreamRunner.class);
     }
     
@@ -56,7 +55,7 @@ public final class TraceStreamRunner {
     public TraceStreamRunner() {
     }
 
-    @Nonnull
+    
     public ChainStatus getChainStatus(@Nullable XDebugSession session) {
         PsiElement element = session == null ? null : myPositionResolver.getNearestElementToBreakpoint(session);
         if (element == null) {
@@ -78,8 +77,8 @@ public final class TraceStreamRunner {
     }
 
     private void displayChains(
-        @Nonnull XDebugSession session,
-        @Nonnull List<ChainResolver.StreamChainWithLibrary> chains
+        XDebugSession session,
+        List<ChainResolver.StreamChainWithLibrary> chains
     ) {
         if (chains.isEmpty()) {
             LOG.warn("Stream chain is not built");
@@ -107,8 +106,8 @@ public final class TraceStreamRunner {
         }
     }
 
-    @Nonnull
-    private List<ChainResolver.StreamChainWithLibrary> getChains(@Nonnull XDebugSession session) {
+    
+    private List<ChainResolver.StreamChainWithLibrary> getChains(XDebugSession session) {
         PsiElement element = ReadAction.compute(() -> myPositionResolver.getNearestElementToBreakpoint(session));
         if (element == null) {
             LOG.info("Element at cursor is not found");
@@ -125,23 +124,23 @@ public final class TraceStreamRunner {
     }
 
     private static class MyStreamChainChooser extends ElementChooserImpl<StreamChainOption> {
-        MyStreamChainChooser(@Nonnull Editor editor) {
+        MyStreamChainChooser(Editor editor) {
             super(editor);
         }
     }
 
     private static class StreamChainOption implements ChooserOption {
-        @Nonnull
+        
         final StreamChain chain;
-        @Nonnull
+        
         final LibrarySupportProvider provider;
 
-        StreamChainOption(@Nonnull ChainResolver.StreamChainWithLibrary chainWithLibrary) {
+        StreamChainOption(ChainResolver.StreamChainWithLibrary chainWithLibrary) {
             this.chain = chainWithLibrary.chain;
             this.provider = chainWithLibrary.provider;
         }
 
-        @Nonnull
+        
         @Override
         public Stream<TextRange> rangeStream() {
             return Stream.of(
@@ -150,7 +149,7 @@ public final class TraceStreamRunner {
             );
         }
 
-        @Nonnull
+        
         @Override
         public String getText() {
             return chain.getCompactText();
@@ -158,9 +157,9 @@ public final class TraceStreamRunner {
     }
 
     private static void runTrace(
-        @Nonnull StreamChain chain,
-        @Nonnull LibrarySupportProvider provider,
-        @Nonnull XDebugSession session
+        StreamChain chain,
+        LibrarySupportProvider provider,
+        XDebugSession session
     ) {
         EvaluationAwareTraceWindow window = new EvaluationAwareTraceWindow(session, chain);
 

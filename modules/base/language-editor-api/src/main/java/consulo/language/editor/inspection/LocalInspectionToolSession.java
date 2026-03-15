@@ -17,7 +17,6 @@ package consulo.language.editor.inspection;
 
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -28,13 +27,13 @@ public class LocalInspectionToolSession extends UserDataHolderBase {
   private final int myStartOffset;
   private final int myEndOffset;
 
-  public LocalInspectionToolSession(@Nonnull PsiFile file, int startOffset, int endOffset) {
+  public LocalInspectionToolSession(PsiFile file, int startOffset, int endOffset) {
     myFile = file;
     myStartOffset = startOffset;
     myEndOffset = endOffset;
   }
 
-  @Nonnull
+  
   public PsiFile getFile() {
     return myFile;
   }

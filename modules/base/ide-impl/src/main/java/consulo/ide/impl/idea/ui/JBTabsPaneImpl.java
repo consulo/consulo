@@ -25,8 +25,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.TabbedPane;
 
 import consulo.ui.ex.awt.tab.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -38,7 +37,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
   private final JBTabsImpl myTabs;
   private final CopyOnWriteArraySet<ChangeListener> myListeners = new CopyOnWriteArraySet<ChangeListener>();
 
-  public JBTabsPaneImpl(@Nullable Project project, int tabPlacement, @Nonnull Disposable parent) {
+  public JBTabsPaneImpl(@Nullable Project project, int tabPlacement, Disposable parent) {
     myTabs = new JBEditorTabs(project, ActionManager.getInstance(), project == null ? null : ProjectIdeFocusManager.getInstance(project), parent) {
       @Override
       public boolean isAlphabeticalMode() {

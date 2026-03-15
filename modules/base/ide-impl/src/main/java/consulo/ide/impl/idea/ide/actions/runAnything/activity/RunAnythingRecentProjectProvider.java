@@ -15,8 +15,7 @@ import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,15 +25,15 @@ import java.util.stream.Collectors;
 
 @ExtensionImpl
 public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvider<AnAction> {
-    @Nonnull
+    
     @Override
-    public Collection<AnAction> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Collection<AnAction> getValues(DataContext dataContext, String pattern) {
         return Arrays.stream(RecentProjectsManager.getInstance().getRecentProjectsActions(false)).collect(Collectors.toList());
     }
 
-    @Nonnull
+    
     @Override
-    public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull AnAction value) {
+    public RunAnythingItem getMainListItem(DataContext dataContext, AnAction value) {
         if (value instanceof ReopenProjectAction reopenProjectAction) {
             return new RecentProjectElement(
                 reopenProjectAction,
@@ -51,13 +50,13 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
         return new RunAnythingCompletionGroup(this, IdeLocalize.runAnythingRecentProjectCompletionGroupTitle());
     }
 
-    @Nonnull
+    
     @Override
     public String getHelpCommandPlaceholder() {
         return IdeLocalize.runAnythingRecentProjectCommandPlaceholder().get();
     }
 
-    @Nonnull
+    
     @Override
     public String getHelpCommand() {
         return "open";
@@ -69,9 +68,9 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
         return IdeLocalize.runAnythingRecentProjectHelpGroupTitle().get();
     }
 
-    @Nonnull
+    
     @Override
-    public String getCommand(@Nonnull AnAction value) {
+    public String getCommand(AnAction value) {
         return getHelpCommand() + " " + ObjectUtil.notNull(
             value.getTemplatePresentation().getText(),
             IdeLocalize.runAnythingActionsUndefined().get()
@@ -79,10 +78,10 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
     }
 
     static class RecentProjectElement extends RunAnythingItemBase {
-        @Nonnull
+        
         private final ReopenProjectAction myValue;
 
-        RecentProjectElement(@Nonnull ReopenProjectAction value, @Nonnull String command, @Nullable Image icon) {
+        RecentProjectElement(ReopenProjectAction value, String command, @Nullable Image icon) {
             super(command, icon);
             myValue = value;
         }
@@ -94,10 +93,10 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
+    public List<RunAnythingContext> getExecutionContexts(DataContext dataContext) {
         return Collections.emptyList();
     }
 }

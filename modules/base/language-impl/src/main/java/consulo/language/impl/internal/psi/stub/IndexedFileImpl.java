@@ -8,8 +8,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class IndexedFileImpl extends UserDataHolderBase implements IndexedFile {
   protected final VirtualFile myFile;
@@ -18,25 +17,25 @@ public class IndexedFileImpl extends UserDataHolderBase implements IndexedFile {
 
   protected Project myProject;
 
-  public IndexedFileImpl(@Nonnull VirtualFile file, @Nonnull FileType type) {
+  public IndexedFileImpl(VirtualFile file, FileType type) {
     myFile = file;
     myFileName = file.getName();
     myFileType = type;
   }
 
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     return SubstitutedFileType.substituteFileType(myFile, myFileType, getProject());
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   @Override
   public String getFileName() {
     return myFileName;

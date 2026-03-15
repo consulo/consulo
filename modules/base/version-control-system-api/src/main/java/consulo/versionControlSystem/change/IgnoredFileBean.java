@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.NullVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.regex.Matcher;
 

@@ -22,7 +22,6 @@ import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.StorableComponent;
 import consulo.externalService.ExternalServiceConfiguration;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -32,13 +31,13 @@ import jakarta.inject.Inject;
 @ExtensionImpl
 public class ExternalStorageAppListener implements ApplicationLoadListener {
     private final Application myApplication;
-    @Nonnull
+    
     private final ExternalServiceConfiguration myExternalServiceConfiguration;
 
     @Inject
     public ExternalStorageAppListener(
-        @Nonnull Application application,
-        @Nonnull ExternalServiceConfiguration externalServiceConfiguration
+        Application application,
+        ExternalServiceConfiguration externalServiceConfiguration
     ) {
         myExternalServiceConfiguration = externalServiceConfiguration;
         myApplication = application;

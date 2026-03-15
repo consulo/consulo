@@ -10,8 +10,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,17 +18,17 @@ import java.awt.*;
 import static consulo.ui.ex.SimpleTextAttributes.*;
 
 public class RunAnythingItemBase extends RunAnythingItem {
-    @Nonnull
+    
     private final String myCommand;
     @Nullable
     protected final Image myIcon;
 
-    public RunAnythingItemBase(@Nonnull String command, @Nullable Image icon) {
+    public RunAnythingItemBase(String command, @Nullable Image icon) {
         myCommand = command;
         myIcon = icon;
     }
 
-    @Nonnull
+    
     @Override
     public String getCommand() {
         return myCommand;
@@ -40,7 +39,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Component createComponent(@Nullable String pattern, boolean isSelected, boolean hasFocus) {
         Component oldComponent = createComponent(isSelected);
@@ -69,7 +68,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
         return component;
     }
 
-    private void addDescription(@Nonnull JPanel panel, boolean isSelected) {
+    private void addDescription(JPanel panel, boolean isSelected) {
         String description = getDescription();
         if (description == null) {
             return;
@@ -81,7 +80,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
         panel.add(descriptionComponent, BorderLayout.CENTER);
     }
 
-    public void setupIcon(@Nonnull SimpleColoredComponent component, @Nullable Image icon) {
+    public void setupIcon(SimpleColoredComponent component, @Nullable Image icon) {
         component.setIcon(ObjectUtil.notNull(icon, Image.empty(16)));
         component.setIpad(JBUI.insets(0, 10, 0, 0));
     }
@@ -106,9 +105,9 @@ public class RunAnythingItemBase extends RunAnythingItem {
     }
 
     protected static void appendDescription(
-        @Nonnull SimpleColoredComponent component,
+        SimpleColoredComponent component,
         @Nullable String description,
-        @Nonnull Color foreground
+        Color foreground
     ) {
         if (description != null) {
             SimpleTextAttributes smallAttributes = new SimpleTextAttributes(STYLE_SMALLER, foreground);
@@ -117,7 +116,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
         }
     }
 
-    @Nonnull
+    
     private static SimpleTextAttributes getDescriptionAttributes(boolean isSelected) {
         return new SimpleTextAttributes(
             STYLE_PLAIN,

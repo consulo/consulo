@@ -8,8 +8,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
@@ -40,7 +39,7 @@ public abstract class JobLauncher {
    * or we were unable to start read action in at least one thread
    * @throws ProcessCanceledException if at least one task has thrown ProcessCanceledException
    */
-  public abstract <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Predicate<? super T> thingProcessor)
+  public abstract <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things, ProgressIndicator progress, Predicate<? super T> thingProcessor)
           throws ProcessCanceledException;
 
   /**
@@ -59,23 +58,23 @@ public abstract class JobLauncher {
    * @deprecated use {@link #invokeConcurrentlyUnderProgress(List, ProgressIndicator, Predicate)} instead
    */
   @Deprecated
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, boolean failFastOnAcquireReadAction, @Nonnull Predicate<? super T> thingProcessor)
+  public <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things, ProgressIndicator progress, boolean failFastOnAcquireReadAction, Predicate<? super T> thingProcessor)
           throws ProcessCanceledException {
     return invokeConcurrentlyUnderProgress(things, progress, ApplicationManager.getApplication().isReadAccessAllowed(), failFastOnAcquireReadAction, thingProcessor);
   }
 
 
-  public abstract <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things,
+  public abstract <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things,
                                                               ProgressIndicator progress,
                                                               boolean runInReadAction,
                                                               boolean failFastOnAcquireReadAction,
-                                                              @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException;
+                                                              Predicate<? super T> thingProcessor) throws ProcessCanceledException;
 
   /**
    * NEVER EVER submit runnable which can lock itself for indeterminate amount of time.
    * This will cause deadlock since this thread pool is an easily exhaustible resource.
    * Use {@link Application#executeOnPooledThread(Runnable)} instead
    */
-  @Nonnull
-  public abstract Job<Void> submitToJobThread(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback);
+  
+  public abstract Job<Void> submitToJobThread(Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback);
 }

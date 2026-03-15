@@ -33,7 +33,6 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -44,14 +43,14 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
     private static final Logger LOG = Logger.getInstance(VirtualFileDeleteProvider.class);
 
     @Override
-    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+    public boolean canDeleteElement(DataContext dataContext) {
         VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
         return files != null && files.length > 0;
     }
 
     @Override
     @RequiredUIAccess
-    public void deleteElement(@Nonnull DataContext dataContext) {
+    public void deleteElement(DataContext dataContext) {
         final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
         if (files == null || files.length == 0) {
             return;
@@ -78,7 +77,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
             .name(ProjectLocalize.commandDeletingFiles())
             .run(() -> new Task.Modal(project, ProjectLocalize.progressTitleDeletingFiles(), true) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     indicator.setIndeterminate(false);
                     int i = 0;
                     for (VirtualFile file : files) {

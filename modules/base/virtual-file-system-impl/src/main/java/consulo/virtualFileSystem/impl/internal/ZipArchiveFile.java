@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.impl.internal;
 
 import consulo.virtualFileSystem.archive.ArchiveEntry;
 import consulo.virtualFileSystem.archive.ArchiveFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +32,11 @@ import java.util.zip.ZipFile;
 public class ZipArchiveFile implements ArchiveFile {
   private final ZipFile myZipFile;
 
-  public ZipArchiveFile(@Nonnull String path) throws IOException{
+  public ZipArchiveFile(String path) throws IOException{
     myZipFile = new ZipFile(path);
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myZipFile.getName();
@@ -51,11 +50,11 @@ public class ZipArchiveFile implements ArchiveFile {
   }
 
   @Override
-  public InputStream getInputStream(@Nonnull ArchiveEntry entry) throws IOException {
+  public InputStream getInputStream(ArchiveEntry entry) throws IOException {
     return myZipFile.getInputStream(((ZipArchiveEntry)entry).getEntry());
   }
 
-  @Nonnull
+  
   @Override
   public Iterator<? extends ArchiveEntry> entries() {
     final Enumeration<? extends ZipEntry> entries = myZipFile.entries();

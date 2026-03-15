@@ -53,8 +53,7 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -350,7 +349,7 @@ public class ScopeEditorPanel {
 
     @Nullable
     static PackageSet processComplementaryScope(
-        @Nonnull PackageSet current,
+        PackageSet current,
         PackageSet added,
         boolean checkComplementSet,
         boolean[] append
@@ -509,20 +508,20 @@ public class ScopeEditorPanel {
         actionGroup.add(new AnAction(IdeLocalize.buttonInclude()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 includeSelected(false);
             }
         });
         actionGroup.add(new AnAction(IdeLocalize.buttonIncludeRecursively()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 includeSelected(true);
             }
 
             @Override
             @RequiredUIAccess
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(isButtonEnabled(true));
             }
         });
@@ -530,20 +529,20 @@ public class ScopeEditorPanel {
         actionGroup.add(new AnAction(IdeLocalize.buttonExclude()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 excludeSelected(false);
             }
         });
         actionGroup.add(new AnAction(IdeLocalize.buttonExcludeRecursively()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 excludeSelected(true);
             }
 
             @Override
             @RequiredUIAccess
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(isButtonEnabled(true));
             }
         });
@@ -650,7 +649,7 @@ public class ScopeEditorPanel {
 
         @Override
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,
@@ -682,14 +681,14 @@ public class ScopeEditorPanel {
         }
 
         @Override
-        @Nonnull
+        
         public DefaultActionGroup createPopupActionGroup(JComponent component) {
             DefaultActionGroup group = new DefaultActionGroup();
             for (PatternDialectProvider provider : PatternDialectProvider.EP_NAME.getExtensionList()) {
                 group.add(new AnAction(provider.getDisplayName()) {
                     @Override
                     @RequiredUIAccess
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         DependencyUISettings.getInstance().setScopeType(provider.getId());
                         myUpdate.run();
                     }
@@ -700,7 +699,7 @@ public class ScopeEditorPanel {
 
         @Override
         @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             PatternDialectProvider provider = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType());
             e.getPresentation().setText(provider.getDisplayName());
@@ -721,12 +720,12 @@ public class ScopeEditorPanel {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return DependencyUISettings.getInstance().UI_FILTER_LEGALS;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_FILTER_LEGALS = flag;
             UIUtil.setEnabled(myLegendPanel, !flag, true);
             myUpdate.run();
@@ -747,13 +746,13 @@ public class ScopeEditorPanel {
             setToComponent(myMatchingCountLabel, myRequestFocus);
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getTextValue() { //just show non-blocking progress
             return LocalizeValue.empty();
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getText2Value() {
             return LocalizeValue.empty();

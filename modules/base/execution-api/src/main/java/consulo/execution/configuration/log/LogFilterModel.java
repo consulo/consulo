@@ -19,8 +19,7 @@ package consulo.execution.configuration.log;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -73,7 +72,7 @@ public abstract class LogFilterModel {
 
   public abstract void selectFilter(LogFilter filter);
 
-  @Nonnull
+  
   public abstract MyProcessingResult processLine(String line);
 
   public void processingStarted() {

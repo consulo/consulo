@@ -25,8 +25,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +33,10 @@ import java.util.List;
 public class UnifiedEditorRangeHighlighter {
     public static final Logger LOG = Logger.getInstance(UnifiedEditorRangeHighlighter.class);
 
-    @Nonnull
+    
     private final List<Element> myPieces = new ArrayList<Element>();
 
-    public UnifiedEditorRangeHighlighter(@Nullable Project project, @Nonnull Document document) {
+    public UnifiedEditorRangeHighlighter(@Nullable Project project, Document document) {
         ApplicationManager.getApplication().assertReadAccessAllowed();
 
         MarkupModelEx model = (MarkupModelEx) DocumentMarkupModel.forDocument(document, project, false);
@@ -59,9 +58,9 @@ public class UnifiedEditorRangeHighlighter {
     }
 
     public UnifiedEditorRangeHighlighter(@Nullable Project project,
-                                         @Nonnull Document document1,
-                                         @Nonnull Document document2,
-                                         @Nonnull List<HighlightRange> ranges) {
+                                         Document document1,
+                                         Document document2,
+                                         List<HighlightRange> ranges) {
         ApplicationManager.getApplication().assertReadAccessAllowed();
 
         MarkupModelEx model1 = DocumentMarkupModel.forDocument(document1, project, false);
@@ -71,7 +70,7 @@ public class UnifiedEditorRangeHighlighter {
 
     private void init(@Nullable MarkupModelEx model1,
                       @Nullable MarkupModelEx model2,
-                      @Nonnull List<HighlightRange> ranges) {
+                      List<HighlightRange> ranges) {
         for (HighlightRange range : ranges) {
             if (range.getSide().isLeft()) {
                 if (model1 != null) {
@@ -86,7 +85,7 @@ public class UnifiedEditorRangeHighlighter {
         }
     }
 
-    private void processRange(@Nonnull MarkupModelEx model, @Nonnull HighlightRange range) {
+    private void processRange(MarkupModelEx model, HighlightRange range) {
         final TextRange base = range.getBase();
         final TextRange changed = range.getChanged();
         final int changedLength = changed.getEndOffset() - changed.getStartOffset();
@@ -111,12 +110,12 @@ public class UnifiedEditorRangeHighlighter {
         });
     }
 
-    public static void erase(@Nullable Project project, @Nonnull Document document) {
+    public static void erase(@Nullable Project project, Document document) {
         MarkupModel model = DocumentMarkupModel.forDocument(document, project, true);
         model.removeAllHighlighters();
     }
 
-    public void apply(@Nullable Project project, @Nonnull Document document) {
+    public void apply(@Nullable Project project, Document document) {
         MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
 
         for (Element piece : myPieces) {
@@ -138,19 +137,19 @@ public class UnifiedEditorRangeHighlighter {
     }
 
     private static class Element {
-        @Nonnull
+        
         private final RangeHighlighterEx myDelegate;
 
         private final int myStart;
         private final int myEnd;
 
-        public Element(@Nonnull RangeHighlighterEx delegate, int start, int end) {
+        public Element(RangeHighlighterEx delegate, int start, int end) {
             myDelegate = delegate;
             myStart = start;
             myEnd = end;
         }
 
-        @Nonnull
+        
         public RangeHighlighterEx getDelegate() {
             return myDelegate;
         }

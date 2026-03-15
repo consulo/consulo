@@ -26,8 +26,7 @@ import consulo.execution.ui.RunContentManager;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -38,7 +37,7 @@ import java.util.function.Predicate;
  */
 @ServiceAPI(value = ComponentScope.PROJECT)
 public interface ExecutionManager {
-  public static ExecutionManager getInstance(@Nonnull Project project) {
+  public static ExecutionManager getInstance(Project project) {
     return project.getInstance(ExecutionManager.class);
   }
 
@@ -47,7 +46,7 @@ public interface ExecutionManager {
    *
    * @return the run content manager instance.
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("RunContentManager is project service, use constructor injection")
   RunContentManager getContentManager();
@@ -57,14 +56,14 @@ public interface ExecutionManager {
    *
    * @return the list of processes.
    */
-  @Nonnull
+  
   ProcessHandler[] getRunningProcesses();
 
-  @Nonnull
+  
   List<RunContentDescriptor> getRunningDescriptors(Predicate<? super RunnerAndConfigurationSettings> condition);
 
-  @Nonnull
-  List<RunContentDescriptor> getDescriptors(@Nonnull Predicate<? super RunnerAndConfigurationSettings> condition);
+  
+  List<RunContentDescriptor> getDescriptors(Predicate<? super RunnerAndConfigurationSettings> condition);
 
   /**
    * Prepares the run or debug tab for running the specified process and calls a callback to start it.
@@ -74,27 +73,27 @@ public interface ExecutionManager {
    * @param environment the execution environment describing the process to be started.
    */
   @RequiredUIAccess
-  void startRunProfile(@Nonnull RunProfileStarter starter,
-                       @Nonnull RunProfileState state,
-                       @Nonnull ExecutionEnvironment environment);
+  void startRunProfile(RunProfileStarter starter,
+                       RunProfileState state,
+                       ExecutionEnvironment environment);
 
-  default void restartRunProfile(@Nonnull Project project,
-                                 @Nonnull Executor executor,
-                                 @Nonnull ExecutionTarget target,
+  default void restartRunProfile(Project project,
+                                 Executor executor,
+                                 ExecutionTarget target,
                                  @Nullable RunnerAndConfigurationSettings configuration,
                                  @Nullable ProcessHandler processHandler) {
     restartRunProfile(project, executor, target, configuration, processHandler, executionEnvironment -> {
     });
   }
 
-  void restartRunProfile(@Nonnull Project project,
-                         @Nonnull Executor executor,
-                         @Nonnull ExecutionTarget target,
+  void restartRunProfile(Project project,
+                         Executor executor,
+                         ExecutionTarget target,
                          @Nullable RunnerAndConfigurationSettings configuration,
                          @Nullable ProcessHandler processHandler,
-                         @Nonnull Consumer<ExecutionEnvironment> envCustomizer);
+                         Consumer<ExecutionEnvironment> envCustomizer);
 
-  void restartRunProfile(@Nonnull ExecutionEnvironment environment);
+  void restartRunProfile(ExecutionEnvironment environment);
 
   boolean isStarting(String exectutorId, String runnerId);
 }

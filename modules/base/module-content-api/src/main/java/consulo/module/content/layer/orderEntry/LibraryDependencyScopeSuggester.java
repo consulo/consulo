@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.library.Library;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -32,5 +31,5 @@ public abstract class LibraryDependencyScopeSuggester {
         ExtensionPointName.create(LibraryDependencyScopeSuggester.class);
 
     @Nullable
-    public abstract DependencyScope getDefaultDependencyScope(@Nonnull Library library);
+    public abstract DependencyScope getDefaultDependencyScope(Library library);
 }

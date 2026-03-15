@@ -20,8 +20,7 @@ import consulo.compiler.artifact.element.ArchivePackageInfo;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -41,18 +40,18 @@ public class CopyToDirectoryInstructionCreator extends IncrementalCompilerInstru
     }
 
     @Override
-    public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
+    public void addFileCopyInstruction(VirtualFile file, String outputFileName) {
         myContext.addDestination(file, new ExplodedDestinationInfo(myOutputPath + "/" + outputFileName, outputChild(outputFileName)));
     }
 
     @Override
-    public CopyToDirectoryInstructionCreator subFolder(@Nonnull String directoryName) {
+    public CopyToDirectoryInstructionCreator subFolder(String directoryName) {
         return new CopyToDirectoryInstructionCreator(myContext, myOutputPath + "/" + directoryName, outputChild(directoryName));
     }
 
-    @Nonnull
+    
     @Override
-    public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
+    public IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter) {
         String jarOutputPath = myOutputPath + "/" + archiveFileName;
         ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
         if (!myContext.registerJarFile(archivePackageInfo, jarOutputPath)) {

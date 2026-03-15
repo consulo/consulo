@@ -2,14 +2,13 @@
 package consulo.application.internal;
 
 import consulo.util.lang.SystemProperties;
-import org.jetbrains.annotations.NonNls;
 
 public final class DiffConfig {
     private DiffConfig() {
     }
 
-    private static final @NonNls String DIFF_DELTA_THRESHOLD_SIZE_KEY = "idea.diff.delta.threshold.size";
-    private static final @NonNls String DIFF_DELTA_PATIENCE_ALG_KEY = "idea.diff.force.patience.alg";
+    private static final String DIFF_DELTA_THRESHOLD_SIZE_KEY = "idea.diff.delta.threshold.size";
+    private static final String DIFF_DELTA_PATIENCE_ALG_KEY = "idea.diff.force.patience.alg";
 
     public static final boolean USE_PATIENCE_ALG = SystemProperties.getBooleanProperty(DIFF_DELTA_PATIENCE_ALG_KEY, false);
     public static final boolean USE_GREEDY_MERGE_MAGIC_RESOLVE = false;

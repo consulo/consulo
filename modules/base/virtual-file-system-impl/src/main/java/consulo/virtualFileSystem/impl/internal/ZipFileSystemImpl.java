@@ -22,7 +22,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import consulo.virtualFileSystem.archive.ZipArchiveFileType;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -36,14 +35,14 @@ public class ZipFileSystemImpl extends ArchiveFileSystemViaArchiveFile implement
   }
 
   @Override
-  protected boolean isCorrectFileType(@Nonnull VirtualFile local) {
+  protected boolean isCorrectFileType(VirtualFile local) {
     // special hack for jar files. eat them even when jar file type is register not as zip file system
     return super.isCorrectFileType(local) || Comparing.equal(local.getExtension(), "jar");
   }
 
-  @Nonnull
+  
   @Override
-  public ArchiveFile createArchiveFile(@Nonnull String filePath) throws IOException {
+  public ArchiveFile createArchiveFile(String filePath) throws IOException {
     return new ZipArchiveFile(filePath);
   }
 }

@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.ui.FocusManager;
 import consulo.ui.event.GlobalFocusListener;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,9 +27,9 @@ import jakarta.annotation.Nonnull;
 public class DesktopSwtFocusManagerImpl implements FocusManager {
   public static final DesktopSwtFocusManagerImpl INSTANCE = new DesktopSwtFocusManagerImpl();
 
-  @Nonnull
+  
   @Override
-  public Disposable addListener(@Nonnull GlobalFocusListener listener) {
+  public Disposable addListener(GlobalFocusListener listener) {
     return () -> {
     };
   }

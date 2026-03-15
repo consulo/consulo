@@ -20,8 +20,7 @@ import consulo.content.base.DocumentationOrderRootType;
 import consulo.dataContext.DataContext;
 import consulo.project.localize.ProjectLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -31,13 +30,13 @@ import java.util.List;
  * @author nik
  */
 public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponentDescriptor {
-  @Nonnull
+  
   @Override
   public List<? extends AttachRootButtonDescriptor> createAttachButtons() {
     return Arrays.asList(new AttachUrlJavadocDescriptor());
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends RootDetector> getRootDetectors() {
     return Application.get().getExtensionList(RootDetector.class);
@@ -50,10 +49,10 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
 
     @Override
     public VirtualFile[] selectFiles(
-      @Nonnull JComponent parent,
+      JComponent parent,
       @Nullable VirtualFile initialSelection,
       @Nullable DataContext dataContext,
-      @Nonnull LibraryEditor libraryEditor
+      LibraryEditor libraryEditor
     ) {
       VirtualFile vFile = DocumentationUtil.showSpecifyJavadocUrlDialog(parent);
       if (vFile != null) {

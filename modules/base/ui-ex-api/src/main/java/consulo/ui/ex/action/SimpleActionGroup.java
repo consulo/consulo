@@ -18,8 +18,7 @@ package consulo.ui.ex.action;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,19 +29,19 @@ public class SimpleActionGroup extends ActionGroup {
     public SimpleActionGroup() {
     }
 
-    public SimpleActionGroup(@Nonnull LocalizeValue text) {
+    public SimpleActionGroup(LocalizeValue text) {
         super(text);
     }
 
-    public SimpleActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+    public SimpleActionGroup(LocalizeValue text, boolean popup) {
         super(text, popup);
     }
 
-    public SimpleActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    public SimpleActionGroup(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    public SimpleActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public SimpleActionGroup(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -55,7 +54,7 @@ public class SimpleActionGroup extends ActionGroup {
     }
 
     @Override
-    @Nonnull
+    
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return myChildren.toArray(new AnAction[myChildren.size()]);
     }

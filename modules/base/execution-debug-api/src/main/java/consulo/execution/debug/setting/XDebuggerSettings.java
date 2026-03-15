@@ -21,8 +21,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.execution.debug.XDebuggerUtil;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +36,7 @@ public abstract class XDebuggerSettings<T> implements PersistentStateComponent<T
 
   private final String myId;
 
-  protected XDebuggerSettings(@Nonnull @NonNls String id) {
+  protected XDebuggerSettings(String id) {
     myId = id;
   }
 
@@ -50,11 +48,11 @@ public abstract class XDebuggerSettings<T> implements PersistentStateComponent<T
     return myId;
   }
 
-  @Nonnull
-  public Collection<? extends Configurable> createConfigurables(@Nonnull DebuggerSettingsCategory category) {
+  
+  public Collection<? extends Configurable> createConfigurables(DebuggerSettingsCategory category) {
     return Collections.emptyList();
   }
 
-  public void generalApplied(@Nonnull DebuggerSettingsCategory category) {
+  public void generalApplied(DebuggerSettingsCategory category) {
   }
 }

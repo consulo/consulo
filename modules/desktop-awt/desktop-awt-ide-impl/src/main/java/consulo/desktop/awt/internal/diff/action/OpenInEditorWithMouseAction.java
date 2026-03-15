@@ -24,8 +24,7 @@ import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class OpenInEditorWithMouseAction extends AnAction implements DumbAware {
-  @Nonnull
+  
   private List<? extends Editor> myEditors = Collections.emptyList();
 
   public OpenInEditorWithMouseAction() {
@@ -45,7 +44,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
                    new CustomShortcutSet(new MouseShortcut(MouseEvent.BUTTON1, InputEvent.CTRL_DOWN_MASK, 1)));
   }
 
-  public void install(@Nonnull List<? extends Editor> editors) {
+  public void install(List<? extends Editor> editors) {
     myEditors = editors;
     for (Editor editor : editors) {
       registerCustomShortcutSet(getShortcutSet(), ((EditorGutterComponentEx)editor.getGutter()).getComponent());
@@ -53,7 +52,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     InputEvent inputEvent = e.getInputEvent();
     Component component = inputEvent.getComponent();
     if (!(inputEvent instanceof MouseEvent) || !e.hasData(Project.KEY) || !e.hasData(OpenInEditorAction.KEY) || component == null) {
@@ -86,7 +85,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     MouseEvent inputEvent = (MouseEvent)e.getInputEvent();
     OpenInEditorAction openInEditorAction = e.getRequiredData(OpenInEditorAction.KEY);
     Project project = e.getRequiredData(Project.KEY);
@@ -108,7 +107,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Nullable
-  private Editor getEditor(@Nonnull Component component) {
+  private Editor getEditor(Component component) {
     for (Editor editor : myEditors) {
       if (editor != null && editor.getGutter() == component) {
         return editor;
@@ -118,5 +117,5 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Nullable
-  protected abstract Navigatable getNavigatable(@Nonnull Editor editor, int line);
+  protected abstract Navigatable getNavigatable(Editor editor, int line);
 }

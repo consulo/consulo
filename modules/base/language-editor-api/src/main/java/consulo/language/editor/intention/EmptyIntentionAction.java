@@ -22,7 +22,6 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -31,18 +30,18 @@ import jakarta.annotation.Nonnull;
 public final class EmptyIntentionAction extends AbstractEmptyIntentionAction implements SyntheticIntentionAction, LowPriorityAction, Iconable {
   private final LocalizeValue myName;
 
-  public EmptyIntentionAction(@Nonnull LocalizeValue name) {
+  public EmptyIntentionAction(LocalizeValue name) {
     myName = name;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return InspectionLocalize.inspectionOptionsActionText(myName);
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return true; //edit inspection settings is always enabled
   }
 

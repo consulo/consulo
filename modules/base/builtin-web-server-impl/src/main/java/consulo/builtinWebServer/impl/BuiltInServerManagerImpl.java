@@ -25,8 +25,7 @@ import consulo.util.lang.function.ThrowableFunction;
 import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.resolver.HostsFileEntriesResolver;
 import io.netty.resolver.ResolvedAddressTypes;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -141,7 +140,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     }
 
     @Override
-    public Url addAuthToken(@Nonnull Url url) {
+    public Url addAuthToken(Url url) {
         if (url.getParameters() != null) {
             // built-in server url contains query only if token specified
             return url;
@@ -155,7 +154,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     }
 
     @Override
-    public void configureRequestToWebServer(@Nonnull URLConnection connection) {
+    public void configureRequestToWebServer(URLConnection connection) {
         connection.setRequestProperty(BuiltInWebServerKt.TOKEN_HEADER_NAME, BuiltInWebServerKt.acquireToken());
     }
 
@@ -194,7 +193,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
         }
     }
 
-    private void bindCustomPorts(@Nonnull BuiltInServer server) {
+    private void bindCustomPorts(BuiltInServer server) {
         if (myApplication.isUnitTestMode()) {
             return;
         }
@@ -205,7 +204,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
             );
     }
 
-    public static boolean isOnBuiltInWebServerByAuthority(@Nonnull String authority) {
+    public static boolean isOnBuiltInWebServerByAuthority(String authority) {
         int portIndex = authority.indexOf(':');
         if (portIndex < 0 || portIndex == authority.length() - 1) {
             return false;

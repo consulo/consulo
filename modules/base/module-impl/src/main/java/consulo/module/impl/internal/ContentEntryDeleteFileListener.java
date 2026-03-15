@@ -31,8 +31,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.*;
@@ -54,7 +53,7 @@ public class ContentEntryDeleteFileListener implements AsyncFileListener {
 
     @Nullable
     @Override
-    public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+    public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
         Map<Module, Set<VirtualFile>> deletedFiles = new HashMap<>();
 
         for (VFileEvent event : events) {

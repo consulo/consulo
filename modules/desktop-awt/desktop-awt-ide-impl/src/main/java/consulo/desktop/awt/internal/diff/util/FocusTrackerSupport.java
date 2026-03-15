@@ -22,31 +22,30 @@ import consulo.diff.DiffUserDataKeys;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.List;
 
 public abstract class FocusTrackerSupport<S> {
-  @Nonnull
+  
   public abstract S getCurrentSide();
 
-  public abstract void setCurrentSide(@Nonnull S side);
+  public abstract void setCurrentSide(S side);
 
-  public abstract void processContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context);
+  public abstract void processContextHints(DiffRequest request, DiffContext context);
 
-  public abstract void updateContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context);
+  public abstract void updateContextHints(DiffRequest request, DiffContext context);
 
   //
   // Impl
   //
 
   public static class Twoside extends FocusTrackerSupport<Side> {
-    @Nonnull
+    
     private Side myCurrentSide;
 
-    public Twoside(@Nonnull List<? extends EditorHolder> holders) {
+    public Twoside(List<? extends EditorHolder> holders) {
       assert holders.size() == 2;
 
       myCurrentSide = Side.RIGHT;
@@ -56,36 +55,36 @@ public abstract class FocusTrackerSupport<S> {
     }
 
     @Override
-    @Nonnull
+    
     public Side getCurrentSide() {
       return myCurrentSide;
     }
 
     @Override
-    public void setCurrentSide(@Nonnull Side side) {
+    public void setCurrentSide(Side side) {
       myCurrentSide = side;
     }
 
     @Override
-    public void processContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
+    public void processContextHints(DiffRequest request, DiffContext context) {
       Side side = DiffImplUtil.getUserData(request, context, DiffUserDataKeys.PREFERRED_FOCUS_SIDE);
       if (side != null) setCurrentSide(side);
     }
 
     @Override
-    public void updateContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
+    public void updateContextHints(DiffRequest request, DiffContext context) {
       context.putUserData(DiffUserDataKeys.PREFERRED_FOCUS_SIDE, myCurrentSide);
     }
 
-    private void addListener(@Nonnull List<? extends EditorHolder> holders, @Nonnull Side side) {
+    private void addListener(List<? extends EditorHolder> holders, Side side) {
       side.select(holders).installFocusListener(new MyFocusListener(side));
     }
 
     private class MyFocusListener extends FocusAdapter {
-      @Nonnull
+      
       private final Side mySide;
 
-      private MyFocusListener(@Nonnull Side side) {
+      private MyFocusListener(Side side) {
         mySide = side;
       }
 
@@ -97,10 +96,10 @@ public abstract class FocusTrackerSupport<S> {
   }
 
   public static class Threeside extends FocusTrackerSupport<ThreeSide> {
-    @Nonnull
+    
     private ThreeSide myCurrentSide;
 
-    public Threeside(@Nonnull List<? extends EditorHolder> holders) {
+    public Threeside(List<? extends EditorHolder> holders) {
       myCurrentSide = ThreeSide.BASE;
 
       addListener(holders, ThreeSide.LEFT);
@@ -109,36 +108,36 @@ public abstract class FocusTrackerSupport<S> {
     }
 
     @Override
-    @Nonnull
+    
     public ThreeSide getCurrentSide() {
       return myCurrentSide;
     }
 
     @Override
-    public void setCurrentSide(@Nonnull ThreeSide side) {
+    public void setCurrentSide(ThreeSide side) {
       myCurrentSide = side;
     }
 
     @Override
-    public void processContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
+    public void processContextHints(DiffRequest request, DiffContext context) {
       ThreeSide side = DiffImplUtil.getUserData(request, context, DiffUserDataKeys.PREFERRED_FOCUS_THREESIDE);
       if (side != null) setCurrentSide(side);
     }
 
     @Override
-    public void updateContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
+    public void updateContextHints(DiffRequest request, DiffContext context) {
       context.putUserData(DiffUserDataKeys.PREFERRED_FOCUS_THREESIDE, myCurrentSide);
     }
 
-    private void addListener(@Nonnull List<? extends EditorHolder> holders, @Nonnull ThreeSide side) {
+    private void addListener(List<? extends EditorHolder> holders, ThreeSide side) {
       side.select(holders).installFocusListener(new MyFocusListener(side));
     }
 
     private class MyFocusListener extends FocusAdapter {
-      @Nonnull
+      
       private final ThreeSide mySide;
 
-      private MyFocusListener(@Nonnull ThreeSide side) {
+      private MyFocusListener(ThreeSide side) {
         mySide = side;
       }
 

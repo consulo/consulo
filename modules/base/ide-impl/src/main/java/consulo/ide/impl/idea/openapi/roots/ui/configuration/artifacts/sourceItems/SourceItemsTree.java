@@ -33,7 +33,6 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.dnd.*;
 import consulo.ui.ex.awt.tree.*;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -135,7 +134,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
   }
 
   @Override
-  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
+  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
     DefaultMutableTreeNode[] nodes = getSelectedTreeNodes();
     if (nodes.length == 1) {
       return DnDAwareTree.getDragImage(this, TreeUtil.getPathFromRoot(nodes[0]), dragOrigin);

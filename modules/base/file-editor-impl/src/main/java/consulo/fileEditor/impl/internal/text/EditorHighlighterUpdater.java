@@ -20,22 +20,21 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 /**
  * @author peter
  */
 public class EditorHighlighterUpdater {
-  @Nonnull
+  
   protected final Project myProject;
-  @Nonnull
+  
   private final EditorEx myEditor;
   @Nullable
   private final VirtualFile myFile;
 
-  public EditorHighlighterUpdater(@Nonnull Project project, @Nonnull Disposable parentDisposable, @Nonnull EditorEx editor, @Nullable VirtualFile file) {
+  public EditorHighlighterUpdater(Project project, Disposable parentDisposable, EditorEx editor, @Nullable VirtualFile file) {
     myProject = project;
     myEditor = editor;
     myFile = file;
@@ -63,7 +62,7 @@ public class EditorHighlighterUpdater {
             .submitDefault();
   }
 
-  @Nonnull
+  
   protected EditorHighlighter createHighlighter() {
     EditorHighlighter highlighter = myFile != null
                                     ? EditorHighlighterFactory.getInstance().createEditorHighlighter(myProject, myFile)
@@ -95,7 +94,7 @@ public class EditorHighlighterUpdater {
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
     @RequiredUIAccess
-    public void fileTypesChanged(@Nonnull FileTypeEvent event) {
+    public void fileTypesChanged(FileTypeEvent event) {
       UIAccess.assertIsUIThread();
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.

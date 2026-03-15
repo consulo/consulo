@@ -31,8 +31,7 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -41,8 +40,8 @@ import java.util.List;
  * @author gregsh
  */
 public class ToggleToolbarAction extends ToggleAction implements DumbAware {
-    @Nonnull
-    public static ActionGroup createToggleToolbarGroup(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    
+    public static ActionGroup createToggleToolbarGroup(Project project, ToolWindow toolWindow) {
         return new DefaultActionGroup(
             new OptionsGroup(toolWindow),
             new ToggleToolbarAction(toolWindow, PropertiesComponent.getInstance(project)),
@@ -53,7 +52,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
     private final PropertiesComponent myPropertiesComponent;
     private final ToolWindow myToolWindow;
 
-    private ToggleToolbarAction(@Nonnull ToolWindow toolWindow, @Nonnull PropertiesComponent propertiesComponent) {
+    private ToggleToolbarAction(ToolWindow toolWindow, PropertiesComponent propertiesComponent) {
         super("Show Toolbar");
         myPropertiesComponent = propertiesComponent;
         myToolWindow = toolWindow;
@@ -74,27 +73,27 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         boolean hasToolbars = iterateToolbars(myToolWindow.getContentManager().getComponent()).iterator().hasNext();
         e.getPresentation().setVisible(hasToolbars);
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return getVisibilityValue();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         myPropertiesComponent.setValue(getProperty(), String.valueOf(state), String.valueOf(true));
         for (Content content : myToolWindow.getContentManager().getContents()) {
             setContentToolbarVisible(content.getComponent(), state);
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private String getProperty() {
         return getShowToolbarProperty(myToolWindow);
@@ -104,19 +103,19 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         return myPropertiesComponent.getBoolean(getProperty(), true);
     }
 
-    private static void setContentToolbarVisible(@Nonnull JComponent root, boolean state) {
+    private static void setContentToolbarVisible(JComponent root, boolean state) {
         for (ActionToolbar toolbar : iterateToolbars(root)) {
             toolbar.getComponent().setVisible(state);
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public static String getShowToolbarProperty(@Nonnull ToolWindow window) {
+    public static String getShowToolbarProperty(ToolWindow window) {
         return "ToolWindow" + window.getStripeTitle() + ".ShowToolbar";
     }
 
-    @Nonnull
+    
     private static Iterable<ActionToolbar> iterateToolbars(JComponent root) {
         return UIUtil.uiTraverser().withRoot(root).preOrderDfsTraversal().filter(ActionToolbar.class);
     }
@@ -130,11 +129,11 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
         }
 
-        @Nonnull
+        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             ContentManager contentManager = myToolWindow.getContentManager();

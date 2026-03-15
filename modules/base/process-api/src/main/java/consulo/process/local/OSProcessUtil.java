@@ -22,7 +22,6 @@ import consulo.process.internal.OSProcessHandler;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class OSProcessUtil {
    * Registers a file to delete after the given command line finishes.
    * In order to have an effect, the command line has to be executed with {@link #consulo.process.internal.OSProcessHandler(GeneralCommandLine)}.
    */
-  public static void deleteFileOnTermination(@Nonnull GeneralCommandLine commandLine, @Nonnull File fileToDelete) {
+  public static void deleteFileOnTermination(GeneralCommandLine commandLine, File fileToDelete) {
     OSProcessHandler.deleteFileOnTermination(commandLine, fileToDelete);
   }
 
@@ -48,11 +47,11 @@ public class OSProcessUtil {
     return (int)ProcessHandle.current().pid();
   }
 
-  public static int getProcessID(@Nonnull Process process) {
+  public static int getProcessID(Process process) {
     return (int)process.pid();
   }
 
-  @Nonnull
+  
   @Deprecated
   public static List<ProcessInfo> getProcessList() {
     List<ProcessInfo> processInfos = new ArrayList<>();

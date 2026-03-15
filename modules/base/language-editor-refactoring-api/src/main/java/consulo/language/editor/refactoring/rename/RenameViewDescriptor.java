@@ -26,7 +26,6 @@ import consulo.usage.UsageViewUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -71,7 +70,7 @@ public class RenameViewDescriptor implements UsageViewDescriptor {
     }
 
     @Override
-    @Nonnull
+    
     public PsiElement[] getElements() {
         return myElements;
     }

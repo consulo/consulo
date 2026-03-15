@@ -2,8 +2,7 @@ package consulo.externalSystem.model.task;
 
 import consulo.application.progress.ProgressIndicator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -11,10 +10,10 @@ import jakarta.annotation.Nullable;
  */
 public interface ExternalSystemTask {
 
-  @Nonnull
+  
   ExternalSystemTaskId getId();
 
-  @Nonnull
+  
   ExternalSystemTaskState getState();
 
   /**
@@ -29,14 +28,14 @@ public interface ExternalSystemTask {
    * @param indicator  target progress indicator
    * @param listeners  callbacks to be notified on task execution update
    */
-  void execute(@Nonnull ProgressIndicator indicator, @Nonnull ExternalSystemTaskNotificationListener... listeners);
+  void execute(ProgressIndicator indicator, ExternalSystemTaskNotificationListener... listeners);
   
   /**
    * Executes current task at the calling thread, i.e. the call to this method blocks.
    * 
    * @param listeners  callbacks to be notified about the task execution update
    */
-  void execute(@Nonnull ExternalSystemTaskNotificationListener... listeners);
+  void execute(ExternalSystemTaskNotificationListener... listeners);
 
   /**
    * Cancels current task and updates given indicator's {@link ProgressIndicator#setText2(String) status} during that.
@@ -44,14 +43,14 @@ public interface ExternalSystemTask {
    * @param indicator  target progress indicator
    * @param listeners  callbacks to be notified on task execution update
    */
-  boolean cancel(@Nonnull ProgressIndicator indicator, @Nonnull ExternalSystemTaskNotificationListener... listeners);
+  boolean cancel(ProgressIndicator indicator, ExternalSystemTaskNotificationListener... listeners);
 
   /**
    * Cancels current task at the calling thread, i.e. the call to this method blocks.
    *
    * @param listeners  callbacks to be notified about the task execution update
    */
-  boolean cancel(@Nonnull ExternalSystemTaskNotificationListener... listeners);
+  boolean cancel(ExternalSystemTaskNotificationListener... listeners);
 
   /**
    * Forces current task to refresh {@link #getState() its state}.

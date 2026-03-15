@@ -30,25 +30,24 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogFilterer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
 public class VcsLogTabsWatcher implements Disposable {
     private static final String TOOLWINDOW_ID = VcsToolWindow.ID;
 
-    @Nonnull
+    
     private final PostponableLogRefresher myRefresher;
 
-    @Nonnull
+    
     private final ToolWindowManagerEx myToolWindowManager;
-    @Nonnull
+    
     private final MyRefreshPostponedEventsListener myPostponedEventsListener;
     @Nullable
     private ToolWindow myToolWindow;
 
-    public VcsLogTabsWatcher(@Nonnull Project project, @Nonnull PostponableLogRefresher refresher, @Nonnull Disposable parentDisposable) {
+    public VcsLogTabsWatcher(Project project, PostponableLogRefresher refresher, Disposable parentDisposable) {
         myRefresher = refresher;
         myToolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
 
@@ -71,8 +70,8 @@ public class VcsLogTabsWatcher implements Disposable {
         return null;
     }
 
-    @Nonnull
-    public Disposable addTabToWatch(@Nonnull String contentTabName, @Nonnull VcsLogFilterer filterer) {
+    
+    public Disposable addTabToWatch(String contentTabName, VcsLogFilterer filterer) {
         return myRefresher.addLogWindow(new VcsLogTab(filterer, contentTabName));
     }
 
@@ -96,10 +95,10 @@ public class VcsLogTabsWatcher implements Disposable {
     }
 
     public class VcsLogTab extends PostponableLogRefresher.VcsLogWindow {
-        @Nonnull
+        
         private final String myTabName;
 
-        public VcsLogTab(@Nonnull VcsLogFilterer filterer, @Nonnull String tabName) {
+        public VcsLogTab(VcsLogFilterer filterer, String tabName) {
             super(filterer);
             myTabName = tabName;
         }
@@ -160,7 +159,7 @@ public class VcsLogTabsWatcher implements Disposable {
         }
 
         @Override
-        public void toolWindowRegistered(@Nonnull String id) {
+        public void toolWindowRegistered(String id) {
             if (id.equals(TOOLWINDOW_ID)) {
                 installContentListener();
             }

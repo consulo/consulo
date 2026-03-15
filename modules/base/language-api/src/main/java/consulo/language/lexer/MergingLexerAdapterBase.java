@@ -17,7 +17,6 @@ package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class MergingLexerAdapterBase extends DelegateLexer {
     private IElementType myTokenType;
@@ -31,7 +30,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
     public abstract MergeFunction getMergeFunction();
 
     @Override
-    public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         super.start(buffer, startOffset, endOffset, initialState);
         myTokenType = null;
     }
@@ -93,7 +92,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
     }
 
     @Override
-    public void restore(@Nonnull LexerPosition position) {
+    public void restore(LexerPosition position) {
         MyLexerPosition pos = (MyLexerPosition)position;
 
         getDelegate().restore(pos.getOriginalPosition());
@@ -102,7 +101,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
         myState = pos.getOldState();
     }
 
-    @Nonnull
+    
     @Override
     public LexerPosition getCurrentPosition() {
         return new MyLexerPosition(myTokenStart, myTokenType, getDelegate().getCurrentPosition(), myState);

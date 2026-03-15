@@ -52,8 +52,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +71,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     private static final Logger LOG = Logger.getInstance(DesktopFileEditorWindow.class);
 
     protected JPanel myPanel;
-    @Nonnull
+    
     private final DesktopAWTEditorTabbedContainer myTabbedPane;
     private final DesktopFileEditorsSplitters myOwner;
 
@@ -138,7 +137,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         myPanel.revalidate();
     }
 
-    @Nonnull
+    
     @Override
     public FileEditorTabbedContainer getContainer() {
         return myTabbedPane;
@@ -176,7 +175,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     }
 
     @Override
-    public void closeFile(@Nonnull VirtualFile file, boolean disposeIfNeeded, boolean transferFocus) {
+    public void closeFile(VirtualFile file, boolean disposeIfNeeded, boolean transferFocus) {
         FileEditorManagerImpl editorManager = getManager();
         editorManager.runChange(
             splitters -> {
@@ -326,7 +325,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         return -1;
     }
 
-    @Nonnull
+    
     @Override
     public FileEditorManagerImpl getManager() {
         return myOwner.getManager();
@@ -382,7 +381,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         myOwner.setCurrentWindow(this, requestFocus);
     }
 
-    @Nonnull
+    
     @Override
     public DesktopFileEditorsSplitters getOwner() {
         return myOwner;
@@ -396,7 +395,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         return myPanel.getSize();
     }
 
-    @Nonnull
+    
     public DesktopAWTEditorTabbedContainer getTabbedPane() {
         return myTabbedPane;
     }
@@ -416,11 +415,11 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     }
 
     protected static class TComp extends JPanel implements DataProvider, EditorWindowHolder, IdeFocusTraversalPolicy.PassThroughComponent {
-        @Nonnull
+        
         DesktopFileEditorWithProviderComposite myEditor;
         protected final FileEditorWindow myWindow;
 
-        TComp(@Nonnull DesktopFileEditorWindow window, @Nonnull DesktopFileEditorWithProviderComposite editor) {
+        TComp(DesktopFileEditorWindow window, DesktopFileEditorWithProviderComposite editor) {
             super(new BorderLayout());
             myEditor = editor;
             myWindow = window;
@@ -441,14 +440,14 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
             });
         }
 
-        @Nonnull
+        
         @Override
         public FileEditorWindow getEditorWindow() {
             return myWindow;
         }
 
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
+        public Object getData(Key<?> dataId) {
             if (VirtualFile.KEY == dataId) {
                 VirtualFile virtualFile = myEditor.getFile();
                 return virtualFile.isValid() ? virtualFile : null;
@@ -655,7 +654,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         }
     }
 
-    @Nonnull
+    
     @Override
     public DesktopFileEditorWindow[] findSiblings() {
         checkConsistency();

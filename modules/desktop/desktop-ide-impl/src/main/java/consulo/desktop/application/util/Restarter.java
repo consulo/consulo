@@ -29,7 +29,6 @@ import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class Restarter {
     return (getRestartCode() != 0 || Platform.current().os().isWindows() || Platform.current().os().isMac()) && !ApplicationProperties.isInSandbox();
   }
 
-  public static int scheduleRestart(@Nonnull String... beforeRestart) throws IOException {
+  public static int scheduleRestart(String... beforeRestart) throws IOException {
     try {
       int restartCode = getRestartCode();
       if (restartCode != 0) {
@@ -99,7 +98,7 @@ public class Restarter {
     }
   }
 
-  private static void restartOnWindows(@Nonnull String... beforeRestart) throws IOException {
+  private static void restartOnWindows(String... beforeRestart) throws IOException {
     Kernel32 kernel32 = Native.load("kernel32", Kernel32.class);
     Shell32 shell32 = Native.load("shell32", Shell32.class);
 
@@ -125,7 +124,7 @@ public class Restarter {
     TimeoutUtil.sleep(500);
   }
 
-  private static void restartOnMac(@Nonnull String... beforeRestart) throws IOException {
+  private static void restartOnMac(String... beforeRestart) throws IOException {
     File distributionDirectory = ContainerPathManager.get().getAppHomeDirectory();
 
     File appDirectory = distributionDirectory.getParentFile();

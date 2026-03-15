@@ -24,8 +24,7 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -39,48 +38,48 @@ public abstract class ShowSettingsUtil implements ProjectStructureSettingsUtil {
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
     return showSettingsDialog(project, (Configurable)null);
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project, Class toSelect) {
     return showAndSelect(project, toSelect, o -> {
     });
   }
 
   @RequiredUIAccess
-  @Nonnull
-  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
+  
+  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, Class<T> toSelect) {
     return showAndSelect(project, toSelect, o -> {
     });
   }
 
   @RequiredUIAccess
-  @Nonnull
-  public abstract <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect, @Nonnull Consumer<T> afterSelect);
+  
+  public abstract <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, Class<T> toSelect, Consumer<T> afterSelect);
 
   @RequiredUIAccess
-  @Nonnull
-  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect);
+  
+  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, String nameToSelect);
 
   @RequiredUIAccess
-  @Nonnull
+  
   public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter);
 
   @RequiredUIAccess
-  @Nonnull
+  
   public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect);
 
   @RequiredUIAccess
-  public void showProjectStructureDialog(@Nonnull Project project) {
+  public void showProjectStructureDialog(Project project) {
     showProjectStructureDialog(project, projectStructureSelector -> projectStructureSelector.select(null, null, true));
   }
 
   @RequiredUIAccess
-  public abstract AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @RequiredUIAccess @Nonnull Consumer<ProjectStructureSelector> consumer);
+  public abstract AsyncResult<Void> showProjectStructureDialog(Project project, @RequiredUIAccess Consumer<ProjectStructureSelector> consumer);
 
   @RequiredUIAccess
   @Deprecated

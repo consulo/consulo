@@ -55,8 +55,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -74,19 +73,19 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     private static final Logger LOG = Logger.getInstance(RunContentManagerImpl.class);
     private static final Key<Executor> EXECUTOR_KEY = Key.create("Executor");
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final RunDashboardManager myRunDashboardManager;
-    @Nonnull
+    
     private final Provider<ToolWindowManager> myToolWindowManager;
 
     private final RunToolWindowManager myRunToolWindowManager;
 
     @Inject
-    public RunContentManagerImpl(@Nonnull Project project,
-                                 @Nonnull RunDashboardManager runDashboardManager,
-                                 @Nonnull Provider<ToolWindowManager> toolWindowManager) {
+    public RunContentManagerImpl(Project project,
+                                 RunDashboardManager runDashboardManager,
+                                 Provider<ToolWindowManager> toolWindowManager) {
         myProject = project;
         myRunDashboardManager = runDashboardManager;
         myToolWindowManager = toolWindowManager;
@@ -123,7 +122,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    public void hideRunContent(@Nonnull Executor executor, RunContentDescriptor descriptor) {
+    public void hideRunContent(Executor executor, RunContentDescriptor descriptor) {
         myProject.getApplication().invokeLater(() -> {
             ToolWindow toolWindow = myToolWindowManager.get().getToolWindow(getToolWindowIdForRunner(executor, descriptor));
             if (toolWindow != null) {
@@ -168,18 +167,18 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    public boolean removeRunContent(@Nonnull Executor executor, RunContentDescriptor descriptor) {
+    public boolean removeRunContent(Executor executor, RunContentDescriptor descriptor) {
         ContentManager contentManager = getContentManagerForRunner(executor, descriptor, false);
         Content content = getRunContentByDescriptor(contentManager, descriptor);
         return content != null && contentManager.removeContent(content, true);
     }
 
     @Override
-    public void showRunContent(@Nonnull Executor executor, @Nonnull RunContentDescriptor descriptor) {
+    public void showRunContent(Executor executor, RunContentDescriptor descriptor) {
         showRunContent(executor, descriptor, descriptor.getExecutionId());
     }
 
-    private void showRunContent(@Nonnull final Executor executor, @Nonnull final RunContentDescriptor descriptor, long executionId) {
+    private void showRunContent(final Executor executor, final RunContentDescriptor descriptor, long executionId) {
         ContentManager contentManager = getContentManagerForRunner(executor, descriptor, true);
         RunContentDescriptor oldDescriptor =
             chooseReuseContentForDescriptor(contentManager, descriptor, executionId, descriptor.getDisplayName());
@@ -285,7 +284,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     @RequiredUIAccess
     @Nullable
     @Override
-    public RunContentDescriptor getReuseContent(@Nonnull ExecutionEnvironment executionEnvironment) {
+    public RunContentDescriptor getReuseContent(ExecutionEnvironment executionEnvironment) {
         RunContentDescriptor contentToReuse = executionEnvironment.getContentToReuse();
         if (contentToReuse != null) {
             return contentToReuse;
@@ -315,15 +314,15 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    public void showRunContent(@Nonnull Executor info,
-                               @Nonnull RunContentDescriptor descriptor,
+    public void showRunContent(Executor info,
+                               RunContentDescriptor descriptor,
                                @Nullable RunContentDescriptor contentToReuse) {
         RunContentManager.copyContentAndBehavior(descriptor, contentToReuse);
         showRunContent(info, descriptor, descriptor.getExecutionId());
     }
 
     @Nullable
-    private static RunContentDescriptor chooseReuseContentForDescriptor(@Nonnull ContentManager contentManager,
+    private static RunContentDescriptor chooseReuseContentForDescriptor(ContentManager contentManager,
                                                                         @Nullable RunContentDescriptor descriptor,
                                                                         long executionId,
                                                                         @Nullable String preferredName) {
@@ -412,25 +411,25 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         return content;
     }
 
-    public static boolean isTerminated(@Nonnull Content content) {
+    public static boolean isTerminated(Content content) {
         RunContentDescriptor descriptor = getRunContentDescriptorByContent(content);
         ProcessHandler processHandler = descriptor == null ? null : descriptor.getProcessHandler();
         return processHandler == null || processHandler.isProcessTerminated();
     }
 
     @Nullable
-    public static RunContentDescriptor getRunContentDescriptorByContent(@Nonnull Content content) {
+    public static RunContentDescriptor getRunContentDescriptorByContent(Content content) {
         return content.getUserData(RunContentDescriptor.KEY);
     }
 
     @Nullable
-    public static Executor getExecutorByContent(@Nonnull Content content) {
+    public static Executor getExecutorByContent(Content content) {
         return content.getUserData(EXECUTOR_KEY);
     }
 
     @Override
     @Nullable
-    public ToolWindow getToolWindowByDescriptor(@Nonnull RunContentDescriptor descriptor) {
+    public ToolWindow getToolWindowByDescriptor(RunContentDescriptor descriptor) {
         for (Map.Entry<String, ContentManager> entry : myRunToolWindowManager.entrySet()) {
             if (getRunContentByDescriptor(entry.getValue(), descriptor) != null) {
                 return ToolWindowManager.getInstance(myProject).getToolWindow(entry.getKey());
@@ -440,7 +439,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Nullable
-    private static Content getRunContentByDescriptor(@Nullable ContentManager contentManager, @Nonnull RunContentDescriptor descriptor) {
+    private static Content getRunContentByDescriptor(@Nullable ContentManager contentManager, RunContentDescriptor descriptor) {
         if (contentManager == null) {
             return null;
         }
@@ -454,7 +453,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    @Nonnull
+    
     public List<RunContentDescriptor> getAllDescriptors() {
         Set<Map.Entry<String, ContentManager>> entries = myRunToolWindowManager.entrySet();
         if (entries.isEmpty()) {
@@ -485,7 +484,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    public void selectRunContent(@Nonnull RunContentDescriptor descriptor) {
+    public void selectRunContent(RunContentDescriptor descriptor) {
         for (Map.Entry<String, ContentManager> entry : myRunToolWindowManager.entrySet()) {
             Content content = getRunContentByDescriptor(entry.getValue(), descriptor);
             if (content != null) {
@@ -506,8 +505,8 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    @Nonnull
-    public String getToolWindowIdByEnvironment(@Nonnull ExecutionEnvironment executionEnvironment) {
+    
+    public String getToolWindowIdByEnvironment(ExecutionEnvironment executionEnvironment) {
         // Also there are some places where ToolWindowId.RUN or ToolWindowId.DEBUG are used directly.
         // For example, HotSwapProgressImpl.NOTIFICATION_GROUP. All notifications for this group is shown in Debug tool window,
         // however such notifications should be shown in Run Dashboard tool window, if run content is redirected to Run Dashboard tool window.
@@ -577,14 +576,14 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         private Content myContent;
         private final Executor myExecutor;
 
-        private CloseListener(@Nonnull Project project, @Nonnull Content content, @Nonnull Executor executor) {
+        private CloseListener(Project project, Content content, Executor executor) {
             super(content, project);
             myContent = content;
             myExecutor = executor;
         }
 
         @Override
-        protected void disposeContent(@Nonnull Content content) {
+        protected void disposeContent(Content content) {
             try {
                 RunContentDescriptor descriptor = getRunContentDescriptorByContent(content);
                 getSyncPublisher().contentRemoved(descriptor, myExecutor);
@@ -598,7 +597,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         }
 
         @Override
-        protected boolean closeQuery(@Nonnull Content content, boolean modal) {
+        protected boolean closeQuery(Content content, boolean modal) {
             RunContentDescriptor descriptor = getRunContentDescriptorByContent(myContent);
             if (descriptor == null) {
                 return true;
@@ -649,7 +648,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
             }
 
             @Override
-            public void run(@Nonnull final ProgressIndicator progressIndicator) {
+            public void run(final ProgressIndicator progressIndicator) {
                 final Semaphore semaphore = new Semaphore();
                 semaphore.down();
 

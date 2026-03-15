@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov

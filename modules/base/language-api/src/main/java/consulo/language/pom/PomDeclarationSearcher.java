@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -30,5 +29,5 @@ import java.util.function.Consumer;
 public abstract class PomDeclarationSearcher {
   public static final ExtensionPointName<PomDeclarationSearcher> EP_NAME = ExtensionPointName.create(PomDeclarationSearcher.class);
 
-  public abstract void findDeclarationsAt(@Nonnull PsiElement element, int offsetInElement, Consumer<PomTarget> consumer);
+  public abstract void findDeclarationsAt(PsiElement element, int offsetInElement, Consumer<PomTarget> consumer);
 }

@@ -29,8 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -59,7 +58,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nonnull
+  
   public Document getDocument() {
     return getEditor().getDocument();
   }
@@ -70,13 +69,13 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nonnull
+  
   public JComponent getComponent() {
     return getEditor().getComponent();
   }
 
   @Override
-  @Nonnull
+  
   public JComponent getContentComponent() {
     return getEditor().getContentComponent();
   }
@@ -92,61 +91,61 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nonnull
+  
   public SelectionModel getSelectionModel() {
     return getEditor().getSelectionModel();
   }
 
   @Override
-  @Nonnull
+  
   public MarkupModel getMarkupModel() {
     return getEditor().getMarkupModel();
   }
 
   @Override
-  @Nonnull
+  
   public FoldingModel getFoldingModel() {
     return getEditor().getFoldingModel();
   }
 
   @Override
-  @Nonnull
+  
   public ScrollingModel getScrollingModel() {
     return getEditor().getScrollingModel();
   }
 
   @Override
-  @Nonnull
+  
   public CaretModel getCaretModel() {
     return getEditor().getCaretModel();
   }
 
   @Override
-  @Nonnull
+  
   public SoftWrapModel getSoftWrapModel() {
     return getEditor().getSoftWrapModel();
   }
 
-  @Nonnull
+  
   @Override
   public InlayModel getInlayModel() {
     return getEditor().getInlayModel();
   }
 
-  @Nonnull
+  
   @Override
   public EditorKind getEditorKind() {
     return getEditor().getEditorKind();
   }
 
   @Override
-  @Nonnull
+  
   public EditorSettings getSettings() {
     return getEditor().getSettings();
   }
 
   @Override
-  @Nonnull
+  
   public EditorColorsScheme getColorsScheme() {
     return getEditor().getColorsScheme();
   }
@@ -157,93 +156,93 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nonnull
-  public Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
+  
+  public Point logicalPositionToXY(LogicalPosition pos) {
     return getEditor().logicalPositionToXY(pos);
   }
 
   @Override
-  public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+  public int logicalPositionToOffset(LogicalPosition pos) {
     return getEditor().logicalPositionToOffset(pos);
   }
 
   @Override
-  @Nonnull
-  public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos) {
+  
+  public VisualPosition logicalToVisualPosition(LogicalPosition logicalPos) {
     return getEditor().logicalToVisualPosition(logicalPos);
   }
 
   @Override
-  @Nonnull
-  public Point visualPositionToXY(@Nonnull VisualPosition visible) {
+  
+  public Point visualPositionToXY(VisualPosition visible) {
     return getEditor().visualPositionToXY(visible);
   }
 
-  @Nonnull
+  
   @Override
-  public Point2D visualPositionToPoint2D(@Nonnull VisualPosition pos) {
+  public Point2D visualPositionToPoint2D(VisualPosition pos) {
     return getEditor().visualPositionToPoint2D(pos);
   }
 
   @Override
-  @Nonnull
-  public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos) {
+  
+  public LogicalPosition visualToLogicalPosition(VisualPosition visiblePos) {
     return getEditor().visualToLogicalPosition(visiblePos);
   }
 
   @Override
-  @Nonnull
+  
   public LogicalPosition offsetToLogicalPosition(int offset) {
     return getEditor().offsetToLogicalPosition(offset);
   }
 
   @Override
-  @Nonnull
+  
   public VisualPosition offsetToVisualPosition(int offset) {
     return getEditor().offsetToVisualPosition(offset);
   }
 
   @Override
-  @Nonnull
+  
   public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
     return getEditor().offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
   }
 
   @Override
-  @Nonnull
-  public LogicalPosition xyToLogicalPosition(@Nonnull Point p) {
+  
+  public LogicalPosition xyToLogicalPosition(Point p) {
     return getEditor().xyToLogicalPosition(p);
   }
 
   @Override
-  @Nonnull
-  public VisualPosition xyToVisualPosition(@Nonnull Point p) {
+  
+  public VisualPosition xyToVisualPosition(Point p) {
     return getEditor().xyToVisualPosition(p);
   }
 
-  @Nonnull
+  
   @Override
-  public VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
+  public VisualPosition xyToVisualPosition(Point2D p) {
     return getEditor().xyToVisualPosition(p);
   }
 
   @Override
-  public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
+  public void addEditorMouseListener(EditorMouseListener listener) {
     getEditor().addEditorMouseListener(listener);
   }
 
   @Override
-  public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
+  public void removeEditorMouseListener(EditorMouseListener listener) {
     getEditor().removeEditorMouseListener(listener);
   }
 
   @Override
-  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
+  public void addEditorMouseMotionListener(EditorMouseMotionListener listener) {
     getEditor().addEditorMouseMotionListener(listener);
   }
 
   @Override
-  public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
+  public void removeEditorMouseMotionListener(EditorMouseMotionListener listener) {
     getEditor().removeEditorMouseMotionListener(listener);
   }
 
@@ -274,14 +273,14 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nonnull
+  
   public EditorGutter getGutter() {
     return getEditor().getGutter();
   }
 
   @Override
   @Nullable
-  public EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e) {
+  public EditorMouseEventArea getMouseEventArea(MouseEvent e) {
     return getEditor().getMouseEventArea(e);
   }
 
@@ -302,7 +301,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nonnull
+  
   public IndentsModel getIndentsModel() {
     return getEditor().getIndentsModel();
   }
@@ -312,7 +311,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
     return getEditor().getAscent();
   }
 
-  @Nonnull
+  
   @Override
   public DataContext getDataContext() {
     return getEditor().getDataContext();

@@ -20,7 +20,6 @@ import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.meta.PsiPresentableMetaData;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -33,7 +32,7 @@ public class HighlightUsagesDescriptionLocation extends ElementDescriptionLocati
   public ElementDescriptionProvider getDefaultProvider() {
     return new ElementDescriptionProvider() {
       @Override
-      public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+      public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
         if (element instanceof PsiPresentableMetaData) {
           return ((PsiPresentableMetaData)element).getTypeName();
         }

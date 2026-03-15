@@ -17,12 +17,11 @@ package consulo.language.editor.refactoring.event;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * {@linkplain RefactoringElementListenerProvider} receives a notification on undo.
  * @author dsl
  */
 public interface UndoRefactoringElementListener {
-  void undoElementMovedOrRenamed(@Nonnull PsiElement newElement, @Nonnull String oldQualifiedName);
+  void undoElementMovedOrRenamed(PsiElement newElement, String oldQualifiedName);
 }

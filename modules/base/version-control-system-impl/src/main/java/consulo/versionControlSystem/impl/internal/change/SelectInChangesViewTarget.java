@@ -28,8 +28,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 /**
@@ -44,7 +43,7 @@ public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return VcsLocalize.changesToolwindowName();

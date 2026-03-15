@@ -21,8 +21,7 @@ import consulo.project.Project;
 import consulo.searchEverywhere.SearchEverywhereContributor;
 import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
 public class RecentFilesSEContributorFactory implements SearchEverywhereContributorFactory<Object> {
     @Nullable
     @Override
-    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent e) {
+    public SearchEverywhereContributor<Object> createContributor(AnActionEvent e) {
         return new RecentFilesSEContributor(e.getData(Project.KEY), GotoActionBase.getPsiContext(e));
     }
 }

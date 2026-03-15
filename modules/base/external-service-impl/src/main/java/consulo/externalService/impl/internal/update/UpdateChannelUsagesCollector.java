@@ -9,8 +9,7 @@ import consulo.externalService.update.UpdateSettings;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Set;
@@ -28,14 +27,14 @@ public class UpdateChannelUsagesCollector extends UsagesCollector {
         myUpdateSettings = updateSettings;
     }
 
-    @Nonnull
+    
     @Override
     public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
         UpdateChannel channel = myUpdateSettings.getChannel();
         return Collections.singleton(new UsageDescriptor(channel.name(), 1));
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupId() {
         return "consulo.platform.base:update.channel";

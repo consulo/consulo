@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a syntax error (for example, invalid token) in Java or custom language code.
@@ -43,6 +42,6 @@ public interface PsiErrorElement extends PsiElement {
    *
    * @return the error description.
    */
-  @Nonnull
+  
   LocalizeValue getErrorDescriptionValue();
 }

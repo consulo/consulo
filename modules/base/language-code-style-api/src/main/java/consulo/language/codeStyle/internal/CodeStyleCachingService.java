@@ -9,21 +9,20 @@ import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface CodeStyleCachingService {
 
-  static CodeStyleCachingService getInstance(@Nonnull Project project) {
+  static CodeStyleCachingService getInstance(Project project) {
     return project.getInstance(CodeStyleCachingService.class);
   }
 
   @Nullable
-  CodeStyleSettings tryGetSettings(@Nonnull PsiFile file);
+  CodeStyleSettings tryGetSettings(PsiFile file);
 
-  void scheduleWhenSettingsComputed(@Nonnull PsiFile file, @Nonnull Runnable runnable);
+  void scheduleWhenSettingsComputed(PsiFile file, Runnable runnable);
 
   @Nullable
-  UserDataHolder getDataHolder(@Nonnull VirtualFile virtualFile);
+  UserDataHolder getDataHolder(VirtualFile virtualFile);
 }

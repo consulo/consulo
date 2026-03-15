@@ -3,22 +3,21 @@ package consulo.language.psi.search;
 
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public interface TodoItem {
-  @Nonnull
+  
   PsiFile getFile();
 
-  @Nonnull
+  
   TextRange getTextRange();
 
-  @Nonnull
+  
   TodoPattern getPattern();
 
-  @Nonnull
+  
   default List<TextRange> getAdditionalTextRanges() {
     return Collections.emptyList();
   }

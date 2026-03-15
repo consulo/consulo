@@ -46,8 +46,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -93,22 +92,22 @@ public class ReplaceInProjectManager {
         private final FindModel findModel;
         private Set<Usage> excludedSet;
 
-        ReplaceContext(@Nonnull UsageView usageView, @Nonnull FindModel findModel) {
+        ReplaceContext(UsageView usageView, FindModel findModel) {
             this.usageView = usageView;
             this.findModel = findModel;
         }
 
-        @Nonnull
+        
         public FindModel getFindModel() {
             return findModel;
         }
 
-        @Nonnull
+        
         public UsageView getUsageView() {
             return usageView;
         }
 
-        @Nonnull
+        
         Set<Usage> getExcludedSetCached() {
             if (excludedSet == null) {
                 excludedSet = usageView.getExcludedUsages();
@@ -125,7 +124,7 @@ public class ReplaceInProjectManager {
      * @param model would be used for replacing if not null, otherwise shared (project-level) model would be used
      */
     @RequiredUIAccess
-    public void replaceInProject(@Nonnull DataContext dataContext, @Nullable FindModel model) {
+    public void replaceInProject(DataContext dataContext, @Nullable FindModel model) {
         FindManager findManager = FindManager.getInstance(myProject);
         FindModel findModel;
 
@@ -167,7 +166,7 @@ public class ReplaceInProjectManager {
         );
     }
 
-    public void replaceInPath(@Nonnull FindModel findModel) {
+    public void replaceInPath(FindModel findModel) {
         FindManager findManager = FindManager.getInstance(myProject);
         if (!findModel.isProjectScope() && FindInProjectUtil.getDirectory(findModel) == null && findModel.getModuleName() == null && findModel.getCustomScope() == null) {
             return;
@@ -190,11 +189,11 @@ public class ReplaceInProjectManager {
     }
 
     private static class ReplaceInProjectTarget extends FindInProjectUtil.StringUsageTarget {
-        ReplaceInProjectTarget(@Nonnull Project project, @Nonnull FindModel findModel) {
+        ReplaceInProjectTarget(Project project, FindModel findModel) {
             super(project, findModel);
         }
 
-        @Nonnull
+        
         @Override
         public String getLongDescriptiveName() {
             UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(myFindModel);
@@ -217,11 +216,11 @@ public class ReplaceInProjectManager {
     }
 
     public void searchAndShowUsages(
-        @Nonnull UsageViewManager manager,
-        @Nonnull Supplier<UsageSearcher> usageSearcherFactory,
-        @Nonnull final FindModel findModelCopy,
-        @Nonnull UsageViewPresentation presentation,
-        @Nonnull FindUsagesProcessPresentation processPresentation
+        UsageViewManager manager,
+        Supplier<UsageSearcher> usageSearcherFactory,
+        final FindModel findModelCopy,
+        UsageViewPresentation presentation,
+        FindUsagesProcessPresentation processPresentation
     ) {
         presentation.setMergeDupLinesAvailable(false);
         ReplaceInProjectTarget target = new ReplaceInProjectTarget(myProject, findModelCopy);
@@ -234,7 +233,7 @@ public class ReplaceInProjectManager {
             presentation,
             new UsageViewManager.UsageViewStateListener() {
                 @Override
-                public void usageViewCreated(@Nonnull UsageView usageView) {
+                public void usageViewCreated(UsageView usageView) {
                     context[0] = new ReplaceContext(usageView, findModelCopy);
                     addReplaceActions(context[0]);
                     usageView.setRerunAction(new AbstractAction() {
@@ -260,10 +259,10 @@ public class ReplaceInProjectManager {
     }
 
     public boolean showReplaceAllConfirmDialog(
-        @Nonnull String usagesCount,
-        @Nonnull String stringToFind,
-        @Nonnull String filesCount,
-        @Nonnull String stringToReplace
+        String usagesCount,
+        String stringToFind,
+        String filesCount,
+        String stringToReplace
     ) {
         return Messages.YES == MessageDialogBuilder.yesNo(
                 FindLocalize.findReplaceAllConfirmationTitle().get(),
@@ -280,7 +279,7 @@ public class ReplaceInProjectManager {
             .show();
     }
 
-    private static Set<VirtualFile> getFiles(@Nonnull ReplaceContext replaceContext, boolean selectedOnly) {
+    private static Set<VirtualFile> getFiles(ReplaceContext replaceContext, boolean selectedOnly) {
         Set<Usage> usages = selectedOnly ? replaceContext.getUsageView().getSelectedUsages() : replaceContext.getUsageView().getUsages();
         if (usages.isEmpty()) {
             return Collections.emptySet();
@@ -295,7 +294,7 @@ public class ReplaceInProjectManager {
         return files;
     }
 
-    private static Set<Usage> getAllUsagesForFile(@Nonnull ReplaceContext replaceContext, @Nonnull VirtualFile file) {
+    private static Set<Usage> getAllUsagesForFile(ReplaceContext replaceContext, VirtualFile file) {
         Set<Usage> usages = replaceContext.getUsageView().getUsages();
         Set<Usage> result = new LinkedHashSet<>();
         for (Usage usage : usages) {
@@ -314,7 +313,7 @@ public class ReplaceInProjectManager {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Set<Usage> usages = replaceContext.getUsageView().getUsages();
                 if (usages.isEmpty()) {
                     return;
@@ -332,7 +331,7 @@ public class ReplaceInProjectManager {
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(!replaceContext.getUsageView().getUsages().isEmpty());
             }
         });
@@ -344,12 +343,12 @@ public class ReplaceInProjectManager {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 replaceUsagesUnderCommand(replaceContext, replaceContext.getUsageView().getSelectedUsages());
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
                 presentation.setTextValue(FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()));
                 presentation.setEnabled(!replaceContext.getUsageView().getSelectedUsages().isEmpty());
@@ -358,7 +357,7 @@ public class ReplaceInProjectManager {
     }
 
     @RequiredUIAccess
-    private boolean replaceUsages(@Nonnull ReplaceContext replaceContext, @Nonnull Collection<Usage> usages) {
+    private boolean replaceUsages(ReplaceContext replaceContext, Collection<Usage> usages) {
         if (!ensureUsagesWritable(replaceContext, usages)) {
             return true;
         }
@@ -417,9 +416,9 @@ public class ReplaceInProjectManager {
     }
 
     public boolean replaceUsage(
-        @Nonnull Usage usage,
-        @Nonnull FindModel findModel,
-        @Nonnull Set<Usage> excludedSet,
+        Usage usage,
+        FindModel findModel,
+        Set<Usage> excludedSet,
         boolean justCheck
     ) throws FindManager.MalformedReplacementStringException {
         SimpleReference<FindManager.MalformedReplacementStringException> exceptionResult = SimpleReference.create();
@@ -490,7 +489,7 @@ public class ReplaceInProjectManager {
     }
 
     @RequiredUIAccess
-    private void replaceUsagesUnderCommand(@Nonnull ReplaceContext replaceContext, @Nonnull Set<? extends Usage> usagesSet) {
+    private void replaceUsagesUnderCommand(ReplaceContext replaceContext, Set<? extends Usage> usagesSet) {
         if (usagesSet.isEmpty()) {
             return;
         }
@@ -577,7 +576,7 @@ public class ReplaceInProjectManager {
         private final FindModel myFindModelCopy;
         private final FindUsagesProcessPresentation myProcessPresentation;
 
-        private UsageSearcherFactory(@Nonnull FindModel findModelCopy, @Nonnull FindUsagesProcessPresentation processPresentation) {
+        private UsageSearcherFactory(FindModel findModelCopy, FindUsagesProcessPresentation processPresentation) {
             myFindModelCopy = findModelCopy;
             myProcessPresentation = processPresentation;
         }

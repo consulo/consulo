@@ -18,8 +18,7 @@ package consulo.ui.ex.keymap;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -29,30 +28,30 @@ import java.util.function.Predicate;
  */
 public interface KeymapGroup {
     interface Builder {
-        @Nonnull
-        CreatingBuilder root(@Nonnull LocalizeValue name);
+        
+        CreatingBuilder root(LocalizeValue name);
 
-        @Nonnull
-        CreatingBuilder root(@Nonnull LocalizeValue name, @Nonnull Image icon);
+        
+        CreatingBuilder root(LocalizeValue name, Image icon);
 
-        @Nonnull
-        CreatingBuilder root(@Nonnull LocalizeValue name, @Nonnull String id, @Nonnull Image icon);
+        
+        CreatingBuilder root(LocalizeValue name, String id, Image icon);
     }
 
     interface CreatingBuilder {
-        @Nonnull
+        
         CreatingBuilder filter(@Nullable Predicate<AnAction> filter);
 
-        @Nonnull
-        CreatingBuilder addGroup(@Nonnull String groupId);
+        
+        CreatingBuilder addGroup(String groupId);
 
-        @Nonnull
-        CreatingBuilder addGroup(@Nonnull String groupId, boolean forceNonPopup);
+        
+        CreatingBuilder addGroup(String groupId, boolean forceNonPopup);
 
-        @Nonnull
+        
         CreatingBuilder addAction(AnAction action, boolean forceNonPopup);
 
-        @Nonnull
+        
         KeymapGroup build();
     }
 

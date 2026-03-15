@@ -15,7 +15,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +34,7 @@ public class PackageFileAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean visible = false;
         Project project = e.getData(Project.KEY);
         if (project != null) {
@@ -53,8 +52,8 @@ public class PackageFileAction extends AnAction {
         e.getPresentation().setVisible(visible);
     }
 
-    @Nonnull
-    private static List<VirtualFile> getFilesToPackage(@Nonnull AnActionEvent e, @Nonnull Project project) {
+    
+    private static List<VirtualFile> getFilesToPackage(AnActionEvent e, Project project) {
         VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (files == null) {
             return Collections.emptyList();
@@ -81,7 +80,7 @@ public class PackageFileAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
         FileDocumentManager.getInstance().saveAllDocuments();
         List<VirtualFile> files = getFilesToPackage(event, project);

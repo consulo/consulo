@@ -21,9 +21,8 @@ import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.Tree;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.List;
  * @since 2012-06-09
  */
 public class FavoritesTreeUtil {
-  @Nonnull
+  
   public static FavoritesTreeNodeDescriptor[] getSelectedNodeDescriptors(DnDAwareTree tree) {
     TreePath[] path = tree.getSelectionPaths();
     if (path == null) {
@@ -122,7 +121,7 @@ public class FavoritesTreeUtil {
     return null;
   }
 
-  static FavoritesListProvider getProvider(@Nonnull FavoritesManagerImpl manager, @Nonnull FavoritesTreeNodeDescriptor descriptor) {
+  static FavoritesListProvider getProvider(FavoritesManagerImpl manager, FavoritesTreeNodeDescriptor descriptor) {
     AbstractTreeNode treeNode = descriptor.getElement();
     while (treeNode != null && (!(treeNode instanceof FavoritesListNode))) {
       treeNode = (AbstractTreeNode)treeNode.getParent();

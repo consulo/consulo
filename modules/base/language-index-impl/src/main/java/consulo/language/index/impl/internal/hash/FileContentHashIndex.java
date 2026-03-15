@@ -11,7 +11,6 @@ import consulo.language.index.impl.internal.VfsAwareMapReduceIndex;
 import consulo.language.index.impl.internal.forward.MapForwardIndexAccessor;
 import consulo.language.index.impl.internal.forward.PersistentMapBasedForwardIndex;
 import consulo.language.psi.stub.FileContent;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -19,14 +18,14 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 public class FileContentHashIndex extends VfsAwareMapReduceIndex<Integer, Void, FileContent> {
-    FileContentHashIndex(@Nonnull FileContentHashIndexExtension extension, IndexStorage<Integer, Void> storage) throws IOException {
+    FileContentHashIndex(FileContentHashIndexExtension extension, IndexStorage<Integer, Void> storage) throws IOException {
         super(extension, storage, new PersistentMapBasedForwardIndex(IndexInfrastructure.getInputIndexStorageFile(extension.getName())),
             new MapForwardIndexAccessor<>(new InputMapExternalizer<>(extension)), null, null);
     }
 
-    @Nonnull
+    
     @Override
-    protected Supplier<Boolean> createIndexUpdateComputation(@Nonnull AbstractUpdateData<Integer, Void> updateData) {
+    protected Supplier<Boolean> createIndexUpdateComputation(AbstractUpdateData<Integer, Void> updateData) {
         return new HashIndexUpdateComputable(super.createIndexUpdateComputation(updateData), updateData.newDataIsEmpty());
     }
 
@@ -38,7 +37,7 @@ public class FileContentHashIndex extends VfsAwareMapReduceIndex<Integer, Void, 
         return data.keySet().iterator().next();
     }
 
-    @Nonnull
+    
     IntUnaryOperator toHashIdToFileIdFunction() {
         return hash -> {
             try {
@@ -53,11 +52,11 @@ public class FileContentHashIndex extends VfsAwareMapReduceIndex<Integer, Void, 
     }
 
     final static class HashIndexUpdateComputable implements Supplier<Boolean> {
-        @Nonnull
+        
         private final Supplier<Boolean> myUnderlying;
         private final boolean myEmptyInput;
 
-        HashIndexUpdateComputable(@Nonnull Supplier<Boolean> underlying, boolean isEmptyInput) {
+        HashIndexUpdateComputable(Supplier<Boolean> underlying, boolean isEmptyInput) {
             myUnderlying = underlying;
             myEmptyInput = isEmptyInput;
         }

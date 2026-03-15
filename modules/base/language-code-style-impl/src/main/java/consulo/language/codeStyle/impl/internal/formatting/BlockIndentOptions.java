@@ -24,7 +24,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import jakarta.annotation.Nonnull;
 
 public class BlockIndentOptions {
     private final CodeStyleSettings mySettings;
@@ -32,8 +31,8 @@ public class BlockIndentOptions {
     private final int myRightMargin;
 
     public BlockIndentOptions(
-        @Nonnull CodeStyleSettings settings,
-        @Nonnull CommonCodeStyleSettings.IndentOptions indentOptions,
+        CodeStyleSettings settings,
+        CommonCodeStyleSettings.IndentOptions indentOptions,
         Block block
     ) {
         mySettings = settings;
@@ -45,8 +44,8 @@ public class BlockIndentOptions {
         return myIndentOptions;
     }
 
-    @Nonnull
-    public CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nonnull AbstractBlockWrapper block) {
+    
+    public CommonCodeStyleSettings.IndentOptions getIndentOptions(AbstractBlockWrapper block) {
         if (!myIndentOptions.isOverrideLanguageOptions()) {
             Language language = block.getLanguage();
             if (language != null) {

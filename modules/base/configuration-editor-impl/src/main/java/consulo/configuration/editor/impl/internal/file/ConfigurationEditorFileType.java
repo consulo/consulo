@@ -19,7 +19,6 @@ import consulo.configuration.editor.ConfigurationFileEditorProvider;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class ConfigurationEditorFileType implements FileType {
         return myProvider;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myProvider.getId();
@@ -47,13 +46,13 @@ public class ConfigurationEditorFileType implements FileType {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.empty();
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return myProvider.getIcon();

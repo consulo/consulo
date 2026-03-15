@@ -24,8 +24,7 @@ import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.template.TemplateLanguageFileViewProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class StructureViewElementWrapper<V extends PsiElement> implements Struct
   private final StructureViewTreeElement myTreeElement;
   private final PsiFile myMainFile;
 
-  public StructureViewElementWrapper(@Nonnull StructureViewTreeElement treeElement, @Nonnull PsiFile mainFile) {
+  public StructureViewElementWrapper(StructureViewTreeElement treeElement, PsiFile mainFile) {
     myTreeElement = treeElement;
     myMainFile = mainFile;
   }

@@ -34,8 +34,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -306,7 +305,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     updateViewerForSelection();
   }
 
-  @Nonnull
+  
   public int[] getSelectedIndices() {
     Object[] values = myList.getSelectedValues();
     int[] result = new int[values.length];
@@ -320,7 +319,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     return myAllContents;
   }
 
-  @Nonnull
+  
   public String getSelectedText() {
     StringBuilder sb = new StringBuilder();
     for (Object o : myList.getSelectedValues()) {

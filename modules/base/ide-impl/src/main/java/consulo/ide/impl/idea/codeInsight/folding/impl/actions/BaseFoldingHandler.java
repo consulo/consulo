@@ -21,23 +21,22 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.action.EditorActionHandler;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseFoldingHandler extends EditorActionHandler {
   @Override
-  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     return editor.getProject() != null;
   }
 
   /**
    * Returns fold regions inside selection, or all regions in editor, if selection doesn't exist or doesn't contain fold regions.
    */
-  protected List<FoldRegion> getFoldRegionsForSelection(@Nonnull Editor editor, @Nullable Caret caret) {
+  protected List<FoldRegion> getFoldRegionsForSelection(Editor editor, @Nullable Caret caret) {
     FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
     if (caret == null) {
       caret = editor.getCaretModel().getPrimaryCaret();
@@ -59,7 +58,7 @@ public abstract class BaseFoldingHandler extends EditorActionHandler {
   /**
    * Returns a region corresponding to current caret position, and all regions contained in it.
    */
-  protected List<FoldRegion> getFoldRegionsForCaret(@Nonnull Editor editor, @Nullable Caret caret, boolean toCollapse) {
+  protected List<FoldRegion> getFoldRegionsForCaret(Editor editor, @Nullable Caret caret, boolean toCollapse) {
     if (caret == null) {
       caret = editor.getCaretModel().getPrimaryCaret();
     }

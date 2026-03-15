@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement.model;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,37 +31,37 @@ import java.util.Set;
  */
 public class ArrangementCompositeMatchCondition implements ArrangementMatchCondition {
 
-  @Nonnull
+  
   private final Set<ArrangementMatchCondition> myOperands = new HashSet<ArrangementMatchCondition>();
 
   public ArrangementCompositeMatchCondition() {
   }
 
-  public ArrangementCompositeMatchCondition(@Nonnull Collection<? extends ArrangementMatchCondition> conditions) {
+  public ArrangementCompositeMatchCondition(Collection<? extends ArrangementMatchCondition> conditions) {
     myOperands.addAll(conditions);
   }
 
-  @Nonnull
+  
   public Set<ArrangementMatchCondition> getOperands() {
     return myOperands;
   }
 
-  @Nonnull
-  public ArrangementCompositeMatchCondition addOperand(@Nonnull ArrangementMatchCondition condition) {
+  
+  public ArrangementCompositeMatchCondition addOperand(ArrangementMatchCondition condition) {
     myOperands.add(condition);
     return this;
   }
 
-  public void removeOperand(@Nonnull ArrangementMatchCondition condition) {
+  public void removeOperand(ArrangementMatchCondition condition) {
     myOperands.remove(condition);
   }
   
   @Override
-  public void invite(@Nonnull ArrangementMatchConditionVisitor visitor) {
+  public void invite(ArrangementMatchConditionVisitor visitor) {
     visitor.visit(this);
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementCompositeMatchCondition clone() {
     ArrangementCompositeMatchCondition result = new ArrangementCompositeMatchCondition();

@@ -34,8 +34,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -51,15 +50,15 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   //@ApiStatus.Experimental
   public static final Key<List<AnAction>> RESTART_ACTIONS = Key.create("restart actions");
   private final
-  @Nonnull
+ 
   Project myProject;
   private final
-  @Nonnull
+ 
   ViewManager myViewManager;
   private final AtomicBoolean isBuildStartEventProcessed = new AtomicBoolean();
   private final List<BuildEvent> myAfterStartEvents = Lists.newLockFreeCopyOnWriteList();
   private final
-  @Nonnull
+ 
   DefaultBuildDescriptor myBuildDescriptor;
   private volatile
   @Nullable
@@ -67,20 +66,20 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   private volatile BuildViewSettingsProvider myViewSettingsProvider;
 
   public BuildView(
-    @Nonnull Project project,
-    @Nonnull BuildDescriptor buildDescriptor,
+    Project project,
+    BuildDescriptor buildDescriptor,
     @NonNls @Nullable String selectionStateKey,
-    @Nonnull ViewManager viewManager
+    ViewManager viewManager
   ) {
     this(project, null, buildDescriptor, selectionStateKey, viewManager);
   }
 
   public BuildView(
-    @Nonnull Project project,
+    Project project,
     @Nullable ExecutionConsole executionConsole,
-    @Nonnull BuildDescriptor buildDescriptor,
+    BuildDescriptor buildDescriptor,
     @NonNls @Nullable String selectionStateKey,
-    @Nonnull ViewManager viewManager
+    ViewManager viewManager
   ) {
     super(selectionStateKey);
     myProject = project;
@@ -92,7 +91,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
+  public void onEvent(Object buildId, BuildEvent event) {
     if (event instanceof StartBuildEvent) {
       Application.get().invokeAndWait(() -> {
         onStartBuild(buildId, (StartBuildEvent)event);
@@ -113,7 +112,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     }
   }
 
-  private void processEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
+  private void processEvent(Object buildId, BuildEvent event) {
     if (event instanceof OutputBuildEvent && (event.getParentId() == null || event.getParentId() == myBuildDescriptor.getId())) {
       ExecutionConsole consoleView = getConsoleView();
       if (consoleView instanceof BuildProgressListener progressListener) {
@@ -128,7 +127,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     }
   }
 
-  private void onStartBuild(@Nonnull Object buildId, @Nonnull StartBuildEvent startBuildEvent) {
+  private void onStartBuild(Object buildId, StartBuildEvent startBuildEvent) {
     Application application = Application.get();
     if (application.isHeadlessEnvironment() && !application.isUnitTestMode()) return;
 
@@ -207,7 +206,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public void addChangeListener(@Nonnull ChangeListener listener, @Nonnull Disposable parent) {
+  public void addChangeListener(ChangeListener listener, Disposable parent) {
     ExecutionConsole console = getConsoleView();
     if (console instanceof ObservableConsoleView observableConsoleView) {
       observableConsoleView.addChangeListener(listener, parent);
@@ -215,7 +214,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public void print(@Nonnull String text, @Nonnull ConsoleViewContentType contentType) {
+  public void print(String text, ConsoleViewContentType contentType) {
     delegateToConsoleView(view -> view.print(text, contentType));
   }
 
@@ -246,7 +245,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public void attachToProcess(@Nonnull ProcessHandler processHandler) {
+  public void attachToProcess(ProcessHandler processHandler) {
     delegateToConsoleView(view -> view.attachToProcess(processHandler));
   }
 
@@ -279,22 +278,22 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public void performWhenNoDeferredOutput(@Nonnull Runnable runnable) {
+  public void performWhenNoDeferredOutput(Runnable runnable) {
     delegateToConsoleView(view -> view.performWhenNoDeferredOutput(runnable));
   }
 
   @Override
-  public void setHelpId(@Nonnull String helpId) {
+  public void setHelpId(String helpId) {
     delegateToConsoleView(view -> view.setHelpId(helpId));
   }
 
   @Override
-  public void addMessageFilter(@Nonnull Filter filter) {
+  public void addMessageFilter(Filter filter) {
     delegateToConsoleView(view -> view.addMessageFilter(filter));
   }
 
   @Override
-  public void printHyperlink(@Nonnull String hyperlinkText, @Nullable HyperlinkInfo info) {
+  public void printHyperlink(String hyperlinkText, @Nullable HyperlinkInfo info) {
     delegateToConsoleView(view -> view.printHyperlink(hyperlinkText, info));
   }
 
@@ -311,7 +310,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  @Nonnull
+ 
   public AnAction[] createConsoleActions() {
     if (!myViewManager.isBuildContentView()) {
       // console actions should be integrated with the provided toolbar when the console is shown not on Build tw
@@ -366,7 +365,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
 
   @Nullable
   @Override
-  public Object getData(@Nonnull Key dataId) {
+  public Object getData(Key dataId) {
     if (KEY == dataId) {
       return getConsoleView();
     }
@@ -390,7 +389,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     return getEventView() != null;
   }
 
-  @Nonnull
+ 
   @Override
   public Predicate<ExecutionNodeImpl> getFilter() {
     BuildTreeConsoleView eventView = getEventView();
@@ -398,7 +397,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public void addFilter(@Nonnull Predicate<? super ExecutionNodeImpl> filter) {
+  public void addFilter(Predicate<? super ExecutionNodeImpl> filter) {
     BuildTreeConsoleView eventView = getEventView();
     if (eventView != null) {
       eventView.addFilter(filter);
@@ -406,7 +405,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public void removeFilter(@Nonnull Predicate<? super ExecutionNodeImpl> filter) {
+  public void removeFilter(Predicate<? super ExecutionNodeImpl> filter) {
     BuildTreeConsoleView eventView = getEventView();
     if (eventView != null) {
       eventView.removeFilter(filter);
@@ -414,12 +413,12 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public boolean contains(@Nonnull Predicate<? super ExecutionNodeImpl> filter) {
+  public boolean contains(Predicate<? super ExecutionNodeImpl> filter) {
     BuildTreeConsoleView eventView = getEventView();
     return eventView != null && eventView.contains(filter);
   }
 
-  @Nonnull
+ 
   private OccurenceNavigator getOccurenceNavigator() {
     BuildTreeConsoleView eventView = getEventView();
     if (eventView != null) return eventView;
@@ -450,13 +449,13 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     return getOccurenceNavigator().goPreviousOccurence();
   }
 
-  @Nonnull
+ 
   @Override
   public String getNextOccurenceActionName() {
     return getOccurenceNavigator().getNextOccurenceActionName();
   }
 
-  @Nonnull
+ 
   @Override
   public String getPreviousOccurenceActionName() {
     return getOccurenceNavigator().getPreviousOccurenceActionName();

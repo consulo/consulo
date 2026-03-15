@@ -21,27 +21,26 @@ import consulo.compiler.artifact.internal.DefaultPackagingElementResolvingContex
 import consulo.content.library.Library;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface PackagingElementResolvingContext {
-  @Nonnull
+  
   static PackagingElementResolvingContext of(Project project, ArtifactManager artifactManager) {
     return new DefaultPackagingElementResolvingContext(project, artifactManager);
   }
 
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   ArtifactModel getArtifactModel();
 
-  @Nonnull
+  
   ModulesProvider getModulesProvider();
 
   @Nullable
-  Library findLibrary(@Nonnull String level, @Nonnull String libraryName);
+  Library findLibrary(String level, String libraryName);
 }

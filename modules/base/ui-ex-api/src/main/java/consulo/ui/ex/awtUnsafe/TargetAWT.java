@@ -25,8 +25,7 @@ import consulo.ui.cursor.Cursor;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -54,8 +53,8 @@ public final class TargetAWT {
         return point2D == null ? null : new Point(point2D.x(), point2D.y());
     }
 
-    @Nonnull
-    public static java.awt.Color to(@Nonnull RGBColor color) {
+   
+    public static java.awt.Color to(RGBColor color) {
         return ourFacade.to(color);
     }
 
@@ -82,28 +81,28 @@ public final class TargetAWT {
     /**
      * Wrap AWT component to untyped UI component. Calling any methods from it except #from() not supported
      */
-    @Nonnull
-    public static Component wrap(@Nonnull java.awt.Component component) {
+   
+    public static Component wrap(java.awt.Component component) {
         return ourFacade.wrap(component);
     }
 
-    @Nonnull
-    public static Image wrap(@Nonnull Icon icon) {
+   
+    public static Image wrap(Icon icon) {
         return ourFacade.wrap(icon);
     }
 
     @Contract("null -> null")
-    public static Component from(@Nullable java.awt.Component component) {
+    public static Component from(java.awt.@Nullable Component component) {
         return ourFacade.from(component);
     }
 
     @Contract("null -> null")
-    public static Window from(@Nullable java.awt.Window component) {
+    public static Window from(java.awt.@Nullable Window component) {
         return ourFacade.from(component);
     }
 
     @Contract("null -> null")
-    public static Rectangle2D from(@Nullable java.awt.Rectangle rectangle) {
+    public static Rectangle2D from(java.awt.@Nullable Rectangle rectangle) {
         return ourFacade.from(rectangle);
     }
 
@@ -118,7 +117,7 @@ public final class TargetAWT {
     }
 
     @Contract("null -> null")
-    public static ColorValue from(@Nullable java.awt.Color color) {
+    public static ColorValue from(java.awt.@Nullable Color color) {
         return ourFacade.from(color);
     }
 
@@ -142,12 +141,12 @@ public final class TargetAWT {
         return ourFacade.from(icon);
     }
 
-    @Nonnull
-    public static java.awt.Font to(@Nonnull Font font) {
+   
+    public static java.awt.Font to(Font font) {
         return ourFacade.to(font);
     }
 
-    public static java.awt.Image toAWTImage(@Nonnull Image image) {
+    public static java.awt.Image toAWTImage(Image image) {
         return ourFacade.toAWTImage(image);
     }
 }

@@ -22,8 +22,7 @@ import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.SimpleComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
     getVaadinComponent().myText = text;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return toVaadinComponent().myText;
@@ -56,7 +55,7 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
     toVaadinComponent().myIcon = icon;
   }
 
-  @Nonnull
+  
   @Override
   public WebMenuItemImpl.Vaadin createVaadinComponent() {
     return new Vaadin();

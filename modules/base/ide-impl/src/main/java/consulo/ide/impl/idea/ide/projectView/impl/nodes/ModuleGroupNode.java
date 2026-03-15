@@ -32,7 +32,6 @@ import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -55,7 +54,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Collection<AbstractTreeNode> getChildren() {
         Collection<ModuleGroup> childGroups = getValue().childGroups(getProject());
         List<AbstractTreeNode> result = new ArrayList<>();
@@ -93,7 +92,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         return someChildContainsFile(file, false);
     }
 
@@ -125,13 +124,13 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
     }
 
     @Override
-    public boolean canDrop(@Nonnull TreeNode[] sourceNodes) {
+    public boolean canDrop(TreeNode[] sourceNodes) {
         List<Module> modules = extractModules(sourceNodes);
         return !modules.isEmpty();
     }
 
     @Override
-    public void drop(@Nonnull TreeNode[] sourceNodes, @Nonnull DataContext dataContext) {
+    public void drop(TreeNode[] sourceNodes, DataContext dataContext) {
         List<Module> modules = extractModules(sourceNodes);
         MoveModulesToGroupAction.doMove(modules.toArray(new Module[modules.size()]), getValue(), dataContext);
     }

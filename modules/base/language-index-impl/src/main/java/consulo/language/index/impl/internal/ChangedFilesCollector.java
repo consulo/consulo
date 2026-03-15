@@ -41,7 +41,6 @@ import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ final class ChangedFilesCollector extends IndexedFilesListener {
   }
 
   @Override
-  protected void buildIndicesForFileRecursively(@Nonnull VirtualFile file, boolean contentChange) {
+  protected void buildIndicesForFileRecursively(VirtualFile file, boolean contentChange) {
     FileBasedIndexImpl.cleanProcessedFlag(file);
     if (!contentChange) {
       myManager.myUpdatingFiles.incrementAndGet();
@@ -88,7 +87,7 @@ final class ChangedFilesCollector extends IndexedFilesListener {
   }
 
   @Override
-  protected void iterateIndexableFiles(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator) {
+  protected void iterateIndexableFiles(VirtualFile file, ContentIterator iterator) {
     for (IndexableFileSet set : myManager.myIndexableSets) {
       if (set.isInSet(file)) {
         set.iterateIndexableFilesIn(file, iterator);
@@ -137,8 +136,8 @@ final class ChangedFilesCollector extends IndexedFilesListener {
   }
 
   @Override
-  @Nonnull
-  public AsyncFileListener.ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+  
+  public AsyncFileListener.ChangeApplier prepareChange(List<? extends VFileEvent> events) {
     boolean shouldCleanup = ContainerUtil.exists(events, ChangedFilesCollector::memoryStorageCleaningNeeded);
     AsyncFileListener.ChangeApplier superApplier = super.prepareChange(events);
 
@@ -159,7 +158,7 @@ final class ChangedFilesCollector extends IndexedFilesListener {
     };
   }
 
-  private static boolean memoryStorageCleaningNeeded(@Nonnull VFileEvent event) {
+  private static boolean memoryStorageCleaningNeeded(VFileEvent event) {
     Object requestor = event.getRequestor();
     return requestor instanceof FileDocumentManager || requestor instanceof PsiManager || requestor == LocalHistory.VFS_EVENT_REQUESTOR;
   }

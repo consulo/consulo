@@ -28,8 +28,7 @@ import consulo.webBrowser.OpenInBrowserRequest;
 import consulo.webBrowser.WebBrowserService;
 import consulo.webBrowser.WebBrowserUrlProvider;
 import consulo.webBrowser.WebFileFilter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -38,10 +37,10 @@ import java.util.Collections;
 @Singleton
 @ServiceImpl
 public class WebBrowserServiceImpl implements WebBrowserService {
-    @Nonnull
+    
     @Override
     public Collection<Url> getUrlsToOpen(
-        @Nonnull OpenInBrowserRequest request,
+        OpenInBrowserRequest request,
         boolean preferLocalUrl
     ) throws WebBrowserUrlProvider.BrowserException {
         VirtualFile virtualFile = request.getVirtualFile();
@@ -76,7 +75,7 @@ public class WebBrowserServiceImpl implements WebBrowserService {
 
     @Override
     @Nullable
-    public WebBrowserUrlProvider getProvider(@Nonnull OpenInBrowserRequest request) {
+    public WebBrowserUrlProvider getProvider(OpenInBrowserRequest request) {
         DumbService dumbService = DumbService.getInstance(request.getProject());
         for (WebBrowserUrlProvider urlProvider : WebBrowserUrlProvider.EP_NAME.getExtensionList()) {
             if ((!dumbService.isDumb() || DumbService.isDumbAware(urlProvider)) && urlProvider.canHandleElement(request)) {
@@ -88,7 +87,7 @@ public class WebBrowserServiceImpl implements WebBrowserService {
 
     @Override
     @Nullable
-    public Url getUrlForContext(@Nonnull PsiElement sourceElement) {
+    public Url getUrlForContext(PsiElement sourceElement) {
         Url url;
         try {
             Collection<Url> urls = WebBrowserService.getInstance().getUrlsToOpen(sourceElement, false);

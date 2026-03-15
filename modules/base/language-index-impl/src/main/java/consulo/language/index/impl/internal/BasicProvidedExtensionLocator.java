@@ -10,8 +10,7 @@ import consulo.language.index.impl.internal.stub.StubProvidedIndexExtension;
 import consulo.language.index.impl.internal.stub.StubUpdatingIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -21,7 +20,7 @@ public class BasicProvidedExtensionLocator implements ProvidedIndexExtensionLoca
 
   @Nullable
   @Override
-  public <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(@Nonnull FileBasedIndexExtension<K, V> originalExtension) {
+  public <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(FileBasedIndexExtension<K, V> originalExtension) {
     File root = getPrebuiltIndexPath();
     if (root == null || !new File(root, StringUtil.toLowerCase(originalExtension.getName().getName())).exists()) return null;
 
@@ -39,41 +38,41 @@ public class BasicProvidedExtensionLocator implements ProvidedIndexExtensionLoca
   }
 
   private static class ProvidedIndexExtensionImpl<K, V> implements ProvidedIndexExtension<K, V> {
-    @Nonnull
+    
     private final File myIndexFile;
-    @Nonnull
+    
     private final ID<K, V> myIndexId;
-    @Nonnull
+    
     private final KeyDescriptor<K> myKeyDescriptor;
-    @Nonnull
+    
     private final DataExternalizer<V> myValueExternalizer;
 
-    private ProvidedIndexExtensionImpl(@Nonnull File file, @Nonnull FileBasedIndexExtension<K, V> originalExtension) {
+    private ProvidedIndexExtensionImpl(File file, FileBasedIndexExtension<K, V> originalExtension) {
       myIndexFile = file;
       myIndexId = originalExtension.getName();
       myKeyDescriptor = originalExtension.getKeyDescriptor();
       myValueExternalizer = originalExtension.getValueExternalizer();
     }
 
-    @Nonnull
+    
     @Override
     public File getIndexPath() {
       return myIndexFile;
     }
 
-    @Nonnull
+    
     @Override
     public ID<K, V> getIndexId() {
       return myIndexId;
     }
 
-    @Nonnull
+    
     @Override
     public KeyDescriptor<K> createKeyDescriptor() {
       return myKeyDescriptor;
     }
 
-    @Nonnull
+    
     @Override
     public DataExternalizer<V> createValueExternalizer() {
       return myValueExternalizer;

@@ -24,7 +24,6 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -108,7 +107,7 @@ public class BuildTreeFilters {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             boolean filteringEnabled = filterable.isFilteringEnabled();
             presentation.setEnabledAndVisible(filteringEnabled);
@@ -121,7 +120,7 @@ public class BuildTreeFilters {
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             if (state) {
                 filterable.addFilter(filter);
             }

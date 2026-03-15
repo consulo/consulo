@@ -23,7 +23,6 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.Objects;
@@ -46,7 +45,7 @@ public class FileTypeFactoryExtensionPreviewFromSPIExtension implements Extensio
     }
 
     @Override
-    public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+    public void analyze(Consumer<ExtensionPreview> recorder) {
         PluginId fileTypeFactoryPluginId = PluginManager.getPlugin(FileTypeFactory.class).getPluginId();
 
         myApplication.getExtensionPoint(SPIClassLoaderExtension.class).forEach(e -> {

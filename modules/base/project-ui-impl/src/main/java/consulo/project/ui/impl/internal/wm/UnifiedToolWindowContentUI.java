@@ -40,11 +40,9 @@ import consulo.ui.layout.DockLayout;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +84,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         //setBorder(JBUI.Borders.empty(0, 0, 0, 2));
     }
 
-    public void setType(@Nonnull ToolWindowContentUiType type) {
+    public void setType(ToolWindowContentUiType type) {
         if (myType != type) {
 
             if (myType != null) {
@@ -110,14 +108,14 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         throw new AbstractMethodError();
     }
 
-    @Nonnull
+    
     @Override
     public consulo.ui.Component getUIComponent() {
         return myContent;
     }
 
     @Override
-    public void setManager(@Nonnull ContentManager manager) {
+    public void setManager(ContentManager manager) {
         if (myManager != null) {
             getCurrentLayout().reset();
         }
@@ -261,29 +259,29 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
     }
 
     @Override
-    public boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit) {
+    public boolean canChangeSelectionTo(Content content, boolean implicit) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public String getCloseActionName() {
         return getCurrentLayout().getCloseActionName();
     }
 
-    @Nonnull
+    
     @Override
     public String getCloseAllButThisActionName() {
         return getCurrentLayout().getCloseAllButThisActionName();
     }
 
-    @Nonnull
+    
     @Override
     public String getPreviousContentActionName() {
         return getCurrentLayout().getPreviousContentActionName();
     }
 
-    @Nonnull
+    
     @Override
     public String getNextContentActionName() {
         return getCurrentLayout().getNextContentActionName();
@@ -346,7 +344,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         return new DumbAwareAction("Split '" + content.getTitlePrefix() + "' group") {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 content.split();
             }
         };
@@ -356,7 +354,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         return new DumbAwareAction("Merge tabs to '" + tabPrefix + "' group") {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Content selectedContent = manager.getSelectedContent();
                 List<Pair<String, JComponent>> tabs = new ArrayList<>();
                 int selectedTab = -1;
@@ -393,7 +391,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
 
     @Override
     @Nullable
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (ToolWindow.KEY == dataId) {
             return myWindow;
         }
@@ -469,7 +467,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
                     tabActions[j] = new DumbAwareAction(tabs.get(index).first) {
                         @RequiredUIAccess
                         @Override
-                        public void actionPerformed(@Nonnull AnActionEvent e) {
+                        public void actionPerformed(AnActionEvent e) {
                             myManager.setSelectedContent(tabbedContent);
                             tabbedContent.selectContent(index);
                         }
@@ -491,7 +489,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
                 actions[i] = new DumbAwareAction(content.getTabName()) {
                     @RequiredUIAccess
                     @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         myManager.setSelectedContent(content, true, true);
                     }
                 };

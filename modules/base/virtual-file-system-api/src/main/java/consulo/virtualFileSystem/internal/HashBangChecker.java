@@ -17,15 +17,14 @@ package consulo.virtualFileSystem.internal;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 08/01/2023
  */
 public class HashBangChecker {
-  public static boolean isHashBangLine(@Nullable CharSequence firstCharsIfText, @Nonnull String marker) {
+  public static boolean isHashBangLine(@Nullable CharSequence firstCharsIfText, String marker) {
     if (firstCharsIfText == null) {
       return false;
     }

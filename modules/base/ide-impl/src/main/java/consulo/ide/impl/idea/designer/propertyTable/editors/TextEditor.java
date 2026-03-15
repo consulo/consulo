@@ -22,8 +22,7 @@ import consulo.ide.impl.idea.designer.propertyTable.PropertyEditor;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -52,7 +51,7 @@ public class TextEditor extends PropertyEditor {
     );
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent(@Nullable PropertiesContainer container,
                                  @Nullable PropertyContext context, Object value,

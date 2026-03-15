@@ -20,7 +20,6 @@ import consulo.proxy.EventDispatcher;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleChangeListener;
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,13 +28,13 @@ import jakarta.annotation.Nonnull;
 public abstract class StyleManagerImpl implements StyleManager {
   private EventDispatcher<StyleChangeListener> myEventDispatcher = EventDispatcher.create(StyleChangeListener.class);
 
-  protected void fireStyleChanged(@Nonnull Style oldStyle, @Nonnull Style newStyle) {
+  protected void fireStyleChanged(Style oldStyle, Style newStyle) {
     myEventDispatcher.getMulticaster().styleChanged(oldStyle, newStyle);
   }
 
-  @Nonnull
+  
   @Override
-  public Disposable addChangeListener(@Nonnull StyleChangeListener listener) {
+  public Disposable addChangeListener(StyleChangeListener listener) {
     myEventDispatcher.addListener(listener);
     return () -> myEventDispatcher.removeListener(listener);
   }

@@ -39,8 +39,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,12 +51,12 @@ import java.util.List;
 public class ExpressionInputComponent extends EvaluationInputComponent {
     private final XDebuggerExpressionEditorImpl myExpressionEditor;
     private final JPanel myMainPanel;
-    @Nonnull
+    
     private final Project myProject;
 
     public ExpressionInputComponent(
-        @Nonnull Project project,
-        @Nonnull XDebuggerEditorsProvider editorsProvider,
+        Project project,
+        XDebuggerEditorsProvider editorsProvider,
         @Nullable XSourcePosition sourcePosition,
         @Nullable XExpression expression,
         Disposable parentDisposable
@@ -99,12 +98,12 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         new AnAction("XEvaluateDialog.ShowHistory") {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 showHistory();
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(LookupManager.getActiveLookup(myExpressionEditor.getEditor()) == null);
             }
         }.registerCustomShortcutSet(CustomShortcutSet.fromString("DOWN"), myMainPanel, parentDisposable);
@@ -127,7 +126,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
             AWTListPopup popup = awtPopupFactory.createListPopup(myProject, step, p -> {
                 return new ColoredListCellRenderer<XExpression>() {
                     @Override
-                    protected void customizeCellRenderer(@Nonnull JList list, XExpression value, int index, boolean selected, boolean hasFocus) {
+                    protected void customizeCellRenderer(JList list, XExpression value, int index, boolean selected, boolean hasFocus) {
                         append(value.getExpression());
                     }
                 };
@@ -144,7 +143,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         contentPanel.add(myMainPanel, BorderLayout.NORTH);
     }
 
-    @Nonnull
+    
     protected XDebuggerEditorBase getInputEditor() {
         return myExpressionEditor;
     }

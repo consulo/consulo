@@ -39,7 +39,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,7 +69,7 @@ public class CompileAction extends CompileActionBase {
 
     @Override
     @RequiredReadAction
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
         if (!presentation.isEnabled()) {

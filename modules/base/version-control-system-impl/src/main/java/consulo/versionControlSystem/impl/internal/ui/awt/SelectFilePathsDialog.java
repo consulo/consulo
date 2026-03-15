@@ -24,8 +24,7 @@ import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.FilePathChangesTreeListImpl;
 import consulo.versionControlSystem.ui.awt.LegacyDialog;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -41,8 +40,8 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> i
         List<FilePath> originalFiles,
         String prompt,
         VcsShowConfirmationOption confirmationOption,
-        @Nonnull LocalizeValue okActionName,
-        @Nonnull LocalizeValue cancelActionName,
+        LocalizeValue okActionName,
+        LocalizeValue cancelActionName,
         boolean showDoNotAskOption
     ) {
         super(project, false, confirmationOption, prompt, showDoNotAskOption);
@@ -84,7 +83,7 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> i
         return List.copyOf(myFileList.getIncludedChanges());
     }
 
-    @Nonnull
+    
     @Override
     protected ChangesTreeListImpl getFileList() {
         return myFileList;

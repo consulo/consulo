@@ -20,7 +20,6 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfile
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +29,13 @@ import java.util.List;
  */
 public class ToolDescriptors {
 
-  @Nonnull
+  
   private final Descriptor myDefaultDescriptor;
-  @Nonnull
+  
   private final List<Descriptor> myNonDefaultDescriptors;
 
-  private ToolDescriptors(@Nonnull Descriptor defaultDescriptor,
-                          @Nonnull List<Descriptor> nonDefaultDescriptors) {
+  private ToolDescriptors(Descriptor defaultDescriptor,
+                          List<Descriptor> nonDefaultDescriptors) {
     myDefaultDescriptor = defaultDescriptor;
     myNonDefaultDescriptors = nonDefaultDescriptors;
   }
@@ -53,17 +52,17 @@ public class ToolDescriptors {
     return new ToolDescriptors(new Descriptor(state, profile, project), descriptors);
   }
 
-  @Nonnull
+  
   public Descriptor getDefaultDescriptor() {
     return myDefaultDescriptor;
   }
 
-  @Nonnull
+  
   public List<Descriptor> getNonDefaultDescriptors() {
     return myNonDefaultDescriptors;
   }
 
-  @Nonnull
+  
   public ScopeToolState getDefaultScopeToolState() {
     return myDefaultDescriptor.getState();
   }

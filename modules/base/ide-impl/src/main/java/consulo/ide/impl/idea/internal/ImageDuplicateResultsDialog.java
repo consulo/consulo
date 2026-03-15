@@ -45,8 +45,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionListener;
@@ -86,7 +85,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
         TreeUtil.selectFirstNode(myTree);
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         Action[] actions = new Action[4];
@@ -188,7 +187,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
         new AnAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 VirtualFile file = getFileFromSelection();
                 if (file != null) {
                     PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
@@ -312,7 +311,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     private class MyCellRenderer extends ColoredTreeCellRenderer {
         @Override
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,

@@ -21,8 +21,7 @@ import consulo.ui.ex.action.QuickActionProvider;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
@@ -42,10 +41,10 @@ public interface RunnerContentUi extends ContentUI, CellTransform.Facade, ViewCo
     @Nullable
     Content findContent(String key);
 
-    void restore(@Nonnull Content content);
+    void restore(Content content);
 
     @Nullable
-    Content findOrRestoreContentIfNeeded(@Nonnull String key);
+    Content findOrRestoreContentIfNeeded(String key);
 
     boolean isHorizontalToolbar();
 

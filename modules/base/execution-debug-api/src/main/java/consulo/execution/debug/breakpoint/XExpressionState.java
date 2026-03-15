@@ -19,7 +19,6 @@ import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Text;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
@@ -43,7 +42,7 @@ public class XExpressionState {
   public XExpressionState() {
   }
 
-  public XExpressionState(boolean disabled, @Nonnull String expression, String language, String customInfo) {
+  public XExpressionState(boolean disabled, String expression, String language, String customInfo) {
     myDisabled = disabled;
     myExpression = expression;
     myLanguage = language;

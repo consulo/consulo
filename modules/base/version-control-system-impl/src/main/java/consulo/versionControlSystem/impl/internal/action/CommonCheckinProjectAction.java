@@ -30,8 +30,7 @@ import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.impl.internal.change.action.AbstractCommonCheckinAction;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -49,16 +48,16 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
     }
 
     protected CommonCheckinProjectAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
-    @Nonnull
+    
     @Override
-    protected FilePath[] getRoots(@Nonnull VcsContext context) {
+    protected FilePath[] getRoots(VcsContext context) {
         Project project = context.getProject();
         List<FilePath> virtualFiles = new ArrayList<>();
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
@@ -73,14 +72,14 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
     }
 
     @Override
-    protected boolean approximatelyHasRoots(@Nonnull VcsContext dataContext) {
+    protected boolean approximatelyHasRoots(VcsContext dataContext) {
         Project project = dataContext.getProject();
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         return vcsManager.hasAnyMappings();
     }
 
     @Override
-    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(VcsContext vcsContext, Presentation presentation) {
         Project project = vcsContext.getProject();
         if (project == null) {
             presentation.setEnabledAndVisible(false);
@@ -99,15 +98,15 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
         presentation.setVisible(true);
     }
 
-    @Nonnull
+    
     @Override
-    protected LocalizeValue getActionName(@Nonnull VcsContext dataContext) {
+    protected LocalizeValue getActionName(VcsContext dataContext) {
         return VcsLocalize.actionNameCommitProject();
     }
 
-    @Nonnull
+    
     @Override
-    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+    protected LocalizeValue getMnemonicsFreeActionName(VcsContext context) {
         return VcsLocalize.vcsCommandNameCheckinNoMnemonics();
     }
 

@@ -15,20 +15,19 @@
  */
 package consulo.versionControlSystem.change;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class ChangesSelection {
-  @Nonnull
+  
   private final List<Change> myChanges;
   private final int myIndex;
 
-  public ChangesSelection(@Nonnull List<Change> changes, int index) {
+  public ChangesSelection(List<Change> changes, int index) {
     myChanges = changes;
     myIndex = index;
   }
 
-  @Nonnull
+  
   public List<Change> getChanges() {
     return myChanges;
   }

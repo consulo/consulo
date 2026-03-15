@@ -25,7 +25,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -71,8 +70,8 @@ public class GenericInlineHandler {
     public static void collectConflicts(
         PsiReference reference,
         PsiElement element,
-        @Nonnull Map<Language, InlineHandler.Inliner> inliners,
-        @Nonnull MultiMap<PsiElement, LocalizeValue> conflicts
+        Map<Language, InlineHandler.Inliner> inliners,
+        MultiMap<PsiElement, LocalizeValue> conflicts
     ) {
         PsiElement referenceElement = reference.getElement();
         if (referenceElement == null) {

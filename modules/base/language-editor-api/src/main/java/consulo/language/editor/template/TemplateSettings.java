@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -29,19 +28,19 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TemplateSettings {
-  @Nonnull
+  
   static TemplateSettings getInstance() {
     return Application.get().getInstance(TemplateSettings.class);
   }
 
   @Nullable
-  Template getTemplateById(@Nonnull String id);
+  Template getTemplateById(String id);
 
-  @Nonnull
+  
   Collection<? extends Template> getTemplates();
 
-  @Nonnull
-  Collection<? extends Template> getTemplates(@Nonnull String templateKey);
+  
+  Collection<? extends Template> getTemplates(String templateKey);
 
   @Nullable
   Template getTemplate(String key, String group);

@@ -41,8 +41,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,8 +62,8 @@ public class ExternalDiffTool {
     @RequiredUIAccess
     public static void show(
         @Nullable final Project project,
-        @Nonnull final DiffRequestChain chain,
-        @Nonnull DiffDialogHints hints
+        final DiffRequestChain chain,
+        DiffDialogHints hints
     ) {
         try {
             //noinspection unchecked
@@ -72,7 +71,7 @@ public class ExternalDiffTool {
             final SimpleReference<Throwable> exceptionRef = new SimpleReference<>();
             ProgressManager.getInstance().run(new Task.Modal(project, LocalizeValue.localizeTODO("Loading Requests"), true) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     try {
                         requestsRef.set(collectRequests(project, chain, indicator));
                     }
@@ -108,11 +107,11 @@ public class ExternalDiffTool {
         }
     }
 
-    @Nonnull
+    
     private static List<DiffRequest> collectRequests(
         @Nullable Project project,
-        @Nonnull DiffRequestChain chain,
-        @Nonnull ProgressIndicator indicator
+        DiffRequestChain chain,
+        ProgressIndicator indicator
     ) {
         List<DiffRequest> requests = new ArrayList<>();
 
@@ -144,7 +143,7 @@ public class ExternalDiffTool {
     }
 
     @RequiredUIAccess
-    public static void showRequest(@Nullable Project project, @Nonnull DiffRequest request) throws ExecutionException, IOException {
+    public static void showRequest(@Nullable Project project, DiffRequest request) throws ExecutionException, IOException {
         request.onAssigned(true);
 
         ExternalDiffSettings settings = ExternalDiffSettings.getInstance();
@@ -159,7 +158,7 @@ public class ExternalDiffTool {
         request.onAssigned(false);
     }
 
-    public static boolean canShow(@Nonnull DiffRequest request) {
+    public static boolean canShow(DiffRequest request) {
         if (request instanceof ContentDiffRequest contentDiffRequest) {
             List<DiffContent> contents = contentDiffRequest.getContents();
             if (contents.size() != 2 && contents.size() != 3) {

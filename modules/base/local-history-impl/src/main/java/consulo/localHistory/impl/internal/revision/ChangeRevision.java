@@ -24,14 +24,13 @@ import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.localHistory.impl.internal.tree.RootEntry;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class ChangeRevision extends Revision {
   private final LocalHistoryFacade myFacade;
   private final RootEntry myRoot;
-  @Nonnull
+  
   private final String myEntryPath;
   private final long myTimestamp;
   private final Change myChangeToRevert;
@@ -44,7 +43,7 @@ public class ChangeRevision extends Revision {
   private final int myLabelColor;
   private final Pair<List<String>, Integer> myAffectedFiles;
 
-  public ChangeRevision(LocalHistoryFacade facade, RootEntry r, @Nonnull String entryPath, ChangeSet changeSet, boolean before) {
+  public ChangeRevision(LocalHistoryFacade facade, RootEntry r, String entryPath, ChangeSet changeSet, boolean before) {
     myFacade = facade;
     myRoot = r;
     myEntryPath = entryPath;

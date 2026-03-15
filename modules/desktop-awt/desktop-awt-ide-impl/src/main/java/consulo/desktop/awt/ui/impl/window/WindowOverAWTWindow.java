@@ -32,8 +32,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
 import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -63,7 +62,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
         myWindow.dispose();
     }
 
-    @Nonnull
+    
     @Override
     public java.awt.Window toAWTWindow() {
         return myWindow;
@@ -88,7 +87,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
     @RequiredUIAccess
     @Override
-    public void setContent(@Nonnull Component content) {
+    public void setContent(Component content) {
         throw new UnsupportedOperationException();
     }
 
@@ -100,13 +99,13 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
     @RequiredUIAccess
     @Override
-    public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {
+    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
         throw new UnsupportedOperationException();
     }
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+    public void removeBorder(BorderPosition borderPosition) {
         throw new UnsupportedOperationException();
     }
 
@@ -115,14 +114,14 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
         return myWindow.isVisible();
     }
 
-    @Nonnull
+    
     @Override
     public Font getFont() {
         return new DesktopFontImpl(myWindow.getFont());
     }
 
     @Override
-    public void setFont(@Nonnull Font font) {
+    public void setFont(Font font) {
         myWindow.setFont(TargetAWT.to(font));
     }
 
@@ -150,36 +149,36 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size2D size) {
+    public void setSize(Size2D size) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+    public Disposable addUserDataProvider(Function<Key<?>, Object> function) {
         return myUIDataObject.addUserDataProvider(function);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         myUIDataObject.putUserData(key, value);
     }
 
-    @Nonnull
+    
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return myUIDataObject.getDispatcher(eventClass);
     }
 
-    @Nonnull
+    
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass, @Nonnull ComponentEventListener<C, E> listener) {
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass, ComponentEventListener<C, E> listener) {
         return myUIDataObject.addListener(eventClass, listener);
     }
 
     @Nullable
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return myUIDataObject.getUserData(key);
     }
 }

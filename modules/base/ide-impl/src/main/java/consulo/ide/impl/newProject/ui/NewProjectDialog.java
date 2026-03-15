@@ -25,8 +25,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +49,7 @@ public class NewProjectDialog extends DialogWrapper {
         TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane());
 
         myProjectPanel = new NewProjectPanel(getDisposable(), project, moduleHome, titlelessDecorator) {
-            @Nonnull
+            
             @Override
             @RequiredUIAccess
             protected JComponent createSouthPanel() {
@@ -63,12 +62,12 @@ public class NewProjectDialog extends DialogWrapper {
             }
 
             @Override
-            public void setOKActionText(@Nonnull LocalizeValue text) {
+            public void setOKActionText(LocalizeValue text) {
                 NewProjectDialog.this.setOKButtonText(text);
             }
 
             @Override
-            public void setCancelText(@Nonnull LocalizeValue text) {
+            public void setCancelText(LocalizeValue text) {
                 NewProjectDialog.this.setCancelButtonText(text);
             }
 
@@ -95,7 +94,7 @@ public class NewProjectDialog extends DialogWrapper {
         return myProjectPanel;
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{getCancelAction(), getOKAction()};
@@ -140,7 +139,7 @@ public class NewProjectDialog extends DialogWrapper {
     }
 
     @Override
-    protected void initRootPanel(@Nonnull JPanel root) {
+    protected void initRootPanel(JPanel root) {
         root.add(myProjectPanel, BorderLayout.CENTER);
     }
 

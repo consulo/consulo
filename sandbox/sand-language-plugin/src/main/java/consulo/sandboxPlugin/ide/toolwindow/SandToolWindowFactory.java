@@ -32,7 +32,6 @@ import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SandToolWindowFactory implements ToolWindowFactory {
-    @Nonnull
+    
     @Override
     public String getId() {
         return "Sand";
@@ -48,7 +47,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ContentFactory contentFactory = ContentFactory.getInstance();
 
         Content content = contentFactory.createUIContent(Label.create(LocalizeValue.localizeTODO("test")), "Test", false);
@@ -61,7 +60,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
         ) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Messages.showInfoMessage("Expand All", Application.get().getName().get());
             }
         });
@@ -74,7 +73,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
         toolWindow.setTabActions(new AnAction(LocalizeValue.localizeTODO("Add Tab"), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Content content = contentFactory.createUIContent(Label.create("test"), "Test", false);
                 content.setCloseable(true);
 
@@ -93,19 +92,19 @@ public class SandToolWindowFactory implements ToolWindowFactory {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.RIGHT;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowpalette();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Sand");

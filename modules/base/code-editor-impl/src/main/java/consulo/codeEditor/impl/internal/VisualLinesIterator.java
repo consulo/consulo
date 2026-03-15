@@ -5,8 +5,7 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +32,15 @@ public final class VisualLinesIterator {
     private final SoftWrapModelEx mySoftWrapModel;
     private final List<? extends SoftWrap> mySoftWraps;
 
-    private @Nonnull Location myLocation;
+    private Location myLocation;
     private Location myNextLocation;
     private int y = UNSET; // y coordinate of visual line's top
 
-    public VisualLinesIterator(@Nonnull RealEditorWithEditorView editor, int startVisualLine) {
+    public VisualLinesIterator(RealEditorWithEditorView editor, int startVisualLine) {
         this(editor.getView(), startVisualLine);
     }
 
-    public VisualLinesIterator(@Nonnull RealEditorView view, int startVisualLine) {
+    public VisualLinesIterator(RealEditorView view, int startVisualLine) {
         myView = view;
         myDocument = myView.getDocument();
         myInlayModel = myView.getInlayModel();

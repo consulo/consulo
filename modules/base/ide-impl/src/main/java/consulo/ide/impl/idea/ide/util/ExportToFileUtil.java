@@ -34,7 +34,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -229,7 +228,7 @@ public class ExportToFileUtil {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
       return new Action[]{getOKAction(), new CopyToClipboardAction(), getCancelAction()};
     }

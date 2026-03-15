@@ -17,8 +17,7 @@ package consulo.sandboxPlugin;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.ReadMeFileProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 
@@ -30,7 +29,7 @@ import java.nio.file.Path;
 public class SandReadMeFileProvider implements ReadMeFileProvider {
     @Nullable
     @Override
-    public Path resolveFile(@Nonnull Path projectPath) {
+    public Path resolveFile(Path projectPath) {
         return projectPath.resolve("SAND.md");
     }
 }

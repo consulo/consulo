@@ -10,7 +10,6 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFileMoveEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -29,7 +28,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
     private final AtomicInteger myProblemCount = new AtomicInteger();
 
     @Inject
-    public ProjectErrorsCollector(@Nonnull Project project) {
+    public ProjectErrorsCollector(Project project) {
         myProject = project;
         myProviderClassFilter = new HashSet<>(List.of("".split(" ,/|")));
         VirtualFileManager.getInstance().addAsyncFileListener(events -> {
@@ -44,14 +43,14 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
     }
 
     @Override
-    public @Nonnull Set<VirtualFile> getProblemFiles() {
+    public Set<VirtualFile> getProblemFiles() {
         synchronized (myFileProblems) {
             return new HashSet<>(myFileProblems.keySet());
         }
     }
 
     @Override
-    public int getFileProblemCount(@Nonnull VirtualFile file) {
+    public int getFileProblemCount(VirtualFile file) {
         synchronized (myFileProblems) {
             Set<FileProblem> set = myFileProblems.get(file);
             return set == null ? 0 : set.size();
@@ -59,7 +58,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
     }
 
     @Override
-    public @Nonnull Set<Problem> getFileProblems(@Nonnull VirtualFile file) {
+    public Set<Problem> getFileProblems(VirtualFile file) {
         synchronized (myFileProblems) {
             Set<FileProblem> set = myFileProblems.get(file);
             return set == null ? Collections.emptySet() : new HashSet<>(set);
@@ -74,14 +73,14 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
     }
 
     @Override
-    public @Nonnull Set<Problem> getOtherProblems() {
+    public Set<Problem> getOtherProblems() {
         synchronized (myOtherProblems) {
             return new HashSet<>(myOtherProblems);
         }
     }
 
     @Override
-    public void problemAppeared(@Nonnull Problem problem) {
+    public void problemAppeared(Problem problem) {
         boolean ignored = isIgnored(problem.getProvider());
         SetUpdateState state;
         if (ignored) {
@@ -123,7 +122,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
     }
 
     @Override
-    public void problemDisappeared(@Nonnull Problem problem) {
+    public void problemDisappeared(Problem problem) {
         SetUpdateState state;
         if (isIgnored(problem.getProvider())) {
             state = SetUpdateState.IGNORED;
@@ -140,7 +139,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
     }
 
     @Override
-    public void problemUpdated(@Nonnull Problem problem) {
+    public void problemUpdated(Problem problem) {
         SetUpdateState state;
         if (isIgnored(problem.getProvider())) {
             state = SetUpdateState.IGNORED;
@@ -156,13 +155,13 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         notify(problem, state, true);
     }
 
-    private boolean isIgnored(@Nonnull ProblemsProvider provider) {
+    private boolean isIgnored(ProblemsProvider provider) {
         return provider.getProject() != myProject || myProviderClassFilter.contains(provider.getClass().getName());
     }
 
-    private SetUpdateState process(@Nonnull FileProblem problem,
+    private SetUpdateState process(FileProblem problem,
                                    boolean create,
-                                   @Nonnull Function<Set<FileProblem>, SetUpdateState> function) {
+                                   Function<Set<FileProblem>, SetUpdateState> function) {
         VirtualFile file = problem.getFile();
         synchronized (myFileProblems) {
             Set<FileProblem> set;
@@ -182,7 +181,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         }
     }
 
-    private void notify(@Nonnull Problem problem, @Nonnull SetUpdateState state, boolean later) {
+    private void notify(Problem problem, SetUpdateState state, boolean later) {
         if (state == SetUpdateState.IGNORED || myProject.isDisposed()) return;
 
         if (later && Registry.is("ide.problems.view.notify.later", true)) {
@@ -207,7 +206,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         }
     }
 
-    private void onVfsChanges(@Nonnull List<? extends VFileEvent> events) {
+    private void onVfsChanges(List<? extends VFileEvent> events) {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (VFileEvent event : events) {
             if (event instanceof VFileDeleteEvent || event instanceof VFileMoveEvent) {

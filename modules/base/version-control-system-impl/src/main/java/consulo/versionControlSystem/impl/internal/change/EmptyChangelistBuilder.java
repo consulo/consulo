@@ -20,7 +20,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Supplier;

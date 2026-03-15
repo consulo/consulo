@@ -20,11 +20,10 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class AbstractEmptyIntentionAction implements IntentionAction {
   @Override
-  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {}
+  public final void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {}
 
   @Override
   public final boolean startInWriteAction() {

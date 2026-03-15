@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.lexer.Lexer;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * The default implementation of a words scanner based on a custom language lexer.
@@ -59,7 +58,7 @@ public class DefaultWordsScanner implements WordsScanner {
    * @param SkipCodeContextTokenSet the set of token types which should not be considered as code context.
    */
   public DefaultWordsScanner(Lexer lexer, TokenSet identifierTokenSet, TokenSet commentTokenSet,
-                             TokenSet literalTokenSet, @Nonnull TokenSet skipCodeContextTokenSet) {
+                             TokenSet literalTokenSet, TokenSet skipCodeContextTokenSet) {
     myLexer = lexer;
     myIdentifierTokenSet = identifierTokenSet;
     myCommentTokenSet = commentTokenSet;

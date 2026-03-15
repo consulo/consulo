@@ -18,16 +18,15 @@ package consulo.diff.old;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 public interface DiffPolicyOld {
-  @Nonnull
-  DiffFragmentOld[] buildFragments(@Nonnull DiffString text1, @Nonnull DiffString text2) throws FilesTooBigForDiffException;
+  
+  DiffFragmentOld[] buildFragments(DiffString text1, DiffString text2) throws FilesTooBigForDiffException;
 
-  @Nonnull
+  
   @TestOnly
-  DiffFragmentOld[] buildFragments(@Nonnull String text1, @Nonnull String text2) throws FilesTooBigForDiffException;
+  DiffFragmentOld[] buildFragments(String text1, String text2) throws FilesTooBigForDiffException;
 
   DiffPolicyOld LINES_WO_FORMATTING = new LineBlocks(ComparisonPolicyOld.IGNORE_SPACE);
   DiffPolicyOld DEFAULT_LINES = new LineBlocks(ComparisonPolicyOld.DEFAULT);
@@ -40,15 +39,15 @@ public interface DiffPolicyOld {
     }
 
     @Override
-    @Nonnull
+    
     @TestOnly
-    public DiffFragmentOld[] buildFragments(@Nonnull String text1, @Nonnull String text2) throws FilesTooBigForDiffException {
+    public DiffFragmentOld[] buildFragments(String text1, String text2) throws FilesTooBigForDiffException {
       return buildFragments(DiffString.create(text1), DiffString.create(text2));
     }
 
-    @Nonnull
+    
     @Override
-    public DiffFragmentOld[] buildFragments(@Nonnull DiffString text1, @Nonnull DiffString text2) throws FilesTooBigForDiffException {
+    public DiffFragmentOld[] buildFragments(DiffString text1, DiffString text2) throws FilesTooBigForDiffException {
       DiffString[] strings1 = text1.tokenize();
       DiffString[] strings2 = text2.tokenize();
       return myComparisonPolicy.buildDiffFragmentsFromLines(strings1, strings2);
@@ -64,19 +63,19 @@ public interface DiffPolicyOld {
     }
 
     @Override
-    @Nonnull
+    
     @TestOnly
-    public DiffFragmentOld[] buildFragments(@Nonnull String text1, @Nonnull String text2) throws FilesTooBigForDiffException {
+    public DiffFragmentOld[] buildFragments(String text1, String text2) throws FilesTooBigForDiffException {
       return buildFragments(DiffString.create(text1), DiffString.create(text2));
     }
 
-    @Nonnull
+    
     @Override
-    public DiffFragmentOld[] buildFragments(@Nonnull DiffString text1, @Nonnull DiffString text2) throws FilesTooBigForDiffException {
+    public DiffFragmentOld[] buildFragments(DiffString text1, DiffString text2) throws FilesTooBigForDiffException {
       return myComparisonPolicy.buildFragments(splitByChar(text1), splitByChar(text2));
     }
 
-    private static DiffString[] splitByChar(@Nonnull DiffString text) {
+    private static DiffString[] splitByChar(DiffString text) {
       DiffString[] result = new DiffString[text.length()];
       for (int i = 0; i < result.length; i++) {
         result[i] = text.substring(i, i + 1);

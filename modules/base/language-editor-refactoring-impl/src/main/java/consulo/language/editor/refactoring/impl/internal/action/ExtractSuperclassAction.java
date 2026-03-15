@@ -19,7 +19,6 @@ import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ExtractSuperclass")
 public class ExtractSuperclassAction extends ExtractSuperActionBase {
@@ -29,7 +28,7 @@ public class ExtractSuperclassAction extends ExtractSuperActionBase {
     }
 
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider supportProvider) {
         return supportProvider.getExtractSuperClassHandler();
     }
 }

@@ -19,7 +19,6 @@ package consulo.language.impl.internal.psi.resolve.reference;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceService;
 import consulo.language.util.ProcessingContext;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,15 +32,15 @@ public interface ProviderBinding<T> {
     public final Context processingContext;
     public final double priority;
 
-    public ProviderInfo(@Nonnull T provider, @Nonnull Context processingContext, double priority) {
+    public ProviderInfo(T provider, Context processingContext, double priority) {
       this.provider = provider;
       this.processingContext = processingContext;
       this.priority = priority;
     }
   }
-  void addAcceptableReferenceProviders(@Nonnull PsiElement position,
-                                       @Nonnull List<ProviderInfo<T, ProcessingContext>> list,
-                                       @Nonnull PsiReferenceService.Hints hints);
+  void addAcceptableReferenceProviders(PsiElement position,
+                                       List<ProviderInfo<T, ProcessingContext>> list,
+                                       PsiReferenceService.Hints hints);
 
-  void unregisterProvider(@Nonnull T provider);
+  void unregisterProvider(T provider);
 }

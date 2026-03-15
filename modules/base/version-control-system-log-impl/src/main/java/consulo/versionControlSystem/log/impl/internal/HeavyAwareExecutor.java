@@ -18,13 +18,12 @@ package consulo.versionControlSystem.log.impl.internal;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.concurrent.ApplicationConcurrency;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 class HeavyAwareExecutor {
-    static void executeOutOfHeavyProcessLater(@Nonnull Runnable command, int delayMs) {
+    static void executeOutOfHeavyProcessLater(Runnable command, int delayMs) {
         ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
 
         ScheduledExecutorService executorService = concurrency.getScheduledExecutorService();

@@ -20,7 +20,6 @@ import consulo.remoteServer.ServerType;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Implement this class if a server supports deployment in debug mode. When an user starts a deployment run configuration using 'Debug' button
@@ -41,9 +40,9 @@ public abstract class DebugConnector<D extends DebugConnectionData, R extends De
   /**
    * @see JavaDebuggerLauncher#getInstance()
    */
-  @Nonnull
+  
   public abstract DebuggerLauncher<D> getLauncher();
 
-  @Nonnull
-  public abstract D getConnectionData(@Nonnull R runtime) throws DebugConnectionDataNotAvailableException;
+  
+  public abstract D getConnectionData(R runtime) throws DebugConnectionDataNotAvailableException;
 }

@@ -16,8 +16,7 @@
 package consulo.versionControlSystem.change.patch;
 
 import consulo.versionControlSystem.VcsException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -31,7 +30,7 @@ public interface AirContentRevision {
   @Nullable
   String getRevisionNumber();
 
-  @Nonnull
+  
   PathDescription getPath();
 
   Charset getCharset();

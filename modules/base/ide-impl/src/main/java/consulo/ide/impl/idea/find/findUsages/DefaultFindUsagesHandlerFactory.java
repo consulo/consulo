@@ -21,7 +21,6 @@ import consulo.find.FindUsagesHandlerFactory;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "default", order = "last")
 public final class DefaultFindUsagesHandlerFactory extends FindUsagesHandlerFactory {
     @Override
-    public boolean canFindUsages(@Nonnull PsiElement element) {
+    public boolean canFindUsages(PsiElement element) {
         if (element instanceof PsiFileSystemItem) {
             if (((PsiFileSystemItem) element).getVirtualFile() == null) {
                 return false;
@@ -42,7 +41,7 @@ public final class DefaultFindUsagesHandlerFactory extends FindUsagesHandlerFact
     }
 
     @Override
-    public FindUsagesHandler createFindUsagesHandler(@Nonnull final PsiElement element, boolean forHighlightUsages) {
+    public FindUsagesHandler createFindUsagesHandler(final PsiElement element, boolean forHighlightUsages) {
         if (canFindUsages(element)) {
             return new FindUsagesHandler(element) {
                 @Override

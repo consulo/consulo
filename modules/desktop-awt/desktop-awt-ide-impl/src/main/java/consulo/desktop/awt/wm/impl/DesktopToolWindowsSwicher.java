@@ -24,7 +24,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +36,7 @@ import java.util.List;
  */
 public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
     private class ToolWindowAction extends DumbAwareAction {
-        @Nonnull
+        
         private final ToolWindow myToolWindow;
 
         public ToolWindowAction(ToolWindow toolWindow) {
@@ -47,7 +46,7 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (popup != null) {
                 popup.closeOk(null);
             }

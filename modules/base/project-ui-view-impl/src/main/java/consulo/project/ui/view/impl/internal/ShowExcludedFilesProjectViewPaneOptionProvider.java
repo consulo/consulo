@@ -29,7 +29,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -61,7 +60,7 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
       super.update(e);
       Presentation presentation = e.getPresentation();
       ProjectView projectView = ProjectView.getInstance(e.getRequiredData(Project.KEY));
@@ -69,14 +68,14 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     }
   }
 
-  @Nonnull
+  
   @Override
   public KeyWithDefaultValue<Boolean> getKey() {
     return ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY;
   }
 
   @Override
-  public void addToolbarActions(@Nonnull ProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup) {
+  public void addToolbarActions(ProjectViewPane pane, DefaultActionGroup actionGroup) {
     if (pane instanceof ProjectViewPane) {
       actionGroup.addAction(new ShowExcludedFilesAction(pane));
     }

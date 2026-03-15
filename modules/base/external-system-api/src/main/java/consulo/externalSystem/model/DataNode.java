@@ -17,8 +17,7 @@ package consulo.externalSystem.model;
 
 import consulo.util.io.StreamUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -41,10 +40,10 @@ public class DataNode<T> implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
+  
   private final List<DataNode<?>> myChildren = new ArrayList<>();
 
-  @Nonnull
+  
   private final Key<T> myKey;
   private transient T myData;
   private byte[] myRawData;
@@ -52,7 +51,7 @@ public class DataNode<T> implements Serializable {
   @Nullable
   private final DataNode<?> myParent;
 
-  public DataNode(@Nonnull Key<T> key, @Nonnull T data, @Nullable DataNode<?> parent) {
+  public DataNode(Key<T> key, T data, @Nullable DataNode<?> parent) {
     myKey = key;
     myData = data;
     myParent = parent;
@@ -63,15 +62,15 @@ public class DataNode<T> implements Serializable {
     return myParent;
   }
 
-  @Nonnull
-  public <T> DataNode<T> createChild(@Nonnull Key<T> key, @Nonnull T data) {
+  
+  public <T> DataNode<T> createChild(Key<T> key, T data) {
     DataNode<T> result = new DataNode<T>(key, data, this);
     myChildren.add(result);
     return result;
   }
 
-  @Nonnull
-  public <T> DataNode<T> createOrReplaceChild(@Nonnull Key<T> key, @Nonnull T data) {
+  
+  public <T> DataNode<T> createOrReplaceChild(Key<T> key, T data) {
     for (Iterator<DataNode<?>> iterator = myChildren.iterator(); iterator.hasNext(); ) {
       DataNode<?> child = iterator.next();
       if (child.getKey().equals(key)) {
@@ -82,12 +81,12 @@ public class DataNode<T> implements Serializable {
     return createChild(key, data);
   }
 
-  @Nonnull
+  
   public Key<T> getKey() {
     return myKey;
   }
 
-  @Nonnull
+  
   public T getData() {
     if (myData == null) {
       prepareData(getClass().getClassLoader(), Thread.currentThread().getContextClassLoader());
@@ -108,7 +107,7 @@ public class DataNode<T> implements Serializable {
    * @param loaders  class loaders which are assumed to be able to build object of the target content class
    */
   @SuppressWarnings({"unchecked", "IOResourceOpenedButNotSafelyClosed"})
-  public void prepareData(@Nonnull final ClassLoader ... loaders) {
+  public void prepareData(final ClassLoader ... loaders) {
     if (myData != null) {
       return;
     }
@@ -142,7 +141,7 @@ public class DataNode<T> implements Serializable {
           return super.resolveProxyClass(interfaces);
         }
 
-        private Class<?> doResolveProxyClass(@Nonnull String[] interfaces, @Nonnull ClassLoader loader) throws ClassNotFoundException {
+        private Class<?> doResolveProxyClass(String[] interfaces, ClassLoader loader) throws ClassNotFoundException {
           ClassLoader nonPublicLoader = null;
           boolean hasNonPublicInterface = false;
 
@@ -200,7 +199,7 @@ public class DataNode<T> implements Serializable {
    */
   @SuppressWarnings("unchecked")
   @Nullable
-  public <T> T getData(@Nonnull Key<T> key) {
+  public <T> T getData(Key<T> key) {
     if (myKey.equals(key)) {
       return (T)myData;
     }
@@ -214,7 +213,7 @@ public class DataNode<T> implements Serializable {
 
   @SuppressWarnings("unchecked")
   @Nullable
-  public <T> DataNode<T> getDataNode(@Nonnull Key<T> key) {
+  public <T> DataNode<T> getDataNode(Key<T> key) {
     if (myKey.equals(key)) {
       return (DataNode<T>)this;
     }
@@ -226,11 +225,11 @@ public class DataNode<T> implements Serializable {
     return null;
   }
 
-  public void addChild(@Nonnull DataNode<?> child) {
+  public void addChild(DataNode<?> child) {
     myChildren.add(child);
   }
 
-  @Nonnull
+  
   public Collection<DataNode<?>> getChildren() {
     return myChildren;
   }

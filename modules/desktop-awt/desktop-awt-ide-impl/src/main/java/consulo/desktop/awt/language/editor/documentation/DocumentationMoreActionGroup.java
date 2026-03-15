@@ -21,7 +21,7 @@ import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

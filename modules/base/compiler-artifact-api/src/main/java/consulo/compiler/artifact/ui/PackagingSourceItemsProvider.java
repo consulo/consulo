@@ -18,8 +18,7 @@ package consulo.compiler.artifact.ui;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.compiler.artifact.Artifact;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -28,7 +27,7 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PackagingSourceItemsProvider {
-  @Nonnull
-  public abstract Collection<? extends PackagingSourceItem> getSourceItems(@Nonnull ArtifactEditorContext editorContext, @Nonnull Artifact artifact,
+  
+  public abstract Collection<? extends PackagingSourceItem> getSourceItems(ArtifactEditorContext editorContext, Artifact artifact,
                                                                            @Nullable PackagingSourceItem parent);
 }

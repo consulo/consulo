@@ -3,13 +3,12 @@ package consulo.execution.debug.stream.psi;
 
 import consulo.language.psi.PsiElement;
 import consulo.execution.debug.XDebugSession;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface DebuggerPositionResolver {
   @Nullable
-  PsiElement getNearestElementToBreakpoint(@Nonnull XDebugSession session);
+  PsiElement getNearestElementToBreakpoint(XDebugSession session);
 }

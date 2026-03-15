@@ -17,7 +17,7 @@ package consulo.module.content.layer.orderEntry;
 
 import consulo.module.Module;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *  @author dsl

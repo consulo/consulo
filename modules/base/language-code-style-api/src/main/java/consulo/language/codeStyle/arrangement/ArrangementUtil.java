@@ -27,8 +27,7 @@ import consulo.language.codeStyle.arrangement.std.*;
 import consulo.logging.Logger;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.*;
@@ -48,7 +47,7 @@ public class ArrangementUtil {
     //region Serialization
 
     @Nullable
-    public static ArrangementSettings readExternal(@Nonnull Element element, @Nonnull Language language) {
+    public static ArrangementSettings readExternal(Element element, Language language) {
         ArrangementSettingsSerializer serializer = getSerializer(language);
         if (serializer == null) {
             LOG.error("Can't find serializer for language: " + language.getID());
@@ -58,7 +57,7 @@ public class ArrangementUtil {
         return serializer.deserialize(element);
     }
 
-    public static void writeExternal(@Nonnull Element element, @Nonnull ArrangementSettings settings, @Nonnull Language language) {
+    public static void writeExternal(Element element, ArrangementSettings settings, Language language) {
         ArrangementSettingsSerializer serializer = getSerializer(language);
         if (serializer == null) {
             LOG.error("Can't find serializer for language: " + language.getID());
@@ -69,24 +68,24 @@ public class ArrangementUtil {
     }
 
     @Nullable
-    private static ArrangementSettingsSerializer getSerializer(@Nonnull Language language) {
+    private static ArrangementSettingsSerializer getSerializer(Language language) {
         Rearranger<?> rearranger = Rearranger.forLanguage(language);
         return rearranger == null ? null : rearranger.getSerializer();
     }
 
     //endregion
 
-    @Nonnull
-    public static ArrangementMatchCondition combine(@Nonnull ArrangementMatchCondition... nodes) {
+    
+    public static ArrangementMatchCondition combine(ArrangementMatchCondition... nodes) {
         ArrangementCompositeMatchCondition result = new ArrangementCompositeMatchCondition();
         ArrangementMatchConditionVisitor visitor = new ArrangementMatchConditionVisitor() {
             @Override
-            public void visit(@Nonnull ArrangementAtomMatchCondition node) {
+            public void visit(ArrangementAtomMatchCondition node) {
                 result.addOperand(node);
             }
 
             @Override
-            public void visit(@Nonnull ArrangementCompositeMatchCondition node) {
+            public void visit(ArrangementCompositeMatchCondition node) {
                 for (ArrangementMatchCondition operand : node.getOperands()) {
                     operand.invite(this);
                 }
@@ -140,8 +139,8 @@ public class ArrangementUtil {
      * @param document     target document against which the ranges are built
      * @return expanded range if possible; <code>null</code> otherwise
      */
-    @Nonnull
-    public static TextRange expandToLineIfPossible(@Nonnull TextRange initialRange, @Nonnull Document document) {
+    
+    public static TextRange expandToLineIfPossible(TextRange initialRange, Document document) {
         CharSequence text = document.getCharsSequence();
         String ws = " \t";
 
@@ -161,11 +160,11 @@ public class ArrangementUtil {
     //endregion
 
     @Nullable
-    public static ArrangementSettingsToken parseType(@Nonnull ArrangementMatchCondition condition) throws IllegalArgumentException {
+    public static ArrangementSettingsToken parseType(ArrangementMatchCondition condition) throws IllegalArgumentException {
         SimpleReference<ArrangementSettingsToken> result = new SimpleReference<>();
         condition.invite(new ArrangementMatchConditionVisitor() {
             @Override
-            public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
+            public void visit(ArrangementAtomMatchCondition condition) {
                 ArrangementSettingsToken type = condition.getType();
                 if (StdArrangementTokenType.ENTRY_TYPE.is(condition.getType()) || MODIFIER_AS_TYPE.contains(type)) {
                     result.set(condition.getType());
@@ -173,7 +172,7 @@ public class ArrangementUtil {
             }
 
             @Override
-            public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
+            public void visit(ArrangementCompositeMatchCondition condition) {
                 for (ArrangementMatchCondition c : condition.getOperands()) {
                     c.invite(this);
                     if (result.get() != null) {
@@ -186,7 +185,7 @@ public class ArrangementUtil {
         return result.get();
     }
 
-    public static <T> Set<T> flatten(@Nonnull Iterable<? extends Iterable<T>> data) {
+    public static <T> Set<T> flatten(Iterable<? extends Iterable<T>> data) {
         Set<T> result = new HashSet<>();
         for (Iterable<T> i : data) {
             for (T t : i) {
@@ -196,12 +195,12 @@ public class ArrangementUtil {
         return result;
     }
 
-    @Nonnull
-    public static Map<ArrangementSettingsToken, Object> extractTokens(@Nonnull ArrangementMatchCondition condition) {
+    
+    public static Map<ArrangementSettingsToken, Object> extractTokens(ArrangementMatchCondition condition) {
         Map<ArrangementSettingsToken, Object> result = new HashMap<>();
         condition.invite(new ArrangementMatchConditionVisitor() {
             @Override
-            public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
+            public void visit(ArrangementAtomMatchCondition condition) {
                 ArrangementSettingsToken type = condition.getType();
                 Object value = condition.getValue();
                 result.put(condition.getType(), type.equals(value) ? null : value);
@@ -215,7 +214,7 @@ public class ArrangementUtil {
             }
 
             @Override
-            public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
+            public void visit(ArrangementCompositeMatchCondition condition) {
                 for (ArrangementMatchCondition operand : condition.getOperands()) {
                     operand.invite(this);
                 }
@@ -225,12 +224,12 @@ public class ArrangementUtil {
     }
 
     @Nullable
-    public static ArrangementEntryMatcher buildMatcher(@Nonnull ArrangementMatchCondition condition) {
+    public static ArrangementEntryMatcher buildMatcher(ArrangementMatchCondition condition) {
         SimpleReference<ArrangementEntryMatcher> result = new SimpleReference<>();
         Stack<CompositeArrangementEntryMatcher> composites = new Stack<>();
         ArrangementMatchConditionVisitor visitor = new ArrangementMatchConditionVisitor() {
             @Override
-            public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
+            public void visit(ArrangementAtomMatchCondition condition) {
                 ArrangementEntryMatcher matcher = buildMatcher(condition);
                 if (matcher == null) {
                     return;
@@ -244,7 +243,7 @@ public class ArrangementUtil {
             }
 
             @Override
-            public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
+            public void visit(ArrangementCompositeMatchCondition condition) {
                 composites.push(new CompositeArrangementEntryMatcher());
                 try {
                     for (ArrangementMatchCondition operand : condition.getOperands()) {
@@ -264,7 +263,7 @@ public class ArrangementUtil {
     }
 
     @Nullable
-    public static ArrangementEntryMatcher buildMatcher(@Nonnull ArrangementAtomMatchCondition condition) {
+    public static ArrangementEntryMatcher buildMatcher(ArrangementAtomMatchCondition condition) {
         if (StdArrangementTokenType.ENTRY_TYPE.is(condition.getType())) {
             return new ByTypeArrangementEntryMatcher(condition);
         }
@@ -282,12 +281,12 @@ public class ArrangementUtil {
         }
     }
 
-    @Nonnull
+    
     public static ArrangementUiComponent buildUiComponent(
-        @Nonnull StdArrangementTokenUiRole role,
-        @Nonnull List<ArrangementSettingsToken> tokens,
-        @Nonnull ArrangementColorsProvider colorsProvider,
-        @Nonnull ArrangementStandardSettingsManager settingsManager
+        StdArrangementTokenUiRole role,
+        List<ArrangementSettingsToken> tokens,
+        ArrangementColorsProvider colorsProvider,
+        ArrangementStandardSettingsManager settingsManager
     ) throws IllegalArgumentException {
         for (ArrangementUiComponentFactory factory : ArrangementUiComponentFactory.EP_NAME.getExtensionList()) {
             ArrangementUiComponent result = factory.build(role, tokens, colorsProvider, settingsManager);
@@ -298,8 +297,8 @@ public class ArrangementUtil {
         throw new IllegalArgumentException("Unsupported UI token role " + role);
     }
 
-    @Nonnull
-    public static List<CompositeArrangementSettingsToken> flatten(@Nonnull CompositeArrangementSettingsToken base) {
+    
+    public static List<CompositeArrangementSettingsToken> flatten(CompositeArrangementSettingsToken base) {
         List<CompositeArrangementSettingsToken> result = new ArrayList<>();
         Queue<CompositeArrangementSettingsToken> toProcess = new LinkedList<>();
         toProcess.add(base);
@@ -313,8 +312,8 @@ public class ArrangementUtil {
     }
 
     //region Arrangement Sections
-    @Nonnull
-    public static List<StdArrangementMatchRule> collectMatchRules(@Nonnull List<ArrangementSectionRule> sections) {
+    
+    public static List<StdArrangementMatchRule> collectMatchRules(List<ArrangementSectionRule> sections) {
         List<StdArrangementMatchRule> matchRules = new ArrayList<>();
         for (ArrangementSectionRule section : sections) {
             matchRules.addAll(section.getMatchRules());
@@ -324,13 +323,13 @@ public class ArrangementUtil {
     //endregion
 
     //region Arrangement Custom Tokens
-    public static List<ArrangementSectionRule> getExtendedSectionRules(@Nonnull ArrangementSettings settings) {
+    public static List<ArrangementSectionRule> getExtendedSectionRules(ArrangementSettings settings) {
         return settings instanceof ArrangementExtendableSettings extendableSettings
             ? extendableSettings.getExtendedSectionRules()
             : settings.getSections();
     }
 
-    public static boolean isAliasedCondition(@Nonnull ArrangementAtomMatchCondition condition) {
+    public static boolean isAliasedCondition(ArrangementAtomMatchCondition condition) {
         return StdArrangementTokenType.ALIAS.is(condition.getType());
     }
     //endregion

@@ -25,8 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -50,21 +49,21 @@ public abstract class CheckboxAction extends ToggleAction implements CustomCompo
         super(text, description, icon);
     }
 
-    protected CheckboxAction(@Nonnull LocalizeValue text) {
+    protected CheckboxAction(LocalizeValue text) {
         super(text);
     }
 
-    protected CheckboxAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected CheckboxAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
-    protected CheckboxAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected CheckboxAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    @Nonnull
+    
     @Override
-    public JComponent createCustomComponent(Presentation presentation, @Nonnull String place) {
+    public JComponent createCustomComponent(Presentation presentation, String place) {
         // this component cannot be stored right here because of action system architecture:
         // one action can be shown on multiple toolbars simultaneously
         TextWithMnemonic textWithMnemonic = LocalizeValueWithMnemonic.get(presentation.getTextValue());
@@ -97,7 +96,7 @@ public abstract class CheckboxAction extends ToggleAction implements CustomCompo
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         JComponent property = e.getPresentation().getClientProperty(COMPONENT_KEY);
         if (property instanceof JCheckBox) {

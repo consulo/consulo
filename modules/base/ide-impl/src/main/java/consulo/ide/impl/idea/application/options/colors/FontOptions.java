@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -52,12 +51,12 @@ public class FontOptions implements OptionsPanel {
 
     private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
 
-    @Nonnull
+    
     private final ColorAndFontOptions myOptions;
 
-    @Nonnull
+    
     private final JTextField myEditorFontSizeField = new JTextField(4);
-    @Nonnull
+    
     private final JTextField myLineSpacingField = new JTextField(4);
     private final FontComboBox myPrimaryCombo = new FontComboBox();
     private final JCheckBox myUseSecondaryFontCheckbox = new JCheckBox(ApplicationLocalize.secondaryFont().get());
@@ -65,7 +64,7 @@ public class FontOptions implements OptionsPanel {
     private final JLabel myLigaturesInfoLinkLabel;
     private final FontComboBox mySecondaryCombo = new FontComboBox();
 
-    @Nonnull
+    
     private final JBCheckBox myOnlyMonospacedCheckBox = new JBCheckBox(ApplicationLocalize.checkboxShowOnlyMonospacedFonts().get());
 
     private boolean myIsInSchemeChange;
@@ -76,7 +75,7 @@ public class FontOptions implements OptionsPanel {
         this(options, ApplicationLocalize.groupEditorFont().get());
     }
 
-    protected FontOptions(@Nonnull ColorAndFontOptions options, String title) {
+    protected FontOptions(ColorAndFontOptions options, String title) {
         JPanel mainPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
         mainPanel.setBorder(JBUI.Borders.empty(5));
 
@@ -313,7 +312,7 @@ public class FontOptions implements OptionsPanel {
         myIsInSchemeChange = false;
     }
 
-    @Nonnull
+    
     protected ModifiableFontPreferences getFontPreferences() {
         return (ModifiableFontPreferences) getCurrentScheme().getFontPreferences();
     }

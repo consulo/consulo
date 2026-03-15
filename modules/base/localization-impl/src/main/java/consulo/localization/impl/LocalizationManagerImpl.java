@@ -31,8 +31,7 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.ClearableLazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -201,7 +200,7 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         }
     }
 
-    public void load(@Nonnull List<PluginFileInfo> files) {
+    public void load(List<PluginFileInfo> files) {
         for (PluginFileInfo fileInfo : files) {
             try {
                 load(fileInfo);
@@ -249,7 +248,7 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         }
     }
 
-    @Nonnull
+    
     private Locale buildLocale(String fullId) {
         StringTokenizer tokenizer = new StringTokenizer(fullId, "_");
         String language = tokenizer.nextToken();
@@ -259,7 +258,7 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         return new Locale(language, country, variant);
     }
 
-    @Nonnull
+    
     @Override
     public Set<Locale> getAvailableLocales() {
         return Collections.unmodifiableSet(myLocalizes.keySet());
@@ -278,7 +277,7 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         }
     }
 
-    @Nonnull
+    
     @Override
     public Locale getLocale() {
         if (myCurrentLocale != null) {
@@ -288,7 +287,7 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         return myAutoDetectedLocale.get();
     }
 
-    @Nonnull
+    
     @Override
     public Locale getAutoDetectedLocale() {
         return myAutoDetectedLocale.get();
@@ -300,7 +299,7 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
     }
 
     @Override
-    public void addListener(@Nonnull LocalizationManagerListener listener, @Nonnull Disposable disposable) {
+    public void addListener(LocalizationManagerListener listener, Disposable disposable) {
         myEventDispatcher.addListener(listener, disposable);
     }
 
@@ -309,9 +308,9 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         return myModificationCount;
     }
 
-    @Nonnull
+    
     @Override
-    public Locale parseLocale(@Nonnull String localeText) {
+    public Locale parseLocale(String localeText) {
         try {
             return buildLocale(localeText);
         }
@@ -321,9 +320,9 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         }
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizedValue fromStringKey(@Nonnull String localizeKeyInfo) {
+    public LocalizedValue fromStringKey(String localizeKeyInfo) {
         List<String> values = StringUtil.split(localizeKeyInfo, "@");
         if (values.size() != 2) {
             return LocalizedValue.of(localizeKeyInfo);
@@ -333,9 +332,9 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         return localizationKey.getValue();
     }
 
-    @Nonnull
+    
     @Override
-    public Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizationKey key) {
+    public Map.Entry<Locale, String> getUnformattedText(LocalizationKey key) {
         if (!myInitialized.get()) {
             throw new IllegalArgumentException("not initialized");
         }
@@ -360,7 +359,7 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         return Map.entry(ourDefaultLocale, key.toString());
     }
 
-    @Nonnull
+    
     @Override
     public String formatText(String unformattedText, Locale locale, Object... args) {
         MessageFormat format = new MessageFormat(unformattedText, locale);

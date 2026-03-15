@@ -23,8 +23,7 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueCallback;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -36,7 +35,7 @@ public abstract class XDebuggerEvaluator {
    * @param expression expression to evaluate
    * @param callback   used to notify that the expression has been evaluated or an error occurs
    */
-  public abstract void evaluate(@Nonnull String expression, @Nonnull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition);
+  public abstract void evaluate(String expression, XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition);
 
   /**
    * Start evaluating expression.
@@ -45,7 +44,7 @@ public abstract class XDebuggerEvaluator {
    * @param callback           used to notify that the expression has been evaluated or an error occurs
    * @param expressionPosition position where this expression should be evaluated
    */
-  public void evaluate(@Nonnull XExpression expression, @Nonnull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition) {
+  public void evaluate(XExpression expression, XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition) {
     evaluate(expression.getExpression(), callback, expressionPosition);
   }
 
@@ -83,7 +82,7 @@ public abstract class XDebuggerEvaluator {
    * @return {@link ExpressionInfo} of expression which can be evaluated
    */
   @Nullable
-  public ExpressionInfo getExpressionInfoAtOffset(@Nonnull Project project, @Nonnull Document document, int offset, boolean sideEffectsAllowed) {
+  public ExpressionInfo getExpressionInfoAtOffset(Project project, Document document, int offset, boolean sideEffectsAllowed) {
     TextRange range = getExpressionRangeAtOffset(project, document, offset, sideEffectsAllowed);
     return range == null ? null : new ExpressionInfo(range);
   }
@@ -91,19 +90,19 @@ public abstract class XDebuggerEvaluator {
   /**
    * Override this method to format selected text before it is shown in 'Evaluate' dialog
    */
-  @Nonnull
-  public String formatTextForEvaluation(@Nonnull String text) {
+  
+  public String formatTextForEvaluation(String text) {
     return text;
   }
 
   /**
    * Returns mode which should be used to evaluate the text
    */
-  public EvaluationMode getEvaluationMode(@Nonnull String text, int startOffset, int endOffset, @Nullable PsiFile psiFile) {
+  public EvaluationMode getEvaluationMode(String text, int startOffset, int endOffset, @Nullable PsiFile psiFile) {
     return text.contains("\n") ? EvaluationMode.CODE_FRAGMENT : EvaluationMode.EXPRESSION;
   }
 
   public interface XEvaluationCallback extends XValueCallback {
-    void evaluated(@Nonnull XValue result);
+    void evaluated(XValue result);
   }
 }

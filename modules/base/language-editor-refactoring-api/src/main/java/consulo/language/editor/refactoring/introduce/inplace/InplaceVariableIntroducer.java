@@ -43,7 +43,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 

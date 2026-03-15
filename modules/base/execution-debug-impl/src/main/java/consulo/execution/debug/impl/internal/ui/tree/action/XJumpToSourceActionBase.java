@@ -22,18 +22,17 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class XJumpToSourceActionBase extends XDebuggerTreeActionBase {
-    protected XJumpToSourceActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected XJumpToSourceActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     @Override
-    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+    protected void perform(XValueNodeImpl node, String nodeName, AnActionEvent e) {
         XValue value = node.getValueContainer();
         XNavigatable navigatable = sourcePosition -> {
             if (sourcePosition != null) {

@@ -35,7 +35,6 @@ import consulo.versionControlSystem.impl.internal.patch.apply.ApplyPatchForBaseR
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
@@ -74,7 +73,7 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
     return myNewContentRevision;
   }
 
-  @Nonnull
+  
   @Override
   public DiffRequestProducer getDiffRequestProducers(final Project project, final PatchReader patchReader) {
     final PatchChange change = getChange();
@@ -87,9 +86,9 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
       }
     };
     return new DiffRequestProducer() {
-      @Nonnull
+      
       @Override
-      public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
+      public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
               throws DiffRequestProducerException, ProcessCanceledException {
         if (myCurrentBase != null && myCurrentBase.getFileType() == UnknownFileType.INSTANCE) {
           return new UnknownFileTypeDiffRequest(myCurrentBase, getName());
@@ -114,7 +113,7 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
         }
       }
 
-      @Nonnull
+      
       @Override
       public String getName() {
         File ioCurrentBase = getIoCurrentBase();

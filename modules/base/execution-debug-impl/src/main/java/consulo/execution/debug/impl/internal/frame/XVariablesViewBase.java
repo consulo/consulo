@@ -49,8 +49,7 @@ import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +65,7 @@ public abstract class XVariablesViewBase extends XDebugView {
   private Object myFrameEqualityObject;
   private MySelectionListener mySelectionListener;
 
-  protected XVariablesViewBase(@Nonnull Project project, @Nonnull XDebuggerEditorsProvider editorsProvider, @Nullable XValueMarkers<?, ?> markers) {
+  protected XVariablesViewBase(Project project, XDebuggerEditorsProvider editorsProvider, @Nullable XValueMarkers<?, ?> markers) {
     myTreePanel = new XDebuggerTreePanel(
       project,
       editorsProvider,
@@ -79,7 +78,7 @@ public abstract class XVariablesViewBase extends XDebugView {
     DnDManager.getInstance().registerSource(myTreePanel, getTree());
   }
 
-  protected void buildTreeAndRestoreState(@Nonnull XStackFrame stackFrame) {
+  protected void buildTreeAndRestoreState(XStackFrame stackFrame) {
     XSourcePosition position = stackFrame.getSourcePosition();
     XDebuggerTree tree = getTree();
     tree.setSourcePosition(position);
@@ -155,7 +154,7 @@ public abstract class XVariablesViewBase extends XDebugView {
     }
   }
 
-  @Nonnull
+  
   public final XDebuggerTree getTree() {
     return myTreePanel.getTree();
   }

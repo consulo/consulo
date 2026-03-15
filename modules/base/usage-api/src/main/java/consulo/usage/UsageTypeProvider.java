@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -35,7 +34,7 @@ public interface UsageTypeProvider {
     UsageType getUsageType(PsiElement element);
 
     @Nullable
-    default UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets) {
+    default UsageType getUsageType(PsiElement element, UsageTarget[] targets) {
         return getUsageType(element);
     }
 }

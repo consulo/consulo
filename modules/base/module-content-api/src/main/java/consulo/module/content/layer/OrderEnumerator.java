@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PathsList;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -121,7 +120,7 @@ public abstract class OrderEnumerator {
    * @param provider provider
    * @return this instance
    */
-  public abstract OrderEnumerator using(@Nonnull RootModelProvider provider);
+  public abstract OrderEnumerator using(RootModelProvider provider);
 
   /**
    * @return {@link OrderRootsEnumerator} instance for processing classes roots
@@ -137,13 +136,13 @@ public abstract class OrderEnumerator {
    * @param rootType root type
    * @return {@link OrderRootsEnumerator} instance for processing roots of the specified type
    */
-  public abstract OrderRootsEnumerator roots(@Nonnull OrderRootType rootType);
+  public abstract OrderRootsEnumerator roots(OrderRootType rootType);
 
   /**
    * @param rootTypeProvider custom root type provider
    * @return {@link OrderRootsEnumerator} instance for processing roots of the provided type
    */
-  public abstract OrderRootsEnumerator roots(@Nonnull Function<OrderEntry, OrderRootType> rootTypeProvider);
+  public abstract OrderRootsEnumerator roots(Function<OrderEntry, OrderRootType> rootTypeProvider);
 
   /**
    * @return classes roots for all entries processed by this enumerator
@@ -178,21 +177,21 @@ public abstract class OrderEnumerator {
    *
    * @param processor processor
    */
-  public abstract void forEach(@Nonnull Processor<OrderEntry> processor);
+  public abstract void forEach(Processor<OrderEntry> processor);
 
   /**
    * Runs <code>processor.process()</code> for each library processed by this enumerator.
    *
    * @param processor processor
    */
-  public abstract void forEachLibrary(@Nonnull Processor<Library> processor);
+  public abstract void forEachLibrary(Processor<Library> processor);
 
   /**
    * Runs <code>processor.process()</code> for each module processed by this enumerator.
    *
    * @param processor processor
    */
-  public abstract void forEachModule(@Nonnull Processor<Module> processor);
+  public abstract void forEachModule(Processor<Module> processor);
 
   /**
    * Passes order entries to the specified visitor.
@@ -202,7 +201,7 @@ public abstract class OrderEnumerator {
    * @return the value returned by the visitor.
    * @see OrderEntry#accept(RootPolicy, Object)
    */
-  public abstract <R> R process(@Nonnull RootPolicy<R> policy, R initialValue);
+  public abstract <R> R process(RootPolicy<R> policy, R initialValue);
 
   /**
    * Creates new enumerator instance to process dependencies of <code>module</code>
@@ -210,8 +209,8 @@ public abstract class OrderEnumerator {
    * @param module module
    * @return new enumerator instance
    */
-  @Nonnull
-  public static OrderEnumerator orderEntries(@Nonnull Module module) {
+  
+  public static OrderEnumerator orderEntries(Module module) {
     return ModuleRootManager.getInstance(module).orderEntries();
   }
 
@@ -222,8 +221,8 @@ public abstract class OrderEnumerator {
    * @param project project
    * @return new enumerator instance
    */
-  @Nonnull
-  public static OrderEnumerator orderEntries(@Nonnull Project project) {
+  
+  public static OrderEnumerator orderEntries(Project project) {
     return ProjectRootManager.getInstance(project).orderEntries();
   }
 }

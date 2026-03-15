@@ -17,7 +17,6 @@ package consulo.desktop.util.windows.defender;
 
 import consulo.project.ui.internal.NotificationFullContent;
 import consulo.project.ui.notification.Notification;
-import jakarta.annotation.Nonnull;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -28,12 +27,12 @@ import java.util.Collection;
 public class WindowsDefenderNotification extends Notification implements NotificationFullContent {
     private final Collection<Path> myPaths;
 
-    public WindowsDefenderNotification(@Nonnull Notification.Builder notificationBuilder, Collection<Path> paths) {
+    public WindowsDefenderNotification(Notification.Builder notificationBuilder, Collection<Path> paths) {
         super(notificationBuilder);
         myPaths = paths;
     }
 
-    @Nonnull
+    
     public Collection<Path> getPaths() {
         return myPaths;
     }

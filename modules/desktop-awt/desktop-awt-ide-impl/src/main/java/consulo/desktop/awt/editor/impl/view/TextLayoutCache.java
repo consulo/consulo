@@ -25,7 +25,6 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.update.Activatable;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -153,7 +152,7 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
     }
   }
 
-  @Nonnull
+  
   LineLayout getLineLayout(int line) {
     checkDisposed();
     if (line >= myLines.size()) LOG.error("Unexpected cache state",

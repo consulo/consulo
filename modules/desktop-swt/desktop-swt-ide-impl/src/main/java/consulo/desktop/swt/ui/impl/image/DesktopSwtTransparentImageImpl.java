@@ -18,7 +18,6 @@ package consulo.desktop.swt.ui.impl.image;
 import consulo.ui.image.Image;
 import org.eclipse.swt.graphics.GC;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -43,7 +42,7 @@ public class DesktopSwtTransparentImageImpl implements Image, DesktopSwtImage {
     return myOriginal.getWidth();
   }
 
-  @Nonnull
+  
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
     org.eclipse.swt.graphics.Image swtImage = new org.eclipse.swt.graphics.Image(null, getWidth(), getHeight());

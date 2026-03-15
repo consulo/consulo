@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @TopicImpl(ComponentScope.APPLICATION)
@@ -29,7 +28,7 @@ final class VcsShutDownProjectListener implements ProjectManagerListener {
   }
 
   @Override
-  public void projectClosing(@Nonnull Project project) {
+  public void projectClosing(Project project) {
     if (project.isDefault()) return;
     VcsInitialization vcsInitialization = project.getInstanceIfCreated(VcsInitialization.class);
     if (vcsInitialization != null) {

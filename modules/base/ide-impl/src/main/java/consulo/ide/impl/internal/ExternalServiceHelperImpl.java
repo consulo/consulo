@@ -22,8 +22,7 @@ import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.ide.util.TipUIUtil;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -36,12 +35,12 @@ import javax.swing.*;
 @ServiceImpl
 public class ExternalServiceHelperImpl implements ExternalServiceHelper {
     @Override
-    public void openTipInBrowser(@Nonnull Pair<LocalizeValue, PluginDescriptor> tipInfo, Object browser) {
+    public void openTipInBrowser(Pair<LocalizeValue, PluginDescriptor> tipInfo, Object browser) {
         TipUIUtil.openTipInBrowserByLocalize(tipInfo, (JEditorPane) browser);
     }
 
     @Override
-    public String markup(@Nonnull String textToMarkup, @Nullable String filter) {
+    public String markup(String textToMarkup, @Nullable String filter) {
         return SearchUtil.markup(textToMarkup, filter);
     }
 }

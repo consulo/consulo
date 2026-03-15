@@ -38,8 +38,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -51,31 +50,31 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class VcsLogManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(VcsLogManager.class);
 
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final VcsLogTabsProperties myUiProperties;
   @Nullable private final Runnable myRecreateMainLogHandler;
 
-  @Nonnull
+  
   private final VcsLogDataImpl myLogData;
-  @Nonnull
+  
   private final VcsLogColorManagerImpl myColorManager;
-  @Nonnull
+  
   private final VcsLogTabsWatcher myTabsLogRefresher;
-  @Nonnull
+  
   private final PostponableLogRefresher myPostponableRefresher;
   private boolean myInitialized = false;
 
-  public VcsLogManager(@Nonnull Project project, @Nonnull VcsLogTabsProperties uiProperties, @Nonnull Collection<VcsRoot> roots) {
+  public VcsLogManager(Project project, VcsLogTabsProperties uiProperties, Collection<VcsRoot> roots) {
     this(project, uiProperties, roots, true, null);
   }
 
   @RequiredUIAccess
   public VcsLogManager(
-    @Nonnull Project project,
-    @Nonnull VcsLogTabsProperties uiProperties,
-    @Nonnull Collection<VcsRoot> roots,
+    Project project,
+    VcsLogTabsProperties uiProperties,
+    Collection<VcsRoot> roots,
     boolean scheduleRefreshImmediately,
     @Nullable Runnable recreateHandler
   ) {
@@ -112,19 +111,19 @@ public class VcsLogManager implements Disposable {
     return myPostponableRefresher.isLogVisible();
   }
 
-  @Nonnull
+  
   public VcsLogDataImpl getDataManager() {
     return myLogData;
   }
 
-  @Nonnull
-  public JComponent createLogPanel(@Nonnull String logId, @Nullable String contentTabName) {
+  
+  public JComponent createLogPanel(String logId, @Nullable String contentTabName) {
     VcsLogUiImpl ui = createLogUi(logId, contentTabName, null);
     return new VcsLogPanel(this, ui);
   }
 
-  @Nonnull
-  public VcsLogUiImpl createLogUi(@Nonnull String logId, @Nullable String contentTabName, @Nullable VcsLogFilter filter) {
+  
+  public VcsLogUiImpl createLogUi(String logId, @Nullable String contentTabName, @Nullable VcsLogFilter filter) {
     MainVcsLogUiProperties properties = myUiProperties.createProperties(logId);
     VcsLogFiltererImpl filterer = new VcsLogFiltererImpl(myProject, myLogData, properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE));
     VcsLogUiImpl ui = new VcsLogUiImpl(myLogData, myProject, myColorManager, properties, filterer);
@@ -145,9 +144,9 @@ public class VcsLogManager implements Disposable {
     return ui;
   }
 
-  private static void refreshLogOnVcsEvents(@Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
-                                            @Nonnull VcsLogRefresher refresher,
-                                            @Nonnull Disposable disposableParent) {
+  private static void refreshLogOnVcsEvents(Map<VirtualFile, VcsLogProvider> logProviders,
+                                            VcsLogRefresher refresher,
+                                            Disposable disposableParent) {
     MultiMap<VcsLogProvider, VirtualFile> providers2roots = MultiMap.create();
     for (Map.Entry<VirtualFile, VcsLogProvider> entry : logProviders.entrySet()) {
       providers2roots.putValue(entry.getValue(), entry.getKey());
@@ -159,8 +158,8 @@ public class VcsLogManager implements Disposable {
     }
   }
 
-  @Nonnull
-  public static Map<VirtualFile, VcsLogProvider> findLogProviders(@Nonnull Collection<VcsRoot> roots, @Nonnull Project project) {
+  
+  public static Map<VirtualFile, VcsLogProvider> findLogProviders(Collection<VcsRoot> roots, Project project) {
     Map<VirtualFile, VcsLogProvider> logProviders = new HashMap<>();
     List<VcsLogProvider> allLogProviders = project.getExtensionPoint(VcsLogProvider.class).getExtensionList();
     for (VcsRoot root : roots) {
@@ -194,7 +193,7 @@ public class VcsLogManager implements Disposable {
     private final AtomicBoolean myIsBroken = new AtomicBoolean(false);
 
     @Override
-    public void consume(@Nullable Object source, @Nonnull Throwable e) {
+    public void consume(@Nullable Object source, Throwable e) {
       if (myIsBroken.compareAndSet(false, true)) {
         processError(source, e);
       }
@@ -203,7 +202,7 @@ public class VcsLogManager implements Disposable {
       }
     }
 
-    protected void processError(@Nullable Object source, @Nonnull Throwable e) {
+    protected void processError(@Nullable Object source, Throwable e) {
       if (myRecreateMainLogHandler != null) {
         myProject.getApplication().invokeLater(() -> {
           String message = "Fatal error, VCS Log re-created: " + e.getMessage();
@@ -227,7 +226,7 @@ public class VcsLogManager implements Disposable {
     }
 
     @Override
-    public void displayFatalErrorMessage(@Nonnull String message) {
+    public void displayFatalErrorMessage(String message) {
       VcsBalloonProblemNotifier.showOverChangesView(myProject, message, NotificationType.ERROR);
     }
   }

@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene.Kudelevsky
@@ -30,17 +29,17 @@ public interface CustomLiveTemplate {
   ExtensionPointName<CustomLiveTemplate> EP_NAME = ExtensionPointName.create(CustomLiveTemplate.class);
 
   @Nullable
-  String computeTemplateKey(@Nonnull CustomTemplateCallback callback);
+  String computeTemplateKey(CustomTemplateCallback callback);
 
-  boolean isApplicable(@Nonnull CustomTemplateCallback callback, int offset, boolean wrapping);
+  boolean isApplicable(CustomTemplateCallback callback, int offset, boolean wrapping);
 
   boolean supportsWrapping();
 
-  void expand(@Nonnull String key, @Nonnull CustomTemplateCallback callback);
+  void expand(String key, CustomTemplateCallback callback);
 
-  void wrap(@Nonnull String selection, @Nonnull CustomTemplateCallback callback);
+  void wrap(String selection, CustomTemplateCallback callback);
 
-  @Nonnull
+  
   String getTitle();
 
   char getShortcut();

@@ -23,8 +23,7 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -67,12 +66,12 @@ public class SelectFilesToAddTextsToPatchPanel {
     return exclude;
   }
 
-  private static boolean isBig(@Nonnull VirtualFile virtualFile) {
+  private static boolean isBig(VirtualFile virtualFile) {
     return virtualFile.getLength() > VcsConfiguration.ourMaximumFileForBaseRevisionSize;
   }
 
   @Nullable
-  private static VirtualFile getVfFromChange(@Nonnull Change change) {
+  private static VirtualFile getVfFromChange(Change change) {
     ContentRevision after = change.getAfterRevision();
     return after != null ? after.getFile().getVirtualFile() : null;
   }

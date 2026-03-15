@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -77,33 +76,33 @@ public class QueueProcessor<T> {
   /**
    * Constructs a QueueProcessor, which will autostart as soon as the first element is added to it.
    */
-  public QueueProcessor(@Nonnull Consumer<T> processor) {
+  public QueueProcessor(Consumer<T> processor) {
     this(processor, () -> false);
   }
 
   /**
    * Constructs a QueueProcessor, which will autostart as soon as the first element is added to it.
    */
-  public QueueProcessor(@Nonnull Consumer<T> processor, @Nonnull BooleanSupplier deathCondition) {
+  public QueueProcessor(Consumer<T> processor, BooleanSupplier deathCondition) {
     this(processor, deathCondition, true);
   }
 
-  public QueueProcessor(@Nonnull Consumer<T> processor, @Nonnull BooleanSupplier deathCondition, boolean autostart) {
+  public QueueProcessor(Consumer<T> processor, BooleanSupplier deathCondition, boolean autostart) {
     this(wrappingProcessor(processor), autostart, ThreadToUse.POOLED, deathCondition);
   }
 
-  @Nonnull
+  
   public static QueueProcessor<Runnable> createRunnableQueueProcessor() {
     return new QueueProcessor<Runnable>(new RunnableConsumer());
   }
 
-  @Nonnull
+  
   public static QueueProcessor<Runnable> createRunnableQueueProcessor(ThreadToUse threadToUse) {
     return new QueueProcessor<Runnable>(wrappingProcessor(new RunnableConsumer()), true, threadToUse, () -> false);
   }
 
-  @Nonnull
-  private static <T> BiConsumer<T, Runnable> wrappingProcessor(@Nonnull final Consumer<T> processor) {
+  
+  private static <T> BiConsumer<T, Runnable> wrappingProcessor(final Consumer<T> processor) {
     return new BiConsumer<T, Runnable>() {
       @Override
       public void accept(final T item, Runnable runnable) {
@@ -128,10 +127,10 @@ public class QueueProcessor<T> {
    *                  After QueueProcessor has started once, autostart setting doesn't matter anymore: all other elements will be processed immediately.
    */
 
-  public QueueProcessor(@Nonnull BiConsumer<T, Runnable> processor,
+  public QueueProcessor(BiConsumer<T, Runnable> processor,
                         boolean autostart,
-                        @Nonnull ThreadToUse threadToUse,
-                        @Nonnull BooleanSupplier deathCondition) {
+                        ThreadToUse threadToUse,
+                        BooleanSupplier deathCondition) {
     myProcessor = processor;
     myStarted = autostart;
     myThreadToUse = threadToUse;
@@ -154,22 +153,22 @@ public class QueueProcessor<T> {
     }
   }
 
-  public void add(@Nonnull T t, ModalityState state) {
+  public void add(T t, ModalityState state) {
     synchronized (myQueue) {
       myModalityState.put(new MyOverrideEquals(t), state);
     }
     doAdd(t, false);
   }
 
-  public void add(@Nonnull T element) {
+  public void add(T element) {
     doAdd(element, false);
   }
 
-  public void addFirst(@Nonnull T element) {
+  public void addFirst(T element) {
     doAdd(element, true);
   }
 
-  private void doAdd(@Nonnull T element, boolean atHead) {
+  private void doAdd(T element, boolean atHead) {
     synchronized (myQueue) {
       if (atHead) {
         myQueue.addFirst(element);
@@ -231,7 +230,7 @@ public class QueueProcessor<T> {
     return true;
   }
 
-  public static void runSafely(@Nonnull Runnable run) {
+  public static void runSafely(Runnable run) {
     try {
       run.run();
     }
@@ -275,7 +274,7 @@ public class QueueProcessor<T> {
   private static class MyOverrideEquals {
     private final Object myDelegate;
 
-    private MyOverrideEquals(@Nonnull Object delegate) {
+    private MyOverrideEquals(Object delegate) {
       myDelegate = delegate;
     }
 

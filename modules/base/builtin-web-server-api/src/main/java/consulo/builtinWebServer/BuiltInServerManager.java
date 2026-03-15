@@ -21,13 +21,12 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.util.io.Url;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.URLConnection;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class BuiltInServerManager {
-  @Nonnull
+  
   public static BuiltInServerManager getInstance() {
     return Application.get().getInstance(BuiltInServerManager.class);
   }
@@ -41,9 +40,9 @@ public abstract class BuiltInServerManager {
 
   public abstract boolean isOnBuiltInWebServer(@Nullable Url url);
 
-  public abstract void configureRequestToWebServer(@Nonnull URLConnection connection);
+  public abstract void configureRequestToWebServer(URLConnection connection);
 
-  public abstract Url addAuthToken(@Nonnull Url url);
+  public abstract Url addAuthToken(Url url);
 
   public abstract boolean isLocalHost(String host, boolean onlyAnyOrLoopback, boolean hostsOnly);
 }

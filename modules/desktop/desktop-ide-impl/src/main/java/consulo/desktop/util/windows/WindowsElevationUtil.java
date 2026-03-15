@@ -6,7 +6,6 @@ import com.sun.jna.ptr.IntByReference;
 import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class WindowsElevationUtil {
   }
 
   private static final AtomicNotNullLazyValue<Boolean> IS_UNDER_ELEVATION = new AtomicNotNullLazyValue<Boolean>() {
-    @Nonnull
+    
     @Override
     protected Boolean compute() {
       if (!Platform.current().os().isWindows()) {

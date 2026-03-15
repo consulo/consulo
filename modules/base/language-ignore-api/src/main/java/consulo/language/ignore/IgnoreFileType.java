@@ -26,7 +26,6 @@ package consulo.language.ignore;
 import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * Describes Ignore file type.
@@ -38,7 +37,7 @@ public class IgnoreFileType extends LanguageFileType {
     /**
      * Current file type language.
      */
-    @Nonnull
+    
     private final IgnoreLanguage language;
 
     /**
@@ -51,7 +50,7 @@ public class IgnoreFileType extends LanguageFileType {
     /**
      * Protected constructor to prevent direct object creation.
      */
-    protected IgnoreFileType(@Nonnull IgnoreLanguage language) {
+    protected IgnoreFileType(IgnoreLanguage language) {
         super(language);
         this.language = language;
     }
@@ -61,13 +60,13 @@ public class IgnoreFileType extends LanguageFileType {
      *
      * @return The file type name.
      */
-    @Nonnull
+    
     @Override
     public String getId() {
         return language.getID() + ".file";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return language.getDisplayName();
@@ -78,7 +77,7 @@ public class IgnoreFileType extends LanguageFileType {
      *
      * @return The file type description.
      */
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return language.getDisplayName();
@@ -89,7 +88,7 @@ public class IgnoreFileType extends LanguageFileType {
      *
      * @return The extension, not including the leading '.'.
      */
-    @Nonnull
+    
     @Override
     public String getDefaultExtension() {
         return language.getExtension();
@@ -100,7 +99,7 @@ public class IgnoreFileType extends LanguageFileType {
      *
      * @return The icon instance, or null if no icon should be shown.
      */
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return language.getIcon();

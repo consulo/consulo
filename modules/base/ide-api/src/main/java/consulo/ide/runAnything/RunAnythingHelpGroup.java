@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,12 +18,12 @@ import java.util.stream.Collectors;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnythingGroupBase {
-    @Nonnull
+    
     private LocalizeValue myTitle = LocalizeValue.localizeTODO("undefined");
-    @Nonnull
+    
     private Collection<P> myProviders = Collections.emptyList();
 
-    public RunAnythingHelpGroup(@Nonnull String title, @Nonnull Collection<P> providers) {
+    public RunAnythingHelpGroup(String title, Collection<P> providers) {
         myTitle = LocalizeValue.localizeTODO(title);
         myProviders = providers;
     }
@@ -36,7 +35,7 @@ public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnyt
     public RunAnythingHelpGroup() {
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTitle() {
         return myTitle;
@@ -49,14 +48,14 @@ public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnyt
      * @deprecated please use {@link RunAnythingProvider#getHelpGroupTitle()} instead
      */
     @Deprecated
-    @Nonnull
+    
     public Collection<P> getProviders() {
         return myProviders;
     }
 
-    @Nonnull
+    
     @Override
-    public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Collection<RunAnythingItem> getGroupItems(DataContext dataContext, String pattern) {
         return getProviders().stream()
             .map(provider -> provider.getHelpItem(dataContext))
             .filter(Objects::nonNull)

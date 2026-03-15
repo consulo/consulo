@@ -17,14 +17,13 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 27-Jul-24
  */
 public interface FilePathHolder extends FileHolder {
-  void addFile(@Nonnull FilePath file);
+  void addFile(FilePath file);
 
-  boolean containsFile(@Nonnull FilePath file, @Nonnull VirtualFile vcsRoot);
+  boolean containsFile(FilePath file, VirtualFile vcsRoot);
 }

@@ -22,8 +22,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
@@ -59,7 +58,7 @@ public abstract class FileTemplateBase implements FileTemplate {
   }
 
   @Override
-  @Nonnull
+  
   public final String getText() {
     String text = myText;
     return text != null? text : getDefaultText();
@@ -76,32 +75,32 @@ public abstract class FileTemplateBase implements FileTemplate {
     }
   }
 
-  @Nonnull
+  
   protected String getDefaultText() {
     return "";
   }
 
   @Override
-  @Nonnull
+  
   public final String getText(Map attributes) throws IOException{
     return FileTemplateImplUtil.mergeTemplate(attributes, getText(), false);
   }
 
   @Override
-  @Nonnull
+  
   public final String getText(Properties attributes) throws IOException{
     return FileTemplateImplUtil.mergeTemplate(attributes, getText(), false);
   }
 
   @Override
-  @Nonnull
-  public final String[] getUnsetAttributes(@Nonnull Properties properties, boolean includeDummies, Project project) throws FileTemplateParseException {
+  
+  public final String[] getUnsetAttributes(Properties properties, boolean includeDummies, Project project) throws FileTemplateParseException {
     return FileTemplateImplUtil.calculateAttributes(getText(), properties, includeDummies, project);
   }
 
   @Override
-  @Nonnull
-  public final String[] getUnsetAttributes(@Nonnull Map<String, Object> properties, boolean includeDummies, Project project) throws FileTemplateParseException {
+  
+  public final String[] getUnsetAttributes(Map<String, Object> properties, boolean includeDummies, Project project) throws FileTemplateParseException {
     return FileTemplateImplUtil.calculateAttributes(getText(), properties, includeDummies, project);
   }
 
@@ -116,7 +115,7 @@ public abstract class FileTemplateBase implements FileTemplate {
   }
 
   @Override
-  public boolean isTemplateOfType(@Nonnull FileType fType) {
+  public boolean isTemplateOfType(FileType fType) {
     return fType.equals(FileTypeRegistry.getInstance().getFileTypeByExtension(getExtension()));
   }
 

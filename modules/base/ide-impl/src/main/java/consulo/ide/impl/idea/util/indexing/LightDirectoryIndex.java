@@ -27,8 +27,7 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -42,25 +41,25 @@ public final class LightDirectoryIndex<T> {
   private final T myDefValue;
   private final Consumer<LightDirectoryIndex<T>> myInitializer;
 
-  public LightDirectoryIndex(@Nonnull Disposable parentDisposable, @Nonnull T defValue, @Nonnull Consumer<LightDirectoryIndex<T>> initializer) {
+  public LightDirectoryIndex(Disposable parentDisposable, T defValue, Consumer<LightDirectoryIndex<T>> initializer) {
     myDefValue = defValue;
     myInitializer = initializer;
     resetIndex();
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(parentDisposable);
     connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
-      public void fileTypesChanged(@Nonnull FileTypeEvent event) {
+      public void fileTypesChanged(FileTypeEvent event) {
         resetIndex();
       }
     });
 
     connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
-      public void before(@Nonnull List<? extends VFileEvent> events) {
+      public void before(List<? extends VFileEvent> events) {
       }
 
       @Override
-      public void after(@Nonnull List<? extends VFileEvent> events) {
+      public void after(List<? extends VFileEvent> events) {
         for (VFileEvent event : events) {
           VirtualFile file = event.getFile();
           if (file == null || file.isDirectory()) {
@@ -77,12 +76,12 @@ public final class LightDirectoryIndex<T> {
     myInitializer.accept(this);
   }
 
-  public void putInfo(@Nullable VirtualFile file, @Nonnull T value) {
+  public void putInfo(@Nullable VirtualFile file, T value) {
     if (!(file instanceof VirtualFileWithId)) return;
     cacheInfo(file, value);
   }
 
-  @Nonnull
+  
   public T getInfoForFile(@Nullable VirtualFile file) {
     if (!(file instanceof VirtualFileWithId)) return myDefValue;
 
@@ -115,8 +114,8 @@ public final class LightDirectoryIndex<T> {
     return cacheInfos(dir, null, myDefValue);
   }
 
-  @Nonnull
-  private T cacheInfos(VirtualFile dir, @Nullable VirtualFile stopAt, @Nonnull T info) {
+  
+  private T cacheInfos(VirtualFile dir, @Nullable VirtualFile stopAt, T info) {
     while (dir != null) {
       cacheInfo(dir, info);
       if (dir.equals(stopAt)) {

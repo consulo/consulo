@@ -20,7 +20,6 @@ import consulo.compiler.generic.BuildTarget;
 import consulo.compiler.generic.CompileItem;
 import consulo.compiler.generic.GenericCompilerCacheState;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.List;
@@ -40,32 +39,32 @@ public abstract class GenericCompilerInstance<T extends BuildTarget, Item
         return myContext.getProject();
     }
 
-    @Nonnull
+    
     public abstract List<T> getAllTargets();
 
-    @Nonnull
+    
     public abstract List<T> getSelectedTargets();
 
     public abstract void processObsoleteTarget(
-        @Nonnull String targetId,
-        @Nonnull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems
+        String targetId,
+        List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems
     );
 
-    @Nonnull
-    public abstract List<Item> getItems(@Nonnull T target);
+    
+    public abstract List<Item> getItems(T target);
 
     public abstract void processItems(
-        @Nonnull T target,
-        @Nonnull List<GenericCompilerProcessingItem<Item, SourceState, OutputState>> changedItems,
-        @Nonnull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems,
-        @Nonnull OutputConsumer<Item> consumer
+        T target,
+        List<GenericCompilerProcessingItem<Item, SourceState, OutputState>> changedItems,
+        List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems,
+        OutputConsumer<Item> consumer
     );
 
     public interface OutputConsumer<Item extends CompileItem<?, ?, ?>> {
-        void addFileToRefresh(@Nonnull File file);
+        void addFileToRefresh(File file);
 
-        void addDirectoryToRefresh(@Nonnull File dir);
+        void addDirectoryToRefresh(File dir);
 
-        void addProcessedItem(@Nonnull Item sourceItem);
+        void addProcessedItem(Item sourceItem);
     }
 }

@@ -27,7 +27,6 @@ import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -43,8 +42,8 @@ import java.util.List;
 public interface SurroundDescriptor extends LanguageExtension {
   ExtensionPointCacheKey<SurroundDescriptor, ByLanguageValue<List<SurroundDescriptor>>> KEY = ExtensionPointCacheKey.create("SurroundDescriptor", LanguageOneToMany.build(false));
 
-  @Nonnull
-  static List<SurroundDescriptor> forLanguage(@Nonnull Language language) {
+  
+  static List<SurroundDescriptor> forLanguage(Language language) {
     return Application.get().getExtensionPoint(SurroundDescriptor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -58,7 +57,7 @@ public interface SurroundDescriptor extends LanguageExtension {
    * @param endOffset   the selection end offset, with whitespaces skipped
    * @return the elements to be surrounded, or an empty array if cannot surround
    */
-  @Nonnull
+  
   @RequiredReadAction
   PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset);
 
@@ -68,7 +67,7 @@ public interface SurroundDescriptor extends LanguageExtension {
    *
    * @return the list of surrounders.
    */
-  @Nonnull
+  
   Surrounder[] getSurrounders();
 
   boolean isExclusive();

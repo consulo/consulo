@@ -30,8 +30,7 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -46,7 +45,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
       myComponent = component;
     }
 
-    @Nonnull
+    
     @Override
     public Component toUIComponent() {
       return myComponent;
@@ -81,7 +80,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     dialog.getHeader().add(closeButton);
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();
@@ -109,13 +108,13 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
 
   @RequiredUIAccess
   @Override
-  public void setTitle(@Nonnull String title) {
+  public void setTitle(String title) {
     getVaadinComponent().setHeaderTitle(title);
   }
 
   @RequiredUIAccess
   @Override
-  public void setContent(@Nonnull Component content) {
+  public void setContent(Component content) {
     myRootPanel.setCenterComponent(content);
   }
 

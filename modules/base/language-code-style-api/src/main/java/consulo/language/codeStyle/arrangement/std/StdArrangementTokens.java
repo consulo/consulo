@@ -19,8 +19,7 @@ import consulo.language.codeStyle.CodeStyleBundle;
 import consulo.util.lang.lazy.LazyValue;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,12 +61,12 @@ public class StdArrangementTokens {
 
   @Nullable
   @SuppressWarnings("ReturnValueIgnored") // initializing nested classes
-  public static ArrangementSettingsToken byId(@Nonnull String id) {
+  public static ArrangementSettingsToken byId(String id) {
     NESTED_CLASSES_INITIALIZER.get();
     return TOKENS_BY_ID.get(id);
   }
 
-  private static Supplier<Set<ArrangementSettingsToken>> collectFields(@Nonnull Class<?> clazz) {
+  private static Supplier<Set<ArrangementSettingsToken>> collectFields(Class<?> clazz) {
     return LazyValue.notNull(() -> {
       Set<ArrangementSettingsToken> result = new HashSet<>();
       for (Field field : clazz.getFields()) {
@@ -84,38 +83,38 @@ public class StdArrangementTokens {
     });
   }
 
-  private static StdArrangementSettingsToken invertible(@Nonnull String id, @Nonnull StdArrangementTokenType type) {
+  private static StdArrangementSettingsToken invertible(String id, StdArrangementTokenType type) {
     StdArrangementSettingsToken result = StdInvertibleArrangementSettingsToken.invertibleTokenById(id, type);
     TOKENS_BY_ID.put(id, result);
     return result;
   }
 
-  private static StdArrangementSettingsToken token(@Nonnull String id, @Nonnull StdArrangementTokenType type) {
+  private static StdArrangementSettingsToken token(String id, StdArrangementTokenType type) {
     StdArrangementSettingsToken result = StdArrangementSettingsToken.tokenById(id, type);
     TOKENS_BY_ID.put(id, result);
     return result;
   }
 
-  private static StdArrangementSettingsToken compositeToken(@Nonnull String id, @Nonnull StdArrangementTokenType type, @Nonnull ArrangementSettingsToken... alternativeTokens) {
+  private static StdArrangementSettingsToken compositeToken(String id, StdArrangementTokenType type, ArrangementSettingsToken... alternativeTokens) {
     StdArrangementSettingsToken result = CompositeArrangementToken.create(id, type, alternativeTokens);
     TOKENS_BY_ID.put(id, result);
     return result;
   }
 
-  private static StdArrangementSettingsToken token(@Nonnull String id, @Nonnull @PropertyKey(resourceBundle = CodeStyleBundle.BUNDLE) String key, @Nonnull StdArrangementTokenType type) {
+  private static StdArrangementSettingsToken token(String id, @PropertyKey(resourceBundle = CodeStyleBundle.BUNDLE) String key, StdArrangementTokenType type) {
     StdArrangementSettingsToken result = StdArrangementSettingsToken.tokenByBundle(id, key, type);
     TOKENS_BY_ID.put(id, result);
     return result;
   }
 
   public static class General {
-    @Nonnull
+    
     public static final ArrangementSettingsToken TYPE = token("TYPE", "arrangement.settings.text.general.type", StdArrangementTokenType.GENERAL);
-    @Nonnull
+    
     public static final ArrangementSettingsToken MODIFIER = token("MODIFIER", "arrangement.settings.text.general.modifier", StdArrangementTokenType.GENERAL);
-    @Nonnull
+    
     public static final ArrangementSettingsToken ORDER = token("ORDER", "arrangement.settings.text.general.order", StdArrangementTokenType.GENERAL);
-    @Nonnull
+    
     public static final ArrangementSettingsToken ALIAS = token("ALIAS", "arrangement.settings.text.general.sequence", StdArrangementTokenType.GENERAL);
 
     private General() {
@@ -123,9 +122,9 @@ public class StdArrangementTokens {
   }
 
   public static class Section {
-    @Nonnull
+    
     public static final ArrangementSettingsToken START_SECTION = token("SECTION_START", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken END_SECTION = token("SECTION_END", StdArrangementTokenType.ENTRY_TYPE);
 
     private Section() {
@@ -134,13 +133,13 @@ public class StdArrangementTokens {
   }
 
   public static class Regexp {
-    @Nonnull
+    
     public static final StdArrangementSettingsToken NAME = token("NAME", "arrangement.settings.text.general.name", StdArrangementTokenType.REG_EXP);
 
-    @Nonnull
+    
     public static final StdArrangementSettingsToken XML_NAMESPACE = token("XML_NAMESPACE", "arrangement.settings.text.general.xml.namespace", StdArrangementTokenType.REG_EXP);
 
-    @Nonnull
+    
     public static final StdArrangementSettingsToken TEXT = token("TEXT", "arrangement.settings.text.general.text", StdArrangementTokenType.REG_EXP);
 
     private Regexp() {
@@ -148,41 +147,41 @@ public class StdArrangementTokens {
   }
 
   public static class EntryType {
-    @Nonnull
+    
     public static final ArrangementSettingsToken CLASS = invertible("CLASS", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken ANONYMOUS_CLASS = invertible("ANONYMOUS_CLASS", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken FIELD = invertible("FIELD", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken CONSTRUCTOR = invertible("CONSTRUCTOR", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken METHOD = invertible("METHOD", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken ENUM = invertible("ENUM", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken INTERFACE = invertible("INTERFACE", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken CONST = invertible("CONST", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken VAR = invertible("VAR", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken PROPERTY = invertible("PROPERTY", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken EVENT_HANDLER = invertible("EVENT_HANDLER", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken STATIC_INIT = invertible("STATIC_INIT", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken INIT_BLOCK = invertible("INITIALIZER_BLOCK", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken NAMESPACE = invertible("NAMESPACE", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final ArrangementSettingsToken TRAIT = invertible("TRAIT", StdArrangementTokenType.ENTRY_TYPE);
 
     // xml use only two entry types -> invertible tokens make no sense
-    @Nonnull
+    
     public static final ArrangementSettingsToken XML_TAG = token("XML_TAG", "arrangement.settings.text.entry.type.xml.tag", StdArrangementTokenType.ENTRY_TYPE);
-    @Nonnull
+    
     public static final StdArrangementSettingsToken XML_ATTRIBUTE = token("XML_ATTRIBUTE", "arrangement.settings.text.entry.type.xml.attribute", StdArrangementTokenType.ENTRY_TYPE);
 
     private static final Supplier<Set<ArrangementSettingsToken>> TOKENS = collectFields(EntryType.class);
@@ -190,40 +189,40 @@ public class StdArrangementTokens {
     private EntryType() {
     }
 
-    @Nonnull
+    
     public static Set<ArrangementSettingsToken> values() {
       return TOKENS.get();
     }
   }
 
   public static class Modifier {
-    @Nonnull
+    
     public static final ArrangementSettingsToken PUBLIC = invertible("PUBLIC", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken PROTECTED = invertible("PROTECTED", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken PRIVATE = invertible("PRIVATE", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken PACKAGE_PRIVATE = invertible("PACKAGE_PRIVATE", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken STATIC = invertible("STATIC", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken FINAL = invertible("FINAL", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken TRANSIENT = invertible("TRANSIENT", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken VOLATILE = invertible("VOLATILE", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken SYNCHRONIZED = invertible("SYNCHRONIZED", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken ABSTRACT = invertible("ABSTRACT", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken OVERRIDE = invertible("OVERRIDE", StdArrangementTokenType.MODIFIER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken GETTER = compositeToken("GETTER", StdArrangementTokenType.MODIFIER, METHOD, PUBLIC);
-    @Nonnull
+    
     public static final ArrangementSettingsToken SETTER = compositeToken("SETTER", StdArrangementTokenType.MODIFIER, METHOD, PUBLIC);
-    @Nonnull
+    
     public static final ArrangementSettingsToken OVERRIDDEN = compositeToken("OVERRIDDEN", StdArrangementTokenType.MODIFIER, METHOD, PUBLIC, PROTECTED);
     private static final Supplier<Set<ArrangementSettingsToken>> TOKENS = collectFields(Modifier.class);
 
@@ -232,20 +231,20 @@ public class StdArrangementTokens {
     private Modifier() {
     }
 
-    @Nonnull
+    
     public static Set<ArrangementSettingsToken> values() {
       return TOKENS.get();
     }
   }
 
   public static class Grouping {
-    @Nonnull
+    
     public static final ArrangementSettingsToken GETTERS_AND_SETTERS = token("GETTERS_AND_SETTERS", "arrangement.settings.groups.getters.and.setters.together", StdArrangementTokenType.GROUPING);
-    @Nonnull
+    
     public static final ArrangementSettingsToken OVERRIDDEN_METHODS = token("OVERRIDDEN_METHODS", "arrangement.settings.groups.overridden.methods", StdArrangementTokenType.GROUPING);
-    @Nonnull
+    
     public static final ArrangementSettingsToken DEPENDENT_METHODS = token("DEPENDENT_METHODS", "arrangement.settings.groups.dependent.methods", StdArrangementTokenType.GROUPING);
-    @Nonnull
+    
     public static final ArrangementSettingsToken GROUP_PROPERTY_FIELD_WITH_GETTER_SETTER =
             token("GROUP_PROPERTY_FIELD_WITH_GETTER_SETTER", "arrangement.settings.groups.property.field", StdArrangementTokenType.GROUPING);
 
@@ -254,13 +253,13 @@ public class StdArrangementTokens {
   }
 
   public static class Order {
-    @Nonnull
+    
     public static final ArrangementSettingsToken KEEP = token("KEEP", "arrangement.settings.order.type.keep", StdArrangementTokenType.ORDER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken BY_NAME = token("BY_NAME", "arrangement.settings.order.type.by.name", StdArrangementTokenType.ORDER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken DEPTH_FIRST = token("DEPTH_FIRST", "arrangement.settings.order.type.depth.first", StdArrangementTokenType.ORDER);
-    @Nonnull
+    
     public static final ArrangementSettingsToken BREADTH_FIRST = token("BREADTH_FIRST", "arrangement.settings.order.type.breadth.first", StdArrangementTokenType.ORDER);
 
     private Order() {

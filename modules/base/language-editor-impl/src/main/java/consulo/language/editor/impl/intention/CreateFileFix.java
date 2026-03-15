@@ -38,8 +38,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.function.Function;
@@ -51,7 +50,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   private final boolean myIsDirectory;
   private final String myNewFileName;
   private final String myText;
-  @Nonnull
+  
   private final Function<String, LocalizeValue> myTextTemplate;
   private boolean myIsAvailable;
   private long myIsAvailableTimeStamp;
@@ -59,10 +58,10 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
 
   public CreateFileFix(
     boolean isDirectory,
-    @Nonnull String newFileName,
-    @Nonnull PsiDirectory directory,
+    String newFileName,
+    PsiDirectory directory,
     @Nullable String text,
-    @Nonnull Function<String, LocalizeValue> textTemplate
+    Function<String, LocalizeValue> textTemplate
   ) {
     super(directory);
 
@@ -74,11 +73,11 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
     myIsAvailableTimeStamp = System.currentTimeMillis();
   }
 
-  public CreateFileFix(@Nonnull String newFileName, @Nonnull PsiDirectory directory, String text) {
+  public CreateFileFix(String newFileName, PsiDirectory directory, String text) {
     this(false, newFileName, directory, text, CodeInsightLocalize::createFileText);
   }
 
-  public CreateFileFix(boolean isDirectory, @Nonnull String newFileName, @Nonnull PsiDirectory directory) {
+  public CreateFileFix(boolean isDirectory, String newFileName, PsiDirectory directory) {
     this(
         isDirectory,
         newFileName,
@@ -94,13 +93,13 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getText() {
     return myTextTemplate.apply(myNewFileName);
   }
 
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull PsiFile file, Editor editor, @Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+  public void invoke(Project project, PsiFile file, Editor editor, PsiElement startElement, PsiElement endElement) {
     if (isAvailable(project, null, file)) {
       invoke(project, (PsiDirectory)startElement);
     }
@@ -112,7 +111,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+  public boolean isAvailable(Project project, PsiFile file, PsiElement startElement, PsiElement endElement) {
     PsiDirectory myDirectory = (PsiDirectory)startElement;
     long current = System.currentTimeMillis();
 
@@ -124,7 +123,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
     return myIsAvailable;
   }
 
-  private void invoke(@Nonnull Project project, PsiDirectory myDirectory) throws IncorrectOperationException {
+  private void invoke(Project project, PsiDirectory myDirectory) throws IncorrectOperationException {
     myIsAvailableTimeStamp = 0; // to revalidate applicability
 
     try {
@@ -168,7 +167,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
     }
   }
 
-  protected void openFile(@Nonnull Project project, PsiDirectory directory, PsiFile newFile, String text) {
+  protected void openFile(Project project, PsiDirectory directory, PsiFile newFile, String text) {
     FileEditorManager editorManager = FileEditorManager.getInstance(directory.getProject());
     FileEditor[] fileEditors = editorManager.openFile(newFile.getVirtualFile(), true);
 

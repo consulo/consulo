@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.awt.hacking.ContainerHacking;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -34,7 +33,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
     return getPreferredFocusedComponent((JComponent)focusCycleRoot, this);
   }
 
-  public static JComponent getPreferredFocusedComponent(@Nonnull JComponent component) {
+  public static JComponent getPreferredFocusedComponent(JComponent component) {
     return getPreferredFocusedComponent(component, null);
   }
 
@@ -43,7 +42,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
    * Method can return component itself if the <code>component</code> is legal
    * (JTextFiel)focusable
    */
-  public static JComponent getPreferredFocusedComponent(@Nonnull JComponent component, FocusTraversalPolicy policyToIgnore) {
+  public static JComponent getPreferredFocusedComponent(JComponent component, FocusTraversalPolicy policyToIgnore) {
     if (!component.isVisible()) {
       return null;
     }

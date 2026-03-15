@@ -21,9 +21,7 @@ import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.ui.ex.action.IdeActions;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to register actions which are activated by typing and navigation keystrokes
@@ -48,7 +46,7 @@ public abstract class EditorActionManager {
    *                 by constants starting with <code>ACTION_EDITOR_</code>.
    * @return the handler currently defined for the action.
    */
-  public abstract EditorActionHandler getActionHandler(@NonNls @Nonnull String actionId);
+  public abstract EditorActionHandler getActionHandler(String actionId);
 
   /**
    * Sets the handler for the specified editor actions.
@@ -58,7 +56,7 @@ public abstract class EditorActionManager {
    *                 by constants starting with <code>ACTION_EDITOR_</code>.
    * @return the handler previously defined for the action.
    */
-  public abstract EditorActionHandler setActionHandler(@NonNls @Nonnull String actionId, @Nonnull EditorActionHandler handler);
+  public abstract EditorActionHandler setActionHandler(String actionId, EditorActionHandler handler);
 
   /**
    * Returns the service for registering actions activated by typing visible characters
@@ -66,7 +64,7 @@ public abstract class EditorActionManager {
    *
    * @return the typed action service instance.
    */
-  @Nonnull
+  
   public abstract TypedAction getTypedAction();
 
   /**
@@ -84,7 +82,7 @@ public abstract class EditorActionManager {
    * @return the old instance of the handler.
    * @see Document#createGuardedBlock(int, int)
    */
-  public abstract ReadonlyFragmentModificationHandler setReadonlyFragmentModificationHandler(@Nonnull ReadonlyFragmentModificationHandler handler);
+  public abstract ReadonlyFragmentModificationHandler setReadonlyFragmentModificationHandler(ReadonlyFragmentModificationHandler handler);
 
   /**
    * Gets the handler which is invoked on attempt to modify a read-only fragment for the document.
@@ -93,7 +91,7 @@ public abstract class EditorActionManager {
    * @return the handler instance.
    * @see Document#createGuardedBlock(int, int)
    */
-  public abstract ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@Nonnull Document document);
+  public abstract ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(Document document);
 
   /**
    * Sets the handler which is invoked on attempt to modify a read-only fragment for the document.
@@ -102,7 +100,7 @@ public abstract class EditorActionManager {
    * @param handler  new handler
    * @see Document#createGuardedBlock(int, int)
    */
-  public abstract void setReadonlyFragmentModificationHandler(@Nonnull Document document, ReadonlyFragmentModificationHandler handler);
+  public abstract void setReadonlyFragmentModificationHandler(Document document, ReadonlyFragmentModificationHandler handler);
 
 }
 

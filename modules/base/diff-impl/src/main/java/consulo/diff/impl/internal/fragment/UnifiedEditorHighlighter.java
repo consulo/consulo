@@ -27,7 +27,6 @@ import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,24 +36,24 @@ import java.util.List;
 public class UnifiedEditorHighlighter implements EditorHighlighter {
   public static final Logger LOG = Logger.getInstance(UnifiedEditorHighlighter.class);
 
-  @Nonnull
+  
   private final Document myDocument;
-  @Nonnull
+  
   private final List<Element> myPieces;
 
-  public UnifiedEditorHighlighter(@Nonnull Document document,
-                                  @Nonnull EditorHighlighter highlighter1,
-                                  @Nonnull EditorHighlighter highlighter2,
-                                  @Nonnull List<HighlightRange> ranges,
+  public UnifiedEditorHighlighter(Document document,
+                                  EditorHighlighter highlighter1,
+                                  EditorHighlighter highlighter2,
+                                  List<HighlightRange> ranges,
                                   int textLength) {
     myDocument = document;
     myPieces = new ArrayList<Element>();
     init(highlighter1.createIterator(0), highlighter2.createIterator(0), ranges, textLength);
   }
 
-  private void init(@Nonnull HighlighterIterator it1,
-                    @Nonnull HighlighterIterator it2,
-                    @Nonnull List<HighlightRange> ranges,
+  private void init(HighlighterIterator it1,
+                    HighlighterIterator it2,
+                    List<HighlightRange> ranges,
                     int textLength) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
@@ -109,7 +108,7 @@ public class UnifiedEditorHighlighter implements EditorHighlighter {
     }
   }
 
-  private void addElement(@Nonnull Element element) {
+  private void addElement(Element element) {
     boolean merged = false;
     if (!myPieces.isEmpty()) {
       Element oldElement = myPieces.get(myPieces.size() - 1);
@@ -126,7 +125,7 @@ public class UnifiedEditorHighlighter implements EditorHighlighter {
     }
   }
 
-  @Nonnull
+  
   @Override
   public HighlighterIterator createIterator(int startOffset) {
     int index = Collections.binarySearch(myPieces, new Element(startOffset, 0, null, null), new Comparator<Element>() {
@@ -142,15 +141,15 @@ public class UnifiedEditorHighlighter implements EditorHighlighter {
   }
 
   @Override
-  public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
+  public void setColorScheme(EditorColorsScheme scheme) {
   }
 
   @Override
-  public void setEditor(@Nonnull HighlighterClient editor) {
+  public void setEditor(HighlighterClient editor) {
   }
 
   @Override
-  public void setText(@Nonnull CharSequence text) {
+  public void setText(CharSequence text) {
   }
 
   @Override
@@ -166,7 +165,7 @@ public class UnifiedEditorHighlighter implements EditorHighlighter {
     private int myIdx;
     private final List<Element> myPieces;
 
-    private ProxyIterator(@Nonnull Document document, int idx, @Nonnull List<Element> pieces) {
+    private ProxyIterator(Document document, int idx, List<Element> pieces) {
       myDocument = document;
       myIdx = idx;
       myPieces = pieces;

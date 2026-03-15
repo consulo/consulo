@@ -24,13 +24,12 @@ import consulo.diff.merge.MergeTool;
 import consulo.diff.request.DiffRequest;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class DiffManagerEx extends DiffManager {
-  @Nonnull
+  
   public static DiffManagerEx getInstanceEx() {
     return (DiffManagerEx)DiffManager.getInstance();
   }
@@ -40,20 +39,20 @@ public abstract class DiffManagerEx extends DiffManager {
   //
 
   @RequiredUIAccess
-  public abstract void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request);
+  public abstract void showDiffBuiltin(@Nullable Project project, DiffRequest request);
 
   @RequiredUIAccess
-  public abstract void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
+  public abstract void showDiffBuiltin(@Nullable Project project, DiffRequest request, DiffDialogHints hints);
 
   @RequiredUIAccess
-  public abstract void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
+  public abstract void showDiffBuiltin(@Nullable Project project, DiffRequestChain requests, DiffDialogHints hints);
 
   @RequiredUIAccess
-  public abstract void showMergeBuiltin(@Nullable Project project, @Nonnull MergeRequest request);
+  public abstract void showMergeBuiltin(@Nullable Project project, MergeRequest request);
 
-  @Nonnull
+  
   public abstract List<DiffTool> getDiffTools();
 
-  @Nonnull
+  
   public abstract List<MergeTool> getMergeTools();
 }

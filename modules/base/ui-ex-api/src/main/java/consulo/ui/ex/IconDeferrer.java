@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -29,14 +28,14 @@ import java.util.function.Function;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IconDeferrer {
-  @Nonnull
+  
   public static IconDeferrer getInstance() {
     return Application.get().getInstance(IconDeferrer.class);
   }
 
-  public abstract <T> Image defer(Image base, T param, @Nonnull Function<T, Image> f);
+  public abstract <T> Image defer(Image base, T param, Function<T, Image> f);
 
-  public abstract <T> Image deferAutoUpdatable(Image base, T param, @Nonnull Function<T, Image> f);
+  public abstract <T> Image deferAutoUpdatable(Image base, T param, Function<T, Image> f);
 
   public boolean equalIcons(Image icon1, Image icon2) {
     return Comparing.equal(icon1, icon2);

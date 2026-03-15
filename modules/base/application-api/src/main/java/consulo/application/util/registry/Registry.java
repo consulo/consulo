@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.lazy.LazyValue;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,16 +53,16 @@ public class Registry {
     return properties;
   });
 
-  @Nonnull
-  public static RegistryValue get(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
+  
+  public static RegistryValue get(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) String key) {
     return ourRegistry.get().computeIfAbsent(key, s -> new RegistryValue(s, null, ourJvmProperties));
   }
 
-  public static boolean is(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
+  public static boolean is(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) String key) {
     return get(key).asBoolean();
   }
 
-  public static boolean is(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key, boolean defaultValue) {
+  public static boolean is(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) String key, boolean defaultValue) {
     try {
       return get(key).asBoolean(defaultValue);
     }
@@ -72,24 +71,24 @@ public class Registry {
     }
   }
 
-  public static int intValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
+  public static int intValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) String key) {
     return get(key).asInteger();
   }
 
-  public static int intValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key, int defaultValue) {
+  public static int intValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) String key, int defaultValue) {
     return get(key).asInteger(defaultValue);
   }
 
-  public static double doubleValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
+  public static double doubleValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) String key) {
     return get(key).asDouble();
   }
 
-  @Nonnull
-  public static String stringValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
+  
+  public static String stringValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) String key) {
     return get(key).asString();
   }
 
-  public static Color getColor(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key, Color defaultValue) {
+  public static Color getColor(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) String key, Color defaultValue) {
     return get(key).asColor(defaultValue);
   }
 }

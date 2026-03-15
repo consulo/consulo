@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.*;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.io.File;
@@ -112,9 +111,9 @@ public class ChangeListManagerSerialization {
     }
   }
 
-  public static void writeExternal(@Nonnull Element element,
-                                   @Nonnull IgnoredFilesComponent ignoredFilesComponent,
-                                   @Nonnull ChangeListWorker worker) {
+  public static void writeExternal(Element element,
+                                   IgnoredFilesComponent ignoredFilesComponent,
+                                   ChangeListWorker worker) {
     for (LocalChangeList list : worker.getListsCopy()) {
       Element listNode = new Element(NODE_LIST);
       element.addContent(listNode);

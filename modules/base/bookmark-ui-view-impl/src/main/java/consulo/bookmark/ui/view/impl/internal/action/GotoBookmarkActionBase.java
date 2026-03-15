@@ -24,14 +24,13 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 abstract class GotoBookmarkActionBase extends EditorAction {
     protected GotoBookmarkActionBase(final boolean next) {
         super(new EditorActionHandler() {
             @Override
-            public void execute(@Nonnull Editor editor, DataContext dataContext) {
+            public void execute(Editor editor, DataContext dataContext) {
                 navigateToBookmark(dataContext, editor);
             }
 
@@ -40,7 +39,7 @@ abstract class GotoBookmarkActionBase extends EditorAction {
                 return getBookmarkToGo(dataContext, editor) != null;
             }
 
-            private void navigateToBookmark(DataContext dataContext, @Nonnull Editor editor) {
+            private void navigateToBookmark(DataContext dataContext, Editor editor) {
                 Bookmark bookmark = getBookmarkToGo(dataContext, editor);
                 if (bookmark == null) {
                     return;

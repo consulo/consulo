@@ -33,8 +33,7 @@ import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +51,13 @@ public class BundleBox implements PseudoComponent {
     /**
      * @return builder with global sdk table
      */
-    @Nonnull
-    public static BundleBoxBuilder builder(@Nonnull Disposable uiDisposable) {
+    
+    public static BundleBoxBuilder builder(Disposable uiDisposable) {
         return BundleBoxBuilder.create(uiDisposable);
     }
 
-    @Nonnull
-    public static BundleBoxBuilder builder(@Nonnull SdkModel sdkModel, @Nonnull Disposable uiDisposable) {
+    
+    public static BundleBoxBuilder builder(SdkModel sdkModel, Disposable uiDisposable) {
         return BundleBoxBuilder.create(sdkModel, uiDisposable);
     }
 
@@ -129,7 +128,7 @@ public class BundleBox implements PseudoComponent {
             return mySdkPointer.getName();
         }
 
-        @Nonnull
+        
         public Module getModule() {
             return myModuleExtension.getModule();
         }
@@ -163,12 +162,12 @@ public class BundleBox implements PseudoComponent {
             myIcon = icon;
         }
 
-        @Nonnull
+        
         public Image getIcon() {
             return myIcon;
         }
 
-        @Nonnull
+        
         public String getPresentableName() {
             return myPresentableName;
         }
@@ -204,7 +203,7 @@ public class BundleBox implements PseudoComponent {
             myModuleName = moduleName;
         }
 
-        @Nonnull
+        
         public String getModuleName() {
             return myModuleName;
         }
@@ -276,23 +275,23 @@ public class BundleBox implements PseudoComponent {
     }
 
     @RequiredUIAccess
-    public BundleBox(@Nonnull BundleHolder bundleHolder) {
+    public BundleBox(BundleHolder bundleHolder) {
         this(bundleHolder, null, false);
     }
 
     @RequiredUIAccess
-    public BundleBox(@Nonnull BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, boolean withNoneItem) {
+    public BundleBox(BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, boolean withNoneItem) {
         this(bundleHolder, filter, withNoneItem ? ProjectBundle.message("sdk.combo.box.item") : null, null);
     }
 
     @RequiredUIAccess
-    public BundleBox(@Nonnull BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, @Nullable String nullItemName) {
+    public BundleBox(BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, @Nullable String nullItemName) {
         this(bundleHolder, filter, nullItemName, null);
     }
 
     @RequiredUIAccess
     public BundleBox(
-        @Nonnull BundleHolder bundleHolder,
+        BundleHolder bundleHolder,
         @Nullable Predicate<SdkTypeId> filter,
         @Nullable String nullItemName,
         @Nullable Image nullIcon
@@ -342,8 +341,8 @@ public class BundleBox implements PseudoComponent {
         });
     }
 
-    @Nonnull
-    static List<BundleBoxItem> buildItems(@Nonnull BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, boolean withNullItem) {
+    
+    static List<BundleBoxItem> buildItems(BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, boolean withNullItem) {
         List<BundleBoxItem> list = new ArrayList<>();
 
         List<Sdk> targetSdks = new ArrayList<>();
@@ -365,10 +364,10 @@ public class BundleBox implements PseudoComponent {
         return list;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private static ListModel<BundleBoxItem> model(
-        @Nonnull BundleHolder holder,
+        BundleHolder holder,
         @Nullable Predicate<SdkTypeId> filter,
         String nullItemName
     ) {
@@ -385,8 +384,8 @@ public class BundleBox implements PseudoComponent {
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     public <T extends MutableModuleExtension<?>> void addModuleExtensionItems(
-        @Nonnull T moduleExtension,
-        @Nonnull Function<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction
+        T moduleExtension,
+        Function<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction
     ) {
         MutableListModel<BundleBoxItem> listModel = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
 
@@ -413,7 +412,7 @@ public class BundleBox implements PseudoComponent {
     }
 
     @RequiredUIAccess
-    public void addBundleItem(@Nonnull Sdk bundle) {
+    public void addBundleItem(Sdk bundle) {
         MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
 
         model.add(new BaseBundleBoxItem(bundle));
@@ -421,7 +420,7 @@ public class BundleBox implements PseudoComponent {
 
     @UsedInPlugin
     @RequiredUIAccess
-    public void addCustomBundleItem(@Nonnull String key, @Nonnull String presentableName, @Nonnull Image icon) {
+    public void addCustomBundleItem(String key, String presentableName, Image icon) {
         CustomBundleBoxItem item = new CustomBundleBoxItem(key, presentableName, icon);
 
         MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
@@ -443,7 +442,7 @@ public class BundleBox implements PseudoComponent {
         }
     }
 
-    public void setSelectedModule(@Nonnull String name) {
+    public void setSelectedModule(String name) {
         int index = indexOfModuleItems(name);
         if (index >= 0) {
             myOriginalComboBox.setValueByIndex(index);
@@ -477,7 +476,7 @@ public class BundleBox implements PseudoComponent {
     }
 
     @RequiredUIAccess
-    public void setInvalidBundle(@Nonnull String name) {
+    public void setInvalidBundle(String name) {
         removeInvalidElement();
         MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
         InvalidBundleBoxItem item = new InvalidBundleBoxItem(name);
@@ -548,7 +547,7 @@ public class BundleBox implements PseudoComponent {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public ComboBox<BundleBoxItem> getComponent() {

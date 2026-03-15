@@ -23,7 +23,6 @@ import consulo.versionControlSystem.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,9 +32,9 @@ import static consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiPr
 
 @ExtensionImpl
 public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector {
-    @Nonnull
+    
     @Override
-    public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
+    public Set<UsageDescriptor> getProjectUsages(Project project) throws CollectUsagesException {
         VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
         if (projectLog != null) {
             VcsLogUiImpl ui = projectLog.getMainLogUi();
@@ -77,7 +76,7 @@ public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector 
         return Collections.emptySet();
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupId() {
         return "consulo.platform.base:vcs.log.ui.settings";

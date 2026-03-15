@@ -30,7 +30,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,13 +37,13 @@ import java.util.Collections;
 import java.util.Iterator;
 
 public class SummaryNode extends BaseToDoNode<ToDoSummary> {
-  public SummaryNode(Project project, @Nonnull ToDoSummary value, TodoTreeBuilder builder) {
+  public SummaryNode(Project project, ToDoSummary value, TodoTreeBuilder builder) {
     super(project, value, builder);
   }
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     ArrayList<AbstractTreeNode> children = new ArrayList<>();
 
@@ -100,7 +99,7 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
   }
 
   @Override
-  public void update(@Nonnull PresentationData presentation) {
+  public void update(PresentationData presentation) {
     if (DumbService.getInstance(getProject()).isDumb()) return;
     int todoItemCount = getTodoItemCount(getValue());
     int fileCount = getFileCount(getValue());

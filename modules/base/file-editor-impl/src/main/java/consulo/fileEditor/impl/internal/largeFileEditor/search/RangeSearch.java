@@ -28,8 +28,7 @@ import consulo.ui.ex.content.Content;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -96,9 +95,9 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         launchSearchingFurther(directionForward);
     }
 
-    public RangeSearch(@Nonnull VirtualFile virtualFile,
-                       @Nonnull Project project,
-                       @Nonnull RangeSearchCallback rangeSearchCallback) {
+    public RangeSearch(VirtualFile virtualFile,
+                       Project project,
+                       RangeSearchCallback rangeSearchCallback) {
         myVirtualFile = virtualFile;
         myProject = project;
         myRangeSearchCallback = rangeSearchCallback;
@@ -139,7 +138,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         });
         myShowingResultsList.setCellRenderer(new ColoredListCellRenderer<>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList<? extends ListElementWrapper> list,
+            protected void customizeCellRenderer(JList<? extends ListElementWrapper> list,
                                                  ListElementWrapper value,
                                                  int index,
                                                  boolean selected,
@@ -436,7 +435,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
             String title = newRangeSearchTask.getTitleForBackgroundableTask();
             Task.Backgroundable task = new Task.Backgroundable(null, title, true) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     newRangeSearchTask.setProgressIndicator(indicator);
                     newRangeSearchTask.run();
                 }
@@ -485,7 +484,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
     @Override
     public void tellFrameSearchResultsFound(RangeSearchTask caller,
                                             long curPageNumber,
-                                            @Nonnull List<? extends SearchResult> allMatchesAtFrame) {
+                                            List<? extends SearchResult> allMatchesAtFrame) {
         if (inBackground) {
             ApplicationManager.getApplication().invokeLater(() -> {
                 onFrameSearchResultsFound(caller, curPageNumber, allMatchesAtFrame);

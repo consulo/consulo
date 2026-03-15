@@ -15,8 +15,7 @@
  */
 package consulo.component.internal.inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -27,32 +26,32 @@ import java.util.function.Function;
  * @since 2018-08-23
  */
 public interface InjectingContainer {
-  static InjectingContainer root(@Nonnull ModuleLayer moduleLayer) {
+  static InjectingContainer root(ModuleLayer moduleLayer) {
     return ServiceLoader.load(moduleLayer, RootInjectingContainerFactory.class).findFirst().get().getRoot();
   }
 
-  static InjectingContainer root(@Nonnull ClassLoader classLoader) {
+  static InjectingContainer root(ClassLoader classLoader) {
     return ServiceLoader.load(RootInjectingContainerFactory.class, classLoader).findFirst().get().getRoot();
   }
 
   boolean LOG_INJECTING_PROBLEMS = Boolean.getBoolean("consulo.log.injecting.problems");
 
-  @Nonnull
-  <T> T getInstance(@Nonnull Class<T> clazz);
+  
+  <T> T getInstance(Class<T> clazz);
 
   @Nullable
-  <T> T getInstanceIfCreated(@Nonnull Class<T> clazz);
+  <T> T getInstanceIfCreated(Class<T> clazz);
 
-  @Nonnull
-  <T> T getUnbindedInstance(@Nonnull Class<T> clazz);
+  
+  <T> T getUnbindedInstance(Class<T> clazz);
 
-  @Nonnull
-  <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor);
+  
+  <T> T getUnbindedInstance(Class<T> clazz, Type[] constructorTypes, Function<Object[], T> constructor);
 
-  @Nonnull
+  
   List<InjectingKey<?>> getKeys();
 
-  @Nonnull
+  
   InjectingContainerBuilder childBuilder();
 
   void dispose();

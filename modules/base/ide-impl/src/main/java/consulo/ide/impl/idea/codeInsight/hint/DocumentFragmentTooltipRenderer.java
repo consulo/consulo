@@ -25,7 +25,6 @@ import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +40,7 @@ public class DocumentFragmentTooltipRenderer implements TooltipRenderer {
   }
 
   @Override
-  public LightweightHint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint intInfo) {
+  public LightweightHint show(Editor editor, Point p, boolean alignToRight, TooltipGroup group, HintHint intInfo) {
     LightweightHint hint;
 
     JComponent editorComponent = editor.getComponent();

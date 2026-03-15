@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItem
 import consulo.util.lang.StringUtil;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Set;
 
 /**

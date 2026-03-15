@@ -27,7 +27,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -36,11 +35,11 @@ import java.util.Collection;
  * from kotlin
  */
 public class WindowsDefenderFixAction extends NotificationAction {
-    @Nonnull
+    
     private final Application myApplication;
     private final Collection<Path> myPaths;
 
-    public WindowsDefenderFixAction(@Nonnull Application application, Collection<Path> paths) {
+    public WindowsDefenderFixAction(Application application, Collection<Path> paths) {
         super(LocalizeValue.localizeTODO("Fix..."));
         myApplication = application;
         myPaths = paths;
@@ -48,7 +47,7 @@ public class WindowsDefenderFixAction extends NotificationAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+    public void actionPerformed(AnActionEvent e, Notification notification) {
         int rc = Messages.showDialog(
             e.getData(Project.KEY),
             ExternalServiceLocalize.virusScanningFixExplanation(

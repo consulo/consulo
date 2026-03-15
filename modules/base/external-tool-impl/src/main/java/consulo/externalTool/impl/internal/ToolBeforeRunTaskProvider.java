@@ -21,19 +21,18 @@ import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ToolBeforeRunTaskProvider extends AbstractToolBeforeRunTaskProvider<ToolBeforeRunTask> {
   static final Key<ToolBeforeRunTask> ID = Key.create("ToolBeforeRunTask");
 
-  @Nonnull
+  
   @Override
   public Key<ToolBeforeRunTask> getId() {
     return ID;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return ExternalToolLocalize.toolsBeforeRunProviderName();

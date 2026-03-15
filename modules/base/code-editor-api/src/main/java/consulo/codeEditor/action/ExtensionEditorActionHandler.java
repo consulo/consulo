@@ -18,8 +18,7 @@ package consulo.codeEditor.action;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,6 +30,6 @@ import jakarta.annotation.Nullable;
 public interface ExtensionEditorActionHandler {
   void init(@Nullable EditorActionHandler originalHandler);
 
-  @Nonnull
+  
   String getActionId();
 }

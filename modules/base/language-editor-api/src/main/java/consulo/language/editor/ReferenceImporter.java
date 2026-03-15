@@ -23,7 +23,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -32,13 +31,13 @@ import jakarta.annotation.Nonnull;
 public interface ReferenceImporter {
   ExtensionPointName<ReferenceImporter> EP_NAME = ExtensionPointName.create(ReferenceImporter.class);
 
-  boolean autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
+  boolean autoImportReferenceAtCursor(Editor editor, PsiFile file);
 
   /**
    * @deprecated implement {@link HintAction#fixSilently(Editor)} instead.
    */
   @Deprecated
-  default boolean autoImportReferenceAt(@Nonnull Editor editor, @Nonnull PsiFile file, int offset) {
+  default boolean autoImportReferenceAt(Editor editor, PsiFile file, int offset) {
     return false;
   }
 }

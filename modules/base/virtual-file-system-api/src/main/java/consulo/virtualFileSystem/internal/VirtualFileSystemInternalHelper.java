@@ -24,8 +24,7 @@ import consulo.component.util.Iconable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -48,11 +47,11 @@ public interface VirtualFileSystemInternalHelper {
 
     <T> Future<T> executeIO(Callable<T> callable);
 
-    Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
+    Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
 
     @RequiredReadAction
-    @Nonnull
-    Image getFileIconNoDefer(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
+    
+    Image getFileIconNoDefer(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
 
-    void notifyAboutSlowFileWatcher(@Nonnull LocalizeValue cause);
+    void notifyAboutSlowFileWatcher(LocalizeValue cause);
 }

@@ -25,8 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.setting.module.event.LibraryEditorListener;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,7 +40,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   private LibraryType<?> myDetectedType;
   private boolean myDetectedTypeComputed;
 
-  public ExistingLibraryEditor(@Nonnull Library library, @Nullable LibraryEditorListener listener) {
+  public ExistingLibraryEditor(Library library, @Nullable LibraryEditorListener listener) {
     myLibrary = (LibraryEx)library;
     myListener = listener;
   }
@@ -68,7 +67,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public void setType(@Nonnull LibraryType<?> type) {
+  public void setType(LibraryType<?> type) {
     getModel().setKind(type.getKind());
   }
 
@@ -164,7 +163,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public void addExcludedRoot(@Nonnull String url) {
+  public void addExcludedRoot(String url) {
     getModel().addExcludedRoot(url);
   }
 
@@ -188,7 +187,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public void removeExcludedRoot(@Nonnull String url) {
+  public void removeExcludedRoot(String url) {
     getModel().removeExcludedRoot(url);
   }
 

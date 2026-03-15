@@ -21,8 +21,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a model of the document containing the formatted text, as seen by the
@@ -32,13 +31,13 @@ import jakarta.annotation.Nullable;
  */
 
 public interface FormattingDocumentModel {
-    @Nonnull
-    static FormattingDocumentModel create(@Nonnull PsiFile file) {
+    
+    static FormattingDocumentModel create(PsiFile file) {
         return CodeStyleInternalHelper.getInstance().createFormattingDocumentModel(file);
     }
 
-    @Nonnull
-    static FormattingDocumentModel create(@Nonnull Document document, @Nullable PsiFile file) {
+    
+    static FormattingDocumentModel create(Document document, @Nullable PsiFile file) {
         return CodeStyleInternalHelper.getInstance().createFormattingDocumentModel(document, file);
     }
 
@@ -73,7 +72,7 @@ public interface FormattingDocumentModel {
      */
     int getTextLength();
 
-    @Nonnull
+    
     Document getDocument();
 
     /**
@@ -99,9 +98,9 @@ public interface FormattingDocumentModel {
      * @param changedViaPsi  flag that identifies whether formatter introduces changes via PSI tree or directly via the document
      * @return white space to use for replacing document symbols at <code>[startOffset; endOffset)</code> region
      */
-    @Nonnull
+    
     CharSequence adjustWhiteSpaceIfNecessary(
-        @Nonnull CharSequence whiteSpaceText,
+        CharSequence whiteSpaceText,
         int startOffset,
         int endOffset,
         @Nullable ASTNode nodeAfter,

@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.internal.CustomShortcutBuilder;
 import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.awt.event.KeyEvent;
@@ -42,13 +41,13 @@ public class RunAnythingAction extends AnAction implements DumbAware {
 
     private boolean myIsDoubleCtrlRegistered;
     private final Application myApplication;
-    @Nonnull
+    
     private final KeyMapSetting myKeyMapSetting;
 
     @Inject
-    public RunAnythingAction(@Nonnull Application application,
-                             @Nonnull IdeEventQueueProxy ideEventQueueProxy,
-                             @Nonnull KeyMapSetting keyMapSetting) {
+    public RunAnythingAction(Application application,
+                             IdeEventQueueProxy ideEventQueueProxy,
+                             KeyMapSetting keyMapSetting) {
         super(
             ActionLocalize.actionRunanythingText(),
             ActionLocalize.actionRunanythingDescription(),
@@ -75,7 +74,7 @@ public class RunAnythingAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (!myKeyMapSetting.isEnabledDoublePressShortcuts()
             && e.getInputEvent() instanceof KeyEvent keyEvent
             && keyEvent.getKeyCode() == KeyEvent.VK_CONTROL) {
@@ -94,7 +93,7 @@ public class RunAnythingAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().putClientProperty(
             CustomShortcutBuilder.KEY,
             () -> {

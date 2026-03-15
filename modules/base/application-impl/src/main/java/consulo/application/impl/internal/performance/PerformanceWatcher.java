@@ -38,8 +38,7 @@ import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
@@ -159,7 +158,7 @@ public class PerformanceWatcher implements Disposable {
     if (allLogsDir.isDirectory()) {
       String[] dirs = allLogsDir.list(new FilenameFilter() {
         @Override
-        public boolean accept(@Nonnull File dir, @Nonnull String name) {
+        public boolean accept(File dir, String name) {
           return name.startsWith("threadDumps-");
         }
       });
@@ -247,7 +246,7 @@ public class PerformanceWatcher implements Disposable {
   }
 
   @Nullable
-  public File dumpThreads(@Nonnull String pathPrefix, boolean millis) {
+  public File dumpThreads(String pathPrefix, boolean millis) {
     if (!shouldWatch()) return null;
 
     String suffix = millis ? "-" + System.currentTimeMillis() : "";
@@ -331,7 +330,7 @@ public class PerformanceWatcher implements Disposable {
     private Snapshot() {
     }
 
-    public void logResponsivenessSinceCreation(@Nonnull String activityName) {
+    public void logResponsivenessSinceCreation(String activityName) {
       LOG.info(activityName +
                " took " +
                (System.currentTimeMillis() - myStartMillis) +
@@ -344,7 +343,7 @@ public class PerformanceWatcher implements Disposable {
 
   }
 
-  @Nonnull
+  
   public static Snapshot takeSnapshot() {
     return getInstance().new Snapshot();
   }

@@ -24,8 +24,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +44,7 @@ import java.util.List;
 public class ProjectWindowActionGroup extends DefaultActionGroup {
     private ProjectWindowAction latest = null;
 
-    public void addProject(@Nonnull Project project) {
+    public void addProject(Project project) {
         String projectLocation = project.getPresentableUrl();
         if (projectLocation == null) {
             return;
@@ -64,7 +63,7 @@ public class ProjectWindowActionGroup extends DefaultActionGroup {
         latest = windowAction;
     }
 
-    public void removeProject(@Nonnull Project project) {
+    public void removeProject(Project project) {
         ProjectWindowAction windowAction = findWindowAction(project.getPresentableUrl());
         if (windowAction == null) {
             return;

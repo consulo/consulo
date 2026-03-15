@@ -7,9 +7,7 @@ import consulo.platform.PlatformOperatingSystem;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 import sun.awt.AWTAccessor;
 
 import javax.swing.*;
@@ -334,12 +332,12 @@ public final class X11Hacking {
    * window should be used instead - in that case window manager is expected to indicate that the application requires user
    * attention but won't switch the focus to it automatically.
    */
-  public static void activate(@Nonnull Window window) {
+  public static void activate(Window window) {
     if (X11 == null) return;
     X11.sendClientMessage(window, "activate", X11.NET_ACTIVE_WINDOW);
   }
 
-  public static void requestAttention(@Nonnull Window window) {
+  public static void requestAttention(Window window) {
     if (X11 == null) return;
     X11.sendClientMessage(window, "request attention", X11.NET_WM_STATE, NET_WM_STATE_ADD, X11.NET_WM_STATE_DEMANDS_ATTENTION);
   }
@@ -386,7 +384,7 @@ public final class X11Hacking {
   }
 
   @SuppressWarnings("SameParameterValue")
-  private static Field field(Class<?> aClass, @NonNls String name) throws Exception {
+  private static Field field(Class<?> aClass, String name) throws Exception {
     Field field = aClass.getDeclaredField(name);
     field.setAccessible(true);
     return field;

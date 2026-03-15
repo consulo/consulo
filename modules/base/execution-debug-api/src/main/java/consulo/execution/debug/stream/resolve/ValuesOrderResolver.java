@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.resolve;
 
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.TraceInfo;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -12,25 +11,25 @@ import java.util.Map;
  * @author Vitaliy.Bibaev
  */
 public interface ValuesOrderResolver {
-  @Nonnull
-  Result resolve(@Nonnull TraceInfo info);
+  
+  Result resolve(TraceInfo info);
 
   interface Result {
-    @Nonnull
+    
     Map<TraceElement, List<TraceElement>> getDirectOrder();
 
-    @Nonnull
+    
     Map<TraceElement, List<TraceElement>> getReverseOrder();
 
-    static Result of(@Nonnull Map<TraceElement, List<TraceElement>> direct, @Nonnull Map<TraceElement, List<TraceElement>> reverse) {
+    static Result of(Map<TraceElement, List<TraceElement>> direct, Map<TraceElement, List<TraceElement>> reverse) {
       return new Result() {
         @Override
-        public @Nonnull Map<TraceElement, List<TraceElement>> getDirectOrder() {
+        public Map<TraceElement, List<TraceElement>> getDirectOrder() {
           return direct;
         }
 
         @Override
-        public @Nonnull Map<TraceElement, List<TraceElement>> getReverseOrder() {
+        public Map<TraceElement, List<TraceElement>> getReverseOrder() {
           return reverse;
         }
       };

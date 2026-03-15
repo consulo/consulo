@@ -24,15 +24,16 @@ import consulo.localize.LocalizeValue;
 import jakarta.annotation.*;
 import javax.swing.*;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 public interface FindPopupScopeUI {
-  @Nonnull
+ 
   List<Pair<ScopeType, JComponent>> getComponents();
 
-  @Nonnull
-  ScopeType initByModel(@Nonnull FindModel findModel);
-  void applyTo(@Nonnull FindSettings findSettings, @Nonnull FindPopupScopeUI.ScopeType selectedScope);
-  void applyTo(@Nonnull FindModel findModel, @Nonnull FindPopupScopeUI.ScopeType selectedScope);
+ 
+  ScopeType initByModel(FindModel findModel);
+  void applyTo(FindSettings findSettings, FindPopupScopeUI.ScopeType selectedScope);
+  void applyTo(FindModel findModel, FindPopupScopeUI.ScopeType selectedScope);
 
   /**
    *
@@ -40,8 +41,7 @@ public interface FindPopupScopeUI {
    * @param selectedScope
    * @return null means OK
    */
-  @Nullable
-  default ValidationInfo validate(@Nonnull FindModel model, FindPopupScopeUI.ScopeType selectedScope) {
+  default ValidationInfo validate(FindModel model, FindPopupScopeUI.@Nullable ScopeType selectedScope) {
     return null;
   }
 
@@ -51,7 +51,7 @@ public interface FindPopupScopeUI {
     public final String name;
     public final LocalizeValue text;
 
-    public ScopeType(@Nonnull String name, @Nonnull LocalizeValue text) {
+    public ScopeType(String name, LocalizeValue text) {
       this.name = name;
       this.text = text;
     }

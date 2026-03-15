@@ -20,8 +20,7 @@ import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> extends SchemeManager<T, E> {
@@ -32,7 +31,7 @@ public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> e
   private String myCurrentSchemeName;
 
   @Override
-  public void addNewScheme(@Nonnull T scheme, boolean replaceExisting) {
+  public void addNewScheme(T scheme, boolean replaceExisting) {
     int toReplace = -1;
     for (int i = 0; i < mySchemes.size(); i++) {
       T existingScheme = mySchemes.get(i);
@@ -56,18 +55,18 @@ public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> e
     checkCurrentScheme(scheme);
   }
 
-  protected void checkCurrentScheme(@Nonnull T scheme) {
+  protected void checkCurrentScheme(T scheme) {
     if (myCurrentScheme == null && Objects.equals(getName(scheme), myCurrentSchemeName)) {
       //noinspection unchecked
       myCurrentScheme = (T)scheme;
     }
   }
 
-  @Nonnull
+  
   protected abstract String getName(T value);
 
-  @Nonnull
-  private Collection<String> collectExistingNames(@Nonnull Collection<T> schemes) {
+  
+  private Collection<String> collectExistingNames(Collection<T> schemes) {
     Set<String> result = new HashSet<String>(schemes.size());
     for (T scheme : schemes) {
       result.add(getName(scheme));
@@ -84,14 +83,14 @@ public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> e
   }
 
   @Override
-  @Nonnull
+  
   public List<T> getAllSchemes() {
     return Collections.unmodifiableList(mySchemes);
   }
 
   @Override
   @Nullable
-  public T findSchemeByName(@Nonnull String schemeName) {
+  public T findSchemeByName(String schemeName) {
     for (T scheme : mySchemes) {
       if (getName(scheme).equals(schemeName)) {
         return scheme;
@@ -114,7 +113,7 @@ public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> e
   }
 
   @Override
-  public void removeScheme(@Nonnull T scheme) {
+  public void removeScheme(T scheme) {
     for (int i = 0, n = mySchemes.size(); i < n; i++) {
       T s = mySchemes.get(i);
       if (getName(scheme).equals(getName(s))) {
@@ -125,14 +124,14 @@ public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> e
     }
   }
 
-  protected void schemeDeleted(@Nonnull T scheme) {
+  protected void schemeDeleted(T scheme) {
     if (myCurrentScheme == scheme) {
       myCurrentScheme = null;
     }
   }
 
   @Override
-  @Nonnull
+  
   public Collection<String> getAllSchemeNames() {
     List<String> names = new ArrayList<String>(mySchemes.size());
     for (T scheme : mySchemes) {
@@ -141,9 +140,9 @@ public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> e
     return names;
   }
 
-  protected abstract void schemeAdded(@Nonnull T scheme);
+  protected abstract void schemeAdded(T scheme);
 
-  protected static void renameScheme(@Nonnull ExternalizableScheme scheme, @Nonnull String newName) {
+  protected static void renameScheme(ExternalizableScheme scheme, String newName) {
     if (!newName.equals(scheme.getName())) {
       scheme.setName(newName);
       LOG.assertTrue(newName.equals(scheme.getName()));

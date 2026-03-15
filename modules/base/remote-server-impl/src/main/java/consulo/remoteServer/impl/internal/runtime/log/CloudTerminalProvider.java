@@ -5,23 +5,21 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CloudTerminalProvider {
-    @Nonnull
+    
     public static CloudTerminalProvider getInstance() {
         return ApplicationManager.getApplication().getInstance(CloudTerminalProvider.class);
     }
 
-    public abstract @Nonnull TerminalHandlerBase createTerminal(@Nonnull @Nls String presentableName,
-                                                                @Nonnull Project project,
-                                                                @Nonnull InputStream terminalOutput,
-                                                                @Nonnull OutputStream terminalInput);
+    public abstract TerminalHandlerBase createTerminal(String presentableName,
+                                                                Project project,
+                                                                InputStream terminalOutput,
+                                                                OutputStream terminalInput);
 
     public abstract boolean isTtySupported();
 }

@@ -22,8 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -34,7 +33,7 @@ public abstract class TypeDeclarationProvider {
 
     @Nullable
     @RequiredReadAction
-    public PsiElement[] getSymbolTypeDeclarations(@Nonnull PsiElement symbol, @Nullable Editor editor, int offset) {
+    public PsiElement[] getSymbolTypeDeclarations(PsiElement symbol, @Nullable Editor editor, int offset) {
         return null;
     }
 }

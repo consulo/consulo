@@ -35,8 +35,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -128,7 +127,7 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
     }
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return PlainTextLanguage.INSTANCE;

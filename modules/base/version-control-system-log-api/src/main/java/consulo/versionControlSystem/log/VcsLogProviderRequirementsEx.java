@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.function.Consumer;
 
@@ -37,6 +36,6 @@ public interface VcsLogProviderRequirementsEx extends Requirements {
   /**
    * Returns the refs which were in the log before the refresh request.
    */
-  @Nonnull
+  
   Collection<VcsRef> getPreviousRefs();
 }

@@ -5,7 +5,6 @@ import consulo.disposer.Disposable;
 import consulo.document.event.DocumentListener;
 import consulo.codeEditor.EditorFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to attach listeners which receive notifications about changes in any currently open
@@ -18,61 +17,61 @@ public interface EditorEventMulticaster {
    * @deprecated Use {@link #addDocumentListener(DocumentListener, Disposable)} instead to avoid leaking listeners
    */
   @Deprecated
-  void addDocumentListener(@Nonnull DocumentListener listener);
+  void addDocumentListener(DocumentListener listener);
 
-  void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable);
+  void addDocumentListener(DocumentListener listener, Disposable parentDisposable);
 
-  void removeDocumentListener(@Nonnull DocumentListener listener);
+  void removeDocumentListener(DocumentListener listener);
 
   /**
    * @deprecated Use {@link #addEditorMouseListener(EditorMouseListener, Disposable)} instead to avoid leaking listeners
    */
   @Deprecated
-  void addEditorMouseListener(@Nonnull EditorMouseListener listener);
+  void addEditorMouseListener(EditorMouseListener listener);
 
-  void addEditorMouseListener(@Nonnull EditorMouseListener listener, @Nonnull Disposable parentDisposable);
+  void addEditorMouseListener(EditorMouseListener listener, Disposable parentDisposable);
 
-  void removeEditorMouseListener(@Nonnull EditorMouseListener listener);
+  void removeEditorMouseListener(EditorMouseListener listener);
 
   /**
    * @deprecated Use {@link #addEditorMouseMotionListener(EditorMouseMotionListener, Disposable)} instead to avoid leaking listeners
    */
   @Deprecated
-  void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener);
+  void addEditorMouseMotionListener(EditorMouseMotionListener listener);
 
-  void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener, @Nonnull Disposable parentDisposable);
+  void addEditorMouseMotionListener(EditorMouseMotionListener listener, Disposable parentDisposable);
 
-  void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener);
+  void removeEditorMouseMotionListener(EditorMouseMotionListener listener);
 
   /**
    * @deprecated Use {@link #addCaretListener(CaretListener, Disposable)} instead to avoid leaking listeners
    */
   @Deprecated
-  void addCaretListener(@Nonnull CaretListener listener);
+  void addCaretListener(CaretListener listener);
 
-  void addCaretListener(@Nonnull CaretListener listener, @Nonnull Disposable parentDisposable);
+  void addCaretListener(CaretListener listener, Disposable parentDisposable);
 
-  void removeCaretListener(@Nonnull CaretListener listener);
+  void removeCaretListener(CaretListener listener);
 
   /**
    * @deprecated Use {@link #addSelectionListener(SelectionListener, Disposable)} instead to avoid leaking listeners
    */
   @Deprecated
-  void addSelectionListener(@Nonnull SelectionListener listener);
+  void addSelectionListener(SelectionListener listener);
 
-  void addSelectionListener(@Nonnull SelectionListener listener, @Nonnull Disposable parentDisposable);
+  void addSelectionListener(SelectionListener listener, Disposable parentDisposable);
 
-  void removeSelectionListener(@Nonnull SelectionListener listener);
+  void removeSelectionListener(SelectionListener listener);
 
   /**
    * @deprecated Use {@link #addVisibleAreaListener(VisibleAreaListener, Disposable)} instead to avoid leaking listeners
    */
   @Deprecated
-  void addVisibleAreaListener(@Nonnull VisibleAreaListener listener);
+  void addVisibleAreaListener(VisibleAreaListener listener);
 
-  default void addVisibleAreaListener(@Nonnull VisibleAreaListener listener, @Nonnull Disposable parent) {
+  default void addVisibleAreaListener(VisibleAreaListener listener, Disposable parent) {
     throw new IllegalStateException("Not implemented");
   }
 
-  void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener);
+  void removeVisibleAreaListener(VisibleAreaListener listener);
 }

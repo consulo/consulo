@@ -8,9 +8,8 @@ import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventObject;
 
@@ -24,21 +23,21 @@ public class CommandEvent extends EventObject {
     private final Document myDocument;
 
     public CommandEvent(
-        @Nonnull CommandProcessor processor,
-        @Nonnull Runnable command,
+        CommandProcessor processor,
+        Runnable command,
         Project project,
-        @Nonnull UndoConfirmationPolicy undoConfirmationPolicy
+        UndoConfirmationPolicy undoConfirmationPolicy
     ) {
         this(processor, command, LocalizeValue.empty(), null, project, undoConfirmationPolicy);
     }
 
     public CommandEvent(
-        @Nonnull CommandProcessor processor,
-        @Nonnull Runnable command,
-        @Nonnull LocalizeValue commandName,
+        CommandProcessor processor,
+        Runnable command,
+        LocalizeValue commandName,
         Object commandGroupId,
         Project project,
-        @Nonnull UndoConfirmationPolicy undoConfirmationPolicy
+        UndoConfirmationPolicy undoConfirmationPolicy
     ) {
         this(processor, command, commandName.get(), commandGroupId, project, undoConfirmationPolicy, true, null);
     }
@@ -46,23 +45,23 @@ public class CommandEvent extends EventObject {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public CommandEvent(
-        @Nonnull CommandProcessor processor,
-        @Nonnull Runnable command,
+        CommandProcessor processor,
+        Runnable command,
         String commandName,
         Object commandGroupId,
         Project project,
-        @Nonnull UndoConfirmationPolicy undoConfirmationPolicy
+        UndoConfirmationPolicy undoConfirmationPolicy
     ) {
         this(processor, command, LocalizeValue.ofNullable(commandName), commandGroupId, project, undoConfirmationPolicy, true, null);
     }
 
     public CommandEvent(
-        @Nonnull CommandProcessor processor,
-        @Nonnull Runnable command,
-        @Nonnull LocalizeValue commandName,
+        CommandProcessor processor,
+        Runnable command,
+        LocalizeValue commandName,
         Object commandGroupId,
         Project project,
-        @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
+        UndoConfirmationPolicy undoConfirmationPolicy,
         boolean shouldRecordActionForActiveDocument,
         Document document
     ) {
@@ -79,12 +78,12 @@ public class CommandEvent extends EventObject {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public CommandEvent(
-        @Nonnull CommandProcessor processor,
-        @Nonnull Runnable command,
+        CommandProcessor processor,
+        Runnable command,
         String commandName,
         Object commandGroupId,
         Project project,
-        @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
+        UndoConfirmationPolicy undoConfirmationPolicy,
         boolean shouldRecordActionForActiveDocument,
         Document document
     ) {
@@ -100,12 +99,12 @@ public class CommandEvent extends EventObject {
         );
     }
 
-    @Nonnull
+    
     public CommandProcessor getCommandProcessor() {
         return (CommandProcessor)getSource();
     }
 
-    @Nonnull
+    
     public Runnable getCommand() {
         return myCommand;
     }
@@ -129,7 +128,7 @@ public class CommandEvent extends EventObject {
         return myCommandGroupId;
     }
 
-    @Nonnull
+    
     public UndoConfirmationPolicy getUndoConfirmationPolicy() {
         return myUndoConfirmationPolicy;
     }

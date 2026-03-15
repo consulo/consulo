@@ -18,8 +18,7 @@ package consulo.versionControlSystem.merge;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * MergeData contains information about revisions
@@ -34,11 +33,11 @@ import jakarta.annotation.Nullable;
  * @author lesya
  */
 public class MergeData {
-  @Nonnull
+  
   public byte[] ORIGINAL;
-  @Nonnull
+  
   public byte[] LAST;
-  @Nonnull
+  
   public byte[] CURRENT;
 
   @Nullable public VcsRevisionNumber ORIGINAL_REVISION_NUMBER;

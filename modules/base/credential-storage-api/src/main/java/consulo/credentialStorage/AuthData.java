@@ -16,8 +16,7 @@
 package consulo.credentialStorage;
 
 import consulo.annotation.UsedInPlugin;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Container for authentication data: login and password.
@@ -27,17 +26,17 @@ import jakarta.annotation.Nullable;
  */
 @UsedInPlugin
 public final class AuthData {
-    @Nonnull
+    
     private final String myLogin;
     @Nullable
     private final String myPassword;
 
-    public AuthData(@Nonnull String login, @Nullable String password) {
+    public AuthData(String login, @Nullable String password) {
         myPassword = password;
         myLogin = login;
     }
 
-    @Nonnull
+    
     public String getLogin() {
         return myLogin;
     }

@@ -23,8 +23,7 @@ import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -47,25 +46,25 @@ public class DefaultPackagingElementResolvingContext implements PackagingElement
   }
 
   @Override
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @Nonnull
+  
   public ArtifactModel getArtifactModel() {
     return myArtifactManager;
   }
 
   @Override
-  @Nonnull
+  
   public ModulesProvider getModulesProvider() {
     return myModulesProvider;
   }
 
   @Override
-  public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
+  public Library findLibrary(String level, String libraryName) {
     return findLibrary(myProject, level, libraryName);
   }
 }

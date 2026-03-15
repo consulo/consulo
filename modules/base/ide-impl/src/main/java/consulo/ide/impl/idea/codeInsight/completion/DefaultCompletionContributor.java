@@ -30,7 +30,6 @@ import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -70,7 +69,7 @@ public class DefaultCompletionContributor extends CompletionContributor {
   }
 
   @Override
-  public AutoCompletionDecision handleAutoCompletionPossibility(@Nonnull AutoCompletionContext context) {
+  public AutoCompletionDecision handleAutoCompletionPossibility(AutoCompletionContext context) {
     LookupElement[] items = context.getItems();
     if (items.length == 1) {
       LookupElement item = items[0];
@@ -81,7 +80,7 @@ public class DefaultCompletionContributor extends CompletionContributor {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

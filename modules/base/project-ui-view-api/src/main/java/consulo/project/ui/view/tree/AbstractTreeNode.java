@@ -13,8 +13,7 @@ import consulo.ui.ex.tree.TreeNode;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusOwner;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileStatusOwner {
@@ -22,13 +21,13 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
 
   protected final Project myProject;
 
-  protected AbstractTreeNode(Project project, @Nonnull T value) {
+  protected AbstractTreeNode(Project project, T value) {
     super(value);
     myProject = project;
   }
 
   @Override
-  @Nonnull
+  
   @RequiredReadAction
   public abstract Collection<? extends AbstractTreeNode> getChildren();
 
@@ -42,7 +41,7 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
   }
 
   @Override
-  protected void postprocess(@Nonnull PresentationData presentation) {
+  protected void postprocess(PresentationData presentation) {
     if (hasProblemFileBeneath()) {
       presentation.setAttributesKey(FILESTATUS_ERRORS);
     }
@@ -51,7 +50,7 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
   }
 
   @Override
-  protected void setForcedForeground(@Nonnull PresentationData presentation) {
+  protected void setForcedForeground(PresentationData presentation) {
     FileStatus status = getFileStatus();
     ColorValue fgColor = getFileStatusColor(status);
     fgColor = fgColor == null ? status.getColor() : fgColor;

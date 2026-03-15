@@ -16,8 +16,7 @@
 
 package consulo.ui.ex.popup;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.stream.Stream;
@@ -27,7 +26,7 @@ public interface IdePopupEventDispatcher {
   @Nullable
   Component getComponent();
 
-  @Nonnull
+  
   Stream<JBPopup> getPopupStream();
 
   boolean dispatch(AWTEvent event);

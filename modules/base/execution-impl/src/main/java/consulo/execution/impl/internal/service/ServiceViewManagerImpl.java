@@ -46,8 +46,7 @@ import consulo.util.concurrent.Promises;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -65,7 +64,7 @@ import java.util.function.Predicate;
 public final class ServiceViewManagerImpl implements ServiceViewManager, PersistentStateComponent<ServiceViewManagerImpl.State> {
     private static final String HELP_ID = "services.tool.window";
 
-    @Nonnull
+    
     private final Project myProject;
     private State myState = new State();
 
@@ -80,7 +79,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     private final Set<String> myActiveToolWindowIds = new SmartHashSet<>();
 
     @Inject
-    public ServiceViewManagerImpl(@Nonnull Project project) {
+    public ServiceViewManagerImpl(Project project) {
         myProject = project;
         myModel = new ServiceModel(myProject);
         Disposer.register(myProject, myModel);
@@ -91,7 +90,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         //CONTRIBUTOR_EP_NAME.addExtensionPointListener(new ServiceViewExtensionPointListener(), myProject);
     }
 
-    private void eventHandled(@Nonnull ServiceEventListener.ServiceEvent e) {
+    private void eventHandled(ServiceEventListener.ServiceEvent e) {
         String toolWindowId = getToolWindowId(e.contributorClass);
         if (toolWindowId == null) {
             return;
@@ -132,7 +131,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         return ContainerUtil.map2Set(myModel.getRoots(), ServiceViewItem::getRootContributor);
     }
 
-    private @Nullable ServiceViewContentHolder getContentHolder(@Nonnull Class<?> contributorClass) {
+    private @Nullable ServiceViewContentHolder getContentHolder(Class<?> contributorClass) {
         for (ServiceViewContentHolder holder : myContentHolders) {
             for (ServiceViewContributor<?> rootContributor : holder.rootContributors) {
                 if (contributorClass.isInstance(rootContributor)) {
@@ -193,7 +192,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         }
     }
 
-    private void registerToolWindow(@Nonnull ServiceViewToolWindowDescriptor descriptor, boolean active) {
+    private void registerToolWindow(ServiceViewToolWindowDescriptor descriptor, boolean active) {
         if (myProject.isDefault()) {
             return;
         }
@@ -228,14 +227,14 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
      * Temporary fix for restoring Services Tool Window (IDEA-288804)
      */
     @Deprecated(forRemoval = true)
-    private static void restoreBrokenToolWindowIfNeeded(@Nonnull ToolWindow toolWindow) {
+    private static void restoreBrokenToolWindowIfNeeded(ToolWindow toolWindow) {
         if (!toolWindow.isShowStripeButton() && toolWindow.isVisible()) {
             toolWindow.hide();
             toolWindow.show();
         }
     }
 
-    private void updateToolWindow(@Nonnull String toolWindowId, boolean active, boolean show) {
+    private void updateToolWindow(String toolWindowId, boolean active, boolean show) {
         if (myProject.isDisposed() || myProject.isDefault()) {
             return;
         }
@@ -261,7 +260,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
 
-    public void createToolWindowContent(@Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(ToolWindow toolWindow) {
         String toolWindowId = toolWindow.getId();
         Collection<ServiceViewContributor<?>> contributors = myGroups.get(toolWindowId);
         if (contributors == null) {
@@ -371,13 +370,13 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     @Override
-    public @Nonnull Promise<Void> select(@Nonnull Object service, @Nonnull Class<?> contributorClass, boolean activate, boolean focus) {
+    public Promise<Void> select(Object service, Class<?> contributorClass, boolean activate, boolean focus) {
         return trackingSelect(service, contributorClass, activate, focus).then(result -> null);
     }
 
-    public @Nonnull Promise<Boolean> trackingSelect(
-        @Nonnull Object service,
-        @Nonnull Class<?> contributorClass,
+    public Promise<Boolean> trackingSelect(
+        Object service,
+        Class<?> contributorClass,
         boolean activate,
         boolean focus
     ) {
@@ -399,7 +398,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         return doSelect(service, contributorClass, activate, focus).then(o -> true);
     }
 
-    private @Nonnull Promise<Void> doSelect(@Nonnull Object service, @Nonnull Class<?> contributorClass, boolean activate, boolean focus) {
+    private Promise<Void> doSelect(Object service, Class<?> contributorClass, boolean activate, boolean focus) {
         AsyncPromise<Void> result = new AsyncPromise<>();
         // Ensure model is updated, then iterate over service views on EDT in order to find view with service and select it.
         myModel.getInvoker().invoke(() -> AppUIUtil.invokeLaterIfProjectAlive(myProject, () -> {
@@ -496,7 +495,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     @Override
-    public @Nonnull Promise<Void> expand(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+    public Promise<Void> expand(Object service, Class<?> contributorClass) {
         AsyncPromise<Void> result = new AsyncPromise<>();
         // Ensure model is updated, then iterate over service views on EDT in order to find view with service and select it.
         myModel.getInvoker().invoke(() -> AppUIUtil.invokeLaterIfProjectAlive(myProject, () ->
@@ -508,7 +507,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     @Override
-    public @Nonnull Promise<Void> extract(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+    public Promise<Void> extract(Object service, Class<?> contributorClass) {
         AsyncPromise<Void> result = new AsyncPromise<>();
         myModel.getInvoker().invoke(() -> AppUIUtil.invokeLaterIfProjectAlive(
             myProject,
@@ -522,8 +521,8 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         return result;
     }
 
-    @Nonnull
-    Promise<Void> select(@Nonnull VirtualFile virtualFile) {
+    
+    Promise<Void> select(VirtualFile virtualFile) {
         List<ServiceViewItem> selectedItems = new SmartList<>();
         for (ServiceViewContentHolder contentHolder : myContentHolders) {
             Content content = contentHolder.contentManager.getSelectedContent();
@@ -570,7 +569,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         return result;
     }
 
-    void extract(@Nonnull ServiceViewDragHelper.ServiceViewDragBean dragBean) {
+    void extract(ServiceViewDragHelper.ServiceViewDragBean dragBean) {
         List<ServiceViewItem> items = dragBean.getItems();
         if (items.isEmpty()) {
             return;
@@ -751,7 +750,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         contributors.add(contributor);
     }
 
-    private @Nonnull Pair<ServiceViewState, List<ServiceViewState>> getServiceViewStates(@Nonnull String groupId) {
+    private Pair<ServiceViewState, List<ServiceViewState>> getServiceViewStates(String groupId) {
         List<ServiceViewState> states =
             ContainerUtil.filter(myState.viewStates, state -> groupId.equals(state.groupId) && !StringUtil.isEmpty(state.viewType));
         ServiceViewState mainState =
@@ -763,7 +762,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     @Override
-    public @Nonnull State getState() {
+    public State getState() {
         List<String> services = ContainerUtil.mapNotNull(
             myGroups.getOrDefault(ToolWindowId.SERVICES, Collections.emptyList()),
             contributor -> contributor.getViewDescriptor(myProject).getId()
@@ -840,7 +839,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     @Override
-    public void loadState(@Nonnull State state) {
+    public void loadState(State state) {
         clearViewStateIfNeeded(state);
         myState = state;
         for (ServiceViewState viewState : myState.viewStates) {
@@ -858,7 +857,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         Disposer.register(myProject, disposable);
         myProject.getMessageBus().connect(disposable).subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
             @Override
-            public void toolWindowShown(@Nonnull ToolWindow toolWindow) {
+            public void toolWindowShown(ToolWindow toolWindow) {
                 Collection<ServiceViewContributor<?>> contributors = myGroups.get(toolWindow.getId());
                 if (contributors != null) {
                     for (ServiceViewContributor<?> contributor : contributors) {
@@ -876,7 +875,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         });
     }
 
-    private static void clearViewStateIfNeeded(@Nonnull State state) {
+    private static void clearViewStateIfNeeded(State state) {
         // TODO [konstantin.aleev] temporary check state for invalid values cause by 2399fc301031caea7fa90916a87114b1a98c0177
         if (state.viewStates == null) {
             state.viewStates = new SmartList<>();
@@ -929,7 +928,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         myState.selectActiveService = value;
     }
 
-    boolean isSplitByTypeEnabled(@Nonnull ServiceView selectedView) {
+    boolean isSplitByTypeEnabled(ServiceView selectedView) {
         if (!isMainView(selectedView) ||
             selectedView.getModel().getVisibleRoots().isEmpty()) {
             return false;
@@ -949,7 +948,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         return true;
     }
 
-    void splitByType(@Nonnull ServiceView selectedView) {
+    void splitByType(ServiceView selectedView) {
         ServiceViewContentHolder holder = getContentHolder(selectedView);
         if (holder == null) {
             return;
@@ -990,17 +989,17 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         extract(contentManager, contributorModel, prepareViewState(new ServiceViewState()), true);
     }
 
-    public @Nonnull List<Object> getChildrenSafe(
-        @Nonnull AnActionEvent e,
-        @Nonnull List<Object> valueSubPath,
-        @Nonnull Class<?> contributorClass
+    public List<Object> getChildrenSafe(
+        AnActionEvent e,
+        List<Object> valueSubPath,
+        Class<?> contributorClass
     ) {
         ServiceView serviceView = ServiceViewActionProvider.getSelectedView(e);
         return serviceView != null ? serviceView.getChildrenSafe(valueSubPath, contributorClass) : Collections.emptyList();
     }
 
     @Override
-    public @Nullable String getToolWindowId(@Nonnull Class<?> contributorClass) {
+    public @Nullable String getToolWindowId(Class<?> contributorClass) {
         for (Map.Entry<String, Collection<ServiceViewContributor<?>>> entry : myGroups.entrySet()) {
             if (ContainerUtil.exists(entry.getValue(), contributorClass::isInstance)) {
                 return entry.getKey();
@@ -1009,11 +1008,11 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         return null;
     }
 
-    private static boolean isMainView(@Nonnull ServiceView serviceView) {
+    private static boolean isMainView(ServiceView serviceView) {
         return serviceView.getModel() instanceof ServiceViewModel.AllServicesModel;
     }
 
-    private static @Nullable Content getMainContent(@Nonnull ContentManager contentManager) {
+    private static @Nullable Content getMainContent(ContentManager contentManager) {
         for (Content content : contentManager.getContents()) {
             ServiceView serviceView = getServiceView(content);
             if (serviceView != null && isMainView(serviceView)) {
@@ -1028,7 +1027,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         return component instanceof ServiceView ? (ServiceView)component : null;
     }
 
-    private static void selectContentByModel(@Nonnull ContentManager contentManager, @Nullable ServiceViewModel modelToSelect) {
+    private static void selectContentByModel(ContentManager contentManager, @Nullable ServiceViewModel modelToSelect) {
         if (modelToSelect != null) {
             for (Content content : contentManager.getContents()) {
                 ServiceView serviceView = getServiceView(content);
@@ -1046,7 +1045,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         }
     }
 
-    private static void selectContentByContributor(@Nonnull ContentManager contentManager, @Nonnull ServiceViewContributor<?> contributor) {
+    private static void selectContentByContributor(ContentManager contentManager, ServiceViewContributor<?> contributor) {
         Content mainContent = null;
         for (Content content : contentManager.getContents()) {
             ServiceView serviceView = getServiceView(content);
@@ -1073,9 +1072,9 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         private final ContentManager myContentManager;
 
         ServiceViewContentMangerListener(
-            @Nonnull ServiceModelFilter modelFilter,
-            @Nonnull AutoScrollToSourceHandler toSourceHandler,
-            @Nonnull ServiceViewContentHolder contentHolder
+            ServiceModelFilter modelFilter,
+            AutoScrollToSourceHandler toSourceHandler,
+            ServiceViewContentHolder contentHolder
         ) {
             myModelFilter = modelFilter;
             myAutoScrollToSourceHandler = toSourceHandler;
@@ -1084,7 +1083,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         }
 
         @Override
-        public void contentAdded(@Nonnull ContentManagerEvent event) {
+        public void contentAdded(ContentManagerEvent event) {
             Content content = event.getContent();
             ServiceView serviceView = getServiceView(content);
             if (serviceView != null && !isMainView(serviceView)) {
@@ -1108,7 +1107,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         }
 
         @Override
-        public void contentRemoved(@Nonnull ContentManagerEvent event) {
+        public void contentRemoved(ContentManagerEvent event) {
             ServiceView serviceView = getServiceView(event.getContent());
             if (serviceView != null && !isMainView(serviceView)) {
                 myModelFilter.removeFilter(serviceView.getModel().getFilter());
@@ -1123,7 +1122,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         }
 
         @Override
-        public void selectionChanged(@Nonnull ContentManagerEvent event) {
+        public void selectionChanged(ContentManagerEvent event) {
             ServiceView serviceView = getServiceView(event.getContent());
             if (serviceView == null) {
                 return;
@@ -1165,17 +1164,17 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     private static ServiceViewToolWindowDescriptor getServicesToolWindowDescriptor() {
         return new ServiceViewToolWindowDescriptor() {
             @Override
-            public @Nonnull String getToolWindowId() {
+            public String getToolWindowId() {
                 return ToolWindowId.SERVICES;
             }
 
             @Override
-            public @Nonnull Image getToolWindowIcon() {
+            public Image getToolWindowIcon() {
                 return PlatformIconGroup.toolwindowsToolwindowservices();
             }
 
             @Override
-            public @Nonnull String getStripeTitle() {
+            public String getStripeTitle() {
                 return ExecutionLocalize.toolwindowServicesDisplayName().get();
             }
         };
@@ -1189,23 +1188,23 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         String toolWindowId = descriptor.getId();
         return new ServiceViewToolWindowDescriptor() {
             @Override
-            public @Nonnull String getToolWindowId() {
+            public String getToolWindowId() {
                 return toolWindowId;
             }
 
             @Override
-            public @Nonnull Image getToolWindowIcon() {
+            public Image getToolWindowIcon() {
                 return PlatformIconGroup.toolwindowsToolwindowservices();
             }
 
             @Override
-            public @Nonnull String getStripeTitle() {
+            public String getStripeTitle() {
                 return toolWindowId;
             }
         };
     }
 
-    void setExcludedContributors(@Nonnull Collection<? extends ServiceViewContributor<?>> excluded) {
+    void setExcludedContributors(Collection<? extends ServiceViewContributor<?>> excluded) {
         List<ServiceViewContributor<?>> toExclude = new ArrayList<>();
         List<ServiceViewContributor<?>> toInclude = new ArrayList<>();
         Collection<ServiceViewContributor<?>> services = null;
@@ -1239,7 +1238,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     private Set<String> excludeServices(
-        @Nonnull List<ServiceViewContributor<?>> toExclude,
+        List<ServiceViewContributor<?>> toExclude,
         @Nullable Collection<ServiceViewContributor<?>> services
     ) {
         if (toExclude.isEmpty()) {
@@ -1269,7 +1268,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     private Set<String> includeServices(
-        @Nonnull List<ServiceViewContributor<?>> toInclude,
+        List<ServiceViewContributor<?>> toInclude,
         @Nullable Collection<ServiceViewContributor<?>> services
     ) {
         if (toInclude.isEmpty()) {
@@ -1315,7 +1314,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         });
     }
 
-    void includeToolWindow(@Nonnull String toolWindowId) {
+    void includeToolWindow(String toolWindowId) {
         Set<ServiceViewContributor<?>> excluded = new HashSet<>();
         Set<ServiceViewContributor<?>> toInclude = new HashSet<>();
         for (Map.Entry<String, Collection<ServiceViewContributor<?>>> entry : myGroups.entrySet()) {
@@ -1376,7 +1375,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
 
 //  private final class ServiceViewExtensionPointListener implements ExtensionPointListener<ServiceViewContributor<?>> {
 //    @Override
-//    public void extensionAdded(@Nonnull ServiceViewContributor<?> extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//    public void extensionAdded(ServiceViewContributor<?> extension, PluginDescriptor pluginDescriptor) {
 //      addToGroup(extension);
 //      String toolWindowId = getToolWindowId(extension.getClass());
 //      boolean register = myGroups.get(toolWindowId).size() == 1;
@@ -1400,7 +1399,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
 //    }
 //
 //    @Override
-//    public void extensionRemoved(@Nonnull ServiceViewContributor<?> extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//    public void extensionRemoved(ServiceViewContributor<?> extension, PluginDescriptor pluginDescriptor) {
 //      myNotInitializedContributors.remove(extension);
 //      ServiceEvent e = ServiceEvent.createUnloadSyncResetEvent(extension.getClass());
 //      myModel.handle(e).onProcessed(o -> {
@@ -1434,7 +1433,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         }
 
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             if (project == null) {
                 return;
@@ -1464,7 +1463,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         Collection<ServiceViewContributor<?>> rootContributors,
         String toolWindowId
     ) {
-        @Nonnull
+        
         List<ServiceView> getServiceViews() {
             List<ServiceView> views = ContainerUtil.mapNotNull(contentManager.getContents(), ServiceViewManagerImpl::getServiceView);
             if (views.isEmpty()) {

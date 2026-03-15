@@ -27,7 +27,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,24 +38,24 @@ public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibrary
 
     private static final Logger LOG = Logger.getInstance(ModuleLibraryOrderEntryType.class);
 
-    @Nonnull
+    
     public static ModuleLibraryOrderEntryType getInstance() {
         return EP_NAME.findExtensionOrFail(ModuleLibraryOrderEntryType.class);
     }
 
     public static final String EXPORTED_ATTR = "exported";
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public ModuleLibraryOrderEntryImpl loadOrderEntry(
-        @Nonnull Element element,
-        @Nonnull ModuleRootLayer moduleRootLayer
+        Element element,
+        ModuleRootLayer moduleRootLayer
     ) throws InvalidDataException {
         boolean exported = element.getAttributeValue(EXPORTED_ATTR) != null;
         DependencyScope scope = DependencyScope.readExternal(element);
@@ -65,7 +64,7 @@ public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibrary
     }
 
     @Override
-    public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
+    public void storeOrderEntry(Element element, ModuleLibraryOrderEntryImpl orderEntry) {
         if (orderEntry.isExported()) {
             element.setAttribute(EXPORTED_ATTR, "");
         }

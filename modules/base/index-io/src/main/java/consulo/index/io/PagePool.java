@@ -18,8 +18,7 @@ package consulo.index.io;
 import consulo.util.lang.SystemProperties;
 import consulo.util.collection.impl.map.LinkedHashMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -85,7 +84,7 @@ public class PagePool {
   private Page lastHit = null;
 
   @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
-  @Nonnull
+  
   public Page alloc(RandomAccessDataFile owner, long offset) {
     synchronized (lock) {
       offset -= offset % Page.PAGE_SIZE;

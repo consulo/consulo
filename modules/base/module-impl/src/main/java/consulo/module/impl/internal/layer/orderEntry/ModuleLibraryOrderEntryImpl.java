@@ -33,7 +33,6 @@ import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.module.impl.internal.layer.library.ModuleRootLayerLibraryOwner;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * Library entry for module ("in-place") libraries
@@ -87,7 +86,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
         return LibraryTableImplUtil.MODULE_LEVEL;
     }
 
-    @Nonnull
+    
     @Override
     public String getPresentableName() {
         String name = myLibrary.getName();
@@ -141,13 +140,13 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
     }
 
     @Override
-    @Nonnull
+    
     public DependencyScope getScope() {
         return myScope;
     }
 
     @Override
-    public void setScope(@Nonnull DependencyScope scope) {
+    public void setScope(DependencyScope scope) {
         myScope = scope;
     }
 }

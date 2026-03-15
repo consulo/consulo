@@ -19,12 +19,11 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.FrameWrapper;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.ex.toolWindow.ToolWindowWindowedDecorator;
-import jakarta.annotation.Nonnull;
 
 public final class DesktopWindowedDecorator extends FrameWrapper implements ToolWindowWindowedDecorator {
   private final Project myProject;
 
-  DesktopWindowedDecorator(@Nonnull Project project, @Nonnull WindowInfoImpl info, @Nonnull DesktopInternalDecorator internalDecorator) {
+  DesktopWindowedDecorator(Project project, WindowInfoImpl info, DesktopInternalDecorator internalDecorator) {
     super(project);
     myProject = project;
     setTitle(info.getId() + " - " + myProject.getName());

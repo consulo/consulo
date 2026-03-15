@@ -44,8 +44,7 @@ import consulo.ui.model.MutableListModel;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.nio.file.Files;
@@ -104,7 +103,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
     @Override
     @RequiredUIAccess
-    public void reset(@Nonnull PasswordSafeSettings settings) {
+    public void reset(PasswordSafeSettings settings) {
         List<PgpKey> secretKeys;
         try {
             secretKeys = pgp.get().listKeys();
@@ -130,7 +129,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
     }
 
     @Override
-    public boolean isModified(@Nonnull PasswordSafeSettings settings) {
+    public boolean isModified(PasswordSafeSettings settings) {
         if (getActiveProviderType() != settings.getProviderType()) {
             return true;
         }
@@ -151,7 +150,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         return CredentialStoreManager.getInstance().defaultProvider();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public JComponent getComponent(Disposable disposable) {
@@ -240,7 +239,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
     @Override
     @RequiredUIAccess
-    public void apply(@Nonnull PasswordSafeSettings settings) throws ConfigurationException {
+    public void apply(PasswordSafeSettings settings) throws ConfigurationException {
         String newPgpKeyId = (getNewPgpKey() != null) ? getNewPgpKey().getKeyId() : null;
         boolean pgpKeyChanged = !StringUtil.equals(newPgpKeyId, this.settings.getState().getPgpKeyId());
         ProviderType oldProviderType = this.settings.getProviderType();
@@ -436,7 +435,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
             e.getPresentation().setEnabled(dbFile != null && Files.exists(dbFile));
         }
 
-        @Nonnull
+        
         @Override
         public ActionUpdateThread getActionUpdateThread() {
             return ActionUpdateThread.BGT;
@@ -450,7 +449,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             closeCurrentStore();
 
             FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
@@ -490,7 +489,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent event) {
+        public void actionPerformed(AnActionEvent event) {
             closeCurrentStore();
             KeePassFileManager mgr = createKeePassFileManager();
             if (mgr == null) {
@@ -510,7 +509,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
             e.getPresentation().setEnabled(getNewDbFileAsString() != null);
         }
 
-        @Nonnull
+        
         @Override
         public ActionUpdateThread getActionUpdateThread() {
             return ActionUpdateThread.BGT;

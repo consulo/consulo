@@ -18,8 +18,7 @@ package consulo.language.ast;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 /**
@@ -27,22 +26,22 @@ import java.util.function.Function;
  * @since 13:28/29.08.13
  */
 public class ElementTypeAsPsiFactory extends IElementType implements IElementTypeAsPsiFactory {
-  @Nonnull
+  
   private final Function<ASTNode, ? extends PsiElement> myFactory;
 
-  public ElementTypeAsPsiFactory(@Nonnull String debugName, @Nullable Language language, @Nonnull Function<ASTNode, ? extends PsiElement> factory) {
+  public ElementTypeAsPsiFactory(String debugName, @Nullable Language language, Function<ASTNode, ? extends PsiElement> factory) {
     this(debugName, language, true, factory);
   }
 
-  public ElementTypeAsPsiFactory(@Nonnull String debugName, @Nullable Language language, boolean register, @Nonnull Function<ASTNode, ? extends PsiElement> factory) {
+  public ElementTypeAsPsiFactory(String debugName, @Nullable Language language, boolean register, Function<ASTNode, ? extends PsiElement> factory) {
     super(debugName, language, register);
 
     myFactory = factory;
   }
 
   @Override
-  @Nonnull
-  public PsiElement createElement(@Nonnull ASTNode node) {
+  
+  public PsiElement createElement(ASTNode node) {
     return myFactory.apply(node);
   }
 }

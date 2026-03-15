@@ -27,7 +27,6 @@ import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.Ref;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -39,16 +38,16 @@ public class ArrangementMatchNodeComponentFactory {
 
   private static final Logger LOG = Logger.getInstance(ArrangementMatchNodeComponentFactory.class);
 
-  @Nonnull
+  
   private final ArrangementStandardSettingsManager mySettingsManager;
-  @Nonnull
+  
   private final ArrangementColorsProvider          myColorsProvider;
-  @Nonnull
+  
   private final ArrangementMatchingRulesControl myList;
 
-  public ArrangementMatchNodeComponentFactory(@Nonnull ArrangementStandardSettingsManager manager,
-                                              @Nonnull ArrangementColorsProvider provider,
-                                              @Nonnull ArrangementMatchingRulesControl list)
+  public ArrangementMatchNodeComponentFactory(ArrangementStandardSettingsManager manager,
+                                              ArrangementColorsProvider provider,
+                                              ArrangementMatchingRulesControl list)
   {
     mySettingsManager = manager;
     myColorsProvider = provider;
@@ -64,15 +63,15 @@ public class ArrangementMatchNodeComponentFactory {
    * @param allowModification   flag which indicates whether given model can be changed at future
    * @return renderer for the given model
    */
-  @Nonnull
-  public ArrangementUiComponent getComponent(@Nonnull ArrangementMatchCondition rendererTarget,
-                                             @Nonnull final StdArrangementMatchRule rule,
+  
+  public ArrangementUiComponent getComponent(ArrangementMatchCondition rendererTarget,
+                                             final StdArrangementMatchRule rule,
                                              final boolean allowModification)
   {
     final Ref<ArrangementUiComponent> ref = new Ref<ArrangementUiComponent>();
     rendererTarget.invite(new ArrangementMatchConditionVisitor() {
       @Override
-      public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
+      public void visit(ArrangementAtomMatchCondition condition) {
         RemoveAtomConditionCallback callback = allowModification ? new RemoveAtomConditionCallback(rule) : null;
         ArrangementUiComponent component = new ArrangementAtomMatchConditionComponent(
                 mySettingsManager, myColorsProvider, condition, callback
@@ -81,7 +80,7 @@ public class ArrangementMatchNodeComponentFactory {
       }
 
       @Override
-      public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
+      public void visit(ArrangementCompositeMatchCondition condition) {
         ref.set(new ArrangementAndMatchConditionComponent(rule, condition, ArrangementMatchNodeComponentFactory.this, mySettingsManager, allowModification));
       }
     });
@@ -92,20 +91,20 @@ public class ArrangementMatchNodeComponentFactory {
                                                        ArrangementAnimationManager.Callback
   {
 
-    @Nonnull
+    
     private final StdArrangementMatchRule myRule;
 
-    @Nonnull
+    
     private Object myModelValue;
     private int myRow;
 
-    RemoveAtomConditionCallback(@Nonnull StdArrangementMatchRule rule) {
+    RemoveAtomConditionCallback(StdArrangementMatchRule rule) {
       myRule = rule;
       myModelValue = myRule;
     }
 
     @Override
-    public void accept(@Nonnull ArrangementAtomMatchConditionComponent component) {
+    public void accept(ArrangementAtomMatchConditionComponent component) {
       ArrangementAtomMatchCondition condition = component.getMatchCondition();
       ArrangementMatchingRulesModel model = myList.getModel();
       int i = getModelIndex();

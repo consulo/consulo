@@ -43,8 +43,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -57,7 +56,7 @@ public class ViewStructureAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         FileEditor fileEditor = e.getData(FileEditor.KEY);
         if (fileEditor == null) {
@@ -84,7 +83,7 @@ public class ViewStructureAction extends DumbAwareAction {
 
     @Nullable
     @RequiredReadAction
-    public static FileStructurePopup createPopup(@Nonnull Project project, @Nonnull FileEditor fileEditor) {
+    public static FileStructurePopup createPopup(Project project, FileEditor fileEditor) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
         StructureViewBuilder builder = fileEditor.getStructureViewBuilder();
         if (builder == null) {
@@ -112,7 +111,7 @@ public class ViewStructureAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);
@@ -128,12 +127,12 @@ public class ViewStructureAction extends DumbAwareAction {
         e.getPresentation().setEnabled(enabled);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static StructureViewModel createStructureViewModel(
-        @Nonnull Project project,
-        @Nonnull FileEditor fileEditor,
-        @Nonnull StructureView structureView
+        Project project,
+        FileEditor fileEditor,
+        StructureView structureView
     ) {
         StructureViewModel treeModel;
         VirtualFile virtualFile = fileEditor.getFile();

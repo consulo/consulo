@@ -17,7 +17,6 @@ package consulo.component.bind;
 
 import consulo.annotation.component.ComponentScope;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.Type;
 
 /**
@@ -27,21 +26,21 @@ import java.lang.reflect.Type;
 public interface InjectingBinding {
   Type[] EMPTY_TYPES = new Type[0];
 
-  @Nonnull
+  
   default String getApiClassName() {
     return getApiClass().getName();
   }
 
-  @Nonnull
+  
   Class getApiClass();
 
-  @Nonnull
+  
   Class getImplClass();
 
-  @Nonnull
+  
   Class getComponentAnnotationClass();
 
-  @Nonnull
+  
   ComponentScope getComponentScope();
 
   int getComponentProfiles();
@@ -50,10 +49,10 @@ public interface InjectingBinding {
     return getParameterTypes().length;
   }
 
-  @Nonnull
+  
   Type[] getParameterTypes();
 
-  @Nonnull
+  
   Object create(Object[] args);
 
   default boolean isLazy() {

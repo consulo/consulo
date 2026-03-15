@@ -49,8 +49,7 @@ import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.wm.toolWindow.WebToolWindowInternalDecorator;
 import consulo.web.internal.wm.toolWindow.WebToolWindowPanelImpl;
 import consulo.web.internal.wm.toolWindow.WebToolWindowStripeButtonImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -81,7 +80,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
             ProjectManagerListener.class,
             new ProjectManagerListener() {
                 @Override
-                public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+                public void projectClosed(Project project, UIAccess uiAccess) {
                     if (project == myProject) {
                         WebToolWindowManagerImpl.this.projectClosed();
                     }
@@ -129,7 +128,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    @Nonnull
+    
     @RequiredUIAccess
     protected Component createInitializingLabel() {
         Label label = Label.create("Initializing...");
@@ -144,17 +143,17 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         UIAccess.get().give(runnable);
     }
 
-    @Nonnull
+    
     @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
         return new MyInternalDecoratorListenerBase() {
             @Override
-            public void resized(@Nonnull ToolWindowInternalDecorator source) {
+            public void resized(ToolWindowInternalDecorator source) {
             }
         };
     }
 
-    @Nonnull
+    
     @Override
     protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
         return new WebToolWindowStripeButtonImpl(
@@ -163,7 +162,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         );
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     protected ToolWindowEx createToolWindow(
@@ -176,12 +175,12 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     protected ToolWindowInternalDecorator createInternalDecorator(
         Project project,
-        @Nonnull WindowInfoImpl info,
+        WindowInfoImpl info,
         ToolWindowEx toolWindow,
         boolean dumbAware
     ) {
@@ -233,7 +232,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public boolean canShowNotification(@Nonnull String toolWindowId) {
+    public boolean canShowNotification(String toolWindowId) {
         return false;
     }
 
@@ -247,7 +246,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
+    public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
     }
 
     @Nullable
@@ -257,16 +256,16 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public boolean isMaximized(@Nonnull ToolWindow wnd) {
+    public boolean isMaximized(ToolWindow wnd) {
         return false;
     }
 
     @Override
-    public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
+    public void setMaximized(ToolWindow wnd, boolean maximized) {
     }
 
     @Override
-    public void doContentRename(@Nonnull DataContext dataContext, @Nonnull ToolWindow toolWindow, @Nullable Content content, @Nonnull LocalizeValue labelText, @Nonnull BiConsumer<Content, String> consumer) {
+    public void doContentRename(DataContext dataContext, ToolWindow toolWindow, @Nullable Content content, LocalizeValue labelText, BiConsumer<Content, String> consumer) {
 
     }
 }

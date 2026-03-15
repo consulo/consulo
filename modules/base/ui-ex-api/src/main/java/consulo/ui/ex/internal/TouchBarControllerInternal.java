@@ -17,7 +17,6 @@ package consulo.ui.ex.internal;
 
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,7 +27,7 @@ import javax.swing.*;
 public non-sealed interface TouchBarControllerInternal extends TouchBarController {
     void tryToInitialize();
 
-    void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent);
+    void showPopupItems(JBPopup popup, JComponent popupComponent);
 
-    void onUpdateEditorHeader(@Nonnull Object editor, JComponent header);
+    void onUpdateEditorHeader(Object editor, JComponent header);
 }

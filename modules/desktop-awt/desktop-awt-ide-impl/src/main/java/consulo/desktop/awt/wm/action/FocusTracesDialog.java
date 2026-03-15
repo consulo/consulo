@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.table.JBTable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -93,7 +92,7 @@ public class FocusTracesDialog extends DialogWrapper {
     return myRequestsTable;
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     return new Action[] {getOKAction(), getCopyStackTraceAction()};

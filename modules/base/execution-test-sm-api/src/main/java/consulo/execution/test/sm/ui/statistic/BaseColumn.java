@@ -19,13 +19,12 @@ import consulo.annotation.DeprecationInfo;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ColumnInfo;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman Chernyatchik
  */
 public abstract class BaseColumn extends ColumnInfo<SMTestProxy, String> {
-    public BaseColumn(@Nonnull LocalizeValue name) {
+    public BaseColumn(LocalizeValue name) {
         super(name.get());
     }
 

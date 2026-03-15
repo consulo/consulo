@@ -22,7 +22,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.action.ComboBoxAction;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.function.Predicate;
@@ -39,12 +38,12 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setText(myConfigurable.getCurrentScheme().getName());
     }
 
-    @Nonnull
+    
     @Override
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
         DefaultActionGroup group = new DefaultActionGroup(new ChangeSchemaAction(FileTemplatesScheme.DEFAULT));
@@ -63,14 +62,14 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
     private class ChangeSchemaAction extends AnAction {
         private final FileTemplatesScheme myScheme;
 
-        public ChangeSchemaAction(@Nonnull FileTemplatesScheme scheme) {
+        public ChangeSchemaAction(FileTemplatesScheme scheme) {
             super(scheme.getName());
             myScheme = scheme;
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myConfigurable.changeScheme(myScheme);
             ChangeSchemaCombo.this.getTemplatePresentation().setText(myScheme.getName());
         }

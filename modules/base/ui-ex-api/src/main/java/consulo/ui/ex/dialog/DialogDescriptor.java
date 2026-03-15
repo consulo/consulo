@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.dialog.action.DialogOkAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ import jakarta.annotation.Nullable;
 public abstract class DialogDescriptor {
     private final LocalizeValue myTitle;
 
-    public DialogDescriptor(@Nonnull LocalizeValue title) {
+    public DialogDescriptor(LocalizeValue title) {
         myTitle = title;
     }
 
@@ -49,16 +48,16 @@ public abstract class DialogDescriptor {
         return null;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public abstract Component createCenterComponent(@Nonnull Disposable uiDisposable);
+    public abstract Component createCenterComponent(Disposable uiDisposable);
 
-    @Nonnull
+    
     public DialogValue getOkValue() {
         return DialogValue.OK_VALUE;
     }
 
-    @Nonnull
+    
     public AnAction[] createActions(boolean inverseOrder) {
         if (inverseOrder) {
             return new AnAction[]{new DialogCancelAction(), createOkAction()};
@@ -72,22 +71,22 @@ public abstract class DialogDescriptor {
         return true;
     }
 
-    @Nonnull
+    
     protected DialogOkAction createOkAction() {
         return new DialogOkAction(CommonLocalize.buttonOk());
     }
 
     @RequiredUIAccess
-    public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value, @Nonnull Window window) {
+    public boolean canHandle(AnAction action, @Nullable DialogValue value, Window window) {
         return canHandle(action, value);
     }
 
     @RequiredUIAccess
-    public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value) {
+    public boolean canHandle(AnAction action, @Nullable DialogValue value) {
         return true;
     }
 
-    public void onHandleValue(@Nonnull AnAction action, @Nullable DialogValue value) {
+    public void onHandleValue(AnAction action, @Nullable DialogValue value) {
     }
 
     public boolean hasDefaultContentBorder() {
@@ -98,7 +97,7 @@ public abstract class DialogDescriptor {
         return true;
     }
 
-    @Nonnull
+    
     public LocalizeValue getTitle() {
         return myTitle;
     }

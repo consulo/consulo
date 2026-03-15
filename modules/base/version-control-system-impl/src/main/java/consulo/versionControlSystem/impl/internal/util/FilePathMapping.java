@@ -9,8 +9,7 @@ import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.internal.FilePathHashUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,13 +26,13 @@ public final class FilePathMapping<T> {
     myPathMap = caseSensitive ? new HashMap<>() : Maps.newHashMap(HashingStrategy.caseInsensitive());
   }
 
-  public void add(@Nonnull String filePath, @Nonnull T value) {
+  public void add(String filePath, T value) {
     String path = StringUtil.trimTrailing(filePath, '/');
     myPathMap.put(path, value);
     myPathHashSet.add(FilePathHashUtil.pathHashCode(myCaseSensitive, path));
   }
 
-  public void remove(@Nonnull String filePath) {
+  public void remove(String filePath) {
     String path = StringUtil.trimTrailing(filePath, '/');
     myPathMap.remove(path);
     // We do not update myPathHashSet, so hash collisions might become worse over time.
@@ -44,18 +43,18 @@ public final class FilePathMapping<T> {
     myPathHashSet.clear();
   }
 
-  @Nonnull
+  
   public Collection<T> values() {
     return myPathMap.values();
   }
 
-  public boolean containsKey(@Nonnull String filePath) {
+  public boolean containsKey(String filePath) {
     String path = StringUtil.trimTrailing(filePath, '/');
     return myPathMap.containsKey(path);
   }
 
   @Nullable
-  public T getMappingFor(@Nonnull String filePath) {
+  public T getMappingFor(String filePath) {
     String path = StringUtil.trimTrailing(filePath, '/');
 
     int index = 0;

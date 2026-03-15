@@ -20,14 +20,13 @@ import consulo.execution.debug.frame.XValueGroup;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.ui.XValuePresentationUtil;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class XValueGroupNodeImpl extends XValueContainerNode<XValueGroup> implements RestorableStateNode {
-  public XValueGroupNodeImpl(XDebuggerTree tree, XDebuggerTreeNode parent, @Nonnull XValueGroup group) {
+  public XValueGroupNodeImpl(XDebuggerTree tree, XDebuggerTreeNode parent, XValueGroup group) {
     super(tree, parent, group);
     setLeaf(false);
     setIcon(group.getIcon());

@@ -18,7 +18,6 @@ package consulo.desktop.swt.ui.impl.image;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,9 +26,9 @@ import jakarta.annotation.Nonnull;
 public class DesktopSwtIconLibraryManager extends BaseIconLibraryManager {
   public static final DesktopSwtIconLibraryManager INSTANCE = new DesktopSwtIconLibraryManager();
 
-  @Nonnull
+  
   @Override
-  protected BaseIconLibraryImpl createLibrary(@Nonnull String id) {
+  protected BaseIconLibraryImpl createLibrary(String id) {
     return new DesktopSwtIconLibraryImpl(id, this);
   }
 }

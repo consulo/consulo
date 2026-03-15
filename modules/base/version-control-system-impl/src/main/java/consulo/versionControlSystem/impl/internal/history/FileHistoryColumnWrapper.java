@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.dualView.DualView;
 import consulo.ui.ex.awt.dualView.DualViewColumnInfo;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.versionControlSystem.history.VcsFileRevision;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -32,10 +31,10 @@ import java.util.Comparator;
 import java.util.Enumeration;
 
 public abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOnVcsRevision, Object> {
-  @Nonnull
+  
   private final ColumnInfo<VcsFileRevision, T> myBaseColumn;
 
-  public FileHistoryColumnWrapper(@Nonnull ColumnInfo<VcsFileRevision, T> additionalColumn) {
+  public FileHistoryColumnWrapper(ColumnInfo<VcsFileRevision, T> additionalColumn) {
     super(additionalColumn.getName());
     myBaseColumn = additionalColumn;
   }
@@ -99,7 +98,7 @@ public abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<Tre
   }
 
   @Nullable
-  private String getMaxValue(@Nonnull String columnHeader) {
+  private String getMaxValue(String columnHeader) {
     DualView dualView = getDualView();
     if(dualView == null) {
       return columnHeader + "ww";

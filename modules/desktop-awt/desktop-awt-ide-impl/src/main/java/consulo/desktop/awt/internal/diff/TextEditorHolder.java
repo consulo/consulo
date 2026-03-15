@@ -23,21 +23,20 @@ import consulo.diff.content.DocumentContent;
 import consulo.diff.internal.DiffLanguageUtil;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.FocusListener;
 
 public class TextEditorHolder extends EditorHolder {
-    @Nonnull
+    
     protected final EditorEx myEditor;
 
-    public TextEditorHolder(@Nonnull EditorEx editor) {
+    public TextEditorHolder(EditorEx editor) {
         myEditor = editor;
     }
 
-    @Nonnull
+    
     public EditorEx getEditor() {
         return myEditor;
     }
@@ -47,14 +46,14 @@ public class TextEditorHolder extends EditorHolder {
         EditorFactory.getInstance().releaseEditor(myEditor);
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return myEditor.getComponent();
     }
 
     @Override
-    public void installFocusListener(@Nonnull FocusListener listener) {
+    public void installFocusListener(FocusListener listener) {
         myEditor.getContentComponent().addFocusListener(listener);
     }
 
@@ -68,8 +67,8 @@ public class TextEditorHolder extends EditorHolder {
     // Build
     //
 
-    @Nonnull
-    public static TextEditorHolder create(@Nullable Project project, @Nonnull DocumentContent content) {
+    
+    public static TextEditorHolder create(@Nullable Project project, DocumentContent content) {
         EditorEx editor = DiffImplUtil.createEditor(content.getDocument(), project, false, true);
         DiffLanguageUtil.configureEditor(editor, content, project);
         return new TextEditorHolder(editor);
@@ -79,13 +78,13 @@ public class TextEditorHolder extends EditorHolder {
         public static TextEditorHolderFactory INSTANCE = new TextEditorHolderFactory();
 
         @Override
-        @Nonnull
-        public TextEditorHolder create(@Nonnull DiffContent content, @Nonnull DiffContext context) {
+        
+        public TextEditorHolder create(DiffContent content, DiffContext context) {
             return TextEditorHolder.create(context.getProject(), (DocumentContent) content);
         }
 
         @Override
-        public boolean canShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context) {
+        public boolean canShowContent(DiffContent content, DiffContext context) {
             if (content instanceof DocumentContent) {
                 return true;
             }
@@ -93,7 +92,7 @@ public class TextEditorHolder extends EditorHolder {
         }
 
         @Override
-        public boolean wantShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context) {
+        public boolean wantShowContent(DiffContent content, DiffContext context) {
             if (content instanceof DocumentContent) {
                 return true;
             }

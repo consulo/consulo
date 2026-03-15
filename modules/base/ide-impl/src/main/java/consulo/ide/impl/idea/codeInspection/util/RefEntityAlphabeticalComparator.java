@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.codeInspection.util;
 
 import consulo.language.editor.inspection.reference.RefEntity;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -27,7 +26,7 @@ import java.util.Comparator;
 public class RefEntityAlphabeticalComparator implements Comparator<RefEntity> {
 
   @Override
-  public int compare(@Nonnull RefEntity o1, @Nonnull RefEntity o2) {
+  public int compare(RefEntity o1, RefEntity o2) {
     if (o1 == o2) return 0;
     return o1.getQualifiedName().compareToIgnoreCase(o2.getQualifiedName());
   }

@@ -18,7 +18,6 @@ package consulo.test.light.impl;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -46,7 +45,7 @@ public class LightCachedValue<T> implements CachedValue<T> {
         return value;
     }
 
-    @Nonnull
+    
     @Override
     public CachedValueProvider<T> getValueProvider() {
         return myProvider;

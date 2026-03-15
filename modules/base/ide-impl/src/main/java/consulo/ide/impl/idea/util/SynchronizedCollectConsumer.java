@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class SynchronizedCollectConsumer<T> extends CollectConsumer<T> {
-  public SynchronizedCollectConsumer(@Nonnull Collection<T> result) {
+  public SynchronizedCollectConsumer(Collection<T> result) {
     super(result);
   }
   public SynchronizedCollectConsumer() {
@@ -32,7 +31,7 @@ public class SynchronizedCollectConsumer<T> extends CollectConsumer<T> {
     super.accept(t);
   }
 
-  @Nonnull
+  
   @Override
   public synchronized Collection<T> getResult() {
     return super.getResult();

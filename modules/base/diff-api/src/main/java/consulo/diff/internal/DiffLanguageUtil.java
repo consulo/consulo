@@ -31,15 +31,14 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2025-09-04
  */
 public class DiffLanguageUtil {
-    public static void configureEditor(@Nonnull EditorEx editor, @Nonnull DocumentContent content, @Nullable Project project) {
+    public static void configureEditor(EditorEx editor, DocumentContent content, @Nullable Project project) {
         setEditorHighlighter(project, editor, content);
         setEditorCodeStyle(project, editor, content.getContentType());
         editor.reinitSettings();
@@ -48,8 +47,8 @@ public class DiffLanguageUtil {
     @Nullable
     public static EditorHighlighter initEditorHighlighter(
         @Nullable Project project,
-        @Nonnull DocumentContent content,
-        @Nonnull CharSequence text
+        DocumentContent content,
+        CharSequence text
     ) {
         EditorHighlighter highlighter = createEditorHighlighter(project, content);
         if (highlighter == null) {
@@ -59,15 +58,15 @@ public class DiffLanguageUtil {
         return highlighter;
     }
 
-    @Nonnull
-    public static EditorHighlighter initEmptyEditorHighlighter(@Nonnull CharSequence text) {
+    
+    public static EditorHighlighter initEmptyEditorHighlighter(CharSequence text) {
         EditorHighlighter highlighter = createEmptyEditorHighlighter();
         highlighter.setText(text);
         return highlighter;
     }
 
     @Nullable
-    private static EditorHighlighter createEditorHighlighter(@Nullable Project project, @Nonnull DocumentContent content) {
+    private static EditorHighlighter createEditorHighlighter(@Nullable Project project, DocumentContent content) {
         FileType type = content.getContentType();
         VirtualFile file = content.getHighlightFile();
         Language language = content.getUserData(Language.KEY);
@@ -88,19 +87,19 @@ public class DiffLanguageUtil {
         return null;
     }
 
-    @Nonnull
+    
     private static EditorHighlighter createEmptyEditorHighlighter() {
         return new EmptyEditorHighlighter(EditorColorsManager.getInstance().getGlobalScheme().getAttributes(HighlighterColors.TEXT));
     }
 
-    public static void setEditorHighlighter(@Nullable Project project, @Nonnull EditorEx editor, @Nonnull DocumentContent content) {
+    public static void setEditorHighlighter(@Nullable Project project, EditorEx editor, DocumentContent content) {
         EditorHighlighter highlighter = createEditorHighlighter(project, content);
         if (highlighter != null) {
             editor.setHighlighter(highlighter);
         }
     }
 
-    public static void setEditorCodeStyle(@Nullable Project project, @Nonnull EditorEx editor, @Nullable FileType fileType) {
+    public static void setEditorCodeStyle(@Nullable Project project, EditorEx editor, @Nullable FileType fileType) {
         if (project != null && fileType != null) {
             editor.getSettings().setTabSize(CodeStyle.getProjectOrDefaultSettings(project).getTabSize(fileType));
             editor.getSettings().setUseTabCharacter(CodeStyle.getProjectOrDefaultSettings(project).useTabCharacter(fileType));

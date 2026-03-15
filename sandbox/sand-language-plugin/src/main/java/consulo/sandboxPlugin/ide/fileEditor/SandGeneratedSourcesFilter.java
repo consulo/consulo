@@ -21,7 +21,6 @@ import consulo.project.content.GeneratedSourcesFilter;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
 public class SandGeneratedSourcesFilter implements GeneratedSourcesFilter {
   @RequiredReadAction
   @Override
-  public boolean isGeneratedSource(@Nonnull VirtualFile file) {
+  public boolean isGeneratedSource(VirtualFile file) {
     return file.getFileType() == SandFileType.INSTANCE && file.getNameWithoutExtension().endsWith("_gen");
   }
 }

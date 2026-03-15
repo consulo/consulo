@@ -50,7 +50,6 @@ import consulo.util.io.StreamUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -82,13 +81,13 @@ public class ExternalStorageManager {
 
     private static final Logger LOG = Logger.getInstance(ExternalStorageManager.class);
 
-    @Nonnull
+    
     private final ApplicationEx myApplication;
-    @Nonnull
+    
     private final ExternalStorage myStorage;
-    @Nonnull
+    
     private final IComponentStore myApplicationStore;
-    @Nonnull
+    
     private final ExternalStoragePluginManager myPluginManager;
 
     private Future<?> myCheckingFuture = CompletableFuture.completedFuture(null);
@@ -96,10 +95,10 @@ public class ExternalStorageManager {
     private AtomicBoolean myCheckingState = new AtomicBoolean();
 
     public ExternalStorageManager(
-        @Nonnull Application application,
-        @Nonnull IComponentStore applicationStore,
-        @Nonnull ExternalStorage storage,
-        @Nonnull ExternalStoragePluginManager pluginManager
+        Application application,
+        IComponentStore applicationStore,
+        ExternalStorage storage,
+        ExternalStoragePluginManager pluginManager
     ) {
         myApplicationStore = applicationStore;
         myPluginManager = pluginManager;
@@ -126,7 +125,7 @@ public class ExternalStorageManager {
         );
     }
 
-    private void checkForModifications(@Nonnull ProgressIndicator indicator) {
+    private void checkForModifications(ProgressIndicator indicator) {
         try {
             boolean wantRestart = myPluginManager.updatePlugins(indicator);
 
@@ -260,7 +259,7 @@ public class ExternalStorageManager {
         }
     }
 
-    private void configurationChanged(@Nonnull ExternalServiceConfiguration configuration) {
+    private void configurationChanged(ExternalServiceConfiguration configuration) {
         ThreeState state = configuration.getState(ExternalService.STORAGE);
         switch (state) {
             case YES ->

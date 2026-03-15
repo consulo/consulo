@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -37,7 +36,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+  default void propertyChanged(VirtualFilePropertyEvent event) {
   }
 
   /**
@@ -45,7 +44,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void contentsChanged(@Nonnull VirtualFileEvent event) {
+  default void contentsChanged(VirtualFileEvent event) {
   }
 
   /**
@@ -53,7 +52,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void fileCreated(@Nonnull VirtualFileEvent event) {
+  default void fileCreated(VirtualFileEvent event) {
   }
 
   /**
@@ -61,7 +60,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void fileDeleted(@Nonnull VirtualFileEvent event) {
+  default void fileDeleted(VirtualFileEvent event) {
   }
 
   /**
@@ -69,7 +68,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void fileMoved(@Nonnull VirtualFileMoveEvent event) {
+  default void fileMoved(VirtualFileMoveEvent event) {
   }
 
   /**
@@ -77,7 +76,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void fileCopied(@Nonnull VirtualFileCopyEvent event) {
+  default void fileCopied(VirtualFileCopyEvent event) {
     fileCreated(event);
   }
 
@@ -86,7 +85,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void beforePropertyChange(@Nonnull VirtualFilePropertyEvent event) {
+  default void beforePropertyChange(VirtualFilePropertyEvent event) {
   }
 
   /**
@@ -94,7 +93,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void beforeContentsChange(@Nonnull VirtualFileEvent event) {
+  default void beforeContentsChange(VirtualFileEvent event) {
   }
 
   /**
@@ -102,7 +101,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void beforeFileDeletion(@Nonnull VirtualFileEvent event) {
+  default void beforeFileDeletion(VirtualFileEvent event) {
   }
 
   /**
@@ -110,6 +109,6 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void beforeFileMovement(@Nonnull VirtualFileMoveEvent event) {
+  default void beforeFileMovement(VirtualFileMoveEvent event) {
   }
 }

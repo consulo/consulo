@@ -21,8 +21,7 @@ import consulo.ui.style.ComponentColors;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,15 +72,15 @@ public class LookupElementPresentation {
     myTail = null;
   }
 
-  public void appendTailText(@Nonnull String text, boolean grayed) {
+  public void appendTailText(String text, boolean grayed) {
     appendTailText(new TextFragment(text, grayed, false, null));
   }
 
-  public void appendTailTextItalic(@Nonnull String text, boolean grayed) {
+  public void appendTailTextItalic(String text, boolean grayed) {
     appendTailText(new TextFragment(text, grayed, true, null));
   }
 
-  private void appendTailText(@Nonnull TextFragment fragment) {
+  private void appendTailText(TextFragment fragment) {
     if (myTail == null) {
       myTail = new SmartList<>();
     }
@@ -137,7 +136,7 @@ public class LookupElementPresentation {
     return myItemText;
   }
 
-  @Nonnull
+  
   public List<TextFragment> getTailFragments() {
     return myTail == null ? Collections.emptyList() : Collections.unmodifiableList(myTail);
   }
@@ -185,17 +184,17 @@ public class LookupElementPresentation {
     myItemTextUnderlined = itemTextUnderlined;
   }
 
-  @Nonnull
+  
   public ColorValue getItemTextForeground() {
     return myItemTextForeground;
   }
 
-  public void setItemTextForeground(@Nonnull ColorValue itemTextForeground) {
+  public void setItemTextForeground(ColorValue itemTextForeground) {
     ensureMutable();
     myItemTextForeground = itemTextForeground;
   }
 
-  public void copyFrom(@Nonnull LookupElementPresentation presentation) {
+  public void copyFrom(LookupElementPresentation presentation) {
     myIcon = presentation.myIcon;
     myTypeIcon = presentation.myTypeIcon;
     myItemText = presentation.myItemText;

@@ -24,7 +24,6 @@ import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,7 +35,7 @@ public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription
     private final ModuleManagerImpl myModuleManager;
 
     private ModuleLoadingErrorDescription(
-        @Nonnull LocalizeValue description,
+        LocalizeValue description,
         ModuleManagerImpl.ModuleLoadItem modulePath,
         ModuleManagerImpl moduleManager,
         String elementName
@@ -70,7 +69,7 @@ public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription
     }
 
     public static ModuleLoadingErrorDescription create(
-        @Nonnull LocalizeValue description,
+        LocalizeValue description,
         ModuleManagerImpl.ModuleLoadItem loadItem,
         ModuleManagerImpl moduleManager
     ) {

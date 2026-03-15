@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.FormBuilder;
 import consulo.disposer.Disposer;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -92,8 +92,7 @@ public abstract class LibraryEditorDialogBase extends DialogWrapper {
 
   protected abstract boolean shouldCheckName(String newName);
 
-  @Nullable
-  protected LibraryTable.ModifiableModel getTableModifiableModel() {
+  protected LibraryTable.@Nullable ModifiableModel getTableModifiableModel() {
     return null;
   }
 

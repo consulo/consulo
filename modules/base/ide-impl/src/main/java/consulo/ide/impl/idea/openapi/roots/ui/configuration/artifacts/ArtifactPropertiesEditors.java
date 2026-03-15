@@ -24,7 +24,7 @@ import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.ArtifactPropertiesEditor;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;

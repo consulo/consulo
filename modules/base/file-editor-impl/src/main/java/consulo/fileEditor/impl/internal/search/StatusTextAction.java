@@ -9,14 +9,13 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class StatusTextAction extends DumbAwareAction implements CustomComponentAction {
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     SearchSession search = e.getData(SearchSession.KEY);
     JLabel label = (JLabel)e.getPresentation().getClientProperty(COMPONENT_KEY);
     if (label == null) return;
@@ -26,12 +25,12 @@ public class StatusTextAction extends DumbAwareAction implements CustomComponent
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
   }
 
-  @Nonnull
+  
   @Override
-  public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     JLabel label = new JLabel();
     //noinspection HardCodedStringLiteral
     label.setText("9888 results");

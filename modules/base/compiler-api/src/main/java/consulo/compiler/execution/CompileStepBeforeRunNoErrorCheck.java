@@ -28,7 +28,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -45,17 +44,17 @@ public class CompileStepBeforeRunNoErrorCheck extends CompileStepBeforeRunBase<C
     public static final Key<MakeBeforeRunTaskNoErrorCheck> ID = Key.create("MakeNoErrorCheck");
 
     @Inject
-    public CompileStepBeforeRunNoErrorCheck(@Nonnull Project project) {
+    public CompileStepBeforeRunNoErrorCheck(Project project) {
         super(project);
     }
 
-    @Nonnull
+    
     @Override
     public Key<MakeBeforeRunTaskNoErrorCheck> getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription(MakeBeforeRunTaskNoErrorCheck task) {
         return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck();
@@ -67,13 +66,13 @@ public class CompileStepBeforeRunNoErrorCheck extends CompileStepBeforeRunBase<C
         return runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption ? new MakeBeforeRunTaskNoErrorCheck() : null;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck();
     }
 
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> executeTaskAsync(
         UIAccess uiAccess,

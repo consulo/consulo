@@ -17,7 +17,6 @@ package consulo.ui.ex.awt.hint;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -27,5 +26,5 @@ import javax.swing.*;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface LightweightHintFactory {
-    LightweightHint create(@Nonnull JComponent component);
+    LightweightHint create(JComponent component);
 }

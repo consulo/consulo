@@ -25,8 +25,7 @@ import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager
 import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -39,7 +38,7 @@ public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigura
     super((consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager)projectProfileManager, profileManager);
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "editor.code.inspections";

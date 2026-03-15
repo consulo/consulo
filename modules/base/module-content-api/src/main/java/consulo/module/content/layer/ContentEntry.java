@@ -19,8 +19,7 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -48,23 +47,23 @@ public interface ContentEntry extends Synthetic {
    *
    * @return URL of content root, that should never be null.
    */
-  @Nonnull
+  
   String getUrl();
 
-  @Nonnull
-  ContentFolder[] getFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
+  
+  ContentFolder[] getFolders(Predicate<ContentFolderTypeProvider> predicate);
 
-  @Nonnull
-  VirtualFile[] getFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
+  
+  VirtualFile[] getFolderFiles(Predicate<ContentFolderTypeProvider> predicate);
 
-  @Nonnull
-  String[] getFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
+  
+  String[] getFolderUrls(Predicate<ContentFolderTypeProvider> predicate);
 
-  @Nonnull
-  ContentFolder addFolder(@Nonnull VirtualFile file, @Nonnull ContentFolderTypeProvider contentFolderType);
+  
+  ContentFolder addFolder(VirtualFile file, ContentFolderTypeProvider contentFolderType);
 
-  @Nonnull
-  ContentFolder addFolder(@Nonnull String url, @Nonnull ContentFolderTypeProvider contentFolderType);
+  
+  ContentFolder addFolder(String url, ContentFolderTypeProvider contentFolderType);
 
-  void removeFolder(@Nonnull ContentFolder contentFolder);
+  void removeFolder(ContentFolder contentFolder);
 }

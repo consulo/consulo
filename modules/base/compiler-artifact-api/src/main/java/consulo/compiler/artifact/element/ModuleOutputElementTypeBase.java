@@ -27,7 +27,6 @@ import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
     myContentFolderTypeProvider = contentFolderType;
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return myContentFolderTypeProvider.getIcon();
@@ -59,15 +58,15 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
   }
 
   @Override
-  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
+  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
     return !getSuitableModules(context).isEmpty();
   }
 
   @Override
-  @Nonnull
-  public List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context,
-                                                             @Nonnull Artifact artifact,
-                                                             @Nonnull CompositePackagingElement<?> parent) {
+  
+  public List<? extends PackagingElement<?>> chooseAndCreate(ArtifactEditorContext context,
+                                                             Artifact artifact,
+                                                             CompositePackagingElement<?> parent) {
     List<Module> suitableModules = getSuitableModules(context);
     List<Module> selected = context.chooseModules(suitableModules, ProjectLocalize.dialogTitlePackagingChooseModule().get());
 
@@ -82,13 +81,13 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
     return myContentFolderTypeProvider;
   }
 
-  public ModuleOutputPackagingElementImpl createElement(@Nonnull Project project, @Nonnull NamedPointer<Module> pointer) {
+  public ModuleOutputPackagingElementImpl createElement(Project project, NamedPointer<Module> pointer) {
     return new ModuleOutputPackagingElementImpl(this, project, pointer, myContentFolderTypeProvider);
   }
 
-  @Nonnull
+  
   @Override
-  public ModuleOutputPackagingElementImpl createEmpty(@Nonnull Project project) {
+  public ModuleOutputPackagingElementImpl createEmpty(Project project) {
     return new ModuleOutputPackagingElementImpl(this, project, myContentFolderTypeProvider);
   }
 

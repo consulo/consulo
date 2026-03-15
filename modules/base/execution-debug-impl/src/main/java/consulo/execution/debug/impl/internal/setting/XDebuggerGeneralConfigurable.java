@@ -24,7 +24,6 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,9 +31,9 @@ import jakarta.annotation.Nonnull;
  */
 public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties implements Configurable {
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
         XDebuggerGeneralSettings settings = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
 
         VerticalLayout layout = VerticalLayout.create();
@@ -72,7 +71,7 @@ public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties
         return layout;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.empty();

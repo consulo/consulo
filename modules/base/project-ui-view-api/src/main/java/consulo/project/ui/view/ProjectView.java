@@ -23,13 +23,12 @@ import consulo.project.Project;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectView {
-  @Nonnull
+  
   static ProjectView getInstance(Project project) {
     return project.getInstance(ProjectView.class);
   }
@@ -41,7 +40,7 @@ public interface ProjectView {
     }
   }
 
-  @Nonnull
+  
   default AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
     ProjectViewPane viewPane = getCurrentProjectViewPane();
     if (viewPane != null) {
@@ -51,8 +50,8 @@ public interface ProjectView {
     return AsyncResult.resolved();
   }
 
-  @Nonnull
-  AsyncResult<Void> changeViewCB(@Nonnull String viewId, String subId);
+  
+  AsyncResult<Void> changeViewCB(String viewId, String subId);
 
   @Nullable
   PsiElement getParentOfCurrentSelection();
@@ -105,7 +104,7 @@ public interface ProjectView {
 
   boolean isManualOrder(String paneId);
 
-  void setManualOrder(@Nonnull String paneId, boolean enabled);
+  void setManualOrder(String paneId, boolean enabled);
 
   void selectPsiElement(PsiElement element, boolean requestFocus);
 
@@ -117,7 +116,7 @@ public interface ProjectView {
 
   Collection<String> getPaneIds();
 
-  @Nonnull
+  
   Collection<SelectInTarget> getSelectInTargets();
 
   default boolean isFoldersAlwaysOnTop() {

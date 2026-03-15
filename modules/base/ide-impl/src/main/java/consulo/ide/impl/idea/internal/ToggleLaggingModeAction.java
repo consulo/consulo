@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -34,7 +33,7 @@ public class ToggleLaggingModeAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     if (myLagging) {
       myLagging = false;
       myAlarm.cancelAllRequests();
@@ -53,7 +52,7 @@ public class ToggleLaggingModeAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     Project project = e.getData(Project.KEY);
     presentation.setEnabled(project != null && myLagging == DumbService.getInstance(project).isDumb());

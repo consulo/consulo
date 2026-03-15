@@ -26,7 +26,6 @@ import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -39,7 +38,7 @@ public class CloseTaskAction extends BaseTaskAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(project);
         LocalTask task = taskManager.getActiveTask();
@@ -61,7 +60,7 @@ public class CloseTaskAction extends BaseTaskAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         boolean enabled = project != null && !TaskManager.getManager(project).getActiveTask().isDefault();
         e.getPresentation().setEnabled(enabled);

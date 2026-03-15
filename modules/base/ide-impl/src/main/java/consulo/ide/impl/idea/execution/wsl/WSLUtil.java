@@ -11,8 +11,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class WSLUtil {
      */
     private static final ProcessListener INPUT_CLOSE_LISTENER = new ProcessAdapter() {
         @Override
-        public void startNotified(@Nonnull ProcessEvent event) {
+        public void startNotified(ProcessEvent event) {
             OutputStream input = event.getProcessHandler().getProcessInput();
             if (input != null) {
                 try {
@@ -68,7 +67,7 @@ public class WSLUtil {
      * @apiNote order of entries depends on configuration file and may change between launches.
      * @see WSLDistributionService
      */
-    @Nonnull
+    
     public static List<WSLDistribution> getAvailableDistributions() {
         if (!isSystemCompatible()) {
             return Collections.emptyList();
@@ -133,8 +132,8 @@ public class WSLUtil {
      */
     @Deprecated
     //@ApiStatus.ScheduledForRemoval(inVersion = "2020.2")
-    @Nonnull
-    public static <T extends ProcessHandler> T addInputCloseListener(@Nonnull T processHandler) {
+    
+    public static <T extends ProcessHandler> T addInputCloseListener(T processHandler) {
         if (Boolean.getBoolean("wsl.close.process.input")) {
             processHandler.removeProcessListener(INPUT_CLOSE_LISTENER);
             processHandler.addProcessListener(INPUT_CLOSE_LISTENER);
@@ -154,7 +153,7 @@ public class WSLUtil {
      * For example, {@code getWindowsPath("/mnt/c/Users/file.txt", "/mnt/") returns "C:\Users\file.txt"}
      */
     @Nullable
-    public static String getWindowsPath(@Nonnull String wslPath, @Nonnull String mntRoot) {
+    public static String getWindowsPath(String wslPath, String mntRoot) {
         if (!wslPath.startsWith(mntRoot)) {
             return null;
         }
@@ -173,7 +172,7 @@ public class WSLUtil {
      * @return list of existing UNC roots for known WSL distributions
      */
     //@ApiStatus.Experimental
-    @Nonnull
+    
     public static List<File> getExistingUNCRoots() {
         if (!isSystemCompatible() || !SystemProperties.getBooleanProperty("wsl.p9.support", true)) {
             return Collections.emptyList();

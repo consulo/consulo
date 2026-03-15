@@ -29,8 +29,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author dsl
@@ -48,7 +47,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
 
   private final MyOrderEntryLibraryTableListener myLibraryListener = new MyOrderEntryLibraryTableListener();
 
-  public LibraryOrderEntryImpl(@Nonnull Library library, @Nonnull ModuleRootLayerImpl rootLayer) {
+  public LibraryOrderEntryImpl(Library library, ModuleRootLayerImpl rootLayer) {
     super(LibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     LOG.assertTrue(library.getTable() != null);
     myLibrary = library;
@@ -56,7 +55,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     init();
   }
 
-  private LibraryOrderEntryImpl(@Nonnull LibraryOrderEntryImpl that, @Nonnull ModuleRootLayerImpl rootLayer) {
+  private LibraryOrderEntryImpl(LibraryOrderEntryImpl that, ModuleRootLayerImpl rootLayer) {
     super(LibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     if (that.myLibrary == null) {
       myLibraryName = that.myLibraryName;
@@ -71,13 +70,13 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     init();
   }
 
-  public LibraryOrderEntryImpl(@Nonnull String name, @Nonnull String level, @Nonnull ModuleRootLayerImpl rootLayer) {
+  public LibraryOrderEntryImpl(String name, String level, ModuleRootLayerImpl rootLayer) {
     this(name, level, rootLayer, DependencyScope.COMPILE, false, true);
   }
 
-  public LibraryOrderEntryImpl(@Nonnull String name,
-                               @Nonnull String level,
-                               @Nonnull ModuleRootLayerImpl rootLayer,
+  public LibraryOrderEntryImpl(String name,
+                               String level,
+                               ModuleRootLayerImpl rootLayer,
                                DependencyScope dependencyScope,
                                boolean exported,
                                boolean init) {
@@ -91,7 +90,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     }
   }
 
-  private void searchForLibrary(@Nonnull String name, @Nonnull String level) {
+  private void searchForLibrary(String name, String level) {
     if (myLibrary != null) return;
     LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, getRootModel().getModule().getProject());
     Library library = libraryTable != null ? libraryTable.getLibraryByName(name) : null;
@@ -118,13 +117,13 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   }
 
   @Override
-  @Nonnull
+  
   public DependencyScope getScope() {
     return myScope;
   }
 
   @Override
-  public void setScope(@Nonnull DependencyScope scope) {
+  public void setScope(DependencyScope scope) {
     myScope = scope;
   }
 
@@ -148,7 +147,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public String getPresentableName() {
     return getLibraryName();
@@ -170,13 +169,13 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   }
 
   @Override
-  public <R> R accept(@Nonnull RootPolicy<R> policy, R initialValue) {
+  public <R> R accept(RootPolicy<R> policy, R initialValue) {
     return policy.visitLibraryOrderEntry(this, initialValue);
   }
 
   @Override
-  @Nonnull
-  public OrderEntry cloneEntry(@Nonnull ModuleRootLayerImpl moduleRootLayer) {
+  
+  public OrderEntry cloneEntry(ModuleRootLayerImpl moduleRootLayer) {
     return new LibraryOrderEntryImpl(this, moduleRootLayer);
   }
 
@@ -219,7 +218,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     }
   }
 
-  private void afterLibraryAdded(@Nonnull Library newLibrary) {
+  private void afterLibraryAdded(Library newLibrary) {
     if (myLibrary == null) {
       if (Comparing.equal(myLibraryName, newLibrary.getName())) {
         myLibrary = newLibrary;
@@ -244,12 +243,12 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     }
 
     @Override
-    public void afterLibraryAdded(@Nonnull Library newLibrary) {
+    public void afterLibraryAdded(Library newLibrary) {
       LibraryOrderEntryImpl.this.afterLibraryAdded(newLibrary);
     }
 
     @Override
-    public void afterLibraryRenamed(@Nonnull Library library) {
+    public void afterLibraryRenamed(Library library) {
       afterLibraryAdded(library);
     }
 

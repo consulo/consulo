@@ -30,8 +30,7 @@ import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 
@@ -50,7 +49,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      *
      * @return <code>VirtualFileManager</code>
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use constructor injection")
     public static VirtualFileManager getInstance() {
@@ -64,7 +63,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @return {@link VirtualFileSystem}
      * @see VirtualFileSystem#getProtocol
      */
-    public abstract VirtualFileSystem getFileSystem(@Nonnull String protocol);
+    public abstract VirtualFileSystem getFileSystem(String protocol);
 
     /**
      * <p>Refreshes the cached file systems information from the physical file systems synchronously.<p/>
@@ -97,7 +96,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see #refreshAndFindFileByUrl
      */
     @Nullable
-    public abstract VirtualFile findFileByUrl(@Nonnull String url);
+    public abstract VirtualFile findFileByUrl(String url);
 
 
     /**
@@ -109,7 +108,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see #refreshAndFindFileByUrl
      */
     @Nullable
-    public VirtualFile findFileByNioPath(@Nonnull Path path) {
+    public VirtualFile findFileByNioPath(Path path) {
         return null;
     }
 
@@ -129,7 +128,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see VirtualFileSystem#refreshAndFindFileByPath
      */
     @Nullable
-    public abstract VirtualFile refreshAndFindFileByUrl(@Nonnull String url);
+    public abstract VirtualFile refreshAndFindFileByUrl(String url);
 
     /**
      * <p>Refreshes only the part of the file system needed for searching the file by the given URL and finds file
@@ -145,7 +144,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see VirtualFileSystem#refreshAndFindFileByPath
      **/
     @Nullable
-    public VirtualFile refreshAndFindFileByNioPath(@Nonnull Path path) {
+    public VirtualFile refreshAndFindFileByNioPath(Path path) {
         return null;
     }
 
@@ -157,11 +156,11 @@ public abstract class VirtualFileManager implements ModificationTracker {
      */
     @Deprecated
     @DeprecationInfo("Use MessageBus API")
-    public abstract void addVirtualFileListener(@Nonnull VirtualFileListener listener);
+    public abstract void addVirtualFileListener(VirtualFileListener listener);
 
     @Deprecated
     @DeprecationInfo("Use MessageBus API")
-    public abstract void addVirtualFileListener(@Nonnull VirtualFileListener listener, @Nonnull Disposable parentDisposable);
+    public abstract void addVirtualFileListener(VirtualFileListener listener, Disposable parentDisposable);
 
     /**
      * Removes listener form the file system.
@@ -170,7 +169,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      */
     @Deprecated
     @DeprecationInfo("Use MessageBus API")
-    public abstract void removeVirtualFileListener(@Nonnull VirtualFileListener listener);
+    public abstract void removeVirtualFileListener(VirtualFileListener listener);
 
     /**
      * Constructs URL by specified protocol and path. URL is a string which uniquely identifies file in all
@@ -180,8 +179,8 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @param path     the path
      * @return URL
      */
-    @Nonnull
-    public static String constructUrl(@Nonnull String protocol, @Nonnull String path) {
+    
+    public static String constructUrl(String protocol, String path) {
         return protocol + URLUtil.SCHEME_SEPARATOR + path;
     }
 
@@ -193,7 +192,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see VirtualFileSystem#getProtocol
      */
     @Nullable
-    public static String extractProtocol(@Nonnull String url) {
+    public static String extractProtocol(String url) {
         int index = url.indexOf(URLUtil.SCHEME_SEPARATOR);
         if (index < 0) {
             return null;
@@ -208,8 +207,8 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @param url the URL
      * @return path
      */
-    @Nonnull
-    public static String extractPath(@Nonnull String url) {
+    
+    public static String extractPath(String url) {
         int index = url.indexOf(URLUtil.SCHEME_SEPARATOR);
         if (index < 0) {
             return url;
@@ -217,18 +216,18 @@ public abstract class VirtualFileManager implements ModificationTracker {
         return url.substring(index + URLUtil.SCHEME_SEPARATOR.length());
     }
 
-    public abstract void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener);
+    public abstract void addVirtualFileManagerListener(VirtualFileManagerListener listener);
 
-    public abstract void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener, @Nonnull Disposable parentDisposable);
+    public abstract void addVirtualFileManagerListener(VirtualFileManagerListener listener, Disposable parentDisposable);
 
-    public abstract void removeVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener);
+    public abstract void removeVirtualFileManagerListener(VirtualFileManagerListener listener);
 
     /**
      * Consider using extension point {@code vfs.asyncListener}.
      */
-    public abstract void addAsyncFileListener(@Nonnull AsyncFileListener listener, @Nonnull Disposable parentDisposable);
+    public abstract void addAsyncFileListener(AsyncFileListener listener, Disposable parentDisposable);
 
-    public abstract void notifyPropertyChanged(@Nonnull VirtualFile virtualFile, @Nonnull String property, Object oldValue, Object newValue);
+    public abstract void notifyPropertyChanged(VirtualFile virtualFile, String property, Object oldValue, Object newValue);
 
     /**
      * @return a number that's incremented every time something changes in the VFS, i.e. file hierarchy, names, flags, attributes, contents.
@@ -249,19 +248,19 @@ public abstract class VirtualFileManager implements ModificationTracker {
         return null;
     }
 
-    public abstract int storeName(@Nonnull String name);
+    public abstract int storeName(String name);
 
-    @Nonnull
+    
     public abstract CharSequence getVFileName(int nameId);
 
-    public abstract Image getBaseFileIcon(@Nonnull VirtualFile file);
+    public abstract Image getBaseFileIcon(VirtualFile file);
 
-    public abstract Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
+    public abstract Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
 
     /**
      * Return icon without proxing to lazy icon. Must be called from not UI thread
      */
-    @Nonnull
+    
     @RequiredReadAction
-    public abstract Image getFileIconNoDefer(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
+    public abstract Image getFileIconNoDefer(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
 }

@@ -45,8 +45,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -303,7 +302,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         private final T myFileType;
         private final SettingsEditor<T> myEditor;
 
-        public TypeEditor(Component parent, T fileType, @Nonnull LocalizeValue title) {
+        public TypeEditor(Component parent, T fileType, LocalizeValue title) {
             super(parent, false);
             myFileType = fileType;
             myEditor = fileType.getEditor();
@@ -368,7 +367,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     @RequiredUIAccess
     @Nullable
     @Override
-    public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+    public JComponent createComponent(Disposable parentDisposable) {
         TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(parentDisposable);
 
         myRecognizedFileType = new RecognizedFileTypes();
@@ -634,7 +633,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "preferences.fileType";
@@ -646,7 +645,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return FileTypeLocalize.filetypeSettingsTitle();

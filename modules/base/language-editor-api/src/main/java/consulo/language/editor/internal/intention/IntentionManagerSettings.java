@@ -28,7 +28,6 @@ import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -66,7 +65,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
         return Application.get().getInstance(IntentionManagerSettings.class);
     }
 
-    private static void register(@Nonnull IntentionAction intentionAction, List<IntentionActionMetaData> actionMetaDatas) {
+    private static void register(IntentionAction intentionAction, List<IntentionActionMetaData> actionMetaDatas) {
         IntentionMetaData intentionMetaData = intentionAction.getClass().getAnnotation(IntentionMetaData.class);
         if (intentionMetaData == null) {
             LOG.error("@IntentionMetaData missed on intention " + intentionAction.getClass().getName());
@@ -77,7 +76,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
         actionMetaDatas.add(new IntentionActionMetaData(intentionAction, intentionMetaData.categories(), descriptionDirectoryName));
     }
 
-    @Nonnull
+    
     public static String getDescriptionDirectoryName(IntentionAction action) {
         return getDescriptionDirectoryName(action.getClass().getName());
     }
@@ -91,7 +90,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
         myApplication = application;
     }
 
-    public boolean isShowLightBulb(@Nonnull IntentionAction action) {
+    public boolean isShowLightBulb(IntentionAction action) {
         if (isSyntheticIntention(action)) {
             return true;
         }
@@ -117,12 +116,12 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
         return element;
     }
 
-    @Nonnull
+    
     public List<IntentionActionMetaData> getMetaData() {
         return myApplication.getExtensionPoint(IntentionAction.class).getOrBuildCache(CACHE_KEY);
     }
 
-    public boolean isEnabled(@Nonnull IntentionActionMetaData metaData) {
+    public boolean isEnabled(IntentionActionMetaData metaData) {
         if (isSyntheticIntention(metaData.getAction())) {
             return true;
         }
@@ -130,8 +129,8 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
         return !myIgnoredActions.contains(getIgnoreId(metaData.getAction()));
     }
 
-    @Nonnull
-    private static String getIgnoreId(@Nonnull IntentionAction action) {
+    
+    private static String getIgnoreId(IntentionAction action) {
         while (action instanceof IntentionActionDelegate) {
             action = ((IntentionActionDelegate) action).getDelegate();
         }
@@ -145,7 +144,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
         return action.getClass().getName();
     }
 
-    private static boolean isSyntheticIntention(@Nonnull IntentionAction action) {
+    private static boolean isSyntheticIntention(IntentionAction action) {
         if (action instanceof SyntheticIntentionAction) {
             return true;
         }
@@ -157,7 +156,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
         return action instanceof SyntheticIntentionAction;
     }
 
-    public void setEnabled(@Nonnull IntentionActionMetaData metaData, boolean enabled) {
+    public void setEnabled(IntentionActionMetaData metaData, boolean enabled) {
         if (enabled) {
             myIgnoredActions.remove(getIgnoreId(metaData.getAction()));
         }
@@ -166,14 +165,14 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
         }
     }
 
-    public boolean isEnabled(@Nonnull IntentionAction action) {
+    public boolean isEnabled(IntentionAction action) {
         if (isSyntheticIntention(action)) {
             return true;
         }
         return !myIgnoredActions.contains(getIgnoreId(action));
     }
 
-    public void setEnabled(@Nonnull IntentionAction action, boolean enabled) {
+    public void setEnabled(IntentionAction action, boolean enabled) {
         if (enabled) {
             myIgnoredActions.remove(getIgnoreId(action));
         }

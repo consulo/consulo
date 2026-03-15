@@ -21,7 +21,6 @@ import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -31,12 +30,12 @@ import java.util.function.Function;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class DummyIconDeferrer extends IconDeferrer {
   @Override
-  public <T> Image defer(Image base, T param, @Nonnull Function<T, Image> f) {
+  public <T> Image defer(Image base, T param, Function<T, Image> f) {
     return f.apply(param);
   }
 
   @Override
-  public <T> Image deferAutoUpdatable(Image base, T param, @Nonnull Function<T, Image> f) {
+  public <T> Image deferAutoUpdatable(Image base, T param, Function<T, Image> f) {
     return f.apply(param);
   }
 }

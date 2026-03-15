@@ -22,14 +22,13 @@ import consulo.module.Module;
 import consulo.pathMacro.Macro;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18.08.14
  */
 public abstract class ModuleOutputDirPathMacro extends Macro {
-  @Nonnull
+  
   public abstract ContentFolderTypeProvider getContentFolderTypeProvider();
 
   @Override

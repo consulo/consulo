@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -14,14 +13,14 @@ import java.util.function.Function;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class Queries {
-  @Nonnull
+  
   static Queries getInstance() {
     return Application.get().getInstance(Queries.class);
   }
 
-  @Nonnull
-  protected abstract <I, O> Query<O> transforming(@Nonnull Query<? extends I> base, @Nonnull Function<? super I, ? extends Collection<? extends O>> transformation);
+  
+  protected abstract <I, O> Query<O> transforming(Query<? extends I> base, Function<? super I, ? extends Collection<? extends O>> transformation);
 
-  @Nonnull
-  protected abstract <I, O> Query<O> flatMapping(@Nonnull Query<? extends I> base, @Nonnull Function<? super I, ? extends Query<? extends O>> mapper);
+  
+  protected abstract <I, O> Query<O> flatMapping(Query<? extends I> base, Function<? super I, ? extends Query<? extends O>> mapper);
 }

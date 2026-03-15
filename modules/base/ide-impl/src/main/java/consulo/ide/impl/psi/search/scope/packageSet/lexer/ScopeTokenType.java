@@ -17,14 +17,12 @@ package consulo.ide.impl.psi.search.scope.packageSet.lexer;
 
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class ScopeTokenType extends IElementType {
-    public ScopeTokenType(@Nonnull @NonNls String debugName) {
+    public ScopeTokenType(String debugName) {
         super(debugName, Language.ANY);
     }
 }

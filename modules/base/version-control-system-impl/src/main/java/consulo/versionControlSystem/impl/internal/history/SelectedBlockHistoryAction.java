@@ -36,7 +36,6 @@ import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.ShowHistoryForBlock")
 public class SelectedBlockHistoryAction extends AbstractVcsAction {
@@ -83,7 +82,7 @@ public class SelectedBlockHistoryAction extends AbstractVcsAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull VcsContext context) {
+    public void actionPerformed(VcsContext context) {
         try {
             Project project = context.getProject();
             assert project != null;
@@ -136,7 +135,7 @@ public class SelectedBlockHistoryAction extends AbstractVcsAction {
     }
 
     @Override
-    protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
+    protected void update(VcsContext context, Presentation presentation) {
         presentation.setEnabled(isEnabled(context));
         VcsSelection selection = VcsSelectionUtil.getSelection(context);
         if (selection != null) {

@@ -27,8 +27,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,12 +37,12 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
   private final ActionImpl myActionImpl;
   private final InjectingBinding myInjectingBinding;
 
-  public InjectingBindingActionStub(@Nonnull ActionImpl actionImpl, @Nonnull InjectingBinding binding) {
+  public InjectingBindingActionStub(ActionImpl actionImpl, InjectingBinding binding) {
     myActionImpl = actionImpl;
     myInjectingBinding = binding;
   }
 
-  @Nonnull
+  
   @Override
   protected Presentation createTemplatePresentation() {
     Presentation presentation = super.createTemplatePresentation();
@@ -56,7 +55,7 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
     return presentation;
   }
 
-  @Nonnull
+  
   @Override
   public ActionImpl getActionImpl() {
     return myActionImpl;
@@ -80,7 +79,7 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
   @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager) {
+  public AnAction initialize(Application application, ActionManager manager) {
     AnAction target = (AnAction)application.getUnbindedInstance(myInjectingBinding.getImplClass(), myInjectingBinding.getParameterTypes(), myInjectingBinding::create);
 
     XmlActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());
@@ -90,7 +89,7 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     throw new UnsupportedOperationException();
   }
 }

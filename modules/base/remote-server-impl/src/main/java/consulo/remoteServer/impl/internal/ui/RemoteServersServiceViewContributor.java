@@ -25,8 +25,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -40,18 +39,18 @@ public abstract class RemoteServersServiceViewContributor
     implements ServiceViewContributor<RemoteServersServiceViewContributor.RemoteServerNodeServiceViewContributor>,
     Comparator<RemoteServersServiceViewContributor.RemoteServerNodeServiceViewContributor>,
     ServersTreeStructure.DeploymentNodeProducer {
-    public abstract boolean accept(@Nonnull RemoteServer<?> server);
+    public abstract boolean accept(RemoteServer<?> server);
 
-    public abstract void selectLog(@Nonnull AbstractTreeNode<?> deploymentNode, @Nonnull String logName);
+    public abstract void selectLog(AbstractTreeNode<?> deploymentNode, String logName);
 
-    public abstract @Nonnull ActionGroups getActionGroups();
+    public abstract ActionGroups getActionGroups();
 
-    protected @Nonnull RemoteServerNodeServiceViewContributor createNodeContributor(@Nonnull AbstractTreeNode<?> node) {
+    protected RemoteServerNodeServiceViewContributor createNodeContributor(AbstractTreeNode<?> node) {
         return new RemoteServerNodeServiceViewContributor(this, node);
     }
 
     @Override
-    public @Nonnull List<RemoteServerNodeServiceViewContributor> getServices(@Nonnull Project project) {
+    public List<RemoteServerNodeServiceViewContributor> getServices(Project project) {
         List<RemoteServerNodeServiceViewContributor> services = RemoteServersManager.getInstance().getServers().stream()
             .filter(this::accept)
             .map(server -> createNodeContributor(new ServersTreeStructure.RemoteServerNode(project, server, this)))
@@ -61,7 +60,7 @@ public abstract class RemoteServersServiceViewContributor
     }
 
     @Override
-    public @Nonnull ServiceViewDescriptor getServiceDescriptor(@Nonnull Project project, @Nonnull RemoteServerNodeServiceViewContributor service) {
+    public ServiceViewDescriptor getServiceDescriptor(Project project, RemoteServerNodeServiceViewContributor service) {
         return service.getViewDescriptor(project);
     }
 
@@ -86,17 +85,17 @@ public abstract class RemoteServersServiceViewContributor
         return name1.compareTo(name2);
     }
 
-    protected @Nullable ServiceEventListener.ServiceEvent createDeploymentsChangedEvent(@Nonnull ServerConnection<?> connection) {
+    protected ServiceEventListener.@Nullable ServiceEvent createDeploymentsChangedEvent(ServerConnection<?> connection) {
         return ServiceEventListener.ServiceEvent.createResetEvent(this.getClass());
     }
 
-    protected static @Nonnull ActionGroup getToolbarActions(@Nonnull ActionGroups groups) {
+    protected static ActionGroup getToolbarActions(ActionGroups groups) {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(ActionManager.getInstance().getAction(groups.getMainToolbarID()));
         return group;
     }
 
-    protected static @Nonnull ActionGroup getPopupActions(@Nonnull ActionGroups groups) {
+    protected static ActionGroup getPopupActions(ActionGroups groups) {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(ActionManager.getInstance().getAction(groups.getMainToolbarID()));
         group.add(ActionManager.getInstance().getAction(groups.getPopupID()));
@@ -118,8 +117,8 @@ public abstract class RemoteServersServiceViewContributor
     }
 
     @RequiredUIAccess
-    public static <C extends ServerConfiguration> void addNewRemoteServer(@Nonnull Project project,
-                                                                          @Nonnull ServerType<C> serverType,
+    public static <C extends ServerConfiguration> void addNewRemoteServer(Project project,
+                                                                          ServerType<C> serverType,
                                                                           @Nullable Class<?> contributorClass) {
         ShowConfigurableService service = project.getApplication().getInstance(ShowConfigurableService.class);
 
@@ -138,7 +137,7 @@ public abstract class RemoteServersServiceViewContributor
         private final AbstractTreeNode<?> myNode;
         private final ActionGroups myActionGroups;
 
-        protected RemoteServerNodeDescriptor(@Nonnull AbstractTreeNode<?> node, @Nonnull ActionGroups actionGroups) {
+        protected RemoteServerNodeDescriptor(AbstractTreeNode<?> node, ActionGroups actionGroups) {
             myNode = node;
             myActionGroups = actionGroups;
         }
@@ -176,12 +175,12 @@ public abstract class RemoteServersServiceViewContributor
         }
 
         @Override
-        public @Nonnull ItemPresentation getPresentation() {
+        public ItemPresentation getPresentation() {
             return myNode.getPresentation();
         }
 
         @Override
-        public boolean handleDoubleClick(@Nonnull MouseEvent event) {
+        public boolean handleDoubleClick(MouseEvent event) {
             AnAction connectAction = ActionManager.getInstance().getAction("RemoteServers.ConnectServer");
             DataContext dataContext = DataManager.getInstance().getDataContext(event.getComponent());
             AnActionEvent actionEvent = AnActionEvent.createFromAnAction(connectAction, event, ActionPlaces.UNKNOWN, dataContext);
@@ -198,7 +197,7 @@ public abstract class RemoteServersServiceViewContributor
             return null;
         }
 
-        protected @Nonnull AbstractTreeNode<?> getNode() {
+        protected AbstractTreeNode<?> getNode() {
             return myNode;
         }
     }
@@ -208,57 +207,57 @@ public abstract class RemoteServersServiceViewContributor
         private final RemoteServersServiceViewContributor myRootContributor;
         private final AbstractTreeNode<?> myNode;
 
-        protected RemoteServerNodeServiceViewContributor(@Nonnull RemoteServersServiceViewContributor rootContributor,
-                                                         @Nonnull AbstractTreeNode<?> node) {
+        protected RemoteServerNodeServiceViewContributor(RemoteServersServiceViewContributor rootContributor,
+                                                         AbstractTreeNode<?> node) {
             myRootContributor = rootContributor;
             myNode = node;
         }
 
         @Override
-        public @Nonnull AbstractTreeNode<?> asService() {
+        public AbstractTreeNode<?> asService() {
             return myNode;
         }
 
         @Override
-        public @Nonnull ServiceViewDescriptor getViewDescriptor(@Nonnull Project project) {
+        public ServiceViewDescriptor getViewDescriptor(Project project) {
             return new RemoteServerNodeDescriptor(myNode, myRootContributor.getActionGroups());
         }
 
         @Override
-        public @Nonnull List<RemoteServerNodeServiceViewContributor> getServices(@Nonnull Project project) {
+        public List<RemoteServerNodeServiceViewContributor> getServices(Project project) {
             return ContainerUtil.map(myNode.getChildren(), myRootContributor::createNodeContributor);
         }
 
         @Override
-        public @Nonnull ServiceViewDescriptor getServiceDescriptor(@Nonnull Project project, @Nonnull RemoteServerNodeServiceViewContributor service) {
+        public ServiceViewDescriptor getServiceDescriptor(Project project, RemoteServerNodeServiceViewContributor service) {
             return service.getViewDescriptor(project);
         }
 
-        protected @Nonnull RemoteServersServiceViewContributor getRootContributor() {
+        protected RemoteServersServiceViewContributor getRootContributor() {
             return myRootContributor;
         }
     }
 
     public static class ActionGroups {
-        private final @Nonnull String myMainToolbarID;
-        private final @Nonnull String mySecondaryToolbarID;
-        private final @Nonnull String myPopupID;
+        private final String myMainToolbarID;
+        private final String mySecondaryToolbarID;
+        private final String myPopupID;
 
-        public ActionGroups(@Nonnull String mainToolbarID, @Nonnull String secondaryToolbarID, @Nonnull String popupID) {
+        public ActionGroups(String mainToolbarID, String secondaryToolbarID, String popupID) {
             myMainToolbarID = mainToolbarID;
             mySecondaryToolbarID = secondaryToolbarID;
             myPopupID = popupID;
         }
 
-        public @Nonnull String getMainToolbarID() {
+        public String getMainToolbarID() {
             return myMainToolbarID;
         }
 
-        public @Nonnull String getPopupID() {
+        public String getPopupID() {
             return myPopupID;
         }
 
-        public @Nonnull String getSecondaryToolbarID() {
+        public String getSecondaryToolbarID() {
             return mySecondaryToolbarID;
         }
 

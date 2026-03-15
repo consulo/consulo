@@ -17,7 +17,6 @@ package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.border.Border;
 import java.awt.*;
 
@@ -27,7 +26,7 @@ import java.awt.*;
  */
 public class CalloutBorder implements Border {
 
-  @Nonnull
+  
   private static final Insets INSETS =
           new Insets(ArrangementConstants.CALLOUT_BORDER_HEIGHT, ArrangementConstants.HORIZONTAL_PADDING, ArrangementConstants.VERTICAL_PADDING, ArrangementConstants.HORIZONTAL_PADDING);
 

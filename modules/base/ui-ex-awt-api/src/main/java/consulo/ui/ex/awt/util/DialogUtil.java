@@ -18,8 +18,7 @@ package consulo.ui.ex.awt.util;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -35,19 +34,19 @@ public class DialogUtil {
   private DialogUtil() {
   }
 
-  public static void registerMnemonic(@Nonnull AbstractButton button) {
+  public static void registerMnemonic(AbstractButton button) {
     setTextWithMnemonic(button, button.getText(), UIUtil.MNEMONIC);
   }
 
-  public static void registerMnemonic(@Nonnull AbstractButton button, char mn) {
+  public static void registerMnemonic(AbstractButton button, char mn) {
     setTextWithMnemonic(button, button.getText(), mn);
   }
 
-  public static void setTextWithMnemonic(@Nonnull AbstractButton button, String text) {
+  public static void setTextWithMnemonic(AbstractButton button, String text) {
     setTextWithMnemonic(button, text, UIUtil.MNEMONIC);
   }
 
-  public static void setTextWithMnemonic(@Nonnull AbstractButton button, String text, char mn) {
+  public static void setTextWithMnemonic(AbstractButton button, String text, char mn) {
     if (text != null) {
       StringBuilder realText = new StringBuilder();
       char mnemonic = '\0';

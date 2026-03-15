@@ -18,7 +18,6 @@ package consulo.language.psi;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to register reference providers for specific locations. The locations are described by
@@ -39,7 +38,7 @@ public abstract class PsiReferenceRegistrar {
    * @param pattern reference place description. See {@link consulo.ide.impl.idea.patterns.StandardPatterns}, {@link consulo.ide.impl.idea.patterns.PlatformPatterns} and their extenders
    * @param provider provider to be registered
    */
-  public void registerReferenceProvider(@Nonnull ElementPattern<? extends PsiElement> pattern, @Nonnull PsiReferenceProvider provider) {
+  public void registerReferenceProvider(ElementPattern<? extends PsiElement> pattern, PsiReferenceProvider provider) {
     registerReferenceProvider(pattern, provider, DEFAULT_PRIORITY);
   }
 
@@ -50,5 +49,5 @@ public abstract class PsiReferenceRegistrar {
    * @param provider provider to be registered
    * @param priority @see DEFAULT_PRIORITY, HIGHER_PRIORITY, LOWER_PRIORITY
    */
-  public abstract <T extends PsiElement> void registerReferenceProvider(@Nonnull ElementPattern<T> pattern, @Nonnull PsiReferenceProvider provider, double priority);
+  public abstract <T extends PsiElement> void registerReferenceProvider(ElementPattern<T> pattern, PsiReferenceProvider provider, double priority);
 }

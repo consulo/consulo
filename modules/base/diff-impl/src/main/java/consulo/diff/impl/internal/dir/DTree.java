@@ -20,8 +20,7 @@ import consulo.diff.dir.DiffElement;
 import consulo.diff.dir.DiffErrorElement;
 import consulo.diff.dir.DirDiffSettings;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -54,13 +53,13 @@ public class DTree {
   private String mySeparator = null;
   private String myPath = null;
 
-  public DTree(@Nullable DTree parent, @Nonnull String name, boolean container) {
+  public DTree(@Nullable DTree parent, String name, boolean container) {
     this.myParent = parent;
     this.myName = name;
     isContainer = container;
   }
 
-  @Nonnull
+  
   public Collection<DTree> getChildren() {
     init();
     if (myChildrenList == null) {
@@ -70,7 +69,7 @@ public class DTree {
     return myChildrenList;
   }
 
-  public DTree addChild(@Nonnull DiffElement element, boolean source) {
+  public DTree addChild(DiffElement element, boolean source) {
     init();
     myChildrenList = null;
     DTree node;

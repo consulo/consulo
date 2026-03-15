@@ -20,7 +20,6 @@ import consulo.externalSystem.impl.internal.service.ExternalSystemFacadeManager;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalSystemSettingsListenerAdapter;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * We need to avoid memory leaks on ide project rename. This class is responsible for that.
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
  * @since 2013-07-19
  */
 public class ProjectRenameAware {
-    public static void beAware(@Nonnull Project project) {
+    public static void beAware(Project project) {
         ExternalSystemFacadeManager facadeManager = project.getApplication().getInstance(ExternalSystemFacadeManager.class);
         project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
             AbstractExternalSystemSettings<?, ?, ?> settings =
@@ -37,7 +36,7 @@ public class ProjectRenameAware {
             //noinspection unchecked
             settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
                 @Override
-                public void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName) {
+                public void onProjectRenamed(String oldName, String newName) {
                     facadeManager.onProjectRename(oldName, newName);
                 }
             });

@@ -33,8 +33,7 @@ import consulo.versionControlSystem.ui.UpdateInfoTree;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -96,10 +95,10 @@ public abstract class ProjectLevelVcsManager {
      * @return the VCS instance, or null if none is found.
      */
     @Nullable
-    public abstract AbstractVcs findVcsByName(@Nonnull String name);
+    public abstract AbstractVcs findVcsByName(String name);
 
     @Nullable
-    public AbstractVcs findVcsByName(@Nonnull VcsKey vcsKey) {
+    public AbstractVcs findVcsByName(VcsKey vcsKey) {
         return findVcsByName(vcsKey.getName());
     }
 
@@ -123,7 +122,7 @@ public abstract class ProjectLevelVcsManager {
      * it belongs to is not under version control.
      */
     @Nullable
-    public abstract AbstractVcs getVcsFor(@Nonnull VirtualFile file);
+    public abstract AbstractVcs getVcsFor(VirtualFile file);
 
     /**
      * Returns the VCS managing the specified file path.
@@ -173,12 +172,12 @@ public abstract class ProjectLevelVcsManager {
      * @param vcsName the name of the VCS to check.
      * @return true if the VCS is used by any of the modules, false otherwise
      */
-    public abstract boolean checkVcsIsActive(@Nonnull String vcsId);
+    public abstract boolean checkVcsIsActive(String vcsId);
 
     /**
      * Returns the list of VCSes supported by plugins.
      */
-    @Nonnull
+    
     public abstract Collection<AbstractVcs> getAllSupportedVcss();
 
     /**
@@ -203,23 +202,23 @@ public abstract class ProjectLevelVcsManager {
         addMessageToConsoleWindow(message, new ConsoleViewContentType("", attributes));
     }
 
-    public void addMessageToConsoleWindow(@Nullable String message, @Nonnull ConsoleViewContentType contentType) {
+    public void addMessageToConsoleWindow(@Nullable String message, ConsoleViewContentType contentType) {
         addMessageToConsoleWindow(VcsConsoleLine.create(message, contentType));
     }
 
     public abstract void addMessageToConsoleWindow(@Nullable VcsConsoleLine line);
 
-    @Nonnull
-    public abstract VcsShowSettingOption getStandardOption(@Nonnull VcsConfiguration.StandardOption option, @Nonnull AbstractVcs vcs);
+    
+    public abstract VcsShowSettingOption getStandardOption(VcsConfiguration.StandardOption option, AbstractVcs vcs);
 
-    @Nonnull
+    
     public abstract VcsShowConfirmationOption getStandardConfirmation(
-        @Nonnull VcsConfiguration.StandardConfirmation option,
+        VcsConfiguration.StandardConfirmation option,
         AbstractVcs vcs
     );
 
-    @Nonnull
-    public abstract VcsShowSettingOption getOrCreateCustomOption(@Nonnull String vcsActionName, @Nonnull AbstractVcs vcs);
+    
+    public abstract VcsShowSettingOption getOrCreateCustomOption(String vcsActionName, AbstractVcs vcs);
 
 
     public abstract void showProjectOperationInfo(UpdatedFiles updatedFiles, String displayActionName);
@@ -266,7 +265,7 @@ public abstract class ProjectLevelVcsManager {
 
     public abstract List<VirtualFile> getRootsUnderVcsWithoutFiltering(AbstractVcs vcs);
 
-    public abstract VirtualFile[] getRootsUnderVcs(@Nonnull AbstractVcs vcs);
+    public abstract VirtualFile[] getRootsUnderVcs(AbstractVcs vcs);
 
     /**
      * Also includes into list all modules under roots
@@ -275,10 +274,10 @@ public abstract class ProjectLevelVcsManager {
 
     public abstract VirtualFile[] getAllVersionedRoots();
 
-    @Nonnull
+    
     public abstract VcsRoot[] getAllVcsRoots();
 
-    @Nonnull
+    
     public abstract LocalizeValue getConsolidatedVcsName();
 
     public abstract List<VcsDirectoryMapping> getDirectoryMappings();
@@ -316,10 +315,10 @@ public abstract class ProjectLevelVcsManager {
 
     public abstract boolean isIgnored(VirtualFile vf);
 
-    @Nonnull
+    
     public abstract VcsAnnotationLocalChangesListener getAnnotationLocalChangesListener();
 
-    @Nonnull
+    
     public abstract VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option);
 
     @RequiredUIAccess

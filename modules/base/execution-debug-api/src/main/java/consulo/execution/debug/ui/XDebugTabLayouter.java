@@ -7,7 +7,6 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to customize xdebug layout for 'Debug' tool window.
@@ -24,8 +23,8 @@ public class XDebugTabLayouter {
      * @param ui      {@code RunnerLayoutUi} instance
      * @return registered {@code Content} instance
      */
-    @Nonnull
-    public Content registerConsoleContent(@Nonnull RunnerLayoutUi ui, @Nonnull ExecutionConsole console) {
+    
+    public Content registerConsoleContent(RunnerLayoutUi ui, ExecutionConsole console) {
         Content content = ui.createContent(DebuggerContentInfo.CONSOLE_CONTENT, console.getComponent(),
             XDebuggerBundle.message("debugger.session.tab.console.content.name"),
             ExecutionIconGroup.console(),
@@ -40,7 +39,7 @@ public class XDebugTabLayouter {
      *
      * @param ui {@code RunnerLayoutUi} instance
      */
-    public void registerAdditionalContent(@Nonnull RunnerLayoutUi ui) {
+    public void registerAdditionalContent(RunnerLayoutUi ui) {
     }
 
 }

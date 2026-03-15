@@ -19,8 +19,7 @@ import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -34,7 +33,7 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
         super(SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsTestTitle());
     }
 
-    @Nonnull
+    
     @Override
     public String valueOf(SMTestProxy testProxy) {
         return testProxy.getPresentableName();

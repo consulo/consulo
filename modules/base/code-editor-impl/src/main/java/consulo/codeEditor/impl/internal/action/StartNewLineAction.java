@@ -28,7 +28,6 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -41,7 +40,7 @@ public class StartNewLineAction extends EditorAction {
         }
 
         @Override
-        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
             return getEnterHandler().isEnabled(editor, caret, dataContext);
         }
 

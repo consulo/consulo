@@ -37,8 +37,7 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -54,10 +53,10 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
   protected boolean myInRefresh;
   protected final Project myProject;
 
-  protected SpecificFilesViewDialog(@Nonnull Project project,
-                                    @Nonnull String title,
-                                    @Nonnull Key<Stream<VirtualFile>> shownDataKey,
-                                    @Nonnull List<VirtualFile> initDataFiles) {
+  protected SpecificFilesViewDialog(Project project,
+                                    String title,
+                                    Key<Stream<VirtualFile>> shownDataKey,
+                                    List<VirtualFile> initDataFiles) {
     super(project, true);
     setTitle(title);
     myProject = project;
@@ -87,13 +86,13 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
   }
 
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction()};
   }
 
-  private void initData(@Nonnull List<VirtualFile> files) {
+  private void initData(List<VirtualFile> files) {
     TreeState state = TreeState.createOn(myView, (ChangesBrowserNode)myView.getModel().getRoot());
 
     DefaultTreeModel model = TreeModelBuilder.buildFromVirtualFiles(myProject, myView.isShowFlatten(), files);
@@ -123,7 +122,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     myView.setShowFlatten(false);
   }
 
-  protected void addCustomActions(@Nonnull DefaultActionGroup group, @Nonnull ActionToolbar actionToolbar) {
+  protected void addCustomActions(DefaultActionGroup group, ActionToolbar actionToolbar) {
   }
 
   @Override
@@ -181,14 +180,14 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     }, InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE, "", Application.get().getCurrentModalityState());
   }
 
-  @Nonnull
+  
   protected abstract List<VirtualFile> getFiles();
 
-  protected static ChangesBrowser getBrowserBase(@Nonnull ChangesListViewImpl view) {
+  protected static ChangesBrowser getBrowserBase(ChangesListViewImpl view) {
     return DataManager.getInstance().getDataContext(view).getData(ChangesBrowser.DATA_KEY);
   }
 
-  public static void refreshChanges(@Nonnull Project project, @Nullable ChangesBrowser browser) {
+  public static void refreshChanges(Project project, @Nullable ChangesBrowser browser) {
     if (browser != null) {
       ChangeListManager.getInstance(project)
                        .invokeAfterUpdate(browser::rebuildList, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, "Delete files", null);

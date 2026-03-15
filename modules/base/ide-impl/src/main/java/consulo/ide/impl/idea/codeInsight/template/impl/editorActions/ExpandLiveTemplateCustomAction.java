@@ -26,8 +26,7 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredWriteAction;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -49,7 +48,7 @@ public class ExpandLiveTemplateCustomAction extends EditorAction {
             }
 
             @Override
-            protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+            protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
                 Project project = editor.getProject();
                 return project != null &&
                     ((TemplateManagerImpl) TemplateManager.getInstance(project)).prepareTemplate(editor, shortcutChar, null) != null;

@@ -10,7 +10,6 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -31,7 +30,7 @@ class CanonicalPathMap {
     myPathMapping = MultiMap.empty();
   }
 
-  CanonicalPathMap(@Nonnull List<String> recursive, @Nonnull List<String> flat) {
+  CanonicalPathMap(List<String> recursive, List<String> flat) {
     myRecursiveWatchRoots = new ArrayList<>(recursive);
     myFlatWatchRoots = new ArrayList<>(flat);
 
@@ -44,18 +43,18 @@ class CanonicalPathMap {
     addMapping(mapping);
   }
 
-  @Nonnull
-  private static Map<String, String> resolvePaths(@Nonnull Collection<String> recursiveRoots, @Nonnull Collection<String> flatRoots) {
+  
+  private static Map<String, String> resolvePaths(Collection<String> recursiveRoots, Collection<String> flatRoots) {
     Map<String, String> result = new ConcurrentHashMap<>();
     Stream.concat(recursiveRoots.stream(), flatRoots.stream()).parallel().forEach(root -> Maps.putIfNotNull(root, FileSystemUtil.resolveSymLink(root), result));
     return result;
   }
 
-  @Nonnull
+  
   private static List<String> mapPaths(
-    @Nonnull Map<String, String> resolvedPaths,
-    @Nonnull List<String> paths,
-    @Nonnull Collection<? super Pair<String, String>> mapping
+    Map<String, String> resolvedPaths,
+    List<String> paths,
+    Collection<? super Pair<String, String>> mapping
   ) {
     List<String> canonicalPaths = new ArrayList<>(paths);
     for (int i = 0; i < paths.size(); i++) {
@@ -69,17 +68,17 @@ class CanonicalPathMap {
     return canonicalPaths;
   }
 
-  @Nonnull
+  
   List<String> getCanonicalRecursiveWatchRoots() {
     return myCanonicalRecursiveWatchRoots;
   }
 
-  @Nonnull
+  
   List<String> getCanonicalFlatWatchRoots() {
     return myCanonicalFlatWatchRoots;
   }
 
-  public void addMapping(@Nonnull Collection<? extends Pair<String, String>> mapping) {
+  public void addMapping(Collection<? extends Pair<String, String>> mapping) {
     for (Pair<String, String> pair : mapping) {
       // See if we are adding a mapping that itself should be mapped to a different path
       // Example: /foo/real_path -> /foo/symlink, /foo/remapped_path -> /foo/real_path
@@ -109,8 +108,8 @@ class CanonicalPathMap {
    * For recursive roots, if the path given to us is already the parent of the actual dirty path, we need to compare the path to the parent
    * of the recursive root because if the root itself was changed, we need to know about it.
    */
-  @Nonnull
-  Collection<String> getWatchedPaths(@Nonnull String reportedPath, boolean isExact) {
+  
+  Collection<String> getWatchedPaths(String reportedPath, boolean isExact) {
     if (myFlatWatchRoots.isEmpty() && myRecursiveWatchRoots.isEmpty()) return Collections.emptyList();
 
     Collection<String> affectedPaths = applyMapping(reportedPath);
@@ -153,12 +152,12 @@ class CanonicalPathMap {
   }
 
   // doesn't care about drive or UNC
-  private static boolean isApproxParent(@Nonnull String path, @Nonnull String parent) {
+  private static boolean isApproxParent(String path, String parent) {
     return path.lastIndexOf(File.separatorChar) == parent.length() && FileUtil.startsWith(path, parent);
   }
 
-  @Nonnull
-  private Collection<String> applyMapping(@Nonnull String reportedPath) {
+  
+  private Collection<String> applyMapping(String reportedPath) {
     if (myPathMapping.isEmpty()) {
       return Collections.singletonList(reportedPath);
     }

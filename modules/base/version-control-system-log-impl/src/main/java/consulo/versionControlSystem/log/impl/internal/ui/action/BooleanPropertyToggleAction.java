@@ -23,8 +23,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BooleanPropertyToggleAction extends ToggleAction implements DumbAware {
     public BooleanPropertyToggleAction() {
@@ -34,15 +33,15 @@ public abstract class BooleanPropertyToggleAction extends ToggleAction implement
         super(text);
     }
 
-    protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected BooleanPropertyToggleAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected BooleanPropertyToggleAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
-    protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text) {
+    protected BooleanPropertyToggleAction(LocalizeValue text) {
         super(text, text);
     }
 
@@ -67,7 +66,7 @@ public abstract class BooleanPropertyToggleAction extends ToggleAction implement
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
         e.getPresentation().setEnabledAndVisible(properties != null && properties.exists(getProperty()));
 

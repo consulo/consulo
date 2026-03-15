@@ -19,8 +19,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -49,7 +48,7 @@ public interface ChangeListManagerGate {
   FileStatus getStatus(VirtualFile file);
 
   @Nullable
-  FileStatus getStatus(@Nonnull FilePath filePath);
+  FileStatus getStatus(FilePath filePath);
 
   /**
    * Use {@link #getStatus(FilePath)
@@ -59,5 +58,5 @@ public interface ChangeListManagerGate {
   @Deprecated
   FileStatus getStatus(File file);
 
-  void setDefaultChangeList(@Nonnull String list);
+  void setDefaultChangeList(String list);
 }

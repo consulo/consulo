@@ -6,14 +6,13 @@ import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
-import jakarta.annotation.Nonnull;
 
 public class DesktopCaretModelImpl extends CodeEditorCaretModelBase<DesktopCaretImpl> {
-  public DesktopCaretModelImpl(@Nonnull DesktopEditorImpl editor) {
+  public DesktopCaretModelImpl(DesktopEditorImpl editor) {
     super(editor);
   }
 
-  @Nonnull
+  
   @Override
   protected DesktopCaretImpl createCaret(CodeEditorBase editor, CodeEditorCaretModelBase<DesktopCaretImpl> model) {
     return new DesktopCaretImpl((DesktopEditorImpl)editor, (DesktopCaretModelImpl)model);

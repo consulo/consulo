@@ -15,7 +15,7 @@
  */
 package consulo.configurable;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Register implementation of this class as {@code projectConfigurable} or {@code applicationConfigurable} extension to provide items for

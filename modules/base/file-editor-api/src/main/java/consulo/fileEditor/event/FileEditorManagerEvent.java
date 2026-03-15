@@ -20,8 +20,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.EventObject;
 
 public final class FileEditorManagerEvent extends EventObject {
@@ -33,7 +32,7 @@ public final class FileEditorManagerEvent extends EventObject {
   private final FileEditorProvider myOldProvider;
   private final FileEditorProvider myNewProvider;
 
-  public FileEditorManagerEvent(@Nonnull FileEditorManager source,
+  public FileEditorManagerEvent(FileEditorManager source,
                                 @Nullable VirtualFile oldFile,
                                 @Nullable FileEditor oldEditor,
                                 @Nullable VirtualFile newFile,
@@ -42,7 +41,7 @@ public final class FileEditorManagerEvent extends EventObject {
     this(source, oldFile, oldEditor, null, newFile, newEditor, null);
   }
   
-  public FileEditorManagerEvent(@Nonnull FileEditorManager source,
+  public FileEditorManagerEvent(FileEditorManager source,
                                 @Nullable VirtualFile oldFile,
                                 @Nullable FileEditor oldEditor,
                                 @Nullable FileEditorProvider oldProvider,
@@ -59,7 +58,7 @@ public final class FileEditorManagerEvent extends EventObject {
     myNewProvider = newProvider;
   }
 
-  @Nonnull
+  
   public FileEditorManager getManager(){
     return (FileEditorManager)getSource();
   }

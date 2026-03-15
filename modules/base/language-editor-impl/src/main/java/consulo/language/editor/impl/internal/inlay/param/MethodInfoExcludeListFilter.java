@@ -7,7 +7,6 @@ import consulo.language.editor.inlay.HintInfo;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.editor.internal.ParameterNameHintsSettings;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,20 +24,20 @@ public final class MethodInfoExcludeListFilter implements HintInfoFilter {
             .collect(Collectors.toList());
     }
 
-    public static @Nonnull MethodInfoExcludeListFilter forLanguage(@Nonnull Language language) {
+    public static MethodInfoExcludeListFilter forLanguage(Language language) {
         Set<String> list = fullExcludelist(language);
         return new MethodInfoExcludeListFilter(list);
     }
 
     @Override
-    public boolean showHint(@Nonnull HintInfo info) {
+    public boolean showHint(HintInfo info) {
         if (info instanceof HintInfo.MethodInfo methodInfo) {
             return !ContainerUtil.exists(myMatchers, (e) -> e.isMatching(methodInfo.getFullyQualifiedName(), methodInfo.getParamNames()));
         }
         return false;
     }
 
-    private static @Nonnull Set<String> fullExcludelist(Language language) {
+    private static Set<String> fullExcludelist(Language language) {
         InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
         if (provider == null) {
             return Collections.emptySet();
@@ -52,7 +51,7 @@ public final class MethodInfoExcludeListFilter implements HintInfoFilter {
         return excludeList;
     }
 
-    private static @Nonnull Set<String> excludeList(@Nonnull Language language) {
+    private static Set<String> excludeList(Language language) {
         InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
         if (provider != null) {
             ParameterNameHintsSettings settings = ParameterNameHintsSettings.getInstance();

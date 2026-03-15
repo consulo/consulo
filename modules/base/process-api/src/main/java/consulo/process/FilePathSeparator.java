@@ -17,7 +17,6 @@ package consulo.process;
 
 import consulo.platform.Platform;
 
-import jakarta.annotation.Nonnull;
 
 public enum FilePathSeparator {
   WINDOWS('\\', ';'), UNIX('/', ':');
@@ -30,7 +29,7 @@ public enum FilePathSeparator {
     this.pathSeparator = pathSeparator;
   }
 
-  @Nonnull
+  
   public static FilePathSeparator current() {
     return Platform.current().os().isWindows() ? WINDOWS : UNIX;
   }

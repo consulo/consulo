@@ -18,7 +18,6 @@ package consulo.desktop.awt.ui.impl.image;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -71,7 +70,7 @@ public abstract class DesktopBaseLazyImageImpl extends JBUI.RasterJBIcon impleme
 
   protected abstract long getModificationCount();
   
-  @Nonnull
+  
   protected abstract Icon calcIcon();
 
   public final void load() {

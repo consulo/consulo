@@ -17,7 +17,7 @@ package consulo.language.editor.navigation;
 
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene.Kudelevsky

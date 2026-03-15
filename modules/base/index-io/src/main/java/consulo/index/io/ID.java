@@ -22,8 +22,7 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 
 /**
@@ -60,13 +59,13 @@ public class ID<K, V> extends IndexId<K, V> {
     }
   }
 
-  @Nonnull
+  
   private static File getEnumFile() {
     File indexFolder = ContainerPathManager.get().getIndexRoot();
     return new File(indexFolder, "indices.enum");
   }
 
-  protected ID(@Nonnull String name) {
+  protected ID(String name) {
     super(name);
     myUniqueId = stringToId(name);
 
@@ -74,7 +73,7 @@ public class ID<K, V> extends IndexId<K, V> {
     assert old == null : "ID with name '" + name + "' is already registered";
   }
 
-  private static short stringToId(@Nonnull String name) {
+  private static short stringToId(String name) {
     synchronized (ourNameToIdRegistry) {
       if (ourNameToIdRegistry.containsKey(name)) {
         return (short)ourNameToIdRegistry.getInt(name);
@@ -114,15 +113,15 @@ public class ID<K, V> extends IndexId<K, V> {
     }
   }
 
-  @Nonnull
-  public static <K, V> ID<K, V> create(@Nonnull String name) {
+  
+  public static <K, V> ID<K, V> create(String name) {
     ID<K, V> found = findByName(name);
     return found == null ? new ID<>(name) : found;
   }
 
   @Nullable
   @SuppressWarnings("unchecked")
-  public static <K, V> ID<K, V> findByName(@Nonnull String name) {
+  public static <K, V> ID<K, V> findByName(String name) {
     return (ID<K, V>)findById(stringToId(name));
   }
 

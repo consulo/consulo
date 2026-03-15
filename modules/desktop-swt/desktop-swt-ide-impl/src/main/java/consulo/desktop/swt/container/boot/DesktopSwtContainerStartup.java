@@ -28,7 +28,6 @@ import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.desktop.swt.starter.DesktopSwtApplicationStarter;
 import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -38,14 +37,14 @@ import java.util.Map;
  * @since 27/04/2021
  */
 public class DesktopSwtContainerStartup implements ContainerStartup {
-    @Nonnull
+    
     @Override
-    public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
+    public ContainerPathManager createPathManager(Map<String, Object> args) {
         return new DesktopContainerPathManager();
     }
 
     @Override
-    public void run(@Nonnull Map<String, Object> map) {
+    public void run(Map<String, Object> map) {
         StatCollector stat = (StatCollector) map.get(ContainerStartup.STAT_COLLECTOR);
         String[] args = (String[]) map.get(ContainerStartup.ARGS);
 

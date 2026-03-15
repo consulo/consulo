@@ -5,8 +5,7 @@ import consulo.execution.ui.awt.EnvironmentVariablesComponent;
 import consulo.process.cmd.GeneralCommandLine;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,7 +32,7 @@ public final class EnvironmentVariablesData {
   private final String myEnvironmentFile;
   private final boolean myPassParentEnvs;
 
-  private EnvironmentVariablesData(@Nonnull Map<String, String> envs, boolean passParentEnvs, @Nullable String environmentFile) {
+  private EnvironmentVariablesData(Map<String, String> envs, boolean passParentEnvs, @Nullable String environmentFile) {
     // insertion order must be preserved - Map.copyOf cannot be used here
     myEnvs = envs.isEmpty() ? Map.of() : Collections.unmodifiableMap(new LinkedHashMap<>(envs));
     myPassParentEnvs = passParentEnvs;
@@ -43,7 +42,7 @@ public final class EnvironmentVariablesData {
   /**
    * @return immutable Map instance containing user-defined environment variables (iteration order is reliable user-specified)
    */
-  @Nonnull
+  
   public Map<String, String> getEnvs() {
     return myEnvs;
   }
@@ -79,8 +78,8 @@ public final class EnvironmentVariablesData {
     return "envs=" + myEnvs + ", passParentEnvs=" + myPassParentEnvs + ", environmentFile=" + myEnvironmentFile;
   }
 
-  @Nonnull
-  public static EnvironmentVariablesData readExternal(@Nonnull Element element) {
+  
+  public static EnvironmentVariablesData readExternal(Element element) {
     Element envsElement = element.getChild(ENVS);
     if (envsElement == null) {
       return DEFAULT;
@@ -101,7 +100,7 @@ public final class EnvironmentVariablesData {
     return create(envs, passParentEnvs);
   }
 
-  public void writeExternal(@Nonnull Element parent) {
+  public void writeExternal(Element parent) {
     Element envsElement = new Element(ENVS);
     if (!myPassParentEnvs) {
       // Avoid writing pass-parent-envs="true" to minimize changes in xml comparing it to xml written by
@@ -114,7 +113,7 @@ public final class EnvironmentVariablesData {
     parent.addContent(envsElement);
   }
 
-  public void configureCommandLine(@Nonnull GeneralCommandLine commandLine, boolean consoleParentEnvs) {
+  public void configureCommandLine(GeneralCommandLine commandLine, boolean consoleParentEnvs) {
     commandLine.withParentEnvironmentType(!myPassParentEnvs ? GeneralCommandLine.ParentEnvironmentType.NONE : consoleParentEnvs ? GeneralCommandLine.ParentEnvironmentType.CONSOLE : GeneralCommandLine.ParentEnvironmentType.SYSTEM);
     commandLine.withEnvironment(myEnvs);
   }
@@ -125,23 +124,23 @@ public final class EnvironmentVariablesData {
    * @param passParentEnvs true if system environment should be passed
    */
   public static
-  @Nonnull
-  EnvironmentVariablesData create(@Nonnull Map<String, String> envs, boolean passParentEnvs) {
+  
+  EnvironmentVariablesData create(Map<String, String> envs, boolean passParentEnvs) {
     return passParentEnvs && envs.isEmpty() ? DEFAULT : new EnvironmentVariablesData(envs, passParentEnvs, null);
   }
 
   public
-  @Nonnull
-  EnvironmentVariablesData with(@Nonnull Map<String, String> envs) {
+  
+  EnvironmentVariablesData with(Map<String, String> envs) {
     return new EnvironmentVariablesData(envs, myPassParentEnvs, myEnvironmentFile);
   }
 
-  @Nonnull
+  
   public EnvironmentVariablesData with(boolean passParentEnvs) {
     return new EnvironmentVariablesData(myEnvs, passParentEnvs, myEnvironmentFile);
   }
 
-  @Nonnull
+  
   public EnvironmentVariablesData with(@Nullable String environmentFile) {
     return new EnvironmentVariablesData(myEnvs, myPassParentEnvs, environmentFile);
   }

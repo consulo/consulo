@@ -3,7 +3,7 @@ package consulo.undoRedo.internal;
 
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a command currently being executed by a command processor.

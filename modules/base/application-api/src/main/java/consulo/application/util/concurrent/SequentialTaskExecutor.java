@@ -17,7 +17,6 @@
 package consulo.application.util.concurrent;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
@@ -27,13 +26,13 @@ public class SequentialTaskExecutor {
   private SequentialTaskExecutor() {
   }
 
-  @Nonnull
-  public static ExecutorService createSequentialApplicationPoolExecutor(@Nonnull String name) {
+  
+  public static ExecutorService createSequentialApplicationPoolExecutor(String name) {
     return AppExecutorUtil.createBoundedApplicationPoolExecutor(name, 1);
   }
 
-  @Nonnull
-  public static ExecutorService createSequentialApplicationPoolExecutor(@Nonnull String name, @Nonnull Executor executor) {
+  
+  public static ExecutorService createSequentialApplicationPoolExecutor(String name, Executor executor) {
     return AppExecutorUtil.createBoundedApplicationPoolExecutor(name, executor, 1);
   }
 }

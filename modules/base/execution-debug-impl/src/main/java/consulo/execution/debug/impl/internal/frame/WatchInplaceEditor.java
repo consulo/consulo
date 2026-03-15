@@ -22,8 +22,7 @@ import consulo.execution.debug.impl.internal.ui.tree.node.WatchNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchesRootNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -33,7 +32,7 @@ public class WatchInplaceEditor extends XDebuggerTreeInplaceEditor {
   private final XWatchesView myWatchesView;
   private final WatchNode myOldNode;
 
-  public WatchInplaceEditor(@Nonnull WatchesRootNode rootNode,
+  public WatchInplaceEditor(WatchesRootNode rootNode,
                             XWatchesView watchesView,
                             WatchNode node,
                             @Nullable WatchNode oldNode) {

@@ -32,11 +32,11 @@ import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
+import org.jspecify.annotations.Nullable;
 
 /**
  * for vcses where it is reasonable to ask revision of each item separately
@@ -61,7 +61,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       return "NOT_LOADED";
     }
 
-    public int compareTo(@Nonnull VcsRevisionNumber o) {
+    public int compareTo(VcsRevisionNumber o) {
       return o == this ? 0 : -1;
     }
   };
@@ -70,7 +70,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       return "UNKNOWN";
     }
 
-    public int compareTo(@Nonnull VcsRevisionNumber o) {
+    public int compareTo(VcsRevisionNumber o) {
       return o == this ? 0 : -1;
     }
   };
@@ -204,7 +204,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private VirtualFile getRootForPath(String s) {
     return myVcsManager.getVcsRootFor(VcsUtil.getFilePath(s, false));
   }
@@ -225,7 +225,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   }
 
   // +-
-  @Nonnull
+  
   private LazyRefreshingSelfQueue<String> getQueue(VcsRoot vcsRoot) {
     synchronized (myLock) {
       LazyRefreshingSelfQueue<String> queue = myRefreshingQueues.get(vcsRoot);

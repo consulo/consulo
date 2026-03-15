@@ -18,7 +18,6 @@ package consulo.ide.newModule;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -53,7 +52,7 @@ public class NewModuleContext extends NewModuleContextGroup {
     }
 
     @Override
-    public int compareTo(@Nonnull Group o) {
+    public int compareTo(Group o) {
       return 0;
     }
   }
@@ -83,7 +82,7 @@ public class NewModuleContext extends NewModuleContextGroup {
     }
 
     @Override
-    public int compareTo(@Nonnull Item o) {
+    public int compareTo(Item o) {
       return 0;
     }
 
@@ -97,8 +96,8 @@ public class NewModuleContext extends NewModuleContextGroup {
     super("", LocalizeValue.empty(), null);
   }
 
-  @Nonnull
-  public Group get(@Nonnull String id) {
+  
+  public Group get(String id) {
     if (UGROUPED.equals(id)) {
       return new Group(this);
     }
@@ -106,9 +105,9 @@ public class NewModuleContext extends NewModuleContextGroup {
     return new Group(group);
   }
 
-  @Nonnull
+  
   @Deprecated
-  public Group createGroup(@Nonnull String id, @Nonnull String name) {
+  public Group createGroup(String id, String name) {
     if (UGROUPED.equals(id)) {
       return new Group(this);
     }

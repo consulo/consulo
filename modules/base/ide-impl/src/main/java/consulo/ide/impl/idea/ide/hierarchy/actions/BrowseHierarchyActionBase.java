@@ -43,8 +43,7 @@ import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -63,14 +62,14 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     private static final Logger LOG = Logger.getInstance(BrowseHierarchyActionBase.class);
     private final Class<T> myHierarchyClass;
 
-    protected BrowseHierarchyActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Class<T> hierarchyClass) {
+    protected BrowseHierarchyActionBase(LocalizeValue text, LocalizeValue description, Class<T> hierarchyClass) {
         super(text, description);
         myHierarchyClass = hierarchyClass;
     }
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -94,10 +93,10 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
 
     @RequiredUIAccess
     public static void createAndAddToPanel(
-        @Nonnull Project project,
-        @Nonnull HierarchyProvider provider,
-        @Nonnull PsiElement target,
-        @Nonnull Consumer<HierarchyBrowser> afterInit
+        Project project,
+        HierarchyProvider provider,
+        PsiElement target,
+        Consumer<HierarchyBrowser> afterInit
     ) {
         HierarchyBrowser hierarchyBrowser = provider.createHierarchyBrowser(target);
 
@@ -132,7 +131,7 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (!Application.get().getExtensionPoint(myHierarchyClass).hasAnyExtensions()) {
             e.getPresentation().setVisible(false);
         }
@@ -144,7 +143,7 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     }
 
     @RequiredReadAction
-    private boolean isEnabled(@Nonnull AnActionEvent e) {
+    private boolean isEnabled(AnActionEvent e) {
         HierarchyProvider provider = getProvider(e);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Using provider " + provider);
@@ -161,17 +160,17 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
 
     @Nullable
     @RequiredReadAction
-    private HierarchyProvider getProvider(@Nonnull AnActionEvent e) {
+    private HierarchyProvider getProvider(AnActionEvent e) {
         return findProvider(myHierarchyClass, e.getData(PsiElement.KEY), e.getData(PsiFile.KEY), e.getDataContext());
     }
 
     @Nullable
     @RequiredReadAction
     public static <T extends HierarchyProvider> T findProvider(
-        @Nonnull Class<T> extension,
+        Class<T> extension,
         @Nullable PsiElement psiElement,
         @Nullable PsiFile psiFile,
-        @Nonnull DataContext dataContext
+        DataContext dataContext
     ) {
         T provider = findBestHierarchyProvider(extension, psiElement, dataContext);
         if (provider == null) {

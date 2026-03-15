@@ -11,7 +11,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -20,7 +19,7 @@ import javax.swing.*;
  * @since 2011-03-05
  */
 public class SwitchToReplace extends AnAction {
-    public SwitchToReplace(@Nonnull JComponent shortcutHolder) {
+    public SwitchToReplace(JComponent shortcutHolder) {
         AnAction replaceAction = ActionManager.getInstance().getAction(IdeActions.ACTION_REPLACE);
         if (replaceAction != null) {
             registerCustomShortcutSet(replaceAction.getShortcutSet(), shortcutHolder);
@@ -28,7 +27,7 @@ public class SwitchToReplace extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
         e.getPresentation().setEnabled(editor != null && search != null && !ConsoleViewUtil.isConsoleViewEditor(editor));
@@ -36,7 +35,7 @@ public class SwitchToReplace extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         EditorSearchSession search = e.getRequiredData(EditorSearchSession.SESSION_KEY);
         FindModel findModel = search.getFindModel();
         FindUtil.configureFindModel(true, e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE), findModel, false);

@@ -18,7 +18,6 @@ package consulo.language.editor.completion;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,5 +26,5 @@ import jakarta.annotation.Nonnull;
 @FunctionalInterface
 public interface CompletionProvider {
   @RequiredReadAction
-  void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result);
+  void addCompletions(CompletionParameters parameters, ProcessingContext context, CompletionResultSet result);
 }

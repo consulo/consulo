@@ -21,7 +21,6 @@ import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.project.Project;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 public abstract class ProjectRootManagerEx extends ProjectRootManager {
   public static ProjectRootManagerEx getInstanceEx(Project project) {
@@ -29,15 +28,15 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
   }
 
   // invokes runnable surrounded by beforeRootsChange()/rootsChanged() callbacks
-  public abstract void makeRootsChange(@Nonnull Runnable runnable, boolean filetypes, boolean fireEvents);
+  public abstract void makeRootsChange(Runnable runnable, boolean filetypes, boolean fireEvents);
 
   public abstract void markRootsForRefresh();
 
   public abstract void clearScopesCachesForModules();
 
-  public abstract void addOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry);
+  public abstract void addOrderWithTracking(OrderEntryWithTracking orderEntry);
 
-  public abstract void removeOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry);
+  public abstract void removeOrderWithTracking(OrderEntryWithTracking orderEntry);
 
   public static String extractLocalPath(String url) {
     String path = VirtualFileUtil.urlToPath(url);

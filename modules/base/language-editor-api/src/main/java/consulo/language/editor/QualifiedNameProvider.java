@@ -22,7 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole

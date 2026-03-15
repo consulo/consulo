@@ -48,7 +48,6 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -127,7 +126,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         myTree.setCellRenderer(new ColoredTreeCellRenderer() {
             @Override
             public void customizeCellRenderer(
-                @Nonnull JTree tree,
+                JTree tree,
                 Object value,
                 boolean selected,
                 boolean expanded,
@@ -184,7 +183,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Classpath Details");
@@ -335,7 +334,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
+        public Object getData(Key<?> dataId) {
             if (Project.KEY == dataId) {
                 return myModule.getProject();
             }
@@ -478,7 +477,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     static class ExplanationTreeRenderer extends ColoredTreeCellRenderer {
         @Override
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,
@@ -549,7 +548,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
-        @Nonnull
+        
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myExplanation.url());
@@ -608,7 +607,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
-        @Nonnull
+        
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myExplanation.entry().getPresentableName());
@@ -631,7 +630,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return mySettings.isSdkIncluded();
         }
 
@@ -640,7 +639,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          */
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             mySettings.setIncludeSdk(state);
             updateTree();
         }
@@ -661,7 +660,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return mySettings.isUrlMode();
         }
 
@@ -670,7 +669,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          */
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             mySettings.setUrlMode(state);
             updateTree();
         }
@@ -688,7 +687,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
-        @Nonnull
+        
         @Override
         public DefaultActionGroup createPopupActionGroup(JComponent component) {
             if (myItems == null) {
@@ -697,7 +696,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
                     myItems.addAction(new DumbAwareAction(classpathType.getDescription()) {
                         @Override
                         @RequiredUIAccess
-                        public void actionPerformed(@Nonnull AnActionEvent e) {
+                        public void actionPerformed(AnActionEvent e) {
                             mySettings.setRuntime(classpathType.isRuntime());
                             mySettings.setTest(classpathType.isTest());
                             updateTree();
@@ -713,7 +712,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          */
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             updateText(presentation);
         }

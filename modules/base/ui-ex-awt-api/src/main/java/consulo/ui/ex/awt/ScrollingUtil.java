@@ -21,11 +21,8 @@ import consulo.logging.Logger;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -43,21 +40,21 @@ import java.awt.event.KeyEvent;
  */
 public class ScrollingUtil {
     private static final Logger LOG = Logger.getInstance(ScrollingUtil.class);
-    @NonNls
+    
     protected static final String SCROLLUP_ACTION_ID = "scrollUp";
-    @NonNls
+    
     protected static final String SCROLLDOWN_ACTION_ID = "scrollDown";
-    @NonNls
+    
     protected static final String SELECT_PREVIOUS_ROW_ACTION_ID = "selectPreviousRow";
-    @NonNls
+    
     protected static final String SELECT_NEXT_ROW_ACTION_ID = "selectNextRow";
-    @NonNls
+    
     protected static final String SELECT_LAST_ROW_ACTION_ID = "selectLastRow";
-    @NonNls
+    
     protected static final String SELECT_FIRST_ROW_ACTION_ID = "selectFirstRow";
-    @NonNls
+    
     protected static final String MOVE_HOME_ID = "MOVE_HOME";
-    @NonNls
+    
     protected static final String MOVE_END_ID = "MOVE_END";
 
     public static final int ROW_PADDING = 2;
@@ -82,7 +79,7 @@ public class ScrollingUtil {
         selectItem(list, selectedIndex);
     }
 
-    public static <T> boolean selectItem(@Nonnull JList<T> list, @Nonnull T item) {
+    public static <T> boolean selectItem(JList<T> list, T item) {
         ListModel<T> model = list.getModel();
         for (int i = 0; i < model.getSize(); i++) {
             T anItem = model.getElementAt(i);
@@ -393,7 +390,7 @@ public class ScrollingUtil {
         }
     }
 
-    public static void ensureSelectionExists(@Nonnull JTable table) {
+    public static void ensureSelectionExists(JTable table) {
         int size = table.getModel().getRowCount();
         if (size == 0) {
             table.clearSelection();
@@ -411,7 +408,7 @@ public class ScrollingUtil {
         }
     }
 
-    @Nonnull
+    
     private static Rectangle getCellBounds(JTable table, int top, int bottom) {
         return table.getCellRect(top, 0, true).union(table.getCellRect(bottom, 0, true));
     }
@@ -619,7 +616,7 @@ public class ScrollingUtil {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(SpeedSearchSupply.getSupply(myComponent) == null && !isEmpty(myComponent));
         }
     }

@@ -46,7 +46,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
@@ -77,7 +76,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
     // todo myModulesConfigurator.addAllModuleChangeListener(moduleRootModel -> daemonAnalyzer.queueUpdate(mySettingsElement));
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return StandardConfigurableIds.PROJECT_GROUP;
@@ -88,10 +87,10 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
     return mySettingsElement;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   @Override
-  public Component createOptionsPanel(@Nonnull Disposable parentUIDisposable) {
+  public Component createOptionsPanel(Disposable parentUIDisposable) {
     init(parentUIDisposable);
     return myLayout;
   }

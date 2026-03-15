@@ -15,13 +15,12 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 class ByteArrayUtils {
   private static final int BYTE_OFFSET = 8;
   private static final int BYTE_MASK = 0xff;
 
-  public static int countBytesAfterCompression(@Nonnull IntList deltaList) {
+  public static int countBytesAfterCompression(IntList deltaList) {
     int count = 0;
     for (int i = 0; i < deltaList.size(); i++) {
       count += sizeOf(deltaList.get(i));

@@ -13,7 +13,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

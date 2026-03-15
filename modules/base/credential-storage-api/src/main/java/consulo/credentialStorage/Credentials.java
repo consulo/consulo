@@ -1,7 +1,7 @@
 package consulo.credentialStorage;
 
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a pair of user and password.

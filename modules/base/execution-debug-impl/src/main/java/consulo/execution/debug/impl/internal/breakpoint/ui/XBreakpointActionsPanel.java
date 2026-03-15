@@ -24,8 +24,7 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionComboBox;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public class XBreakpointActionsPanel extends XBreakpointPropertiesSubPanel {
   private JPanel myExpressionPanel;
   private XDebuggerExpressionComboBox myLogExpressionComboBox;
 
-  public void init(Project project, XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint, @Nullable XDebuggerEditorsProvider debuggerEditorsProvider) {
+  public void init(Project project, XBreakpointManager breakpointManager, XBreakpointBase breakpoint, @Nullable XDebuggerEditorsProvider debuggerEditorsProvider) {
     init(project, breakpointManager, breakpoint);
     if (debuggerEditorsProvider != null) {
       ActionListener listener = new ActionListener() {

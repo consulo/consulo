@@ -24,11 +24,10 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.versionControlSystem.root.VcsRootDetector;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -39,31 +38,31 @@ import java.util.*;
 public class VcsRootDetectorImpl implements VcsRootDetector {
   private static final int MAXIMUM_SCAN_DEPTH = 2;
 
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final ProjectRootManager myProjectManager;
-  @Nonnull
+  
   private final ProjectLevelVcsManager myVcsManager;
-  @Nonnull
+  
   private final List<VcsRootChecker> myCheckers;
 
   @Inject
-  public VcsRootDetectorImpl(@Nonnull Project project,
-                             @Nonnull ProjectRootManager projectRootManager,
-                             @Nonnull ProjectLevelVcsManager projectLevelVcsManager) {
+  public VcsRootDetectorImpl(Project project,
+                             ProjectRootManager projectRootManager,
+                             ProjectLevelVcsManager projectLevelVcsManager) {
     myProject = project;
     myProjectManager = projectRootManager;
     myVcsManager = projectLevelVcsManager;
     myCheckers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
   }
 
-  @Nonnull
+  
   public Collection<VcsRoot> detect() {
     return detect(myProject.getBaseDir());
   }
 
-  @Nonnull
+  
   public Collection<VcsRoot> detect(@Nullable VirtualFile startDir) {
     if (startDir == null || myCheckers.isEmpty()) {
       return Collections.emptyList();
@@ -81,7 +80,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     return roots;
   }
 
-  @Nonnull
+  
   private Set<VcsRoot> scanForRootsInContentRoots() {
     Set<VcsRoot> vcsRoots = new HashSet<VcsRoot>();
     VirtualFile[] roots = myProjectManager.getContentRoots();
@@ -103,8 +102,8 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     return vcsRoots;
   }
 
-  @Nonnull
-  private Set<VcsRoot> scanForRootsInsideDir(@Nonnull VirtualFile dir, int depth) {
+  
+  private Set<VcsRoot> scanForRootsInsideDir(VirtualFile dir, int depth) {
     Set<VcsRoot> roots = new HashSet<VcsRoot>();
     if (depth > MAXIMUM_SCAN_DEPTH) {
       // performance optimization via limitation: don't scan deep though the whole VFS, 2 levels under a content root is enough
@@ -124,13 +123,13 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     return roots;
   }
 
-  @Nonnull
-  private Set<VcsRoot> scanForRootsInsideDir(@Nonnull VirtualFile dir) {
+  
+  private Set<VcsRoot> scanForRootsInsideDir(VirtualFile dir) {
     return scanForRootsInsideDir(dir, 0);
   }
 
-  @Nonnull
-  private List<VcsRoot> scanForSingleRootAboveDir(@Nonnull VirtualFile dir) {
+  
+  private List<VcsRoot> scanForSingleRootAboveDir(VirtualFile dir) {
     List<VcsRoot> roots = new ArrayList<VcsRoot>();
     if (myProject.isDisposed()) {
       return roots;
@@ -150,8 +149,8 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     return roots;
   }
 
-  @Nonnull
-  private List<AbstractVcs> getVcsListFor(@Nonnull VirtualFile dir) {
+  
+  private List<AbstractVcs> getVcsListFor(VirtualFile dir) {
     List<AbstractVcs> vcsList = new ArrayList<AbstractVcs>();
     for (VcsRootChecker checker : myCheckers) {
       if (checker.isRoot(dir.getPath())) {

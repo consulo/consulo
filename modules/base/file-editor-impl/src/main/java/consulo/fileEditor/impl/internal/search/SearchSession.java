@@ -19,16 +19,15 @@ import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.find.FindModel;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 public interface SearchSession {
   Key<SearchSession> KEY = Key.create("search.replace.session");
   String INCORRECT_REGEX_MESSAGE = "Incorrect regular expression";
 
-  @Nonnull
+  
   FindModel getFindModel();
 
-  @Nonnull
+  
   SearchReplaceComponent getComponent();
 
   boolean hasMatches();

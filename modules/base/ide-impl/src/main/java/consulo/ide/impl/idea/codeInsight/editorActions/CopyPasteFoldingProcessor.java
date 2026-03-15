@@ -25,7 +25,6 @@ import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -37,7 +36,7 @@ import java.util.List;
 
 @ExtensionImpl
 public class CopyPasteFoldingProcessor extends CopyPastePostProcessor<FoldingTransferableData> {
-  @Nonnull
+  
   @Override
   public List<FoldingTransferableData> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets) {
     // might be slow
@@ -63,7 +62,7 @@ public class CopyPasteFoldingProcessor extends CopyPastePostProcessor<FoldingTra
     return Collections.singletonList(new FoldingTransferableData(list.toArray(new FoldingData[list.size()])));
   }
 
-  @Nonnull
+  
   @Override
   public List<FoldingTransferableData> extractTransferableData(Transferable content) {
     FoldingTransferableData foldingData = null;

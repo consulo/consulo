@@ -2,7 +2,6 @@ package consulo.language.util;
 
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class ProcessingContext {
     mySharedContext = sharedContext;
   }
 
-  @Nonnull
+  
   public SharedProcessingContext getSharedContext() {
     if (mySharedContext == null) {
       return mySharedContext = new SharedProcessingContext();
@@ -29,11 +28,11 @@ public class ProcessingContext {
   }
 
   @SuppressWarnings({"ConstantConditions"})
-  public Object get(@Nonnull Object key) {
+  public Object get(Object key) {
     return myMap == null ? null : myMap.get(key);
   }
 
-  public void put(@Nonnull Object key, @Nonnull Object value) {
+  public void put(Object key, Object value) {
     checkMapInitialized();
     myMap.put(key, value);
   }

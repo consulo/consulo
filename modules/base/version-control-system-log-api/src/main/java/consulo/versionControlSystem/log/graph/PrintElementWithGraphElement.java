@@ -16,29 +16,28 @@
 
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class PrintElementWithGraphElement implements PrintElement {
 
   protected final int myRowIndex;
   protected final int myPositionInCurrentRow;
 
-  @Nonnull
+  
   protected final GraphElement myGraphElement;
-  @Nonnull
+  
   protected final PrintElementManager myPrintElementManager;
 
   protected PrintElementWithGraphElement(int rowIndex,
                                          int positionInCurrentRow,
-                                         @Nonnull GraphElement graphElement,
-                                         @Nonnull PrintElementManager printElementManager) {
+                                         GraphElement graphElement,
+                                         PrintElementManager printElementManager) {
     myRowIndex = rowIndex;
     myPositionInCurrentRow = positionInCurrentRow;
     myGraphElement = graphElement;
     myPrintElementManager = printElementManager;
   }
 
-  @Nonnull
+  
   public GraphElement getGraphElement() {
     return myGraphElement;
   }
@@ -63,9 +62,9 @@ public abstract class PrintElementWithGraphElement implements PrintElement {
     return myPrintElementManager.isSelected(this);
   }
 
-  @Nonnull
-  public static PrintElementWithGraphElement converted(@Nonnull PrintElementWithGraphElement element,
-                                                       @Nonnull GraphElement convertedGraphElement) {
+  
+  public static PrintElementWithGraphElement converted(PrintElementWithGraphElement element,
+                                                       GraphElement convertedGraphElement) {
     return new PrintElementWithGraphElement(element.getRowIndex(), element.getPositionInCurrentRow(), convertedGraphElement,
                                             element.myPrintElementManager) {
     };

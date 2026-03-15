@@ -27,8 +27,6 @@ import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 import java.awt.*;
 
@@ -43,7 +41,7 @@ public class FontEditorPreview implements PreviewPanel{
   FontEditorPreview(ColorAndFontOptions options, boolean editable) {
     myOptions = options;
 
-    @Nls String text = getIDEDemoText();
+    String text = getIDEDemoText();
 
     myEditor = (EditorEx)createPreviewEditor(text, 10, 3, -1, myOptions, editable);
 
@@ -65,14 +63,14 @@ public class FontEditorPreview implements PreviewPanel{
       "\n";
   }
 
-  static void installTrafficLights(@Nonnull EditorEx editor) {
+  static void installTrafficLights(EditorEx editor) {
     ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeRenderer(new DumbTrafficLightRenderer());
     ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeVisible(true);
   }
 
   private static class DumbTrafficLightRenderer implements ErrorStripeRenderer {
     @Override
-    public void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r) {
+    public void paint(Component c, Graphics g, Rectangle r) {
       Image icon = AllIcons.General.InspectionsOK;
       TargetAWT.to(icon).paintIcon(c, g, r.x, r.y);
     }
@@ -144,7 +142,7 @@ public class FontEditorPreview implements PreviewPanel{
   }
 
   @Override
-  public void addListener(@Nonnull ColorAndFontSettingsListener listener) {
+  public void addListener(ColorAndFontSettingsListener listener) {
     myDispatcher.addListener(listener);
   }
 

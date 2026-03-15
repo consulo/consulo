@@ -22,8 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,9 +31,8 @@ import jakarta.annotation.Nullable;
 public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Vaadin> implements ListBox<E> {
     @Tag("div")
     public class Vaadin extends com.vaadin.flow.component.listbox.ListBox implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public consulo.ui.Component toUIComponent() {
+        public consulo.ui.@Nullable Component toUIComponent() {
             return WebListBoxImpl.this;
         }
     }
@@ -45,14 +43,14 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
         myModel = model;
     }
 
-    @Nonnull
+    
     @Override
     public ListModel<E> getListModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRenderer renderer) {
+    public void setRenderer(TextItemRenderer renderer) {
     }
 
     @Override
@@ -70,7 +68,7 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
     public void setValue(Object value, boolean fireListeners) {
     }
 
-    @Nonnull
+    
     @Override
     public WebListBoxImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

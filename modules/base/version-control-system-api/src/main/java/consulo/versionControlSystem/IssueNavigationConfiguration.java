@@ -26,7 +26,6 @@ import consulo.component.util.SimpleModificationTracker;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -90,7 +89,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
     }
 
     @Override
-    public int compareTo(@Nonnull LinkMatch rhs) {
+    public int compareTo(LinkMatch rhs) {
       return myRange.getStartOffset() - rhs.getRange().getStartOffset();
     }
   }

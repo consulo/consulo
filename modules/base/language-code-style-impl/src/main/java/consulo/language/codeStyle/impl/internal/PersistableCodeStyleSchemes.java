@@ -28,8 +28,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Rustam Vishnyakov
@@ -41,7 +40,7 @@ public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements
   public String CURRENT_SCHEME_NAME = CodeStyleScheme.DEFAULT_SCHEME_NAME;
 
   @Inject
-  public PersistableCodeStyleSchemes(@Nonnull SchemeManagerFactory schemeManagerFactory) {
+  public PersistableCodeStyleSchemes(SchemeManagerFactory schemeManagerFactory) {
     super(schemeManagerFactory);
   }
 
@@ -52,7 +51,7 @@ public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements
     CURRENT_SCHEME_NAME = currentScheme == null ? null : currentScheme.getName();
     return XmlSerializer.serialize(this, new SerializationFilter() {
       @Override
-      public boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean) {
+      public boolean accepts(Accessor accessor, Object bean) {
         if ("CURRENT_SCHEME_NAME".equals(accessor.getName())) {
           return !CodeStyleScheme.DEFAULT_SCHEME_NAME.equals(accessor.read(bean));
         }
@@ -64,7 +63,7 @@ public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements
   }
 
   @Override
-  public void loadState(@Nonnull Element state) {
+  public void loadState(Element state) {
     CURRENT_SCHEME_NAME = CodeStyleScheme.DEFAULT_SCHEME_NAME;
     XmlSerializer.deserializeInto(this, state);
     CodeStyleScheme current = CURRENT_SCHEME_NAME == null ? null : findSchemeByName(CURRENT_SCHEME_NAME);

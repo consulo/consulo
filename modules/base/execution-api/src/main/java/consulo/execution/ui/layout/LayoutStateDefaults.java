@@ -18,19 +18,18 @@ package consulo.execution.ui.layout;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface LayoutStateDefaults {
-  @Nonnull
+  
     //this
   LayoutStateDefaults initTabDefaults(int tabId, @Nullable String defaultTabText, @Nullable Image defaultTabIcon);
 
-  @Nonnull
+  
     // this
-  LayoutStateDefaults initFocusContent(@Nonnull String id, @Nonnull String condition);
+  LayoutStateDefaults initFocusContent(String id, String condition);
 
-  @Nonnull
+  
     //this
-  LayoutStateDefaults initFocusContent(@Nonnull String id, @Nonnull String condition, @Nonnull LayoutAttractionPolicy policy);
+  LayoutStateDefaults initFocusContent(String id, String condition, LayoutAttractionPolicy policy);
 }

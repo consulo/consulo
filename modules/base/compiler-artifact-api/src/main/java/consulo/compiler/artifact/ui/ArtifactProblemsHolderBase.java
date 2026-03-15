@@ -16,7 +16,6 @@
 package consulo.compiler.artifact.ui;
 
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,12 +27,12 @@ public abstract class ArtifactProblemsHolderBase implements ArtifactProblemsHold
     myContext = context;
   }
 
-  @Nonnull
+  
   public PackagingElementResolvingContext getContext() {
     return myContext;
   }
 
-  public void registerError(@Nonnull String message, @Nonnull String problemTypeId) {
+  public void registerError(String message, String problemTypeId) {
     registerError(message, problemTypeId, null);
   }
 }

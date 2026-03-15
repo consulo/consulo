@@ -23,7 +23,6 @@ import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.action.UpToDateLineNumberListener;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ui.ex.awt.transferable.TextTransferable;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -39,7 +38,7 @@ public class CopyRevisionNumberFromAnnotateAction extends AnAction implements Up
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (myLineNumber < 0) {
             return;
         }
@@ -51,7 +50,7 @@ public class CopyRevisionNumberFromAnnotateAction extends AnAction implements Up
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean enabled = myLineNumber >= 0 && myAnnotation.getLineRevisionNumber(myLineNumber) != null;
         e.getPresentation().setEnabledAndVisible(enabled);
     }

@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Toggleable;
 import consulo.util.collection.primitive.ints.IntList;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -38,14 +37,14 @@ public class EditArrangementRuleAction extends AbstractArrangementRuleAction imp
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ArrangementMatchingRulesControl control = getRulesControl(e);
         e.getPresentation().setEnabled(control != null && control.getSelectedModelRows().size() == 1);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ArrangementMatchingRulesControl control = getRulesControl(e);
         if (control == null) {
             return;

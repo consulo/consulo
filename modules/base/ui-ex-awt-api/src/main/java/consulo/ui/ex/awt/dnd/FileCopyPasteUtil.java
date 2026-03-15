@@ -22,8 +22,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.FlavorMap;
@@ -40,15 +39,15 @@ public class FileCopyPasteUtil {
     private FileCopyPasteUtil() {
     }
 
-    public static DataFlavor createDataFlavor(@Nonnull String mimeType) {
+    public static DataFlavor createDataFlavor(String mimeType) {
         return createDataFlavor(mimeType, null, false);
     }
 
-    public static DataFlavor createDataFlavor(@Nonnull String mimeType, @Nullable Class<?> clazz) {
+    public static DataFlavor createDataFlavor(String mimeType, @Nullable Class<?> clazz) {
         return createDataFlavor(mimeType, clazz, false);
     }
 
-    public static DataFlavor createDataFlavor(@Nonnull String mimeType, @Nullable Class<?> clazz, boolean register) {
+    public static DataFlavor createDataFlavor(String mimeType, @Nullable Class<?> clazz, boolean register) {
         try {
             DataFlavor flavor = clazz != null
                 ? new DataFlavor(mimeType + ";class=" + clazz.getName(), null, clazz.getClassLoader())
@@ -70,7 +69,7 @@ public class FileCopyPasteUtil {
         }
     }
 
-    public static DataFlavor createJvmDataFlavor(@Nonnull Class<?> klass) {
+    public static DataFlavor createJvmDataFlavor(Class<?> klass) {
         return createDataFlavor(DataFlavor.javaJVMLocalObjectMimeType, klass, false);
     }
 
@@ -80,13 +79,13 @@ public class FileCopyPasteUtil {
         );
     }
 
-    public static boolean isFileListFlavorAvailable(@Nonnull DnDEvent event) {
+    public static boolean isFileListFlavorAvailable(DnDEvent event) {
         return event.isDataFlavorSupported(DataFlavor.javaFileListFlavor) ||
             event.isDataFlavorSupported(LinuxDragAndDropSupport.uriListFlavor) ||
             event.isDataFlavorSupported(LinuxDragAndDropSupport.gnomeFileListFlavor);
     }
 
-    public static boolean isFileListFlavorAvailable(@Nonnull DataFlavor[] transferFlavors) {
+    public static boolean isFileListFlavorAvailable(DataFlavor[] transferFlavors) {
         for (DataFlavor flavor : transferFlavors) {
             if (flavor != null && (flavor.equals(DataFlavor.javaFileListFlavor) ||
                 flavor.equals(LinuxDragAndDropSupport.uriListFlavor) ||
@@ -98,7 +97,7 @@ public class FileCopyPasteUtil {
     }
 
     @Nullable
-    public static List<File> getFileList(@Nonnull Transferable transferable) {
+    public static List<File> getFileList(Transferable transferable) {
         try {
             if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 @SuppressWarnings({"unchecked"}) List<File> fileList =
@@ -115,7 +114,7 @@ public class FileCopyPasteUtil {
         return null;
     }
 
-    @Nonnull
+    
     public static List<File> getFileListFromAttachedObject(Object attached) {
         List<File> result;
         if (attached instanceof FileFlavorProvider transferableWrapper) {
@@ -130,7 +129,7 @@ public class FileCopyPasteUtil {
         return result == null ? Collections.<File>emptyList() : result;
     }
 
-    @Nonnull
+    
     public static List<VirtualFile> getVirtualFileListFromAttachedObject(Object attached) {
         List<VirtualFile> result;
         List<File> fileList = getFileListFromAttachedObject(attached);

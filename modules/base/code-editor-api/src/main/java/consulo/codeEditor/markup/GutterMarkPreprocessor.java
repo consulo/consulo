@@ -18,11 +18,10 @@ package consulo.codeEditor.markup;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GutterMarkPreprocessor {
-  @Nonnull
-  List<GutterMark> processMarkers(@Nonnull List<GutterMark> list);
+  
+  List<GutterMark> processMarkers(List<GutterMark> list);
 }

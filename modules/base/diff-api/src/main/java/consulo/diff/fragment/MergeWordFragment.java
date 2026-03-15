@@ -16,10 +16,9 @@
 package consulo.diff.fragment;
 
 import consulo.diff.util.ThreeSide;
-import jakarta.annotation.Nonnull;
 
 public interface MergeWordFragment {
-  int getStartOffset(@Nonnull ThreeSide side);
+  int getStartOffset(ThreeSide side);
 
-  int getEndOffset(@Nonnull ThreeSide side);
+  int getEndOffset(ThreeSide side);
 }

@@ -26,7 +26,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -40,12 +39,12 @@ public class XRemoveWatchAction extends XWatchesTreeActionBase {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
+    protected boolean isEnabled(AnActionEvent e, XDebuggerTree tree) {
         return !getSelectedNodes(tree, WatchNodeImpl.class).isEmpty();
     }
 
     @Override
-    protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
+    protected void perform(AnActionEvent e, XDebuggerTree tree, XWatchesView watchesView) {
         List<? extends WatchNodeImpl> nodes = getSelectedNodes(tree, WatchNodeImpl.class);
         watchesView.removeWatches(nodes);
     }

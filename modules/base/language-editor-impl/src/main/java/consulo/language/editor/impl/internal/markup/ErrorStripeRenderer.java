@@ -17,16 +17,15 @@ package consulo.language.editor.impl.internal.markup;
 
 import consulo.codeEditor.Editor;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public interface ErrorStripeRenderer {
-  void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r);
+  void paint(Component c, Graphics g, Rectangle r);
 
   int getSquareSize();
 
-  @Nonnull
-  default AnalyzerStatus getStatus(@Nonnull Editor editor) {
+  
+  default AnalyzerStatus getStatus(Editor editor) {
     return AnalyzerStatus.DEFAULT.getValue();
   }
 }

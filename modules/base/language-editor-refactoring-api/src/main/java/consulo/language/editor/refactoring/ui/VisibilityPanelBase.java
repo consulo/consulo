@@ -17,7 +17,7 @@ package consulo.language.editor.refactoring.ui;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.proxy.EventDispatcher;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;

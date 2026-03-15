@@ -20,14 +20,13 @@ import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link XAttachDebugger} allows to attach to process with specified {@link ProcessInfo}
  */
 public interface XAttachDebugger {
-  @Nonnull
+  
   String getDebuggerDisplayName();
 
   /**
@@ -49,8 +48,8 @@ public interface XAttachDebugger {
    * @throws ExecutionException if an error occurs during attach
    */
   void attachDebugSession(
-    @Nonnull Project project,
-    @Nonnull XAttachHost hostInfo,
-    @Nonnull ProcessInfo info
+    Project project,
+    XAttachHost hostInfo,
+    ProcessInfo info
   ) throws ExecutionException;
 }

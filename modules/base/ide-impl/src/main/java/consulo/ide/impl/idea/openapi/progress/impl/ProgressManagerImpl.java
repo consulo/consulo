@@ -20,8 +20,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.SystemNotifications;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,16 +51,16 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
         return new BackgroundableProcessIndicator(backgroundable);
     }
 
-    @Nonnull
+    
     @Override
     public ProgressIndicator newBackgroundableProcessIndicator(@Nullable ComponentManager project,
-                                                               @Nonnull TaskInfo info,
-                                                               @Nonnull PerformInBackgroundOption option) {
+                                                               TaskInfo info,
+                                                               PerformInBackgroundOption option) {
         return new BackgroundableProcessIndicator((Project) project, info, option);
     }
 
     @Override
-    public void executeProcessUnderProgress(@Nonnull Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
+    public void executeProcessUnderProgress(Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
         CheckCanceledHook hook = progress instanceof PingProgress && myApplication.isDispatchThread() ? p -> {
             ((PingProgress) progress).interact();
             return true;
@@ -81,7 +80,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     }
 
     @Override
-    public boolean runProcessWithProgressSynchronously(@Nonnull Task task) {
+    public boolean runProcessWithProgressSynchronously(Task task) {
         long start = System.currentTimeMillis();
         boolean result = super.runProcessWithProgressSynchronously(task);
         if (result) {
@@ -98,12 +97,12 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
         return result;
     }
 
-    private static void systemNotify(@Nonnull Task.NotificationInfo info) {
+    private static void systemNotify(Task.NotificationInfo info) {
         SystemNotifications.getInstance().notify(info.getNotificationName(), info.getNotificationTitle(), info.getNotificationText());
     }
 
     @Override
-    public void notifyTaskFinished(@Nonnull Task.Backgroundable task, long elapsed) {
+    public void notifyTaskFinished(Task.Backgroundable task, long elapsed) {
         Task.NotificationInfo notificationInfo = task.notifyFinished();
         if (notificationInfo != null && elapsed > 5000) { // snow notification if process took more than 5 secs
             Component window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
@@ -114,7 +113,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     }
 
     @Override
-    public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
+    public boolean runInReadActionWithWriteActionPriority(Runnable action, @Nullable ProgressIndicator indicator) {
         return ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(action, indicator);
     }
 
@@ -123,14 +122,14 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
      * because hooks will be executed on every checkCanceled and can dramatically slow down everything in the IDE.
      */
     @Override
-    public void addCheckCanceledHook(@Nonnull CheckCanceledHook hook) {
+    public void addCheckCanceledHook(CheckCanceledHook hook) {
         if (myHooks.add(hook)) {
             updateShouldCheckCanceled();
         }
     }
 
     @Override
-    public void removeCheckCanceledHook(@Nonnull CheckCanceledHook hook) {
+    public void removeCheckCanceledHook(CheckCanceledHook hook) {
         if (myHooks.remove(hook)) {
             updateShouldCheckCanceled();
         }

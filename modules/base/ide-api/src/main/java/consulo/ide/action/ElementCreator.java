@@ -34,8 +34,7 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -48,18 +47,18 @@ public abstract class ElementCreator {
     private final Project myProject;
     private final LocalizeValue myErrorTitle;
 
-    protected ElementCreator(Project project, @Nonnull LocalizeValue errorTitle) {
+    protected ElementCreator(Project project, LocalizeValue errorTitle) {
         myProject = project;
         myErrorTitle = errorTitle;
     }
 
     protected abstract PsiElement[] create(String newName) throws Exception;
 
-    @Nonnull
+    
     protected abstract LocalizeValue getActionName(String newName);
 
     @RequiredUIAccess
-    public PsiElement[] tryCreate(@Nonnull String inputString) {
+    public PsiElement[] tryCreate(String inputString) {
         if (inputString.isEmpty()) {
             Messages.showMessageDialog(
                 myProject,
@@ -89,7 +88,7 @@ public abstract class ElementCreator {
 
     @Nullable
     @RequiredUIAccess
-    private Exception executeCommand(@Nonnull LocalizeValue commandName, ThrowableRunnable<Exception> invokeCreate) {
+    private Exception executeCommand(LocalizeValue commandName, ThrowableRunnable<Exception> invokeCreate) {
         return CommandProcessor.getInstance().<Exception>newCommand()
             .project(myProject)
             .name(commandName)

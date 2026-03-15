@@ -29,7 +29,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
@@ -43,13 +42,13 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Editor editor = e.getData(Editor.KEY);
         dumpLookupElementWeights(LookupManager.getActiveLookup(editor));
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Editor editor = e.getData(Editor.KEY);
         presentation.setEnabled(editor != null && LookupManager.getActiveLookup(editor) != null);

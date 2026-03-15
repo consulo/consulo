@@ -15,15 +15,14 @@
  */
 package consulo.diff.comparison;
 
-import jakarta.annotation.Nonnull;
 
 abstract class TextChunk {
-  @Nonnull
+  
   private final CharSequence myText;
   private final int myOffset1;
   private final int myOffset2;
 
-  public TextChunk(@Nonnull CharSequence text, int offset1, int offset2) {
+  public TextChunk(CharSequence text, int offset1, int offset2) {
     myText = text;
     myOffset1 = offset1;
     myOffset2 = offset2;
@@ -35,12 +34,12 @@ abstract class TextChunk {
   @Override
   public abstract boolean equals(Object obj);
 
-  @Nonnull
+  
   public CharSequence getContent() {
     return myText.subSequence(myOffset1, myOffset2);
   }
 
-  @Nonnull
+  
   public CharSequence getOriginalText() {
     return myText;
   }

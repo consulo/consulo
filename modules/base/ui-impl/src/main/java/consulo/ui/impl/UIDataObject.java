@@ -27,8 +27,7 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -48,9 +47,9 @@ public class UIDataObject extends UserDataHolderBase {
 
     private final Supplier<List<Function<Key<?>, Object>>> myUserDataProviders = LazyValue.atomicNotNull(Lists::newLockFreeCopyOnWriteList);
 
-    @Nonnull
-    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
-                                                                                     @Nonnull ComponentEventListener<C, E> listener) {
+    
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
+                                                                                     ComponentEventListener<C, E> listener) {
         EventDispatcher<ComponentEventListener> eventDispatcher = myListeners.computeIfAbsent(eventClass,
             it -> EventDispatcher.create(ComponentEventListener.class)
         );
@@ -59,7 +58,7 @@ public class UIDataObject extends UserDataHolderBase {
     }
 
     @SuppressWarnings("unchecked")
-    @Nonnull
+    
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getDispatcher(Class<E> c) {
         EventDispatcher eventDispatcher = myListeners.computeIfAbsent(c,
             it -> EventDispatcher.create(ComponentEventListener.class)
@@ -67,15 +66,15 @@ public class UIDataObject extends UserDataHolderBase {
         return (ComponentEventListener<C, E>) eventDispatcher.getMulticaster();
     }
 
-    @Nonnull
-    public <T> Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+    
+    public <T> Disposable addUserDataProvider(Function<Key<?>, Object> function) {
         myUserDataProviders.get().add(function);
         return () -> myUserDataProviders.get().remove(function);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         List<Function<Key<?>, Object>> value = myUserDataProviders.get();
         for (Function<Key<?>, Object> function : value) {
             Object funcValue = function.apply(key);
@@ -103,7 +102,7 @@ public class UIDataObject extends UserDataHolderBase {
         myBorders.remove(borderPosition);
     }
 
-    @Nonnull
+    
     public Map<BorderPosition, BorderInfo> getBorders() {
         return myBorders == null ? Map.of() : myBorders;
     }

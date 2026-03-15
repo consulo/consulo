@@ -5,20 +5,19 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 
 public abstract class TextFieldValueEditor<T> extends AbstractValueEditor<T> {
   private final JTextField myField;
 
-  public TextFieldValueEditor(@Nonnull JTextField field, @Nullable String valueName, @Nonnull T defaultValue) {
+  public TextFieldValueEditor(JTextField field, @Nullable String valueName, T defaultValue) {
     super(valueName, defaultValue);
     myField = field;
     myField.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
-      protected void textChanged(@Nonnull DocumentEvent e) {
+      protected void textChanged(DocumentEvent e) {
         String errorText = validateTextOnChange(myField.getText(), e);
         highlightState(StringUtil.isEmpty(errorText));
         if (StringUtil.isNotEmpty(errorText)) {
@@ -45,7 +44,7 @@ public abstract class TextFieldValueEditor<T> extends AbstractValueEditor<T> {
   }
 
   @SuppressWarnings("unused")
-  protected void setErrorText(@Nonnull String errorText) {
+  protected void setErrorText(String errorText) {
     // TODO: to be implemented later
   }
 
@@ -56,7 +55,7 @@ public abstract class TextFieldValueEditor<T> extends AbstractValueEditor<T> {
   }
 
   @Override
-  public void setValueText(@Nonnull String text) {
+  public void setValueText(String text) {
     myField.setText(text);
   }
 

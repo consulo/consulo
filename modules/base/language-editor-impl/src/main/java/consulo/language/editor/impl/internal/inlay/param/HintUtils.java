@@ -22,7 +22,6 @@ import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.editor.internal.InlayHintsSettings;
 import consulo.language.editor.internal.ParameterNameHintsSettings;
 import consulo.language.extension.LanguageExtension;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.List;
@@ -53,7 +52,7 @@ public class HintUtils {
             .toList();
     }
 
-    @Nonnull
+    
     public static Language getLanguageForSettingKey(Language language) {
         List<Language> supportedLanguages = getBaseLanguagesWithProviders();
 

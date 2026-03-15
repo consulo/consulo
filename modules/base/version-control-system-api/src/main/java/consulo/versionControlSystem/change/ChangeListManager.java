@@ -27,8 +27,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -41,7 +40,7 @@ import java.util.function.Consumer;
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ChangeListManager {
-  @Nonnull
+  
   public static ChangeListManager getInstance(Project project) {
     return project.getInstance(ChangeListManager.class);
   }
@@ -62,12 +61,12 @@ public abstract class ChangeListManager {
                                          ModalityState state);
 
 
-  @Nonnull
-  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable Object data);
+  
+  public abstract LocalChangeList addChangeList(String name, @Nullable String comment, @Nullable Object data);
 
-  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment);
+  public abstract LocalChangeList addChangeList(String name, @Nullable String comment);
 
-  public abstract void setDefaultChangeList(@Nonnull LocalChangeList list);
+  public abstract void setDefaultChangeList(LocalChangeList list);
 
   public abstract void removeChangeList(String name);
 
@@ -78,10 +77,10 @@ public abstract class ChangeListManager {
   // added - since ChangeListManager wouldn't pass internal lists, only copies
   public abstract boolean setReadOnly(String name, boolean value);
 
-  public abstract boolean editName(@Nonnull String fromName, @Nonnull String toName);
+  public abstract boolean editName(String fromName, String toName);
 
   @Nullable
-  public abstract String editComment(@Nonnull String fromName, String newComment);
+  public abstract String editComment(String fromName, String newComment);
 
   @TestOnly
   public abstract boolean ensureUpToDate(boolean canBeCanceled);
@@ -90,18 +89,18 @@ public abstract class ChangeListManager {
 
   public abstract List<LocalChangeList> getChangeListsCopy();
 
-  @Nonnull
+  
   public abstract List<LocalChangeList> getChangeLists();
 
-  @Nonnull
-  public abstract List<LocalChangeList> getChangeLists(@Nonnull Change change);
+  
+  public abstract List<LocalChangeList> getChangeLists(Change change);
 
-  @Nonnull
-  public abstract List<LocalChangeList> getChangeLists(@Nonnull VirtualFile file);
+  
+  public abstract List<LocalChangeList> getChangeLists(VirtualFile file);
 
   public abstract List<File> getAffectedPaths();
 
-  @Nonnull
+  
   public abstract List<VirtualFile> getAffectedFiles();
 
   public abstract boolean isFileAffected(VirtualFile file);
@@ -109,7 +108,7 @@ public abstract class ChangeListManager {
   /**
    * @return all changes in all changelists.
    */
-  @Nonnull
+  
   public abstract Collection<Change> getAllChanges();
 
   @Nullable
@@ -128,36 +127,36 @@ public abstract class ChangeListManager {
   public abstract boolean isDefaultChangeList(ChangeList list);
 
   @Nullable
-  public abstract LocalChangeList getChangeList(@Nonnull Change change);
+  public abstract LocalChangeList getChangeList(Change change);
 
   @Nullable
   public abstract String getChangeListNameIfOnlyOne(Change[] changes);
 
-  @Nonnull
+  
   public abstract Runnable prepareForChangeDeletion(Collection<Change> changes);
 
   @Nullable
-  public abstract Change getChange(@Nonnull VirtualFile file);
+  public abstract Change getChange(VirtualFile file);
 
   @Nullable
-  public abstract LocalChangeList getChangeList(@Nonnull VirtualFile file);
+  public abstract LocalChangeList getChangeList(VirtualFile file);
 
   @Nullable
   public abstract Change getChange(FilePath file);
 
   public abstract boolean isUnversioned(VirtualFile file);
 
-  @Nonnull
+  
   public abstract FileStatus getStatus(VirtualFile file);
 
-  @Nonnull
+  
   public abstract Collection<Change> getChangesIn(VirtualFile dir);
 
-  @Nonnull
+  
   public abstract Collection<Change> getChangesIn(FilePath path);
 
   @Nullable
-  public abstract AbstractVcs getVcsFor(@Nonnull Change change);
+  public abstract AbstractVcs getVcsFor(Change change);
 
 //  public abstract void removeChangeList(final LocalChangeList list);
 
@@ -186,17 +185,17 @@ public abstract class ChangeListManager {
 
   public abstract void addFilesToIgnore(IgnoredFileBean... ignoredFiles);
 
-  public abstract void addDirectoryToIgnoreImplicitly(@Nonnull String path);
+  public abstract void addDirectoryToIgnoreImplicitly(String path);
 
   public abstract void setFilesToIgnore(IgnoredFileBean... ignoredFiles);
 
   public abstract IgnoredFileBean[] getFilesToIgnore();
 
-  public boolean isIgnoredFile(@Nonnull VirtualFile file) {
+  public boolean isIgnoredFile(VirtualFile file) {
     return isIgnoredFile(VcsUtil.getFilePath(file));
   }
 
-  public abstract boolean isIgnoredFile(@Nonnull FilePath file);
+  public abstract boolean isIgnoredFile(FilePath file);
 
   public abstract boolean isContainedInLocallyDeleted(FilePath filePath);
 
@@ -215,8 +214,8 @@ public abstract class ChangeListManager {
 
   public abstract List<VirtualFile> getModifiedWithoutEditing();
 
-  @Nonnull
-  public abstract ThreeState haveChangesUnder(@Nonnull VirtualFile vf);
+  
+  public abstract ThreeState haveChangesUnder(VirtualFile vf);
 
   public boolean areChangeListsEnabled() {
     return true;

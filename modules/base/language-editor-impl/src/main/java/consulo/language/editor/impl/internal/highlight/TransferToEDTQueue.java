@@ -18,7 +18,6 @@ package consulo.language.editor.impl.internal.highlight;
 import consulo.application.util.Semaphore;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Queue;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -83,14 +82,14 @@ public class TransferToEDTQueue<T> {
         }
     };
 
-    public TransferToEDTQueue(@Nonnull String name, @Nonnull Predicate<T> processor, @Nonnull BooleanSupplier shutUpCondition) {
+    public TransferToEDTQueue(String name, Predicate<T> processor, BooleanSupplier shutUpCondition) {
         this(name, processor, shutUpCondition, DEFAULT_THRESHOLD);
     }
 
     public TransferToEDTQueue(
-        @Nonnull String name,
-        @Nonnull Predicate<T> processor,
-        @Nonnull BooleanSupplier shutUpCondition,
+        String name,
+        Predicate<T> processor,
+        BooleanSupplier shutUpCondition,
         int maxUnitOfWorkThresholdMs
     ) {
         myName = name;
@@ -99,11 +98,11 @@ public class TransferToEDTQueue<T> {
         myMaxUnitOfWorkThresholdMs = maxUnitOfWorkThresholdMs;
     }
 
-    public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull String name) {
+    public static TransferToEDTQueue<Runnable> createRunnableMerger(String name) {
         return createRunnableMerger(name, DEFAULT_THRESHOLD);
     }
 
-    public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull String name, int maxUnitOfWorkThresholdMs) {
+    public static TransferToEDTQueue<Runnable> createRunnableMerger(String name, int maxUnitOfWorkThresholdMs) {
         return new TransferToEDTQueue<>(
             name,
             runnable -> {
@@ -140,7 +139,7 @@ public class TransferToEDTQueue<T> {
         }
     }
 
-    public boolean offer(@Nonnull T thing) {
+    public boolean offer(T thing) {
         synchronized (myQueue) {
             myQueue.addLast(thing);
         }
@@ -148,11 +147,11 @@ public class TransferToEDTQueue<T> {
         return true;
     }
 
-    public boolean offerIfAbsent(@Nonnull T thing) {
+    public boolean offerIfAbsent(T thing) {
         return offerIfAbsent(thing, HashingStrategy.canonical());
     }
 
-    public boolean offerIfAbsent(@Nonnull T thing, @Nonnull HashingStrategy<T> equality) {
+    public boolean offerIfAbsent(T thing, HashingStrategy<T> equality) {
         synchronized (myQueue) {
             boolean absent = myQueue.process(t -> !equality.equals(t, thing));
             if (absent) {
@@ -169,7 +168,7 @@ public class TransferToEDTQueue<T> {
         }
     }
 
-    protected void schedule(@Nonnull Runnable updateRunnable) {
+    protected void schedule(Runnable updateRunnable) {
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(updateRunnable);
     }
@@ -188,7 +187,7 @@ public class TransferToEDTQueue<T> {
     }
 
     @TestOnly
-    @Nonnull
+    
     public Collection<T> dump() {
         synchronized (myQueue) {
             return myQueue.toList();

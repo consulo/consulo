@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,8 +42,8 @@ public interface ExternalServiceConfiguration {
    * @see ThreeState documentation
    * @return state or default state
    */
-  @Nonnull
-  ThreeState getState(@Nonnull ExternalService externalService);
+  
+  ThreeState getState(ExternalService externalService);
 
-  void setState(@Nonnull ExternalService externalService, @Nonnull ThreeState state);
+  void setState(ExternalService externalService, ThreeState state);
 }

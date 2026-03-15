@@ -17,18 +17,17 @@ package consulo.execution.debug.impl.internal.action.handler;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class DebuggerActionHandler {
 
-  public abstract void perform(@Nonnull Project project, AnActionEvent event);
+  public abstract void perform(Project project, AnActionEvent event);
 
-  public abstract boolean isEnabled(@Nonnull Project project, AnActionEvent event);
+  public abstract boolean isEnabled(Project project, AnActionEvent event);
 
-  public boolean isHidden(@Nonnull Project project, AnActionEvent event) {
+  public boolean isHidden(Project project, AnActionEvent event) {
     return false;
   }
 }

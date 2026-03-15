@@ -30,8 +30,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiElement;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
@@ -41,27 +40,27 @@ public interface LanguageChangeSignatureDetector<C extends ChangeInfo> extends L
 
   @Nullable
   @SuppressWarnings("unchecked")
-  static LanguageChangeSignatureDetector<ChangeInfo> forLanguage(@Nonnull Language language) {
+  static LanguageChangeSignatureDetector<ChangeInfo> forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageChangeSignatureDetector.class).getOrBuildCache(KEY).get(language);
   }
 
-  @Nonnull
-  C createInitialChangeInfo(@Nonnull PsiElement element);
+  
+  C createInitialChangeInfo(PsiElement element);
 
   boolean ignoreChanges(PsiElement element);
 
   @Nullable
-  C createNextChangeInfo(String signature, @Nonnull C currentInfo, boolean delegate);
+  C createNextChangeInfo(String signature, C currentInfo, boolean delegate);
 
-  void performChange(C changeInfo, Editor editor, @Nonnull String oldText);
+  void performChange(C changeInfo, Editor editor, String oldText);
 
-  boolean isChangeSignatureAvailableOnElement(@Nonnull PsiElement element, C currentInfo);
+  boolean isChangeSignatureAvailableOnElement(PsiElement element, C currentInfo);
 
-  TextRange getHighlightingRange(@Nonnull C changeInfo);
+  TextRange getHighlightingRange(C changeInfo);
 
   default
-  @Nonnull
-  String extractSignature(@Nonnull C initialChangeInfo) {
+  
+  String extractSignature(C initialChangeInfo) {
     TextRange signatureRange = getHighlightingRange(initialChangeInfo);
     return signatureRange.shiftRight(-signatureRange.getStartOffset()).substring(initialChangeInfo.getMethod().getText());
   }
@@ -70,7 +69,7 @@ public interface LanguageChangeSignatureDetector<C extends ChangeInfo> extends L
     return extractSignature(info);
   }
 
-  @Nonnull
+  
   default FileType getFileType() {
     return FileTypeManager.getInstance().findFileTypeByLanguage(getLanguage());
   }

@@ -18,8 +18,7 @@ package consulo.credentialStorage.ui;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ public interface PasswordSafePromptDialog {
    * @param error         the error to show in the dialog       @return null if dialog was cancelled or password (stored in database or a entered by user)
    */
   @Nullable
-  default String askPassword(String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword, String error) {
+  default String askPassword(String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
     return askPassword(title, message, requestor, key, resetPassword, error, null, null);
   }
 
@@ -56,7 +55,7 @@ public interface PasswordSafePromptDialog {
    * @return null if dialog was cancelled or password (stored in database or a entered by user)
    */
   @Nullable
-  default String askPassword(String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword) {
+  default String askPassword(String title, String message, Class<?> requestor, String key, boolean resetPassword) {
     return askPassword(title, message, requestor, key, resetPassword, null);
   }
 
@@ -74,7 +73,7 @@ public interface PasswordSafePromptDialog {
    * @param error         the error to show in the dialog       @return null if dialog was cancelled or password (stored in database or a entered by user)
    */
   @Nullable
-  default String askPassphrase(String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword, String error) {
+  default String askPassphrase(String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
     return askPassword(title, message, requestor, key, resetPassword, error, "Passphrase:", "Remember the passphrase");
   }
 
@@ -96,7 +95,7 @@ public interface PasswordSafePromptDialog {
   @Nullable
   String askPassword(String title,
                      String message,
-                     @Nonnull Class<?> requestor,
+                     Class<?> requestor,
                      String key,
                      boolean resetPassword,
                      String error,

@@ -3,10 +3,9 @@ package consulo.execution.debug.attach.osHandler;
 
 import consulo.execution.debug.attach.EnvironmentAwareHost;
 
-import jakarta.annotation.Nonnull;
 
 class GenericAttachOSHandler extends AttachOSHandler {
-  GenericAttachOSHandler(@Nonnull EnvironmentAwareHost host) {
+  GenericAttachOSHandler(EnvironmentAwareHost host) {
     super(host, OSType.UNKNOWN);
   }
 }

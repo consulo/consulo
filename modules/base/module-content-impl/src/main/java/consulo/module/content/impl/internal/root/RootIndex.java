@@ -21,27 +21,26 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.DirectoryInfo;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2024-12-09
  */
 public interface RootIndex {
-    @Nonnull
-    Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources);
+    
+    Query<VirtualFile> getDirectoriesByPackageName(String packageName, boolean includeLibrarySources);
 
-    @Nonnull
-    DirectoryInfo getInfoForFile(@Nonnull VirtualFile file);
-
-    @Nullable
-    ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo directoryInfo);
+    
+    DirectoryInfo getInfoForFile(VirtualFile file);
 
     @Nullable
-    String getPackageName(@Nonnull VirtualFile dir);
+    ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo);
 
-    @Nonnull
+    @Nullable
+    String getPackageName(VirtualFile dir);
+
+    
     @RequiredReadAction
-    OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info);
+    OrderEntry[] getOrderEntries(DirectoryInfo info);
 }

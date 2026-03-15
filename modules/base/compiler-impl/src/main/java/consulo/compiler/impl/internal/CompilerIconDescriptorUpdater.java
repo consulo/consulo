@@ -28,7 +28,6 @@ import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -47,7 +46,7 @@ public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
 
     @RequiredReadAction
     @Override
-    public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+    public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
         VirtualFile vFile = PsiUtilCore.getVirtualFile(element);
 
         if (vFile != null && myFileIndexFacade.isInSource(vFile) && myCompilerManager.isExcludedFromCompilation(vFile)) {

@@ -24,8 +24,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.function.IntUnaryOperator;
@@ -35,11 +34,11 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
 
     @RequiredReadAction
     public static <T extends PsiElement> T findElementInRange(
-        @Nonnull PsiFile file,
+        PsiFile file,
         int startOffset,
         int endOffset,
-        @Nonnull Class<T> clazz,
-        @Nonnull Language language
+        Class<T> clazz,
+        Language language
     ) {
         return findElementInRange(file, startOffset, endOffset, clazz, language, null);
     }
@@ -48,11 +47,11 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     private static <T extends PsiElement> T findElementInRange(
-        @Nonnull PsiFile file,
+        PsiFile file,
         int startOffset,
         int endOffset,
-        @Nonnull Class<T> clazz,
-        @Nonnull Language language,
+        Class<T> clazz,
+        Language language,
         @Nullable PsiElement initialElement
     ) {
         PsiElement element1 = file.getViewProvider().findElementAt(startOffset, language);
@@ -87,14 +86,14 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
 
     @Nullable
     @RequiredReadAction
-    public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(@Nonnull T element) {
+    public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(T element) {
         return forcePsiPostprocessAndRestoreElement(element, false);
     }
 
     @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(@Nonnull T element, boolean useFileLanguage) {
+    public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(T element, boolean useFileLanguage) {
         PsiFile psiFile = element.getContainingFile();
         Document document = psiFile.getViewProvider().getDocument();
         //if (document == null) return element;
@@ -116,13 +115,13 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         return elementInRange;
     }
 
-    public static boolean parseStringCharacters(@Nonnull String chars, @Nonnull StringBuilder out, @Nullable int[] sourceOffsets) {
+    public static boolean parseStringCharacters(String chars, StringBuilder out, @Nullable int[] sourceOffsets) {
         return parseStringCharacters(chars, out, sourceOffsets, true);
     }
 
     public static boolean parseStringCharacters(
-        @Nonnull String chars,
-        @Nonnull StringBuilder out,
+        String chars,
+        StringBuilder out,
         @Nullable int[] sourceOffsets,
         boolean textBlock
     ) {
@@ -144,7 +143,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
      * @return String literal value, or null, if the literal is invalid
      */
     @Nullable
-    public static CharSequence parseStringCharacters(@Nonnull String chars, @Nullable int[] sourceOffsets) {
+    public static CharSequence parseStringCharacters(String chars, @Nullable int[] sourceOffsets) {
         LOG.assertTrue(sourceOffsets == null || sourceOffsets.length == chars.length() + 1);
         if (noEscape(chars, sourceOffsets)) {
             return chars;
@@ -153,7 +152,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         return parseStringCharactersWithEscape(chars, true, out, sourceOffsets) ? out : null;
     }
 
-    private static boolean noEscape(@Nonnull String chars, @Nullable int[] sourceOffsets) {
+    private static boolean noEscape(String chars, @Nullable int[] sourceOffsets) {
         if (chars.indexOf('\\') >= 0) {
             return false;
         }
@@ -164,9 +163,9 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
     }
 
     static boolean parseStringCharactersWithEscape(
-        @Nonnull String chars,
+        String chars,
         boolean textBlock,
-        @Nonnull StringBuilder out,
+        StringBuilder out,
         @Nullable int[] sourceOffsets
     ) {
         int index = 0;
@@ -194,10 +193,10 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
 
     private static int parseEscapedSymbol(
         boolean isAfterEscapedBackslash,
-        @Nonnull String chars,
+        String chars,
         int index,
         boolean textBlock,
-        @Nonnull StringBuilder out
+        StringBuilder out
     ) {
         if (index == chars.length()) {
             return -1;
@@ -237,10 +236,10 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
 
     private static int parseUnicodeEscape(
         boolean isAfterEscapedBackslash,
-        @Nonnull String s,
+        String s,
         int index,
         boolean textBlock,
-        @Nonnull StringBuilder out
+        StringBuilder out
     ) {
         int len = s.length();
         // uuuuu1234 is valid too
@@ -291,7 +290,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         }
     }
 
-    private static boolean parseEscapedChar(char c, boolean textBlock, @Nonnull StringBuilder out) {
+    private static boolean parseEscapedChar(char c, boolean textBlock, StringBuilder out) {
         return switch (c) {
             case 'b' -> {
                 out.append('\b');
@@ -330,7 +329,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
         };
     }
 
-    private static int parseOctalEscape(char c, @Nonnull String s, int index, @Nonnull StringBuilder out) {
+    private static int parseOctalEscape(char c, String s, int index, StringBuilder out) {
         char startC = c;
         int v = c - '0', len = s.length();
         if (index < len) {

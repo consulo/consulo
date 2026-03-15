@@ -26,8 +26,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Instances of NamesValidator are obtained from {@link Language} instance.
@@ -38,7 +37,7 @@ public interface NamesValidator extends LanguageExtension {
   ExtensionPointCacheKey<NamesValidator, ByLanguageValue<NamesValidator>> KEY = ExtensionPointCacheKey.create("NamesValidator", LanguageOneToOne.build(new DefaultNamesValidator()));
 
   @Nullable
-  static NamesValidator forLanguage(@Nonnull Language language) {
+  static NamesValidator forLanguage(Language language) {
     return Application.get().getExtensionPoint(NamesValidator.class).getOrBuildCache(KEY).get(language);
   }
 

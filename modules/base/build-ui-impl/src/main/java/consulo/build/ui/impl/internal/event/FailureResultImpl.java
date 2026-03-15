@@ -18,8 +18,7 @@ package consulo.build.ui.impl.internal.event;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.Failure;
 import consulo.build.ui.event.FailureResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,7 @@ public class FailureResultImpl implements FailureResult {
     }
   }
 
-  public FailureResultImpl(@Nonnull List<Failure> failures) {
+  public FailureResultImpl(List<Failure> failures) {
     myFailures = failures;
   }
   

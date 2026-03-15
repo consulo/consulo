@@ -18,7 +18,6 @@ package consulo.colorScheme;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.color.ColorValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,15 +26,15 @@ import jakarta.annotation.Nonnull;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorColorSchemeExtender {
     interface Builder {
-        void add(@Nonnull EditorColorKey key, @Nonnull ColorValue colorValue);
+        void add(EditorColorKey key, ColorValue colorValue);
 
-        void add(@Nonnull TextAttributesKey key, @Nonnull AttributesFlyweight attributes);
+        void add(TextAttributesKey key, AttributesFlyweight attributes);
 
-        void add(@Nonnull TextAttributesKey key, @Nonnull TextAttributesKey baseAttributes, @Nonnull AttributesFlyweight attributes);
+        void add(TextAttributesKey key, TextAttributesKey baseAttributes, AttributesFlyweight attributes);
     }
 
     void extend(Builder builder);
 
-    @Nonnull
+    
     String getColorSchemeId();
 }

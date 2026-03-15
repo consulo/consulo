@@ -15,7 +15,6 @@
  */
 package consulo.language.index.impl.internal;
 
-import jakarta.annotation.Nonnull;
 
 @SuppressWarnings({"WhileLoopSpinsOnField", "SynchronizeOnThis"})
 class StorageGuard {
@@ -39,7 +38,7 @@ class StorageGuard {
     }
   };
 
-  @Nonnull
+  
   synchronized StorageModeExitHandler enter(boolean mode) {
     if (mode) {
       while (myHolds < 0) {

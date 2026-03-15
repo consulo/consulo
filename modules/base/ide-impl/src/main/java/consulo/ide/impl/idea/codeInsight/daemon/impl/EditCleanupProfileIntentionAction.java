@@ -27,7 +27,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -40,18 +39,18 @@ public class EditCleanupProfileIntentionAction implements IntentionAction {
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getText() {
     return LocalizeValue.localizeTODO("Edit cleanup profile settings");
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return true;
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
     ProjectInspectionToolsConfigurable configurable = new ProjectInspectionToolsConfigurable(InspectionProfileManager.getInstance(), profileManager) {
       @Override

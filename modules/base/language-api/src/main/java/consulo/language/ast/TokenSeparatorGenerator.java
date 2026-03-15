@@ -25,8 +25,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.internal.DefaultTokenSeparatorGenerator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -36,8 +35,8 @@ public interface TokenSeparatorGenerator extends LanguageExtension {
   ExtensionPointCacheKey<TokenSeparatorGenerator, ByLanguageValue<TokenSeparatorGenerator>> KEY =
           ExtensionPointCacheKey.create("TokenSeparatorGenerator", LanguageOneToOne.build(new DefaultTokenSeparatorGenerator()));
 
-  @Nonnull
-  static TokenSeparatorGenerator forLanguage(@Nonnull Language language) {
+  
+  static TokenSeparatorGenerator forLanguage(Language language) {
     return Application.get().getExtensionPoint(TokenSeparatorGenerator.class).getOrBuildCache(KEY).requiredGet(language);
   }
 

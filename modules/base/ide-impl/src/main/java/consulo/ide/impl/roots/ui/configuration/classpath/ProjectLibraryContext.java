@@ -28,8 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,10 +57,10 @@ public class ProjectLibraryContext extends AddModuleDependencyContext<List<Libra
         ContainerUtil.sort(myItems, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), false));
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull List<Library> value) {
+    public List<OrderEntry> createOrderEntries(ModifiableModuleRootLayer layer, List<Library> value) {
         List<OrderEntry> entries = new ArrayList<>();
 
         for (Library item : value) {

@@ -27,8 +27,7 @@ import consulo.language.psi.*;
 import consulo.language.util.CommentUtilCore;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -52,12 +51,12 @@ public class CodeEditUtil {
     }
 
     @RequiredWriteAction
-    public static void removeChild(ASTNode parent, @Nonnull ASTNode child) {
+    public static void removeChild(ASTNode parent, ASTNode child) {
         removeChildren(parent, child, child);
     }
 
     @RequiredWriteAction
-    public static ASTNode addChildren(ASTNode parent, @Nonnull ASTNode first, @Nonnull ASTNode last, ASTNode anchorBefore) {
+    public static ASTNode addChildren(ASTNode parent, ASTNode first, ASTNode last, ASTNode anchorBefore) {
         ASTNode lastChild = last.getTreeNext();
         ASTNode current = first;
         while (current != lastChild) {
@@ -148,7 +147,7 @@ public class CodeEditUtil {
         return stored != null ? stored : -1;
     }
 
-    public static void removeChildren(ASTNode parent, @Nonnull ASTNode first, @Nonnull ASTNode last) {
+    public static void removeChildren(ASTNode parent, ASTNode first, ASTNode last) {
         boolean tailingElement = last.getStartOffset() + last.getTextLength() == parent.getStartOffset() + parent.getTextLength();
         boolean forceReformat = needToForceReformat(parent, first, last);
         saveWhitespacesInfo(first);
@@ -194,7 +193,7 @@ public class CodeEditUtil {
     }
 
     @RequiredWriteAction
-    public static void replaceChild(ASTNode parent, @Nonnull ASTNode oldChild, @Nonnull ASTNode newChild) {
+    public static void replaceChild(ASTNode parent, ASTNode oldChild, ASTNode newChild) {
         saveWhitespacesInfo(oldChild);
         saveWhitespacesInfo(newChild);
         checkForOuters(oldChild);
@@ -324,7 +323,7 @@ public class CodeEditUtil {
         right.getTreeParent().replaceChild(right, merged);
     }
 
-    private static void markToReformatBeforeOrInsertWhitespace(ASTNode left, @Nonnull ASTNode right) {
+    private static void markToReformatBeforeOrInsertWhitespace(ASTNode left, ASTNode right) {
         Language leftLang = left != null ? PsiUtilCore.getNotAnyLanguage(left) : null;
         Language rightLang = PsiUtilCore.getNotAnyLanguage(right);
 

@@ -6,7 +6,6 @@ import consulo.execution.debug.stream.trace.impl.TraceElementImpl;
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedValueException;
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedValueTypeException;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -17,7 +16,7 @@ public class CollectIdentityTraceInterpreter implements CallTraceInterpreter {
     private final SimplePeekCallTraceInterpreter myPeekResolver = new SimplePeekCallTraceInterpreter();
 
     @Override
-    public @Nonnull TraceInfo resolve(@Nonnull StreamCall call, @Nonnull Value value) {
+    public TraceInfo resolve(StreamCall call, Value value) {
         if (!(value instanceof ArrayReference array)) {
             throw new UnexpectedValueTypeException("Array reference expected. But " + value.typeName() + " received");
         }
@@ -45,7 +44,7 @@ public class CollectIdentityTraceInterpreter implements CallTraceInterpreter {
         return new ValuesOrderInfo(call, before, after);
     }
 
-    public static int extractTime(@Nonnull ArrayReference value) {
+    public static int extractTime(ArrayReference value) {
         Value timeArray = value.getValue(1);
         if (timeArray instanceof ArrayReference) {
             Value time = ((ArrayReference) timeArray).getValue(0);

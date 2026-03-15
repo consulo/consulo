@@ -18,7 +18,7 @@ package consulo.versionControlSystem.impl.internal.patch.apply;
 
 import com.google.common.collect.Ordering;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashSet;

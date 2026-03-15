@@ -17,17 +17,16 @@ package consulo.diagram;
 
 import consulo.ui.Component;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 22:36/15.10.13
  */
 public interface GraphBuilder {
-    @Nonnull
-    <E> GraphNode<E> createNode(@Nonnull String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy);
+    
+    <E> GraphNode<E> createNode(String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy);
 
-    @Nonnull
+    
     Component getComponent();
 }

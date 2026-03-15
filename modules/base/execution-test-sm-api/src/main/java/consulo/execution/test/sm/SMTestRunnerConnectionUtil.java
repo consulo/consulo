@@ -41,8 +41,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.io.URLUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -63,14 +62,14 @@ public class SMTestRunnerConnectionUtil {
             myLocators = TestLocationProvider.EP_NAME.getExtensionList();
         }
 
-        @Nonnull
+        
         @Override
         @RequiredReadAction
         public List<Location> getLocation(
-            @Nonnull String protocol,
-            @Nonnull String path,
-            @Nonnull Project project,
-            @Nonnull GlobalSearchScope scope
+            String protocol,
+            String path,
+            Project project,
+            GlobalSearchScope scope
         ) {
             boolean isDumbMode = DumbService.isDumb(project);
 
@@ -141,11 +140,11 @@ public class SMTestRunnerConnectionUtil {
      * @throws ExecutionException If IDEA cannot execute process this exception will
      *                            be caught and shown in error message box
      */
-    @Nonnull
+    
     public static BaseTestsOutputConsoleView createAndAttachConsole(
-        @Nonnull String testFrameworkName,
-        @Nonnull ProcessHandler processHandler,
-        @Nonnull TestConsoleProperties consoleProperties
+        String testFrameworkName,
+        ProcessHandler processHandler,
+        TestConsoleProperties consoleProperties
     )
         throws ExecutionException {
         BaseTestsOutputConsoleView console = createConsole(testFrameworkName, consoleProperties);
@@ -153,10 +152,10 @@ public class SMTestRunnerConnectionUtil {
         return console;
     }
 
-    @Nonnull
+    
     public static BaseTestsOutputConsoleView createConsole(
-        @Nonnull String testFrameworkName,
-        @Nonnull TestConsoleProperties consoleProperties
+        String testFrameworkName,
+        TestConsoleProperties consoleProperties
     ) {
         String splitterPropertyName = getSplitterPropertyName(testFrameworkName);
         SMTRunnerConsoleView consoleView = new SMTRunnerConsoleView(consoleProperties, splitterPropertyName);
@@ -164,12 +163,12 @@ public class SMTestRunnerConnectionUtil {
         return consoleView;
     }
 
-    @Nonnull
-    public static String getSplitterPropertyName(@Nonnull String testFrameworkName) {
+    
+    public static String getSplitterPropertyName(String testFrameworkName) {
         return testFrameworkName + ".Splitter.Proportion";
     }
 
-    public static void initConsoleView(@Nonnull SMTRunnerConsoleView consoleView, @Nonnull String testFrameworkName) {
+    public static void initConsoleView(SMTRunnerConsoleView consoleView, String testFrameworkName) {
         consoleView.addAttachToProcessListener(processHandler -> {
             TestConsoleProperties properties = consoleView.getProperties();
 
@@ -306,14 +305,14 @@ public class SMTestRunnerConnectionUtil {
             myLocator = locator;
         }
 
-        @Nonnull
+        
         @Override
         @RequiredReadAction
         public List<Location> getLocation(
-            @Nonnull String protocol,
-            @Nonnull String path,
-            @Nonnull Project project,
-            @Nonnull GlobalSearchScope scope
+            String protocol,
+            String path,
+            Project project,
+            GlobalSearchScope scope
         ) {
             if (URLUtil.FILE_PROTOCOL.equals(protocol)) {
                 return FileUrlProvider.INSTANCE.getLocation(protocol, path, project, scope);
@@ -332,9 +331,9 @@ public class SMTestRunnerConnectionUtil {
      */
     @SuppressWarnings({"unused", "deprecation"})
     public static BaseTestsOutputConsoleView createAndAttachConsole(
-        @Nonnull String testFrameworkName,
-        @Nonnull ProcessHandler processHandler,
-        @Nonnull TestConsoleProperties consoleProperties,
+        String testFrameworkName,
+        ProcessHandler processHandler,
+        TestConsoleProperties consoleProperties,
         ExecutionEnvironment environment
     ) throws ExecutionException {
         BaseTestsOutputConsoleView console = createConsole(testFrameworkName, consoleProperties, environment);
@@ -347,8 +346,8 @@ public class SMTestRunnerConnectionUtil {
      */
     @SuppressWarnings({"unused", "deprecation"})
     public static BaseTestsOutputConsoleView createConsole(
-        @Nonnull String testFrameworkName,
-        @Nonnull TestConsoleProperties consoleProperties,
+        String testFrameworkName,
+        TestConsoleProperties consoleProperties,
         ExecutionEnvironment environment
     ) {
         return createConsoleWithCustomLocator(testFrameworkName, consoleProperties, environment, null);
@@ -359,8 +358,8 @@ public class SMTestRunnerConnectionUtil {
      */
     @SuppressWarnings({"unused", "deprecation"})
     public static BaseTestsOutputConsoleView createConsoleWithCustomLocator(
-        @Nonnull String testFrameworkName,
-        @Nonnull TestConsoleProperties consoleProperties,
+        String testFrameworkName,
+        TestConsoleProperties consoleProperties,
         ExecutionEnvironment environment,
         @Nullable TestLocationProvider locator
     ) {
@@ -372,8 +371,8 @@ public class SMTestRunnerConnectionUtil {
      */
     @SuppressWarnings({"unused", "deprecation"})
     public static SMTRunnerConsoleView createConsoleWithCustomLocator(
-        @Nonnull String testFrameworkName,
-        @Nonnull TestConsoleProperties consoleProperties,
+        String testFrameworkName,
+        TestConsoleProperties consoleProperties,
         ExecutionEnvironment environment,
         @Nullable TestLocationProvider locator,
         boolean idBasedTreeConstruction,
@@ -390,8 +389,8 @@ public class SMTestRunnerConnectionUtil {
      */
     @SuppressWarnings({"unused", "deprecation"})
     public static void initConsoleView(
-        @Nonnull SMTRunnerConsoleView consoleView,
-        @Nonnull String testFrameworkName,
+        SMTRunnerConsoleView consoleView,
+        String testFrameworkName,
         @Nullable TestLocationProvider locator,
         boolean idBasedTreeConstruction,
         @Nullable TestProxyFilterProvider filterProvider
@@ -427,11 +426,11 @@ public class SMTestRunnerConnectionUtil {
      */
     @SuppressWarnings({"unused", "deprecation"})
     public static ConsoleView createAndAttachConsole(
-        @Nonnull String testFrameworkName,
-        @Nonnull ProcessHandler processHandler,
-        @Nonnull CommandLineState commandLineState,
-        @Nonnull ModuleRunConfiguration config,
-        @Nonnull Executor executor
+        String testFrameworkName,
+        ProcessHandler processHandler,
+        CommandLineState commandLineState,
+        ModuleRunConfiguration config,
+        Executor executor
     ) throws ExecutionException {
         TestConsoleProperties consoleProperties = new SMTRunnerConsoleProperties(config, testFrameworkName, executor);
         return createAndAttachConsole(testFrameworkName, processHandler, consoleProperties, commandLineState.getEnvironment());
@@ -442,10 +441,10 @@ public class SMTestRunnerConnectionUtil {
      */
     @SuppressWarnings({"unused", "deprecation"})
     public static ConsoleView createConsole(
-        @Nonnull String testFrameworkName,
-        @Nonnull CommandLineState commandLineState,
-        @Nonnull ModuleRunConfiguration config,
-        @Nonnull Executor executor
+        String testFrameworkName,
+        CommandLineState commandLineState,
+        ModuleRunConfiguration config,
+        Executor executor
     )
         throws ExecutionException {
         TestConsoleProperties consoleProperties = new SMTRunnerConsoleProperties(config, testFrameworkName, executor);

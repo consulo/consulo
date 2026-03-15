@@ -17,26 +17,25 @@ package consulo.versionControlSystem.log;
 
 import consulo.versionControlSystem.log.VcsLogProvider;
 
-import jakarta.annotation.Nonnull;
 
 public class VcsLogProperties {
   public static class VcsLogProperty<T> {
     private final T defaultValue;
 
-    private VcsLogProperty(@Nonnull T defaultValue) {
+    private VcsLogProperty(T defaultValue) {
       this.defaultValue = defaultValue;
     }
   }
 
-  @Nonnull
+  
   public static final VcsLogProperty<Boolean> LIGHTWEIGHT_BRANCHES = new VcsLogProperty<>(false);
-  @Nonnull
+  
   public static final VcsLogProperty<Boolean> SUPPORTS_INDEXING = new VcsLogProperty<>(false);
-  @Nonnull
+  
   public static final VcsLogProperty<Boolean> CASE_INSENSITIVE_REGEX = new VcsLogProperty<>(true);
 
-  @Nonnull
-  public static <T> T get(@Nonnull VcsLogProvider provider, VcsLogProperty<T> property) {
+  
+  public static <T> T get(VcsLogProvider provider, VcsLogProperty<T> property) {
     T value = provider.getPropertyValue(property);
     if (value == null) return property.defaultValue;
     return value;

@@ -20,13 +20,12 @@ import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.ui.model.HistoryDialogModel;
 import consulo.localHistory.impl.internal.ui.model.RevisionItem;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class LocalHistoryUtil {
 
-  static int findRevisionIndexToRevert(@Nonnull HistoryDialogModel dirHistoryModel, @Nonnull LabelImpl label) {
+  static int findRevisionIndexToRevert(HistoryDialogModel dirHistoryModel, LabelImpl label) {
     List<RevisionItem> revs = dirHistoryModel.getRevisions();
     for (int i = 0; i < revs.size(); i++) {
       RevisionItem rev = revs.get(i);
@@ -37,12 +36,12 @@ public class LocalHistoryUtil {
     return -1;
   }
 
-  static boolean isLabelRevision(@Nonnull RevisionItem rev, @Nonnull LabelImpl label) {
+  static boolean isLabelRevision(RevisionItem rev, LabelImpl label) {
     long targetChangeId = label.getLabelChangeId();
     return ContainerUtil.exists(rev.labels, revision -> isChangeWithId(revision, targetChangeId));
   }
 
-  private static boolean isChangeWithId(@Nonnull Revision revision, long targetChangeId) {
+  private static boolean isChangeWithId(Revision revision, long targetChangeId) {
     return revision instanceof ChangeRevision && ((ChangeRevision)revision).containsChangeWithId(targetChangeId);
   }
 }

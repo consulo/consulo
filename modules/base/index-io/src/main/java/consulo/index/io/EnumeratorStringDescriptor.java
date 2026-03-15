@@ -17,7 +17,6 @@ package consulo.index.io;
 
 import consulo.index.io.data.IOUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -31,12 +30,12 @@ public class EnumeratorStringDescriptor implements KeyDescriptor<String> {
   public static final EnumeratorStringDescriptor INSTANCE = new EnumeratorStringDescriptor();
 
   @Override
-  public void save(@Nonnull DataOutput storage, @Nonnull String value) throws IOException {
+  public void save(DataOutput storage, String value) throws IOException {
     IOUtil.writeUTF(storage, value);
   }
 
   @Override
-  public String read(@Nonnull DataInput storage) throws IOException {
+  public String read(DataInput storage) throws IOException {
     return IOUtil.readUTF(storage);
   }
 }

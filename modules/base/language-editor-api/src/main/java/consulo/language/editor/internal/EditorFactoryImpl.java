@@ -30,8 +30,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.CharArrayCharSequence;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -43,7 +42,7 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
     private final EventDispatcher<EditorFactoryListener> myEditorFactoryEventDispatcher = EventDispatcher.create(EditorFactoryListener.class);
     protected final List<Editor> myEditors = Lists.newLockFreeCopyOnWriteList();
 
-    @Nonnull
+    
     private final Application myApplication;
     private final DocumentFactory myDocumentFactory;
 
@@ -54,7 +53,7 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
         MessageBusConnection busConnection = application.getMessageBus().connect();
         busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectClosed(Project project, UIAccess uiAccess) {
                 // validate all editors are disposed after fireProjectClosed() was called, because it's the place where editor should be released
                 Disposer.register(project, () -> {
                     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
@@ -67,10 +66,10 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
         busConnection.subscribe(EditorColorsListener.class, scheme -> refreshAllEditors());
     }
 
-    @Nonnull
-    protected abstract RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind);
+    
+    protected abstract RealEditor createEditorImpl(Document document, boolean isViewer, Project project, EditorKind kind);
 
-    protected final Editor createEditor(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
+    protected final Editor createEditor(Document document, boolean isViewer, Project project, EditorKind kind) {
         Document hostDocument = document instanceof DocumentWindow ? ((DocumentWindow) document).getDelegate() : document;
         RealEditor editor = createEditorImpl(hostDocument, isViewer, project, kind);
         myEditors.add(editor);
@@ -101,7 +100,7 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
         }
     }
 
-    public static void throwNotReleasedError(@Nonnull Editor editor) {
+    public static void throwNotReleasedError(Editor editor) {
         if (editor instanceof RealEditor) {
             ((RealEditor) editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
         }
@@ -111,29 +110,29 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
     }
 
     @Override
-    @Nonnull
-    public Document createDocument(@Nonnull char[] text) {
+    
+    public Document createDocument(char[] text) {
         return createDocument(new CharArrayCharSequence(text));
     }
 
     @Override
-    @Nonnull
-    public Document createDocument(@Nonnull CharSequence text) {
+    
+    public Document createDocument(CharSequence text) {
         DocumentEx document = myDocumentFactory.createDocument(text);
         myEditorEventMulticaster.registerDocument(document);
         return document;
     }
 
     @Override
-    @Nonnull
+    
     public Document createDocument(boolean allowUpdatesWithoutWriteAction) {
         DocumentEx document = myDocumentFactory.createDocument("", allowUpdatesWithoutWriteAction);
         myEditorEventMulticaster.registerDocument(document);
         return document;
     }
 
-    @Nonnull
-    public Document createDocument(@Nonnull CharSequence text, boolean acceptsSlashR, boolean allowUpdatesWithoutWriteAction) {
+    
+    public Document createDocument(CharSequence text, boolean acceptsSlashR, boolean allowUpdatesWithoutWriteAction) {
         DocumentEx document = myDocumentFactory.createDocument(text, acceptsSlashR, allowUpdatesWithoutWriteAction);
         myEditorEventMulticaster.registerDocument(document);
         return document;
@@ -147,51 +146,51 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
     }
 
     @Override
-    public Editor createEditor(@Nonnull Document document) {
+    public Editor createEditor(Document document) {
         return createEditor(document, false, null, EditorKind.UNTYPED);
     }
 
     @Override
-    public Editor createViewer(@Nonnull Document document) {
+    public Editor createViewer(Document document) {
         return createEditor(document, true, null, EditorKind.UNTYPED);
     }
 
     @Override
-    public Editor createEditor(@Nonnull Document document, Project project) {
+    public Editor createEditor(Document document, Project project) {
         return createEditor(document, false, project, EditorKind.UNTYPED);
     }
 
     @Override
-    public Editor createEditor(@Nonnull Document document, @Nullable Project project, @Nonnull EditorKind kind) {
+    public Editor createEditor(Document document, @Nullable Project project, EditorKind kind) {
         return createEditor(document, false, project, kind);
     }
 
     @Override
-    public Editor createViewer(@Nonnull Document document, Project project) {
+    public Editor createViewer(Document document, Project project) {
         return createEditor(document, true, project, EditorKind.UNTYPED);
     }
 
     @Override
-    public Editor createViewer(@Nonnull Document document, @Nullable Project project, @Nonnull EditorKind kind) {
+    public Editor createViewer(Document document, @Nullable Project project, EditorKind kind) {
         return createEditor(document, true, project, kind);
     }
 
     @Override
-    public Editor createEditor(@Nonnull Document document, Project project, @Nonnull FileType fileType, boolean isViewer) {
+    public Editor createEditor(Document document, Project project, FileType fileType, boolean isViewer) {
         Editor editor = createEditor(document, isViewer, project, EditorKind.UNTYPED);
         ((EditorEx) editor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, fileType));
         return editor;
     }
 
     @Override
-    public Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer) {
+    public Editor createEditor(Document document, Project project, VirtualFile file, boolean isViewer) {
         Editor editor = createEditor(document, isViewer, project, EditorKind.UNTYPED);
         ((EditorEx) editor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, file));
         return editor;
     }
 
     @Override
-    public Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer, @Nonnull EditorKind kind) {
+    public Editor createEditor(Document document, Project project, VirtualFile file, boolean isViewer, EditorKind kind) {
         Editor editor = createEditor(document, isViewer, project, kind);
         ((EditorEx) editor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, file));
         return editor;
@@ -199,7 +198,7 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
 
 
     @Override
-    public void releaseEditor(@Nonnull Editor editor) {
+    public void releaseEditor(Editor editor) {
         try {
             EditorFactoryEvent event = new EditorFactoryEvent(this, editor);
             myEditorFactoryEventDispatcher.getMulticaster().editorReleased(event);
@@ -219,8 +218,8 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
     }
 
     @Override
-    @Nonnull
-    public Editor[] getEditors(@Nonnull Document document, Project project) {
+    
+    public Editor[] getEditors(Document document, Project project) {
         List<Editor> list = null;
         for (Editor editor : myEditors) {
             if (editor.getDocument().equals(document) && (project == null || project.equals(editor.getProject()))) {
@@ -234,30 +233,30 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
     }
 
     @Override
-    @Nonnull
+    
     public Editor[] getAllEditors() {
         return myEditors.toArray(Editor.EMPTY_ARRAY);
     }
 
     @Override
     @Deprecated
-    public void addEditorFactoryListener(@Nonnull EditorFactoryListener listener) {
+    public void addEditorFactoryListener(EditorFactoryListener listener) {
         myEditorFactoryEventDispatcher.addListener(listener);
     }
 
     @Override
-    public void addEditorFactoryListener(@Nonnull EditorFactoryListener listener, @Nonnull Disposable parentDisposable) {
+    public void addEditorFactoryListener(EditorFactoryListener listener, Disposable parentDisposable) {
         myEditorFactoryEventDispatcher.addListener(listener, parentDisposable);
     }
 
     @Override
     @Deprecated
-    public void removeEditorFactoryListener(@Nonnull EditorFactoryListener listener) {
+    public void removeEditorFactoryListener(EditorFactoryListener listener) {
         myEditorFactoryEventDispatcher.removeListener(listener);
     }
 
     @Override
-    @Nonnull
+    
     public EditorEventMulticaster getEventMulticaster() {
         return myEditorEventMulticaster;
     }

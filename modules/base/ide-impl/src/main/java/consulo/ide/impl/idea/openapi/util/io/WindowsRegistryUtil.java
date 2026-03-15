@@ -15,8 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util.io;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -69,8 +68,8 @@ public class WindowsRegistryUtil {
     return output.subSequence(startPos, endPos + 1).toString();
   }
 
-  @Nonnull
-  public static List<String> readRegistryBranch(@Nonnull String location) {
+  
+  public static List<String> readRegistryBranch(String location) {
     List<String> result = new ArrayList<String>();
     StringBuilder output = readRegistry("reg query \"" + location + "\" /s");
     if (output != null) {
@@ -89,12 +88,12 @@ public class WindowsRegistryUtil {
   }
 
   @Nullable
-  public static String readRegistryDefault(@Nonnull String location) {
+  public static String readRegistryDefault(String location) {
     return trimToValue(readRegistry("reg query \"" + location + "\" /ve"));
   }
 
   @Nullable
-  public static String readRegistryValue(@Nonnull String location, @Nonnull String key) {
+  public static String readRegistryValue(String location, String key) {
     return trimToValue(readRegistry("reg query \"" + location + "\" /v " + key));
   }
 

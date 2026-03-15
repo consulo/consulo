@@ -21,8 +21,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.nio.charset.Charset;
 
@@ -36,30 +34,30 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
     this("");
   }
 
-  public LightVirtualFile(@NonNls @Nonnull String name) {
+  public LightVirtualFile(String name) {
     this(name, "");
   }
 
-  public LightVirtualFile(@NonNls @Nonnull String name, @Nonnull CharSequence content) {
+  public LightVirtualFile(String name, CharSequence content) {
     this(name, null, content, LocalTimeCounter.currentTime());
   }
 
-  public LightVirtualFile(@Nonnull String name, FileType fileType, @Nonnull CharSequence text) {
+  public LightVirtualFile(String name, FileType fileType, CharSequence text) {
     this(name, fileType, text, LocalTimeCounter.currentTime());
   }
 
-  public LightVirtualFile(VirtualFile original, @Nonnull CharSequence text, long modificationStamp) {
+  public LightVirtualFile(VirtualFile original, CharSequence text, long modificationStamp) {
     this(original.getName(), original.getFileType(), text, modificationStamp);
     setCharset(original.getCharset());
   }
 
-  public LightVirtualFile(@Nonnull String name, FileType fileType, @Nonnull CharSequence text, long modificationStamp) {
+  public LightVirtualFile(String name, FileType fileType, CharSequence text, long modificationStamp) {
     this(name, fileType, text, fileType == null ? null : fileType.extractCharsetFromFileContent(null, null, text), modificationStamp);
   }
 
-  public LightVirtualFile(@Nonnull String name,
+  public LightVirtualFile(String name,
                           FileType fileType,
-                          @Nonnull CharSequence text,
+                          CharSequence text,
                           Charset charset,
                           long modificationStamp) {
     super(name, fileType, modificationStamp);
@@ -67,7 +65,7 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
     setCharset(charset);
   }
 
-  public LightVirtualFile(@Nonnull String name, Language language, @Nonnull CharSequence text) {
+  public LightVirtualFile(String name, Language language, CharSequence text) {
     super(name, null, LocalTimeCounter.currentTime());
     setContent(text);
     setLanguage(language);
@@ -77,7 +75,7 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
     return myLanguage;
   }
 
-  public void setLanguage(@Nonnull Language language) {
+  public void setLanguage(Language language) {
     myLanguage = language;
     FileType type = language.getAssociatedFileType();
     if (type == null) {

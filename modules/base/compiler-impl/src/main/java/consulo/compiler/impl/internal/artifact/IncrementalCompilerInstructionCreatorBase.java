@@ -24,8 +24,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -40,12 +39,12 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
     }
 
     @Override
-    public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory) {
+    public void addDirectoryCopyInstructions(VirtualFile directory) {
         addDirectoryCopyInstructions(directory, null);
     }
 
     @Override
-    public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @Nullable PackagingFileFilter filter) {
+    public void addDirectoryCopyInstructions(VirtualFile directory, @Nullable PackagingFileFilter filter) {
         ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
         boolean copyExcluded = index.isExcluded(directory);
         collectInstructionsRecursively(directory, this, filter, index, copyExcluded);
@@ -67,7 +66,7 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
                 }
 
                 @Override
-                public boolean visitFile(@Nonnull VirtualFile child) {
+                public boolean visitFile(VirtualFile child) {
                     if (copyExcluded) {
                         if (fileTypeManager.isFileIgnored(child)) {
                             return false;
@@ -96,10 +95,10 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
     }
 
     @Override
-    public abstract IncrementalCompilerInstructionCreatorBase subFolder(@Nonnull String directoryName);
+    public abstract IncrementalCompilerInstructionCreatorBase subFolder(String directoryName);
 
     @Override
-    public IncrementalCompilerInstructionCreator subFolderByRelativePath(@Nonnull String relativeDirectoryPath) {
+    public IncrementalCompilerInstructionCreator subFolderByRelativePath(String relativeDirectoryPath) {
         List<String> folders = StringUtil.split(relativeDirectoryPath, "/");
         IncrementalCompilerInstructionCreator current = this;
         for (String folder : folders) {

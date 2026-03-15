@@ -19,13 +19,12 @@ package consulo.language.editor.generation;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
   private final PsiElement myPsiElement;
 
-  public PsiElementMemberChooserObject(@Nonnull PsiElement psiElement, String text) {
+  public PsiElementMemberChooserObject(PsiElement psiElement, String text) {
     super(text);
     myPsiElement = psiElement;
   }

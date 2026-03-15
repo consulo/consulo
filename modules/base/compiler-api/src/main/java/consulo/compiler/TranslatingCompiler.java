@@ -19,7 +19,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -81,9 +80,9 @@ public interface TranslatingCompiler extends Compiler {
      */
     void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink);
 
-    @Nonnull
+    
     FileType[] getInputFileTypes();
 
-    @Nonnull
+    
     FileType[] getOutputFileTypes();
 }

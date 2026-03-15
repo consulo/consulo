@@ -5,13 +5,12 @@ import consulo.execution.debug.stream.resolve.IdentityResolver;
 import consulo.execution.debug.stream.trace.impl.handler.unified.ToCollectionHandler;
 import consulo.execution.debug.stream.trace.impl.interpret.CollectIdentityTraceInterpreter;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public class ToCollectionOperation extends TerminalOperationBase {
-  public ToCollectionOperation(@Nonnull String name) {
+  public ToCollectionOperation(String name) {
     super(name,
           (call, resultExpression, dsl) -> new ToCollectionHandler(call, dsl),
           new CollectIdentityTraceInterpreter(),

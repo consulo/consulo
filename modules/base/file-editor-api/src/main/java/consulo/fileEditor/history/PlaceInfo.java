@@ -6,8 +6,7 @@ import consulo.document.RangeMarker;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -21,9 +20,9 @@ public final class PlaceInfo {
   private final RangeMarker myCaretPosition;
   private final long myTimeStamp;
 
-  public PlaceInfo(@Nonnull VirtualFile file,
-                   @Nonnull FileEditorState navigationState,
-                   @Nonnull String editorTypeId,
+  public PlaceInfo(VirtualFile file,
+                   FileEditorState navigationState,
+                   String editorTypeId,
                    @Nullable FileEditorWindow window,
                    @Nullable RangeMarker caretPosition,
                    long stamp) {
@@ -39,17 +38,17 @@ public final class PlaceInfo {
     return myWindow.get();
   }
 
-  @Nonnull
+  
   public FileEditorState getNavigationState() {
     return myNavigationState;
   }
 
-  @Nonnull
+  
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   public String getEditorTypeId() {
     return myEditorTypeId;
   }

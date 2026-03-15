@@ -32,8 +32,7 @@ import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.FList;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -85,7 +84,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     private MouseListener myMouseListener = null;
 
     @SuppressWarnings("WeakerAccess")
-    public ClassesTable(@Nonnull Project project, @Nonnull ClassesFilteredViewBase parent, boolean onlyWithDiff,
+    public ClassesTable(Project project, ClassesFilteredViewBase parent, boolean onlyWithDiff,
                         boolean onlyWithInstances,
                         boolean onlyTracked) {
         myModel = getTableModel();
@@ -110,24 +109,24 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
         myCountProvider = new ReferenceCountProvider() {
             @Override
-            public int getTotalCount(@Nonnull TypeInfo ref) {
+            public int getTotalCount(TypeInfo ref) {
                 return (int) myCounts.get(ref).myCurrentCount;
             }
 
             @Override
-            public int getDiffCount(@Nonnull TypeInfo ref) {
+            public int getDiffCount(TypeInfo ref) {
                 return (int) myCounts.get(ref).diff();
             }
 
             @Override
-            public int getNewInstancesCount(@Nonnull TypeInfo ref) {
+            public int getNewInstancesCount(TypeInfo ref) {
                 TrackerForNewInstancesBase strategy = myParent.getStrategy(ref);
                 return strategy == null || !strategy.isReady() ? -1 : strategy.getCount();
             }
         };
     }
 
-    @Nonnull
+    
     protected DiffViewTableModel getTableModel() {
         return new DiffViewTableModel();
     }
@@ -165,7 +164,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         setRowSorter(sorter);
     }
 
-    @Nonnull
+    
     protected List<RowSorter.SortKey> getTableSortingKeys() {
         return Arrays.asList(
             new RowSorter.SortKey(DiffViewTableModel.DIFF_COLUMN_INDEX, SortOrder.DESCENDING),
@@ -176,11 +175,11 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
     public interface ReferenceCountProvider {
 
-        int getTotalCount(@Nonnull TypeInfo ref);
+        int getTotalCount(TypeInfo ref);
 
-        int getDiffCount(@Nonnull TypeInfo ref);
+        int getDiffCount(TypeInfo ref);
 
-        int getNewInstancesCount(@Nonnull TypeInfo ref);
+        int getNewInstancesCount(TypeInfo ref);
     }
 
     @Nullable
@@ -195,7 +194,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     }
 
     @Nullable
-    public TypeInfo getClassByName(@Nonnull String name) {
+    public TypeInfo getClassByName(String name) {
         for (TypeInfo ref : myItems) {
             if (name.equals(ref.name())) {
                 return ref;
@@ -209,12 +208,12 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         return myMouseListener != null;
     }
 
-    public void makeClickable(@Nonnull Runnable onClick) {
+    public void makeClickable(Runnable onClick) {
         releaseMouseListener();
 
         AnAction action = new AnAction() {
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 onClick.run();
                 releaseMouseListener();
             }
@@ -322,7 +321,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void updateClassesOnly(@Nonnull List<? extends TypeInfo> classes) {
+    public void updateClassesOnly(List<? extends TypeInfo> classes) {
         myIsShowCounts = false;
         Map<TypeInfo, Long> class2Count = new LinkedHashMap<>();
         classes.forEach(x -> class2Count.put(x, 0L));
@@ -330,12 +329,12 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void updateContent(@Nonnull Map<TypeInfo, Long> class2Count) {
+    public void updateContent(Map<TypeInfo, Long> class2Count) {
         myIsShowCounts = true;
         updateCountsInternal(class2Count);
     }
 
-    void hideContent(@Nonnull String emptyText) {
+    void hideContent(String emptyText) {
         releaseMouseListener();
         getEmptyText().setText(emptyText);
 
@@ -346,7 +345,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         myModel.show();
     }
 
-    private void updateCountsInternal(@Nonnull Map<TypeInfo, Long> class2Count) {
+    private void updateCountsInternal(Map<TypeInfo, Long> class2Count) {
         releaseMouseListener();
         getEmptyText().setText(StatusText.getDefaultEmptyText());
 
@@ -382,7 +381,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (dataId == SELECTED_CLASS_KEY) {
             return getSelectedClass();
         }
@@ -393,7 +392,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         return null;
     }
 
-    public void clean(@Nonnull String emptyText) {
+    public void clean(String emptyText) {
         clearSelection();
         releaseMouseListener();
         getEmptyText().setText(emptyText);
@@ -474,7 +473,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         }
     }
 
-    @Nonnull
+    
     protected AbstractTableColumnDescriptor[] getColumnDescriptors() {
         return new AbstractTableColumnDescriptor[]{
             new AbstractTableColumnDescriptor(XDebuggerBundle.message("memory.view.table.column.name.class"), TypeInfo.class) {
@@ -556,14 +555,14 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         }
 
         @Override
-        public int compareTo(@Nonnull DiffValue o) {
+        public int compareTo(DiffValue o) {
             return Long.compare(diff(), o.diff());
         }
     }
 
     public abstract static class MyTableCellRenderer extends ColoredTableCellRenderer {
         @Override
-        protected void customizeCellRenderer(@Nonnull JTable table, @Nullable Object value, boolean isSelected,
+        protected void customizeCellRenderer(JTable table, @Nullable Object value, boolean isSelected,
                                              boolean hasFocus, int row, int column) {
 
             if (hasFocus) {
@@ -575,12 +574,12 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
             }
         }
 
-        protected abstract void addText(@Nonnull Object value, boolean isSelected, int row);
+        protected abstract void addText(Object value, boolean isSelected, int row);
     }
 
     private class MyClassColumnRenderer extends MyTableCellRenderer {
         @Override
-        protected void addText(@Nonnull Object value, boolean isSelected,
+        protected void addText(Object value, boolean isSelected,
                                int row) {
             String presentation = ((TypeInfo) value).name();
             append(" ");
@@ -601,19 +600,19 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
     private abstract class MyNumericRenderer extends MyTableCellRenderer {
         @Override
-        protected void addText(@Nonnull Object value, boolean isSelected, int row) {
+        protected void addText(Object value, boolean isSelected, int row) {
             if (myIsShowCounts) {
                 setTextAlign(SwingConstants.RIGHT);
                 appendText(value, row);
             }
         }
 
-        abstract void appendText(@Nonnull Object value, int row);
+        abstract void appendText(Object value, int row);
     }
 
     private class MyCountColumnRenderer extends MyNumericRenderer {
         @Override
-        void appendText(@Nonnull Object value, int row) {
+        void appendText(Object value, int row) {
             //noinspection HardCodedStringLiteral
             append(value.toString());
         }
@@ -624,7 +623,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
             new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, JBColor.BLUE);
 
         @Override
-        void appendText(@Nonnull Object value, int row) {
+        void appendText(Object value, int row) {
             TrackingType trackingType = getTrackingType(row);
             if (trackingType != null) {
                 setIcon(ExecutionDebugIconGroup.nodeWatch());

@@ -45,8 +45,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -100,18 +99,18 @@ public class NavBarPresentation {
         return null;
     }
 
-    @Nonnull
+    
     protected String getPresentableText(Object object) {
         return getPresentableText(object, false);
     }
 
-    @Nonnull
+    
     protected String getPresentableText(Object object, boolean forPopup) {
         String text = calcPresentableText(object, forPopup);
         return text.length() > 50 ? text.substring(0, 47) + "..." : text;
     }
 
-    @Nonnull
+    
     public static String calcPresentableText(Object object, boolean forPopup) {
         if (!NavBarModel.isValid(object)) {
             return IdeLocalize.nodeStructureviewInvalid().get();

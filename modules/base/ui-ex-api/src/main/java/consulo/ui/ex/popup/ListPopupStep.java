@@ -16,8 +16,7 @@
 package consulo.ui.ex.popup;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,7 +33,7 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      *
      * @return the list of values to be displayed in the list popup.
      */
-    @Nonnull
+    
     List<T> getValues();
 
     /**
@@ -65,7 +64,7 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      * @param value the value for which the text is requested.
      * @return the text to display.
      */
-    @Nonnull
+    
     String getTextFor(T value);
 
     /**
@@ -80,7 +79,7 @@ public interface ListPopupStep<T> extends PopupStep<T> {
         return null;
     }
 
-    default boolean isSeparator(@Nonnull T value) {
+    default boolean isSeparator(T value) {
         return false;
     }
 

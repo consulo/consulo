@@ -6,7 +6,6 @@ import consulo.util.collection.SmartList;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -25,13 +24,13 @@ public class InputMapExternalizer<Key, Value> implements DataExternalizer<Map<Ke
   }
 
 
-  @Nonnull
+  
   public DataExternalizer<Value> getValueExternalizer() {
     return myValueExternalizer;
   }
 
   @Override
-  public void save(@Nonnull DataOutput stream, Map<Key, Value> data) throws IOException {
+  public void save(DataOutput stream, Map<Key, Value> data) throws IOException {
     int size = data.size();
     DataInputOutputUtil.writeINT(stream, size);
 
@@ -62,7 +61,7 @@ public class InputMapExternalizer<Key, Value> implements DataExternalizer<Map<Ke
   }
 
   @Override
-  public Map<Key, Value> read(@Nonnull DataInput in) throws IOException {
+  public Map<Key, Value> read(DataInput in) throws IOException {
     int pairs = DataInputOutputUtil.readINT(in);
     if (pairs == 0) return Collections.emptyMap();
     Map<Key, Value> result = new HashMap<>(pairs);

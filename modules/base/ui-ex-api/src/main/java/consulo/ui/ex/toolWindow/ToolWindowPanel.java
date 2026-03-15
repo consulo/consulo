@@ -17,7 +17,6 @@ package consulo.ui.ex.toolWindow;
 
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 
 /**
@@ -28,20 +27,20 @@ import java.util.Comparator;
  */
 public interface ToolWindowPanel {
   @RequiredUIAccess
-  void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator);
+  void addButton(ToolWindowStripeButton button, WindowInfo info, Comparator<ToolWindowStripeButton> comparator);
 
   @RequiredUIAccess
-  void updateButtonPosition(@Nonnull String id);
+  void updateButtonPosition(String id);
 
   @RequiredUIAccess
   void setEditorComponent(Object component);
 
   @RequiredUIAccess
-  void removeButton(@Nonnull String id);
+  void removeButton(String id);
 
   @RequiredUIAccess
-  void removeDecorator(@Nonnull String id, boolean dirtyMode);
+  void removeDecorator(String id, boolean dirtyMode);
 
   @RequiredUIAccess
-  void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode);
+  void addDecorator(ToolWindowInternalDecorator decorator, WindowInfo info, boolean dirtyMode);
 }

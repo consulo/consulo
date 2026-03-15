@@ -20,7 +20,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -31,8 +30,8 @@ public class GlobalSearchScopes extends GlobalSearchScopesCore {
   private GlobalSearchScopes() {
   }
 
-  @Nonnull
-  public static GlobalSearchScope openFilesScope(@Nonnull Project project) {
+  
+  public static GlobalSearchScope openFilesScope(Project project) {
     VirtualFile[] files = FileEditorManager.getInstance(project).getOpenFiles();
     return GlobalSearchScope.filesScope(project, Arrays.asList(files), "Open Files");
   }

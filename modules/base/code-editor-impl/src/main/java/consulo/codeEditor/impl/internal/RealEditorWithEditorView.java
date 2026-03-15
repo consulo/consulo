@@ -16,13 +16,12 @@
 package consulo.codeEditor.impl.internal;
 
 import consulo.codeEditor.RealEditor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-06-01
  */
 public interface RealEditorWithEditorView extends RealEditor {
-    @Nonnull
+    
     RealEditorView getView();
 }

@@ -4,7 +4,6 @@ package consulo.language.internal.custom;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 
 public final class CharTrie {
   private int myAllNodesSize;
@@ -98,7 +97,7 @@ public final class CharTrie {
     return index + (((long)resultingLength) << 32);
   }
 
-  @Nonnull
+  
   public char[] getChars(int hashCode) {
     int length = 0;
     int run = hashCode;
@@ -130,7 +129,7 @@ public final class CharTrie {
     return index;
   }
 
-  @Nonnull
+  
   public char[] getReversedChars(int hashCode) {
     int length = 0;
     int run = hashCode;

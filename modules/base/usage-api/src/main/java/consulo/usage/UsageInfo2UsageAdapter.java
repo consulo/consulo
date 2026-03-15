@@ -59,8 +59,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.lang.ref.Reference;
@@ -79,7 +78,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     private static final Comparator<UsageInfo> BY_NAVIGATION_OFFSET = Comparator.comparingInt(UsageInfo::getNavigationOffset);
 
     private final UsageInfo myUsageInfo;
-    @Nonnull
+    
     private Object myMergedUsageInfos; // contains all merged infos, including myUsageInfo. Either UsageInfo or UsageInfo[]
     private final int myLineNumber;
     private final int myOffset;
@@ -88,7 +87,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     private volatile UsageType myUsageType;
 
     @RequiredReadAction
-    public UsageInfo2UsageAdapter(@Nonnull UsageInfo usageInfo) {
+    public UsageInfo2UsageAdapter(UsageInfo usageInfo) {
         myUsageInfo = usageInfo;
         myMergedUsageInfos = usageInfo;
 
@@ -124,7 +123,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         myModificationStamp = getCurrentModificationStamp();
     }
 
-    private static int getLineNumber(@Nonnull Document document, int startOffset) {
+    private static int getLineNumber(Document document, int startOffset) {
         if (document.getTextLength() == 0) {
             return 0;
         }
@@ -135,7 +134,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     private TextChunk[] initChunks() {
         PsiFile psiFile = getPsiFile();
         Document document = psiFile == null ? null : PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
@@ -162,7 +161,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    @Nonnull
+    
     public UsagePresentation getPresentation() {
         return this;
     }
@@ -243,7 +242,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
 
     // must iterate in start offset order
     @RequiredReadAction
-    public boolean processRangeMarkers(@Nonnull Predicate<Segment> processor) {
+    public boolean processRangeMarkers(Predicate<Segment> processor) {
         for (UsageInfo usageInfo : getMergedInfos()) {
             Segment segment = usageInfo.getSegment();
             if (segment != null && !processor.test(segment)) {
@@ -342,7 +341,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return range;
     }
 
-    @Nonnull
+    
     private Project getProject() {
         return getUsageInfo().getProject();
     }
@@ -416,7 +415,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    @Nonnull
+    
     public String getPath() {
         return getFile().getPath();
     }
@@ -427,7 +426,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    public boolean merge(@Nonnull MergeableUsage other) {
+    public boolean merge(MergeableUsage other) {
         if (!(other instanceof UsageInfo2UsageAdapter)) {
             return false;
         }
@@ -467,14 +466,14 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return getUsageInfo().isNonCodeUsage;
     }
 
-    @Nonnull
+    
     public UsageInfo getUsageInfo() {
         return myUsageInfo;
     }
 
     // by start offset
     @Override
-    public int compareTo(@Nonnull UsageInfo2UsageAdapter o) {
+    public int compareTo(UsageInfo2UsageAdapter o) {
         return getUsageInfo().compareToByStartOffset(o.getUsageInfo());
     }
 
@@ -486,9 +485,9 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         reference.handleElementRename(newName);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static UsageInfo2UsageAdapter[] convert(@Nonnull UsageInfo[] usageInfos) {
+    public static UsageInfo2UsageAdapter[] convert(UsageInfo[] usageInfos) {
         UsageInfo2UsageAdapter[] result = new UsageInfo2UsageAdapter[usageInfos.length];
         for (int i = 0; i < result.length; i++) {
             result[i] = new UsageInfo2UsageAdapter(usageInfos[i]);
@@ -509,7 +508,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    @Nonnull
+    
     public UsageInfo[] getMergedInfos() {
         Object infos = myMergedUsageInfos;
         return infos instanceof UsageInfo ? new UsageInfo[]{(UsageInfo)infos} : (UsageInfo[])infos;
@@ -523,7 +522,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return containingFile == null ? -1L : containingFile.getViewProvider().getModificationStamp();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public TextChunk[] getText() {
@@ -538,7 +537,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return chunks;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public String getPlainText() {

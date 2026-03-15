@@ -24,7 +24,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -43,11 +42,11 @@ public class AboutRestHandler extends JsonGetRequestHandler {
         public List<String> plugins = List.of();
     }
 
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public AboutRestHandler(@Nonnull Application application) {
+    public AboutRestHandler(Application application) {
         super("about");
         myApplication = application;
     }
@@ -57,7 +56,7 @@ public class AboutRestHandler extends JsonGetRequestHandler {
         return true; // trust in any cases
     }
 
-    @Nonnull
+    
     @Override
     public JsonResponse handle(HttpRequest request) {
         ApplicationInfo info = ApplicationInfo.getInstance();

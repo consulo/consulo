@@ -30,10 +30,8 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -48,19 +46,19 @@ public class MasterDetailsStateService implements PersistentStateComponent<Maste
   private final SkipDefaultValuesSerializationFilters mySerializationFilter = new SkipDefaultValuesSerializationFilters();
   private final Map<String, ComponentState> myStates = new HashMap<>();
 
-  public static MasterDetailsStateService getInstance(@Nonnull ComponentManager project) {
+  public static MasterDetailsStateService getInstance(ComponentManager project) {
     return project.getInstance(MasterDetailsStateService.class);
   }
 
   @Nullable
-  public MasterDetailsState getComponentState(@Nonnull String key, Class<? extends MasterDetailsState> stateClass) {
+  public MasterDetailsState getComponentState(String key, Class<? extends MasterDetailsState> stateClass) {
     ComponentState state = myStates.get(key);
     if (state == null) return null;
     Element settings = state.mySettings;
     return settings != null ? XmlSerializer.deserialize(settings, stateClass) : null;
   }
 
-  public void setComponentState(@Nonnull @NonNls String key, @Nonnull MasterDetailsState state) {
+  public void setComponentState(String key, MasterDetailsState state) {
     Element element = XmlSerializer.serialize(state, mySerializationFilter);
     if (element == null) {
       myStates.remove(key);

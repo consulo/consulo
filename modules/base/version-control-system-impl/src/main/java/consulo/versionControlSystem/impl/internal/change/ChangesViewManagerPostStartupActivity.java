@@ -21,7 +21,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(order = "after changelist-manager", profiles = ComponentProfiles.AWT)
 public class ChangesViewManagerPostStartupActivity implements PostStartupActivity, DumbAware {
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     ChangesViewManagerImpl changesViewManager = (ChangesViewManagerImpl) ChangesViewManagerImpl.getInstance(project);
 
     changesViewManager.projectOpened();

@@ -32,7 +32,6 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.undoRedo.internal.StartMarkAction;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -56,7 +55,7 @@ public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {
   }
 
   @Override
-  public InplaceRefactoring doRename(@Nonnull final PsiElement elementToRename, final Editor editor, final DataContext dataContext) {
+  public InplaceRefactoring doRename(final PsiElement elementToRename, final Editor editor, final DataContext dataContext) {
     if (elementToRename instanceof PsiNameIdentifierOwner) {
       RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(elementToRename);
       if (processor.isInplaceRenameSupported()) {
@@ -89,8 +88,8 @@ public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {
     return null;
   }
 
-  @Nonnull
-  protected MemberInplaceRenamer createMemberRenamer(@Nonnull PsiElement element, PsiNameIdentifierOwner elementToRename, Editor editor) {
+  
+  protected MemberInplaceRenamer createMemberRenamer(PsiElement element, PsiNameIdentifierOwner elementToRename, Editor editor) {
     return new MemberInplaceRenamer(elementToRename, element, editor);
   }
 }

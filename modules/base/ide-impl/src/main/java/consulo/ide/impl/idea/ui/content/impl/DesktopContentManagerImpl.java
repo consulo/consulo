@@ -27,10 +27,8 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.wm.impl.ContentManagerBase;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -42,7 +40,7 @@ import java.awt.*;
 public class DesktopContentManagerImpl extends ContentManagerBase {
   protected JComponent myComponent;
 
-  public DesktopContentManagerImpl(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
+  public DesktopContentManagerImpl(ContentUI contentUI, boolean canCloseContents, Project project) {
     super(contentUI, canCloseContents, project);
   }
 
@@ -51,7 +49,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     myUI.getComponent().updateUI();
   }
 
-  @Nonnull
+  
   @Override
   protected AsyncResult<Void> requestFocusForComponent() {
     return getFocusManager().requestFocus(myComponent, true);
@@ -81,7 +79,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     if (myComponent == null) {
@@ -96,7 +94,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     return myComponent;
   }
 
-  @Nonnull
+  
   @Override
   public AsyncResult<Void> requestFocus(Content content, boolean forced) {
     Content toSelect = content == null ? getSelectedContent() : content;
@@ -113,7 +111,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
 
     @Override
     @Nullable
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
       if (PlatformDataKeys.CONTENT_MANAGER == dataId || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && getContentCount() > 1) {
         return DesktopContentManagerImpl.this;
       }

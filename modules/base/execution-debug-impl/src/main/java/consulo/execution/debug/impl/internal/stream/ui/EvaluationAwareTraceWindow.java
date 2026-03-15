@@ -21,8 +21,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +46,7 @@ public class EvaluationAwareTraceWindow extends DialogWrapper {
 
     private MyMode myMode;
 
-    public EvaluationAwareTraceWindow(@Nonnull XDebugSession session, @Nonnull StreamChain chain) {
+    public EvaluationAwareTraceWindow(XDebugSession session, StreamChain chain) {
         super(session.getProject(), true);
         myTabsPane = new TabbedPaneWrapper(getDisposable());
         session.addSessionListener(new XDebugSessionListener() {
@@ -96,8 +95,8 @@ public class EvaluationAwareTraceWindow extends DialogWrapper {
         return "#com.intellij.debugger.streams.ui.EvaluationAwareTraceWindow";
     }
 
-    public void setTrace(@Nonnull ResolvedTracingResult resolvedTrace, @Nonnull DebuggerCommandLauncher launcher, @Nonnull GenericEvaluationContext context,
-                         @Nonnull CollectionTreeBuilder builder) {
+    public void setTrace(ResolvedTracingResult resolvedTrace, DebuggerCommandLauncher launcher, GenericEvaluationContext context,
+                         CollectionTreeBuilder builder) {
         if (Disposer.isDisposed(myDisposable)) {
             return;
         }
@@ -155,7 +154,7 @@ public class EvaluationAwareTraceWindow extends DialogWrapper {
         myCenterPane.repaint();
     }
 
-    public void setFailMessage(@Nonnull String reason) {
+    public void setFailMessage(String reason) {
         List<MyPlaceholder> placeholders = new ArrayList<>(myTabContents);
         placeholders.addFirst(myFlatContent);
 
@@ -165,13 +164,13 @@ public class EvaluationAwareTraceWindow extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{new DialogWrapperExitAction(CommonLocalize.buttonClose().map(Presentation.NO_MNEMONIC).get(), CLOSE_EXIT_CODE)};
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createLeftSideActions() {
         return new Action[]{new MyToggleViewAction()};
     }
@@ -181,7 +180,7 @@ public class EvaluationAwareTraceWindow extends DialogWrapper {
         return myCenterPane;
     }
 
-    private @Nonnull List<TraceControllerImpl> createControllers(@Nonnull ResolvedTracingResult resolvedResult) {
+    private List<TraceControllerImpl> createControllers(ResolvedTracingResult resolvedResult) {
         List<TraceControllerImpl> controllers = new ArrayList<>();
         ResolvedStreamChain chain = resolvedResult.getResolvedChain();
 
@@ -219,12 +218,12 @@ public class EvaluationAwareTraceWindow extends DialogWrapper {
         return controllers;
     }
 
-    private static void updateWindowMode(@Nonnull MyCenterPane pane, @Nonnull MyMode mode) {
+    private static void updateWindowMode(MyCenterPane pane, MyMode mode) {
         pane.getLayout().show(pane, mode.name());
         ApplicationPropertiesComponent.getInstance().setValue(IS_FLAT_MODE_PROPERTY, MyMode.FLAT.equals(mode));
     }
 
-    private static @Nonnull LocalizeValue getButtonText(@Nonnull MyMode currentState) {
+    private static LocalizeValue getButtonText(MyMode currentState) {
         return MyMode.SPLIT.equals(currentState)
             ? XDebuggerLocalize.streamDebuggerDialogFlatModeButton()
             : XDebuggerLocalize.streamDebuggerDialogSplitModeButton();
@@ -246,7 +245,7 @@ public class EvaluationAwareTraceWindow extends DialogWrapper {
             updateWindowMode(myCenterPane, myMode);
         }
 
-        private static @Nonnull MyMode toggleMode(@Nonnull MyMode mode) {
+        private static MyMode toggleMode(MyMode mode) {
             return MyMode.FLAT.equals(mode) ? MyMode.SPLIT : MyMode.FLAT;
         }
     }
@@ -257,7 +256,7 @@ public class EvaluationAwareTraceWindow extends DialogWrapper {
             add(new JBLabel(XDebuggerLocalize.evaluationInProgress().get(), SwingConstants.CENTER), BorderLayout.CENTER);
         }
 
-        void setContent(@Nonnull JComponent view, String placement) {
+        void setContent(JComponent view, String placement) {
             Arrays.stream(getComponents()).forEach(this::remove);
             add(view, placement);
             revalidate();

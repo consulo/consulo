@@ -24,7 +24,6 @@ import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,7 +35,7 @@ public class CapitalizeAndUnderscoreMacro extends MacroBase {
   }
 
   @Override
-  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
+  protected Result calculateResult(Expression[] params, ExpressionContext context, boolean quick) {
     String text = MacroBase.getTextResult(params, context, true);
     if (text != null && text.length() > 0) {
       String[] words = NameUtil.nameToWords(text);

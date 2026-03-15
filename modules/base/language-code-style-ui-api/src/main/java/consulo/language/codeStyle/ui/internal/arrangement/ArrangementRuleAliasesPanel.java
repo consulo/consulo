@@ -24,10 +24,8 @@ import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -37,17 +35,17 @@ import java.util.List;
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider {
-  @Nonnull
+  
   protected final ArrangementRuleAliasControl myControl;
 
-  public ArrangementRuleAliasesPanel(@Nonnull ArrangementStandardSettingsManager settingsManager, @Nonnull ArrangementColorsProvider colorsProvider) {
+  public ArrangementRuleAliasesPanel(ArrangementStandardSettingsManager settingsManager, ArrangementColorsProvider colorsProvider) {
     super(new GridBagLayout());
     setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
     JBScrollPane scrollPane = new JBScrollPane();
     final JViewport viewport = scrollPane.getViewport();
     ArrangementMatchingRulesControl.RepresentationCallback callback = new ArrangementMatchingRulesControl.RepresentationCallback() {
       @Override
-      public void ensureVisible(@Nonnull Rectangle r) {
+      public void ensureVisible(Rectangle r) {
         Rectangle visibleRect = viewport.getViewRect();
         if (r.y <= visibleRect.y) {
           return;
@@ -74,7 +72,7 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
     add(scrollPane, new GridBag().fillCell().weightx(1).weighty(1).insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, 0));
   }
 
-  @Nonnull
+  
   public List<StdArrangementMatchRule> getRuleSequences() {
     return myControl.getRuleSequences();
   }
@@ -85,7 +83,7 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
 
   @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     if (ArrangementRuleAliasControl.KEY == dataId) {
       return myControl;
     }

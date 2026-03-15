@@ -16,15 +16,14 @@
 
 package consulo.language.psi;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
  * Trivial implementation of {@link ResolveResult}.
  */
 public class PsiElementResolveResult implements ResolveResult {
-  @Nonnull
+  
   private final PsiElement myElement;
   private final boolean myValidResult;
 
@@ -33,17 +32,17 @@ public class PsiElementResolveResult implements ResolveResult {
    *
    * @param element the resolve target element.
    */
-  public PsiElementResolveResult(@Nonnull PsiElement element) {
+  public PsiElementResolveResult(PsiElement element) {
     this(element, true);
   }
 
-  public PsiElementResolveResult(@Nonnull PsiElement element, boolean validResult) {
+  public PsiElementResolveResult(PsiElement element, boolean validResult) {
     myElement = element;
     myValidResult = validResult;
   }
 
   @Override
-  @Nonnull
+  
   public PsiElement getElement() {
     return myElement;
   }
@@ -73,7 +72,7 @@ public class PsiElementResolveResult implements ResolveResult {
     return "PsiElementResolveResult with " + myElement.getClass() + ": " + (myElement instanceof PsiNamedElement ? ((PsiNamedElement)myElement).getName() : myElement.getText());
   }
 
-  @Nonnull
+  
   public static ResolveResult[] createResults(@Nullable Collection<? extends PsiElement> elements) {
     if (elements == null || elements.isEmpty()) return EMPTY_ARRAY;
 
@@ -85,7 +84,7 @@ public class PsiElementResolveResult implements ResolveResult {
     return results;
   }
 
-  @Nonnull
+  
   public static ResolveResult[] createResults(@Nullable PsiElement... elements) {
     if (elements == null || elements.length == 0) return EMPTY_ARRAY;
 

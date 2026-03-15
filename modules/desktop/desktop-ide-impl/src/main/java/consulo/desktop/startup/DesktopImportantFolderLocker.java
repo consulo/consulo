@@ -33,8 +33,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
@@ -71,7 +70,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
     private String myToken;
     private BuiltInServer myServer;
 
-    public DesktopImportantFolderLocker(@Nonnull String configPath, @Nonnull String systemPath) {
+    public DesktopImportantFolderLocker(String configPath, String systemPath) {
         myConfigPath = canonicalPath(configPath);
         mySystemPath = canonicalPath(systemPath);
     }
@@ -115,8 +114,8 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
     }
 
     @Override
-    @Nonnull
-    public ActivateStatus lock(@Nonnull String[] args) throws Exception {
+    
+    public ActivateStatus lock(String[] args) throws Exception {
         log("enter: lock(config=%s system=%s)", myConfigPath, mySystemPath);
 
         return underLocks(() -> {
@@ -167,7 +166,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
         });
     }
 
-    private <V> V underLocks(@Nonnull Callable<V> action) throws Exception {
+    private <V> V underLocks(Callable<V> action) throws Exception {
         FileUtil.createDirectory(new File(myConfigPath));
         try (@SuppressWarnings("unused") FileOutputStream lock1 = new FileOutputStream(new File(myConfigPath, PORT_LOCK_FILE), true)) {
             FileUtil.createDirectory(new File(mySystemPath));
@@ -177,7 +176,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
         }
     }
 
-    private static void addExistingPort(@Nonnull File portMarker, @Nonnull String path, @Nonnull MultiMap<Integer, String> portToPath) {
+    private static void addExistingPort(File portMarker, String path, MultiMap<Integer, String> portToPath) {
         if (portMarker.exists()) {
             try {
                 portToPath.putValue(Integer.parseInt(Files.readString(portMarker.toPath())), path);
@@ -189,8 +188,8 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
         }
     }
 
-    @Nonnull
-    private ActivateStatus tryActivate(int portNumber, @Nonnull Collection<String> paths, @Nonnull String[] args) {
+    
+    private ActivateStatus tryActivate(int portNumber, Collection<String> paths, String[] args) {
         log("trying: port=%s", portNumber);
         args = checkForJetBrainsProtocolCommand(args);
         try {
@@ -303,9 +302,9 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
         private State myState = State.HEADER;
 
         public MyChannelInboundHandler(
-            @Nonnull String[] lockedPaths,
-            @Nonnull AtomicReference<Consumer<CommandLineArgs>> activateListener,
-            @Nonnull String token
+            String[] lockedPaths,
+            AtomicReference<Consumer<CommandLineArgs>> activateListener,
+            String token
         ) {
             myLockedPaths = lockedPaths;
             myActivateListener = activateListener;
@@ -332,7 +331,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
         }
 
         @Override
-        protected void messageReceived(@Nonnull ChannelHandlerContext context, @Nonnull ByteBuf input) throws Exception {
+        protected void messageReceived(ChannelHandlerContext context, ByteBuf input) throws Exception {
             while (true) {
                 switch (myState) {
                     case HEADER: {
@@ -399,8 +398,8 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
         }
     }
 
-    @Nonnull
-    private static String canonicalPath(@Nonnull String configPath) {
+    
+    private static String canonicalPath(String configPath) {
         try {
             return new File(configPath).getCanonicalPath();
         }

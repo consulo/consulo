@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -42,8 +41,8 @@ public interface CustomComponentAction {
    * be shown on several toolbars simultaneously. Use {@link CustomComponentAction#COMPONENT_KEY}
    * to retrieve current component from a Presentation instance in {@link AnAction#update(AnActionEvent)} method.
    */
-  @Nonnull
-  default JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+  
+  default JComponent createCustomComponent(Presentation presentation, String place) {
     return createCustomComponent(presentation);
   }
 
@@ -51,8 +50,8 @@ public interface CustomComponentAction {
    * @deprecated Use {@link CustomComponentAction#createCustomComponent(Presentation, String)}
    */
   @Deprecated
-  @Nonnull
-  default JComponent createCustomComponent(@Nonnull Presentation presentation) {
+  
+  default JComponent createCustomComponent(Presentation presentation) {
     throw new AssertionError();
   }
 }

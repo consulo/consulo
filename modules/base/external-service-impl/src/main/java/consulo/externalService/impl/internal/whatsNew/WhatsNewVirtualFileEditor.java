@@ -46,8 +46,7 @@ import consulo.ui.util.ColorValueUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +72,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
         myUpdateHistory = updateHistory;
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);

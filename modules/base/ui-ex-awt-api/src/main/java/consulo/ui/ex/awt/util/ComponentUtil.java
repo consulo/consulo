@@ -4,8 +4,7 @@ package consulo.ui.ex.awt.util;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public final class ComponentUtil {
     return frame.getExtendedState() == Frame.ICONIFIED;
   }
 
-  @Nonnull
+  
   public static Window getActiveWindow() {
     for (Window each : Window.getWindows()) {
       if (each.isVisible() && each.isActive()) {
@@ -32,8 +31,8 @@ public final class ComponentUtil {
     return JOptionPane.getRootFrame();
   }
 
-  @Nonnull
-  public static Component findUltimateParent(@Nonnull Component c) {
+  
+  public static Component findUltimateParent(Component c) {
     Component eachParent = c;
     while (true) {
       if (eachParent.getParent() == null) {
@@ -60,7 +59,7 @@ public final class ComponentUtil {
   }
 
   @Nullable
-  public static Component findParentByCondition(@Nullable Component c, @Nonnull Predicate<? super Component> condition) {
+  public static Component findParentByCondition(@Nullable Component c, Predicate<? super Component> condition) {
     Component eachParent = c;
     while (eachParent != null) {
       if (condition.test(eachParent)) return eachParent;
@@ -80,7 +79,7 @@ public final class ComponentUtil {
    */
   @Nullable
   @Contract(pure = true)
-  public static <T> T getParentOfType(@Nonnull Class<? extends T> type, Component component) {
+  public static <T> T getParentOfType(Class<? extends T> type, Component component) {
     while (component != null) {
       if (type.isInstance(component)) {
         //noinspection unchecked
@@ -91,12 +90,12 @@ public final class ComponentUtil {
     return null;
   }
 
-  public static <T> T getClientProperty(@Nonnull JComponent component, @Nonnull Key<T> key) {
+  public static <T> T getClientProperty(JComponent component, Key<T> key) {
     //noinspection unchecked
     return (T)component.getClientProperty(key);
   }
 
-  public static <T> void putClientProperty(@Nonnull JComponent component, @Nonnull Key<T> key, T value) {
+  public static <T> void putClientProperty(JComponent component, Key<T> key, T value) {
     component.putClientProperty(key, value);
   }
 
@@ -129,14 +128,14 @@ public final class ComponentUtil {
     return parent instanceof JViewport ? (JViewport)parent : null;
   }
 
-  @Nonnull
-  public static <T extends JComponent> java.util.List<T> findComponentsOfType(JComponent parent, @Nonnull Class<? extends T> cls) {
+  
+  public static <T extends JComponent> java.util.List<T> findComponentsOfType(JComponent parent, Class<? extends T> cls) {
     java.util.List<T> result = new ArrayList<>();
     findComponentsOfType(parent, cls, result);
     return result;
   }
 
-  private static <T extends JComponent> void findComponentsOfType(JComponent parent, @Nonnull Class<T> cls, @Nonnull List<? super T> result) {
+  private static <T extends JComponent> void findComponentsOfType(JComponent parent, Class<T> cls, List<? super T> result) {
     if (parent == null) return;
     if (cls.isAssignableFrom(parent.getClass())) {
       @SuppressWarnings("unchecked") T t = (T)parent;

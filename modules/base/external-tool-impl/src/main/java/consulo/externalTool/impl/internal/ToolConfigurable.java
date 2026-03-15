@@ -21,8 +21,7 @@ import consulo.configurable.*;
 
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class ToolConfigurable implements SearchableConfigurable, Configurable.No
     return StandardConfigurableIds.EXECUTION_GROUP;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return ExternalToolLocalize.toolsSettingsTitle();
@@ -75,7 +74,7 @@ public class ToolConfigurable implements SearchableConfigurable, Configurable.No
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "preferences.externalTools";
   }

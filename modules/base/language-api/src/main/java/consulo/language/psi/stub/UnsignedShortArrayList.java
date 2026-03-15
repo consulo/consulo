@@ -17,7 +17,6 @@ package consulo.language.psi.stub;
 
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 
 class UnsignedShortArrayList implements Cloneable {
@@ -111,13 +110,13 @@ class UnsignedShortArrayList implements Cloneable {
     }
   }
 
-  @Nonnull
+  
   public int[] toArray() {
     return toArray(0, mySize);
   }
 
-  @Nonnull
-  public int[] toArray(@Nonnull int[] a) {
+  
+  public int[] toArray(int[] a) {
     if (a.length < mySize) {
       a = new int[mySize];
     }
@@ -129,7 +128,7 @@ class UnsignedShortArrayList implements Cloneable {
     return a;
   }
 
-  @Nonnull
+  
   public int[] toArray(int startIndex, int length) {
     int[] result = new int[length];
     for (int i = startIndex; i < length; i++) {

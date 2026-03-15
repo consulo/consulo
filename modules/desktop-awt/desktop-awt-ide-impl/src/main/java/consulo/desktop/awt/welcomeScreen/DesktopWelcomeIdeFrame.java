@@ -25,8 +25,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -49,7 +48,7 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
         return myFrame.getRootPane();
     }
 
-    @Nonnull
+    
     @Override
     public Window getWindow() {
         return myFrame.toUIWindow();
@@ -84,7 +83,7 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
 
     @Nullable
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
         return null;
     }
 

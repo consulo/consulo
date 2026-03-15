@@ -34,8 +34,7 @@ import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFileMoveEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -61,12 +60,12 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     private final Queue<Runnable> myTasks = new ConcurrentLinkedQueue<>();
 
     @Inject
-    public PushedFilePropertiesUpdaterImpl(@Nonnull Project project) {
+    public PushedFilePropertiesUpdaterImpl(Project project) {
         myProject = project;
     }
 
     @Override
-    public void processAfterVfsChanges(@Nonnull List<? extends VFileEvent> events) {
+    public void processAfterVfsChanges(List<? extends VFileEvent> events) {
         List<Runnable> syncTasks = new ArrayList<>();
         List<Runnable> delayedTasks = new ArrayList<>();
         for (VFileEvent event : events) {
@@ -117,7 +116,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
         }
     }
 
-    private static VirtualFile getFile(@Nonnull VFileEvent event) {
+    private static VirtualFile getFile(VFileEvent event) {
         VirtualFile file = event.getFile();
         if (event instanceof VFileCopyEvent fileCopyEvent) {
             file = fileCopyEvent.getNewParent().findChild(fileCopyEvent.getNewChildName());
@@ -131,7 +130,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
             ModuleRootListener.class,
             new ModuleRootListener() {
                 @Override
-                public void rootsChanged(@Nonnull ModuleRootEvent event) {
+                public void rootsChanged(ModuleRootEvent event) {
                     if (LOG.isTraceEnabled()) {
                         LOG.trace(new Throwable("Processing roots changed event (caused by file type change: " + event.isCausedByFileTypesChange() + ")"));
                     }
@@ -152,7 +151,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     }
 
     @Nullable
-    private Runnable createRecursivePushTask(@Nonnull VFileEvent event, @Nonnull List<? extends FilePropertyPusher> pushers) {
+    private Runnable createRecursivePushTask(VFileEvent event, List<? extends FilePropertyPusher> pushers) {
         if (pushers.isEmpty()) {
             return null;
         }
@@ -167,24 +166,24 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
         };
     }
 
-    private void doPushRecursively(VirtualFile dir, @Nonnull List<? extends FilePropertyPusher> pushers, ProjectFileIndex fileIndex) {
+    private void doPushRecursively(VirtualFile dir, List<? extends FilePropertyPusher> pushers, ProjectFileIndex fileIndex) {
         fileIndex.iterateContentUnderDirectory(dir, fileOrDir -> {
             applyPushersToFile(fileOrDir, pushers, null);
             return true;
         });
     }
 
-    private void queueTasks(@Nonnull List<? extends Runnable> actions) {
+    private void queueTasks(List<? extends Runnable> actions) {
         actions.forEach(myTasks::offer);
         DumbModeTask task = new DumbModeTask(this) {
             @Override
-            public void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace) {
+            public void performInDumbMode(ProgressIndicator indicator, Exception trace) {
                 performPushTasks();
             }
         };
         myProject.getMessageBus().connect(task).subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
-            public void rootsChanged(@Nonnull ModuleRootEvent event) {
+            public void rootsChanged(ModuleRootEvent event) {
                 DumbService.getInstance(myProject).cancelTask(task);
             }
         });
@@ -226,7 +225,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
 
     @Override
     @RequiredReadAction
-    public void filePropertiesChanged(@Nonnull VirtualFile fileOrDir, @Nonnull Predicate<? super VirtualFile> acceptFileCondition) {
+    public void filePropertiesChanged(VirtualFile fileOrDir, Predicate<? super VirtualFile> acceptFileCondition) {
         if (fileOrDir.isDirectory()) {
             for (VirtualFile child : fileOrDir.getChildren()) {
                 if (!child.isDirectory() && acceptFileCondition.test(child)) {
@@ -272,11 +271,11 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     }
 
     @Override
-    public void pushAll(@Nonnull FilePropertyPusher<?>... pushers) {
+    public void pushAll(FilePropertyPusher<?>... pushers) {
         queueTasks(Collections.singletonList(() -> doPushAll(Arrays.asList(pushers))));
     }
 
-    private void doPushAll(@Nonnull List<? extends FilePropertyPusher> pushers) {
+    private void doPushAll(List<? extends FilePropertyPusher> pushers) {
         Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(myProject).getModules());
 
         List<Runnable> tasks = new ArrayList<>();
@@ -356,7 +355,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
         }
     }
 
-    private void applyPushersToFile(VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher> pushers, Object[] moduleValues) {
+    private void applyPushersToFile(VirtualFile fileOrDir, List<? extends FilePropertyPusher> pushers, Object[] moduleValues) {
         ReadAction.run(() -> {
             ProgressManager.checkCanceled();
             if (!fileOrDir.isValid()) {
@@ -367,8 +366,8 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     }
 
     private void doApplyPushersToFile(
-        @Nonnull VirtualFile fileOrDir,
-        @Nonnull List<? extends FilePropertyPusher> pushers,
+        VirtualFile fileOrDir,
+        List<? extends FilePropertyPusher> pushers,
         Object[] moduleValues
     ) {
         FilePropertyPusher<Object> pusher = null;
@@ -416,7 +415,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
 
     @Override
     @RequiredReadAction
-    public void filePropertiesChanged(@Nonnull VirtualFile file) {
+    public void filePropertiesChanged(VirtualFile file) {
         Application.get().assertReadAccessAllowed();
         FileBasedIndex.getInstance().requestReindex(file);
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {

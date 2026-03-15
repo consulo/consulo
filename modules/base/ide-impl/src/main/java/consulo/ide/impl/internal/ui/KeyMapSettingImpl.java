@@ -21,7 +21,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 /**

@@ -19,7 +19,6 @@ package consulo.language.editor.refactoring.safeDelete.usageInfo;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageInfo;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -28,7 +27,7 @@ public class SafeDeleteUsageInfo extends UsageInfo {
   private static final Logger LOG = Logger.getInstance(SafeDeleteUsageInfo.class);
   private final PsiElement myReferencedElement;
 
-  public SafeDeleteUsageInfo(@Nonnull PsiElement element, PsiElement referencedElement) {
+  public SafeDeleteUsageInfo(PsiElement element, PsiElement referencedElement) {
     super(element);
     myReferencedElement = referencedElement;
   }

@@ -17,7 +17,6 @@ package consulo.component.internal.inject;
 
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 
@@ -26,31 +25,31 @@ import java.util.function.Function;
  * @since 2018-08-23
  */
 public interface InjectingPoint<T> {
-  @Nonnull
-  InjectingPoint<T> to(@Nonnull T value);
+  
+  InjectingPoint<T> to(T value);
 
-  @Nonnull
-  InjectingPoint<T> to(@Nonnull InjectingKey<? extends T> key);
+  
+  InjectingPoint<T> to(InjectingKey<? extends T> key);
 
-  @Nonnull
-  InjectingPoint<T> to(@Nonnull Provider<T> provider);
+  
+  InjectingPoint<T> to(Provider<T> provider);
 
-  @Nonnull
-  default InjectingPoint<T> to(@Nonnull Class<? extends T> key) {
+  
+  default InjectingPoint<T> to(Class<? extends T> key) {
     return to(InjectingKey.of(key));
   }
 
   InjectingPoint<T> forceSingleton();
 
 
-  InjectingPoint<T> factory(@Nonnull Function<Provider<T>, T> remap);
+  InjectingPoint<T> factory(Function<Provider<T>, T> remap);
 
-  @Nonnull
-  InjectingPoint<T> injectListener(@Nonnull PostInjectListener<T> consumer);
+  
+  InjectingPoint<T> injectListener(PostInjectListener<T> consumer);
 
-  @Nonnull
-  InjectingPoint<T> constructorParameterTypes(@Nonnull Type[] constructorParameterTypes);
+  
+  InjectingPoint<T> constructorParameterTypes(Type[] constructorParameterTypes);
 
-  @Nonnull
-  InjectingPoint<T> constructorFactory(@Nonnull Function<Object[], T> factory);
+  
+  InjectingPoint<T> constructorFactory(Function<Object[], T> factory);
 }

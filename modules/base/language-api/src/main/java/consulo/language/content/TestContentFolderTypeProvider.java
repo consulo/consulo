@@ -29,7 +29,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 import consulo.ui.util.LightDarkColorValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -43,7 +42,7 @@ public class TestContentFolderTypeProvider extends PackageBasedContentFolderType
     private static final Supplier<TestContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
     );
 
-    @Nonnull
+    
     public static TestContentFolderTypeProvider getInstance() {
         return INSTANCE.get();
     }
@@ -57,13 +56,13 @@ public class TestContentFolderTypeProvider extends PackageBasedContentFolderType
         return 150;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return AllIcons.Modules.TestRoot;
     }
 
-    @Nonnull
+    
     @Override
     public Image getGeneratedIcon() {
         return PlatformIconGroup.modulesGeneratedtestroot();
@@ -74,13 +73,13 @@ public class TestContentFolderTypeProvider extends PackageBasedContentFolderType
         return PlatformIconGroup.nodesPackage();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ProjectLocalize.moduleToggleTestSourcesAction();
     }
 
-    @Nonnull
+    
     @Override
     public ColorValue getGroupColor() {
         return TESTS_COLOR;

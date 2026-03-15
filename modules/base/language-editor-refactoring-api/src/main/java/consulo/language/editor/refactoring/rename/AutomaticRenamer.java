@@ -22,7 +22,6 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.logging.Logger;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -159,12 +158,12 @@ public abstract class AutomaticRenamer {
     }
   }
 
-  @NonNls
-  protected String canonicalNameToName(@NonNls String canonicalName, PsiNamedElement element) {
+  
+  protected String canonicalNameToName(String canonicalName, PsiNamedElement element) {
     return canonicalName;
   }
 
-  protected String nameToCanonicalName(@NonNls String name, PsiNamedElement element) {
+  protected String nameToCanonicalName(String name, PsiNamedElement element) {
     return name;
   }
 

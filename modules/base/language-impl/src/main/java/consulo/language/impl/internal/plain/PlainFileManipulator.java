@@ -24,7 +24,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.AbstractElementManipulator;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ik
@@ -33,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class PlainFileManipulator extends AbstractElementManipulator<PsiPlainTextFile> {
   @Override
-  public PsiPlainTextFile handleContentChange(@Nonnull PsiPlainTextFile file, @Nonnull TextRange range, String newContent)
+  public PsiPlainTextFile handleContentChange(PsiPlainTextFile file, TextRange range, String newContent)
           throws IncorrectOperationException {
     Document document = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
     document.replaceString(range.getStartOffset(), range.getEndOffset(), newContent);
@@ -42,7 +41,7 @@ public class PlainFileManipulator extends AbstractElementManipulator<PsiPlainTex
     return file;
   }
 
-  @Nonnull
+  
   @Override
   public Class<PsiPlainTextFile> getElementClass() {
     return PsiPlainTextFile.class;

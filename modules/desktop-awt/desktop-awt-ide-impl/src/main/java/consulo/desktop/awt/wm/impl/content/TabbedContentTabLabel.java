@@ -12,8 +12,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.lang.ref.Reference;
@@ -28,7 +27,7 @@ public class TabbedContentTabLabel extends ContentTabLabel {
   private final TabbedContent myContent;
   private Reference<JBPopup> myPopupReference = null;
 
-  public TabbedContentTabLabel(@Nonnull TabbedContent content, @Nonnull TabContentLayout layout) {
+  public TabbedContentTabLabel(TabbedContent content, TabContentLayout layout) {
     super(content, layout);
     myContent = content;
   }
@@ -49,7 +48,7 @@ public class TabbedContentTabLabel extends ContentTabLabel {
       popup.showUnderneathOf(this);
       popup.addListener(new JBPopupAdapter() {
         @Override
-        public void onClosed(@Nonnull LightweightWindowEvent event) {
+        public void onClosed(LightweightWindowEvent event) {
           repaint();
         }
       });
@@ -67,7 +66,7 @@ public class TabbedContentTabLabel extends ContentTabLabel {
   @Override
   protected void fillIcons(List<AdditionalIcon> icons) {
     icons.add(new AdditionalIcon(AllIcons.General.ArrowDown, AllIcons.General.ArrowDown) {
-      @Nonnull
+      
       @Override
       public Rectangle getRectangle() {
         return new Rectangle(getX(), 0, getIconWidth(), getHeight());
@@ -102,7 +101,7 @@ public class TabbedContentTabLabel extends ContentTabLabel {
     }
   }
 
-  @Nonnull
+  
   @Override
   public TabbedContent getContent() {
     return myContent;

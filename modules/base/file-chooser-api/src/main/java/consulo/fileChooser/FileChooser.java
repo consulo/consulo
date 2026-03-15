@@ -21,8 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -35,28 +34,28 @@ public final class FileChooser {
   private FileChooser() {
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile[]> chooseFiles(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static AsyncResult<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     return chooseFiles(descriptor, null, project, toSelect);
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile[]> chooseFiles(@Nonnull FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static AsyncResult<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, parent);
     return chooser.chooseAsync(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static AsyncResult<VirtualFile> chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     return chooseFile(descriptor, null, project, toSelect);
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(@Nonnull FileChooserDescriptor descriptor,
+  public static AsyncResult<VirtualFile> chooseFile(FileChooserDescriptor descriptor,
                                                     @Nullable Component parent,
                                                     @Nullable ComponentManager project,
                                                     @Nullable VirtualFile toSelect) {
@@ -77,9 +76,9 @@ public final class FileChooser {
    * @param parent     parent component
    * @param toSelect   file to preselect
    */
-  @Nonnull
+  
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile[]> chooseFiles(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
+  public static AsyncResult<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
     FileChooserFactory factory = FileChooserFactory.getInstance();
     PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parent);
     return pathChooser.chooseAsync(toSelect);
@@ -93,9 +92,9 @@ public final class FileChooser {
    * @param parent     parent component
    * @param toSelect   file to preselect
    */
-  @Nonnull
+  
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
+  public static AsyncResult<VirtualFile> chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
     AsyncResult<VirtualFile> result = AsyncResult.undefined();
 

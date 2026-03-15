@@ -42,8 +42,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -194,7 +193,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
 
     @Override
     @RequiredUIAccess
-    public final void setModel(@Nonnull CodeStyleSchemesModel model) {
+    public final void setModel(CodeStyleSchemesModel model) {
         super.setModel(model);
         ensureTabs();
         for (CodeStyleAbstractPanel tab : myTabs) {
@@ -216,7 +215,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
         return myActiveTab.createHighlighter(scheme);
     }
 
-    @Nonnull
+   
     @Override
     @RequiredUIAccess
     protected FileType getFileType() {
@@ -432,7 +431,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
         private JComponent myComponent;
 
         @RequiredUIAccess
-        public ConfigurableWrapper(@Nonnull Configurable configurable, CodeStyleSettings settings) {
+        public ConfigurableWrapper(Configurable configurable, CodeStyleSettings settings) {
             super(settings);
             myConfigurable = configurable;
 
@@ -451,7 +450,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
         }
 
         @SuppressWarnings("ConstantConditions")
-        @Nonnull
+       
         @Override
         protected FileType getFileType() {
             Language language = getDefaultLanguage();
@@ -463,7 +462,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
             return TabbedLanguageCodeStylePanel.this.getDefaultLanguage();
         }
 
-        @Nonnull
+       
         @Override
         protected LocalizeValue getTabTitle() {
             return myConfigurable.getDisplayName();
@@ -568,7 +567,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
         }
 
         @SuppressWarnings("ConstantConditions")
-        @Nonnull
+       
         @Override
         protected FileType getFileType() {
             Language language = TabbedLanguageCodeStylePanel.this.getDefaultLanguage();
@@ -621,8 +620,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
             myEditor.reset(settings, indentOptions);
         }
 
-        @Nullable
-        private CommonCodeStyleSettings.IndentOptions getIndentOptions(CodeStyleSettings settings) {
+        private CommonCodeStyleSettings.@Nullable IndentOptions getIndentOptions(CodeStyleSettings settings) {
             return settings.getCommonSettings(getDefaultLanguage()).getIndentOptions();
         }
 
@@ -631,7 +629,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
             return TabbedLanguageCodeStylePanel.this.getDefaultLanguage();
         }
 
-        @Nonnull
+       
         @Override
         protected LocalizeValue getTabTitle() {
             return ApplicationLocalize.titleTabsAndIndents();
@@ -646,14 +644,14 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     }
 
     public interface TabChangeListener {
-        void tabChanged(@Nonnull TabbedLanguageCodeStylePanel source, @Nonnull String tabTitle);
+        void tabChanged(TabbedLanguageCodeStylePanel source, String tabTitle);
     }
 
     public void setListener(@Nullable TabChangeListener listener) {
         myListener = listener;
     }
 
-    public void changeTab(@Nonnull String tabTitle) {
+    public void changeTab(String tabTitle) {
         myTabbedPane.setSelectedTitle(tabTitle);
     }
 }

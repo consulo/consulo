@@ -18,25 +18,24 @@ package consulo.diff.dir;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DirDiffManager {
-  public static DirDiffManager getInstance(@Nonnull Project project) {
+  public static DirDiffManager getInstance(Project project) {
     return project.getInstance(DirDiffManager.class);
   }
   
-  public abstract void showDiff(@Nonnull DiffElement dir1, @Nonnull DiffElement dir2, DirDiffSettings settings, @Nullable Runnable onWindowClose);
+  public abstract void showDiff(DiffElement dir1, DiffElement dir2, DirDiffSettings settings, @Nullable Runnable onWindowClose);
 
-  public abstract void showDiff(@Nonnull DiffElement dir1, @Nonnull DiffElement dir2, DirDiffSettings settings);
+  public abstract void showDiff(DiffElement dir1, DiffElement dir2, DirDiffSettings settings);
 
-  public abstract void showDiff(@Nonnull DiffElement dir1, @Nonnull DiffElement dir2);
+  public abstract void showDiff(DiffElement dir1, DiffElement dir2);
 
-  public abstract boolean canShow(@Nonnull DiffElement dir1, @Nonnull DiffElement dir2);
+  public abstract boolean canShow(DiffElement dir1, DiffElement dir2);
 
   @Nullable
   public abstract DiffElement createDiffElement(Object obj);

@@ -15,7 +15,6 @@
  */
 package consulo.application.impl.internal;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,7 +23,7 @@ import jakarta.annotation.Nonnull;
 public class ModalityStateImpl {
   public static final IdeaModalityState ANY = new IdeaModalityState() {
     @Override
-    public boolean dominates(@Nonnull IdeaModalityState anotherState) {
+    public boolean dominates(IdeaModalityState anotherState) {
       return false;
     }
 

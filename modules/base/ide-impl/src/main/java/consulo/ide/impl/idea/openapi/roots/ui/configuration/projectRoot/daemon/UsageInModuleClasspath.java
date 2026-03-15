@@ -7,8 +7,7 @@ import consulo.util.lang.StringUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -21,8 +20,8 @@ public class UsageInModuleClasspath extends ProjectStructureElementUsage {
   private final ProjectStructureElement mySourceElement;
   private final Module myModule;
 
-  public UsageInModuleClasspath(@Nonnull ModulesConfigurator modulesConfigurator,
-                                @Nonnull ModuleProjectStructureElement containingElement,
+  public UsageInModuleClasspath(ModulesConfigurator modulesConfigurator,
+                                ModuleProjectStructureElement containingElement,
                                 ProjectStructureElement sourceElement,
                                 @Nullable DependencyScope scope) {
     myModulesConfigurator = modulesConfigurator;

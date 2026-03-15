@@ -22,7 +22,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,49 +48,49 @@ public class ConfigurationEditorFileImpl extends LightVirtualFileBase implements
         myRequestedParams = requestedParams;
     }
 
-    @Nonnull
+    
     @Override
     public Map<String, String> getRequestedParams() {
         return myRequestedParams;
     }
 
-    @Nonnull
+    
     @Override
     public ConfigurationEditorFileSystemImpl getFileSystem() {
         return myFileSystem;
     }
 
-    @Nonnull
+    
     @Override
     public String getPath() {
         return myPath;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getLocalizedName() {
         return getProvider().getName();
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return getProvider().getName().map(Presentation.NO_MNEMONIC).get();
     }
 
     @Override
-    @Nonnull
+    
     public ConfigurationFileEditorProvider getProvider() {
         return ((ConfigurationEditorFileType) getFileType()).getProvider();
     }
 
-    @Nonnull
+    
     @Override
     public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public byte[] contentsToByteArray() throws IOException {
         return ArrayUtil.EMPTY_BYTE_ARRAY;

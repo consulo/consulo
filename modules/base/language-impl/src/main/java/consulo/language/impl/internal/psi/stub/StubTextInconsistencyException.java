@@ -32,7 +32,6 @@ import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,17 +55,17 @@ public class StubTextInconsistencyException extends RuntimeException implements 
     myFileText = file.getText();
   }
 
-  @Nonnull
+  
   public String getStubsFromText() {
     return myStubsFromText;
   }
 
-  @Nonnull
+  
   public String getStubsFromPsi() {
     return myStubsFromPsi;
   }
 
-  @Nonnull
+  
   @Override
   public Attachment[] getAttachments() {
     return new Attachment[]{AttachmentFactory.get().create(myFileName, myFileText), AttachmentFactory.get().create("stubsRestoredFromText.txt", myStubsFromText),
@@ -74,7 +73,7 @@ public class StubTextInconsistencyException extends RuntimeException implements 
   }
 
   @RequiredReadAction
-  public static void checkStubTextConsistency(@Nonnull PsiFile file) throws StubTextInconsistencyException {
+  public static void checkStubTextConsistency(PsiFile file) throws StubTextInconsistencyException {
     PsiUtilCore.ensureValid(file);
 
     FileViewProvider viewProvider = file.getViewProvider();
@@ -104,7 +103,7 @@ public class StubTextInconsistencyException extends RuntimeException implements 
     }
   }
 
-  @Nonnull
+  
   private static List<PsiFileStub> restoreStubsFromText(FileViewProvider viewProvider) {
     FileContentImpl fc = new FileContentImpl(viewProvider.getVirtualFile(), viewProvider.getContents(), 0);
     fc.setProject(viewProvider.getManager().getProject());

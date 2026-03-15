@@ -21,16 +21,15 @@ import consulo.application.Application;
 import consulo.colorScheme.EditorColorsScheme;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface UsageTreeColorsScheme {
-    @Nonnull
+    
     public static UsageTreeColorsScheme getInstance() {
         return Application.get().getInstance(UsageTreeColorsScheme.class);
     }
 
-    @Nonnull
+    
     EditorColorsScheme getScheme();
 }

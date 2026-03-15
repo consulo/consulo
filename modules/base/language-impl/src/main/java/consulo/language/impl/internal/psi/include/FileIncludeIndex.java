@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -42,14 +41,14 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
 
     private static final int BASE_VERSION = 6;
 
-    @Nonnull
-    public static List<FileIncludeInfo> getIncludes(@Nonnull VirtualFile file, @Nonnull Project project) {
+    
+    public static List<FileIncludeInfo> getIncludes(VirtualFile file, Project project) {
         Map<String, List<FileIncludeInfoImpl>> data = FileBasedIndex.getInstance().getFileData(INDEX_ID, file, project);
         return ContainerUtil.flatten(data.values());
     }
 
-    @Nonnull
-    public static MultiMap<VirtualFile, FileIncludeInfoImpl> getIncludingFileCandidates(String fileName, @Nonnull GlobalSearchScope scope) {
+    
+    public static MultiMap<VirtualFile, FileIncludeInfoImpl> getIncludingFileCandidates(String fileName, GlobalSearchScope scope) {
         MultiMap<VirtualFile, FileIncludeInfoImpl> result = new MultiMap<>();
         FileBasedIndex.getInstance().processValues(
             INDEX_ID,
@@ -68,19 +67,19 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
         private static final List<FileIncludeProvider> myProviders = FileIncludeProvider.EP_NAME.getExtensionList();
     }
 
-    @Nonnull
+    
     @Override
     public ID<String, List<FileIncludeInfoImpl>> getName() {
         return INDEX_ID;
     }
 
-    @Nonnull
+    
     @Override
     public DataIndexer<String, List<FileIncludeInfoImpl>, FileContent> getIndexer() {
         return new DataIndexer<>() {
             @Override
-            @Nonnull
-            public Map<String, List<FileIncludeInfoImpl>> map(@Nonnull FileContent inputData) {
+            
+            public Map<String, List<FileIncludeInfoImpl>> map(FileContent inputData) {
 
                 Map<String, List<FileIncludeInfoImpl>> map = FactoryMap.create(key -> new ArrayList<>());
 
@@ -103,18 +102,18 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
         };
     }
 
-    @Nonnull
+    
     @Override
     public KeyDescriptor<String> getKeyDescriptor() {
         return EnumeratorStringDescriptor.INSTANCE;
     }
 
-    @Nonnull
+    
     @Override
     public DataExternalizer<List<FileIncludeInfoImpl>> getValueExternalizer() {
         return new DataExternalizer<>() {
             @Override
-            public void save(@Nonnull DataOutput out, List<FileIncludeInfoImpl> value) throws IOException {
+            public void save(DataOutput out, List<FileIncludeInfoImpl> value) throws IOException {
                 out.writeInt(value.size());
                 for (FileIncludeInfoImpl info : value) {
                     IOUtil.writeUTF(out, info.path);
@@ -125,7 +124,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
             }
 
             @Override
-            public List<FileIncludeInfoImpl> read(@Nonnull DataInput in) throws IOException {
+            public List<FileIncludeInfoImpl> read(DataInput in) throws IOException {
                 int size = in.readInt();
                 ArrayList<FileIncludeInfoImpl> infos = new ArrayList<>(size);
                 for (int i = 0; i < size; i++) {
@@ -136,12 +135,12 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
         };
     }
 
-    @Nonnull
+    
     @Override
     public FileBasedIndex.InputFilter getInputFilter() {
         return new FileBasedIndex.FileTypeSpecificInputFilter() {
             @Override
-            public boolean acceptInput(Project project, @Nonnull VirtualFile file) {
+            public boolean acceptInput(Project project, VirtualFile file) {
                 if (file.getFileSystem() instanceof ArchiveFileSystem) {
                     return false;
                 }
@@ -154,7 +153,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
             }
 
             @Override
-            public void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink) {
+            public void registerFileTypesUsedForIndexing(Consumer<FileType> fileTypeSink) {
                 for (FileIncludeProvider provider : Holder.myProviders) {
                     provider.registerFileTypesUsedForIndexing(fileTypeSink);
                 }

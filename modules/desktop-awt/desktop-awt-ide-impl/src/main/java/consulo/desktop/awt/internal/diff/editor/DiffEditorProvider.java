@@ -24,25 +24,24 @@ import consulo.fileEditor.FileEditorProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 // from kotlin
 @ExtensionImpl
 public class DiffEditorProvider implements FileEditorProvider, DumbAware {
   @Override
-  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public boolean accept(Project project, VirtualFile file) {
     return file instanceof DiffVirtualFile;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public FileEditor createEditor(Project project, VirtualFile file) {
     DiffRequestProcessor processor = (DiffRequestProcessor)((DiffVirtualFile)file).createProcessor(project);
     return new DiffRequestProcessorEditor((DiffVirtualFile)file, processor);
   }
 
-  @Nonnull
+  
   @Override
   public String getEditorTypeId() {
     return "DiffEditor";

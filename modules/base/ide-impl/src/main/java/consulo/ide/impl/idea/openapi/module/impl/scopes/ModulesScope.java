@@ -21,8 +21,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -32,25 +30,25 @@ public class ModulesScope extends GlobalSearchScope {
   private final ProjectFileIndex myProjectFileIndex;
   private final Set<Module> myModules;
 
-  public ModulesScope(@Nonnull Set<Module> modules, Project project) {
+  public ModulesScope(Set<Module> modules, Project project) {
     super(project);
     myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     myModules = modules;
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     Module moduleOfFile = myProjectFileIndex.getModuleForFile(file);
     return moduleOfFile != null && myModules.contains(moduleOfFile);
   }
 
   @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return myModules.contains(aModule);
   }
 
@@ -59,7 +57,7 @@ public class ModulesScope extends GlobalSearchScope {
     return false;
   }
 
-  @NonNls
+  
   public String toString() {
     return "Modules:" + Arrays.toString(myModules.toArray(new Module[myModules.size()]));
   }

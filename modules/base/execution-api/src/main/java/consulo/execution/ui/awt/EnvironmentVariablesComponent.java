@@ -21,7 +21,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UserActivityProviderComponent;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -51,11 +50,11 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
     setText(ExecutionLocalize.environmentVariablesComponentTitle().get());
   }
 
-  public void setEnvs(@Nonnull Map<String, String> envs) {
+  public void setEnvs(Map<String, String> envs) {
     myEnvVars.setEnvs(envs);
   }
 
-  @Nonnull
+  
   public Map<String, String> getEnvs() {
     return myEnvVars.getEnvs();
   }
@@ -68,12 +67,12 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
     myEnvVars.setPassParentEnvs(passParentEnvs);
   }
 
-  @Nonnull
+  
   public EnvironmentVariablesData getEnvData() {
     return myEnvVars.getData();
   }
 
-  public void setEnvData(@Nonnull EnvironmentVariablesData envData) {
+  public void setEnvData(EnvironmentVariablesData envData) {
     myEnvVars.setData(envData);
   }
 
@@ -116,7 +115,7 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
   /**
    * Consider using {@link EnvironmentVariablesData#writeExternal(Element)} instead for simplicity and better performance.
    */
-  public static void writeExternal(@Nonnull Element element, @Nonnull Map<String, String> envs) {
+  public static void writeExternal(Element element, Map<String, String> envs) {
     Element envsElement = new Element(ENVS);
     for (String envName : envs.keySet()) {
       Element envElement = new Element(ENV);

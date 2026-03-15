@@ -2,7 +2,6 @@
 package consulo.fileEditor.internal.largeFileEditor;
 
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 public final class SearchResult {
 
@@ -29,7 +28,7 @@ public final class SearchResult {
     }
 
     @Override
-    public @NonNls String toString() {
+    public String toString() {
         return String.format("p%ds%d-p%ds%d: pref{%s},orig{%s},post{%s}",
             startPosition.pageNumber, startPosition.symbolOffsetInPage,
             endPosition.pageNumber, endPosition.symbolOffsetInPage,

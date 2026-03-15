@@ -8,8 +8,7 @@ import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeOverrider;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Substitutes type for files which users explicitly marked with "Override File Type" action
@@ -27,7 +26,7 @@ public class UserFileTypeOverrider implements FileTypeOverrider {
 
   @Nullable
   @Override
-  public FileType getOverriddenFileType(@Nonnull VirtualFile file) {
+  public FileType getOverriddenFileType(VirtualFile file) {
     String overriddenType = myOverrideFileTypeManagerProvider.get().getFileValue(file);
     if (overriddenType != null) {
       return myFileTypeManagerProvider.get().findFileTypeByName(overriddenType);

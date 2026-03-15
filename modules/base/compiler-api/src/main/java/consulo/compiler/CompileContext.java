@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An interface allowing access and modification of the data associated with the current compile session.
@@ -72,7 +71,7 @@ public interface CompileContext extends UserDataHolder {
      *
      * @return the progress indicator instance.
      */
-    @Nonnull
+    
     ProgressIndicator getProgressIndicator();
 
     /**
@@ -117,7 +116,7 @@ public interface CompileContext extends UserDataHolder {
      * @param module the module to check.
      * @return the output directory for the module specified, null if corresponding VirtualFile is not valid or directory not specified
      */
-    @jakarta.annotation.Nullable
+    @Nullable
     @Deprecated
     VirtualFile getModuleOutputDirectory(Module module);
 

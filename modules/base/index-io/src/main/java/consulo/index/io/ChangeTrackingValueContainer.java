@@ -24,7 +24,6 @@ import consulo.index.io.internal.ValueContainerImpl;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 
-import jakarta.annotation.Nonnull;
 import java.io.DataOutput;
 import java.io.IOException;
 
@@ -85,7 +84,7 @@ public class ChangeTrackingValueContainer<Value> extends CompactableUpdatableVal
     return getMergedData().size();
   }
 
-  @Nonnull
+  
   @Override
   public ValueContainer.ValueIterator<Value> getValueIterator() {
     return getMergedData().getValueIterator();

@@ -31,7 +31,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -41,12 +40,12 @@ import java.util.Objects;
  * @since 2013-05-13
  */
 public abstract class AbstractExternalSystemToolWindowFactory implements ToolWindowFactory, DumbAware {
-    @Nonnull
+    
     private final ProjectSystemId myExternalSystemId;
-    @Nonnull
+    
     private final NotificationGroup myNotificationGroup;
 
-    protected AbstractExternalSystemToolWindowFactory(@Nonnull ProjectSystemId id) {
+    protected AbstractExternalSystemToolWindowFactory(ProjectSystemId id) {
         myExternalSystemId = id;
         myNotificationGroup = NotificationGroup.toolWindowGroup(
             "notification.group.id." + id.toString().toLowerCase(Locale.ROOT),
@@ -56,13 +55,13 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
         );
     }
 
-    @Nonnull
+    
     @Override
     public final String getId() {
         return myExternalSystemId.getToolWindowId();
     }
 
-    @Nonnull
+    
     @Override
     public final LocalizeValue getDisplayName() {
         return myExternalSystemId.getDisplayName();
@@ -70,7 +69,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
         assert manager != null;
@@ -80,7 +79,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
     }
 
     @Override
-    public boolean validate(@Nonnull Project project) {
+    public boolean validate(Project project) {
         if (Objects.equals(project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT), Boolean.TRUE)) {
             return true;
         }

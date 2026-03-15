@@ -17,7 +17,6 @@ import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 import consulo.project.util.query.QueryExecutorBase;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -32,7 +31,7 @@ public class CachesBasedRefSearcher extends QueryExecutorBase<PsiReference, Refe
 
     @Override
     @RequiredReadAction
-    public void processQuery(@Nonnull ReferencesSearch.SearchParameters p, @Nonnull Predicate<? super PsiReference> consumer) {
+    public void processQuery(ReferencesSearch.SearchParameters p, Predicate<? super PsiReference> consumer) {
         PsiElement refElement = p.getElementToSearch();
         boolean caseSensitive = refElement.getLanguage().isCaseSensitive();
 

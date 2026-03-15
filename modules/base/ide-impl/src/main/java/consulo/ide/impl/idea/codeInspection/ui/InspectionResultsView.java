@@ -79,8 +79,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -118,22 +117,22 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     );
 
     private final Splitter mySplitter;
-    @Nonnull
+    
     private final GlobalInspectionContextImpl myGlobalInspectionContext;
     private boolean myRerun = false;
 
-    @Nonnull
+    
     private final InspectionRVContentProvider myProvider;
     private AnAction myIncludeAction;
     private AnAction myExcludeAction;
 
     @RequiredUIAccess
     public InspectionResultsView(
-        @Nonnull Project project,
+        Project project,
         InspectionProfile inspectionProfile,
-        @Nonnull AnalysisScope scope,
-        @Nonnull GlobalInspectionContextImpl globalInspectionContext,
-        @Nonnull InspectionRVContentProvider provider
+        AnalysisScope scope,
+        GlobalInspectionContextImpl globalInspectionContext,
+        InspectionRVContentProvider provider
     ) {
         setLayout(new BorderLayout());
 
@@ -226,7 +225,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
             @Override
             @Nullable
             @RequiredReadAction
-            protected Navigatable createDescriptorForNode(@Nonnull DefaultMutableTreeNode node) {
+            protected Navigatable createDescriptorForNode(DefaultMutableTreeNode node) {
                 if (node instanceof RefElementNode refNode) {
                     if (refNode.hasDescriptorsUnder()) {
                         return null;
@@ -289,13 +288,13 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 ((InspectionTreeNode) myTree.getSelectionPath().getLastPathComponent()).amnesty();
                 updateView(false);
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 TreePath path = myTree.getSelectionPath();
                 e.getPresentation().setEnabled(path != null && !myGlobalInspectionContext.getUIOptions().FILTER_RESOLVED_ITEMS);
             }
@@ -308,13 +307,13 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 ((InspectionTreeNode) myTree.getSelectionPath().getLastPathComponent()).ignoreElement();
                 updateView(false);
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 TreePath path = myTree.getSelectionPath();
                 e.getPresentation().setEnabled(path != null);
             }
@@ -453,7 +452,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         setCursor(currentCursor);
     }
 
-    private void showInBrowser(@Nonnull InspectionToolWrapper toolWrapper) {
+    private void showInBrowser(InspectionToolWrapper toolWrapper) {
         Cursor currentCursor = getCursor();
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
         myBrowser.showDescription(toolWrapper);
@@ -468,9 +467,9 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         setCursor(currentCursor);
     }
 
-    @Nonnull
+    
     public InspectionNode addTool(
-        @Nonnull InspectionToolWrapper toolWrapper,
+        InspectionToolWrapper toolWrapper,
         HighlightDisplayLevel errorLevel,
         boolean groupedBySeverity
     ) {
@@ -487,7 +486,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         return toolNode;
     }
 
-    private void registerActionShortcuts(@Nonnull InspectionToolPresentation presentation) {
+    private void registerActionShortcuts(InspectionToolPresentation presentation) {
         QuickFixAction[] fixes = presentation.getQuickFixes(RefEntity.EMPTY_ELEMENTS_ARRAY);
         if (fixes != null) {
             for (QuickFixAction fix : fixes) {
@@ -549,8 +548,8 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         return resultsFound;
     }
 
-    @Nonnull
-    public InspectionTreeNode getToolParentNode(@Nonnull String groupName, HighlightDisplayLevel errorLevel, boolean groupedBySeverity) {
+    
+    public InspectionTreeNode getToolParentNode(String groupName, HighlightDisplayLevel errorLevel, boolean groupedBySeverity) {
         if (groupName.isEmpty()) {
             return getRelativeRootNode(groupedBySeverity, errorLevel);
         }
@@ -577,7 +576,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         return group;
     }
 
-    @Nonnull
+    
     private InspectionTreeNode getRelativeRootNode(boolean isGroupedBySeverity, HighlightDisplayLevel level) {
         if (isGroupedBySeverity) {
             if (mySeverityGroupNodes.containsKey(level)) {
@@ -625,14 +624,14 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         return myOccurenceNavigator != null ? myOccurenceNavigator.getPreviousOccurenceActionName() : "";
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
 
     @Override
     @RequiredReadAction
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (HelpManager.HELP_ID == dataId) {
             return HELP_ID;
         }
@@ -798,17 +797,17 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         menu.getComponent().show(component, x, y);
     }
 
-    @Nonnull
+    
     public InspectionTree getTree() {
         return myTree;
     }
 
-    @Nonnull
+    
     public GlobalInspectionContextImpl getGlobalInspectionContext() {
         return myGlobalInspectionContext;
     }
 
-    @Nonnull
+    
     public InspectionRVContentProvider getProvider() {
         return myProvider;
     }
@@ -865,7 +864,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myGlobalInspectionContext.close(true);
         }
     }
@@ -881,7 +880,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(myProject);
             InspectionToolWrapper toolWrapper = myTree.getSelectedToolWrapper();
             InspectionProfile inspectionProfile = myInspectionProfile;
@@ -927,13 +926,13 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myScope.isValid());
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             rerun();
         }
 

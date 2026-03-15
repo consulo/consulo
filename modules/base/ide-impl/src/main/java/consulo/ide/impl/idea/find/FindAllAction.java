@@ -18,8 +18,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class FindAllAction extends AnAction implements ShortcutProvider, DumbAware {
     public FindAllAction() {
@@ -27,7 +26,7 @@ public final class FindAllAction extends AnAction implements ShortcutProvider, D
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
@@ -45,7 +44,7 @@ public final class FindAllAction extends AnAction implements ShortcutProvider, D
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Editor editor = e.getRequiredData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         Project project = e.getRequiredData(Project.KEY);
         EditorSearchSession search = e.getRequiredData(EditorSearchSession.SESSION_KEY);
@@ -75,7 +74,7 @@ public final class FindAllAction extends AnAction implements ShortcutProvider, D
         return findUsages != null ? findUsages.getShortcutSet() : null;
     }
 
-    @Nonnull
+    
     private static Image getIcon(@Nullable Project project) {
         ToolWindowManager toolWindowManager = project != null ? ToolWindowManager.getInstance(project) : null;
         if (toolWindowManager != null) {

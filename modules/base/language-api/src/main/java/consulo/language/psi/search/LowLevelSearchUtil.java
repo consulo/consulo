@@ -36,8 +36,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,7 @@ public class LowLevelSearchUtil {
   private static Boolean processInjectedFile(PsiElement element,
                                              TextOccurenceProcessor processor,
                                              StringSearcher searcher,
-                                             @Nonnull ProgressIndicator progress,
+                                             ProgressIndicator progress,
                                              InjectedLanguageManager injectedLanguageManager) {
     if (!(element instanceof PsiLanguageInjectionHost)) return null;
     if (injectedLanguageManager == null) return null;
@@ -71,13 +70,13 @@ public class LowLevelSearchUtil {
    * to be reused via <code>lastElement<code/> param in subsequent calls to avoid full tree rescan (n^2->n).
    */
   @RequiredReadAction
-  private static ASTNode processTreeUp(@Nonnull Project project,
-                                       @Nonnull TextOccurenceProcessor processor,
-                                       @Nonnull PsiElement scope,
-                                       @Nonnull StringSearcher searcher,
+  private static ASTNode processTreeUp(Project project,
+                                       TextOccurenceProcessor processor,
+                                       PsiElement scope,
+                                       StringSearcher searcher,
                                        int offset,
                                        boolean processInjectedPsi,
-                                       @Nonnull ProgressIndicator progress,
+                                       ProgressIndicator progress,
                                        ASTNode lastElement) {
     if (scope instanceof PsiCompiledElement) {
       throw new IllegalArgumentException("Scope is compiled, can't scan: " + scope);
@@ -193,17 +192,17 @@ public class LowLevelSearchUtil {
   }
 
   @RequiredReadAction
-  public static boolean processElementsContainingWordInElement(@Nonnull TextOccurenceProcessor processor,
-                                                               @Nonnull PsiElement scope,
-                                                               @Nonnull StringSearcher searcher,
+  public static boolean processElementsContainingWordInElement(TextOccurenceProcessor processor,
+                                                               PsiElement scope,
+                                                               StringSearcher searcher,
                                                                boolean processInjectedPsi,
-                                                               @Nonnull ProgressIndicator progress) {
+                                                               ProgressIndicator progress) {
     int[] occurrences = getTextOccurrencesInScope(scope, searcher, progress);
     return processElementsAtOffsets(scope, searcher, processInjectedPsi, progress, occurrences, processor);
   }
 
   @RequiredReadAction
-  public static int[] getTextOccurrencesInScope(@Nonnull PsiElement scope, @Nonnull StringSearcher searcher, ProgressIndicator progress) {
+  public static int[] getTextOccurrencesInScope(PsiElement scope, StringSearcher searcher, ProgressIndicator progress) {
     if (progress != null) progress.checkCanceled();
 
     PsiFile file = scope.getContainingFile();
@@ -230,12 +229,12 @@ public class LowLevelSearchUtil {
     return offsets;
   }
 
-  public static boolean processElementsAtOffsets(@Nonnull PsiElement scope,
-                                                 @Nonnull StringSearcher searcher,
+  public static boolean processElementsAtOffsets(PsiElement scope,
+                                                 StringSearcher searcher,
                                                  boolean processInjectedPsi,
-                                                 @Nonnull ProgressIndicator progress,
+                                                 ProgressIndicator progress,
                                                  int[] offsetsInScope,
-                                                 @Nonnull TextOccurenceProcessor processor) {
+                                                 TextOccurenceProcessor processor) {
     if (offsetsInScope.length == 0) return true;
 
     Project project = scope.getProject();
@@ -249,7 +248,7 @@ public class LowLevelSearchUtil {
   }
 
   @RequiredReadAction
-  private static void diagnoseInvalidRange(@Nonnull PsiElement scope,
+  private static void diagnoseInvalidRange(PsiElement scope,
                                            PsiFile file,
                                            FileViewProvider viewProvider,
                                            CharSequence buffer,
@@ -278,12 +277,12 @@ public class LowLevelSearchUtil {
   private static final ConcurrentMap<CharSequence, Map<StringSearcher, int[]>> cache =
     Maps.newConcurrentWeakHashMap(HashingStrategy.identity());
 
-  public static boolean processTextOccurrences(@Nonnull CharSequence text,
+  public static boolean processTextOccurrences(CharSequence text,
                                                int startOffset,
                                                int endOffset,
-                                               @Nonnull StringSearcher searcher,
+                                               StringSearcher searcher,
                                                @Nullable ProgressIndicator progress,
-                                               @Nonnull IntPredicate processor) {
+                                               IntPredicate processor) {
     for (int offset : getTextOccurrences(text, startOffset, endOffset, searcher, progress)) {
       if (!processor.test(offset)) {
         return false;
@@ -292,10 +291,10 @@ public class LowLevelSearchUtil {
     return true;
   }
 
-  private static int[] getTextOccurrences(@Nonnull CharSequence text,
+  private static int[] getTextOccurrences(CharSequence text,
                                           int startOffset,
                                           int endOffset,
-                                          @Nonnull StringSearcher searcher,
+                                          StringSearcher searcher,
                                           @Nullable ProgressIndicator progress) {
     if (endOffset > text.length()) {
       throw new IllegalArgumentException("end: " + endOffset + " > length: " + text.length());
@@ -335,10 +334,10 @@ public class LowLevelSearchUtil {
     return offsets.toArray();
   }
 
-  private static boolean checkJavaIdentifier(@Nonnull CharSequence text,
+  private static boolean checkJavaIdentifier(CharSequence text,
                                              int startOffset,
                                              int endOffset,
-                                             @Nonnull StringSearcher searcher,
+                                             StringSearcher searcher,
                                              int index) {
     if (!searcher.isJavaIdentifier()) {
       return true;

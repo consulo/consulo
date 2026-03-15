@@ -7,8 +7,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.component.util.ModificationTracker;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -29,7 +28,7 @@ public interface CodeStyleSettingsModifier {
      * @param file     The PSI file for which a modification is to be made.
      * @return True if the modifier has made any changes, false otherwise.
      */
-    boolean modifySettings(@Nonnull TransientCodeStyleSettings settings, @Nonnull PsiFile file);
+    boolean modifySettings(TransientCodeStyleSettings settings, PsiFile file);
 
     /**
      * Checks if the modifier may potentially override project code style settings. This may include enabled/disabled flag in settings,
@@ -38,7 +37,7 @@ public interface CodeStyleSettingsModifier {
      * @param project The project to check the overriding status for.
      * @return True if the modifier may override project setting, false otherwise (default).
      */
-    default boolean mayOverrideSettingsOf(@Nonnull Project project) {
+    default boolean mayOverrideSettingsOf(Project project) {
         return false;
     }
 
@@ -56,7 +55,7 @@ public interface CodeStyleSettingsModifier {
      * @see CodeStyleStatusBarUIContributor
      */
     @Nullable
-    CodeStyleStatusBarUIContributor getStatusBarUiContributor(@Nonnull TransientCodeStyleSettings transientSettings);
+    CodeStyleStatusBarUIContributor getStatusBarUiContributor(TransientCodeStyleSettings transientSettings);
 
     /**
      * @return The function which disables the modifier in the given code style settings or by other means. It is purely programmatic and

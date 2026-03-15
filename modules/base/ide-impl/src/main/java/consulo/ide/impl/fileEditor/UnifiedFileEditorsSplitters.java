@@ -28,7 +28,6 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.WrappedLayout;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.concurrent.CompletableFuture;
@@ -61,13 +60,13 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
     }
   }
 
-  @Nonnull
+  
   @Override
   protected UnifiedFileEditorWindow[] createArray(int size) {
     return new UnifiedFileEditorWindow[size];
   }
 
-  @Nonnull
+  
   @Override
   public Component getUIComponent() {
     return myLayout;
@@ -79,8 +78,8 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
   }
 
   @Override
-  @Nonnull
-  public CompletableFuture<?> openFilesAsync(@Nonnull UIAccess uiAccess) {
+  
+  public CompletableFuture<?> openFilesAsync(UIAccess uiAccess) {
     return CompletableFuture.completedFuture(null);
   }
 

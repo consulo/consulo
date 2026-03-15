@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.task.Comment;
 import consulo.task.Task;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;

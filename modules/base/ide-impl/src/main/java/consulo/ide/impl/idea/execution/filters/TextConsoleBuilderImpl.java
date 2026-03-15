@@ -23,7 +23,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +35,9 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   private final List<Filter> myFilters = new ArrayList<>();
 
   private ConsoleState myState = new ConsoleState.NotStartedStated() {
-    @Nonnull
+    
     @Override
-    public ConsoleState attachTo(@Nonnull ConsoleView console, ProcessHandler processHandler) {
+    public ConsoleState attachTo(ConsoleView console, ProcessHandler processHandler) {
       return new ConsoleViewRunningState(console, processHandler, this, true, true);
     }
   };
@@ -50,7 +49,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
     this(project, GlobalSearchScope.allScope(project));
   }
 
-  public TextConsoleBuilderImpl(@Nonnull Project project, @Nonnull SearchScope scope) {
+  public TextConsoleBuilderImpl(Project project, SearchScope scope) {
     myProject = project;
     myScope = scope;
   }
@@ -85,7 +84,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   }
 
   @Override
-  public void setState(@Nonnull ConsoleState state) {
+  public void setState(ConsoleState state) {
     myState = state;
   }
 

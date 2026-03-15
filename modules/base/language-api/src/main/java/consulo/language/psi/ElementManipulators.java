@@ -18,7 +18,6 @@ package consulo.language.psi;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,7 +28,7 @@ public class ElementManipulators {
   /**
    * @see #getNotNullManipulator(PsiElement)
    */
-  public static <T extends PsiElement> ElementManipulator<T> getManipulator(@Nonnull T element) {
+  public static <T extends PsiElement> ElementManipulator<T> getManipulator(T element) {
     return ElementManipulator.getManipulator(element);
   }
 
@@ -49,7 +48,7 @@ public class ElementManipulators {
     return manipulator == null ? TextRange.from(0, element.getTextLength()) : manipulator.getRangeInElement(element);
   }
 
-  @Nonnull
+  
   public static String getValueText(PsiElement element) {
     TextRange valueTextRange = getValueTextRange(element);
     if (valueTextRange.isEmpty()) return "";

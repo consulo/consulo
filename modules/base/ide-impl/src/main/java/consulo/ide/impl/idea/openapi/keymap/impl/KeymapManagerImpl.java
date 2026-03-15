@@ -27,8 +27,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -43,7 +42,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   static final String KEYMAPS_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/keymaps";
 
   private final EventDispatcher<KeymapManagerListener> myListeners = EventDispatcher.create(KeymapManagerListener.class);
-  @Nonnull
+  
   private final DefaultKeymap myDefaultKeymap;
   private String myActiveKeymapName;
   private final Map<String, String> myBoundShortcuts = new HashMap<>();
@@ -58,28 +57,28 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemeManagerFactory factory) {
     myDefaultKeymap = defaultKeymap;
     mySchemeManager = factory.createSchemeManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<Keymap, KeymapImpl>() {
-      @Nonnull
+      
       @Override
-      public KeymapImpl readScheme(@Nonnull Element element) throws InvalidDataException {
+      public KeymapImpl readScheme(Element element) throws InvalidDataException {
         KeymapImpl keymap = new KeymapImpl();
         keymap.readExternal(element, getAllIncludingDefaultsKeymaps());
         return keymap;
       }
 
       @Override
-      public Element writeScheme(@Nonnull KeymapImpl scheme) {
+      public Element writeScheme(KeymapImpl scheme) {
         return scheme.writeExternal();
       }
 
-      @Nonnull
+      
       @Override
-      public State getState(@Nonnull KeymapImpl scheme) {
+      public State getState(KeymapImpl scheme) {
         return scheme.canModify() ? State.POSSIBLY_CHANGED : State.NON_PERSISTENT;
       }
 
-      @Nonnull
+      
       @Override
-      public String getName(@Nonnull Keymap immutableElement) {
+      public String getName(Keymap immutableElement) {
         return immutableElement.getName();
       }
     }, RoamingType.DEFAULT);
@@ -116,7 +115,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   @Override
   @Nullable
-  public Keymap getKeymap(@Nonnull String name) {
+  public Keymap getKeymap(String name) {
     return mySchemeManager.findSchemeByName(name);
   }
 
@@ -222,17 +221,17 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   @Override
-  public void addKeymapManagerListener(@Nonnull KeymapManagerListener listener) {
+  public void addKeymapManagerListener(KeymapManagerListener listener) {
     myListeners.addListener(listener);
   }
 
   @Override
-  public void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull Disposable parentDisposable) {
+  public void addKeymapManagerListener(KeymapManagerListener listener, Disposable parentDisposable) {
     myListeners.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeKeymapManagerListener(@Nonnull KeymapManagerListener listener) {
+  public void removeKeymapManagerListener(KeymapManagerListener listener) {
     myListeners.removeListener(listener);
   }
 }

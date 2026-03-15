@@ -22,8 +22,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -120,14 +119,14 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
   }
 
   @Nullable
-  private static VirtualFile findFileToPatchByName(@Nonnull ApplyPatchContext context, String fileName,
+  private static VirtualFile findFileToPatchByName(ApplyPatchContext context, String fileName,
                                                    boolean isNewFile) {
     String[] pathNameComponents = fileName.split("/");
     int lastComponentToFind = isNewFile ? pathNameComponents.length-1 : pathNameComponents.length;
     return findFileToPatchByComponents(context, pathNameComponents, lastComponentToFind);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static VirtualFile findFileToPatchByComponents(ApplyPatchContext context,
                                                          String[] pathNameComponents,
                                                          int lastComponentToFind) {

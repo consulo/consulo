@@ -7,7 +7,6 @@ import consulo.codeEditor.Inlay;
 import consulo.codeEditor.InlayProperties;
 import consulo.codeEditor.VisualPosition;
 import consulo.document.impl.RangeMarkerTree;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -18,12 +17,12 @@ public class AfterLineEndInlayImpl<R extends EditorCustomElementRenderer> extend
     final int myPriority;
     final int myOrder;
 
-    AfterLineEndInlayImpl(@Nonnull CodeEditorBase editor,
+    AfterLineEndInlayImpl(CodeEditorBase editor,
                           int offset,
                           boolean relatesToPrecedingText,
                           boolean softWrappable,
                           int priority,
-                          @Nonnull R renderer) {
+                          R renderer) {
         super(editor, offset, relatesToPrecedingText, renderer);
         mySoftWrappable = softWrappable;
         myPriority = priority;
@@ -50,13 +49,13 @@ public class AfterLineEndInlayImpl<R extends EditorCustomElementRenderer> extend
         return myEditor.visualPositionToXY(pos);
     }
 
-    @Nonnull
+    
     @Override
     public Placement getPlacement() {
         return Placement.AFTER_LINE_END;
     }
 
-    @Nonnull
+    
     @Override
     public VisualPosition getVisualPosition() {
         int offset = getOffset();
@@ -77,7 +76,7 @@ public class AfterLineEndInlayImpl<R extends EditorCustomElementRenderer> extend
     }
 
     @Override
-    @Nonnull
+    
     public InlayProperties getProperties() {
         return new InlayProperties()
             .relatesToPrecedingText(isRelatedToPrecedingText())

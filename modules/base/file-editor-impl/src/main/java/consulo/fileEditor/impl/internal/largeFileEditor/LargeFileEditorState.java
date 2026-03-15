@@ -3,15 +3,13 @@ package consulo.fileEditor.impl.internal.largeFileEditor;
 
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 public final class LargeFileEditorState implements FileEditorState {
     long caretPageNumber = 0;
     int caretSymbolOffsetInPage = 0;
 
     @Override
-    public boolean canBeMergedWith(@Nonnull FileEditorState otherState, @Nonnull FileEditorStateLevel level) {
+    public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
         if (otherState instanceof LargeFileEditorState state) {
             return caretPageNumber == state.caretPageNumber
                 && caretSymbolOffsetInPage == state.caretSymbolOffsetInPage;
@@ -20,7 +18,7 @@ public final class LargeFileEditorState implements FileEditorState {
     }
 
     @Override
-    public @NonNls String toString() {
+    public String toString() {
         return "[p" + caretPageNumber + ",s" + caretSymbolOffsetInPage + "]";  // 'p' - Page number, 's' - Symbol offset in Page
     }
 }

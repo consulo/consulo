@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -59,7 +58,7 @@ public class OpenTaskDialog extends DialogWrapper {
     private final Task myTask;
     private final List<TaskDialogPanel> myPanels;
 
-    public OpenTaskDialog(@Nonnull Project project, @Nonnull Task task) {
+    public OpenTaskDialog(Project project, Task task) {
         super(project, false);
         myProject = project;
         myTask = task;
@@ -189,8 +188,8 @@ public class OpenTaskDialog extends DialogWrapper {
             @Nullable
             @Override
             protected CustomTaskState getPreferredState(
-                @Nonnull TaskRepository repository,
-                @Nonnull Collection<CustomTaskState> available
+                TaskRepository repository,
+                Collection<CustomTaskState> available
             ) {
                 return repository.getPreferredOpenTaskState();
             }

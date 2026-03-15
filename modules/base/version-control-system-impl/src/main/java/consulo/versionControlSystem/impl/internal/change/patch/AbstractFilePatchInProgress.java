@@ -30,7 +30,6 @@ import consulo.versionControlSystem.impl.internal.patch.PathMerger;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,7 +67,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     }
   }
 
-  public void setAutoBases(@Nonnull Collection<VirtualFile> autoBases) {
+  public void setAutoBases(Collection<VirtualFile> autoBases) {
     String path = myPatch.getBeforeName() == null ? myPatch.getAfterName() : myPatch.getBeforeName();
     for (VirtualFile autoBase : autoBases) {
       VirtualFile willBeBase = PathMerger.getBase(autoBase, path);
@@ -152,7 +151,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
 
   protected abstract ContentRevision getNewContentRevision();
 
-  @Nonnull
+  
   protected FilePath detectNewFilePathForMovedOrModified() {
     return FilePatchStatus.MOVED_OR_RENAMED.equals(myStatus)
            ? VcsUtil.getFilePath(PathMerger.getFile(new File(myBase.getPath()), myPatch.getAfterName()), false)
@@ -201,7 +200,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     }
   }
 
-  @Nonnull
+  
   public abstract DiffRequestProducer getDiffRequestProducers(Project project, PatchReader baseContents);
 
   public List<VirtualFile> getAutoBasesCopy() {
@@ -251,7 +250,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     return myStrippable.getCurrentPath();
   }
 
-  @Nonnull
+  
   public String getOriginalBeforePath() {
     return myStrippable.getOriginalBeforePath();
   }
@@ -319,7 +318,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
       return mySourcePath.substring(myParts[myCurrentStrip]);
     }
 
-    @Nonnull
+    
     private String getOriginalPath() {
       return mySourcePath.toString();
     }
@@ -414,7 +413,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
       return myParts[0].getCurrentPath();
     }
 
-    @Nonnull
+    
     private String getOriginalBeforePath() {
       return myParts[myBeforeIdx].getOriginalPath();
     }

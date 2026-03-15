@@ -33,8 +33,7 @@ import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -55,8 +54,8 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     @RequiredUIAccess
     @Override
     public void apply(
-        @Nonnull List<FilePatch> remaining,
-        @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
+        List<FilePatch> remaining,
+        MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
         @Nullable LocalChangeList localList,
         @Nullable String fileName,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
@@ -71,8 +70,8 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     protected ApplyPatchStatus executeAndApplyAdditionalInfo(
         @Nullable LocalChangeList localList,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
-        @Nonnull CommitContext commitContext,
-        @Nonnull Collection<PatchApplier> appliers
+        CommitContext commitContext,
+        Collection<PatchApplier> appliers
     ) {
         ApplyPatchStatus applyPatchStatus = PatchApplier.executePatchGroup(appliers, localList);
         if (applyPatchStatus != ApplyPatchStatus.ABORT) {
@@ -81,11 +80,11 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
         return applyPatchStatus;
     }
 
-    @Nonnull
+    
     protected Collection<PatchApplier> getPatchAppliers(
-        @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroups,
+        MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroups,
         @Nullable LocalChangeList localList,
-        @Nonnull CommitContext commitContext
+        CommitContext commitContext
     ) {
         Collection<PatchApplier> appliers = new LinkedList<>();
         for (VirtualFile base : patchGroups.keySet()) {

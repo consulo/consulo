@@ -24,8 +24,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.image.Image;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -102,27 +101,27 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
         return this;
     }
 
-    public static ToolbarDecorator createDecorator(@Nonnull JTable table) {
+    public static ToolbarDecorator createDecorator(JTable table) {
         return new TableToolbarDecorator(table, null).initPosition();
     }
 
-    public static ToolbarDecorator createDecorator(@Nonnull JTree tree) {
+    public static ToolbarDecorator createDecorator(JTree tree) {
         return createDecorator(tree, null);
     }
 
-    private static ToolbarDecorator createDecorator(@Nonnull JTree tree, @Nullable ElementProducer<?> producer) {
+    private static ToolbarDecorator createDecorator(JTree tree, @Nullable ElementProducer<?> producer) {
         return new TreeToolbarDecorator(tree, producer).initPosition();
     }
 
-    public static ToolbarDecorator createDecorator(@Nonnull JList list) {
+    public static ToolbarDecorator createDecorator(JList list) {
         return new ListToolbarDecorator(list, null).initPosition();
     }
 
-    public static ToolbarDecorator createDecorator(@Nonnull JList list, EditableModel editableModel) {
+    public static ToolbarDecorator createDecorator(JList list, EditableModel editableModel) {
         return new ListToolbarDecorator(list, editableModel).initPosition();
     }
 
-    public static <T> ToolbarDecorator createDecorator(@Nonnull TableView<T> table, @Nullable ElementProducer<T> producer) {
+    public static <T> ToolbarDecorator createDecorator(TableView<T> table, @Nullable ElementProducer<T> producer) {
         return new TableToolbarDecorator(table, producer).initPosition();
     }
 
@@ -152,7 +151,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
         return this;
     }
 
-    public ToolbarDecorator setToolbarBackgroundColor(@Nonnull Color color) {
+    public ToolbarDecorator setToolbarBackgroundColor(Color color) {
         myToolbarBackgroundColor = color;
         return this;
     }
@@ -370,7 +369,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
 
     }
 
-    public ToolbarDecorator setActionGroup(@Nonnull ActionGroup actionGroup) {
+    public ToolbarDecorator setActionGroup(ActionGroup actionGroup) {
         AnAction[] actions = actionGroup.getChildren(null);
         for (AnAction action : actions) {
             addExtraAction(action instanceof AnSeparator ? action : AnActionButton.fromAction(action));
@@ -551,23 +550,23 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
         };
     }
 
-    public static AnActionButton findAddButton(@Nonnull JComponent container) {
+    public static AnActionButton findAddButton(JComponent container) {
         return findButton(container, CommonActionsPanel.Buttons.ADD);
     }
 
-    public static AnActionButton findEditButton(@Nonnull JComponent container) {
+    public static AnActionButton findEditButton(JComponent container) {
         return findButton(container, CommonActionsPanel.Buttons.EDIT);
     }
 
-    public static AnActionButton findRemoveButton(@Nonnull JComponent container) {
+    public static AnActionButton findRemoveButton(JComponent container) {
         return findButton(container, CommonActionsPanel.Buttons.REMOVE);
     }
 
-    public static AnActionButton findUpButton(@Nonnull JComponent container) {
+    public static AnActionButton findUpButton(JComponent container) {
         return findButton(container, CommonActionsPanel.Buttons.UP);
     }
 
-    public static AnActionButton findDownButton(@Nonnull JComponent container) {
+    public static AnActionButton findDownButton(JComponent container) {
         return findButton(container, CommonActionsPanel.Buttons.DOWN);
     }
 
@@ -592,7 +591,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
             super(text, icon);
         }
 
-        protected ElementActionButton(@Nonnull LocalizeValue text, @Nullable Image image) {
+        protected ElementActionButton(LocalizeValue text, @Nullable Image image) {
             super(text, LocalizeValue.empty(), image);
         }
 

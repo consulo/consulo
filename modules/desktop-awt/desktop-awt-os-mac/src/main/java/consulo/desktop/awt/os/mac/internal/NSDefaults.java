@@ -5,8 +5,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,18 +20,18 @@ public final class NSDefaults {
     // It waits for any pending asynchronous updates to the defaults database and returns; this method is unnecessary and shouldn't be used.
 
     private static final class Path {
-        private final @Nonnull ArrayList<Node> myPath = new ArrayList<>();
+        private final ArrayList<Node> myPath = new ArrayList<>();
 
         @Override
         public String toString() {
             return myPath.stream().map(Node::toString).collect(Collectors.joining(" | "));
         }
 
-        String readStringVal(@Nonnull String key) {
+        String readStringVal(String key) {
             return readStringVal(key, false);
         }
 
-        String readStringVal(@Nonnull String key, boolean doSynchronize) {
+        String readStringVal(String key, boolean doSynchronize) {
             if (myPath.isEmpty())
                 return null;
 
@@ -63,7 +62,7 @@ public final class NSDefaults {
             }
         }
 
-        void writeStringValue(@Nonnull String key, String val) {
+        void writeStringValue(String key, String val) {
             if (myPath.isEmpty())
                 return;
 
@@ -126,11 +125,11 @@ public final class NSDefaults {
         }
 
         private static final class Node {
-            private final @Nonnull String mySelector;
-            private final @Nonnull String myNodeName;
-            private @Nonnull ID cachedNodeObj = ID.NIL;
+            private final String mySelector;
+            private final String myNodeName;
+            private ID cachedNodeObj = ID.NIL;
 
-            Node(@Nonnull String selector, @Nonnull String nodeName) {
+            Node(String selector, String nodeName) {
                 mySelector = selector;
                 myNodeName = nodeName;
             }
@@ -161,11 +160,11 @@ public final class NSDefaults {
                 cachedNodeObj = nodeObj;
             }
 
-            private static @Nonnull ID _createDictionary() {
+            private static ID _createDictionary() {
                 return Foundation.invoke("NSMutableDictionary", "new");
             }
 
-            void writeStringValue(@Nonnull String key, String val) {
+            void writeStringValue(String key, String val) {
                 ID mnode;
                 if (!isValid()) {
                     if (val == null) // nothing to erase
@@ -218,7 +217,7 @@ public final class NSDefaults {
         return result.lastValidPos() >= 0;
     }
 
-    public static void createPersistentDomain(@Nonnull String domainName, @Nullable Map<String, Object> values) {
+    public static void createPersistentDomain(String domainName, @Nullable Map<String, Object> values) {
         Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
         try {
             ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
@@ -245,7 +244,7 @@ public final class NSDefaults {
         }
     }
 
-    public static void removePersistentDomain(@Nonnull String domainName) {
+    public static void removePersistentDomain(String domainName) {
         Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
         try {
             ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");

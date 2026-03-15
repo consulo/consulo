@@ -8,8 +8,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StackOverflowPreventedException;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -68,7 +67,7 @@ public class RecursionManager {
      * without a need to bother to create {@link RecursionGuard}.
      */
     @Nullable
-    public static <T> T doPreventingRecursion(@Nonnull Object key, boolean memoize, Supplier<T> computation) {
+    public static <T> T doPreventingRecursion(Object key, boolean memoize, Supplier<T> computation) {
         return createGuard(computation.getClass().getName()).doPreventingRecursion(key, memoize, computation);
     }
 
@@ -77,11 +76,11 @@ public class RecursionManager {
      * @return a helper object which allow you to perform reentrancy-safe computations and check whether caching will be safe.
      * Don't use it unless you need to call it from several places in the code, inspect the computation stack and/or prohibit result caching.
      */
-    @Nonnull
+    
     public static <Key> RecursionGuard<Key> createGuard(final String id) {
         return new RecursionGuard<>() {
             @Override
-            public <T> T doPreventingRecursion(@Nonnull Key key, boolean memoize, @Nonnull Supplier<T> computation) {
+            public <T> T doPreventingRecursion(Key key, boolean memoize, Supplier<T> computation) {
                 MyKey realKey = new MyKey(id, key, true);
                 CalculationStack stack = ourStack.get();
 
@@ -132,7 +131,7 @@ public class RecursionManager {
                 }
             }
 
-            @Nonnull
+            
             @Override
             public List<Key> currentStack() {
                 List<Key> result = new ArrayList<>();
@@ -146,7 +145,7 @@ public class RecursionManager {
             }
 
             @Override
-            public void prohibitResultCaching(@Nonnull Object since) {
+            public void prohibitResultCaching(Object since) {
                 MyKey realKey = new MyKey(id, since, false);
                 CalculationStack stack = ourStack.get();
                 stack.prohibitResultCaching(realKey);
@@ -171,7 +170,7 @@ public class RecursionManager {
      *
      * @return an object representing the current stack state, managed by {@link RecursionManager}
      */
-    @Nonnull
+    
     public static RecursionGuard.StackStamp markStack() {
         int stamp = ourStack.get().reentrancyCount;
         return () -> stamp == ourStack.get().reentrancyCount;
@@ -183,7 +182,7 @@ public class RecursionManager {
         private final int myHashCode;
         private final boolean myCallEquals;
 
-        MyKey(String guardId, @Nonnull Object userObject, boolean mayCallEquals) {
+        MyKey(String guardId, Object userObject, boolean mayCallEquals) {
             this.guardId = guardId;
             this.userObject = userObject;
             // remember user object hashCode to ensure our internal maps consistency
@@ -335,7 +334,7 @@ public class RecursionManager {
     }
 
     @TestOnly
-    public static void assertOnRecursionPrevention(@Nonnull Disposable parentDisposable) {
+    public static void assertOnRecursionPrevention(Disposable parentDisposable) {
         ourAssertOnPrevention = true;
         Disposer.register(
             parentDisposable,

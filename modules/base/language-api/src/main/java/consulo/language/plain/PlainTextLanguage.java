@@ -18,7 +18,6 @@ package consulo.language.plain;
 
 import consulo.language.Language;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -31,7 +30,7 @@ public class PlainTextLanguage extends Language {
         super("TEXT", "text/plain");
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Plain text");

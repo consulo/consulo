@@ -22,8 +22,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -41,9 +40,9 @@ public abstract class ComparingClassifier<T> extends Classifier<T> {
     @Nullable
     public abstract Comparable getWeight(T t, ProcessingContext context);
 
-    @Nonnull
+    
     @Override
-    public Iterable<T> classify(@Nonnull Iterable<T> source, @Nonnull final ProcessingContext context) {
+    public Iterable<T> classify(Iterable<T> source, final ProcessingContext context) {
         List<T> nulls = null;
         NavigableMap<Comparable, List<T>> map = new TreeMap<>();
         for (T t : source) {
@@ -75,9 +74,9 @@ public abstract class ComparingClassifier<T> extends Classifier<T> {
         };
     }
 
-    @Nonnull
+    
     @Override
-    public List<Pair<T, Object>> getSortingWeights(@Nonnull Iterable<T> items, @Nonnull ProcessingContext context) {
+    public List<Pair<T, Object>> getSortingWeights(Iterable<T> items, ProcessingContext context) {
         return ContainerUtil.map(items, t -> new Pair<T, Object>(t, getWeight(t, context)));
     }
 }

@@ -20,18 +20,17 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.ArtifactPropertiesEditor;
 import consulo.component.persist.PersistentStateComponent;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class ArtifactProperties<S> implements PersistentStateComponent<S> {
 
-  public void onBuildStarted(@Nonnull Artifact artifact, @Nonnull CompileContext compileContext) {
+  public void onBuildStarted(Artifact artifact, CompileContext compileContext) {
   }
 
-  public void onBuildFinished(@Nonnull Artifact artifact, @Nonnull CompileContext compileContext) {
+  public void onBuildFinished(Artifact artifact, CompileContext compileContext) {
   }
 
-  public abstract ArtifactPropertiesEditor createEditor(@Nonnull ArtifactEditorContext context);
+  public abstract ArtifactPropertiesEditor createEditor(ArtifactEditorContext context);
 }

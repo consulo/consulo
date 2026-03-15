@@ -20,7 +20,6 @@ import consulo.module.Module;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,20 +31,20 @@ import java.util.Set;
 public class ModulesOrderEnumerator extends OrderEnumeratorBase {
   private final Collection<? extends Module> myModules;
 
-  public ModulesOrderEnumerator(@Nonnull Project project, @Nonnull Collection<? extends Module> modules) {
+  public ModulesOrderEnumerator(Project project, Collection<? extends Module> modules) {
     super(null, project, null);
     myModules = modules;
   }
 
   @Override
-  public void processRootModules(@Nonnull Processor<Module> processor) {
+  public void processRootModules(Processor<Module> processor) {
     for (Module each : myModules) {
       processor.process(each);
     }
   }
 
   @Override
-  public void forEach(@Nonnull Processor<OrderEntry> processor) {
+  public void forEach(Processor<OrderEntry> processor) {
     myRecursivelyExportedOnly = false;
 
     Set<Module> processed = new HashSet<Module>();
@@ -55,7 +54,7 @@ public class ModulesOrderEnumerator extends OrderEnumeratorBase {
   }
 
   @Override
-  public boolean isRootModuleModel(@Nonnull ModuleRootModel rootModel) {
+  public boolean isRootModuleModel(ModuleRootModel rootModel) {
     return myModules.contains(rootModel.getModule());
   }
 }

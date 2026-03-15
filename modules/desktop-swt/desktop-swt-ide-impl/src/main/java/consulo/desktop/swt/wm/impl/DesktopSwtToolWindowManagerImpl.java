@@ -46,8 +46,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -76,7 +75,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
         MessageBusConnection busConnection = project.getMessageBus().connect();
         busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectClosed(Project project, UIAccess uiAccess) {
                 if (project == myProject) {
                     DesktopSwtToolWindowManagerImpl.this.projectClosed();
                 }
@@ -123,7 +122,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    @Nonnull
+    
     @RequiredUIAccess
     protected Component createInitializingLabel() {
         Label label = Label.create("Initializing...");
@@ -138,18 +137,18 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
         UIAccess.get().give(runnable);
     }
 
-    @Nonnull
+    
     @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
         return new MyInternalDecoratorListenerBase() {
             @Override
-            public void resized(@Nonnull ToolWindowInternalDecorator source) {
+            public void resized(ToolWindowInternalDecorator source) {
 
             }
         };
     }
 
-    @Nonnull
+    
     @Override
     protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
         return new DesktopSwtToolWindowStripeButtonImpl(
@@ -158,7 +157,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
         );
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     protected ToolWindowEx createToolWindow(
@@ -171,12 +170,12 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
         return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     protected ToolWindowInternalDecorator createInternalDecorator(
         Project project,
-        @Nonnull WindowInfoImpl info,
+        WindowInfoImpl info,
         ToolWindowEx toolWindow,
         boolean dumbAware
     ) {
@@ -228,7 +227,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public boolean canShowNotification(@Nonnull String toolWindowId) {
+    public boolean canShowNotification(String toolWindowId) {
         return false;
     }
 
@@ -242,7 +241,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
+    public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
     }
 
     @Nullable
@@ -252,16 +251,16 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public boolean isMaximized(@Nonnull ToolWindow wnd) {
+    public boolean isMaximized(ToolWindow wnd) {
         return false;
     }
 
     @Override
-    public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
+    public void setMaximized(ToolWindow wnd, boolean maximized) {
     }
 
     @Override
-    public void doContentRename(@Nonnull DataContext dataContext, @Nonnull ToolWindow toolWindow, @Nullable Content content, @Nonnull LocalizeValue labelText, @Nonnull BiConsumer<Content, String> consumer) {
+    public void doContentRename(DataContext dataContext, ToolWindow toolWindow, @Nullable Content content, LocalizeValue labelText, BiConsumer<Content, String> consumer) {
 
     }
 }

@@ -17,11 +17,10 @@ package consulo.usage;
 
 import consulo.fileEditor.FileEditorLocation;
 
-import jakarta.annotation.Nonnull;
 
 public class UsageAdapter implements Usage {
     @Override
-    @Nonnull
+    
     public UsagePresentation getPresentation() {
         throw new IllegalAccessError();
     }

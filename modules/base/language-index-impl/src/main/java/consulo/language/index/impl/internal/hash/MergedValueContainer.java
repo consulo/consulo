@@ -2,33 +2,32 @@
 package consulo.language.index.impl.internal.hash;
 
 import consulo.index.io.ValueContainer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class MergedValueContainer<Value> extends ValueContainer<Value> {
   private final ValueContainer<Value> myContainer1;
   private final ValueContainer<Value> myContainer2;
 
-  @Nonnull
-  public static <Value> ValueContainer<Value> merge(@Nonnull ValueContainer<Value> container1, @Nonnull ValueContainer<Value> container2) {
+  
+  public static <Value> ValueContainer<Value> merge(ValueContainer<Value> container1, ValueContainer<Value> container2) {
     if (container1.size() == 0) return container2;
     if (container2.size() == 0) return container1;
     return new MergedValueContainer<>(container1, container2);
   }
 
-  private MergedValueContainer(@Nonnull ValueContainer<Value> container1, @Nonnull ValueContainer<Value> container2) {
+  private MergedValueContainer(ValueContainer<Value> container1, ValueContainer<Value> container2) {
     myContainer1 = container1;
     myContainer2 = container2;
   }
 
-  @Nonnull
+  
   @Override
   public ValueIterator<Value> getValueIterator() {
     return new ValueIterator<Value>() {
       boolean mySecondIsUsed;
       ValueIterator<Value> myCurrent = myContainer1.getValueIterator();
 
-      @Nonnull
+      
       @Override
       public IntIterator getInputIdsIterator() {
         return myCurrent.getInputIdsIterator();

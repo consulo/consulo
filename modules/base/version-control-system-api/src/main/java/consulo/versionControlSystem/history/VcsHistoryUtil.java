@@ -39,8 +39,7 @@ import consulo.versionControlSystem.diff.VcsDiffDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.io.IOException;
@@ -85,9 +84,9 @@ public class VcsHistoryUtil {
    * @throws VcsException
    * @throws IOException
    */
-  public static void showDiff(@Nonnull Project project, @Nonnull FilePath path,
-                              @Nonnull VcsFileRevision revision1, @Nonnull VcsFileRevision revision2,
-                              @Nonnull String title1, @Nonnull String title2) throws VcsException, IOException {
+  public static void showDiff(Project project, FilePath path,
+                              VcsFileRevision revision1, VcsFileRevision revision2,
+                              String title1, String title2) throws VcsException, IOException {
     byte[] content1 = loadRevisionContent(revision1);
     byte[] content2 = loadRevisionContent(revision2);
 
@@ -114,7 +113,7 @@ public class VcsHistoryUtil {
   }
 
   @Nullable
-  private static Pair<FilePath, VcsRevisionNumber> getRevisionInfo(@Nonnull VcsFileRevision revision) {
+  private static Pair<FilePath, VcsRevisionNumber> getRevisionInfo(VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return Pair.create(((VcsFileRevisionEx)revision).getPath(), revision.getRevisionNumber());
     }
@@ -122,15 +121,15 @@ public class VcsHistoryUtil {
   }
 
   @Nullable
-  private static FilePath getRevisionPath(@Nonnull VcsFileRevision revision) {
+  private static FilePath getRevisionPath(VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return ((VcsFileRevisionEx)revision).getPath();
     }
     return null;
   }
 
-  @Nonnull
-  public static byte[] loadRevisionContent(@Nonnull VcsFileRevision revision) throws VcsException, IOException {
+  
+  public static byte[] loadRevisionContent(VcsFileRevision revision) throws VcsException, IOException {
     byte[] content = revision.getContent();
     if (content == null) {
       revision.loadContent();
@@ -140,7 +139,7 @@ public class VcsHistoryUtil {
     return content;
   }
 
-  public static String loadRevisionContentGuessEncoding(@Nonnull VcsFileRevision revision, @Nullable VirtualFile file,
+  public static String loadRevisionContentGuessEncoding(VcsFileRevision revision, @Nullable VirtualFile file,
                                                         @Nullable Project project) throws VcsException, IOException {
     byte[] bytes = loadRevisionContent(revision);
     if (file != null) {
@@ -154,9 +153,9 @@ public class VcsHistoryUtil {
     return CharsetToolkit.bytesToString(bytes, e.getDefaultCharset());
   }
 
-  @Nonnull
-  private static DiffContent createContent(@Nonnull Project project, @Nonnull byte[] content, @Nonnull VcsFileRevision revision,
-                                           @Nonnull FilePath filePath) throws IOException {
+  
+  private static DiffContent createContent(Project project, byte[] content, VcsFileRevision revision,
+                                           FilePath filePath) throws IOException {
     DiffContentFactoryEx contentFactory = DiffContentFactoryEx.getInstanceEx();
     if (isCurrent(revision)) {
       VirtualFile file = filePath.getVirtualFile();
@@ -182,13 +181,13 @@ public class VcsHistoryUtil {
    *
    * @see #showDiff(Project, FilePath, VcsFileRevision, VcsFileRevision, String, String)
    */
-  public static void showDifferencesInBackground(@Nonnull final Project project,
-                                                 @Nonnull final FilePath filePath,
-                                                 @Nonnull final VcsFileRevision older,
-                                                 @Nonnull final VcsFileRevision newer) {
+  public static void showDifferencesInBackground(final Project project,
+                                                 final FilePath filePath,
+                                                 final VcsFileRevision older,
+                                                 final VcsFileRevision newer) {
     new Task.Backgroundable(project, "Comparing Revisions...") {
       @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
+      public void run(ProgressIndicator indicator) {
         try {
           showDiff(project, filePath, older, newer, makeTitle(older), makeTitle(newer));
         }
@@ -206,15 +205,15 @@ public class VcsHistoryUtil {
         }
       }
 
-      @Nonnull
-      private String makeTitle(@Nonnull VcsFileRevision revision) {
+      
+      private String makeTitle(VcsFileRevision revision) {
         return revision.getRevisionNumber().asString() +
                (revision instanceof CurrentRevision ? " (" + VcsBundle.message("diff.title.local") + ")" : "");
       }
     }.queue();
   }
 
-  @Nonnull
+  
   public static Font getCommitDetailsFont() {
     return JBUI.scale(EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN));
   }

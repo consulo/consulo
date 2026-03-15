@@ -26,7 +26,6 @@ import consulo.versionControlSystem.impl.internal.change.commited.CacheSettingsP
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -149,21 +148,21 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
     return myPanel;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Background");
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "project.propVCSSupport.Background";
   }
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     return getPanel();
   }
 

@@ -47,8 +47,7 @@ import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -70,41 +69,41 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   }
 
   @Override
-  @Nonnull
-  public PsiFile createFileFromText(@Nonnull String name,
-                                    @Nonnull FileType fileType,
-                                    @Nonnull CharSequence text,
+  
+  public PsiFile createFileFromText(String name,
+                                    FileType fileType,
+                                    CharSequence text,
                                     long modificationStamp,
                                     boolean physical) {
     return createFileFromText(name, fileType, text, modificationStamp, physical, true);
   }
 
   @Override
-  public PsiFile createFileFromText(@Nonnull String name, @Nonnull Language language, @Nonnull CharSequence text) {
+  public PsiFile createFileFromText(String name, Language language, CharSequence text) {
     return createFileFromText(name, language, text, true, true);
   }
 
   @Override
-  public PsiFile createFileFromText(@Nonnull String name,
-                                    @Nonnull Language language,
-                                    @Nonnull LanguageVersion languageVersion,
-                                    @Nonnull CharSequence text) {
+  public PsiFile createFileFromText(String name,
+                                    Language language,
+                                    LanguageVersion languageVersion,
+                                    CharSequence text) {
     return createFileFromText(name, language, languageVersion, text, true, true, false);
   }
 
   @Override
-  public PsiFile createFileFromText(@Nonnull String name,
-                                    @Nonnull Language language,
-                                    @Nonnull CharSequence text,
+  public PsiFile createFileFromText(String name,
+                                    Language language,
+                                    CharSequence text,
                                     boolean physical,
                                     boolean markAsCopy) {
     return createFileFromText(name, language, text, physical, markAsCopy, false);
   }
 
   @Override
-  public PsiFile createFileFromText(@Nonnull String name,
-                                    @Nonnull Language language,
-                                    @Nonnull CharSequence text,
+  public PsiFile createFileFromText(String name,
+                                    Language language,
+                                    CharSequence text,
                                     boolean physical,
                                     boolean markAsCopy,
                                     boolean noSizeLimit) {
@@ -114,10 +113,10 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
 
   @Nullable
   @Override
-  public PsiFile createFileFromText(@Nonnull String name,
-                                    @Nonnull Language language,
-                                    @Nonnull LanguageVersion languageVersion,
-                                    @Nonnull CharSequence text,
+  public PsiFile createFileFromText(String name,
+                                    Language language,
+                                    LanguageVersion languageVersion,
+                                    CharSequence text,
                                     boolean physical,
                                     boolean markAsCopy,
                                     boolean noSizeLimit) {
@@ -131,9 +130,9 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
 
   @Nullable
   @Override
-  public PsiFile createFileFromText(@Nonnull String name,
-                                    @Nonnull LanguageVersion languageVersion,
-                                    @Nonnull CharSequence text,
+  public PsiFile createFileFromText(String name,
+                                    LanguageVersion languageVersion,
+                                    CharSequence text,
                                     boolean physical,
                                     boolean markAsCopy,
                                     boolean noSizeLimit,
@@ -148,10 +147,10 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   }
 
   @Override
-  @Nonnull
-  public PsiFile createFileFromText(@Nonnull String name,
-                                    @Nonnull FileType fileType,
-                                    @Nonnull CharSequence text,
+  
+  public PsiFile createFileFromText(String name,
+                                    FileType fileType,
+                                    CharSequence text,
                                     long modificationStamp,
                                     boolean physical,
                                     boolean markAsCopy) {
@@ -170,8 +169,8 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
 
   @Nullable
   public PsiFile trySetupPsiForFile(LightVirtualFile virtualFile,
-                                    @Nonnull Language language,
-                                    @Nonnull LanguageVersion languageVersion,
+                                    Language language,
+                                    LanguageVersion languageVersion,
                                     boolean physical,
                                     boolean markAsCopy) {
     FileViewProviderFactory factory = LanguageFileViewProviderFactory.forLanguage(language);
@@ -193,12 +192,12 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
     return null;
   }
 
-  @Nonnull
-  public PsiFile createFileFromText(@Nonnull String name,
-                                    @Nonnull FileType fileType,
+  
+  public PsiFile createFileFromText(String name,
+                                    FileType fileType,
                                     Language language,
-                                    @Nonnull Language targetLanguage,
-                                    @Nonnull CharSequence text,
+                                    Language targetLanguage,
+                                    CharSequence text,
                                     long modificationStamp,
                                     boolean physical,
                                     boolean markAsCopy) {
@@ -226,14 +225,14 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   }
 
   @Override
-  @Nonnull
-  public PsiFile createFileFromText(@Nonnull String name, @Nonnull FileType fileType, @Nonnull CharSequence text) {
+  
+  public PsiFile createFileFromText(String name, FileType fileType, CharSequence text) {
     return createFileFromText(name, fileType, text, LocalTimeCounter.currentTime(), false);
   }
 
   @Override
-  @Nonnull
-  public PsiFile createFileFromText(@Nonnull String name, @Nonnull String text) {
+  
+  public PsiFile createFileFromText(String name, String text) {
     FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(name);
     if (type.isBinary()) {
       throw new RuntimeException("Cannot create binary files from text: name " + name + ", file type " + type);
@@ -252,7 +251,7 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
 
   @Nullable
   @Override
-  public PsiFile createFileFromText(@Nonnull CharSequence chars, @Nonnull PsiFile original) {
+  public PsiFile createFileFromText(CharSequence chars, PsiFile original) {
     PsiFile file = createFileFromText(original.getName(), original.getLanguage(), chars, false, true);
     if (file != null) {
       file.putUserData(ORIGINAL_FILE, original);
@@ -263,9 +262,9 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   @Override
   @Nullable
   public PsiElement createElementFromText(@Nullable String text,
-                                          @Nonnull Language language,
-                                          @Nonnull LanguageVersion languageVersion,
-                                          @Nonnull IElementType type,
+                                          Language language,
+                                          LanguageVersion languageVersion,
+                                          IElementType type,
                                           @Nullable PsiElement context) {
     if (text == null) return null;
     DummyHolder result = DummyHolderFactory.createHolder(myManager, language, context);

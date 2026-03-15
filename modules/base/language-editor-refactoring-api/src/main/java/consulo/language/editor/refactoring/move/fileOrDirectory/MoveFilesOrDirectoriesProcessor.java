@@ -45,8 +45,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageViewDescriptor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -98,12 +97,12 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
     }
 
     @Override
-    @Nonnull
-    protected UsageViewDescriptor createUsageViewDescriptor(@Nonnull UsageInfo[] usages) {
+    
+    protected UsageViewDescriptor createUsageViewDescriptor(UsageInfo[] usages) {
         return new MoveFilesOrDirectoriesViewDescriptor(myElementsToMove, myNewParent);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     protected UsageInfo[] findUsages() {
@@ -142,7 +141,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
     }
 
     @Override
-    protected void refreshElements(@Nonnull PsiElement[] elements) {
+    protected void refreshElements(PsiElement[] elements) {
         LOG.assertTrue(elements.length == myElementsToMove.length);
         System.arraycopy(elements, 0, myElementsToMove, 0, elements.length);
     }
@@ -157,7 +156,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
 
     @Override
     @RequiredWriteAction
-    protected void performRefactoring(@Nonnull UsageInfo[] usages) {
+    protected void performRefactoring(UsageInfo[] usages) {
         // If files are being moved then I need to collect some information to delete these
         // files from CVS. I need to know all common parents of the moved files and relative
         // paths.
@@ -255,7 +254,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
 
     @Nullable
     @Override
-    protected RefactoringEventData getAfterData(@Nonnull UsageInfo[] usages) {
+    protected RefactoringEventData getAfterData(UsageInfo[] usages) {
         RefactoringEventData data = new RefactoringEventData();
         data.addElement(myNewParent);
         return data;
@@ -318,7 +317,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
         myNonCodeUsages = nonCodeUsages.toArray(new NonCodeUsageInfo[nonCodeUsages.size()]);
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getCommandName() {
         return RefactoringLocalize.moveTitle();

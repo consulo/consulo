@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.versionControlSystem.distributed.push.OutgoingResult;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.Future;
@@ -31,7 +30,7 @@ public interface EditableTreeNode extends CustomRenderedTreeNode {
 
     void cancelLoading();
 
-    void startLoading(@Nonnull JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial);
+    void startLoading(JTree tree, Future<AtomicReference<OutgoingResult>> future, boolean initial);
 
     boolean isEditableNow();
 }

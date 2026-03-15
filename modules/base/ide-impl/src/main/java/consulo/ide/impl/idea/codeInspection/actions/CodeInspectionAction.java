@@ -40,7 +40,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.MutableListModel;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -62,16 +61,16 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     }
 
     public CodeInspectionAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue analysisNoon
+        LocalizeValue text,
+        LocalizeValue description,
+        LocalizeValue title,
+        LocalizeValue analysisNoon
     ) {
         super(text, description, title, analysisNoon);
     }
 
     @Override
-    protected void analyze(@Nonnull Project project, @Nonnull AnalysisScope scope) {
+    protected void analyze(Project project, AnalysisScope scope) {
         try {
             runInspections(project, scope);
         }

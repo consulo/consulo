@@ -16,13 +16,12 @@
 package consulo.web.internal.ui.base;
 
 import com.vaadin.flow.component.Component;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-02-17
  */
 public interface ToVaddinComponentWrapper {
-  @Nonnull
+  
   Component toVaadinComponent();
 }

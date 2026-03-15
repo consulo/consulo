@@ -24,8 +24,7 @@ import consulo.language.template.TemplateDataLanguageMappings;
 import consulo.module.content.FilePropertyPusher;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -49,7 +48,7 @@ public class TemplateDataLanguageMappingsImpl extends LanguagePerFileMappings<La
     }
 
     @Override
-    @Nonnull
+    
     public List<Language> getAvailableValues() {
         return TemplateDataLanguageMappings.getTemplateableLanguages();
     }
@@ -73,7 +72,7 @@ public class TemplateDataLanguageMappingsImpl extends LanguagePerFileMappings<La
 
     private final FilePropertyPusher<Language> myPropertyPusher = new TemplateDataLanguagePusher();
 
-    @Nonnull
+    
     @Override
     protected FilePropertyPusher<Language> getFilePropertyPusher() {
         return myPropertyPusher;

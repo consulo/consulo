@@ -29,8 +29,7 @@ import consulo.versionControlSystem.log.impl.internal.VcsLogUserFilterImpl;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,28 +40,28 @@ import java.util.TreeSet;
  * Show a popup to select a user or enter the user name.
  */
 class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogUserFilter> {
-    @Nonnull
+    
     private final VcsLogDataImpl myLogData;
-    @Nonnull
+    
     private final List<String> myAllUsers;
 
-    UserFilterPopupComponent(@Nonnull MainVcsLogUiProperties uiProperties,
-                             @Nonnull VcsLogDataImpl logData,
-                             @Nonnull FilterModel<VcsLogUserFilter> filterModel) {
+    UserFilterPopupComponent(MainVcsLogUiProperties uiProperties,
+                             VcsLogDataImpl logData,
+                             FilterModel<VcsLogUserFilter> filterModel) {
         super("User", uiProperties, filterModel);
         myLogData = logData;
         myAllUsers = collectUsers(logData);
     }
 
-    @Nonnull
+    
     @Override
-    protected String getText(@Nonnull VcsLogUserFilter filter) {
+    protected String getText(VcsLogUserFilter filter) {
         return displayableText(myFilterModel.getFilterValues(filter));
     }
 
     @Nullable
     @Override
-    protected String getToolTip(@Nonnull VcsLogUserFilter filter) {
+    protected String getToolTip(VcsLogUserFilter filter) {
         return tooltip(myFilterModel.getFilterValues(filter));
     }
 
@@ -78,7 +77,7 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
         return group;
     }
 
-    @Nonnull
+    
     protected ActionGroup createSpeedSearchActionGroup() {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new SpeedsearchPredefinedValueAction(VcsLogUserFilterImpl.ME));
@@ -89,24 +88,24 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
         return group;
     }
 
-    @Nonnull
+    
     @Override
     protected List<List<String>> getRecentValuesFromSettings() {
         return myUiProperties.getRecentlyFilteredUserGroups();
     }
 
     @Override
-    protected void rememberValuesInSettings(@Nonnull Collection<String> values) {
+    protected void rememberValuesInSettings(Collection<String> values) {
         myUiProperties.addRecentlyFilteredUserGroup(new ArrayList<>(values));
     }
 
-    @Nonnull
+    
     @Override
     protected List<String> getAllValues() {
         return myAllUsers;
     }
 
-    @Nonnull
+    
     @Override
     protected ListPopup createPopupMenu() {
         ActionGroup actionGroup = createActionGroup();
@@ -129,8 +128,8 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
             });
     }
 
-    @Nonnull
-    private static List<String> collectUsers(@Nonnull VcsLogDataImpl logData) {
+    
+    private static List<String> collectUsers(VcsLogDataImpl logData) {
         List<String> users = ContainerUtil.map(logData.getAllUsers(), user -> {
             String shortPresentation = VcsUserUtil.getShortPresentation(user);
             Couple<String> firstAndLastName = VcsUserUtil.getFirstAndLastName(shortPresentation);

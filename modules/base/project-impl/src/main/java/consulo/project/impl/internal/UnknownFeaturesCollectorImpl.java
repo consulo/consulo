@@ -24,8 +24,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.container.plugin.PluginId;
 import consulo.project.Project;
 import consulo.project.internal.UnknownFeaturesCollector;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -69,7 +68,7 @@ public class UnknownFeaturesCollectorImpl implements PersistentStateComponent<El
         myIgnoredUnknownExtensions.add(feature);
     }
 
-    @Nonnull
+    
     @Override
     public Set<ExtensionPreview> getUnknownExtensions() {
         return myUnknownExtensions;

@@ -26,8 +26,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -52,43 +51,43 @@ public interface PsiFileFactory {
      * @throws IncorrectOperationException if the file type with specified extension is binary.
      */
     @Deprecated
-    @Nonnull
-    PsiFile createFileFromText(@Nonnull String name, @Nonnull String text);
+    
+    PsiFile createFileFromText(String name, String text);
 
-    @Nonnull
-    PsiFile createFileFromText(@Nonnull String fileName, @Nonnull FileType fileType, @Nonnull CharSequence text);
+    
+    PsiFile createFileFromText(String fileName, FileType fileType, CharSequence text);
 
-    @Nonnull
-    PsiFile createFileFromText(@Nonnull String name,
-                               @Nonnull FileType fileType,
-                               @Nonnull CharSequence text,
+    
+    PsiFile createFileFromText(String name,
+                               FileType fileType,
+                               CharSequence text,
                                long modificationStamp,
                                boolean physical);
 
-    @Nonnull
-    PsiFile createFileFromText(@Nonnull String name,
-                               @Nonnull FileType fileType,
-                               @Nonnull CharSequence text,
+    
+    PsiFile createFileFromText(String name,
+                               FileType fileType,
+                               CharSequence text,
                                long modificationStamp,
                                boolean physical,
                                boolean markAsCopy);
 
-    PsiFile createFileFromText(@Nonnull String name, @Nonnull Language language, @Nonnull CharSequence text);
+    PsiFile createFileFromText(String name, Language language, CharSequence text);
 
-    PsiFile createFileFromText(@Nonnull String name,
-                               @Nonnull Language language,
-                               @Nonnull LanguageVersion languageVersion,
-                               @Nonnull CharSequence text);
+    PsiFile createFileFromText(String name,
+                               Language language,
+                               LanguageVersion languageVersion,
+                               CharSequence text);
 
-    PsiFile createFileFromText(@Nonnull String name,
-                               @Nonnull Language language,
-                               @Nonnull CharSequence text,
+    PsiFile createFileFromText(String name,
+                               Language language,
+                               CharSequence text,
                                boolean physical,
                                boolean markAsCopy);
 
-    PsiFile createFileFromText(@Nonnull String name,
-                               @Nonnull Language language,
-                               @Nonnull CharSequence text,
+    PsiFile createFileFromText(String name,
+                               Language language,
+                               CharSequence text,
                                boolean physical,
                                boolean markAsCopy,
                                boolean noSizeLimit);
@@ -96,18 +95,18 @@ public interface PsiFileFactory {
     @Deprecated
     @DeprecationInfo("Use #createFileFromText() without Language parameter")
     @Nullable
-    PsiFile createFileFromText(@Nonnull String name,
-                               @Nonnull Language language,
-                               @Nonnull LanguageVersion languageVersion,
-                               @Nonnull CharSequence text,
+    PsiFile createFileFromText(String name,
+                               Language language,
+                               LanguageVersion languageVersion,
+                               CharSequence text,
                                boolean physical,
                                boolean markAsCopy,
                                boolean noSizeLimit);
 
     @Nullable
-    default PsiFile createFileFromText(@Nonnull String name,
-                                       @Nonnull LanguageVersion languageVersion,
-                                       @Nonnull CharSequence text,
+    default PsiFile createFileFromText(String name,
+                                       LanguageVersion languageVersion,
+                                       CharSequence text,
                                        boolean physical,
                                        boolean markAsCopy,
                                        boolean noSizeLimit) {
@@ -115,9 +114,9 @@ public interface PsiFileFactory {
     }
 
     @Nullable
-    PsiFile createFileFromText(@Nonnull String name,
-                               @Nonnull LanguageVersion languageVersion,
-                               @Nonnull CharSequence text,
+    PsiFile createFileFromText(String name,
+                               LanguageVersion languageVersion,
+                               CharSequence text,
                                boolean physical,
                                boolean markAsCopy,
                                boolean noSizeLimit,
@@ -126,12 +125,12 @@ public interface PsiFileFactory {
     PsiFile createFileFromText(FileType fileType, String fileName, CharSequence chars, int startOffset, int endOffset);
 
     @Nullable
-    PsiFile createFileFromText(@Nonnull CharSequence chars, @Nonnull PsiFile original);
+    PsiFile createFileFromText(CharSequence chars, PsiFile original);
 
     @Nullable
     PsiElement createElementFromText(@Nullable String text,
-                                     @Nonnull Language language,
-                                     @Nonnull LanguageVersion languageVersion,
-                                     @Nonnull IElementType type,
+                                     Language language,
+                                     LanguageVersion languageVersion,
+                                     IElementType type,
                                      @Nullable PsiElement context);
 }

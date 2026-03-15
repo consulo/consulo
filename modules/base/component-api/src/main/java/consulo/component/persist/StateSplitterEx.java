@@ -21,21 +21,20 @@ import consulo.util.lang.Pair;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
 public abstract class StateSplitterEx {
-  public abstract List<Pair<Element, String>> splitState(@Nonnull Element state);
+  public abstract List<Pair<Element, String>> splitState(Element state);
 
-  public void mergeStateInto(@Nonnull Element target, @Nonnull Element subState) {
+  public void mergeStateInto(Element target, Element subState) {
     target.addContent(subState);
   }
 
-  @Nonnull
-  protected static List<Pair<Element, String>> splitState(@Nonnull Element state, @Nonnull String attributeName) {
+  
+  protected static List<Pair<Element, String>> splitState(Element state, String attributeName) {
     UniqueNameGenerator generator = new UniqueNameGenerator();
     List<Pair<Element, String>> result = new ArrayList<>();
     for (Element subState : state.getChildren()) {
@@ -44,17 +43,17 @@ public abstract class StateSplitterEx {
     return result;
   }
 
-  @Nonnull
-  protected static Pair<Element, String> createItem(@Nonnull UniqueNameGenerator generator, @Nonnull Element element, @Nonnull String attributeName) {
+  
+  protected static Pair<Element, String> createItem(UniqueNameGenerator generator, Element element, String attributeName) {
     return createItem(element.getAttributeValue(attributeName), generator, element);
   }
 
-  @Nonnull
-  protected static Pair<Element, String> createItem(@Nonnull String fileName, @Nonnull UniqueNameGenerator generator, @Nonnull Element element) {
+  
+  protected static Pair<Element, String> createItem(String fileName, UniqueNameGenerator generator, Element element) {
     return Pair.create(element, generator.generateUniqueName(FileUtil.sanitizeFileName(fileName)) + ".xml");
   }
 
-  protected static void mergeStateInto(@Nonnull Element target, @Nonnull Element subState, @Nonnull String subStateName) {
+  protected static void mergeStateInto(Element target, Element subState, String subStateName) {
     if (subState.getName().equals(subStateName)) {
       target.addContent(subState);
     }

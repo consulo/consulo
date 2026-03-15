@@ -27,7 +27,6 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.function.BooleanSupplier;
@@ -39,7 +38,7 @@ import java.util.function.BooleanSupplier;
 public abstract class UnifiedApplication extends BaseApplication {
     protected static final Logger LOG = Logger.getInstance(BaseApplication.class);
 
-    public UnifiedApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+    public UnifiedApplication(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
 
         myLock = new UnifiedRWLock();
@@ -53,12 +52,12 @@ public abstract class UnifiedApplication extends BaseApplication {
     }
 
     @Override
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
     }
 
     @Override
-    public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
+    public void invokeLaterOnWriteThread(Runnable action, ModalityState modal, BooleanSupplier expired) {
         UIAccess uiAccess = getLastUIAccess();
         uiAccess.give(() -> runIntendedWriteActionOnCurrentThread(action));
     }
@@ -93,28 +92,28 @@ public abstract class UnifiedApplication extends BaseApplication {
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable) {
+    public void invokeLater(Runnable runnable) {
         UIAccess lastUIAccess = getLastUIAccess();
 
         lastUIAccess.give(runnable);
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
+    public void invokeLater(Runnable runnable, BooleanSupplier expired) {
         UIAccess lastUIAccess = getLastUIAccess();
 
         lastUIAccess.give(runnable);
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
+    public void invokeLater(Runnable runnable, consulo.ui.ModalityState state) {
         UIAccess lastUIAccess = getLastUIAccess();
 
         lastUIAccess.give(runnable);
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
+    public void invokeLater(Runnable runnable, consulo.ui.ModalityState state, BooleanSupplier expired) {
         UIAccess lastUIAccess = getLastUIAccess();
 
         lastUIAccess.give(runnable);
@@ -122,7 +121,7 @@ public abstract class UnifiedApplication extends BaseApplication {
 
     @RequiredUIAccess
     @Override
-    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
+    public void invokeAndWait(Runnable runnable, consulo.ui.ModalityState modalityState) {
         if (isDispatchThread()) {
             runnable.run();
             return;
@@ -140,7 +139,7 @@ public abstract class UnifiedApplication extends BaseApplication {
     }
 
     @Override
-    public void runIntendedWriteActionOnCurrentThread(@Nonnull Runnable action) {
+    public void runIntendedWriteActionOnCurrentThread(Runnable action) {
         action.run();
     }
 
@@ -149,19 +148,19 @@ public abstract class UnifiedApplication extends BaseApplication {
         return isWriteThread() || myLock.isReadLockedByThisThread(); // no ui thread check
     }
 
-    @Nonnull
+    
     @Override
     public ModalityState getCurrentModalityState() {
         return ModalityState.nonModal();
     }
 
-    @Nonnull
+    
     @Override
-    public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+    public ModalityState getModalityStateForComponent(Component c) {
         return ModalityState.nonModal();
     }
 
-    @Nonnull
+    
     @Override
     public ModalityState getDefaultModalityState() {
         return ModalityState.nonModal();

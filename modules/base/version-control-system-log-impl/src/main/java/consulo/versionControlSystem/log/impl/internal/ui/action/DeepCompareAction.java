@@ -31,8 +31,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.filter.BranchPopupBuild
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -67,7 +66,7 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
         return null; // TODO
     }
 
-    @Nonnull
+    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.EDT;
@@ -114,19 +113,19 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
     }
 
     private static void selectBranchAndPerformAction(
-        @Nonnull VcsLogDataPack dataPack,
-        @Nonnull AnActionEvent event,
-        @Nonnull final Consumer<String> consumer,
-        @Nonnull Collection<VirtualFile> visibleRoots
+        VcsLogDataPack dataPack,
+        AnActionEvent event,
+        final Consumer<String> consumer,
+        Collection<VirtualFile> visibleRoots
     ) {
         ActionGroup actionGroup = new BranchPopupBuilder(dataPack, visibleRoots, null) {
-            @Nonnull
+            
             @Override
-            protected AnAction createAction(@Nonnull String name) {
+            protected AnAction createAction(String name) {
                 return new DumbAwareAction(LocalizeValue.of(name)) {
                     @RequiredUIAccess
                     @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         consumer.accept(name);
                     }
                 };
@@ -153,7 +152,7 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         Project project = e.getData(Project.KEY);
         VcsLogUi ui = e.getData(VcsLogUi.KEY);
@@ -162,14 +161,14 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
         );
     }
 
-    private static boolean isEnabledDeepComparator(@Nonnull Project project, @Nonnull Set<VirtualFile> roots) {
+    private static boolean isEnabledDeepComparator(Project project, Set<VirtualFile> roots) {
         return true;  // TODO !
 //        GitRepositoryManager manager = project.getInstance(GitRepositoryManager.class);
 //        return ContainerUtil.exists(roots, root -> manager.getRepositoryForRoot(root) != null);
     }
 
-    @Nonnull
-    private static Set<VirtualFile> getAllVisibleRoots(@Nonnull VcsLogUi ui) {
+    
+    private static Set<VirtualFile> getAllVisibleRoots(VcsLogUi ui) {
         return VcsLogUtil.getAllVisibleRoots(
             ui.getDataPack().getLogProviders().keySet(),
             ui.getFilterUi().getFilters().getRootFilter(),

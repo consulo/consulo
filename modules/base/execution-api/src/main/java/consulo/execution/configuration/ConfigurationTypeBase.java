@@ -19,7 +19,6 @@ package consulo.execution.configuration;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -33,14 +32,14 @@ public abstract class ConfigurationTypeBase implements ConfigurationType {
   private final Image myIcon;
   private ConfigurationFactory[] myFactories;
 
-  protected ConfigurationTypeBase(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
+  protected ConfigurationTypeBase(String id, LocalizeValue displayName, Image icon) {
     this(id, displayName, displayName, icon);
   }
 
-  protected ConfigurationTypeBase(@Nonnull String id,
-                                  @Nonnull LocalizeValue displayName,
-                                  @Nonnull LocalizeValue description,
-                                  @Nonnull Image icon) {
+  protected ConfigurationTypeBase(String id,
+                                  LocalizeValue displayName,
+                                  LocalizeValue description,
+                                  Image icon) {
     myId = id;
     myDisplayName = displayName;
     myDescription = description;
@@ -52,13 +51,13 @@ public abstract class ConfigurationTypeBase implements ConfigurationType {
     myFactories = ArrayUtil.append(myFactories, factory);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return myDisplayName;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getConfigurationTypeDescription() {
     return myDescription;
@@ -70,7 +69,7 @@ public abstract class ConfigurationTypeBase implements ConfigurationType {
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return myId;
   }

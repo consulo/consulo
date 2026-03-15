@@ -10,8 +10,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.PatternUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -67,9 +66,9 @@ public abstract class GotoLineNumberDialog extends DialogWrapper {
 
     protected abstract int getMaxOffset();
 
-    protected abstract int coordinatesToOffset(@Nonnull Coordinates coordinates);
+    protected abstract int coordinatesToOffset(Coordinates coordinates);
 
-    @Nonnull
+    
     protected abstract Coordinates offsetToCoordinates(int offset);
 
     @Override
@@ -129,7 +128,7 @@ public abstract class GotoLineNumberDialog extends DialogWrapper {
                 boolean inSync;
 
                 @Override
-                protected void textChanged(@Nonnull DocumentEvent e) {
+                protected void textChanged(DocumentEvent e) {
                     if (inSync) {
                         return;
                     }

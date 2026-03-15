@@ -27,14 +27,13 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 @Singleton
 @State(name = "PrintSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/print.xml")})
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class PrintSettings implements PersistentStateComponent<PrintSettings> {
-  @NonNls
+  
   public String PAPER_SIZE = "A4";
 
   public boolean COLOR_PRINTING = false;
@@ -43,7 +42,7 @@ public class PrintSettings implements PersistentStateComponent<PrintSettings> {
 
   public boolean PORTRAIT_LAYOUT = true;
 
-  @NonNls
+  
   public String FONT_NAME = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName();
   public int FONT_SIZE = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontSize();
 
@@ -65,7 +64,7 @@ public class PrintSettings implements PersistentStateComponent<PrintSettings> {
   public String FOOTER_HEADER_PLACEMENT2 = FOOTER;
   public String FOOTER_HEADER_ALIGNMENT2 = CENTER;
   public int FOOTER_HEADER_FONT_SIZE = 8;
-  @NonNls
+  
   public String FOOTER_HEADER_FONT_NAME = "Arial";
 
   public static final int PRINT_FILE = 1;
@@ -74,16 +73,16 @@ public class PrintSettings implements PersistentStateComponent<PrintSettings> {
   private int myPrintScope;
   private boolean myIncludeSubdirectories;
 
-  @NonNls
+  
   public static final String HEADER = "Header";
-  @NonNls
+  
   public static final String FOOTER = "Footer";
 
-  @NonNls
+  
   public static final String LEFT = "Left";
-  @NonNls
+  
   public static final String CENTER = "Center";
-  @NonNls
+  
   public static final String RIGHT = "Right";
 
   public static PrintSettings getInstance() {

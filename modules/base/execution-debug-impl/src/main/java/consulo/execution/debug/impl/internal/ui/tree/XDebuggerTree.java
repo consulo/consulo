@@ -53,8 +53,7 @@ import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -156,10 +155,10 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     private final List<XDebuggerTreeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
     private final XValueMarkers<?, ?> myValueMarkers;
 
-    public XDebuggerTree(@Nonnull Project project,
-                         @Nonnull XDebuggerEditorsProvider editorsProvider,
+    public XDebuggerTree(Project project,
+                         XDebuggerEditorsProvider editorsProvider,
                          @Nullable XSourcePosition sourcePosition,
-                         final @Nonnull String popupActionGroupId, @Nullable XValueMarkers<?, ?> valueMarkers) {
+                         final String popupActionGroupId, @Nullable XValueMarkers<?, ?> valueMarkers) {
         myValueMarkers = valueMarkers;
         myProject = project;
         myEditorsProvider = editorsProvider;
@@ -174,7 +173,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
             }
 
             @Override
-            protected void handleTagClick(@Nullable Object tag, @Nonnull MouseEvent event) {
+            protected void handleTagClick(@Nullable Object tag, MouseEvent event) {
                 if (tag instanceof XDebuggerTreeNodeHyperlink) {
                     ((XDebuggerTreeNodeHyperlink) tag).onClick(event);
                 }
@@ -250,11 +249,11 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         return false;
     }
 
-    public void addTreeListener(@Nonnull XDebuggerTreeListener listener) {
+    public void addTreeListener(XDebuggerTreeListener listener) {
         myListeners.add(listener);
     }
 
-    public void removeTreeListener(@Nonnull XDebuggerTreeListener listener) {
+    public void removeTreeListener(XDebuggerTreeListener listener) {
         myListeners.remove(listener);
     }
 
@@ -276,13 +275,13 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         mySourcePosition = sourcePosition;
     }
 
-    @Nonnull
+    
     public XDebuggerEditorsProvider getEditorsProvider() {
         return myEditorsProvider;
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
@@ -298,7 +297,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
 
     @Override
     @Nullable
-    public Object getData(@Nonnull Key dataId) {
+    public Object getData(Key dataId) {
         if (XDEBUGGER_TREE_KEY == dataId || XValueTree.KEY == dataId) {
             return this;
         }
@@ -323,15 +322,15 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         }
     }
 
-    public void childrenLoaded(@Nonnull XDebuggerTreeNode node,
-                               @Nonnull List<XValueContainerNode<?>> children,
+    public void childrenLoaded(XDebuggerTreeNode node,
+                               List<XValueContainerNode<?>> children,
                                boolean last) {
         for (XDebuggerTreeListener listener : myListeners) {
             listener.childrenLoaded(node, children, last);
         }
     }
 
-    public void nodeLoaded(@Nonnull RestorableStateNode node, @Nonnull String name) {
+    public void nodeLoaded(RestorableStateNode node, String name) {
         for (XDebuggerTreeListener listener : myListeners) {
             listener.nodeLoaded(node, name);
         }
@@ -386,7 +385,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     public void selectNodeOnLoad(final Predicate<TreeNode> nodeFilter) {
         addTreeListener(new XDebuggerTreeListener() {
             @Override
-            public void nodeLoaded(@Nonnull RestorableStateNode node, String name) {
+            public void nodeLoaded(RestorableStateNode node, String name) {
                 if (nodeFilter.test(node)) {
                     setSelectionPath(node.getPath());
                     removeTreeListener(this); // remove the listener on first match
@@ -394,7 +393,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
             }
 
             @Override
-            public void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, boolean last) {
+            public void childrenLoaded(XDebuggerTreeNode node, List<XValueContainerNode<?>> children, boolean last) {
             }
         });
     }
@@ -402,7 +401,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     public void expandNodesOnLoad(final Predicate<TreeNode> nodeFilter) {
         addTreeListener(new XDebuggerTreeListener() {
             @Override
-            public void nodeLoaded(@Nonnull RestorableStateNode node, String name) {
+            public void nodeLoaded(RestorableStateNode node, String name) {
                 if (nodeFilter.test(node) && !node.isLeaf()) {
                     // cause children computing
                     node.getChildCount();
@@ -410,7 +409,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
             }
 
             @Override
-            public void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, boolean last) {
+            public void childrenLoaded(XDebuggerTreeNode node, List<XValueContainerNode<?>> children, boolean last) {
                 if (nodeFilter.test(node)) {
                     expandPath(node.getPath());
                 }
@@ -419,7 +418,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     }
 
     @Override
-    public void expand(@Nonnull XValueNode node) {
+    public void expand(XValueNode node) {
         if (!(node instanceof XValueNodeImpl impl)) {
             throw new IllegalArgumentException("Not supported implementation: " + node.getClass());
         }
@@ -427,7 +426,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
        expandPath(impl.getPath());
     }
 
-    @Nonnull
+    
     @Override
     public List<XValueNode> getSelectedNodes() {
         TreePath[] paths = getSelectionPaths();

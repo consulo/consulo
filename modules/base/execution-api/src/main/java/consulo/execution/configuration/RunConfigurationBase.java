@@ -31,8 +31,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +90,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   }
 
   @Override
-  @Nonnull
+  
   public ConfigurationType getType() {
     return myFactory.getType();
   }
@@ -110,7 +109,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     return super.hashCode();
   }
 
-  public void checkRunnerSettings(@Nonnull ProgramRunner runner, @Nullable RunnerSettings runnerSettings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings)
+  public void checkRunnerSettings(ProgramRunner runner, @Nullable RunnerSettings runnerSettings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings)
           throws RuntimeConfigurationException {
   }
 
@@ -118,7 +117,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   }
 
   @Override
-  public boolean canRunOn(@Nonnull ExecutionTarget target) {
+  public boolean canRunOn(ExecutionTarget target) {
     return true;
   }
 

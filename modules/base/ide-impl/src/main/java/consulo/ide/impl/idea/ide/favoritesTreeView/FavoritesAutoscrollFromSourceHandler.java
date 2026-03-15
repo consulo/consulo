@@ -26,7 +26,6 @@ import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class FavoritesAutoscrollFromSourceHandler extends ProjectViewAutoScrollFromSourceHandler {
   private final FavoritesViewSelectInTarget mySelectInTarget = new FavoritesViewSelectInTarget(myProject);
 
-  public FavoritesAutoscrollFromSourceHandler(@Nonnull Project project, @Nonnull FavoritesViewTreeBuilder builder) {
+  public FavoritesAutoscrollFromSourceHandler(Project project, FavoritesViewTreeBuilder builder) {
     super(project, builder.getTree(), builder);
   }
 
@@ -49,7 +48,7 @@ public class FavoritesAutoscrollFromSourceHandler extends ProjectViewAutoScrollF
   }
 
   @Override
-  protected void selectElementFromEditor(@Nonnull FileEditor editor) {
+  protected void selectElementFromEditor(FileEditor editor) {
     VirtualFile file = FileEditorManagerEx.getInstanceEx(myProject).getFile(editor);
     if (file != null) {
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);

@@ -18,25 +18,24 @@ package consulo.content.library;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
  * @author nik
  */
 public interface LibraryPresentation<P extends LibraryProperties> {
-  @Nonnull
+  
   LibraryKind getKind();
 
   @Nullable
   Image getIcon();
 
   @Nullable
-  default String getDescription(@Nonnull P properties) {
+  default String getDescription(P properties) {
     return null;
   }
 
   @Nullable
-  P detect(@Nonnull List<VirtualFile> classesRoots);
+  P detect(List<VirtualFile> classesRoots);
 }

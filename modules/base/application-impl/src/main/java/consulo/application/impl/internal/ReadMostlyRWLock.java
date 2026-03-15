@@ -11,8 +11,7 @@ import consulo.application.util.ApplicationUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.util.collection.ConcurrentList;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,7 @@ public final class ReadMostlyRWLock implements RWLock {
 
     // Each reader thread has instance of this struct in its thread local. it's also added to global "readers" list.
     public static class Reader implements ReadToken {
-        @Nonnull
+        
         private final Thread thread;   // its thread
         public volatile boolean readRequested;
         // this reader is requesting or obtained read access. Written by reader thread only, read by writer.
@@ -68,7 +67,7 @@ public final class ReadMostlyRWLock implements RWLock {
         // this reader is blocked waiting for the writer thread to release write lock. Written by reader thread only, read by writer.
         private boolean impatientReads; // true if should throw PCE on contented read lock
 
-        Reader(@Nonnull Thread readerThread) {
+        Reader(Thread readerThread) {
             thread = readerThread;
         }
 
@@ -198,7 +197,7 @@ public final class ReadMostlyRWLock implements RWLock {
      * if there is a pending write lock request.
      */
     @Override
-    public void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable)
+    public void executeByImpatientReader(@RequiredReadAction Runnable runnable)
         throws ApplicationUtil.CannotRunReadActionException {
         checkReadThreadAccess();
         Reader status = R.get();

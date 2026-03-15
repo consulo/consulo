@@ -3,7 +3,6 @@ package consulo.externalSystem.service.project;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Not thread-safe.
@@ -15,20 +14,20 @@ public class ProjectData extends AbstractNamedData implements ExternalConfigPath
 
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
+  
   private final String myLinkedExternalProjectPath;
 
-  @Nonnull
+  
   private String myIdeProjectFileDirectoryPath;
 
   @Deprecated
-  public ProjectData(@Nonnull ProjectSystemId owner, @Nonnull String ideProjectFileDirectoryPath, @Nonnull String linkedExternalProjectPath) {
+  public ProjectData(ProjectSystemId owner, String ideProjectFileDirectoryPath, String linkedExternalProjectPath) {
     super(owner, "unnamed");
     myLinkedExternalProjectPath = ExternalSystemApiUtil.toCanonicalPath(linkedExternalProjectPath);
     myIdeProjectFileDirectoryPath = ExternalSystemApiUtil.toCanonicalPath(ideProjectFileDirectoryPath);
   }
 
-  public ProjectData(@Nonnull ProjectSystemId owner, @Nonnull String externalName, @Nonnull String ideProjectFileDirectoryPath, @Nonnull String linkedExternalProjectPath) {
+  public ProjectData(ProjectSystemId owner, String externalName, String ideProjectFileDirectoryPath, String linkedExternalProjectPath) {
     super(owner, externalName);
     myLinkedExternalProjectPath = ExternalSystemApiUtil.toCanonicalPath(linkedExternalProjectPath);
     myIdeProjectFileDirectoryPath = ExternalSystemApiUtil.toCanonicalPath(ideProjectFileDirectoryPath);
@@ -36,21 +35,21 @@ public class ProjectData extends AbstractNamedData implements ExternalConfigPath
 
   @Deprecated
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     super.setExternalName(name);
     super.setInternalName(name);
   }
 
-  @Nonnull
+  
   public String getIdeProjectFileDirectoryPath() {
     return myIdeProjectFileDirectoryPath;
   }
 
-  public void setIdeProjectFileDirectoryPath(@Nonnull String ideProjectFileDirectoryPath) {
+  public void setIdeProjectFileDirectoryPath(String ideProjectFileDirectoryPath) {
     myIdeProjectFileDirectoryPath = ExternalSystemApiUtil.toCanonicalPath(ideProjectFileDirectoryPath);
   }
 
-  @Nonnull
+  
   public String getLinkedExternalProjectPath() {
     return myLinkedExternalProjectPath;
   }
@@ -80,7 +79,7 @@ public class ProjectData extends AbstractNamedData implements ExternalConfigPath
     return String.format("%s project '%s'", getOwner().toString().toLowerCase(), getExternalName());
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "";

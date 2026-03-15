@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.tree;
 
-import jakarta.annotation.Nonnull;
 
 public enum LeafState {
   /**
@@ -34,7 +33,7 @@ public enum LeafState {
      * @return a leaf state for the tree node, that implements this interface
      * @see javax.swing.tree.TreeModel#isLeaf(Object)
      */
-    @Nonnull
+    
     LeafState getLeafState();
   }
 }

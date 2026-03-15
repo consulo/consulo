@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,13 +33,13 @@ import jakarta.annotation.Nullable;
 public class DefaultEditorHighlighterProvider implements EditorHighlighterProvider {
   public static final DefaultEditorHighlighterProvider INSTANCE = new DefaultEditorHighlighterProvider();
 
-  @Nonnull
+  
   @Override
-  public EditorHighlighter getEditorHighlighter(@Nullable Project project, @Nonnull FileType fileType, @Nullable VirtualFile virtualFile, @Nonnull EditorColorsScheme colors) {
+  public EditorHighlighter getEditorHighlighter(@Nullable Project project, FileType fileType, @Nullable VirtualFile virtualFile, EditorColorsScheme colors) {
     return EditorHighlighterFactory.getInstance().createEditorHighlighter(SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, project, virtualFile), colors);
   }
 
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     throw new UnsupportedOperationException();

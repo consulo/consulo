@@ -23,7 +23,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +35,7 @@ import java.util.List;
 public class InternalChangesBrowserWithRollback extends InternalChangesBrowser {
     private final List<Change> myOriginalChanges;
 
-    public InternalChangesBrowserWithRollback(@Nonnull Project project, @Nonnull List<Change> changes) {
+    public InternalChangesBrowserWithRollback(Project project, List<Change> changes) {
         super(project, null, changes, null, false, true, null, MyUseCase.LOCAL_CHANGES, null);
         myOriginalChanges = changes;
         RollbackDialogAction rollback = new RollbackDialogAction();
@@ -53,8 +52,8 @@ public class InternalChangesBrowserWithRollback extends InternalChangesBrowser {
         super.rebuildList();
     }
 
-    @Nonnull
-    private static List<Change> filterActualChanges(@Nonnull Project project, @Nonnull List<Change> originalChanges) {
+    
+    private static List<Change> filterActualChanges(Project project, List<Change> originalChanges) {
         Collection<Change> allChanges = ChangeListManager.getInstance(project).getAllChanges();
         return ContainerUtil.filter(originalChanges, allChanges::contains);
     }

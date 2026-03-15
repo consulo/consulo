@@ -27,8 +27,7 @@ import consulo.versionControlSystem.change.shelf.ShelveChangesManager;
 import consulo.versionControlSystem.change.shelf.ShelvedChangeList;
 import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -46,14 +45,14 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return VcsLocalize.shelveChangesAction();
     }
 
     @Override
-    @Nonnull
+    
     public CommitSession createCommitSession() {
         return new ShelveChangesCommitSession();
     }

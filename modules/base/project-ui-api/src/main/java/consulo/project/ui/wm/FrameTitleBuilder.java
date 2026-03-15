@@ -22,7 +22,6 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -33,11 +32,11 @@ public abstract class FrameTitleBuilder {
     return Application.get().getInstance(FrameTitleBuilder.class);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public abstract String getProjectTitle(@Nonnull Project project);
+  public abstract String getProjectTitle(Project project);
 
-  @Nonnull
+  
   @RequiredReadAction
-  public abstract String getFileTitle(@Nonnull Project project, @Nonnull VirtualFile file);
+  public abstract String getFileTitle(Project project, VirtualFile file);
 }

@@ -18,7 +18,6 @@ package consulo.execution.impl.internal.ui;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -32,7 +31,7 @@ public class TemplateConfigurable extends SettingsEditorConfigurable<RunnerAndCo
         myTemplate = template;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.ofNullable(myTemplate.getConfiguration().getName());

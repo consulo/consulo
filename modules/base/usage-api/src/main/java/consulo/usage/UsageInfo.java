@@ -26,8 +26,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -41,7 +40,7 @@ public class UsageInfo {
     protected boolean myDynamicUsage;
 
     @RequiredReadAction
-    public UsageInfo(@Nonnull PsiElement originalElement, int startOffset, int endOffset, boolean isNonCodeUsage) {
+    public UsageInfo(PsiElement originalElement, int startOffset, int endOffset, boolean isNonCodeUsage) {
         PsiElement element = originalElement.getNavigationElement();
         PsiFile file = element.getContainingFile();
         PsiElement topElement = file == null ? element : file;
@@ -106,7 +105,7 @@ public class UsageInfo {
     }
 
     public UsageInfo(
-        @Nonnull SmartPsiElementPointer<?> smartPointer,
+        SmartPsiElementPointer<?> smartPointer,
         @Nullable SmartPsiFileRange psiFileRange,
         boolean dynamicUsage,
         boolean nonCodeUsage
@@ -118,7 +117,7 @@ public class UsageInfo {
     }
 
     // in case of find file by name, not by text inside. Since it can be a binary file, do not query for text offsets.
-    public UsageInfo(@Nonnull PsiFile psiFile) {
+    public UsageInfo(PsiFile psiFile) {
         Project project = psiFile.getProject();
         SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(project);
         mySmartPointer = smartPointerManager.createSmartPsiElementPointer(psiFile);
@@ -127,17 +126,17 @@ public class UsageInfo {
     }
 
     @RequiredReadAction
-    public UsageInfo(@Nonnull PsiElement element, boolean isNonCodeUsage) {
+    public UsageInfo(PsiElement element, boolean isNonCodeUsage) {
         this(element, -1, -1, isNonCodeUsage);
     }
 
     @RequiredReadAction
-    public UsageInfo(@Nonnull PsiElement element, int startOffset, int endOffset) {
+    public UsageInfo(PsiElement element, int startOffset, int endOffset) {
         this(element, startOffset, endOffset, false);
     }
 
     @RequiredReadAction
-    public UsageInfo(@Nonnull PsiReference reference) {
+    public UsageInfo(PsiReference reference) {
         this(reference.getElement(), reference.getRangeInElement().getStartOffset(), reference.getRangeInElement().getEndOffset());
         if (reference instanceof PsiPolyVariantReference polyVariantReference) {
             myDynamicUsage = polyVariantReference.multiResolve(false).length == 0;
@@ -148,16 +147,16 @@ public class UsageInfo {
     }
 
     @RequiredReadAction
-    public UsageInfo(@Nonnull PsiQualifiedReferenceElement reference) {
+    public UsageInfo(PsiQualifiedReferenceElement reference) {
         this((PsiElement)reference);
     }
 
     @RequiredReadAction
-    public UsageInfo(@Nonnull PsiElement element) {
+    public UsageInfo(PsiElement element) {
         this(element, false);
     }
 
-    @Nonnull
+    
     public SmartPsiElementPointer<?> getSmartPointer() {
         return mySmartPointer;
     }
@@ -328,7 +327,7 @@ public class UsageInfo {
         return Pair.create(containingFile0, range.getStartOffset() + shift0);
     }
 
-    public int compareToByStartOffset(@Nonnull UsageInfo info) {
+    public int compareToByStartOffset(UsageInfo info) {
         Pair<VirtualFile, Integer> offset0 = offset();
         Pair<VirtualFile, Integer> offset1 = info.offset();
         if (offset0 == null || offset0.first == null || offset1 == null || offset1.first == null
@@ -338,7 +337,7 @@ public class UsageInfo {
         return offset0.second - offset1.second;
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return mySmartPointer.getProject();
     }

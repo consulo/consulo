@@ -31,7 +31,6 @@ import consulo.logging.Logger;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.util.io.StreamUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,9 +54,9 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
     return request.method() == HttpMethod.GET && HttpRequestHandler.checkPrefix(request.uri(), "redirectAuth");
   }
 
-  @Nonnull
+  
   @Override
-  public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
+  public HttpResponse process(HttpRequest request) throws IOException {
     String token = request.getParameterValue("token");
     if (token != null) {
       doGetToken(token);

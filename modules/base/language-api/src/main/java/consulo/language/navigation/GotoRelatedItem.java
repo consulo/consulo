@@ -19,8 +19,7 @@ import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,11 +40,11 @@ public class GotoRelatedItem {
     myMnemonic = mnemonic;
   }
 
-  public GotoRelatedItem(@Nonnull PsiElement element, String group) {
+  public GotoRelatedItem(PsiElement element, String group) {
     this(element, group, -1);
   }
 
-  public GotoRelatedItem(@Nonnull PsiElement element) {
+  public GotoRelatedItem(PsiElement element) {
     this(element, DEFAULT_GROUP_NAME);
   }
 
@@ -76,11 +75,11 @@ public class GotoRelatedItem {
   public int getMnemonic() {
     return myMnemonic;
   }
-  public static List<GotoRelatedItem> createItems(@Nonnull Collection<? extends PsiElement> elements) {
+  public static List<GotoRelatedItem> createItems(Collection<? extends PsiElement> elements) {
     return createItems(elements, DEFAULT_GROUP_NAME);
   }
 
-  public static List<GotoRelatedItem> createItems(@Nonnull Collection<? extends PsiElement> elements, String group) {
+  public static List<GotoRelatedItem> createItems(Collection<? extends PsiElement> elements, String group) {
     List<GotoRelatedItem> items = new ArrayList<>(elements.size());
     for (PsiElement element : elements) {
       items.add(new GotoRelatedItem(element, group));

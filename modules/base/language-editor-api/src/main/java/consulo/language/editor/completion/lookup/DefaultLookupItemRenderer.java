@@ -23,7 +23,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter

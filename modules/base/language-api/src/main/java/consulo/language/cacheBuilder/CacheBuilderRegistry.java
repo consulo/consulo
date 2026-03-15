@@ -22,8 +22,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The cache builder registry allows to register custom cache builders for file types which
@@ -34,7 +33,7 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CacheBuilderRegistry {
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use injecting provider")
   public static CacheBuilderRegistry getInstance() {
@@ -48,5 +47,5 @@ public abstract class CacheBuilderRegistry {
    * @return the cache builder, or null if none was registered.
    */
   @Nullable
-  public abstract WordsScanner getCacheBuilder(@Nonnull FileType fileType);
+  public abstract WordsScanner getCacheBuilder(FileType fileType);
 }

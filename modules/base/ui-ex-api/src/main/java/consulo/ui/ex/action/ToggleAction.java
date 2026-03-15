@@ -5,10 +5,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An action which has a selected state, and which toggles its selected state when performed.
@@ -20,35 +18,35 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String text) {
+    public ToggleAction(@Nullable  String text) {
         super(text);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public ToggleAction(
-        @Nullable @Nls(capitalization = Nls.Capitalization.Title) String text,
-        @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
+        @Nullable  String text,
+        @Nullable  String description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
-    protected ToggleAction(@Nonnull LocalizeValue text) {
+    protected ToggleAction(LocalizeValue text) {
         super(text);
     }
 
-    public ToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public ToggleAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
-    protected ToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected ToggleAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         boolean state = !isSelected(e);
         setSelected(e, state);
         Presentation presentation = e.getPresentation();
@@ -61,7 +59,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
      * @param e the action event representing the place and context in which the selected state is queried.
      * @return true if the action is selected, false otherwise
      */
-    public abstract boolean isSelected(@Nonnull AnActionEvent e);
+    public abstract boolean isSelected(AnActionEvent e);
 
     /**
      * Sets the selected state of the action to the specified value.
@@ -70,10 +68,10 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
      * @param state the new selected state of the action.
      */
     @RequiredUIAccess
-    public abstract void setSelected(@Nonnull AnActionEvent e, boolean state);
+    public abstract void setSelected(AnActionEvent e, boolean state);
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean selected = isSelected(e);
         Presentation presentation = e.getPresentation();
 

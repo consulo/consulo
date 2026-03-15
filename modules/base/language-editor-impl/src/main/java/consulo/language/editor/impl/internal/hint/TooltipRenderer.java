@@ -19,8 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.ui.ex.awt.hint.HintHint;
 
 import consulo.ui.ex.awt.hint.Hint;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -28,5 +27,5 @@ import java.awt.*;
  */
 public interface TooltipRenderer {
   @Nullable
-  Hint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint intInfo);
+  Hint show(Editor editor, Point p, boolean alignToRight, TooltipGroup group, HintHint intInfo);
 }

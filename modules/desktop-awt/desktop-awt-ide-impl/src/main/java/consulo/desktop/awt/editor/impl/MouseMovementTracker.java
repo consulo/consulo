@@ -3,8 +3,7 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.ui.ex.awt.util.ScreenUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -26,7 +25,7 @@ public class MouseMovementTracker {
     Arrays.fill(myHistory, null);
   }
 
-  public boolean isMovingTowards(@Nonnull MouseEvent me, @Nullable Rectangle rectangleOnScreen) {
+  public boolean isMovingTowards(MouseEvent me, @Nullable Rectangle rectangleOnScreen) {
     Point currentLocation = me.getLocationOnScreen();
     // finding previous location
     Point previousLocation = null;

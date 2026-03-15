@@ -27,8 +27,7 @@ import consulo.project.macro.ProjectPathMacroManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class RefFileImpl extends RefElementImpl implements RefFile {
   public RefFileImpl(PsiFile elem, RefManager manager) {
@@ -41,7 +40,7 @@ public class RefFileImpl extends RefElementImpl implements RefFile {
   }
 
   @Override
-  public void accept(@Nonnull RefVisitor visitor) {
+  public void accept(RefVisitor visitor) {
     ApplicationManager.getApplication().runReadAction(() -> visitor.visitFile(this));
   }
 

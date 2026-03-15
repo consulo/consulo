@@ -17,7 +17,7 @@ package consulo.language.editor.internal;
 
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

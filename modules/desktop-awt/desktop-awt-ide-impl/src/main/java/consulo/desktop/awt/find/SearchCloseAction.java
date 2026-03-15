@@ -22,7 +22,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.KeyEvent;
 
@@ -31,10 +30,10 @@ import java.awt.event.KeyEvent;
  * @since 2024-12-30
  */
 public class SearchCloseAction extends DumbAwareAction {
-    @Nonnull
+    
     private final Runnable myCloseAction;
 
-    public SearchCloseAction(@Nonnull Runnable closeAction) {
+    public SearchCloseAction(Runnable closeAction) {
         super(FindLocalize.tooltipCloseSearchBarEscape(), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
         myCloseAction = closeAction;
 
@@ -43,7 +42,7 @@ public class SearchCloseAction extends DumbAwareAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myCloseAction.run();
     }
 }

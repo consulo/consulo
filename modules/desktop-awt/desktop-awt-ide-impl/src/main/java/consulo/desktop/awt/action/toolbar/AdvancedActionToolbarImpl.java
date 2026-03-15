@@ -41,8 +41,7 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,11 +65,11 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
      */
     private final List<Rectangle> myComponentBounds = new ArrayList<>();
 
-    @Nonnull
+    
     private final DataManager myDataManager;
-    @Nonnull
+    
     private final Application myApplication;
-    @Nonnull
+    
     private final KeymapManager myKeymapManager;
 
     private Size2D myMinimumButtonSize = Size2D.ZERO;
@@ -89,13 +88,13 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     private final ActionManagerEx myActionManager;
 
     public AdvancedActionToolbarImpl(
-        @Nonnull String place,
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull Style style,
-        @Nonnull ActionManager actionManager,
-        @Nonnull DataManager dataManager,
-        @Nonnull Application application,
-        @Nonnull KeymapManager keymapManager
+        String place,
+        ActionGroup actionGroup,
+        Style style,
+        ActionManager actionManager,
+        DataManager dataManager,
+        Application application,
+        KeymapManager keymapManager
         ) {
         super(place, actionGroup, actionManager, dataManager, application, keymapManager, style);
         myDataManager = dataManager;
@@ -119,7 +118,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
     @Override
-    protected void tweakActionComponentUI(@Nonnull Component actionComponent) {
+    protected void tweakActionComponentUI(Component actionComponent) {
         super.tweakActionComponentUI(actionComponent);
 
         actionComponent.setMinimumSize(TargetAWT.to(myMinimumButtonSize));
@@ -178,7 +177,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
                 hidePopup();
             }
 
-            @Nonnull
+            
             @Override
             protected DataContext getDataContext() {
                 return AdvancedActionToolbarImpl.this.getDataContext();
@@ -221,7 +220,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         builder.addListener(new JBPopupListener() {
             @Override
             @RequiredUIAccess
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 processClosed();
             }
         });
@@ -293,13 +292,13 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         private final JComponent myParent;
 
         PopupToolbar(
-            @Nonnull String place,
-            @Nonnull ActionGroup actionGroup,
-            @Nonnull JComponent parent,
-            @Nonnull ActionManager actionManager,
-            @Nonnull DataManager dataManager,
-            @Nonnull Application application,
-            @Nonnull KeymapManager keymapManager
+            String place,
+            ActionGroup actionGroup,
+            JComponent parent,
+            ActionManager actionManager,
+            DataManager dataManager,
+            Application application,
+            KeymapManager keymapManager
         ) {
             super(place, actionGroup, Style.HORIZONTAL, actionManager, dataManager, application, keymapManager);
             Application.get().getMessageBus().connect(this).subscribe(AnActionListener.class, this);
@@ -309,7 +308,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
         @Nullable
         @Override
-        public Object getData(@Nonnull Key dataId) {
+        public Object getData(Key dataId) {
             Object data = super.getData(dataId);
             if (data != null) {
                 return data;
@@ -329,9 +328,9 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
         @Override
         public void afterActionPerformed(
-            @Nonnull AnAction action,
-            @Nonnull DataContext dataContext,
-            @Nonnull AnActionEvent event
+            AnAction action,
+            DataContext dataContext,
+            AnActionEvent event
         ) {
             List<? extends AnAction> visibleActions = myEngine.getVisibleActions();
 
@@ -394,7 +393,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
     @Override
-    @Nonnull
+    
     public Dimension getPreferredSize() {
         ArrayList<Rectangle> bounds = new ArrayList<>();
         calculateBounds(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE), bounds);//it doesn't take into account wrapping
@@ -449,7 +448,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     /**
      * Calculates bounds of all the components in the toolbar
      */
-    private void calculateBounds(@Nonnull Dimension size2Fit, @Nonnull List<Rectangle> bounds) {
+    private void calculateBounds(Dimension size2Fit, List<Rectangle> bounds) {
         bounds.clear();
         for (int i = 0; i < getComponentCount(); i++) {
             bounds.add(new Rectangle());
@@ -489,7 +488,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
     }
 
-    private void calculateBoundsAutoImp(@Nonnull Dimension sizeToFit, @Nonnull List<? extends Rectangle> bounds) {
+    private void calculateBoundsAutoImp(Dimension sizeToFit, List<? extends Rectangle> bounds) {
         int componentCount = getComponentCount();
         LOG.assertTrue(componentCount <= bounds.size());
 
@@ -584,7 +583,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
     }
 
-    private void calculateBoundsNowrapImpl(@Nonnull List<? extends Rectangle> bounds) {
+    private void calculateBoundsNowrapImpl(List<? extends Rectangle> bounds) {
         int componentCount = getComponentCount();
         LOG.assertTrue(componentCount <= bounds.size());
 
@@ -613,7 +612,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
 
-    private void calculateBoundsWrapImpl(@Nonnull Dimension sizeToFit, @Nonnull List<? extends Rectangle> bounds) {
+    private void calculateBoundsWrapImpl(Dimension sizeToFit, List<? extends Rectangle> bounds) {
         // We have to graceful handle case when toolbar was not laid out yet.
         // In this case we calculate bounds as it is a NOWRAP toolbar.
         if (getWidth() == 0 || getHeight() == 0) {

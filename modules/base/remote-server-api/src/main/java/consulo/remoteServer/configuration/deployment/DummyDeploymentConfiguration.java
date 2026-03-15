@@ -3,7 +3,7 @@ package consulo.remoteServer.configuration.deployment;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.remoteServer.configuration.RemoteServer;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik

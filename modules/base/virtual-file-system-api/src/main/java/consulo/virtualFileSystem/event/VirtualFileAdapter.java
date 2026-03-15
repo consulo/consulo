@@ -17,49 +17,48 @@ package consulo.virtualFileSystem.event;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use VirtualFileListener instead")
 public abstract class VirtualFileAdapter implements VirtualFileListener {
   @Override
-  public void propertyChanged(@Nonnull VirtualFilePropertyEvent event){
+  public void propertyChanged(VirtualFilePropertyEvent event){
   }
 
   @Override
-  public void contentsChanged(@Nonnull VirtualFileEvent event){
+  public void contentsChanged(VirtualFileEvent event){
   }
 
   @Override
-  public void fileCreated(@Nonnull VirtualFileEvent event){
+  public void fileCreated(VirtualFileEvent event){
   }
 
   @Override
-  public void fileDeleted(@Nonnull VirtualFileEvent event){
+  public void fileDeleted(VirtualFileEvent event){
   }
 
   @Override
-  public void fileMoved(@Nonnull VirtualFileMoveEvent event){
+  public void fileMoved(VirtualFileMoveEvent event){
   }
 
   @Override
-  public void fileCopied(@Nonnull VirtualFileCopyEvent event) {
+  public void fileCopied(VirtualFileCopyEvent event) {
     fileCreated(event);
   }
 
   @Override
-  public void beforePropertyChange(@Nonnull VirtualFilePropertyEvent event){
+  public void beforePropertyChange(VirtualFilePropertyEvent event){
   }
 
   @Override
-  public void beforeContentsChange(@Nonnull VirtualFileEvent event){
+  public void beforeContentsChange(VirtualFileEvent event){
   }
 
   @Override
-  public void beforeFileDeletion(@Nonnull VirtualFileEvent event){
+  public void beforeFileDeletion(VirtualFileEvent event){
   }
 
   @Override
-  public void beforeFileMovement(@Nonnull VirtualFileMoveEvent event){
+  public void beforeFileMovement(VirtualFileMoveEvent event){
   }
 }

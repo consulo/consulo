@@ -3,7 +3,7 @@ package consulo.ide.internal;
 
 import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;

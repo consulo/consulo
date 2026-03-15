@@ -28,7 +28,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
 
 public class SelectTargetAction extends AnAction {
     private final Project myProject;
@@ -58,7 +57,7 @@ public class SelectTargetAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ExecutionTargetManager.setActiveTarget(myProject, myTarget);
         RunConfigurationsComboBoxAction.updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), RunManagerEx.getInstanceEx(myProject).getSelectedConfiguration(), myProject, e.getPresentation(), e.getPlace());
     }

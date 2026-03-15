@@ -29,7 +29,6 @@ import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -39,7 +38,7 @@ public class ProjectStorageUtil {
         private Project myProject;
         private final List<String> myFileNames;
 
-        private UnableToSaveProjectNotification(@Nonnull Project project, Collection<File> readOnlyFiles) {
+        private UnableToSaveProjectNotification(Project project, Collection<File> readOnlyFiles) {
             super(
                 NotificationService.getInstance()
                     .newError(ProjectNotificationGroups.Project)
@@ -128,12 +127,12 @@ public class ProjectStorageUtil {
         }
     }
 
-    @Nonnull
-    public static String getStoreDir(@Nonnull Project project) {
+    
+    public static String getStoreDir(Project project) {
         return project.getBasePath() + "/" + Project.DIRECTORY_STORE_FOLDER;
     }
 
-    public static void dropUnableToSaveProjectNotification(@Nonnull Project project, Collection<File> readOnlyFiles) {
+    public static void dropUnableToSaveProjectNotification(Project project, Collection<File> readOnlyFiles) {
         UnableToSaveProjectNotification[] notifications =
             NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
         if (notifications.length == 0) {

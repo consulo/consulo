@@ -27,8 +27,7 @@ import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
@@ -39,33 +38,33 @@ public final class OpenUrlHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
     private final WebBrowser browser;
     private final Predicate<WebBrowser> browserCondition;
 
-    public OpenUrlHyperlinkInfo(@Nonnull String url) {
+    public OpenUrlHyperlinkInfo(String url) {
         this(url, webBrowser -> true, null);
     }
 
-    public OpenUrlHyperlinkInfo(@Nonnull String url, @Nullable WebBrowser browser) {
+    public OpenUrlHyperlinkInfo(String url, @Nullable WebBrowser browser) {
         this(url, null, browser);
     }
 
-    public OpenUrlHyperlinkInfo(@Nonnull String url, @Nonnull Predicate<WebBrowser> browserCondition) {
+    public OpenUrlHyperlinkInfo(String url, Predicate<WebBrowser> browserCondition) {
         this(url, browserCondition, null);
     }
 
-    private OpenUrlHyperlinkInfo(@Nonnull String url, @Nullable Predicate<WebBrowser> browserCondition, @Nullable WebBrowser browser) {
+    private OpenUrlHyperlinkInfo(String url, @Nullable Predicate<WebBrowser> browserCondition, @Nullable WebBrowser browser) {
         this.url = url;
         this.browserCondition = browserCondition;
         this.browser = browser;
     }
 
     @Override
-    public ActionGroup getPopupMenuGroup(@Nonnull MouseEvent event) {
+    public ActionGroup getPopupMenuGroup(MouseEvent event) {
         ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
         for (final WebBrowser browser : WebBrowserManager.getInstance().getActiveBrowsers()) {
             if (browserCondition == null ? (this.browser == null || browser.equals(this.browser)) : browserCondition.test(browser)) {
                 builder.add(new DumbAwareAction("Open in " + browser.getName(), "Open URL in " + browser.getName(), browser.getIcon()) {
                     @RequiredUIAccess
                     @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         BrowserLauncher.getInstance().browse(url, browser, e.getData(Project.KEY));
                     }
                 });
@@ -75,7 +74,7 @@ public final class OpenUrlHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
         builder.add(new AnAction("Copy URL", "Copy URL to clipboard", PlatformIconGroup.actionsCopy()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 CopyPasteManager.getInstance().setContents(new StringSelection(url));
             }
         });

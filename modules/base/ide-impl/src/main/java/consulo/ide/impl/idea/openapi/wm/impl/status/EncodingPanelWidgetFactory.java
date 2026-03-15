@@ -6,19 +6,18 @@ import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "encodingWidget", order = "after lineSeparatorWidget")
 public class EncodingPanelWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
         return UILocalize.statusBarEncodingWidgetName().get();
     }
 
     @Override
-    @Nonnull
-    public StatusBarWidget createWidget(@Nonnull Project project) {
+    
+    public StatusBarWidget createWidget(Project project) {
         return new EncodingPanel(project, this);
     }
 }

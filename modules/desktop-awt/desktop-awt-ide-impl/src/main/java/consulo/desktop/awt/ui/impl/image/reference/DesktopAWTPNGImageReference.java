@@ -21,8 +21,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.RetinaImage;
 import consulo.util.io.UnsyncByteArrayInputStream;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -76,19 +75,19 @@ public class DesktopAWTPNGImageReference extends DesktopAWTImageReference {
     }
   }
 
-  @Nonnull
+  
   private final ImageBytes myX1Data;
   @Nullable
   private final ImageBytes myX2Data;
 
-  public DesktopAWTPNGImageReference(@Nonnull ImageBytes x1Data, @Nullable ImageBytes x2Data) {
+  public DesktopAWTPNGImageReference(ImageBytes x1Data, @Nullable ImageBytes x2Data) {
     myX1Data = x1Data;
     myX2Data = x2Data;
   }
 
   @Override
-  public void draw(@Nonnull JBUI.ScaleContext ctx,
-                   @Nonnull Graphics2D graphics,
+  public void draw(JBUI.ScaleContext ctx,
+                   Graphics2D graphics,
                    int x,
                    int y,
                    int width,

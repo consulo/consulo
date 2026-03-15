@@ -17,7 +17,6 @@ package consulo.web.internal.ui;
 
 import consulo.ui.font.Font;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -35,19 +34,19 @@ public class WebFontImpl implements Font {
     myFontStyle = fontStyle;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myFontName;
   }
 
-  @Nonnull
+  
   @Override
   public String getFontName() {
     return myFontName;
   }
 
-  @Nonnull
+  
   @Override
   public String getFamily() {
     return "";
@@ -63,7 +62,7 @@ public class WebFontImpl implements Font {
     return myFontSize;
   }
 
-  @Nonnull
+  
   @Override
   public Font buildNewFont(int newSize) {
     return new WebFontImpl(myFontName, newSize, myFontStyle);

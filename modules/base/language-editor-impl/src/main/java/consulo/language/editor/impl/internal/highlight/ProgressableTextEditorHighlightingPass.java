@@ -30,8 +30,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -47,20 +46,20 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   protected final PsiFile myFile;
   @Nullable
   private final Editor myEditor;
-  @Nonnull
+  
   protected final TextRange myRestrictRange;
-  @Nonnull
+  
   protected final HighlightInfoProcessor myHighlightInfoProcessor;
   protected HighlightingSession myHighlightingSession;
 
-  protected ProgressableTextEditorHighlightingPass(@Nonnull Project project,
+  protected ProgressableTextEditorHighlightingPass(Project project,
                                                    @Nullable Document document,
-                                                   @Nonnull String presentableName,
+                                                   String presentableName,
                                                    @Nullable PsiFile file,
                                                    @Nullable Editor editor,
-                                                   @Nonnull TextRange restrictRange,
+                                                   TextRange restrictRange,
                                                    boolean runIntentionPassAfter,
-                                                   @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
+                                                   HighlightInfoProcessor highlightInfoProcessor) {
     super(project, document, runIntentionPassAfter);
     myPresentableName = presentableName;
     myFile = file;
@@ -79,7 +78,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   }
 
   @Override
-  public final void doCollectInformation(@Nonnull ProgressIndicator progress) {
+  public final void doCollectInformation(ProgressIndicator progress) {
     if (!(progress instanceof DaemonProgressIndicator)) {
       throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: " + progress);
     }
@@ -97,7 +96,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
   }
 
-  protected abstract void collectInformationWithProgress(@Nonnull ProgressIndicator progress);
+  protected abstract void collectInformationWithProgress(ProgressIndicator progress);
 
   @Override
   public final void doApplyInformationToEditor() {
@@ -174,7 +173,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
 
     @Override
-    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+    public void doCollectInformation(ProgressIndicator progress) {
     }
 
     @Override

@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik

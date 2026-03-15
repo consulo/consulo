@@ -19,7 +19,6 @@ import consulo.codeEditor.IndentGuideDescriptor;
 import consulo.codeEditor.IndentsModel;
 import consulo.codeEditor.LogicalPosition;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,14 +31,14 @@ public class IndentsModelImpl implements IndentsModel {
 
   private final Map<IntPair, IndentGuideDescriptor> myIndentsByLines = new HashMap<>();
   private List<IndentGuideDescriptor> myIndents = new ArrayList<>();
-  @Nonnull
+  
   private final CodeEditorBase myEditor;
 
-  public IndentsModelImpl(@Nonnull CodeEditorBase editor) {
+  public IndentsModelImpl(CodeEditorBase editor) {
     myEditor = editor;
   }
 
-  @Nonnull
+  
   public List<IndentGuideDescriptor> getIndents() {
     return myIndents;
   }
@@ -66,7 +65,7 @@ public class IndentsModelImpl implements IndentsModel {
   }
 
   @Override
-  public void assumeIndents(@Nonnull List<IndentGuideDescriptor> descriptors) {
+  public void assumeIndents(List<IndentGuideDescriptor> descriptors) {
     myIndents = descriptors;
     myIndentsByLines.clear();
     for (IndentGuideDescriptor descriptor : myIndents) {

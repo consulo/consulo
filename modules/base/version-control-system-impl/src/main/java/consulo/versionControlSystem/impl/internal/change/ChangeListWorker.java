@@ -33,8 +33,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -105,14 +104,14 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     myDefault = defaultList;
   }
 
-  public void onAfterWorkerSwitch(@Nonnull ChangeListWorker previous) {
+  public void onAfterWorkerSwitch(ChangeListWorker previous) {
     checkForMultipleCopiesNotMove(myDelta.step(previous.myIdx, myIdx));
   }
 
   private void checkForMultipleCopiesNotMove(boolean somethingChanged) {
     MultiMap<FilePath, Pair<Change, String>> moves = new MultiMap<>() {
       @Override
-      @Nonnull
+      
       protected Collection<Pair<Change, String>> createCollection() {
         return new LinkedList<>();
       }
@@ -154,7 +153,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return new ChangeListWorker(this);
   }
 
-  public boolean findListByName(@Nonnull String name) {
+  public boolean findListByName(String name) {
     return myMap.containsKey(name);
   }
 
@@ -205,11 +204,11 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
   }
 
   @Override
-  public LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable Object data) {
+  public LocalChangeList addChangeList(String name, @Nullable String comment, @Nullable Object data) {
     return addChangeList(null, name, comment, false, data);
   }
 
-  LocalChangeList addChangeList(String id, @Nonnull String name, @Nullable String description, boolean inUpdate,
+  LocalChangeList addChangeList(String id, String name, @Nullable String description, boolean inUpdate,
                                 @Nullable Object data) {
     boolean contains = myMap.containsKey(name);
     LOG.assertTrue(!contains, "Attempt to create duplicate changelist " + name);
@@ -230,7 +229,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return newList.copy();
   }
 
-  public boolean addChangeToList(@Nonnull String name, Change change, VcsKey vcsKey) {
+  public boolean addChangeToList(String name, Change change, VcsKey vcsKey) {
     LOG.debug("[addChangeToList] name: " + name + " change: " + ChangesUtil.getFilePath(change).getPath() + " vcs: " +
                 (vcsKey == null ? null : vcsKey.getName()));
     LocalChangeList changeList = myMap.get(name);
@@ -241,7 +240,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return changeList != null;
   }
 
-  public void addChangeToCorrespondingList(@Nonnull Change change, VcsKey vcsKey) {
+  public void addChangeToCorrespondingList(Change change, VcsKey vcsKey) {
     String path = ChangesUtil.getFilePath(change).getPath();
     LOG.debug("[addChangeToCorrespondingList] for change " + path + " type: " + change.getType() + " have before revision: " + (change.getBeforeRevision() != null));
     assert myDefault != null;
@@ -261,7 +260,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
   }
 
   @Override
-  public boolean removeChangeList(@Nonnull String name) {
+  public boolean removeChangeList(String name) {
     LocalChangeList list = myMap.get(name);
     if (list == null) {
       return false;
@@ -301,7 +300,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
   }
 
   @Override
-  public boolean editName(@Nonnull String fromName, @Nonnull String toName) {
+  public boolean editName(String fromName, String toName) {
     if (fromName.equals(toName)) return false;
     LocalChangeList list = myMap.get(fromName);
     boolean canEdit = list != null && (!list.isReadOnly());
@@ -316,7 +315,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
 
   @Override
   @Nullable
-  public String editComment(@Nonnull String fromName, String newComment) {
+  public String editComment(String fromName, String newComment) {
     LocalChangeList list = myMap.get(fromName);
     if (list != null) {
       String oldComment = list.getComment();
@@ -412,7 +411,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     myListsToDisappear.clear();
   }
 
-  @Nonnull
+  
   public List<LocalChangeList> getListsCopy() {
     List<LocalChangeList> result = new ArrayList<>();
     for (LocalChangeList list : myMap.values()) {
@@ -434,7 +433,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return result;
   }
 
-  @Nonnull
+  
   public List<VirtualFile> getAffectedFiles() {
     Set<VirtualFile> result = new LinkedHashSet<>();
     for (LocalChangeList list : myMap.values()) {
@@ -459,7 +458,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
   }
 
   @Nullable
-  public LocalChangeList getListCopy(@Nonnull VirtualFile file) {
+  public LocalChangeList getListCopy(VirtualFile file) {
     FilePath filePath = VcsUtil.getFilePath(file);
     for (LocalChangeList list : myMap.values()) {
       for (Change change : list.getChanges()) {
@@ -472,8 +471,8 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return null;
   }
 
-  @Nonnull
-  public List<LocalChangeList> getAffectedLists(@Nonnull Collection<? extends Change> changes) {
+  
+  public List<LocalChangeList> getAffectedLists(Collection<? extends Change> changes) {
     List<LocalChangeList> result = new ArrayList<>();
     for (LocalChangeList list : myMap.values()) {
       for (Change change : list.getChanges()) {
@@ -519,7 +518,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return mySwitchedHolder.copy();
   }
 
-  public void addSwitched(VirtualFile file, @Nonnull String branchName, boolean recursive) {
+  public void addSwitched(VirtualFile file, String branchName, boolean recursive) {
     mySwitchedHolder.addFile(file, branchName, recursive);
   }
 
@@ -658,7 +657,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     }
   }
 
-  @Nonnull
+  
   public Map<String, List<Change>> listsForChanges(Collection<Change> changes, Map<String, LocalChangeList> lists) {
     GatherChangesVsListsInfo info = new GatherChangesVsListsInfo(changes);
     info.run();
@@ -666,7 +665,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return info.getListToChangesMap();
   }
 
-  @Nonnull
+  
   public Collection<LocalChangeList> getInvolvedListsFilterChanges(Collection<Change> changes, List<Change> validChanges) {
     GatherListsFilterValidChanges worker = new GatherListsFilterValidChanges(changes);
     worker.run();
@@ -706,7 +705,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return null;
   }
 
-  public ThreeState haveChangesUnder(@Nonnull VirtualFile virtualFile) {
+  public ThreeState haveChangesUnder(VirtualFile virtualFile) {
     FilePath dir = VcsUtil.getFilePath(virtualFile);
     FilePath changeCandidate = myIdx.getAffectedPaths().ceiling(dir);
     if (changeCandidate == null) {
@@ -715,7 +714,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return FileUtil.isAncestorThreeState(dir.getPath(), changeCandidate.getPath(), false);
   }
 
-  @Nonnull
+  
   public Collection<Change> getChangesIn(FilePath dirPath) {
     List<Change> changes = new ArrayList<>();
     for (ChangeList list : myMap.values()) {
@@ -736,7 +735,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
   }
 
   @Nullable
-  public VcsKey getVcsFor(@Nonnull Change change) {
+  public VcsKey getVcsFor(Change change) {
     return myIdx.getVcsFor(change);
   }
 
@@ -744,7 +743,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     myListsToDisappear.addAll(names);
   }
 
-  @Nonnull
+  
   public ChangeListManagerGate createSelfGate() {
     return new MyGate(this);
   }
@@ -808,12 +807,12 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     }
 
     @Override
-    public FileStatus getStatus(@Nonnull FilePath filePath) {
+    public FileStatus getStatus(FilePath filePath) {
       return myWorker.getStatus(filePath);
     }
 
     @Override
-    public void setDefaultChangeList(@Nonnull String list) {
+    public void setDefaultChangeList(String list) {
       myWorker.setDefault(list);
     }
   }

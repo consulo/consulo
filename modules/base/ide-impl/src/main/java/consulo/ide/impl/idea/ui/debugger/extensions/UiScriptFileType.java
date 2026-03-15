@@ -21,7 +21,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author alexander.chernikov
@@ -41,13 +40,13 @@ public class UiScriptFileType implements FileType {
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "UI Script";
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDescription() {
     return LocalizeValue.of("UI test scripts.");
   }
@@ -55,19 +54,19 @@ public class UiScriptFileType implements FileType {
   public static final String myExtension = "ijs";
 
   @Override
-  @Nonnull
+  
   public String getDefaultExtension() {
     return myExtension;
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
   @Override
-  public String getCharset(@Nonnull VirtualFile file, byte[] content) {
+  public String getCharset(VirtualFile file, byte[] content) {
     return CharsetToolkit.UTF8;
   }
 }

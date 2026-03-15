@@ -7,16 +7,15 @@ import consulo.language.ast.TokenSet;
 import consulo.language.internal.TokenSequence;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class represents the result of lexing: text and the tokens produced from it by some lexer.
  * It allows clients to inspect all tokens at once and easily move back and forward to implement some simple lexer-based checks.
  */
 public interface TokenList {
-    @Nonnull
-    static TokenList performLexing(@Nonnull CharSequence text, @Nonnull Lexer lexer) {
+    
+    static TokenList performLexing(CharSequence text, Lexer lexer) {
         return TokenSequence.performLexing(text, lexer);
     }
 
@@ -28,7 +27,7 @@ public interface TokenList {
     /**
      * @return the full text that was split into the tokens represented here
      */
-    @Nonnull
+    
     CharSequence getTokenizedText();
 
     /**
@@ -44,7 +43,7 @@ public interface TokenList {
     /**
      * @return the range of the token with the given index
      */
-    default @Nonnull TextRange getTokenRange(int index) {
+    default TextRange getTokenRange(int index) {
         return new TextRange(getTokenStart(index), getTokenEnd(index));
     }
 
@@ -66,21 +65,21 @@ public interface TokenList {
     /**
      * @return whether {@link #getTokenType}(index) would return the given type
      */
-    default boolean hasType(int index, @Nonnull IElementType type) {
+    default boolean hasType(int index, IElementType type) {
         return getTokenType(index) == type;
     }
 
     /**
      * @return whether {@link #getTokenType}(index) would return any of the given types (null acceptable, indicating start or end of the text)
      */
-    default boolean hasType(int index, @Nonnull IElementType... types) {
+    default boolean hasType(int index, IElementType... types) {
         return ArrayUtil.contains(getTokenType(index), types);
     }
 
     /**
      * @return whether {@link #getTokenType}(index) would return a type in the given set
      */
-    default boolean hasType(int index, @Nonnull TokenSet types) {
+    default boolean hasType(int index, TokenSet types) {
         return types.contains(getTokenType(index));
     }
 
@@ -94,7 +93,7 @@ public interface TokenList {
      * <li>{@code hasType(prev + 1, opening) && hasType(index, closing)} and every opening brace between those indices has its closing one before {@code index}</li>
      * </ol>
      */
-    default int backWithBraceMatching(int index, @Nonnull IElementType opening, @Nonnull IElementType closing) {
+    default int backWithBraceMatching(int index, IElementType opening, IElementType closing) {
         if (getTokenType(index) == closing) {
             int nesting = 1;
             while (nesting > 0 && index > 0) {
@@ -116,7 +115,7 @@ public interface TokenList {
      *
      * @return the largest {@code prev <= index} whose token type doesn't belong to {@code toSkip}
      */
-    default int backWhile(int index, @Nonnull TokenSet toSkip) {
+    default int backWhile(int index, TokenSet toSkip) {
         while (hasType(index, toSkip)) {
             index--;
         }
@@ -128,7 +127,7 @@ public interface TokenList {
      *
      * @return the smallest {@code next >= index} whose token type doesn't belong to {@code toSkip}
      */
-    default int forwardWhile(int index, @Nonnull TokenSet toSkip) {
+    default int forwardWhile(int index, TokenSet toSkip) {
         while (hasType(index, toSkip)) {
             index++;
         }
@@ -141,7 +140,7 @@ public interface TokenList {
      * but states and positions might differ. The returned lexer may be used to avoid tokenizing the same text again in APIs where lexer is expected,
      * but it will only accept the very same text from the very beginning; it can't be used on any other strings.
      */
-    @Nonnull
+    
     default Lexer asLexer() {
         return new WrappingLexer(this);
     }
@@ -162,7 +161,7 @@ public interface TokenList {
         }
 
         @Override
-        public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+        public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
             assert Comparing.equal(buffer, myTokens.getTokenizedText());
             assert startOffset == 0;
             assert endOffset == buffer.length();
@@ -196,7 +195,7 @@ public interface TokenList {
         }
 
         @Override
-        public @Nonnull CharSequence getBufferSequence() {
+        public CharSequence getBufferSequence() {
             return myTokens.getTokenizedText();
         }
 

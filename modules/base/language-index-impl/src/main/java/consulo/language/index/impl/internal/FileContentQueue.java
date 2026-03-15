@@ -11,8 +11,7 @@ import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,7 +39,7 @@ public class FileContentQueue {
 
     private final AtomicLong myLoadedBytesInQueue = new AtomicLong();
     private static final Object ourProceedWithLoadingLock = new Object();
-    @Nonnull
+    
     private final Project myProject;
 
     private volatile long myBytesBeingProcessed;
@@ -50,7 +49,7 @@ public class FileContentQueue {
     private final ProgressIndicator myProgressIndicator;
     private static final Deque<FileContentQueue> ourContentLoadingQueues = new LinkedBlockingDeque<>();
 
-    FileContentQueue(@Nonnull Project project, @Nonnull Collection<VirtualFile> files, @Nonnull ProgressIndicator indicator) {
+    FileContentQueue(Project project, Collection<VirtualFile> files, ProgressIndicator indicator) {
         myProject = project;
         int numberOfFiles = files.size();
         myContentsToLoad.set(numberOfFiles);
@@ -132,12 +131,12 @@ public class FileContentQueue {
         }
     }
 
-    private static boolean isValidFile(@Nonnull VirtualFile file) {
+    private static boolean isValidFile(VirtualFile file) {
         return file.isValid() && !file.isDirectory() && !file.is(VFileProperty.SPECIAL) && !VirtualFileUtil.isBrokenLink(file);
     }
 
     @SuppressWarnings("InstanceofCatchParameter")
-    private boolean doLoadContent(@Nonnull IndexFileContent content) {
+    private boolean doLoadContent(IndexFileContent content) {
         long contentLength = content.getLength();
 
         try {
@@ -169,7 +168,7 @@ public class FileContentQueue {
     }
 
     @Nullable
-    public IndexFileContent take(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
+    public IndexFileContent take(ProgressIndicator indicator) throws ProcessCanceledException {
         IndexFileContent content = doTake(indicator);
         if (content == null) {
             return null;
@@ -257,14 +256,14 @@ public class FileContentQueue {
         }
     }
 
-    public void release(@Nonnull IndexFileContent content) {
+    public void release(IndexFileContent content) {
         synchronized (myProceedWithProcessingLock) {
             myBytesBeingProcessed -= content.getLength();
             myProceedWithProcessingLock.notifyAll(); // ask all sleeping threads to proceed, there can be more than one of them
         }
     }
 
-    public void pushBack(@Nonnull IndexFileContent content) {
+    public void pushBack(IndexFileContent content) {
         myLoadedBytesInQueue.addAndGet(content.getLength());
         myLoadedContents.addFirst(content);
     }

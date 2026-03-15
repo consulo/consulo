@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.util.lang.function.BooleanConsumer;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BooleanSupplier;
 
@@ -33,15 +32,15 @@ import java.util.function.BooleanSupplier;
  */
 public class CheckBoxRefreshableOnComponent implements RefreshableOnComponent {
     private final CheckBox myCheckBox;
-    @Nonnull
+    
     private final BooleanSupplier myValueGetter;
-    @Nonnull
+    
     private final BooleanConsumer myValueSetter;
 
     @RequiredUIAccess
-    public CheckBoxRefreshableOnComponent(@Nonnull LocalizeValue checkBoxText,
-                                          @Nonnull BooleanSupplier valueGetter,
-                                          @Nonnull BooleanConsumer valueSetter) {
+    public CheckBoxRefreshableOnComponent(LocalizeValue checkBoxText,
+                                          BooleanSupplier valueGetter,
+                                          BooleanConsumer valueSetter) {
         myValueSetter = valueSetter;
         myValueGetter = valueGetter;
         
@@ -49,11 +48,11 @@ public class CheckBoxRefreshableOnComponent implements RefreshableOnComponent {
     }
 
     @RequiredUIAccess
-    public CheckBoxRefreshableOnComponent(@Nonnull LocalizeValue checkBoxText,
-                                          @Nonnull Project project,
-                                          @Nonnull LocalizeValue dumbToolTipText,
-                                          @Nonnull BooleanSupplier valueGetter,
-                                          @Nonnull BooleanConsumer valueSetter) {
+    public CheckBoxRefreshableOnComponent(LocalizeValue checkBoxText,
+                                          Project project,
+                                          LocalizeValue dumbToolTipText,
+                                          BooleanSupplier valueGetter,
+                                          BooleanConsumer valueSetter) {
         myValueSetter = valueSetter;
         myValueGetter = valueGetter;
 
@@ -61,7 +60,7 @@ public class CheckBoxRefreshableOnComponent implements RefreshableOnComponent {
         CheckinHandlerUtil.disableWhenDumb(project, myCheckBox, dumbToolTipText);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public Component getUIComponent() {

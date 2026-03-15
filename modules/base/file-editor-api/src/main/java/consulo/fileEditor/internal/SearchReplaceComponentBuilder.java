@@ -20,8 +20,7 @@ import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.BooleanSupplier;
@@ -44,48 +43,48 @@ public class SearchReplaceComponentBuilder {
   private final DefaultActionGroup myExtraReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
   private final DefaultActionGroup myReplaceFieldActions = DefaultActionGroup.createFlatGroup(() -> "replace field actions");
 
-  public SearchReplaceComponentBuilder(@Nullable Project project, @Nonnull JComponent component) {
+  public SearchReplaceComponentBuilder(@Nullable Project project, JComponent component) {
     myProject = project;
     myTargetComponent = component;
   }
 
-  @Nonnull
-  public SearchReplaceComponentBuilder withDataProvider(@Nonnull DataProvider provider) {
+  
+  public SearchReplaceComponentBuilder withDataProvider(DataProvider provider) {
     myDataProvider = provider;
     return this;
   }
 
-  @Nonnull
-  public SearchReplaceComponentBuilder withReplaceAction(@Nonnull Runnable action) {
+  
+  public SearchReplaceComponentBuilder withReplaceAction(Runnable action) {
     myReplaceAction = action;
     return this;
   }
 
-  @Nonnull
-  public SearchReplaceComponentBuilder withCloseAction(@Nonnull Runnable action) {
+  
+  public SearchReplaceComponentBuilder withCloseAction(Runnable action) {
     myCloseAction = action;
     return this;
   }
 
-  @Nonnull
+  
   public SearchReplaceComponentBuilder addSearchFieldActions(AnAction... actions) {
     mySearchFieldActions.addAll(actions);
     return this;
   }
 
-  @Nonnull
+  
   public SearchReplaceComponentBuilder addReplaceFieldActions(AnAction... actions) {
     myReplaceFieldActions.addAll(actions);
     return this;
   }
 
-  @Nonnull
+  
   public SearchReplaceComponentBuilder addPrimarySearchActions(AnAction... actions) {
     mySearchActions.addAll(actions);
     return this;
   }
 
-  @Nonnull
+  
   public SearchReplaceComponentBuilder addSecondarySearchActions(AnAction... actions) {
     for (AnAction action : actions) {
       mySearchActions.addAction(action).setAsSecondary(true);
@@ -93,31 +92,31 @@ public class SearchReplaceComponentBuilder {
     return this;
   }
 
-  @Nonnull
-  public SearchReplaceComponentBuilder withSecondarySearchActionsIsModifiedGetter(@Nonnull BooleanSupplier getter) {
+  
+  public SearchReplaceComponentBuilder withSecondarySearchActionsIsModifiedGetter(BooleanSupplier getter) {
     mySearchToolbarModifiedFlagGetter = getter;
     return this;
   }
 
-  @Nonnull
+  
   public SearchReplaceComponentBuilder addExtraSearchActions(AnAction... actions) {
     myExtraSearchActions.addAll(actions);
     return this;
   }
 
-  @Nonnull
+  
   public SearchReplaceComponentBuilder addPrimaryReplaceActions(AnAction... actions) {
     myReplaceActions.addAll(actions);
     return this;
   }
 
-  @Nonnull
+  
   public SearchReplaceComponentBuilder addExtraReplaceAction(AnAction... actions) {
     myExtraReplaceActions.addAll(actions);
     return this;
   }
 
-  @Nonnull
+  
   public SearchReplaceComponent build() {
     SearchReplaceComponentFactory factory = Application.get().getInstance(SearchReplaceComponentFactory.class);
     return factory.create(myProject,

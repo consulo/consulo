@@ -21,20 +21,19 @@ import consulo.language.ast.IElementType;
 import consulo.language.lexer.EmptyLexer;
 import consulo.language.lexer.Lexer;
 
-import jakarta.annotation.Nonnull;
 
 public class DefaultSyntaxHighlighter implements SyntaxHighlighter {
   private static final TextAttributesKey[] ATTRS = new TextAttributesKey[] {HighlighterColors.TEXT};
 
   @Override
-  @Nonnull
+  
   public Lexer getHighlightingLexer() {
     return new EmptyLexer();
   }
 
   @Override
-  @Nonnull
-  public TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType) {
+  
+  public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     return ATTRS;
   }
 }

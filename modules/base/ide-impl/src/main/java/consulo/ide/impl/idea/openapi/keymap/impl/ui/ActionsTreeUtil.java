@@ -38,7 +38,7 @@ import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;

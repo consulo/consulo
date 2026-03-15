@@ -16,14 +16,13 @@
 package consulo.usage;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface UsageViewDescriptor {
     /**
      * @return an array of elements whose usages were searched or {@link PsiElement#EMPTY_ARRAY} if not available
      */
-    @Nonnull
+    
     PsiElement[] getElements();
 
     String getProcessedElementsHeader();

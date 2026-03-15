@@ -16,19 +16,18 @@
 package consulo.versionControlSystem.log.graph;
 
 import consulo.versionControlSystem.log.graph.action.GraphAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Set;
 
 public interface LinearGraphController {
 
-  @Nonnull
+  
   LinearGraph getCompiledGraph();
 
-  @Nonnull
-  LinearGraphAnswer performLinearGraphAction(@Nonnull LinearGraphAction action);
+  
+  LinearGraphAnswer performLinearGraphAction(LinearGraphAction action);
 
   interface LinearGraphAction extends GraphAction {
     @Nullable

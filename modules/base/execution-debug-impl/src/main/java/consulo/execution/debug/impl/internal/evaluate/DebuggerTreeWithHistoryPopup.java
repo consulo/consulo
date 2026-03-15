@@ -28,9 +28,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -42,18 +40,18 @@ import java.awt.*;
  * @author nik
  */
 class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D> {
-  @NonNls private final static String DIMENSION_SERVICE_KEY = "DebuggerActiveHint";
+  private final static String DIMENSION_SERVICE_KEY = "DebuggerActiveHint";
   private JBPopup myPopup;
   private final Editor myEditor;
   private final Point myPoint;
   @Nullable private final Runnable myHideRunnable;
 
   private DebuggerTreeWithHistoryPopup(
-    @Nonnull D initialItem,
-    @Nonnull DebuggerTreeCreator<D> creator,
-    @Nonnull Editor editor,
-    @Nonnull Point point,
-    @Nonnull Project project,
+    D initialItem,
+    DebuggerTreeCreator<D> creator,
+    Editor editor,
+    Point point,
+    Project project,
     @Nullable Runnable hideRunnable
   ) {
     super(initialItem, creator, project);
@@ -63,11 +61,11 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
   }
 
   public static <D> void showTreePopup(
-    @Nonnull DebuggerTreeCreator<D> creator,
-    @Nonnull D initialItem,
-    @Nonnull Editor editor,
-    @Nonnull Point point,
-    @Nonnull Project project,
+    DebuggerTreeCreator<D> creator,
+    D initialItem,
+    Editor editor,
+    Point point,
+    Project project,
     Runnable hideRunnable
   ) {
     new DebuggerTreeWithHistoryPopup<>(initialItem, creator, editor, point, project, hideRunnable)

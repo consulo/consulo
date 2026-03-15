@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -56,7 +55,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
 
   protected abstract TreeCellRenderer getRenderer(TestConsoleProperties properties);
 
-  public abstract AbstractTestProxy getSelectedTest(@Nonnull TreePath selectionPath);
+  public abstract AbstractTestProxy getSelectedTest(TreePath selectionPath);
 
   protected TestFrameworkRunningModel getTestFrameworkRunningModel() {
     return myModel;
@@ -84,7 +83,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     if (CopyProvider.KEY == dataId) {
       return this;
     }
@@ -137,7 +136,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public void performCopy(@Nonnull DataContext dataContext) {
+  public void performCopy(DataContext dataContext) {
     PsiElement element = dataContext.getData(PsiElement.KEY);
     String fqn;
     if (element != null) {
@@ -151,7 +150,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+  public boolean isCopyEnabled(DataContext dataContext) {
     AbstractTestProxy test = getSelectedTest();
     if (test instanceof TestProxyRoot) {
       return ((TestProxyRoot)test).getRootLocation() != null;
@@ -160,7 +159,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+  public boolean isCopyVisible(DataContext dataContext) {
     return true;
   }
 

@@ -15,7 +15,6 @@
  */
 package consulo.content.library;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -25,10 +24,10 @@ public abstract class PersistentLibraryKind<P extends LibraryProperties> extends
    * @param kindId must be unique among all {@link LibraryType} and
    *               {@link LibraryPresentationProvider} implementations.
    */
-  public PersistentLibraryKind(@Nonnull String kindId) {
+  public PersistentLibraryKind(String kindId) {
     super(kindId);
   }
 
-  @Nonnull
+  
   public abstract P createDefaultProperties();
 }

@@ -27,8 +27,7 @@ import consulo.project.Project;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -40,7 +39,7 @@ import java.util.function.Consumer;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ModuleImportProvider<C extends ModuleImportContext> {
     @SuppressWarnings("unchecked")
-    @Nonnull
+    
     default C createContext(@Nullable Project project) {
         return (C)new ModuleImportContext(project);
     }
@@ -52,31 +51,31 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
         return true;
     }
 
-    @Nonnull
+    
     abstract LocalizeValue getName();
 
-    @Nonnull
+    
     abstract Image getIcon();
 
-    boolean canImport(@Nonnull File fileOrDirectory);
+    boolean canImport(File fileOrDirectory);
 
     @RequiredReadAction
     void process(
-        @Nonnull C context,
-        @Nonnull Project project,
-        @Nonnull ModifiableModuleModel model,
-        @Nonnull Consumer<Module> newModuleConsumer
+        C context,
+        Project project,
+        ModifiableModuleModel model,
+        Consumer<Module> newModuleConsumer
     );
 
-    default String getPathToBeImported(@Nonnull VirtualFile file) {
+    default String getPathToBeImported(VirtualFile file) {
         return getDefaultPath(file);
     }
 
-    static String getDefaultPath(@Nonnull VirtualFile file) {
+    static String getDefaultPath(VirtualFile file) {
         return file.isDirectory() ? file.getPath() : file.getParent().getPath();
     }
 
-    default void buildSteps(@Nonnull Consumer<WizardStep<C>> consumer, @Nonnull C context) {
+    default void buildSteps(Consumer<WizardStep<C>> consumer, C context) {
         consumer.accept(new UnifiedProjectOrModuleNameStep<>(context));
     }
 }

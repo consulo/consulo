@@ -14,7 +14,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "DisableDeclarativeInlayAction")
 public class DisableDeclarativeInlayAction extends AnAction implements DumbAware {
@@ -22,14 +21,14 @@ public class DisableDeclarativeInlayAction extends AnAction implements DumbAware
         super(CodeEditorLocalize.inlayHintsDeclarativeDisableActionNoProviderText());
     }
 
-    @Nonnull
+    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         LocalizeValue providerName = e.getData(DeclarativeInlayHintsProvider.PROVIDER_NAME);
         e.getPresentation().setEnabledAndVisible(providerName != null);
         e.getPresentation().setTextValue(
@@ -41,7 +40,7 @@ public class DisableDeclarativeInlayAction extends AnAction implements DumbAware
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;

@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.execution.configuration.RunProfile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RunnerRegistry {
@@ -29,7 +28,7 @@ public abstract class RunnerRegistry {
     return Application.get().getInstance(RunnerRegistry.class);
   }
 
-  public abstract boolean hasRunner(@Nonnull String executorId, @Nonnull RunProfile settings);
+  public abstract boolean hasRunner(String executorId, RunProfile settings);
 
   @Nullable
   public abstract ProgramRunner getRunner(String executorId, RunProfile settings);

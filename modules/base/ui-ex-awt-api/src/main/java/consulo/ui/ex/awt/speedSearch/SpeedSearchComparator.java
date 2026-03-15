@@ -20,8 +20,7 @@ import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -51,11 +50,11 @@ public class SpeedSearchComparator {
   }
 
   @Nullable
-  public List<MatcherTextRange> matchingFragments(@Nonnull String pattern, @Nonnull String text) {
+  public List<MatcherTextRange> matchingFragments(String pattern, String text) {
     return obtainMatcher(pattern).matchingFragments(text);
   }
 
-  private MinusculeMatcher obtainMatcher(@Nonnull String pattern) {
+  private MinusculeMatcher obtainMatcher(String pattern) {
     if (myRecentSearchText == null || !myRecentSearchText.equals(pattern)) {
       myRecentSearchText = pattern;
       if (myShouldMatchCamelCase) {
@@ -69,8 +68,8 @@ public class SpeedSearchComparator {
     return myMinusculeMatcher;
   }
 
-  @Nonnull
-  protected MinusculeMatcher createMatcher(@Nonnull String pattern) {
+  
+  protected MinusculeMatcher createMatcher(String pattern) {
     return NameUtil.buildMatcher(pattern).build();
   }
 

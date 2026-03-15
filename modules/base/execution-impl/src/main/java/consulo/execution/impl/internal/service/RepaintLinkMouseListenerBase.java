@@ -6,7 +6,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +34,7 @@ public abstract class RepaintLinkMouseListenerBase<T> extends LinkMouseListenerB
   }
 
   @Override
-  public void installOn(@Nonnull Component component) {
+  public void installOn(Component component) {
     if (!(component instanceof JComponent)) {
       throw new IllegalArgumentException("JComponent expected");
     }

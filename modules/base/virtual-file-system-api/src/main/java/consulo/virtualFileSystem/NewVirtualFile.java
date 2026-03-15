@@ -17,10 +17,8 @@ package consulo.virtualFileSystem;
 
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -36,13 +34,13 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   }
 
   @Override
-  @Nonnull
+  
   public byte[] contentsToByteArray() throws IOException {
     throw new IOException("Cannot get content of " + this);
   }
 
   @Override
-  @Nonnull
+  
   public abstract NewVirtualFileSystem getFileSystem();
 
   @Override
@@ -54,19 +52,19 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
 
   @Override
   @Nullable
-  public abstract NewVirtualFile findChild(@Nonnull @NonNls String name);
+  public abstract NewVirtualFile findChild(String name);
 
   @Nullable
-  public abstract NewVirtualFile refreshAndFindChild(@Nonnull String name);
+  public abstract NewVirtualFile refreshAndFindChild(String name);
 
   @Nullable
-  public abstract NewVirtualFile findChildIfCached(@Nonnull String name);
+  public abstract NewVirtualFile findChildIfCached(String name);
 
 
   public abstract void setTimeStamp(long time) throws IOException;
 
   @Override
-  @Nonnull
+  
   public abstract CharSequence getNameSequence();
 
   @Override
@@ -89,7 +87,7 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract void markClean();
 
   @Override
-  public void move(Object requestor, @Nonnull VirtualFile newParent) throws IOException {
+  public void move(Object requestor, VirtualFile newParent) throws IOException {
     if (!exists()) {
       throw new IOException("File to move does not exist: " + getPath());
     }
@@ -113,16 +111,16 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
     });
   }
 
-  @Nonnull
+  
   public abstract Collection<VirtualFile> getCachedChildren();
 
   /**
    * iterated children will NOT contain NullVirtualFile.INSTANCE
    */
-  @Nonnull
+  
   public abstract Iterable<VirtualFile> iterInDbChildren();
 
-  @Nonnull
+  
   @Deprecated
   //@ApiStatus.Experimental
   public Iterable<VirtualFile> iterInDbChildrenWithoutLoadingVfsFromOtherProjects() {

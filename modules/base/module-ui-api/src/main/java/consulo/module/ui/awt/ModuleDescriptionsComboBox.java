@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.SortedComboBoxModel;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,13 +59,13 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     setRenderer(new ModuleDescriptionListCellRenderer());
   }
 
-  public void allowEmptySelection(@Nonnull String emptySelectionText) {
+  public void allowEmptySelection(String emptySelectionText) {
     myAllowEmptySelection = true;
     myModel.add(null);
     setRenderer(new ModuleDescriptionListCellRenderer(emptySelectionText));
   }
 
-  public void setModules(@Nonnull Collection<Module> modules) {
+  public void setModules(Collection<Module> modules) {
     myModel.clear();
     for (Module module : modules) {
       myModel.add(new LoadedModuleDescriptionImpl(module));
@@ -76,7 +75,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     }
   }
 
-  public void setAllModulesFromProject(@Nonnull Project project) {
+  public void setAllModulesFromProject(Project project) {
     setModules(Arrays.asList(ModuleManager.getInstance(project).getModules()));
   }
 
@@ -84,7 +83,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     myModel.setSelectedItem(module != null ? new LoadedModuleDescriptionImpl(module) : null);
   }
 
-  public void setSelectedModule(@Nonnull Project project, @Nonnull String moduleName) {
+  public void setSelectedModule(Project project, String moduleName) {
     Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
     if (module != null) {
       setSelectedModule(module);
@@ -125,12 +124,12 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
       this("[none]");
     }
 
-    public ModuleDescriptionListCellRenderer(@Nonnull String emptySelectionText) {
+    public ModuleDescriptionListCellRenderer(String emptySelectionText) {
       myEmptySelectionText = emptySelectionText;
     }
 
     @Override
-    protected void customizeCellRenderer(@Nonnull JList<? extends ModuleDescription> list, ModuleDescription moduleDescription, int index, boolean selected, boolean hasFocus) {
+    protected void customizeCellRenderer(JList<? extends ModuleDescription> list, ModuleDescription moduleDescription, int index, boolean selected, boolean hasFocus) {
       if (moduleDescription == null) {
         append(myEmptySelectionText);
       }

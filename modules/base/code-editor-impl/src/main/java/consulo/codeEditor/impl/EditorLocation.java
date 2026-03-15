@@ -4,8 +4,7 @@ package consulo.codeEditor.impl;
 import consulo.codeEditor.*;
 import consulo.document.Document;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -18,17 +17,17 @@ public final class EditorLocation {
     private int[] myVisualLineYRange;
     private FoldRegion myCollapsedRegion = NO_REGION;
 
-    public EditorLocation(@Nonnull RealEditor editor, @Nonnull Point point) {
+    public EditorLocation(RealEditor editor, Point point) {
         myEditor = editor;
         myPoint = point;
     }
 
-    @Nonnull
+    
     public Point getPoint() {
         return myPoint;
     }
 
-    @Nonnull
+    
     public VisualPosition getVisualPosition() {
         if (myVisualPosition == null) {
             myVisualPosition = myEditor.xyToVisualPosition(myPoint);
@@ -50,7 +49,7 @@ public final class EditorLocation {
         return myVisualLineYRange[1];
     }
 
-    @Nonnull
+    
     public LogicalPosition getLogicalPosition() {
         if (myLogicalPosition == null) {
             myLogicalPosition = myEditor.visualToLogicalPosition(getVisualPosition());
@@ -83,7 +82,7 @@ public final class EditorLocation {
         }
 
         @Override
-        public @Nonnull String getPlaceholderText() {
+        public String getPlaceholderText() {
             return "";
         }
 
@@ -108,7 +107,7 @@ public final class EditorLocation {
         }
 
         @Override
-        public @Nonnull Document getDocument() {
+        public Document getDocument() {
             throw new UnsupportedOperationException();
         }
 
@@ -151,12 +150,12 @@ public final class EditorLocation {
 
         @Override
         @Nullable
-        public <T> T getUserData(@Nonnull Key<T> key) {
+        public <T> T getUserData(Key<T> key) {
             return null;
         }
 
         @Override
-        public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
         }
     };
 }

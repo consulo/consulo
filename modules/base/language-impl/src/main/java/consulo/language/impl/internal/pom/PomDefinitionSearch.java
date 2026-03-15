@@ -8,7 +8,6 @@ import consulo.language.psi.PsiTarget;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.language.psi.search.DefinitionsScopedSearchExecutor;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -19,8 +18,8 @@ import java.util.function.Predicate;
 public class PomDefinitionSearch implements DefinitionsScopedSearchExecutor {
     @Override
     public boolean execute(
-        @Nonnull DefinitionsScopedSearch.SearchParameters queryParameters,
-        @Nonnull Predicate<? super PsiElement> consumer
+        DefinitionsScopedSearch.SearchParameters queryParameters,
+        Predicate<? super PsiElement> consumer
     ) {
         return !(queryParameters.getElement() instanceof PomTargetPsiElement targetPsiElement
             && targetPsiElement.getTarget() instanceof PsiTarget target

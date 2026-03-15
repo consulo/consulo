@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -115,7 +114,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
             new AnAction("Remove Task", "Remove Task", PlatformIconGroup.generalRemove()) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     for (LocalTask localTask : myTable.getSelectedObjects()) {
                         SwitchTaskAction.removeTask(myProject, localTask, myTaskManager);
                     }
@@ -125,12 +124,12 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
         group.add(
             new ToggleAction("Show closed tasks", "Show closed tasks", PlatformIconGroup.actionsChecked()) {
                 @Override
-                public boolean isSelected(@Nonnull AnActionEvent e) {
+                public boolean isSelected(AnActionEvent e) {
                     return myTimeTrackingManager.getState().showClosedTasks;
                 }
 
                 @Override
-                public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+                public void setSelected(AnActionEvent e, boolean state) {
                     myTimeTrackingManager.getState().showClosedTasks = state;
                     updateTable();
                 }
@@ -144,7 +143,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                 new AnAction("Post work item to bugtracker", "Post work item to bugtracker", PlatformIconGroup.actionsExport()) {
                     @Override
                     @RequiredUIAccess
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         LocalTask localTask = myTable.getSelectedObject();
                         if (localTask == null) {
                             return;
@@ -153,7 +152,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                     }
 
                     @Override
-                    public void update(@Nonnull AnActionEvent e) {
+                    public void update(AnActionEvent e) {
                         LocalTask localTask = myTable.getSelectedObject();
                         if (localTask == null) {
                             e.getPresentation().setEnabled(false);
@@ -173,12 +172,12 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                     TaskIconGroup.clock()
                 ) {
                     @Override
-                    public boolean isSelected(@Nonnull AnActionEvent e) {
+                    public boolean isSelected(AnActionEvent e) {
                         return myTimeTrackingManager.getState().showSpentTimeFromLastPost;
                     }
 
                     @Override
-                    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+                    public void setSelected(AnActionEvent e, boolean state) {
                         myTimeTrackingManager.getState().showSpentTimeFromLastPost = state;
                         myTable.repaint();
                     }
@@ -304,7 +303,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
     private class StartStopAction extends AnAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (myTimeTrackingManager.getState().autoMode) {
                 e.getPresentation().setEnabled(false);
                 e.getPresentation().setIcon(TaskIconGroup.starttimer());
@@ -325,7 +324,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             LocalTask activeTask = myTaskManager.getActiveTask();
             if (activeTask.isRunning()) {
                 activeTask.setRunning(false);
@@ -342,12 +341,12 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myTimeTrackingManager.getState().autoMode;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myTimeTrackingManager.setAutoMode(state);
             updateTable();
         }

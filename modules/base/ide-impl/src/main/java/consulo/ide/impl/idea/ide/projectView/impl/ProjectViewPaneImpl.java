@@ -27,7 +27,6 @@ import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import javax.swing.tree.DefaultTreeModel;
@@ -41,39 +40,39 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
         super(project);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTitle() {
         return IdeLocalize.titleProject();
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public SelectInTarget createSelectInTarget() {
         return new ProjectPaneSelectInTarget(myProject);
     }
 
-    @Nonnull
+    
     @Override
-    protected AbstractTreeUpdater createTreeUpdater(@Nonnull AbstractTreeBuilder treeBuilder) {
+    protected AbstractTreeUpdater createTreeUpdater(AbstractTreeBuilder treeBuilder) {
         return new ProjectViewTreeUpdater(treeBuilder);
     }
 
-    @Nonnull
+    
     @Override
     public ProjectAbstractTreeStructureBase createStructure() {
         return new ProjectViewPaneTreeStructure();
     }
 
-    @Nonnull
+    
     @Override
-    protected ProjectViewTree createTree(@Nonnull DefaultTreeModel treeModel) {
+    protected ProjectViewTree createTree(DefaultTreeModel treeModel) {
         return new ProjectViewTree(treeModel) {
             @Override
             public String toString() {
@@ -95,7 +94,7 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
 
         @Override
         @RequiredReadAction
-        public boolean addSubtreeToUpdateByElement(@Nonnull Object element) {
+        public boolean addSubtreeToUpdateByElement(Object element) {
             if (element instanceof PsiDirectory dir && !myProject.isDisposed()) {
                 ProjectTreeStructure treeStructure = (ProjectTreeStructure)myTreeStructure;
                 PsiDirectory dirToUpdateFrom = dir;
@@ -130,13 +129,13 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
         }
 
         @Override
-        protected AbstractTreeNode createRoot(@Nonnull Project project, @Nonnull ViewSettings settings) {
+        protected AbstractTreeNode createRoot(Project project, ViewSettings settings) {
             return new ProjectViewProjectNode(project, settings);
         }
 
-        @Nonnull
+        
         @Override
-        public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
+        public <T> T getViewOption(KeyWithDefaultValue<T> option) {
             T value = ProjectViewPaneImpl.this.getUserData(option);
             assert value != null;
             return value;
@@ -144,17 +143,17 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
 
 
         @Override
-        public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+        public boolean isToBuildChildrenInBackground(Object element) {
             return Registry.is("ide.projectView.ProjectViewPaneTreeStructure.BuildChildrenInBackground");
         }
     }
 
     @Override
-    protected BaseProjectTreeBuilder createBuilder(@Nonnull DefaultTreeModel model) {
+    protected BaseProjectTreeBuilder createBuilder(DefaultTreeModel model) {
         return null;
     }
 
-    public static boolean canBeSelectedInProjectView(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public static boolean canBeSelectedInProjectView(Project project, VirtualFile file) {
         VirtualFile archiveFile;
 
         if (file.getFileSystem() instanceof ArchiveFileSystem) {

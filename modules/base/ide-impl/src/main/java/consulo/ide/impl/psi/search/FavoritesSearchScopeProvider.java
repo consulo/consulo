@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,9 +40,9 @@ public class FavoritesSearchScopeProvider implements SearchScopeProvider {
     return "Favorites";
   }
 
-  @Nonnull
+  
   @Override
-  public List<SearchScope> getSearchScopes(@Nonnull Project project) {
+  public List<SearchScope> getSearchScopes(Project project) {
     FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     if (favoritesManager == null) return Collections.emptyList();
     List<SearchScope> result = new ArrayList<>();
@@ -51,19 +50,19 @@ public class FavoritesSearchScopeProvider implements SearchScopeProvider {
       Collection<TreeItem<Pair<AbstractUrl, String>>> rootUrls = favoritesManager.getFavoritesListRootUrls(favorite);
       if (rootUrls.isEmpty()) continue;  // ignore unused root
       result.add(new GlobalSearchScope(project) {
-        @Nonnull
+        
         @Override
         public String getDisplayName() {
           return "Favorite \'" + favorite + "\'";
         }
 
         @Override
-        public boolean contains(@Nonnull VirtualFile file) {
+        public boolean contains(VirtualFile file) {
           return ReadAction.compute(() -> favoritesManager.contains(favorite, file));
         }
 
         @Override
-        public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+        public boolean isSearchInModuleContent(Module aModule) {
           return true;
         }
 

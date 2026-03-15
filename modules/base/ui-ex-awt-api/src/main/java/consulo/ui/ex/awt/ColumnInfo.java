@@ -17,8 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -28,7 +27,7 @@ import java.util.Objects;
 
 public abstract class ColumnInfo<Item, Aspect> {
     public static class StringColumn extends ColumnInfo<String, String> {
-        public StringColumn(@Nonnull LocalizeValue name) {
+        public StringColumn(LocalizeValue name) {
             super(name);
         }
 
@@ -47,7 +46,7 @@ public abstract class ColumnInfo<Item, Aspect> {
     private String myName;
     public static final ColumnInfo[] EMPTY_ARRAY = new ColumnInfo[0];
 
-    public ColumnInfo(@Nonnull LocalizeValue name) {
+    public ColumnInfo(LocalizeValue name) {
         myName = name.get();
     }
 
@@ -126,7 +125,7 @@ public abstract class ColumnInfo<Item, Aspect> {
         return -1;
     }
 
-    public void setName(@Nonnull LocalizeValue name) {
+    public void setName(LocalizeValue name) {
         myName = name.get();
     }
 

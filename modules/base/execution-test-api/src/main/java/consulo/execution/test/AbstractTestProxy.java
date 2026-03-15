@@ -23,8 +23,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,9 +59,9 @@ public abstract class AbstractTestProxy extends CompositePrintable {
 
   public abstract boolean isConfig();
 
-  public abstract Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope);
+  public abstract Location getLocation(Project project, GlobalSearchScope searchScope);
 
-  public abstract Navigatable getDescriptor(@Nullable Location location, @Nonnull TestConsoleProperties properties);
+  public abstract Navigatable getDescriptor(@Nullable Location location, TestConsoleProperties properties);
 
   public abstract AbstractTestProxy getParent();
 
@@ -82,7 +81,7 @@ public abstract class AbstractTestProxy extends CompositePrintable {
 
   public abstract boolean shouldSkipRootNodeForExport();
 
-  public void fireOnNewPrintable(@Nonnull Printable printable) {
+  public void fireOnNewPrintable(Printable printable) {
     if (myPrinter != null) {
       myPrinter.onNewAvailable(printable);
     }
@@ -101,13 +100,13 @@ public abstract class AbstractTestProxy extends CompositePrintable {
    * @param printable Printable info
    */
   @Override
-  public void addLast(@Nonnull Printable printable) {
+  public void addLast(Printable printable) {
     super.addLast(printable);
     fireOnNewPrintable(printable);
   }
 
   @Override
-  public void insert(@Nonnull Printable printable, int i) {
+  public void insert(Printable printable, int i) {
     super.insert(printable, i);
     fireOnNewPrintable(printable);
   }
@@ -148,7 +147,7 @@ public abstract class AbstractTestProxy extends CompositePrintable {
     return myExceptionMark;
   }
 
-  @Nonnull
+  
   public List<DiffHyperlink> getDiffViewerProviders() {
     DiffHyperlink provider = getDiffViewerProvider();
     return provider == null ? Collections.emptyList() : Collections.singletonList(provider);

@@ -17,8 +17,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -46,27 +45,27 @@ public abstract class DiryFilesStateProcessor {
 
   protected abstract boolean isRecursiveDeleteSupported();
 
-  protected abstract boolean isEventIgnored(@Nonnull VFileEvent event);
+  protected abstract boolean isEventIgnored(VFileEvent event);
 
-  protected abstract boolean filterOutByStatus(@Nonnull FileStatus status);
+  protected abstract boolean filterOutByStatus(FileStatus status);
 
-  protected abstract boolean shouldIgnoreDeletion(@Nonnull FileStatus status);
+  protected abstract boolean shouldIgnoreDeletion(FileStatus status);
 
   protected abstract boolean isUnderMyVcs(@Nullable VirtualFile file);
 
   protected abstract void executePendingTasksImpl();
 
-  @Nonnull
+  
   public List<VirtualFile> acquireAddedFiles() {
     return acquireListUnderLock(myAddedFiles);
   }
 
-  @Nonnull
+  
   public List<VcsVFSListener.MovedFileInfo> acquireMovedFiles() {
     return acquireListUnderLock(myMovedFiles);
   }
 
-  @Nonnull
+  
   public List<FilePath> acquireDeletedFiles() {
     return ConcurrencyUtil.withLock(PROCESSING_LOCK.writeLock(), () -> {
       List<FilePath> deletedFiles = new ArrayList<>(myDeletedFiles);
@@ -78,8 +77,8 @@ public abstract class DiryFilesStateProcessor {
   /**
    * @return get a list of files under lock and clear the given collection of files
    */
-  @Nonnull
-  private <T> List<T> acquireListUnderLock(@Nonnull Collection<? extends T> files) {
+  
+  private <T> List<T> acquireListUnderLock(Collection<? extends T> files) {
     return ConcurrencyUtil.withLock(PROCESSING_LOCK.writeLock(), () -> {
       List<T> copiedFiles = new ArrayList<>(files);
       files.clear();
@@ -90,7 +89,7 @@ public abstract class DiryFilesStateProcessor {
   /**
    * @return get a map of copied files under lock and clear the given map
    */
-  @Nonnull
+  
   public Map<VirtualFile, VirtualFile> acquireCopiedFiles() {
     return ConcurrencyUtil.withLock(PROCESSING_LOCK.writeLock(), () -> {
       Map<VirtualFile, VirtualFile> copyFromMap = new HashMap<>(myCopyFromMap);
@@ -171,7 +170,7 @@ public abstract class DiryFilesStateProcessor {
     executePendingTasksImpl();
   }
 
-  private void processFileCreated(@Nonnull VFileCreateEvent event) {
+  private void processFileCreated(VFileCreateEvent event) {
     if (LOG.isDebugEnabled()) LOG.debug("fileCreated: ", event.getFile());
     if (!event.isDirectory()) {
       VirtualFile file = event.getFile();
@@ -182,7 +181,7 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  private void processFileMoved(@Nonnull VFileMoveEvent event) {
+  private void processFileMoved(VFileMoveEvent event) {
     VirtualFile file = event.getFile();
     VirtualFile oldParent = event.getOldParent();
     if (!isUnderMyVcs(oldParent)) {
@@ -190,7 +189,7 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  private void processFileCopied(@Nonnull VFileCopyEvent event) {
+  private void processFileCopied(VFileCopyEvent event) {
     VirtualFile newFile = event.getNewParent().findChild(event.getNewChildName());
     if (newFile == null || myChangeListManager.isIgnoredFile(newFile)) return;
     VirtualFile originalFile = event.getFile();
@@ -205,11 +204,11 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  private void processBeforeDeletedFile(@Nonnull VFileDeleteEvent event) {
+  private void processBeforeDeletedFile(VFileDeleteEvent event) {
     processBeforeDeletedFile(event.getFile());
   }
 
-  private void processBeforeDeletedFile(@Nonnull VirtualFile file) {
+  private void processBeforeDeletedFile(VirtualFile file) {
     if (file.isDirectory() && file instanceof NewVirtualFile && !isRecursiveDeleteSupported()) {
       for (VirtualFile child : ((NewVirtualFile)file).getCachedChildren()) {
         ProgressManager.checkCanceled();
@@ -228,7 +227,7 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  protected void processMovedFile(@Nonnull VirtualFile file, @Nonnull String newParentPath, @Nonnull String newName) {
+  protected void processMovedFile(VirtualFile file, String newParentPath, String newName) {
     FileStatus status = myChangeListManager.getStatus(file);
     LOG.debug("Checking moved file ", file, "; status=", status);
 
@@ -258,7 +257,7 @@ public abstract class DiryFilesStateProcessor {
     });
   }
 
-  private void processBeforeFileMovement(@Nonnull VFileMoveEvent event) {
+  private void processBeforeFileMovement(VFileMoveEvent event) {
     VirtualFile file = event.getFile();
     if (isUnderMyVcs(event.getNewParent())) {
       LOG.debug("beforeFileMovement ", event, " into same vcs");
@@ -270,7 +269,7 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  private void processBeforePropertyChange(@Nonnull VFilePropertyChangeEvent event) {
+  private void processBeforePropertyChange(VFilePropertyChangeEvent event) {
     if (event.isRename()) {
       LOG.debug("before file rename ", event);
       String newName = (String)event.getNewValue();
@@ -282,7 +281,7 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  private void addFileToMove(@Nonnull VirtualFile file, @Nonnull String newParentPath, @Nonnull String newName) {
+  private void addFileToMove(VirtualFile file, String newParentPath, String newName) {
     if (file.isDirectory() && !file.is(VFileProperty.SYMLINK)) {
       @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = file.getChildren();
       if (children != null) {
@@ -297,7 +296,7 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  public void processBeforeEvents(@Nonnull List<? extends VFileEvent> events) {
+  public void processBeforeEvents(List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       if (isEventIgnored(event)) continue;
 
@@ -313,7 +312,7 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  public void processAfterEvents(@Nonnull List<? extends VFileEvent> events) {
+  public void processAfterEvents(List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       ProgressManager.checkCanceled();
       if (isEventIgnored(event)) continue;
@@ -330,20 +329,20 @@ public abstract class DiryFilesStateProcessor {
     }
   }
 
-  public boolean allowedDeletion(@Nonnull VFileEvent event) {
+  public boolean allowedDeletion(VFileEvent event) {
     if (myVcsFileListenerContextHelper.isDeletionContextEmpty()) return true;
 
     return !myVcsFileListenerContextHelper.isDeletionIgnored(getEventFilePath(event));
   }
 
-  public boolean allowedAddition(@Nonnull VFileEvent event) {
+  public boolean allowedAddition(VFileEvent event) {
     if (myVcsFileListenerContextHelper.isAdditionContextEmpty()) return true;
 
     return !myVcsFileListenerContextHelper.isAdditionIgnored(getEventFilePath(event));
   }
 
-  @Nonnull
-  public static FilePath getEventFilePath(@Nonnull VFileEvent event) {
+  
+  public static FilePath getEventFilePath(VFileEvent event) {
     if (event instanceof VFileCreateEvent createEvent) {
       return VcsUtil.getFilePath(event.getPath(), createEvent.isDirectory());
     }

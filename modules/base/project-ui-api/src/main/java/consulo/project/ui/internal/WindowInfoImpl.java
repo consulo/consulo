@@ -22,8 +22,7 @@ import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.ex.toolWindow.WindowInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.Objects;
@@ -54,7 +53,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     private static final float DEFAULT_SIDE_WEIGHT = 0.5f;
 
     private boolean myActive;
-    @Nonnull
+    
     private ToolWindowAnchor myAnchor = ToolWindowAnchor.LEFT;
     private boolean myAutoHide;
     /**
@@ -71,7 +70,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     private float mySideWeight = DEFAULT_SIDE_WEIGHT;
     private boolean mySplitMode;
 
-    @Nonnull
+    
     private ToolWindowContentUiType myContentUiType = ToolWindowContentUiType.TABBED;
     /**
      * Defines order of tool window button inside the stripe.
@@ -101,7 +100,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     /**
      * Creates <code>WindowInfo</code> for tool window with specified <code>ID</code>.
      */
-    WindowInfoImpl(@Nonnull String id) {
+    WindowInfoImpl(String id) {
         myId = id;
         setType(ToolWindowType.DOCKED);
     }
@@ -109,7 +108,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     /**
      * Creates copy of <code>WindowInfo</code> object.
      */
-    @Nonnull
+    
     public WindowInfoImpl copy() {
         try {
             WindowInfoImpl info = (WindowInfoImpl) clone();
@@ -126,7 +125,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     /**
      * Copies all data from the passed <code>WindowInfo</code> into itself.
      */
-    void copyFrom(@Nonnull WindowInfoImpl info) {
+    void copyFrom(WindowInfoImpl info) {
         myActive = info.myActive;
         myAnchor = info.myAnchor;
         myAutoHide = info.myAutoHide;
@@ -145,19 +144,19 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     /**
      * @return tool window's anchor in internal mode.
      */
-    @Nonnull
+    
     @Override
     public ToolWindowAnchor getAnchor() {
         return myAnchor;
     }
 
-    @Nonnull
+    
     @Override
     public ToolWindowContentUiType getContentUiType() {
         return myContentUiType;
     }
 
-    public void setContentUiType(@Nonnull ToolWindowContentUiType type) {
+    public void setContentUiType(ToolWindowContentUiType type) {
         myContentUiType = type;
     }
 
@@ -173,7 +172,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
      * @return <code>ID</code> of the tool window.
      */
     @Override
-    @Nonnull
+    
     public String getId() {
         return myId;
     }
@@ -183,7 +182,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
      * window can be in floating mode, but this method has sense if you want to know what type
      * tool window had when it was internal one. The method never returns <code>null</code>.
      */
-    @Nonnull
+    
     public ToolWindowType getInternalType() {
         return myInternalType;
     }
@@ -363,7 +362,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     /**
      * Sets new anchor.
      */
-    public void setAnchor(@Nonnull ToolWindowAnchor anchor) {
+    public void setAnchor(ToolWindowAnchor anchor) {
         myAnchor = anchor;
     }
 
@@ -379,7 +378,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
         myFloatingBounds = floatingBounds;
     }
 
-    public void setType(@Nonnull ToolWindowType type) {
+    public void setType(ToolWindowType type) {
         if (ToolWindowType.DOCKED == type || ToolWindowType.SLIDING == type) {
             myInternalType = type;
         }

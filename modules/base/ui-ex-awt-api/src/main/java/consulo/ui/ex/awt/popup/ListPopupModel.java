@@ -21,7 +21,7 @@ import consulo.ui.ex.internal.PopupListModelApi;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;

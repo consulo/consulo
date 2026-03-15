@@ -18,7 +18,6 @@ package consulo.ui.ex.action;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ActionToolbarFactory {
-    @Nonnull
+    
     static ActionToolbarFactory getInstance() {
         return Application.get().getInstance(ActionToolbarFactory.class);
     }
@@ -42,6 +41,6 @@ public interface ActionToolbarFactory {
      * @param style Style of toolbar, see documentation of {@link ActionToolbar.Style}
      * @return An instance of <code>ActionToolbar</code>
      */
-    @Nonnull
-    ActionToolbar createActionToolbar(String place, ActionGroup group, @Nonnull ActionToolbar.Style style);
+    
+    ActionToolbar createActionToolbar(String place, ActionGroup group, ActionToolbar.Style style);
 }

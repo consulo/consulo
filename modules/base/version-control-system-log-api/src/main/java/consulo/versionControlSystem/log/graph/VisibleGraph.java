@@ -17,8 +17,7 @@ package consulo.versionControlSystem.log.graph;
 
 import consulo.versionControlSystem.log.graph.action.ActionController;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A part of {@link PermanentGraph} which should be drawn on screen (e.g. with applied filters). <br/>
@@ -29,13 +28,13 @@ public interface VisibleGraph<Id> {
 
   int getVisibleCommitCount();
 
-  @Nonnull
+  
   RowInfo<Id> getRowInfo(int visibleRow);
 
   @Nullable
-  Integer getVisibleRowIndex(@Nonnull Id id);
+  Integer getVisibleRowIndex(Id id);
 
-  @Nonnull
+  
   ActionController<Id> getActionController();
 
   int getRecommendedWidth();

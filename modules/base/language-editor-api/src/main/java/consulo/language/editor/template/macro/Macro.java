@@ -24,8 +24,7 @@ import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.context.TemplateContextType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A macro which can be used in live templates.
@@ -41,21 +40,21 @@ public abstract class Macro {
      */
     public abstract String getPresentableName();
 
-    @Nonnull
+    
     public String getDefaultValue() {
         return "";
     }
 
     @Nullable
-    public abstract Result calculateResult(@Nonnull Expression[] params, ExpressionContext context);
+    public abstract Result calculateResult(Expression[] params, ExpressionContext context);
 
     @Nullable
-    public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+    public Result calculateQuickResult(Expression[] params, ExpressionContext context) {
         return null;
     }
 
     @Nullable
-    public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
+    public LookupElement[] calculateLookupItems(Expression[] params, ExpressionContext context) {
         return null;
     }
 

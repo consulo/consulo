@@ -17,7 +17,6 @@ package consulo.logger.internal.impl.logback;
 
 import consulo.logging.internal.LoggerFactory;
 import consulo.logging.internal.LoggerFactoryProvider;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public class LogbackLoggerFactoryProvider implements LoggerFactoryProvider {
         return HIGHT_PRIORITY;
     }
 
-    @Nonnull
+    
     @Override
     public LoggerFactory create() {
         return new LogbackLoggerFactory();

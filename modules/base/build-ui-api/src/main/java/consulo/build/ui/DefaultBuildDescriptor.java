@@ -25,8 +25,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -49,16 +48,16 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
   private boolean myAutoFocusContent = false;
 
   private final
-  @Nonnull
+  
   List<AnAction> myActions = new SmartList<>();
   private final
-  @Nonnull
+  
   List<AnAction> myRestartActions = new SmartList<>();
   private final
-  @Nonnull
+  
   List<Filter> myExecutionFilters = new SmartList<>();
   private final
-  @Nonnull
+  
   List<Function<? super ExecutionNode, ? extends AnAction>> myContextActions = new SmartList<>();
 
   private
@@ -70,14 +69,14 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
   ExecutionEnvironment myExecutionEnvironment;
   private Supplier<? extends RunContentDescriptor> myContentDescriptorSupplier;
 
-  public DefaultBuildDescriptor(@Nonnull Object id, @Nonnull @BuildEventsNls.Title String title, @Nonnull String workingDir, long startTime) {
+  public DefaultBuildDescriptor(Object id, @BuildEventsNls.Title String title, String workingDir, long startTime) {
     myId = id;
     myTitle = title;
     myWorkingDir = workingDir;
     myStartTime = startTime;
   }
 
-  public DefaultBuildDescriptor(@Nullable @Nonnull BuildDescriptor descriptor) {
+  public DefaultBuildDescriptor(@Nullable BuildDescriptor descriptor) {
     this(descriptor.getId(), descriptor.getTitle(), descriptor.getWorkingDir(), descriptor.getStartTime());
     if (descriptor instanceof DefaultBuildDescriptor) {
       DefaultBuildDescriptor defaultBuildDescriptor = (DefaultBuildDescriptor)descriptor;
@@ -97,19 +96,19 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
     }
   }
 
-  @Nonnull
+  
   @Override
   public Object getId() {
     return myId;
   }
 
-  @Nonnull
+  
   @Override
   public String getTitle() {
     return myTitle;
   }
 
-  @Nonnull
+  
   @Override
   public String getWorkingDir() {
     return myWorkingDir;
@@ -120,22 +119,22 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
     return myStartTime;
   }
 
-  @Nonnull
+  
   public List<AnAction> getActions() {
     return Collections.unmodifiableList(myActions);
   }
 
-  @Nonnull
+  
   public List<AnAction> getRestartActions() {
     return Collections.unmodifiableList(myRestartActions);
   }
 
-  @Nonnull
-  public List<AnAction> getContextActions(@Nonnull ExecutionNode node) {
+  
+  public List<AnAction> getContextActions(ExecutionNode node) {
     return ContainerUtil.map(myContextActions, function -> function.apply(node));
   }
 
-  @Nonnull
+  
   public List<Filter> getExecutionFilters() {
     return Collections.unmodifiableList(myExecutionFilters);
   }
@@ -183,22 +182,22 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
     return myAttachedConsoleConsumer;
   }
 
-  public DefaultBuildDescriptor withAction(@Nonnull AnAction action) {
+  public DefaultBuildDescriptor withAction(AnAction action) {
     myActions.add(action);
     return this;
   }
 
-  public DefaultBuildDescriptor withActions(@Nonnull AnAction... actions) {
+  public DefaultBuildDescriptor withActions(AnAction... actions) {
     myActions.addAll(Arrays.asList(actions));
     return this;
   }
 
-  public DefaultBuildDescriptor withRestartAction(@Nonnull AnAction action) {
+  public DefaultBuildDescriptor withRestartAction(AnAction action) {
     myRestartActions.add(action);
     return this;
   }
 
-  public DefaultBuildDescriptor withRestartActions(@Nonnull AnAction... actions) {
+  public DefaultBuildDescriptor withRestartActions(AnAction... actions) {
     myRestartActions.addAll(Arrays.asList(actions));
     return this;
   }
@@ -208,7 +207,7 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
     return this;
   }
 
-  public DefaultBuildDescriptor withContextActions(@Nonnull AnAction... actions) {
+  public DefaultBuildDescriptor withContextActions(AnAction... actions) {
     for (AnAction action : actions) {
       myContextActions.add(node -> action);
     }
@@ -216,7 +215,7 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
   }
 
   //@ApiStatus.Experimental
-  public DefaultBuildDescriptor withExecutionFilter(@Nonnull Filter filter) {
+  public DefaultBuildDescriptor withExecutionFilter(Filter filter) {
     myExecutionFilters.add(filter);
     return this;
   }

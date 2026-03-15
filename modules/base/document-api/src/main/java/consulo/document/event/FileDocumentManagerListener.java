@@ -6,7 +6,6 @@ import consulo.annotation.component.TopicAPI;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -25,22 +24,22 @@ public interface FileDocumentManagerListener extends EventListener {
   /**
    * NOTE: Vetoing facility is deprecated in this listener implement {@link FileDocumentSynchronizationVetoer} instead.
    */
-  default void beforeDocumentSaving(@Nonnull Document document) {
+  default void beforeDocumentSaving(Document document) {
   }
 
   /**
    * NOTE: Vetoing facility is deprecated in this listener implement {@link FileDocumentSynchronizationVetoer} instead.
    */
-  default void beforeFileContentReload(@Nonnull VirtualFile file, @Nonnull Document document) {
+  default void beforeFileContentReload(VirtualFile file, Document document) {
   }
 
-  default void fileWithNoDocumentChanged(@Nonnull VirtualFile file) {
+  default void fileWithNoDocumentChanged(VirtualFile file) {
   }
 
-  default void fileContentReloaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+  default void fileContentReloaded(VirtualFile file, Document document) {
   }
 
-  default void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+  default void fileContentLoaded(VirtualFile file, Document document) {
   }
 
   default void unsavedDocumentsDropped() {

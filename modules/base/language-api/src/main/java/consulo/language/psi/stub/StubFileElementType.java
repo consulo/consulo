@@ -18,8 +18,7 @@ package consulo.language.psi.stub;
 import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for file element types having stubs.
@@ -34,7 +33,7 @@ public abstract class StubFileElementType<T extends PsiFileStub> extends IFileEl
     super(language);
   }
 
-  public StubFileElementType(@Nonnull String debugName, @Nullable Language language) {
+  public StubFileElementType(String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 }

@@ -21,7 +21,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -49,7 +48,7 @@ public abstract class TodoGroupByOptionAction extends ToggleAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (!e.hasData(TODO_PANEL_DATA_KEY)) {
             e.getPresentation().setEnabled(false);
         }
@@ -57,14 +56,14 @@ public abstract class TodoGroupByOptionAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
         return todoPanel != null && myGetter.apply(todoPanel);
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
         if (todoPanel != null) {
             mySetter.accept(todoPanel, state);

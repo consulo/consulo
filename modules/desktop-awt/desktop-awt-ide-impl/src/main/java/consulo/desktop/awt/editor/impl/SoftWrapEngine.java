@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * Class that calculates soft wrap positions for a given text fragment and available visible width.
@@ -41,11 +40,11 @@ public class SoftWrapEngine {
 
     private LineWrapPositionStrategy myLineWrapPositionStrategy;
 
-    public SoftWrapEngine(@Nonnull DesktopEditorImpl editor,
-                          @Nonnull SoftWrapPainter painter,
-                          @Nonnull SoftWrapsStorage storage,
-                          @Nonnull CachingSoftWrapDataMapper dataMapper,
-                          @Nonnull IncrementalCacheUpdateEvent event,
+    public SoftWrapEngine(DesktopEditorImpl editor,
+                          SoftWrapPainter painter,
+                          SoftWrapsStorage storage,
+                          CachingSoftWrapDataMapper dataMapper,
+                          IncrementalCacheUpdateEvent event,
                           int visibleWidth,
                           int relativeIndent) {
         myEditor = editor;

@@ -29,7 +29,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -38,12 +37,12 @@ import jakarta.annotation.Nonnull;
 public class ResumeAction extends XDebuggerActionBase implements DumbAware {
     private final DebuggerActionHandler myHandler = new XDebuggerActionHandler() {
         @Override
-        protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+        protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
             return session.isPaused();
         }
 
         @Override
-        protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+        protected void perform(XDebugSession session, DataContext dataContext) {
             session.resume();
         }
     };
@@ -72,7 +71,7 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (!performWithHandler(e)) {
             Project project = e.getData(Project.KEY);
             if (project != null && !DumbService.isDumb(project)) {
@@ -81,7 +80,7 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
         }
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

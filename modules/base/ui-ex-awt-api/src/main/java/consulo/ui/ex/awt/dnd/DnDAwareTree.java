@@ -22,8 +22,7 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
@@ -81,25 +80,25 @@ public class DnDAwareTree extends Tree implements DnDAware {
     }
 
     @Override
-    @Nonnull
+    
     public final JComponent getComponent() {
         return this;
     }
 
-    @Nonnull
-    public static Pair<Image, Point> getDragImage(@Nonnull Tree dndAwareTree, @Nonnull TreePath path, @Nonnull Point dragOrigin) {
+    
+    public static Pair<Image, Point> getDragImage(Tree dndAwareTree, TreePath path, Point dragOrigin) {
         int row = dndAwareTree.getRowForPath(path);
         Component comp = dndAwareTree.getCellRenderer().getTreeCellRendererComponent(dndAwareTree, path.getLastPathComponent(), false, true, true, row, false);
         return createDragImage(dndAwareTree, comp, dragOrigin, true);
     }
 
-    @Nonnull
-    public static Pair<Image, Point> getDragImage(@Nonnull Tree dndAwareTree, @Nonnull String text, @Nullable Point dragOrigin) {
+    
+    public static Pair<Image, Point> getDragImage(Tree dndAwareTree, String text, @Nullable Point dragOrigin) {
         return createDragImage(dndAwareTree, new JLabel(text), dragOrigin, false);
     }
 
-    @Nonnull
-    private static Pair<Image, Point> createDragImage(@Nonnull Tree tree, @Nonnull Component c, @Nullable Point dragOrigin, boolean adjustToPathUnderDragOrigin) {
+    
+    private static Pair<Image, Point> createDragImage(Tree tree, Component c, @Nullable Point dragOrigin, boolean adjustToPathUnderDragOrigin) {
         if (c instanceof JComponent) {
             ((JComponent) c).setOpaque(true);
         }

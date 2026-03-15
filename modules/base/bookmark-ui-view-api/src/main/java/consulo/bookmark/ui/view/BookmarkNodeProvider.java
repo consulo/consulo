@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -85,7 +84,7 @@ public interface BookmarkNodeProvider {
    *
    * @return the string identifier.
    */
-  @Nonnull
+  
   String getFavoriteTypeId();
 
   /**

@@ -5,8 +5,7 @@ import consulo.execution.debug.stream.trace.*;
 import consulo.execution.debug.stream.trace.impl.TraceElementImpl;
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedValueException;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,7 +16,7 @@ import java.util.SequencedMap;
  */
 public class SimplePeekCallTraceInterpreter implements CallTraceInterpreter {
   @Override
-  public @Nonnull TraceInfo resolve(@Nonnull StreamCall call, @Nonnull Value value) {
+  public TraceInfo resolve(StreamCall call, Value value) {
     if (value instanceof ArrayReference trace) {
       Value before = trace.getValue(0);
       Value after = trace.getValue(1);
@@ -31,7 +30,7 @@ public class SimplePeekCallTraceInterpreter implements CallTraceInterpreter {
     throw new UnexpectedValueException("peek operation trace is wrong format");
   }
 
-  protected static @Nonnull Map<Integer, TraceElement> resolveTrace(@Nonnull ArrayReference mapArray) {
+  protected static Map<Integer, TraceElement> resolveTrace(ArrayReference mapArray) {
     Value keys = mapArray.getValue(0);
     Value values = mapArray.getValue(1);
     if (keys instanceof ArrayReference && values instanceof ArrayReference) {
@@ -41,7 +40,7 @@ public class SimplePeekCallTraceInterpreter implements CallTraceInterpreter {
     throw new UnexpectedValueException("keys and values must be stored in arrays in peek resolver");
   }
 
-  private static @Nonnull Map<Integer, TraceElement> resolveTrace(@Nonnull ArrayReference keysArray, @Nonnull ArrayReference valuesArray) {
+  private static Map<Integer, TraceElement> resolveTrace(ArrayReference keysArray, ArrayReference valuesArray) {
     SequencedMap<Integer, TraceElement> result = new LinkedHashMap<>();
     if (keysArray.length() == valuesArray.length()) {
       for (int i = 0, size = keysArray.length(); i < size; i++) {
@@ -55,7 +54,7 @@ public class SimplePeekCallTraceInterpreter implements CallTraceInterpreter {
     throw new UnexpectedValueException("keys and values arrays should be with the same sizes");
   }
 
-  private static @Nonnull TraceElement resolveTraceElement(@Nonnull Value key, @Nullable Value value) {
+  private static TraceElement resolveTraceElement(Value key, @Nullable Value value) {
     if (key instanceof IntegerValue) {
       return new TraceElementImpl(((IntegerValue)key).value(), value);
     }

@@ -19,8 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public interface FileEditorWindow {
   Key<Integer> INITIAL_INDEX_KEY = Key.create("initial editor index");
   Key<FileEditorWindow> DATA_KEY = Key.create("editorWindow");
 
-  @Nonnull
+  
   FileEditorManager getManager();
 
   void closeAllExcept(VirtualFile selectedFile);
@@ -44,13 +43,13 @@ public interface FileEditorWindow {
 
   boolean isDisposed();
 
-  @Nonnull
+  
   FileEditorWithProviderComposite[] getEditors();
 
-  @Nonnull
+  
   FileEditorWindow[] findSiblings();
 
-  @Nonnull
+  
   VirtualFile[] getFiles();
 
   @Nullable
@@ -59,10 +58,10 @@ public interface FileEditorWindow {
   @Nullable
   FileEditorWithProviderComposite getSelectedEditor();
 
-  @Nonnull
+  
   FileEditorsSplitters getOwner();
 
-  @Nonnull
+  
   FileEditorTabbedContainer getContainer();
 
   VirtualFile getSelectedFile();
@@ -79,7 +78,7 @@ public interface FileEditorWindow {
     closeFile(file, disposeIfNeeded, true);
   }
 
-  void closeFile(@Nonnull VirtualFile file, boolean disposeIfNeeded, boolean transferFocus);
+  void closeFile(VirtualFile file, boolean disposeIfNeeded, boolean transferFocus);
 
   void clear();
 
@@ -115,7 +114,7 @@ public interface FileEditorWindow {
 
   void requestFocus(boolean force);
 
-  @Nonnull
+  
   default Component getUIComponent() {
     throw new UnsupportedOperationException("Unsupported platform");
   }

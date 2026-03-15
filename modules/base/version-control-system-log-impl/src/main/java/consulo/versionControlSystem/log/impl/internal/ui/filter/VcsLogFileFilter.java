@@ -18,7 +18,7 @@ package consulo.versionControlSystem.log.impl.internal.ui.filter;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.versionControlSystem.log.VcsLogRootFilter;
 import consulo.versionControlSystem.log.VcsLogStructureFilter;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /*package private*/ class VcsLogFileFilter implements VcsLogFilter {
   @Nullable private final VcsLogStructureFilter myStructureFilter;

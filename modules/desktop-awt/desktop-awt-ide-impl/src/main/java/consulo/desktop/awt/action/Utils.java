@@ -15,7 +15,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,11 +31,11 @@ public class Utils {
     private static boolean DO_FULL_EXPAND = Boolean.getBoolean("actionSystem.use.full.group.expand"); // for tests and debug
 
     @RequiredUIAccess
-    public static void fillMenu(@Nonnull ActionGroup group,
+    public static void fillMenu(ActionGroup group,
                                 JComponent component,
                                 boolean enableMnemonics,
                                 PresentationFactory presentationFactory,
-                                @Nonnull DataContext context,
+                                DataContext context,
                                 String place,
                                 boolean isWindowMenu,
                                 boolean isInModalContext,
@@ -138,8 +137,8 @@ public class Utils {
 
     private static ActionMenuItem createItem(AnAction action,
                                              Presentation presentation,
-                                             @Nonnull String place,
-                                             @Nonnull DataContext context,
+                                             String place,
+                                             DataContext context,
                                              boolean enableMnemonics,
                                              boolean prepareNow,
                                              boolean insideCheckedGroup,

@@ -6,8 +6,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -86,17 +85,17 @@ public class UpdaterTreeState {
         return target;
     }
 
-    @Nonnull
+    
     public Object[] getToSelect() {
         return ArrayUtil.toObjectArray(myToSelect.keySet());
     }
 
-    @Nonnull
+    
     public Object[] getToExpand() {
         return ArrayUtil.toObjectArray(myToExpand.keySet());
     }
 
-    public boolean process(@Nonnull Runnable runnable) {
+    public boolean process(Runnable runnable) {
         try {
             setProcessingNow(true);
             runnable.run();
@@ -117,7 +116,7 @@ public class UpdaterTreeState {
         return myProcessingCount > 0;
     }
 
-    public void addAll(@Nonnull UpdaterTreeState state) {
+    public void addAll(UpdaterTreeState state) {
         myToExpand.putAll(state.myToExpand);
 
         Object[] toSelect = state.getToSelect();

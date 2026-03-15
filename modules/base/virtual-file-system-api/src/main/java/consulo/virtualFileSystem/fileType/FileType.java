@@ -21,8 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.Comparator;
@@ -39,10 +38,10 @@ public interface FileType {
      *
      * @return The file type id.
      */
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
+    
     default LocalizeValue getDisplayName() {
         return LocalizeValue.of(getId());
     }
@@ -52,7 +51,7 @@ public interface FileType {
      *
      * @return The file type description.
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Override #getDisplayName()")
     LocalizeValue getDescription();
@@ -62,7 +61,7 @@ public interface FileType {
      *
      * @return The extension, not including the leading '.'.
      */
-    @Nonnull
+    
     default String getDefaultExtension() {
         return "";
     }
@@ -73,7 +72,7 @@ public interface FileType {
      * @return The icon instance, or null if no icon should be shown.
      */
 
-    @Nonnull
+    
     Image getIcon();
 
     /**
@@ -103,7 +102,7 @@ public interface FileType {
      * @return The character set name, in the format supported by {@link Charset} class.
      */
     @Nullable
-    default String getCharset(@Nonnull VirtualFile file, byte[] content) {
+    default String getCharset(VirtualFile file, byte[] content) {
         return null;
     }
 
@@ -111,7 +110,7 @@ public interface FileType {
     default Charset extractCharsetFromFileContent(
         @Nullable ComponentManager project,
         @Nullable VirtualFile file,
-        @Nonnull CharSequence content
+        CharSequence content
     ) {
         return null;
     }

@@ -21,20 +21,19 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public abstract class InactiveEditorAction extends EditorAction {
-    protected InactiveEditorAction(@Nonnull LocalizeValue text, EditorActionHandler defaultHandler) {
+    protected InactiveEditorAction(LocalizeValue text, EditorActionHandler defaultHandler) {
         super(text, defaultHandler);
     }
 
     @Nullable
     @Override
-    protected Editor getEditor(@Nonnull DataContext dataContext) {
+    protected Editor getEditor(DataContext dataContext) {
         return dataContext.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
     }
 }

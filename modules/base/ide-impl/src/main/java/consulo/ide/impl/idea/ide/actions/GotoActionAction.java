@@ -39,8 +39,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -61,7 +60,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (e.hasData(Project.KEY)) {
             showInSearchEverywherePopup(ActionSearchEverywhereContributor.class.getSimpleName(), e, false, true);
         }
@@ -71,7 +70,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     }
 
     @Override
-    public void gotoActionPerformed(@Nonnull AnActionEvent e) {
+    public void gotoActionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         Editor editor = e.getData(Editor.KEY);
@@ -80,7 +79,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         GotoActionModel model = new GotoActionModel(project, component, editor);
         GotoActionCallback<Object> callback = new GotoActionCallback<>() {
             @Override
-            public void elementChosen(@Nonnull ChooseByNamePopup popup, @Nonnull Object element) {
+            public void elementChosen(ChooseByNamePopup popup, Object element) {
                 if (project != null) {
                     // if the chosen action displays another popup, don't populate it automatically with the text from this popup
                     project.putUserData(ChooseByNamePopup.CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY, null);
@@ -95,10 +94,10 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         showNavigationPopup(callback, null, createPopup(project, model, start.first, start.second, component, e), false);
     }
 
-    @Nonnull
+    
     private static ChooseByNamePopup createPopup(
         @Nullable Project project,
-        @Nonnull GotoActionModel model,
+        GotoActionModel model,
         String initialText,
         int initialIndex,
         Component component,
@@ -174,9 +173,9 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                     return null;
                 }
 
-                @Nonnull
+                
                 @Override
-                protected Set<Object> filter(@Nonnull Set<Object> elements) {
+                protected Set<Object> filter(Set<Object> elements) {
                     return super.filter(model.sortItems(elements));
                 }
 
@@ -221,7 +220,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
         popup.addMouseClickListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(@Nonnull MouseEvent me) {
+            public void mouseClicked(MouseEvent me) {
                 Object element = popup.getSelectionByPoint(me.getPoint());
                 if (element instanceof GotoActionModel.MatchedValue mv && processOptionInplace(mv.value, popup, component, event)) {
                     me.consume();
@@ -268,7 +267,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
     @RequiredUIAccess
     public static void openOptionOrPerformAction(
-        @Nonnull Object element,
+        Object element,
         String enteredText,
         @Nullable Project project,
         Component component
@@ -301,7 +300,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         }
     }
 
-    public static void performAction(@Nonnull Object element, @Nullable Component component, @Nullable AnActionEvent e) {
+    public static void performAction(Object element, @Nullable Component component, @Nullable AnActionEvent e) {
         performAction(element, component, e, 0, null);
     }
 

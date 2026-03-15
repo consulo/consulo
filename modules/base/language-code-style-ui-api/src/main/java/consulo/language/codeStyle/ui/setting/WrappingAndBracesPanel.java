@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.CommaSeparatedIntegersField;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -56,7 +55,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
     }
 
     @Override
-    protected void addOption(@Nonnull String fieldName, @Nonnull String title, @Nullable String groupName) {
+    protected void addOption(String fieldName, String title, @Nullable String groupName) {
         super.addOption(fieldName, title, groupName);
         if (groupName != null) {
             myGroupToFields.putValue(groupName, fieldName);
@@ -65,11 +64,11 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
 
     @Override
     protected void addOption(
-        @Nonnull String fieldName,
-        @Nonnull String title,
+        String fieldName,
+        String title,
         @Nullable String groupName,
-        @Nonnull String[] options,
-        @Nonnull int[] values
+        String[] options,
+        int[] values
     ) {
         super.addOption(fieldName, title, groupName, options, values);
         if (groupName == null) {
@@ -113,7 +112,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         }
     }
 
-    private Function<Integer, String> getDefaultIntValueRenderer(@Nonnull String fieldName) {
+    private Function<Integer, String> getDefaultIntValueRenderer(String fieldName) {
         if ("RIGHT_MARGIN".equals(fieldName)) {
             return integer -> MarginOptionsUtil.getDefaultRightMarginText(getSettings());
         }
@@ -137,7 +136,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         return myFieldNameToGroup.get(fieldName);
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getTabTitle() {
         return CodeStyleLocalize.wrappingAndBraces();
@@ -147,13 +146,13 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         public final String title;
         public final Collection<String> commonCodeStyleSettingFieldNames;
 
-        public SettingsGroup(@Nonnull String title, @Nonnull Collection<String> commonCodeStyleSettingFieldNames) {
+        public SettingsGroup(String title, Collection<String> commonCodeStyleSettingFieldNames) {
             this.title = title;
             this.commonCodeStyleSettingFieldNames = commonCodeStyleSettingFieldNames;
         }
     }
 
-    private void addSoftMarginsOption(@Nonnull String optionName, @Nonnull String title, @Nullable String groupName) {
+    private void addSoftMarginsOption(String optionName, String title, @Nullable String groupName) {
         Language language = getDefaultLanguage();
         if (language != null) {
             addCustomOption(new SoftMarginsOption(language, optionName, title, groupName));
@@ -164,9 +163,9 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         private final Language myLanguage;
 
         protected SoftMarginsOption(
-            @Nonnull Language language,
-            @Nonnull String optionName,
-            @Nonnull String title,
+            Language language,
+            String optionName,
+            String title,
             @Nullable String groupName
         ) {
             super(optionName, title, groupName, null, null);
@@ -200,7 +199,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
 
     @Nullable
     @Override
-    protected JComponent getCustomValueRenderer(@Nonnull String optionName, @Nonnull Object value) {
+    protected JComponent getCustomValueRenderer(String optionName, Object value) {
         if (CodeStyleSoftMarginsPresentation.OPTION_NAME.equals(optionName)) {
             JLabel softMarginsLabel = new JLabel(getSoftMarginsString(castToIntList(value)));
             UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, softMarginsLabel);
@@ -216,8 +215,8 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         return super.getCustomValueRenderer(optionName, value);
     }
 
-    @Nonnull
-    private String getSoftMarginsString(@Nonnull List<Integer> intList) {
+    
+    private String getSoftMarginsString(List<Integer> intList) {
         if (intList.size() > 0) {
             return CommaSeparatedIntegersValueEditor.intListToString(intList);
         }
@@ -226,7 +225,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
 
     @Nullable
     @Override
-    protected JComponent getCustomNodeEditor(@Nonnull MyTreeNode node) {
+    protected JComponent getCustomNodeEditor(MyTreeNode node) {
         String optionName = node.getKey().getOptionName();
         if (CodeStyleSoftMarginsPresentation.OPTION_NAME.equals(optionName)) {
             mySoftMarginsEditor.setValue(castToIntList(node.getValue()));
@@ -249,7 +248,7 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
 
     @Nullable
     @Override
-    protected Object getCustomNodeEditorValue(@Nonnull JComponent customEditor) {
+    protected Object getCustomNodeEditorValue(JComponent customEditor) {
         if (customEditor instanceof CommaSeparatedIntegersField commaSeparatedIntegersField) {
             return commaSeparatedIntegersField.getValue();
         }

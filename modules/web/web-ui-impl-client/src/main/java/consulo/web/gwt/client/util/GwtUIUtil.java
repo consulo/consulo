@@ -25,8 +25,7 @@ import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.shared.Connector;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +60,7 @@ public class GwtUIUtil {
     return componentConnector.getWidget();
   }
 
-  @Nonnull
+  
   public static List<Widget> remapWidgets(AbstractComponentContainerConnector abstractLayout) {
     List<Widget> widgets = new ArrayList<>();
     for (ComponentConnector connector : abstractLayout.getChildComponents()) {

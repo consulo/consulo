@@ -35,8 +35,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +55,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         InspectionProfileImpl inspectionProfile = getInspectionProfile();
         Image icon = PlatformIconGroup.generalGearplain();

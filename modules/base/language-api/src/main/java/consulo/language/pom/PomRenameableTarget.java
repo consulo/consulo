@@ -15,7 +15,6 @@
  */
 package consulo.language.pom;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -28,6 +27,6 @@ public interface PomRenameableTarget<T> extends PomNamedTarget {
    * @param newName new name
    * @return will be ignored unless you use it yourself
    */
-  T setName(@Nonnull String newName);
+  T setName(String newName);
   
 }

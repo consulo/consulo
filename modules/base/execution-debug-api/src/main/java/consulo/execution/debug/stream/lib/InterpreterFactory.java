@@ -3,12 +3,11 @@ package consulo.execution.debug.stream.lib;
 
 import consulo.execution.debug.stream.trace.CallTraceInterpreter;
 import consulo.execution.debug.stream.wrapper.StreamCallType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface InterpreterFactory {
-  @Nonnull
-  CallTraceInterpreter getInterpreter(@Nonnull String callName, @Nonnull StreamCallType callType);
+  
+  CallTraceInterpreter getInterpreter(String callName, StreamCallType callType);
 }

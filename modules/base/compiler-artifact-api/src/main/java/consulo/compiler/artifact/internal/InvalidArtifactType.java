@@ -26,7 +26,6 @@ import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -44,22 +43,22 @@ public class InvalidArtifactType extends ArtifactType {
         super("invalid", LocalizeValue.localizeTODO("Invalid"));
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.filetypesUnknown();
     }
 
     @Override
-    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+    public String getDefaultPathFor(PackagingElementOutputKind kind) {
         return "";
     }
 
-    @Nonnull
+    
     @Override
     public CompositePackagingElement<?> createRootElement(
-        @Nonnull PackagingElementFactory packagingElementFactory,
-        @Nonnull String artifactName
+        PackagingElementFactory packagingElementFactory,
+        String artifactName
     ) {
         return packagingElementFactory.createArtifactRootElement();
     }

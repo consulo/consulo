@@ -16,9 +16,7 @@
 
 package consulo.language.editor.internal.intention;
 
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -28,19 +26,19 @@ public class PlainTextDescriptor implements TextDescriptor {
   private final String myText;
   private final String myFileName;
 
-  public PlainTextDescriptor(@Nonnull String text, @NonNls @Nonnull String fileName) {
+  public PlainTextDescriptor(String text, String fileName) {
     myText = text;
     myFileName = fileName;
   }
 
   @Override
-  @Nonnull
+  
   public String getText() throws IOException {
     return myText;
   }
 
   @Override
-  @Nonnull
+  
   public String getFileName() {
     return myFileName;
   }

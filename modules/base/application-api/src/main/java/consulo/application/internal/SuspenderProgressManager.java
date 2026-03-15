@@ -15,14 +15,13 @@
  */
 package consulo.application.internal;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2026-02-21
  */
 public interface SuspenderProgressManager {
-    void addCheckCanceledHook(@Nonnull CheckCanceledHook hook);
+    void addCheckCanceledHook(CheckCanceledHook hook);
 
-    void removeCheckCanceledHook(@Nonnull CheckCanceledHook hook);
+    void removeCheckCanceledHook(CheckCanceledHook hook);
 }

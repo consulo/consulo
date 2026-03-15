@@ -54,8 +54,7 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -74,7 +73,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     private static final int CHANGE_QUEUE_LIMIT = 150;
 
     private final Project myProject;
-    @Nonnull
+    
     private final FileEditorManagerEx myFileEditorManager;
 
     private FileDocumentManager myFileDocumentManager;
@@ -105,11 +104,11 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
 
     @Inject
     public IdeDocumentHistoryImpl(
-        @Nonnull Application application,
-        @Nonnull Project project,
-        @Nonnull FileEditorManager fileEditorManager,
-        @Nonnull EditorFactory editorFactory,
-        @Nonnull ApplicationConcurrency applicationConcurrency
+        Application application,
+        Project project,
+        FileEditorManager fileEditorManager,
+        EditorFactory editorFactory,
+        ApplicationConcurrency applicationConcurrency
     ) {
         myProject = project;
         myFileEditorManager = (FileEditorManagerEx)fileEditorManager;
@@ -118,13 +117,13 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         MessageBusConnection busConnection = project.getMessageBus().connect(this);
         busConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
-            public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
+            public void selectionChanged(FileEditorManagerEvent e) {
                 onSelectionChanged();
             }
         });
         busConnection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
-            public void after(@Nonnull List<? extends VFileEvent> events) {
+            public void after(List<? extends VFileEvent> events) {
                 for (VFileEvent event : events) {
                     if (event instanceof VFileDeleteEvent) {
                         removeInvalidFilesFromStacks();
@@ -135,19 +134,19 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         });
         busConnection.subscribe(CommandListener.class, new CommandListener() {
             @Override
-            public void commandStarted(@Nonnull CommandEvent event) {
+            public void commandStarted(CommandEvent event) {
                 onCommandStarted();
             }
 
             @Override
-            public void commandFinished(@Nonnull CommandEvent event) {
+            public void commandFinished(CommandEvent event) {
                 onCommandFinished(event.getProject(), event.getCommandGroupId());
             }
         });
 
         EditorEventListener listener = new EditorEventListener() {
             @Override
-            public void documentChanged(@Nonnull DocumentEvent e) {
+            public void documentChanged(DocumentEvent e) {
                 Document document = e.getDocument();
                 VirtualFile file = getFileDocumentManager().getFile(document);
                 if (file != null && !(file instanceof LightVirtualFile) && !application.hasWriteAction(ExternalChangeAction.class)) {
@@ -160,7 +159,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
             }
 
             @Override
-            public void caretPositionChanged(@Nonnull CaretEvent e) {
+            public void caretPositionChanged(CaretEvent e) {
                 if (e.getOldPosition().line == e.getNewPosition().line) {
                     return;
                 }
@@ -176,7 +175,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         multicaster.addCaretListener(listener, this);
     }
 
-    @Nonnull
+    
     private PersistentHashMap<String, Long> initRecentFilesTimestampMap() {
         File file = ProjectUtil.getProjectCachePath(myProject, "recentFilesTimeStamps.dat").toFile();
         PersistentHashMap<String, Long> map;
@@ -197,7 +196,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         return map;
     }
 
-    private void registerViewed(@Nonnull VirtualFile file) {
+    private void registerViewed(VirtualFile file) {
         myWriteExecutor.execute(() -> {
             try {
                 myRecentFilesTimestampsMap.get().put(file.getPath(), System.currentTimeMillis());
@@ -208,7 +207,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         });
     }
 
-    public static void appendTimestamp(@Nonnull Project project, @Nonnull SimpleColoredComponent component, @Nonnull VirtualFile file) {
+    public static void appendTimestamp(Project project, SimpleColoredComponent component, VirtualFile file) {
         if (!UISettings.getInstance().getShowInplaceComments()) {
             return;
         }
@@ -253,7 +252,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
-    public void loadState(@Nonnull RecentlyChangedFilesState state) {
+    public void loadState(RecentlyChangedFilesState state) {
         myRecentlyChangedFiles = state;
     }
 
@@ -382,7 +381,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         return myRecentFilesTimestampsMap.get();
     }
 
-    boolean isRecentlyChanged(@Nonnull VirtualFile file) {
+    boolean isRecentlyChanged(VirtualFile file) {
         return myRecentlyChangedFiles.CHANGED_PATHS.contains(file.getPath());
     }
 
@@ -489,7 +488,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
-    @Nonnull
+    
     public List<PlaceInfo> getBackPlaces() {
         return List.copyOf(myBackPlaces);
     }
@@ -500,16 +499,16 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
-    public void removeBackPlace(@Nonnull PlaceInfo placeInfo) {
+    public void removeBackPlace(PlaceInfo placeInfo) {
         removePlaceInfo(placeInfo, myBackPlaces, false);
     }
 
     @Override
-    public void removeChangePlace(@Nonnull PlaceInfo placeInfo) {
+    public void removeChangePlace(PlaceInfo placeInfo) {
         removePlaceInfo(placeInfo, myChangePlaces, true);
     }
 
-    private void removePlaceInfo(@Nonnull PlaceInfo placeInfo, @Nonnull LinkedList<PlaceInfo> places, boolean changed) {
+    private void removePlaceInfo(PlaceInfo placeInfo, LinkedList<PlaceInfo> places, boolean changed) {
         boolean removed = places.remove(placeInfo);
         if (removed) {
             myProject.getMessageBus().syncPublisher(RecentPlacesListener.class).recentPlaceRemoved(placeInfo, changed);
@@ -553,13 +552,13 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         return myCurrentIndex < myChangePlaces.size();
     }
 
-    private static boolean removeInvalidFilesFrom(@Nonnull List<PlaceInfo> backPlaces) {
+    private static boolean removeInvalidFilesFrom(List<PlaceInfo> backPlaces) {
         return backPlaces.removeIf(info -> (info.getFile() instanceof SkipFromDocumentHistory) || !info.getFile().isValid());
     }
 
     @Override
     @RequiredUIAccess
-    public void gotoPlaceInfo(@Nonnull PlaceInfo info) {
+    public void gotoPlaceInfo(PlaceInfo info) {
         boolean wasActive = ToolWindowManager.getInstance(myProject).isEditorComponentActive();
         FileEditorWindow wnd = info.getWindow();
         FileEditorManagerEx editorManager = myFileEditorManager;
@@ -589,7 +588,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         return file == null ? null : editorManager.getSelectedEditorWithProvider(file);
     }
 
-    protected PlaceInfo createPlaceInfo(@Nonnull FileEditor fileEditor, FileEditorProvider fileProvider) {
+    protected PlaceInfo createPlaceInfo(FileEditor fileEditor, FileEditorProvider fileProvider) {
         if (!fileEditor.isValid()) {
             return null;
         }
@@ -610,7 +609,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Nullable
-    private static RangeMarker getCaretPosition(@Nonnull FileEditor fileEditor) {
+    private static RangeMarker getCaretPosition(FileEditor fileEditor) {
         if (!(fileEditor instanceof TextEditor)) {
             return null;
         }
@@ -621,7 +620,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         return editor.getDocument().createRangeMarker(offset, offset);
     }
 
-    private void putLastOrMerge(@Nonnull PlaceInfo next, int limit, boolean isChanged) {
+    private void putLastOrMerge(PlaceInfo next, int limit, boolean isChanged) {
         LinkedList<PlaceInfo> list = isChanged ? myChangePlaces : myBackPlaces;
         MessageBus messageBus = myProject.getMessageBus();
         RecentPlacesListener listener = messageBus.syncPublisher(RecentPlacesListener.class);
@@ -663,7 +662,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         }
     }
 
-    public static boolean isSame(@Nonnull PlaceInfo first, @Nonnull PlaceInfo second) {
+    public static boolean isSame(PlaceInfo first, PlaceInfo second) {
         if (first.getFile().equals(second.getFile())) {
             FileEditorState firstState = first.getNavigationState();
             FileEditorState secondState = second.getNavigationState();

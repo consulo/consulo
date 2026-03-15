@@ -43,7 +43,6 @@ import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -79,7 +78,7 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         int number = currentLine;
         e.getPresentation().setVisible(myEnabled);
         e.getPresentation().setEnabled(myEnabled && number >= 0 && number < myFileAnnotation.getLineCount());
@@ -87,7 +86,7 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final int actualNumber = currentLine;
         if (actualNumber < 0) {
             return;
@@ -105,7 +104,7 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
                 BackgroundFromStartOption.getInstance()
             ) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     CommittedChangesProvider provider = myVcs.getCommittedChangesProvider();
                     try {
                         Pair<CommittedChangeList, FilePath> pair = provider.getOneList(myFile, revisionNumber);

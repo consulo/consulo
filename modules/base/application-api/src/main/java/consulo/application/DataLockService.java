@@ -20,7 +20,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -31,8 +30,8 @@ import java.util.concurrent.CompletableFuture;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DataLockService {
-    @Nonnull
+    
     @RequiredUIAccess
-    <T> CompletableFuture<T> modalWrite(@Nonnull LocalizeValue modalText,
-                                        @RequiredWriteAction @Nonnull Callable<T> callable);
+    <T> CompletableFuture<T> modalWrite(LocalizeValue modalText,
+                                        @RequiredWriteAction Callable<T> callable);
 }

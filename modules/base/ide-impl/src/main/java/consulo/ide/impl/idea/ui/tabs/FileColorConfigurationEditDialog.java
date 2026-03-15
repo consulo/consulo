@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -45,7 +44,7 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 public class FileColorConfigurationEditDialog extends DialogWrapper {
-    @Nonnull
+    
     private final Project myProject;
     private FileColorConfiguration myConfiguration;
     private JComboBox<NamedScope> myScopeComboBox;
@@ -54,8 +53,8 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
     private static final String CUSTOM_COLOR_NAME = "Custom";
     private final Map<String, NamedScope> myScopeById = new HashMap<>();
 
-    public FileColorConfigurationEditDialog(@Nonnull Project project,
-                                            @Nonnull FileColorManager manager,
+    public FileColorConfigurationEditDialog(Project project,
+                                            FileColorManager manager,
                                             @Nullable FileColorConfiguration configuration) {
         super(true);
         myProject = project;
@@ -97,7 +96,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
         myScopeComboBox = new ComboBox<>(new CollectionComboBoxModel<>(new ArrayList<>(myScopeById.values())));
         myScopeComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList<? extends NamedScope> list, NamedScope value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList<? extends NamedScope> list, NamedScope value, int index, boolean selected, boolean hasFocus) {
                 append(value.getPresentableName());
             }
         });

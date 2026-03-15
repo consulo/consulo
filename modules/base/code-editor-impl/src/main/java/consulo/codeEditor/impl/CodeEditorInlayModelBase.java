@@ -21,8 +21,7 @@ import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -36,7 +35,7 @@ import java.util.function.Supplier;
  * Common part from desktop inlay model
  */
 public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpable {
-    public static boolean showWhenFolded(@Nonnull Inlay<?> inlay) {
+    public static boolean showWhenFolded(Inlay<?> inlay) {
         return inlay instanceof BlockInlayImpl && ((BlockInlayImpl<?>) inlay).myShowWhenFolded;
     }
 
@@ -68,7 +67,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     private List<Inlay<?>> myInlaysAtCaret;
     private boolean myInBatchMode;
 
-    public CodeEditorInlayModelBase(@Nonnull CodeEditorBase editor) {
+    public CodeEditorInlayModelBase(CodeEditorBase editor) {
         myEditor = editor;
         myInlineElementsTree = new InlineElementsTree(editor.getDocument());
         myBlockElementsTree = new BlockElementsTree(editor.getDocument());
@@ -80,7 +79,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
             }
 
             @Override
-            public void beforeDocumentChange(@Nonnull DocumentEvent event) {
+            public void beforeDocumentChange(DocumentEvent event) {
                 if (myEditor.getDocument().isInBulkUpdate()) {
                     return;
                 }
@@ -102,7 +101,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
             }
 
             @Override
-            public void documentChanged(@Nonnull DocumentEvent event) {
+            public void documentChanged(DocumentEvent event) {
                 if (myInlaysAtCaret != null) {
                     for (Inlay<?> inlay : myInlaysAtCaret) {
                         ((InlayImpl<?, ?>) inlay).setStickingToRight(inlay.isRelatedToPrecedingText());
@@ -136,7 +135,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     @Override
     public @Nullable <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset,
                                                                                        boolean relatesToPrecedingText,
-                                                                                       @Nonnull T renderer) {
+                                                                                       T renderer) {
         return addInlineElement(offset, relatesToPrecedingText, 0, renderer);
     }
 
@@ -144,7 +143,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     public @Nullable <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset,
                                                                                        boolean relatesToPrecedingText,
                                                                                        int priority,
-                                                                                       @Nonnull T renderer) {
+                                                                                       T renderer) {
         UIAccess.assertIsUIThread();
         Document document = myEditor.getDocument();
         if (DocumentUtil.isInsideSurrogatePair(document, offset)) {
@@ -158,25 +157,25 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
 
     @Override
     public @Nullable <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset,
-                                                                                       @Nonnull InlayProperties properties,
-                                                                                       @Nonnull T renderer) {
+                                                                                       InlayProperties properties,
+                                                                                       T renderer) {
         return addInlineElement(offset, properties.isRelatedToPrecedingText(), properties.getPriority(), renderer);
     }
 
     @Override
-    @Nonnull
+    
     public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset,
                                                                             boolean relatesToPrecedingText,
                                                                             boolean showAbove,
                                                                             int priority,
-                                                                            @Nonnull T renderer) {
+                                                                            T renderer) {
         return addBlockElement(offset, relatesToPrecedingText, showAbove, false, priority, renderer);
     }
 
     @Override
     public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset,
-                                                                            @Nonnull InlayProperties properties,
-                                                                            @Nonnull T renderer) {
+                                                                            InlayProperties properties,
+                                                                            T renderer) {
         return addBlockElement(offset,
             properties.isRelatedToPrecedingText(),
             properties.isShownAbove(),
@@ -190,7 +189,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
                                                                              boolean showAbove,
                                                                              boolean showWhenFolded,
                                                                              int priority,
-                                                                             @Nonnull T renderer) {
+                                                                             T renderer) {
         UIAccess.assertIsUIThread();
         offset = Math.max(0, Math.min(myEditor.getDocument().getTextLength(), offset));
         BlockInlayImpl<T> inlay = new BlockInlayImpl<>(myEditor, offset, relatesToPrecedingText, showAbove, showWhenFolded, priority, renderer);
@@ -199,27 +198,27 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     @Override
-    @Nonnull
+    
     public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset,
                                                                                    boolean relatesToPrecedingText,
-                                                                                   @Nonnull T renderer) {
+                                                                                   T renderer) {
         return addAfterLineEndElement(offset, relatesToPrecedingText, true, 0, renderer);
     }
 
     @Override
     public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset,
-                                                                                   @Nonnull InlayProperties properties,
-                                                                                   @Nonnull T renderer) {
+                                                                                   InlayProperties properties,
+                                                                                   T renderer) {
         return addAfterLineEndElement(offset, properties.isRelatedToPrecedingText(), !properties.isSoftWrappingDisabled(),
             properties.getPriority(), renderer);
     }
 
-    @Nonnull
+    
     private <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset,
                                                                                     boolean relatesToPrecedingText,
                                                                                     boolean softWrappable,
                                                                                     int priority,
-                                                                                    @Nonnull T renderer) {
+                                                                                    T renderer) {
         UIAccess.assertIsUIThread();
 
         Document document = myEditor.getDocument();
@@ -230,7 +229,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return inlay;
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getInlineElementsInRange(int startOffset, int endOffset) {
         List<InlineInlayImpl> range = getElementsInRange(myInlineElementsTree, startOffset, endOffset, inlay -> true, INLINE_ELEMENTS_COMPARATOR);
@@ -238,15 +237,15 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    @Nonnull
+    
     @Override
-    public <T> List<Inlay<? extends T>> getInlineElementsInRange(int startOffset, int endOffset, @Nonnull Class<T> type) {
+    public <T> List<Inlay<? extends T>> getInlineElementsInRange(int startOffset, int endOffset, Class<T> type) {
         List<InlineInlayImpl> range = getElementsInRange(myInlineElementsTree, startOffset, endOffset, inlay -> type.isInstance(inlay.myRenderer), INLINE_ELEMENTS_COMPARATOR);
         //noinspection unchecked
         return (List) range;
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getBlockElementsInRange(int startOffset, int endOffset) {
         List<BlockInlayImpl> range = getElementsInRange(myBlockElementsTree, startOffset, endOffset, inlay -> true, BLOCK_ELEMENTS_PRIORITY_COMPARATOR);
@@ -254,15 +253,15 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    @Nonnull
+    
     @Override
-    public <T> List<Inlay<? extends T>> getBlockElementsInRange(int startOffset, int endOffset, @Nonnull Class<T> type) {
+    public <T> List<Inlay<? extends T>> getBlockElementsInRange(int startOffset, int endOffset, Class<T> type) {
         List<BlockInlayImpl> range = getElementsInRange(myBlockElementsTree, startOffset, endOffset, inlay -> type.isInstance(inlay.myRenderer), BLOCK_ELEMENTS_PRIORITY_COMPARATOR);
         //noinspection unchecked
         return (List) range;
     }
 
-    private static <T extends Inlay> List<T> getElementsInRange(@Nonnull IntervalTreeImpl<? extends T> tree,
+    private static <T extends Inlay> List<T> getElementsInRange(IntervalTreeImpl<? extends T> tree,
                                                                 int startOffset,
                                                                 int endOffset,
                                                                 Predicate<? super T> predicate,
@@ -278,7 +277,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return result;
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getBlockElementsForVisualLine(int visualLine, boolean above) {
         int visibleLineCount = myEditor.getVisibleLineCount();
@@ -350,7 +349,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     @Override
-    public boolean hasInlineElementAt(@Nonnull VisualPosition visualPosition) {
+    public boolean hasInlineElementAt(VisualPosition visualPosition) {
         int offset = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(visualPosition));
         int inlayCount = getInlineElementsInRange(offset, offset).size();
         if (inlayCount == 0) {
@@ -362,7 +361,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
 
     @Nullable
     @Override
-    public Inlay getInlineElementAt(@Nonnull VisualPosition visualPosition) {
+    public Inlay getInlineElementAt(VisualPosition visualPosition) {
         int offset = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(visualPosition));
         List<Inlay<?>> inlays = getInlineElementsInRange(offset, offset);
         if (inlays.isEmpty()) {
@@ -378,11 +377,11 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
 
     @Nullable
     @Override
-    public Inlay getElementAt(@Nonnull Point point) {
+    public Inlay getElementAt(Point point) {
         return getElementAt(new EditorLocation(myEditor, point), false);
     }
 
-    public Inlay getElementAt(@Nonnull EditorLocation location, boolean ignoreBlockElementWidth) {
+    public Inlay getElementAt(EditorLocation location, boolean ignoreBlockElementWidth) {
         return ReadAction.compute(() -> {
             Insets insets = myEditor.getContentComponent().getInsets();
             Point point = location.getPoint();
@@ -487,7 +486,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getAfterLineEndElementsInRange(int startOffset, int endOffset) {
         if (!hasAfterLineEndElements()) {
@@ -498,9 +497,9 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    @Nonnull
+    
     @Override
-    public <T> List<Inlay<? extends T>> getAfterLineEndElementsInRange(int startOffset, int endOffset, @Nonnull Class<T> type) {
+    public <T> List<Inlay<? extends T>> getAfterLineEndElementsInRange(int startOffset, int endOffset, Class<T> type) {
         if (!hasAfterLineEndElements()) {
             return Collections.emptyList();
         }
@@ -509,7 +508,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getAfterLineEndElementsForLogicalLine(int logicalLine) {
         DocumentEx document = myEditor.getDocument();
@@ -538,7 +537,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     @Override
-    public void execute(boolean batchMode, @Nonnull Runnable operation) {
+    public void execute(boolean batchMode, Runnable operation) {
         UIAccess.assertIsUIThread();
         if (myInBatchMode || !batchMode) {
             operation.run();
@@ -557,7 +556,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     @Override
-    public void addListener(@Nonnull Listener listener, @Nonnull Disposable disposable) {
+    public void addListener(Listener listener, Disposable disposable) {
         myDispatcher.addListener(listener, disposable);
     }
 
@@ -591,7 +590,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         }
     }
 
-    @Nonnull
+    
     @Override
     public String dumpState() {
         return "Inline elements: " + dumpInlays(myInlineElementsTree) + ", after-line-end elements: " + dumpInlays(myAfterLineEndElementsTree) + ", block elements: " + dumpInlays(myBlockElementsTree);
@@ -625,17 +624,17 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     private class InlineElementsTree extends HardReferencingRangeMarkerTree<InlineInlayImpl<?>> {
-        InlineElementsTree(@Nonnull Document document) {
+        InlineElementsTree(Document document) {
             super(document);
         }
 
         @Override
-        @Nonnull
-        protected RMNode<InlineInlayImpl<?>> createNewNode(@Nonnull InlineInlayImpl key, int start, int end,
+        
+        protected RMNode<InlineInlayImpl<?>> createNewNode(InlineInlayImpl key, int start, int end,
                                                            boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
             return new RMNode<InlineInlayImpl<?>>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {
                 @Override
-                public void addIntervalsFrom(@Nonnull IntervalNode<InlineInlayImpl<?>> otherNode) {
+                public void addIntervalsFrom(IntervalNode<InlineInlayImpl<?>> otherNode) {
                     super.addIntervalsFrom(otherNode);
                     if (myPutMergedIntervalsAtBeginning) {
                         List<Supplier<? extends InlineInlayImpl<?>>> added = ContainerUtil.subList(intervals, intervals.size() - otherNode.intervals.size());
@@ -648,7 +647,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         }
 
         @Override
-        public void fireBeforeRemoved(@Nonnull InlineInlayImpl inlay) {
+        public void fireBeforeRemoved(InlineInlayImpl inlay) {
             if (inlay.getUserData(InlayImpl.OFFSET_BEFORE_DISPOSAL) == null) {
                 if (myMoveInProgress) {
                     // delay notification about invalidated inlay - folding model is not consistent at this point
@@ -663,12 +662,12 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     private class BlockElementsTree extends MarkerTreeWithPartialSums<BlockInlayImpl<?>> {
-        BlockElementsTree(@Nonnull Document document) {
+        BlockElementsTree(Document document) {
             super(document);
         }
 
         @Override
-        public void fireBeforeRemoved(@Nonnull BlockInlayImpl inlay) {
+        public void fireBeforeRemoved(BlockInlayImpl inlay) {
             if (inlay.getUserData(InlayImpl.OFFSET_BEFORE_DISPOSAL) == null) {
                 notifyRemoved(inlay);
             }
@@ -676,12 +675,12 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     private class AfterLineEndElementTree extends HardReferencingRangeMarkerTree<AfterLineEndInlayImpl<?>> {
-        AfterLineEndElementTree(@Nonnull Document document) {
+        AfterLineEndElementTree(Document document) {
             super(document);
         }
 
         @Override
-        public void fireBeforeRemoved(@Nonnull AfterLineEndInlayImpl inlay) {
+        public void fireBeforeRemoved(AfterLineEndInlayImpl inlay) {
             if (inlay.getUserData(InlayImpl.OFFSET_BEFORE_DISPOSAL) == null) {
                 notifyRemoved(inlay);
             }

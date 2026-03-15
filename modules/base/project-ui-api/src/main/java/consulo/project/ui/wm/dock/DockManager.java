@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -34,16 +33,15 @@ public interface DockManager {
 
   void register(DockContainer container);
 
-  DragSession createDragSession(MouseEvent mouseEvent, @Nonnull DockableContent content);
+  DragSession createDragSession(MouseEvent mouseEvent, DockableContent content);
 
   Set<DockContainer> getContainers();
 
   IdeFrame getIdeFrame(DockContainer container);
 
-  String getDimensionKeyForFocus(@Nonnull String key);
+  String getDimensionKeyForFocus(String key);
 
-  @Nullable
-  DockContainer getContainerFor(consulo.ui.Component c);
+  DockContainer getContainerFor(consulo.ui.@Nullable Component c);
 
   @Nullable
   default DockContainer getContainerFor(Component c) {

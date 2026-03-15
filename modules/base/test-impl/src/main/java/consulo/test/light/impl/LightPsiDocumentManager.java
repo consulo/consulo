@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -32,7 +31,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class LightPsiDocumentManager extends PsiDocumentManagerBase {
   @Inject
-  public LightPsiDocumentManager(@Nonnull Project project,
+  public LightPsiDocumentManager(Project project,
                                     DocumentCommitProcessor documentCommitProcessor) {
     super(project, documentCommitProcessor);
   }

@@ -24,8 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.stub.FileContent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -36,21 +35,21 @@ import java.util.function.Consumer;
 public abstract class FileIncludeProvider {
     public static final ExtensionPointName<FileIncludeProvider> EP_NAME = ExtensionPointName.create(FileIncludeProvider.class);
 
-    @Nonnull
+    
     public abstract String getId();
 
     public abstract boolean acceptFile(VirtualFile file);
 
-    public abstract void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink);
+    public abstract void registerFileTypesUsedForIndexing(Consumer<FileType> fileTypeSink);
 
-    @Nonnull
+    
     public abstract FileIncludeInfo[] getIncludeInfos(FileContent content);
 
     /**
      * If all providers return {@code null} then {@code FileIncludeInfo} is resolved in a standard way using {@code FileReferenceSet}
      */
     @Nullable
-    public PsiFileSystemItem resolveIncludedFile(@Nonnull FileIncludeInfo info, @Nonnull PsiFile context) {
+    public PsiFileSystemItem resolveIncludedFile(FileIncludeInfo info, PsiFile context) {
         return null;
     }
 
@@ -64,8 +63,8 @@ public abstract class FileIncludeProvider {
     /**
      * @return Possible name in included paths. For example if a provider returns FileIncludeInfos without file extensions
      */
-    @Nonnull
-    public String getIncludeName(@Nonnull PsiFile file, @Nonnull String originalName) {
+    
+    public String getIncludeName(PsiFile file, String originalName) {
         return originalName;
     }
 }

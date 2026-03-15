@@ -26,7 +26,6 @@ import consulo.project.content.library.ProjectLibraryTable;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,21 +43,21 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
     super("library", CompilerLocalize.elementTypeNameLibraryFiles());
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.PpLib;
   }
 
   @Override
-  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
+  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
     return !getAllLibraries(context).isEmpty();
   }
 
   @Override
-  @Nonnull
-  public List<? extends LibraryPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
-                                                                 @Nonnull CompositePackagingElement<?> parent) {
+  
+  public List<? extends LibraryPackagingElement> chooseAndCreate(ArtifactEditorContext context, Artifact artifact,
+                                                                 CompositePackagingElement<?> parent) {
     List<Library> selected = context.chooseLibraries(ProjectLocalize.dialogTitlePackagingChooseLibrary().get());
     List<LibraryPackagingElement> elements = new ArrayList<>();
     for (Library library : selected) {
@@ -73,8 +72,8 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
     return libraries;
   }
 
-  @Nonnull
-  public LibraryPackagingElement createEmpty(@Nonnull Project project) {
+  
+  public LibraryPackagingElement createEmpty(Project project) {
     return new LibraryPackagingElement();
   }
 

@@ -23,33 +23,32 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ResolveScopeManager {
-  @Nonnull
-  public abstract GlobalSearchScope getResolveScope(@Nonnull PsiElement element);
+  
+  public abstract GlobalSearchScope getResolveScope(PsiElement element);
 
   @RequiredReadAction
-  @Nonnull
+  
   public abstract GlobalSearchScope getDefaultResolveScope(VirtualFile vFile);
 
-  @Nonnull
-  public abstract GlobalSearchScope getUseScope(@Nonnull PsiElement element);
+  
+  public abstract GlobalSearchScope getUseScope(PsiElement element);
 
   public static ResolveScopeManager getInstance(Project project) {
     return project.getInstance(ResolveScopeManager.class);
   }
 
-  @Nonnull
+  
   public static GlobalSearchScope getElementUseScope(PsiElement element) {
     return getInstance(element.getProject()).getUseScope(element);
   }
 
-  @Nonnull
+  
   public static GlobalSearchScope getElementResolveScope(PsiElement element) {
     return getInstance(element.getProject()).getResolveScope(element);
   }

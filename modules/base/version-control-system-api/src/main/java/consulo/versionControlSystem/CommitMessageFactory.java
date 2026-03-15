@@ -17,7 +17,6 @@ package consulo.versionControlSystem;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,11 +24,11 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface CommitMessageFactory {
-    @Nonnull
+    
     default CommitMessage create() {
         return create(true);
     }
 
-    @Nonnull
+    
     CommitMessage create(boolean withSeparator);
 }

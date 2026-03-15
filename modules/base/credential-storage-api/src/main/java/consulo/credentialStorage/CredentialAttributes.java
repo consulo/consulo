@@ -1,6 +1,6 @@
 package consulo.credentialStorage;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the combined service name and user information used for authentication.

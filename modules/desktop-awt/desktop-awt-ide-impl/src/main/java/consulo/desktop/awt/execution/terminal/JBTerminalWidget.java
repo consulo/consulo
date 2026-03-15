@@ -17,8 +17,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.JBScrollBar;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -36,7 +35,7 @@ public class JBTerminalWidget extends JediTermWidget implements Disposable, Jedi
         return myTerminalPanel.getBoundedRangeModel();
     }
 
-    @Nonnull
+    
     @Override
     public Component getUIComponent() {
         return TargetAWT.wrap(getComponent());
@@ -44,9 +43,9 @@ public class JBTerminalWidget extends JediTermWidget implements Disposable, Jedi
 
     @Override
     protected JBTerminalPanel createTerminalPanel(
-        @Nonnull SettingsProvider settingsProvider,
-        @Nonnull StyleState styleState,
-        @Nonnull TerminalTextBuffer textBuffer
+        SettingsProvider settingsProvider,
+        StyleState styleState,
+        TerminalTextBuffer textBuffer
     ) {
         JBTerminalPanel panel =
             new JBTerminalPanel((JBTerminalSystemSettingsProvider) settingsProvider, textBuffer, styleState);
@@ -54,13 +53,13 @@ public class JBTerminalWidget extends JediTermWidget implements Disposable, Jedi
         return panel;
     }
 
-    public static void convertActions(@Nonnull JComponent component, @Nonnull List<TerminalAction> actions) {
+    public static void convertActions(JComponent component, List<TerminalAction> actions) {
         convertActions(component, actions, null);
     }
 
     public static void convertActions(
-        @Nonnull JComponent component,
-        @Nonnull List<TerminalAction> actions,
+        JComponent component,
+        List<TerminalAction> actions,
         @Nullable final Predicate<java.awt.event.KeyEvent> elseAction
     ) {
         for (final TerminalAction action : actions) {

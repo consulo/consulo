@@ -23,7 +23,6 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -37,7 +36,7 @@ public class PageDownAction extends EditorAction {
         }
 
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretPageDown(editor, false);
         }
 

@@ -23,8 +23,7 @@ import consulo.logging.internal.GroupedLogMessage;
 import consulo.logging.internal.IdeaLoggingEvent;
 import consulo.logging.internal.LogMessage;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +86,7 @@ public class MessagePool {
         return false;
     }
 
-    @Nonnull
+    
     public State getState() {
         if (myIdeFatals.isEmpty()) {
             return State.NoErrors;
@@ -194,7 +193,7 @@ public class MessagePool {
             myAccumulatedTime = 0;
         }
 
-        public boolean addToGroup(@Nonnull AbstractMessage message) {
+        public boolean addToGroup(AbstractMessage message) {
             myAccumulatedTime = 0;
             boolean result = myMessages.isEmpty();
             synchronized (myMessages) {

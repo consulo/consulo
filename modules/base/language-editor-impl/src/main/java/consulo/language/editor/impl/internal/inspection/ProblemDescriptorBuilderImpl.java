@@ -24,8 +24,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -51,61 +50,61 @@ public class ProblemDescriptorBuilderImpl implements ProblemDescriptorBuilder {
         myDescriptionTemplate = descriptionTemplate;
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemDescriptorBuilder range(@Nonnull PsiElement element, @Nullable TextRange rangeInElement) {
+    public ProblemDescriptorBuilder range(PsiElement element, @Nullable TextRange rangeInElement) {
         myStartElement = myEndElement = element;
         myRangeInElement = rangeInElement;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemDescriptorBuilder range(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+    public ProblemDescriptorBuilder range(PsiElement startElement, PsiElement endElement) {
         myStartElement = startElement;
         myEndElement = endElement;
         myRangeInElement = null;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemDescriptorBuilder highlightType(@Nonnull ProblemHighlightType highlightType) {
+    public ProblemDescriptorBuilder highlightType(ProblemHighlightType highlightType) {
         myHighlightType = highlightType;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public ProblemDescriptorBuilder afterEndOfLine() {
         myIsAfterEndOfLine = true;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public ProblemDescriptorBuilder onTheFly() {
         myOnTheFly = true;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public ProblemDescriptorBuilder showTooltip(boolean showTooltip) {
         myShowTooltip = showTooltip;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemDescriptorBuilder withFix(@Nonnull LocalQuickFix fix) {
+    public ProblemDescriptorBuilder withFix(LocalQuickFix fix) {
         nonNullLocalQuickFixes().add(fix);
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemDescriptorBuilder withFixes(@Nonnull Collection<? extends LocalQuickFix> localQuickFixes) {
+    public ProblemDescriptorBuilder withFixes(Collection<? extends LocalQuickFix> localQuickFixes) {
         nonNullLocalQuickFixes().addAll(localQuickFixes);
         return this;
     }
@@ -117,7 +116,7 @@ public class ProblemDescriptorBuilderImpl implements ProblemDescriptorBuilder {
         return myLocalQuickFixes;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public ProblemDescriptor create() {

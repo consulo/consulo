@@ -28,8 +28,7 @@ import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.component.util.pointer.NamedPointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -68,7 +67,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 
-  @Nonnull
+  
   @Override
   public NamedPointer<Sdk> getSdkPointer(String sdkName) {
     return new NamedPointer<>() {
@@ -78,7 +77,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
         return ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel().findSdk(sdkName);
       }
 
-      @Nonnull
+      
       @Override
       public String getName() {
         return sdkName;
@@ -95,7 +94,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
   public NamedPointer<Module> getModulePointer(Project project, String name) {
     return new NamedPointer<>() {
@@ -105,7 +104,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
         return myModulesConfigurator.getModule(name);
       }
 
-      @Nonnull
+      
       @Override
       public String getName() {
         return name;

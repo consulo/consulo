@@ -24,8 +24,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +64,7 @@ public class CommonActionsPanel extends JPanel {
             return StringUtil.capitalize(name().toLowerCase());
         }
 
-        public void performAction(Listener listener, @Nonnull AnActionEvent event) {
+        public void performAction(Listener listener, AnActionEvent event) {
             myActionPerformer.accept(listener, event);
         }
     }
@@ -190,12 +189,12 @@ public class CommonActionsPanel extends JPanel {
         new AnAction(LocalizeValue.localizeTODO("Delete Hook")) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 removeButton.actionPerformed(e);
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 JComponent contextComponent = removeButton.getContextComponent();
                 if (contextComponent instanceof JTable table && table.isEditing()) {
                     e.getPresentation().setEnabled(false);
@@ -230,7 +229,7 @@ public class CommonActionsPanel extends JPanel {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myButton.performAction(myListener, e);
         }
 
@@ -240,7 +239,7 @@ public class CommonActionsPanel extends JPanel {
         }
 
         @Override
-        public void updateButton(@Nonnull AnActionEvent e) {
+        public void updateButton(AnActionEvent e) {
             super.updateButton(e);
             if (!e.getPresentation().isEnabled()) {
                 return;

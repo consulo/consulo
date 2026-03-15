@@ -15,11 +15,10 @@
  */
 package consulo.codeEditor.internal;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 public interface ErrorStripeListener extends EventListener {
   ErrorStripeListener[] EMPTY_ARRAY = new ErrorStripeListener[0];
 
-  void errorMarkerClicked(@Nonnull ErrorStripeEvent e);
+  void errorMarkerClicked(ErrorStripeEvent e);
 }

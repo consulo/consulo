@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -48,13 +47,13 @@ public class DeleteAction extends AnAction implements DumbAware {
         super(ActionLocalize.action$deleteText(), ActionLocalize.action$deleteDescription());
     }
 
-    public DeleteAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public DeleteAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         DeleteProvider provider = getDeleteProvider(dataContext);
         if (provider == null) {
@@ -77,7 +76,7 @@ public class DeleteAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         String place = event.getPlace();
         Presentation presentation = event.getPresentation();
         if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place) || ActionPlaces.COMMANDER_POPUP.equals(place)) {

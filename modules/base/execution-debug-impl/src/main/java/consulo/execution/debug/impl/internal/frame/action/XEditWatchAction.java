@@ -23,7 +23,6 @@ import consulo.execution.debug.impl.internal.ui.tree.node.WatchNodeImpl;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchesRootNode;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -37,14 +36,14 @@ public class XEditWatchAction extends XWatchesTreeActionBase {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         XDebuggerTree tree = XDebuggerTree.getTree(e);
         e.getPresentation().setVisible(tree != null && getSelectedNodes(tree, WatchNodeImpl.class).size() == 1);
         super.update(e);
     }
 
     @Override
-    protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
+    protected void perform(AnActionEvent e, XDebuggerTree tree, XWatchesView watchesView) {
         List<? extends WatchNodeImpl> watchNodes = getSelectedNodes(tree, WatchNodeImpl.class);
         if (watchNodes.size() != 1) {
             return;

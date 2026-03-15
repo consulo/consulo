@@ -22,7 +22,7 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a frame of execution stack. The selected frame is shown in 'Variables' panel of 'Debug' tool window.

@@ -25,20 +25,19 @@ import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class ThreesideContentPanel extends JPanel {
-  @Nonnull
+ 
   private final ThreeDiffSplitter mySplitter;
-  @Nonnull
+ 
   private final List<DiffContentPanel> myPanels;
 
-  public ThreesideContentPanel(@Nonnull List<? extends JComponent> contents) {
+  public ThreesideContentPanel(List<? extends JComponent> contents) {
     super(new BorderLayout());
     assert contents.size() == 3;
 
@@ -49,7 +48,7 @@ public class ThreesideContentPanel extends JPanel {
     add(mySplitter, BorderLayout.CENTER);
   }
 
-  public void setTitles(@Nonnull List<JComponent> titleComponents) {
+  public void setTitles(List<JComponent> titleComponents) {
     for (ThreeSide side : ThreeSide.values()) {
       DiffContentPanel panel = side.select(myPanels);
       JComponent title = side.select(titleComponents);
@@ -57,7 +56,7 @@ public class ThreesideContentPanel extends JPanel {
     }
   }
 
-  //public void setBreadcrumbs(@Nonnull ThreeSide side, @Nullable DiffBreadcrumbsPanel breadcrumbs, @Nonnull TextDiffSettings settings) {
+  //public void setBreadcrumbs(ThreeSide side, @Nullable DiffBreadcrumbsPanel breadcrumbs, TextDiffSettings settings) {
   //  if (breadcrumbs != null) {
   //    DiffContentPanel panel = side.select(myPanels);
   //    panel.setBreadcrumbs(breadcrumbs);
@@ -73,7 +72,7 @@ public class ThreesideContentPanel extends JPanel {
   //}
 
   @RequiredUIAccess
-  public void setPainter(@Nullable DiffSplitter.Painter painter, @Nonnull Side side) {
+  public void setPainter(DiffSplitter.@Nullable Painter painter, Side side) {
     mySplitter.setPainter(painter, side);
   }
 
@@ -82,7 +81,7 @@ public class ThreesideContentPanel extends JPanel {
     repaintDivider(Side.RIGHT);
   }
 
-  public void repaintDivider(@Nonnull Side side) {
+  public void repaintDivider(Side side) {
     mySplitter.repaintDivider(side);
   }
 
@@ -90,7 +89,7 @@ public class ThreesideContentPanel extends JPanel {
     @Nullable
     private final EditorEx myBaseEditor;
 
-    public Holders(@Nonnull List<? extends EditorHolder> holders) {
+    public Holders(List<? extends EditorHolder> holders) {
       super(ContainerUtil.map(holders, holder -> holder.getComponent()));
 
 
@@ -99,7 +98,7 @@ public class ThreesideContentPanel extends JPanel {
     }
 
     @Override
-    public void repaintDivider(@Nonnull Side side) {
+    public void repaintDivider(Side side) {
       if (side == Side.RIGHT && myBaseEditor != null) {
         myBaseEditor.getScrollPane().getVerticalScrollBar().repaint();
       }

@@ -19,7 +19,6 @@ import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,7 @@ import java.util.List;
  * In most cases this class should be used to create new choice-based intention actions.
  */
 public interface DefaultIntentionActionWithChoice extends IntentionActionWithChoice<ChoiceTitleIntentionAction, ChoiceVariantIntentionAction> {
-  @Nonnull
+  
   default List<LocalQuickFix> getAllAsFixes() {
     List<LocalQuickFix> result = new ArrayList<>();
     result.add(getTitle());

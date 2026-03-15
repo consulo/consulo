@@ -29,7 +29,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.io.FileUtil;
 import consulo.util.io.ResourceUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,7 +52,7 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         InspectionProfile profile = (InspectionProfile) InspectionProfileManager.getInstance().getRootProfile();
         InspectionToolWrapper[] tools = profile.getInspectionTools(null);
 

@@ -22,10 +22,8 @@ import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.ui.ex.awt.GridBag;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -36,10 +34,10 @@ import java.util.List;
  */
 public class ArrangementGroupingRulesPanel extends JPanel implements DataProvider {
 
-  @Nonnull
+  
   private final ArrangementGroupingRulesControl myControl;
 
-  public ArrangementGroupingRulesPanel(@Nonnull ArrangementStandardSettingsManager settingsManager, @Nonnull ArrangementColorsProvider colorsProvider) {
+  public ArrangementGroupingRulesPanel(ArrangementStandardSettingsManager settingsManager, ArrangementColorsProvider colorsProvider) {
     super(new GridBagLayout());
 
     myControl = new ArrangementGroupingRulesControl(settingsManager, colorsProvider);
@@ -55,14 +53,14 @@ public class ArrangementGroupingRulesPanel extends JPanel implements DataProvide
     myControl.setRules(rules);
   }
 
-  @Nonnull
+  
   public List<ArrangementGroupingRule> getRules() {
     return myControl.getRules();
   }
 
   @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key dataId) {
+  public Object getData(Key dataId) {
     if (ArrangementGroupingRulesControl.KEY == dataId) {
       return myControl;
     }

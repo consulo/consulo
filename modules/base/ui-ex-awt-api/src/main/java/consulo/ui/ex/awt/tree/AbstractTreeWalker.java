@@ -4,7 +4,6 @@ package consulo.ui.ex.awt.tree;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.TreePath;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -32,7 +31,7 @@ public abstract class AbstractTreeWalker<N> {
    *
    * @param visitor an object that controls visiting a tree structure
    */
-  public AbstractTreeWalker(@Nonnull TreeVisitor visitor) {
+  public AbstractTreeWalker(TreeVisitor visitor) {
     this(visitor, node -> node);
   }
 
@@ -43,7 +42,7 @@ public abstract class AbstractTreeWalker<N> {
    * @param visitor   an object that controls visiting a tree structure
    * @param converter a node converter for the path components
    */
-  public AbstractTreeWalker(@Nonnull TreeVisitor visitor, Function<? super N, Object> converter) {
+  public AbstractTreeWalker(TreeVisitor visitor, Function<? super N, Object> converter) {
     this.converter = converter;
     this.visitor = visitor;
   }
@@ -58,7 +57,7 @@ public abstract class AbstractTreeWalker<N> {
    * @param node a node in a tree structure
    * @return children for the specified node or {@code null} if children will be set later
    */
-  protected abstract Collection<N> getChildren(@Nonnull N node);
+  protected abstract Collection<N> getChildren(N node);
 
   /**
    * Sets the children, awaited by the walker, and continues to traverse a tree structure.
@@ -76,7 +75,7 @@ public abstract class AbstractTreeWalker<N> {
   /**
    * @return a promise that will be resolved when visiting is finished
    */
-  @Nonnull
+  
   public Promise<TreePath> promise() {
     return promise;
   }
@@ -84,7 +83,7 @@ public abstract class AbstractTreeWalker<N> {
   /**
    * Stops visiting a tree structure by specifying a cause.
    */
-  public void setError(@Nonnull Throwable error) {
+  public void setError(Throwable error) {
     state.set(State.FAILED);
     promise.setError(error);
   }
@@ -136,7 +135,7 @@ public abstract class AbstractTreeWalker<N> {
    * @param node a node to get children to process
    * @return {@code false} if the walker should be pause
    */
-  private boolean processChildren(@Nonnull TreePath path, @Nonnull N node) {
+  private boolean processChildren(TreePath path, N node) {
     current = path;
     Collection<N> children = getChildren(node);
     if (children == null) return !state.compareAndSet(State.REQUESTED, State.PAUSED);
@@ -189,7 +188,7 @@ public abstract class AbstractTreeWalker<N> {
     }
   }
 
-  private void update(State expected, @Nonnull State replacement) {
+  private void update(State expected, State replacement) {
     if (!state.compareAndSet(expected, replacement)) throw new IllegalStateException();
   }
 }

@@ -19,11 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class XDebuggerSettingsManager {
-  @Nonnull
+  
   public static XDebuggerSettingsManager getInstance() {
     return Application.get().getInstance(XDebuggerSettingsManager.class);
   }
@@ -48,9 +47,9 @@ public abstract class XDebuggerSettingsManager {
       boolean isSingleClickForDisablingBreakpoint();
   }
 
-  @Nonnull
+  
   public abstract DataViewSettings getDataViewSettings();
 
-  @Nonnull
+  
   public abstract GeneralViewSettings getGeneralSettings();
 }

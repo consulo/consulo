@@ -8,7 +8,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -34,5 +33,5 @@ public interface ExternalSystemOutputParserProvider {
      * @param taskId is id of build task that output should be patched by these parsers.
      * @return parsers for messages from text and build events.
      */
-    List<BuildOutputParser> getBuildOutputParsers(@Nonnull ExternalSystemTaskId taskId);
+    List<BuildOutputParser> getBuildOutputParsers(ExternalSystemTaskId taskId);
 }

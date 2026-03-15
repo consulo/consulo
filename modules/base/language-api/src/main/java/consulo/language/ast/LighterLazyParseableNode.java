@@ -18,8 +18,7 @@ package consulo.language.ast;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.CharTable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface LighterLazyParseableNode extends LighterASTNode {
   @Nullable
@@ -33,5 +32,5 @@ public interface LighterLazyParseableNode extends LighterASTNode {
     boolean visit(IElementType type);
   }
 
-  boolean accept(@Nonnull Visitor visitor);
+  boolean accept(Visitor visitor);
 }

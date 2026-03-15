@@ -26,8 +26,7 @@ import consulo.language.codeStyle.impl.internal.formatting.NewLineBlocksIterator
 import consulo.language.psi.PsiComment;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,7 @@ public class FormatterBasedLineIndentInfoBuilder {
   private final CharSequence myText;
   private final Block myRootBlock;
 
-  public FormatterBasedLineIndentInfoBuilder(@Nonnull Document document, @Nonnull Block rootBlock, @Nullable ProgressIndicator indicator) {
+  public FormatterBasedLineIndentInfoBuilder(Document document, Block rootBlock, @Nullable ProgressIndicator indicator) {
     myDocument = document;
     myText = myDocument.getCharsSequence();
     myRootBlock = rootBlock;
@@ -116,7 +115,7 @@ public class FormatterBasedLineIndentInfoBuilder {
     return indentsOnStartOffset;
   }
 
-  @Nonnull
+  
   private List<Block> getBlocksStartingNewLine() {
     NewLineBlocksIterator newLineBlocksIterator = new NewLineBlocksIterator(myRootBlock, myDocument, myProgressIndicator);
 

@@ -49,8 +49,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -75,14 +74,14 @@ public class BuildArtifactAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabled(project != null && !ArtifactUtil.getArtifactWithOutputPaths(project).isEmpty());
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
 
         List<Artifact> artifacts = ArtifactUtil.getArtifactWithOutputPaths(project);
@@ -137,7 +136,7 @@ public class BuildArtifactAction extends DumbAwareAction {
     }
 
     @RequiredReadAction
-    private static void doBuild(@Nonnull Project project, @Nonnull List<ArtifactPopupItem> items, boolean rebuild) {
+    private static void doBuild(Project project, List<ArtifactPopupItem> items, boolean rebuild) {
         Set<Artifact> artifacts = getArtifacts(items, project);
         CompileScope scope = ArtifactCompileScope.createArtifactsScope(project, artifacts, rebuild);
 
@@ -175,9 +174,9 @@ public class BuildArtifactAction extends DumbAwareAction {
         private final NotificationService myNotificationService;
 
         private CleanArtifactItem(
-            @Nonnull List<ArtifactPopupItem> item,
-            @Nonnull Project project,
-            @Nonnull NotificationService notificationService
+            List<ArtifactPopupItem> item,
+            Project project,
+            NotificationService notificationService
         ) {
             super(item, project, CompilerLocalize.artifactsMenuItemClean());
             myNotificationService = notificationService;
@@ -232,7 +231,7 @@ public class BuildArtifactAction extends DumbAwareAction {
 
             new Task.Backgroundable(myProject, CompilerLocalize.taskCleaningArtifactsTitle(), true) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     List<File> deleted = new ArrayList<>();
                     for (Pair<File, Artifact> pair : toClean) {
                         indicator.checkCanceled();
@@ -278,20 +277,20 @@ public class BuildArtifactAction extends DumbAwareAction {
     }
 
     private static abstract class ArtifactActionItem implements Runnable {
-        @Nonnull
+        
         protected final List<ArtifactPopupItem> myArtifactPopupItems;
-        @Nonnull
+        
         protected final Project myProject;
-        @Nonnull
+        
         private LocalizeValue myActionName;
 
-        protected ArtifactActionItem(@Nonnull List<ArtifactPopupItem> item, @Nonnull Project project, @Nonnull LocalizeValue name) {
+        protected ArtifactActionItem(List<ArtifactPopupItem> item, Project project, LocalizeValue name) {
             myArtifactPopupItems = item;
             myProject = project;
             myActionName = name;
         }
 
-        @Nonnull
+        
         public LocalizeValue getActionName() {
             return myActionName;
         }
@@ -300,11 +299,11 @@ public class BuildArtifactAction extends DumbAwareAction {
     private static class ArtifactPopupItem {
         @Nullable
         private final Artifact myArtifact;
-        @Nonnull
+        
         private final LocalizeValue myText;
         private final Image myIcon;
 
-        private ArtifactPopupItem(@Nullable Artifact artifact, @Nonnull LocalizeValue text, Image icon) {
+        private ArtifactPopupItem(@Nullable Artifact artifact, LocalizeValue text, Image icon) {
             myArtifact = artifact;
             myText = text;
             myIcon = icon;
@@ -315,7 +314,7 @@ public class BuildArtifactAction extends DumbAwareAction {
             return myArtifact;
         }
 
-        @Nonnull
+        
         public LocalizeValue getText() {
             return myText;
         }
@@ -357,7 +356,7 @@ public class BuildArtifactAction extends DumbAwareAction {
             return aValue.getIcon();
         }
 
-        @Nonnull
+        
         @Override
         public String getTextFor(ArtifactPopupItem value) {
             return value.getText().get();
@@ -388,7 +387,7 @@ public class BuildArtifactAction extends DumbAwareAction {
                 CompilerLocalize.popupTitleChosenArtifactAction(selectedValues.size()).get(),
                 actions
             ) {
-                @Nonnull
+                
                 @Override
                 public String getTextFor(ArtifactActionItem value) {
                     return value.getActionName().get();

@@ -20,7 +20,6 @@ import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class RemoveSelectedProjectsFromGroupsAction extends RecentProjectsWelcom
   }
 
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     List<AnAction> elements = getSelectedElements(e);
     for (AnAction element : elements) {
       if (element instanceof ReopenProjectAction) {

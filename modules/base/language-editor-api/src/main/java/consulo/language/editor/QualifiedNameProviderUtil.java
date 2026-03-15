@@ -17,8 +17,7 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -27,19 +26,19 @@ public final class QualifiedNameProviderUtil {
     }
 
     @Nullable
-    public static PsiElement adjustElementToCopy(@Nonnull PsiElement element) {
+    public static PsiElement adjustElementToCopy(PsiElement element) {
         return element.getApplication().getExtensionPoint(QualifiedNameProvider.class)
             .computeSafeIfAny(it -> it.adjustElementToCopy(element));
     }
 
     @Nullable
-    public static String getQualifiedName(@Nonnull PsiElement element) {
+    public static String getQualifiedName(PsiElement element) {
         return element.getApplication().getExtensionPoint(QualifiedNameProvider.class)
             .computeSafeIfAny(it -> it.getQualifiedName(element));
     }
 
     @Nullable
-    public static PsiElement qualifiedNameToElement(@Nonnull String qualifiedName, @Nonnull Project project) {
+    public static PsiElement qualifiedNameToElement(String qualifiedName, Project project) {
         return project.getApplication().getExtensionPoint(QualifiedNameProvider.class)
             .computeSafeIfAny(it -> it.qualifiedNameToElement(qualifiedName, project));
     }
@@ -80,15 +79,15 @@ public final class QualifiedNameProviderUtil {
         return null;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static String getFileFqn(PsiFile file) {
         VirtualFile virtualFile = file.getVirtualFile();
         return virtualFile == null ? file.getName() : getVirtualFileFqn(virtualFile, file.getProject());
     }
 
-    @Nonnull
-    public static String getVirtualFileFqn(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
+    
+    public static String getVirtualFileFqn(VirtualFile virtualFile, Project project) {
         String qualifiedName = project.getApplication().getExtensionPoint(VirtualFileQualifiedNameProvider.class)
             .computeSafeIfAny(provider -> provider.getQualifiedName(project, virtualFile));
         if (qualifiedName != null) {

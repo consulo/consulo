@@ -23,8 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -42,20 +41,20 @@ public class EmptyMarkupModel implements MarkupModelEx {
     }
 
     @Override
-    @Nonnull
+    
     public Document getDocument() {
         return myDocument;
     }
 
     @Override
-    @Nonnull
-    public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
+    
+    public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, HighlighterTargetArea targetArea) {
         throw new ProcessCanceledException();
     }
 
-    @Nonnull
+    
     @Override
-    public RangeHighlighter addRangeHighlighter(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, @Nonnull HighlighterTargetArea targetArea) {
+    public RangeHighlighter addRangeHighlighter(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, HighlighterTargetArea targetArea) {
         throw new ProcessCanceledException();
     }
 
@@ -65,30 +64,30 @@ public class EmptyMarkupModel implements MarkupModelEx {
         throw new ProcessCanceledException();
     }
 
-    @Nonnull
+    
     @Override
-    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, @Nonnull HighlighterTargetArea targetArea, boolean isPersistent, @Nullable Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, HighlighterTargetArea targetArea, boolean isPersistent, @Nullable Consumer<? super RangeHighlighterEx> changeAttributesAction) {
         throw new ProcessCanceledException();
     }
 
     @Override
-    public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+    public void changeAttributesInBatch(RangeHighlighterEx highlighter, Consumer<? super RangeHighlighterEx> changeAttributesAction) {
     }
 
     @Override
-    @Nonnull
+    
     public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
         throw new ProcessCanceledException();
     }
 
     @Override
-    @Nonnull
+    
     public RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int line, int layer) {
         throw new ProcessCanceledException();
     }
 
     @Override
-    public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
+    public void removeHighlighter(RangeHighlighter rangeHighlighter) {
     }
 
     @Override
@@ -96,18 +95,18 @@ public class EmptyMarkupModel implements MarkupModelEx {
     }
 
     @Override
-    @Nonnull
+    
     public RangeHighlighter[] getAllHighlighters() {
         return RangeHighlighter.EMPTY_ARRAY;
     }
 
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return null;
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, T value) {
+    public <T> void putUserData(Key<T> key, T value) {
     }
 
     @Override
@@ -120,37 +119,37 @@ public class EmptyMarkupModel implements MarkupModelEx {
     }
 
     @Override
-    public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
+    public boolean containsHighlighter(RangeHighlighter highlighter) {
         return false;
     }
 
     @Override
-    public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
+    public void addMarkupModelListener(Disposable parentDisposable, MarkupModelListener listener) {
     }
 
     @Override
-    public void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes) {
+    public void setRangeHighlighterAttributes(RangeHighlighter highlighter, TextAttributes textAttributes) {
 
     }
 
     @Override
-    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor) {
+    public boolean processRangeHighlightersOverlappingWith(int start, int end, Predicate<? super RangeHighlighterEx> processor) {
         return false;
     }
 
     @Override
-    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor) {
+    public boolean processRangeHighlightersOutside(int start, int end, Predicate<? super RangeHighlighterEx> processor) {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
     public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
         return MarkupIterator.EMPTY;
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
     public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
@@ -158,17 +157,17 @@ public class EmptyMarkupModel implements MarkupModelEx {
     }
 
     @Override
-    public void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter) {
+    public void fireAfterAdded(RangeHighlighterEx segmentHighlighter) {
 
     }
 
     @Override
-    public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
+    public void fireBeforeRemoved(RangeHighlighterEx segmentHighlighter) {
 
     }
 
     @Override
-    public void fireAfterRemoved(@Nonnull RangeHighlighterEx highlighter) {
+    public void fireAfterRemoved(RangeHighlighterEx highlighter) {
 
     }
 }

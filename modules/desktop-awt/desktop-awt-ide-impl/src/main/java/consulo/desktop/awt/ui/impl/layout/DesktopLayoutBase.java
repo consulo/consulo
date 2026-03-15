@@ -23,7 +23,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.LayoutStyle;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +44,7 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
             super.updateUI();
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopLayoutBase.this;
@@ -53,7 +52,7 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
     }
 
     @Override
-    public void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
         T component = toAWTComponent();
 
         for (int i = 0; i < component.getComponentCount(); i++) {
@@ -77,9 +76,9 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
         return (T) new MyJPanel(Objects.requireNonNull(myLayoutManager));
     }
 
-    @Nonnull
+    
     @Override
-    public Layout<C> add(@Nonnull Component component, @Nonnull C constraint) {
+    public Layout<C> add(Component component, C constraint) {
         addImpl(component, convertConstraints(constraint));
         return this;
     }

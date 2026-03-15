@@ -25,7 +25,6 @@ import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +38,7 @@ public class XDebuggerEditBreakpointActionHandler extends EditBreakpointActionHa
     }
 
     @Override
-    public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
+    public boolean isEnabled(Project project, AnActionEvent event) {
         DataContext dataContext = event.getDataContext();
         Editor editor = dataContext.getData(Editor.KEY);
         if (editor == null) {

@@ -15,8 +15,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +40,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   private final LinkedBlockingQueue<InvocationEvent> myInvocationEvents = new LinkedBlockingQueue<>();
 
   @RequiredUIAccess
-  public PotemkinProgress(@Nonnull String title, @Nullable Project project, @Nullable JComponent parentComponent, @Nonnull LocalizeValue cancelText) {
+  public PotemkinProgress(String title, @Nullable Project project, @Nullable JComponent parentComponent, LocalizeValue cancelText) {
     super(cancelText.isNotEmpty(), false, project, parentComponent, cancelText);
     setTitle(title);
     UIAccess.assertIsUIThread();
@@ -62,7 +61,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
     }, this);
   }
 
-  @Nonnull
+  
   @Override
   protected DesktopAWTProgressDialogImpl getDialog() {
     return (DesktopAWTProgressDialogImpl)Objects.requireNonNull(super.getDialog());
@@ -102,7 +101,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
     }
   }
 
-  private void dispatchInputEvent(@Nonnull InputEvent e) {
+  private void dispatchInputEvent(InputEvent e) {
     if (isCancellationEvent(e)) {
       cancel();
       return;
@@ -179,7 +178,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
    * Executes the action in EDT, paints itself inside checkCanceled calls.
    */
   @RequiredUIAccess
-  public void runInSwingThread(@Nonnull Runnable action) {
+  public void runInSwingThread(Runnable action) {
     UIAccess.assertIsUIThread();
     try {
       ProgressManager.getInstance().runProcess(action, this);
@@ -195,7 +194,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
    * Executes the action in a background thread, block Swing thread, handles selected input events and paints itself periodically.
    */
   @RequiredUIAccess
-  public void runInBackground(@Nonnull Runnable action) {
+  public void runInBackground(Runnable action) {
     UIAccess.assertIsUIThread();
     enterModality();
 
@@ -213,7 +212,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
     }
   }
 
-  private void ensureBackgroundThreadStarted(@Nonnull Runnable action) {
+  private void ensureBackgroundThreadStarted(Runnable action) {
     Semaphore started = new Semaphore();
     started.down();
     myApp.executeOnPooledThread(() -> ProgressManager.getInstance().runProcess(() -> {

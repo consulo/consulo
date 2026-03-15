@@ -15,16 +15,15 @@
  */
 package consulo.language.ast;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class LighterASTNodeVisitor {
-  public abstract void visitNode(@Nonnull LighterASTNode node);
+  public abstract void visitNode(LighterASTNode node);
 
-  public void visitTokenNode(@Nonnull LighterASTTokenNode node) {
+  public void visitTokenNode(LighterASTTokenNode node) {
     visitNode(node);
   }
 
-  public void visitLazyParseableNode(@Nonnull LighterLazyParseableNode node) {
+  public void visitLazyParseableNode(LighterLazyParseableNode node) {
     visitNode(node);
   }
 }

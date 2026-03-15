@@ -22,8 +22,7 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class AddToFavoritesActionGroup extends ActionGroup {
         super(ActionLocalize.groupAddtofavoritesText(), true);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (e == null) {
@@ -64,7 +63,7 @@ public class AddToFavoritesActionGroup extends ActionGroup {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setVisible(AddToFavoritesAction.canCreateNodes(e));
     }

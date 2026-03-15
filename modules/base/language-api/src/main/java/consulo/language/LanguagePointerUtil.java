@@ -16,7 +16,6 @@
 package consulo.language;
 
 import consulo.component.util.pointer.NamedPointer;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,8 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LanguagePointerUtil {
   private static final Map<String, NamedPointer<Language>> ourPointersCache = new ConcurrentHashMap<>();
 
-  @Nonnull
-  public static NamedPointer<Language> createPointer(@Nonnull String name) {
+  
+  public static NamedPointer<Language> createPointer(String name) {
     NamedPointer<Language> languageNamedPointer = ourPointersCache.get(name);
     if(languageNamedPointer != null) {
       return languageNamedPointer;

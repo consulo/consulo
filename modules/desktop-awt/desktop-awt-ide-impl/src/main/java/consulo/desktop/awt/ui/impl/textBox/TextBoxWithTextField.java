@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.ui.TextBox;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -25,6 +24,6 @@ import javax.swing.*;
  * @since 2020-05-30
  */
 public interface TextBoxWithTextField extends TextBox {
-  @Nonnull
+  
   JTextField getTextField();
 }

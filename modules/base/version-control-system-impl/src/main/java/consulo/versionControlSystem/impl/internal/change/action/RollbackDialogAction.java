@@ -28,7 +28,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.RollbackChangesDialog;
 import consulo.versionControlSystem.impl.internal.util.RollbackUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -42,7 +41,7 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     FileDocumentManager.getInstance().saveAllDocuments();
     Change[] changes = e.getRequiredData(VcsDataKeys.CHANGES);
     Project project = e.getRequiredData(Project.KEY);
@@ -59,7 +58,7 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
     Project project = e.getData(Project.KEY);
     boolean enabled = changes != null && project != null;

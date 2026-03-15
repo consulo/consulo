@@ -17,15 +17,14 @@ package consulo.compiler.util;
 
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public class ExportableUserDataHolderBase extends UserDataHolderBase implements ExportableUserDataHolder {
     private final Set<Key> myKeys = Collections.synchronizedSet(new HashSet<Key>());
 
-    @Nonnull
+    
     @Override
     public final Map<Key, Object> exportUserData() {
         Map<Key, Object> result = new HashMap<>();
@@ -41,7 +40,7 @@ public class ExportableUserDataHolderBase extends UserDataHolderBase implements 
     }
 
     @Override
-    public final <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public final <T> void putUserData(Key<T> key, @Nullable T value) {
         if (value != null) {
             myKeys.add(key);
         }

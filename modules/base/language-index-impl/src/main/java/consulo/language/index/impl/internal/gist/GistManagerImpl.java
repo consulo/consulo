@@ -15,7 +15,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
@@ -33,9 +32,9 @@ public final class GistManagerImpl extends GistManager {
     private static final String ourPropertyName = "file.gist.reindex.count";
     private final AtomicInteger myReindexCount = new AtomicInteger(ApplicationPropertiesComponent.getInstance().getInt(ourPropertyName, 0));
 
-    @Nonnull
+    
     @Override
-    public <Data> VirtualFileGist<Data> newVirtualFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull BiFunction<Project, VirtualFile, Data> calcData) {
+    public <Data> VirtualFileGist<Data> newVirtualFileGist(String id, int version, DataExternalizer<Data> externalizer, BiFunction<Project, VirtualFile, Data> calcData) {
         if (!ourKnownIds.add(id)) {
             throw new IllegalArgumentException("Gist '" + id + "' is already registered");
         }
@@ -43,9 +42,9 @@ public final class GistManagerImpl extends GistManager {
         return new VirtualFileGistImpl<>(id, version, externalizer, calcData);
     }
 
-    @Nonnull
+    
     @Override
-    public <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull Function<PsiFile, Data> calculator) {
+    public <Data> PsiFileGist<Data> newPsiFileGist(String id, int version, DataExternalizer<Data> externalizer, Function<PsiFile, Data> calculator) {
         return new PsiFileGistImpl<>(id, version, externalizer, calculator);
     }
 

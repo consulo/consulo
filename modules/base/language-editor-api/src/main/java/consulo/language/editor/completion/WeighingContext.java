@@ -18,15 +18,14 @@ package consulo.language.editor.completion;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.LookupElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface WeighingContext {
-  @Nonnull
-  String itemPattern(@Nonnull LookupElement element);
+  
+  String itemPattern(LookupElement element);
 
-  @Nonnull
-  PrefixMatcher itemMatcher(@Nonnull LookupElement item);
+  
+  PrefixMatcher itemMatcher(LookupElement item);
 }

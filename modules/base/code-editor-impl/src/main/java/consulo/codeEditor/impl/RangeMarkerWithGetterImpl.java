@@ -4,14 +4,13 @@ package consulo.codeEditor.impl;
 import consulo.document.internal.DocumentEx;
 import consulo.document.impl.RangeMarkerImpl;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
  * @see HardReferencingRangeMarkerTree
  */
 class RangeMarkerWithGetterImpl extends RangeMarkerImpl implements Supplier<RangeMarkerWithGetterImpl> {
-  RangeMarkerWithGetterImpl(@Nonnull DocumentEx document, int start, int end, boolean register) {
+  RangeMarkerWithGetterImpl(DocumentEx document, int start, int end, boolean register) {
     super(document, start, end, register, true);
   }
 

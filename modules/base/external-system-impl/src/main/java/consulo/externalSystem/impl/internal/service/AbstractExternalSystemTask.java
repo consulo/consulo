@@ -9,7 +9,6 @@ import consulo.externalSystem.service.notification.ExternalSystemProgressNotific
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -29,46 +28,46 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
     new AtomicReference<ExternalSystemTaskState>(ExternalSystemTaskState.NOT_STARTED);
   private final AtomicReference<Throwable> myError = new AtomicReference<Throwable>();
 
-  @Nonnull
+  
   private final transient Project myIdeProject;
 
-  @Nonnull
+  
   private final ExternalSystemTaskId myId;
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
-  @Nonnull
+  
   private final String myExternalProjectPath;
 
-  protected AbstractExternalSystemTask(@Nonnull ProjectSystemId id,
-                                       @Nonnull ExternalSystemTaskType type,
-                                       @Nonnull Project project,
-                                       @Nonnull String externalProjectPath) {
+  protected AbstractExternalSystemTask(ProjectSystemId id,
+                                       ExternalSystemTaskType type,
+                                       Project project,
+                                       String externalProjectPath) {
     myExternalSystemId = id;
     myIdeProject = project;
     myId = ExternalSystemTaskId.create(id, type, myIdeProject);
     myExternalProjectPath = externalProjectPath;
   }
 
-  @Nonnull
+  
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
   }
 
-  @Nonnull
+  
   public ExternalSystemTaskId getId() {
     return myId;
   }
 
-  @Nonnull
+  
   public ExternalSystemTaskState getState() {
     return myState.get();
   }
 
-  protected void setState(@Nonnull ExternalSystemTaskState state) {
+  protected void setState(ExternalSystemTaskState state) {
     myState.set(state);
   }
 
-  protected boolean compareAndSetState(@Nonnull ExternalSystemTaskState expect, @Nonnull ExternalSystemTaskState update) {
+  protected boolean compareAndSetState(ExternalSystemTaskState expect, ExternalSystemTaskState update) {
     return myState.compareAndSet(expect, update);
   }
 
@@ -77,12 +76,12 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
     return myError.get();
   }
 
-  @Nonnull
+  
   public Project getIdeProject() {
     return myIdeProject;
   }
 
-  @Nonnull
+  
   public String getExternalProjectPath() {
     return myExternalProjectPath;
   }
@@ -106,11 +105,11 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
   }
 
   @Override
-  public void execute(@Nonnull final ProgressIndicator indicator, @Nonnull ExternalSystemTaskNotificationListener... listeners) {
+  public void execute(final ProgressIndicator indicator, ExternalSystemTaskNotificationListener... listeners) {
     indicator.setIndeterminate(true);
     ExternalSystemTaskNotificationListenerAdapter adapter = new ExternalSystemTaskNotificationListenerAdapter() {
       @Override
-      public void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) {
+      public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
         indicator.setText(wrapProgressText(event.getDescription()));
       }
     };
@@ -126,7 +125,7 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
   }
 
   @Override
-  public void execute(@Nonnull ExternalSystemTaskNotificationListener... listeners) {
+  public void execute(ExternalSystemTaskNotificationListener... listeners) {
     if (!compareAndSetState(ExternalSystemTaskState.NOT_STARTED, ExternalSystemTaskState.IN_PROGRESS)) return;
 
     ExternalSystemProgressNotificationManager progressManager = Application.get().getInstance(ExternalSystemProgressNotificationManager.class);
@@ -155,11 +154,11 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
   protected abstract void doExecute() throws Exception;
 
   @Override
-  public boolean cancel(@Nonnull final ProgressIndicator indicator, @Nonnull ExternalSystemTaskNotificationListener... listeners) {
+  public boolean cancel(final ProgressIndicator indicator, ExternalSystemTaskNotificationListener... listeners) {
     indicator.setIndeterminate(true);
     ExternalSystemTaskNotificationListenerAdapter adapter = new ExternalSystemTaskNotificationListenerAdapter() {
       @Override
-      public void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) {
+      public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
         indicator.setText(wrapProgressText(event.getDescription()));
       }
     };
@@ -175,7 +174,7 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
   }
 
   @Override
-  public boolean cancel(@Nonnull ExternalSystemTaskNotificationListener... listeners) {
+  public boolean cancel(ExternalSystemTaskNotificationListener... listeners) {
     ExternalSystemTaskState currentTaskState = getState();
     if (currentTaskState.isStopped()) return true;
 
@@ -208,8 +207,8 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
   protected abstract boolean doCancel() throws Exception;
 
 
-  @Nonnull
-  protected String wrapProgressText(@Nonnull String text) {
+  
+  protected String wrapProgressText(String text) {
     return ExternalSystemBundle.message("progress.update.text", getExternalSystemId(), text);
   }
 

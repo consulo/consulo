@@ -14,8 +14,7 @@ import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -237,7 +236,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
   }
 
   @Override
-  public int getPopupOffset(@Nonnull NavBarItem item) {
+  public int getPopupOffset(NavBarItem item) {
     return item.isFirstElement() ? 0 : JBUIScale.scale(5);
   }
 }

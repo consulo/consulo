@@ -30,8 +30,7 @@ import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import java.util.List;
  */
 public class CheckinHandlerUtil {
     @RequiredReadAction
-    public static List<VirtualFile> filterOutGeneratedAndExcludedFiles(@Nonnull Collection<VirtualFile> files, @Nonnull Project project) {
+    public static List<VirtualFile> filterOutGeneratedAndExcludedFiles(Collection<VirtualFile> files, Project project) {
         ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
         List<VirtualFile> result = new ArrayList<>(files.size());
         for (VirtualFile file : files) {
@@ -79,25 +78,25 @@ public class CheckinHandlerUtil {
         return PsiUtilCore.toPsiFileArray(result);
     }
 
-    private static boolean isUnderProjectFileDir(@Nullable VirtualFile projectFileDir, @Nonnull VirtualFile file) {
+    private static boolean isUnderProjectFileDir(@Nullable VirtualFile projectFileDir, VirtualFile file) {
         return projectFileDir != null && VirtualFileUtil.isAncestor(projectFileDir, file, false);
     }
 
-    private static boolean isFileUnderSourceRoot(@Nonnull Project project, @Nonnull VirtualFile file) {
+    private static boolean isFileUnderSourceRoot(Project project, VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
         return index.isInContent(file) && !index.isInLibrarySource(file);
     }
 
     @Deprecated
     @DeprecationInfo("Use #disableWhenDumb() with new UI")
-    public static void disableWhenDumb(@Nonnull Project project, @Nonnull JCheckBox checkBox, @Nonnull String tooltip) {
+    public static void disableWhenDumb(Project project, JCheckBox checkBox, String tooltip) {
         boolean dumb = DumbService.isDumb(project);
         checkBox.setEnabled(!dumb);
         checkBox.setToolTipText(dumb ? tooltip : "");
     }
 
     @RequiredUIAccess
-    public static void disableWhenDumb(@Nonnull Project project, @Nonnull CheckBox checkBox, @Nonnull LocalizeValue tooltip) {
+    public static void disableWhenDumb(Project project, CheckBox checkBox, LocalizeValue tooltip) {
         boolean dumb = DumbService.isDumb(project);
         checkBox.setEnabled(!dumb);
         checkBox.setToolTipText(dumb ? tooltip : LocalizeValue.empty());

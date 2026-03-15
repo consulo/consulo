@@ -24,7 +24,6 @@ import consulo.execution.debug.impl.internal.ui.tree.node.WatchesRootNode;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,7 +35,7 @@ public class XNewWatchAction extends XWatchesTreeActionBase {
     }
 
     @Override
-    protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
+    protected void perform(AnActionEvent e, XDebuggerTree tree, XWatchesView watchesView) {
         if (tree.getRoot() instanceof WatchesRootNode watchesRoot) {
             watchesRoot.addNewWatch();
         }

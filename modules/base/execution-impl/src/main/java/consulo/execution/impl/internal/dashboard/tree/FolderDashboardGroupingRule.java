@@ -10,8 +10,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author konstantin.aleev
@@ -21,7 +20,7 @@ public final class FolderDashboardGroupingRule implements RunDashboardGroupingRu
   private static final String NAME = "FolderDashboardGroupingRule";
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return NAME;
   }

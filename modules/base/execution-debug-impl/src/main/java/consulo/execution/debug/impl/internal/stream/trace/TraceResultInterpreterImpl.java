@@ -8,7 +8,6 @@ import consulo.execution.debug.stream.trace.impl.interpret.ValuesOrderInfo;
 import consulo.execution.debug.stream.wrapper.StreamCall;
 import consulo.execution.debug.stream.wrapper.StreamChain;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +20,12 @@ public class TraceResultInterpreterImpl implements TraceResultInterpreter {
     private static final Logger LOG = Logger.getInstance(TraceResultInterpreterImpl.class);
     private final InterpreterFactory myInterpreterFactory;
 
-    public TraceResultInterpreterImpl(@Nonnull InterpreterFactory interpreterFactory) {
+    public TraceResultInterpreterImpl(InterpreterFactory interpreterFactory) {
         myInterpreterFactory = interpreterFactory;
     }
 
     @Override
-    public @Nonnull TracingResult interpret(@Nonnull StreamChain chain, @Nonnull ArrayReference resultArray, boolean isException) {
+    public TracingResult interpret(StreamChain chain, ArrayReference resultArray, boolean isException) {
         ArrayReference info = (ArrayReference) resultArray.getValue(0);
         ArrayReference result = (ArrayReference) resultArray.getValue(1);
         Value streamResult = result.getValue(0);
@@ -36,7 +35,7 @@ public class TraceResultInterpreterImpl implements TraceResultInterpreter {
         return new TracingResultImpl(chain, TraceElementImpl.ofResultValue(streamResult), trace, isException);
     }
 
-    private @Nonnull List<TraceInfo> getTrace(@Nonnull StreamChain chain, @Nonnull ArrayReference info) {
+    private List<TraceInfo> getTrace(StreamChain chain, ArrayReference info) {
         int callCount = chain.length();
         List<TraceInfo> result = new ArrayList<>(callCount);
 
@@ -52,7 +51,7 @@ public class TraceResultInterpreterImpl implements TraceResultInterpreter {
         return result;
     }
 
-    private static void logTime(@Nonnull Value elapsedTimeArray) {
+    private static void logTime(Value elapsedTimeArray) {
         Value elapsedTime = ((ArrayReference) elapsedTimeArray).getValue(0);
         long elapsedNanoseconds = ((LongValue) elapsedTime).value();
         long elapsedMillis = TimeUnit.NANOSECONDS.toMillis(elapsedNanoseconds);

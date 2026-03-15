@@ -41,7 +41,6 @@ import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -57,14 +56,14 @@ import static consulo.externalSystem.model.ProjectKeys.MODULE;
 public class LibraryDependencyDataService extends AbstractDependencyDataService<LibraryDependencyData, LibraryOrderEntry> {
     private static final Logger LOG = Logger.getInstance(LibraryDependencyDataService.class);
 
-    @Nonnull
+    
     @Override
     public Key<LibraryDependencyData> getTargetDataKey() {
         return ProjectKeys.LIBRARY_DEPENDENCY;
     }
 
     @Override
-    public void importData(@Nonnull Collection<DataNode<LibraryDependencyData>> toImport, @Nonnull Project project, boolean synchronous) {
+    public void importData(Collection<DataNode<LibraryDependencyData>> toImport, Project project, boolean synchronous) {
         if (toImport.isEmpty()) {
             return;
         }
@@ -88,8 +87,8 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
 
     public void importData(
-        @Nonnull final Collection<DataNode<LibraryDependencyData>> nodesToImport,
-        @Nonnull final Module module,
+        final Collection<DataNode<LibraryDependencyData>> nodesToImport,
+        final Module module,
         final boolean synchronous
     ) {
         ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
@@ -149,11 +148,11 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
 
     private void importMissing(
-        @Nonnull Set<LibraryDependencyData> toImport,
-        @Nonnull ModifiableRootModel moduleRootModel,
-        @Nonnull LibraryTable moduleLibraryTable,
-        @Nonnull LibraryTable libraryTable,
-        @Nonnull Module module
+        Set<LibraryDependencyData> toImport,
+        ModifiableRootModel moduleRootModel,
+        LibraryTable moduleLibraryTable,
+        LibraryTable libraryTable,
+        Module module
     ) {
         for (LibraryDependencyData dependencyData : toImport) {
             LibraryData libraryData = dependencyData.getTarget();
@@ -188,10 +187,10 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
 
     private static void setLibraryScope(
-        @Nonnull LibraryOrderEntry orderEntry,
-        @Nonnull Library lib,
-        @Nonnull Module module,
-        @Nonnull LibraryDependencyData dependencyData
+        LibraryOrderEntry orderEntry,
+        Library lib,
+        Module module,
+        LibraryDependencyData dependencyData
     ) {
         LOG.info(String.format("Adding library dependency '%s' to module '%s'", lib.getName(), module.getName()));
         orderEntry.setExported(dependencyData.isExported());
@@ -206,10 +205,10 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
 
     private static void filterUpToDateAndRemoveObsolete(
-        @Nonnull Map<Set<String>, LibraryDependencyData> moduleLibrariesToImport,
-        @Nonnull Map<String, LibraryDependencyData> projectLibrariesToImport,
-        @Nonnull Set<LibraryDependencyData> toImport,
-        @Nonnull ModifiableRootModel moduleRootModel,
+        Map<Set<String>, LibraryDependencyData> moduleLibrariesToImport,
+        Map<String, LibraryDependencyData> projectLibrariesToImport,
+        Set<LibraryDependencyData> toImport,
+        ModifiableRootModel moduleRootModel,
         boolean hasUnresolvedLibraries
     ) {
         Set<String> moduleLibraryKey = new HashSet<>();
@@ -249,8 +248,8 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
 
     private void importMissingProjectLibraries(
-        @Nonnull Module module,
-        @Nonnull Collection<DataNode<LibraryDependencyData>> nodesToImport,
+        Module module,
+        Collection<DataNode<LibraryDependencyData>> nodesToImport,
         boolean synchronous
     ) {
         LibraryTable libraryTable = ProjectLibraryTable.getInstance(module.getProject());

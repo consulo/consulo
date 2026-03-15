@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.internal.perfomance;
 
-import jakarta.annotation.Nonnull;
 
 // non-sequential and repeated items
 public enum ActivityCategory {
@@ -34,11 +33,11 @@ public enum ActivityCategory {
 
   private final String jsonName;
 
-  ActivityCategory(@Nonnull String jsonName) {
+  ActivityCategory(String jsonName) {
     this.jsonName = jsonName;
   }
 
-  @Nonnull
+  
   public String getJsonName() {
     return jsonName;
   }

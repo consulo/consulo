@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.dataContext.DataValidators;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -31,7 +30,7 @@ public class PsiElementArrayDataValidator extends DataValidators.ArrayValidator<
     super(new PsiElementDataValidator());
   }
 
-  @Nonnull
+  
   @Override
   public Key<PsiElement[]> getKey() {
     return PsiElement.KEY_OF_ARRAY;

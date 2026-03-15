@@ -29,8 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Creates documentation comment for the current context if it's not created yet (e.g. the caret is inside a method which
@@ -47,7 +46,7 @@ public class FixDocCommentAction extends EditorAction {
     private static final class MyHandler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
-        public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project == null) {
                 return;
@@ -69,7 +68,7 @@ public class FixDocCommentAction extends EditorAction {
     }
 
     @RequiredUIAccess
-    private static void process(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull Project project, int offset) {
+    private static void process(PsiFile file, Editor editor, Project project, int offset) {
         PsiElement elementAtOffset = file.findElementAt(offset);
         if (elementAtOffset == null || !FileModificationService.getInstance().preparePsiElementForWrite(elementAtOffset)) {
             return;
@@ -85,7 +84,7 @@ public class FixDocCommentAction extends EditorAction {
      * @param editor  target editor
      */
     @RequiredUIAccess
-    public static void generateOrFixComment(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull Editor editor) {
+    public static void generateOrFixComment(PsiElement element, Project project, Editor editor) {
         Language language = element.getLanguage();
         CodeDocumentationProvider docProvider;
         DocumentationProvider langDocumentationProvider = LanguageDocumentationProvider.forLanguageComposite(language);
@@ -145,11 +144,11 @@ public class FixDocCommentAction extends EditorAction {
      */
     @RequiredReadAction
     private static void generateComment(
-        @Nonnull PsiElement anchor,
-        @Nonnull Editor editor,
-        @Nonnull CodeDocumentationProvider documentationProvider,
-        @Nonnull CodeDocumentationAwareCommenter commenter,
-        @Nonnull Project project
+        PsiElement anchor,
+        Editor editor,
+        CodeDocumentationProvider documentationProvider,
+        CodeDocumentationAwareCommenter commenter,
+        Project project
     ) {
         Document document = editor.getDocument();
         int commentStartOffset = anchor.getTextRange().getStartOffset();
@@ -237,7 +236,7 @@ public class FixDocCommentAction extends EditorAction {
     }
 
     @RequiredReadAction
-    private static void reformatCommentKeepingEmptyTags(@Nonnull PsiFile file, @Nonnull Project project, int start, int end) {
+    private static void reformatCommentKeepingEmptyTags(PsiFile file, Project project, int start, int end) {
         CodeStyleSettings tempSettings = CodeStyle.getSettings(file).clone();
         LanguageCodeStyleSettingsProvider langProvider = LanguageCodeStyleSettingsProvider.forLanguage(file.getLanguage());
         if (langProvider != null) {
@@ -249,7 +248,7 @@ public class FixDocCommentAction extends EditorAction {
     }
 
     @RequiredReadAction
-    private static int calcStartReformatOffset(@Nonnull PsiElement element) {
+    private static int calcStartReformatOffset(PsiElement element) {
         int result = element.getTextRange().getStartOffset();
         for (PsiElement e = element.getPrevSibling(); e != null; e = e.getPrevSibling()) {
             if (e instanceof PsiWhiteSpace) {

@@ -15,11 +15,10 @@
  */
 package consulo.versionControlSystem.log.impl.internal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface FatalErrorHandler {
-  void consume(@Nullable Object source, @Nonnull Throwable exception);
+  void consume(@Nullable Object source, Throwable exception);
 
-  void displayFatalErrorMessage(@Nonnull String message);
+  void displayFatalErrorMessage(String message);
 }

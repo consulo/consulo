@@ -28,7 +28,6 @@ import consulo.util.lang.BitUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
@@ -230,8 +229,8 @@ public class WhiteSpace {
    * @param tabSize      tab width in columns
    * @return             information about white space symbols at the target region of the given text
    */
-  @Nonnull
-  private static WhiteSpaceInfo parse(@Nonnull CharSequence text, int startOffset, int endOffset, int startColumn, int tabSize) {
+  
+  private static WhiteSpaceInfo parse(CharSequence text, int startOffset, int endOffset, int startColumn, int tabSize) {
     assert startOffset <= endOffset;
 
     int spaces = 0;
@@ -633,7 +632,7 @@ public class WhiteSpace {
     return result;
   }
 
-  @Nonnull
+  
   public IndentInside getInitialLastLineIndent() {
     return new IndentInside(myInitialLastLinesSpaces, myInitialLastLinesTabs);
   }
@@ -721,7 +720,7 @@ public class WhiteSpace {
     assert (flags & 0x7F) == (myFlags & 0x7F);
   }
 
-  @Nonnull
+  
   public WhiteSpace setBeforeCodeBlockEnd(boolean isBeforeCodeBlockEnd) {
     myIsBeforeCodeBlockEnd = isBeforeCodeBlockEnd;
     return this;

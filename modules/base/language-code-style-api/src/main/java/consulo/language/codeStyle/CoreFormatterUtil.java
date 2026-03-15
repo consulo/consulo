@@ -20,8 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.codeStyle.internal.*;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -34,24 +33,24 @@ public class CoreFormatterUtil {
     private CoreFormatterUtil() {
     }
 
-    @Nonnull
+    
     public static FormattingModel buildModel(
-        @Nonnull FormattingModelBuilder builder,
-        @Nonnull PsiElement element,
-        @Nonnull TextRange range,
-        @Nonnull CodeStyleSettings settings,
-        @Nonnull FormattingMode mode
+        FormattingModelBuilder builder,
+        PsiElement element,
+        TextRange range,
+        CodeStyleSettings settings,
+        FormattingMode mode
     ) {
         return builder.createModel(FormattingContext.create(element, range, settings, mode));
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static FormattingModel buildModel(
-        @Nonnull FormattingModelBuilder builder,
-        @Nonnull PsiElement element,
-        @Nonnull CodeStyleSettings settings,
-        @Nonnull FormattingMode mode
+        FormattingModelBuilder builder,
+        PsiElement element,
+        CodeStyleSettings settings,
+        FormattingMode mode
     ) {
         return buildModel(builder, element, element.getTextRange(), settings, mode);
     }
@@ -64,7 +63,7 @@ public class CoreFormatterUtil {
      * @return alignment object to use during adjusting white space of the given block if any; {@code null} otherwise
      */
     @Nullable
-    public static AlignmentImpl getAlignment(@Nonnull AbstractBlockWrapper block) {
+    public static AlignmentImpl getAlignment(AbstractBlockWrapper block) {
         AbstractBlockWrapper current = block;
         while (true) {
             AlignmentImpl alignment = current.getAlignment();
@@ -126,7 +125,7 @@ public class CoreFormatterUtil {
      * @return closest block to the given block that contains line feeds if any; {@code null} otherwise
      */
     @Nullable
-    public static AbstractBlockWrapper getIndentedParentBlock(@Nonnull AbstractBlockWrapper block) {
+    public static AbstractBlockWrapper getIndentedParentBlock(AbstractBlockWrapper block) {
         AbstractBlockWrapper current = block.getParent();
         while (current != null) {
             if (current.getStartOffset() != block.getStartOffset() && current.getWhiteSpace().containsLineFeeds()) {
@@ -207,9 +206,9 @@ public class CoreFormatterUtil {
      * @return {@code true} if backward alignment is possible; {@code false} otherwise
      */
     public static boolean allowBackwardAlignment(
-        @Nonnull LeafBlockWrapper first,
-        @Nonnull LeafBlockWrapper second,
-        @Nonnull Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings
+        LeafBlockWrapper first,
+        LeafBlockWrapper second,
+        Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings
     ) {
         Set<AbstractBlockWrapper> blocksBeforeCurrent = new HashSet<>();
         for (LeafBlockWrapper previousBlock = second.getPreviousBlock(); previousBlock != null;
@@ -271,8 +270,8 @@ public class CoreFormatterUtil {
         return new IndentData(options.INDENT_SIZE);
     }
 
-    @Nonnull
-    public static LeafBlockWrapper getFirstLeaf(@Nonnull AbstractBlockWrapper block) {
+    
+    public static LeafBlockWrapper getFirstLeaf(AbstractBlockWrapper block) {
         if (block instanceof LeafBlockWrapper leafBlockWrapper) {
             return leafBlockWrapper;
         }

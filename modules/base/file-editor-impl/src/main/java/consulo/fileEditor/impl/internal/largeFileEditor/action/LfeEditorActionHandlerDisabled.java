@@ -6,16 +6,15 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.LargeFileEditor;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class LfeEditorActionHandlerDisabled extends LfeBaseEditorActionHandler {
 
     private static final Logger logger = Logger.getInstance(LfeEditorActionHandlerDisabled.class);
 
     @Override
-    protected void doExecuteInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                  @Nonnull Editor editor,
+    protected void doExecuteInLfe(LargeFileEditor largeFileEditor,
+                                  Editor editor,
                                   @Nullable Caret caret,
                                   DataContext dataContext) {
         // never called
@@ -23,9 +22,9 @@ public abstract class LfeEditorActionHandlerDisabled extends LfeBaseEditorAction
     }
 
     @Override
-    protected boolean isEnabledInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                     @Nonnull Editor editor,
-                                     @Nonnull Caret caret,
+    protected boolean isEnabledInLfe(LargeFileEditor largeFileEditor,
+                                     Editor editor,
+                                     Caret caret,
                                      DataContext dataContext) {
         return false;
     }

@@ -14,7 +14,6 @@ import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.WrappedLayout;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -37,11 +36,11 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
         add(TargetAWT.to(layout), BorderLayout.NORTH);
     }
 
-    public void addValidator(@Nonnull HasValidator.Validator<String> validator) {
+    public void addValidator(HasValidator.Validator<String> validator) {
         myTextField.addValidator(value -> validator.validateValue(StringUtil.notNullize(value).trim()));
     }
 
-    public void setApplyAction(@Nonnull Consumer<? super InputEvent> applyAction) {
+    public void setApplyAction(Consumer<? super InputEvent> applyAction) {
         myApplyAction = applyAction;
     }
 
@@ -53,7 +52,7 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
         return myTextField;
     }
 
-    @Nonnull
+    
     protected TextBoxWithExtensions createTextField() {
         TextBoxWithExtensions res = TextBoxWithExtensions.create();
 

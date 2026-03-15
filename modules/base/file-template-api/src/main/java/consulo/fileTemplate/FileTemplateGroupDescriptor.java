@@ -17,7 +17,6 @@ package consulo.fileTemplate;
 
 import consulo.language.file.FileTypeManager;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class FileTemplateGroupDescriptor extends FileTemplateDescriptor {
     myTemplates.add(descriptor);
   }
 
-  public void addTemplate(@NonNls String fileName) {
+  public void addTemplate(String fileName) {
     addTemplate(new FileTemplateDescriptor(fileName, FileTypeManager.getInstance().getFileTypeByFileName(fileName).getIcon()));
   }
 }

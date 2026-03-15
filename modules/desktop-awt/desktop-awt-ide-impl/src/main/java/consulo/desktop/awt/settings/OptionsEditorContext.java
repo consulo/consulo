@@ -21,8 +21,7 @@ import consulo.util.collection.MultiValuesMap;
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
@@ -44,14 +43,14 @@ public class OptionsEditorContext {
     myFilter = filter;
   }
 
-  AsyncResult<Void> fireSelected(@Nullable Configurable configurable, @Nonnull OptionsEditorColleague requestor) {
+  AsyncResult<Void> fireSelected(@Nullable Configurable configurable, OptionsEditorColleague requestor) {
     Configurable old = myCurrentConfigurable;
     myCurrentConfigurable = configurable;
 
     return notify(colleague -> colleague.onSelected(configurable, old), requestor);
   }
 
-  AsyncResult<Void> fireModifiedAdded(@Nonnull Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+  AsyncResult<Void> fireModifiedAdded(Configurable configurable, @Nullable OptionsEditorColleague requestor) {
     if(myModified.contains(configurable)) {
       return AsyncResult.rejected();
     }
@@ -61,7 +60,7 @@ public class OptionsEditorContext {
     return notify(colleague -> colleague.onModifiedAdded(configurable), requestor);
   }
 
-  AsyncResult<Void> fireModifiedRemoved(@Nonnull Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+  AsyncResult<Void> fireModifiedRemoved(Configurable configurable, @Nullable OptionsEditorColleague requestor) {
     if (!myModified.contains(configurable)) return AsyncResult.rejected();
 
     myModified.remove(configurable);
@@ -126,7 +125,7 @@ public class OptionsEditorContext {
     return result == null ? Collections.<Configurable>emptySet() : result;
   }
 
-  @Nonnull
+  
   ElementFilter<Configurable> getFilter() {
     return myFilter;
   }

@@ -35,15 +35,14 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "variable")
 public class VariableInplaceRenameHandler implements RenameHandler {
     private static final ThreadLocal<String> ourPreventInlineRenameFlag = new ThreadLocal<>();
     private static final Logger LOG = Logger.getInstance(VariableInplaceRenameHandler.class);
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionTitleValue() {
         return LocalizeValue.localizeTODO("Rename Variable...");
@@ -77,7 +76,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
 
     @Override
     @RequiredReadAction
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         PsiElement element = PsiElementRenameHandler.getElement(dataContext);
         if (element == null) {
             if (LookupManager.getActiveLookup(editor) != null) {
@@ -107,7 +106,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
 
     @Override
     @RequiredReadAction
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         PsiElement element = elements.length == 1 ? elements[0] : null;
         if (element == null) {
             element = PsiElementRenameHandler.getElement(dataContext);
@@ -134,7 +133,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
     }
 
     @Nullable
-    public InplaceRefactoring doRename(@Nonnull PsiElement elementToRename, Editor editor, DataContext dataContext) {
+    public InplaceRefactoring doRename(PsiElement elementToRename, Editor editor, DataContext dataContext) {
         VariableInplaceRenamer renamer = createRenamer(elementToRename, editor);
         boolean startedRename = renamer != null && renamer.performInplaceRename();
 
@@ -171,7 +170,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
     }
 
     @Nullable
-    protected VariableInplaceRenamer createRenamer(@Nonnull PsiElement elementToRename, Editor editor) {
+    protected VariableInplaceRenamer createRenamer(PsiElement elementToRename, Editor editor) {
         return new VariableInplaceRenamer((PsiNamedElement) elementToRename, editor);
     }
 }

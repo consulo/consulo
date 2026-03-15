@@ -21,46 +21,45 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.VirtualFilePointerContainerImpl;
 import consulo.virtualFileSystem.pointer.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
  */
 public class CoreVirtualFilePointerManager extends SimpleModificationTracker implements VirtualFilePointerManager, Disposable {
-  @Nonnull
+  
   @Override
-  public VirtualFilePointer create(@Nonnull String url, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointer create(String url, Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new LightFilePointer(url);
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFilePointer create(@Nonnull VirtualFile file, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointer create(VirtualFile file, Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new LightFilePointer(file);
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFilePointer duplicate(@Nonnull VirtualFilePointer pointer, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointer duplicate(VirtualFilePointer pointer, Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new LightFilePointer(pointer.getUrl());
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFilePointerContainer createContainer(@Nonnull Disposable parent) {
+  public VirtualFilePointerContainer createContainer(Disposable parent) {
     return createContainer(parent, null);
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFilePointerContainer createContainer(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointerContainer createContainer(Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new VirtualFilePointerContainerImpl(this, parent, listener);
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFilePointer createDirectoryPointer(@Nonnull String url, boolean recursively, @Nonnull Disposable parent, @Nonnull VirtualFilePointerListener listener) {
+  public VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, VirtualFilePointerListener listener) {
     return create(url, parent, listener);
   }
 

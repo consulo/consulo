@@ -21,8 +21,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 public interface ToolWindowEx extends ToolWindow {
@@ -57,11 +56,11 @@ public interface ToolWindowEx extends ToolWindow {
 
     void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions);
 
-    void setTitleActions(@Nonnull AnAction... actions);
+    void setTitleActions(AnAction... actions);
 
-    void setTabActions(@Nonnull AnAction... actions);
+    void setTabActions(AnAction... actions);
 
-    void setTabDoubleClickActions(@Nonnull AnAction... actions);
+    void setTabDoubleClickActions(AnAction... actions);
 
     void setUseLastFocusedOnActivation(boolean focus);
 

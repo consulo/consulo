@@ -19,8 +19,7 @@ import consulo.ui.ex.Colored;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.lang.annotation.Annotation;
 
@@ -32,13 +31,13 @@ public class ColorUtil {
   private ColorUtil() {
   }
 
-  public static Color softer(@Nonnull Color color) {
+  public static Color softer(Color color) {
     if (color.getBlue() > 220 && color.getRed() > 220 && color.getGreen() > 220) return color;
     float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     return Color.getHSBColor(hsb[0], 0.6f * hsb[1], hsb[2]);
   }
 
-  public static Color darker(@Nonnull Color color, int tones) {
+  public static Color darker(Color color, int tones) {
     float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float brightness = hsb[2];
     for (int i = 0; i < tones; i++) {
@@ -48,7 +47,7 @@ public class ColorUtil {
     return Color.getHSBColor(hsb[0], hsb[1], brightness);
   }
 
-  public static Color brighter(@Nonnull Color color, int tones) {
+  public static Color brighter(Color color, int tones) {
     float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float brightness = hsb[2];
     for (int i = 0; i < tones; i++) {
@@ -58,8 +57,8 @@ public class ColorUtil {
     return Color.getHSBColor(hsb[0], hsb[1], brightness);
   }
 
-  @Nonnull
-  public static Color saturate(@Nonnull Color color, int tones) {
+  
+  public static Color saturate(Color color, int tones) {
     float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float saturation = hsb[1];
     for (int i = 0; i < tones; i++) {
@@ -69,8 +68,8 @@ public class ColorUtil {
     return Color.getHSBColor(hsb[0], saturation, hsb[2]);
   }
 
-  @Nonnull
-  public static Color desaturate(@Nonnull Color color, int tones) {
+  
+  public static Color desaturate(Color color, int tones) {
     float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float saturation = hsb[1];
     for (int i = 0; i < tones; i++) {
@@ -80,7 +79,7 @@ public class ColorUtil {
     return Color.getHSBColor(hsb[0], saturation, hsb[2]);
   }
 
-  public static Color dimmer(@Nonnull Color color) {
+  public static Color dimmer(Color color) {
     float[] rgb = color.getRGBColorComponents(null);
 
     float alpha = 0.80f;
@@ -101,8 +100,8 @@ public class ColorUtil {
     return toAlpha(c, (int)(255 * a));
   }
 
-  @Nonnull
-  public static Color withPreAlpha(@Nonnull Color c, double a) {
+  
+  public static Color withPreAlpha(Color c, double a) {
     float[] rgba = new float[4];
 
     rgba = withAlpha(c, a).getRGBComponents(rgba);
@@ -118,12 +117,12 @@ public class ColorUtil {
     return shift(withAlpha(c, d), d);
   }
 
-  @Nonnull
-  public static String toHtmlColor(@Nonnull Color c) {
+  
+  public static String toHtmlColor(Color c) {
     return "#" + toHex(c);
   }
 
-  public static String toHex(@Nonnull Color c) {
+  public static String toHex(Color c) {
     String R = Integer.toHexString(c.getRed());
     String G = Integer.toHexString(c.getGreen());
     String B = Integer.toHexString(c.getBlue());
@@ -173,13 +172,13 @@ public class ColorUtil {
    * @param c color to check
    * @return dark or not
    */
-  public static boolean isDark(@Nonnull Color c) {
+  public static boolean isDark(Color c) {
     // based on perceptional luminosity, see
     return (1 - (0.299 * c.getRed() + 0.587 * c.getGreen() + 0.114 * c.getBlue()) / 255) >= 0.5;
   }
 
-  @Nonnull
-  public static Color mix(@Nonnull Color c1, @Nonnull Color c2, double balance) {
+  
+  public static Color mix(Color c1, Color c2, double balance) {
     balance = Math.min(1, Math.max(0, balance));
     return new Color((int)((1 - balance) * c1.getRed() + c2.getRed() * balance + .5),
                      (int)((1 - balance) * c1.getGreen() + c2.getGreen() * balance + .5),

@@ -60,8 +60,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -93,7 +92,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
     private static final Border INACTIVE_BORDER = BorderFactory.createEmptyBorder(NORMAL_BORDER_SIZE, NORMAL_BORDER_SIZE, NORMAL_BORDER_SIZE, NORMAL_BORDER_SIZE);
     private static final Border INACTIVE_BORDER_SMALL = BorderFactory.createEmptyBorder(SMALL_BORDER_SIZE, SMALL_BORDER_SIZE, SMALL_BORDER_SIZE, SMALL_BORDER_SIZE);
-    @Nonnull
+    
     private final Project myProject;
 
     @TestOnly
@@ -157,9 +156,9 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
     private PopupMenuListener myOuterComboboxPopupListener;
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public static IntentionHintComponent showIntentionHint(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Editor editor, boolean showExpanded, @Nonnull CachedIntentions cachedIntentions) {
+    public static IntentionHintComponent showIntentionHint(Project project, PsiFile file, Editor editor, boolean showExpanded, CachedIntentions cachedIntentions) {
         UIAccess.assertIsUIThread();
 
         IntentionHintComponent component = new IntentionHintComponent(project, file, editor, cachedIntentions);
@@ -206,7 +205,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         closePopup();
     }
 
-    public boolean isForEditor(@Nonnull Editor editor) {
+    public boolean isForEditor(Editor editor) {
         return editor == myEditor;
     }
 
@@ -216,7 +215,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         HIDE_AND_RECREATE   // ahh, has to close already shown popup, recreate and re-show again
     }
 
-    @Nonnull
+    
     public PopupUpdateResult getPopupUpdateResult(boolean actionsChanged) {
         if (myPopup.isDisposed() || !myFile.isValid()) {
             return PopupUpdateResult.HIDE_AND_RECREATE;
@@ -354,7 +353,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     @RequiredUIAccess
-    private IntentionHintComponent(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull final Editor editor, @Nonnull CachedIntentions cachedIntentions) {
+    private IntentionHintComponent(Project project, PsiFile file, final Editor editor, CachedIntentions cachedIntentions) {
         UIAccess.assertIsUIThread();
 
         myProject = project;
@@ -391,7 +390,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         myIconLabel.addMouseListener(new MouseAdapter() {
             @Override
             @RequiredUIAccess
-            public void mousePressed(@Nonnull MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (!e.isPopupTrigger() && e.getButton() == MouseEvent.BUTTON1) {
                     AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
                     AnActionEvent event = AnActionEvent.createFromInputEvent(e, ActionPlaces.MOUSE_SHORTCUT, new Presentation(), SimpleDataContext.getProjectContext(project));
@@ -402,12 +401,12 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
             }
 
             @Override
-            public void mouseEntered(@Nonnull MouseEvent e) {
+            public void mouseEntered(MouseEvent e) {
                 onMouseEnter(editor.isOneLineMode());
             }
 
             @Override
-            public void mouseExited(@Nonnull MouseEvent e) {
+            public void mouseExited(MouseEvent e) {
                 onMouseExit(editor.isOneLineMode());
             }
         });
@@ -474,7 +473,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     @RequiredUIAccess
-    private void recreateMyPopup(@Nonnull ListPopupStep step) {
+    private void recreateMyPopup(ListPopupStep step) {
         UIAccess.assertIsUIThread();
 
         if (myPopup != null) {
@@ -508,7 +507,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
         myPopup.addListener(new JBPopupListener() {
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 highlighter.dropHighlight();
                 injectionHighlighter.dropHighlight();
                 myPopupShown = false;
@@ -563,7 +562,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         Disposer.register(myPopup, UIAccess::assertIsUIThread);
     }
 
-    void canceled(@Nonnull ListPopupStep intentionListStep) {
+    void canceled(ListPopupStep intentionListStep) {
         if (myPopup.getListStep() != intentionListStep || myDisposed) {
             return;
         }
@@ -580,7 +579,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
 
         @Override
-        public void show(@Nonnull JComponent parentComponent, int x, int y, JComponent focusBackComponent, @Nonnull HintHint hintHint) {
+        public void show(JComponent parentComponent, int x, int y, JComponent focusBackComponent, HintHint hintHint) {
             myVisible = true;
             if (myShouldDelay) {
                 ourAlarm.cancelAllRequests();

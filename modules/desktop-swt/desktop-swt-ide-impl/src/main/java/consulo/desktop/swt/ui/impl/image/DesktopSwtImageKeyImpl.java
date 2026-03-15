@@ -19,8 +19,7 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -47,13 +46,13 @@ public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
     return ourLibraryManager.resolveImage(null, this);
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupId() {
     return myGroupId;
   }
 
-  @Nonnull
+  
   @Override
   public String getImageId() {
     return myImageId;
@@ -69,7 +68,7 @@ public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
     return myWidth;
   }
 
-  @Nonnull
+  
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
     ImageReference ref = resolveImage();

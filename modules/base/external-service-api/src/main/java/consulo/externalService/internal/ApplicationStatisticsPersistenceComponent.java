@@ -30,7 +30,6 @@ import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +129,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
     return null;
   }
 
-  private static String joinUsages(@Nonnull Set<UsageDescriptor> usages) {
+  private static String joinUsages(Set<UsageDescriptor> usages) {
     // for instance, usage can be: "_foo"(equals "_foo=1") or "_foo=2"
     return StringUtil.join(usages, usageDescriptor -> {
       String key = usageDescriptor.getKey();

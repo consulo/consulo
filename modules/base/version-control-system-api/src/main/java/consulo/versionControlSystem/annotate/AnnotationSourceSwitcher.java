@@ -15,18 +15,17 @@
  */
 package consulo.versionControlSystem.annotate;
 
-import jakarta.annotation.Nonnull;
 
 public interface AnnotationSourceSwitcher {
-  @Nonnull
+  
   AnnotationSource getAnnotationSource(int lineNumber);
 
   boolean mergeSourceAvailable(int lineNumber);
 
-  @Nonnull
+  
   LineAnnotationAspect getRevisionAspect();
 
-  @Nonnull
+  
   AnnotationSource getDefaultSource();
 
   void switchTo(AnnotationSource source);

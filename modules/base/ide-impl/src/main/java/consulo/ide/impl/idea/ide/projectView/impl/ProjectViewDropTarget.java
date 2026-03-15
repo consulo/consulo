@@ -26,8 +26,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -135,7 +134,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     return wrapper == null ? null : wrapper.getTreePaths();
   }
 
-  private static void doValidDrop(@Nonnull TreePath[] sources, @Nonnull TreePath target, @Nonnull DropHandler handler) {
+  private static void doValidDrop(TreePath[] sources, TreePath target, DropHandler handler) {
     target = getValidTarget(sources, target, handler);
     if (target != null) {
       sources = removeRedundant(sources, target, handler);
@@ -144,7 +143,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
   }
 
   @Nullable
-  private static TreePath getValidTarget(@Nonnull TreePath[] sources, @Nonnull TreePath target, @Nonnull DropHandler handler) {
+  private static TreePath getValidTarget(TreePath[] sources, TreePath target, DropHandler handler) {
     while (target != null) {
       if (handler.isValidTarget(sources, target)) return target;
       if (!handler.shouldDelegateToParent(sources, target)) break;
@@ -153,8 +152,8 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     return null;
   }
 
-  @Nonnull
-  private static TreePath[] removeRedundant(@Nonnull TreePath[] sources, @Nonnull TreePath target, @Nonnull DropHandler dropHandler) {
+  
+  private static TreePath[] removeRedundant(TreePath[] sources, TreePath target, DropHandler dropHandler) {
     return Stream.of(sources).filter(source -> !dropHandler.isDropRedundant(source, target)).toArray(TreePath[]::new);
   }
 
@@ -169,40 +168,40 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
   }
 
   private interface DropHandler {
-    boolean isValidSource(@Nonnull TreePath[] sources, @Nonnull TreePath target);
+    boolean isValidSource(TreePath[] sources, TreePath target);
 
-    boolean isValidTarget(@Nonnull TreePath[] sources, @Nonnull TreePath target);
+    boolean isValidTarget(TreePath[] sources, TreePath target);
 
-    boolean shouldDelegateToParent(@Nonnull TreePath[] sources, @Nonnull TreePath target);
+    boolean shouldDelegateToParent(TreePath[] sources, TreePath target);
 
-    boolean isDropRedundant(@Nonnull TreePath source, @Nonnull TreePath target);
+    boolean isDropRedundant(TreePath source, TreePath target);
 
-    void doDrop(@Nonnull TreePath[] sources, @Nonnull TreePath target);
+    void doDrop(TreePath[] sources, TreePath target);
 
-    void doDropFiles(List<? extends File> files, @Nonnull TreePath target);
+    void doDropFiles(List<? extends File> files, TreePath target);
   }
 
   @Nullable
-  abstract PsiElement getPsiElement(@Nonnull TreePath path);
+  abstract PsiElement getPsiElement(TreePath path);
 
   @Nullable
-  abstract Module getModule(@Nonnull PsiElement element);
+  abstract Module getModule(PsiElement element);
 
   abstract class MoveCopyDropHandler implements DropHandler {
     @Override
-    public boolean isValidSource(@Nonnull TreePath[] sources, @Nonnull TreePath target) {
+    public boolean isValidSource(TreePath[] sources, TreePath target) {
       return canDrop(sources, target);
     }
 
     @Override
-    public boolean isValidTarget(@Nonnull TreePath[] sources, @Nonnull TreePath target) {
+    public boolean isValidTarget(TreePath[] sources, TreePath target) {
       return canDrop(sources, target);
     }
 
-    protected abstract boolean canDrop(@Nonnull TreePath[] sources, @Nonnull TreePath target);
+    protected abstract boolean canDrop(TreePath[] sources, TreePath target);
 
-    @Nonnull
-    protected PsiElement[] getPsiElements(@Nonnull TreePath[] paths) {
+    
+    protected PsiElement[] getPsiElements(TreePath[] paths) {
       List<PsiElement> psiElements = new ArrayList<>(paths.length);
       for (TreePath path : paths) {
         PsiElement psiElement = getPsiElement(path);
@@ -233,7 +232,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
 
   private class MoveDropHandler extends MoveCopyDropHandler {
     @Override
-    protected boolean canDrop(@Nonnull TreePath[] sources, @Nonnull TreePath target) {
+    protected boolean canDrop(TreePath[] sources, TreePath target) {
       DropTargetNode node = getLastUserObject(DropTargetNode.class, target);
       if (node != null && node.canDrop(sources)) return true;
 
@@ -243,7 +242,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     @Override
-    public void doDrop(@Nonnull TreePath[] sources, @Nonnull TreePath target) {
+    public void doDrop(TreePath[] sources, TreePath target) {
       DropTargetNode node = getLastUserObject(DropTargetNode.class, target);
       if (node != null && node.canDrop(sources)) {
         node.drop(sources, DataManager.getInstance().getDataContext(myTree));
@@ -288,7 +287,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
       DataContext context = new DataContext() {
         @Nullable
         @Override
-        public <T> T getData(@Nonnull Key<T> dataId) {
+        public <T> T getData(Key<T> dataId) {
           if (LangDataKeys.TARGET_MODULE == dataId) {
             if (module != null) return (T)module;
           }
@@ -308,18 +307,18 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     @Override
-    public boolean isDropRedundant(@Nonnull TreePath source, @Nonnull TreePath target) {
+    public boolean isDropRedundant(TreePath source, TreePath target) {
       return target.equals(source.getParentPath()) || MoveHandler.isMoveRedundant(getPsiElement(source), getPsiElement(target));
     }
 
     @Override
-    public boolean shouldDelegateToParent(@Nonnull TreePath[] sources, @Nonnull TreePath target) {
+    public boolean shouldDelegateToParent(TreePath[] sources, TreePath target) {
       PsiElement psiElement = getPsiElement(target);
       return !MoveHandler.isValidTarget(psiElement, getPsiElements(sources));
     }
 
     @Override
-    public void doDropFiles(List<? extends File> files, @Nonnull TreePath target) {
+    public void doDropFiles(List<? extends File> files, TreePath target) {
       PsiFileSystemItem[] sourceFileArray = getPsiFiles(files);
 
       DropTargetNode node = getLastUserObject(DropTargetNode.class, target);
@@ -334,7 +333,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
 
   private class CopyDropHandler extends MoveCopyDropHandler {
     @Override
-    protected boolean canDrop(@Nonnull TreePath[] sources, @Nonnull TreePath target) {
+    protected boolean canDrop(TreePath[] sources, TreePath target) {
       PsiElement[] sourceElements = getPsiElements(sources);
       PsiElement targetElement = getPsiElement(target);
       if (targetElement == null) return false;
@@ -344,12 +343,12 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     @Override
-    public void doDrop(@Nonnull TreePath[] sources, @Nonnull TreePath target) {
+    public void doDrop(TreePath[] sources, TreePath target) {
       PsiElement[] sourceElements = getPsiElements(sources);
       doDrop(target, sourceElements);
     }
 
-    private void doDrop(@Nonnull TreePath target, PsiElement[] sources) {
+    private void doDrop(TreePath target, PsiElement[] sources) {
       PsiElement targetElement = getPsiElement(target);
       if (targetElement == null) return;
 
@@ -376,18 +375,18 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     @Override
-    public boolean isDropRedundant(@Nonnull TreePath source, @Nonnull TreePath target) {
+    public boolean isDropRedundant(TreePath source, TreePath target) {
       return false;
     }
 
     @Override
-    public boolean shouldDelegateToParent(@Nonnull TreePath[] sources, @Nonnull TreePath target) {
+    public boolean shouldDelegateToParent(TreePath[] sources, TreePath target) {
       PsiElement psiElement = getPsiElement(target);
       return !(psiElement instanceof PsiDirectoryContainer) && !(psiElement instanceof PsiDirectory);
     }
 
     @Override
-    public void doDropFiles(List<? extends File> files, @Nonnull TreePath target) {
+    public void doDropFiles(List<? extends File> files, TreePath target) {
       PsiFileSystemItem[] sourceFileArray = getPsiFiles(files);
       doDrop(target, sourceFileArray);
     }

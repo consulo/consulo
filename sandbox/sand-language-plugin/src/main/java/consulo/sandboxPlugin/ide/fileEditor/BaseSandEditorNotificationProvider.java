@@ -27,8 +27,7 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -44,7 +43,7 @@ public abstract class BaseSandEditorNotificationProvider implements EditorNotifi
         myType = notificationType;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "sand-" + myType;
@@ -53,7 +52,7 @@ public abstract class BaseSandEditorNotificationProvider implements EditorNotifi
     @RequiredReadAction
     @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+    public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
         if (file.getFileType() != SandFileType.INSTANCE) {
             return null;
         }

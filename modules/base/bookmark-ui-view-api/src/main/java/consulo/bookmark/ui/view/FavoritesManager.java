@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.util.lang.Pair;
 import consulo.util.lang.TreeItem;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -40,15 +39,15 @@ public interface FavoritesManager {
   @Deprecated
   void addFavoritesListener(FavoritesListener listener);
 
-  void addFavoritesListener(FavoritesListener listener, @Nonnull Disposable parent);
+  void addFavoritesListener(FavoritesListener listener, Disposable parent);
 
   @Deprecated
   void removeFavoritesListener(FavoritesListener listener);
 
   FavoritesViewSettings getViewSettings();
 
-  @Nonnull
-  List<TreeItem<Pair<AbstractUrl, String>>> getFavoritesListRootUrls(@Nonnull String name);
+  
+  List<TreeItem<Pair<AbstractUrl, String>>> getFavoritesListRootUrls(String name);
 
-  void fireListeners(@Nonnull String listName);
+  void fireListeners(String listName);
 }

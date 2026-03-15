@@ -18,8 +18,7 @@ package consulo.language.pattern;
 import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -72,7 +71,7 @@ public abstract class PatternCondition<T> {
     builder.append("]");
   }
 
-  public abstract boolean accepts(@Nonnull T t, ProcessingContext context);
+  public abstract boolean accepts(T t, ProcessingContext context);
 
   @Override
   public String toString() {

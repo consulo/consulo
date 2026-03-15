@@ -19,7 +19,6 @@ import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Objects;
 
@@ -40,7 +39,7 @@ class AWTColorValue implements ColorValue {
     myColor = color;
   }
 
-  @Nonnull
+  
   @Override
   public RGBColor toRGB() {
     long oldMod = myModificationCount;

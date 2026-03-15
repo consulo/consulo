@@ -19,8 +19,7 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.internal.plugin.PluginHolderModificator;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
@@ -32,7 +31,7 @@ public final class ProxyHelper {
   /**
    * @return base {@link ClassLoader} based on superclass and interfaces
    */
-  @Nonnull
+  
   public static ClassLoader preferClassLoader(@Nullable Class<?> superclass, @Nullable Class<?>... interfaces) {
     int maxIndex = -1;
     ClassLoader bestLoader = null;
@@ -68,7 +67,7 @@ public final class ProxyHelper {
     }
   }
 
-  @Nonnull
+  
   public static Class[] getConstructorParameterTypes(Class aClass, Object... constructorArgs) {
     if (constructorArgs.length == 0) return ArrayUtil.EMPTY_CLASS_ARRAY;
 

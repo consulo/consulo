@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.FileAttribute;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.io.DataInputStream;
@@ -39,9 +38,9 @@ public interface FSRecordsProxy {
     @Contract("_->fail")
     void handleError(Throwable e) throws RuntimeException, Error;
 
-    @Nonnull
-    DataOutputStream writeAttribute(int fileId, @Nonnull FileAttribute att);
+    
+    DataOutputStream writeAttribute(int fileId, FileAttribute att);
 
     @Nullable
-    DataInputStream readAttributeWithLock(int fileId, @Nonnull FileAttribute att);
+    DataInputStream readAttributeWithLock(int fileId, FileAttribute att);
 }

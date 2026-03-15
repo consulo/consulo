@@ -22,7 +22,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
@@ -34,13 +33,13 @@ public class UnmuteOnStopAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isUnmuteOnStop();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().setUnmuteOnStop(state);
     }
 }

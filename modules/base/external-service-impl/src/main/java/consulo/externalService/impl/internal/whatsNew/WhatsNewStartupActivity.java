@@ -22,7 +22,6 @@ import consulo.externalService.impl.internal.pluginHistory.UpdateHistory;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -50,7 +49,7 @@ public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {
     }
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         if (myAlreadyShow.compareAndSet(false, true)) {
             UpdateHistory updateHistory = myUpdateHistoryProvider.get();
 

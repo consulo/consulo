@@ -15,11 +15,10 @@
  */
 package consulo.execution.ui.console;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public interface FileHyperlinkRawDataFinder {
-  @Nonnull
-  List<FileHyperlinkRawData> find(@Nonnull String line);
+  
+  List<FileHyperlinkRawData> find(String line);
 }

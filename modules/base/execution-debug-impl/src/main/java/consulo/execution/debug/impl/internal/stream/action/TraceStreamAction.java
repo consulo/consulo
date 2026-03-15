@@ -11,7 +11,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
@@ -23,7 +22,7 @@ public class TraceStreamAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -61,7 +60,7 @@ public class TraceStreamAction extends AnAction {
         }
     }
 
-    @Nonnull
+    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
@@ -69,7 +68,7 @@ public class TraceStreamAction extends AnAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         XDebugSession session = e.getData(XDebugSession.DATA_KEY);

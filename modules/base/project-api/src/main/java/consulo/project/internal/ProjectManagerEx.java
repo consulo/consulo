@@ -20,8 +20,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -34,11 +33,11 @@ public interface ProjectManagerEx extends ProjectManager {
      * @param dirPath path to directory where .consulo directory is located
      */
     @Nullable
-    Project newProject(String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings);
+    Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings);
 
     // returns true on success
     @RequiredUIAccess
-    boolean closeAndDispose(@Nonnull Project project);
+    boolean closeAndDispose(Project project);
 
     @Nullable
     @Override
@@ -49,12 +48,12 @@ public interface ProjectManagerEx extends ProjectManager {
     boolean canClose(Project project);
 
     @RequiredUIAccess
-    boolean closeProject(@Nonnull Project project, boolean save, boolean dispose, boolean checkCanClose);
+    boolean closeProject(Project project, boolean save, boolean dispose, boolean checkCanClose);
 
-    @Nonnull
-    Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto);
+    
+    Disposable registerCloseProjectVeto(Predicate<Project> projectVeto);
 
-    @Nonnull
+    
         //@ApiStatus.Internal
     String[] getAllExcludedUrls();
 }

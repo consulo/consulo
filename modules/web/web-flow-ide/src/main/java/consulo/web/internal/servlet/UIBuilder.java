@@ -17,7 +17,6 @@ package consulo.web.internal.servlet;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,5 +24,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface UIBuilder {
   @RequiredUIAccess
-  void build(@Nonnull Window window);
+  void build(Window window);
 }

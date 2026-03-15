@@ -25,22 +25,21 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
 public class DesktopSwtMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
-  @Nonnull
+  
   private final DesktopSwtEditorImpl myWebEditor;
 
-  public DesktopSwtMarkupModelImpl(@Nonnull DesktopSwtEditorImpl webEditor) {
+  public DesktopSwtMarkupModelImpl(DesktopSwtEditorImpl webEditor) {
     super(webEditor.getDocument());
     myWebEditor = webEditor;
   }
 
-  @Nonnull
+  
   @Override
   public Editor getEditor() {
     return myWebEditor;
@@ -64,22 +63,22 @@ public class DesktopSwtMarkupModelImpl extends MarkupModelImpl implements Editor
   }
 
   @Override
-  public void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent) {
+  public void addErrorMarkerListener(ErrorStripeListener listener, Disposable parent) {
 
   }
 
   @RequiredUIAccess
   @Override
-  public void setErrorPanelPopupHandler(@Nonnull PopupHandler handler) {
+  public void setErrorPanelPopupHandler(PopupHandler handler) {
 
   }
 
   @Override
-  public void setErrorStripTooltipRendererProvider(@Nonnull ErrorStripTooltipRendererProvider provider) {
+  public void setErrorStripTooltipRendererProvider(ErrorStripTooltipRendererProvider provider) {
 
   }
 
-  @Nonnull
+  
   @Override
   public ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider() {
     return null;

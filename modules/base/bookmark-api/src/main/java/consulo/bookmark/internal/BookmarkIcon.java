@@ -27,7 +27,6 @@ import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -40,12 +39,12 @@ public class BookmarkIcon {
     @SuppressWarnings("unchecked")
     private static final Couple<Image>[] ourMnemonicImageCache = new Couple[36];
 
-    @Nonnull
+    
     public static Image getDefaultIcon(boolean gutter) {
         return gutter ? BookmarkIconGroup.gutterBookmark() : BookmarkIconGroup.actionBookmark();
     }
 
-    @Nonnull
+    
     public static Image getMnemonicIcon(char mnemonic, boolean gutter) {
         int index = mnemonic - 48;
         if (index > 9) {
@@ -63,7 +62,7 @@ public class BookmarkIcon {
         return gutter ? couple.getFirst() : couple.getSecond();
     }
 
-    @Nonnull
+    
     private static Image createMnemonicIcon(char cha, boolean gutter) {
         ImageKey base = PlatformIconGroup.gutterMnemonic();
 

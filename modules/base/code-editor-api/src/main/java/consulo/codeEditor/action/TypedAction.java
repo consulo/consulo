@@ -15,8 +15,7 @@ import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -64,7 +63,7 @@ public abstract class TypedAction {
 
     private static class Handler implements TypedActionHandler {
         @Override
-        public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
+        public void execute(Editor editor, char charTyped, DataContext dataContext) {
             if (editor.isViewer()) {
                 return;
             }
@@ -114,12 +113,12 @@ public abstract class TypedAction {
      *
      * @see #setupRawHandler(TypedActionHandler)
      */
-    @Nonnull
+    
     public TypedActionHandler getRawHandler() {
         return myRawHandler;
     }
 
-    @Nonnull
+    
     public RawTypedActionHandler getDefaultRawTypedHandler() {
         throw new UnsupportedOperationException();
     }
@@ -138,7 +137,7 @@ public abstract class TypedAction {
      * @see #getHandler()
      * @see #setupHandler(TypedActionHandler)
      */
-    public TypedActionHandler setupRawHandler(@Nonnull TypedActionHandler handler) {
+    public TypedActionHandler setupRawHandler(TypedActionHandler handler) {
         TypedActionHandler tmp = myRawHandler;
         myRawHandler = handler;
         if (tmp == null) {
@@ -147,7 +146,7 @@ public abstract class TypedAction {
         return tmp;
     }
 
-    public void beforeActionPerformed(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
+    public void beforeActionPerformed(Editor editor, char c, DataContext context, ActionPlan plan) {
         if (myRawHandler instanceof TypedActionHandlerEx) {
             ((TypedActionHandlerEx)myRawHandler).beforeExecute(editor, c, context, plan);
         }

@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,13 +31,13 @@ public class WindowsDefenderCheckerEarlyAccessDescriptor extends EarlyAccessProg
     return Platform.current().os().isWindows();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("Windows Defender Checker");
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription() {
     return LocalizeValue.localizeTODO("Enable checking for protecting source files by Windows Defender which can slow running IDE");

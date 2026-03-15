@@ -47,8 +47,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -70,14 +69,14 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         getTemplatePresentation().setTextValue(ActionLocalize.actionRunconfigurationDescription());
     }
 
-    @Nonnull
+    
     @Override
     public String getPopupActionPlace() {
         return ActionPlaces.RUN_CONFIGURATIONS_COMBOBOX;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
@@ -122,7 +121,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         @Nullable ExecutionTarget target,
         @Nullable RunnerAndConfigurationSettings settings,
         @Nullable Project project,
-        @Nonnull Presentation presentation,
+        Presentation presentation,
         @Nullable String actionPlace
     ) {
         if (project != null && target != null && settings != null) {
@@ -186,7 +185,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public ActionGroup createPopupActionGroup(JComponent button) {
         Project project = DataManager.getInstance().getDataContext(button).getData(Project.KEY);
@@ -283,9 +282,9 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         return separator;
     }
 
-    @Nonnull
+    
     @Override
-    public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
+    public JBPopup createPopup(JComponent component, DataContext context, Runnable onDispose) {
         ActionGroup group = createPopupActionGroup(component, context);
 
         Project project = context.getRequiredData(Project.KEY);

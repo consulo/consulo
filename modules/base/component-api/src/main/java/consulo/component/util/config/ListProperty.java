@@ -16,7 +16,6 @@
 
 package consulo.component.util.config;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,11 +25,11 @@ import java.util.List;
 public class ListProperty<T> extends AbstractProperty<List<T>> {
   private final String myName;
 
-  public ListProperty(@NonNls String name) {
+  public ListProperty(String name) {
     myName = name;
   }
 
-  public static <T> ListProperty<T> create(@NonNls String name) {
+  public static <T> ListProperty<T> create(String name) {
     return new ListProperty<T>(name);
   }
 

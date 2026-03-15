@@ -19,7 +19,6 @@ import consulo.usage.UsageView;
 import consulo.util.lang.BitUtil;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Vector;
 import java.util.function.Consumer;
@@ -69,8 +68,8 @@ public abstract class Node extends DefaultMutableTreeNode {
 
   protected abstract boolean isDataExcluded();
 
-  @Nonnull
-  protected abstract String getText(@Nonnull UsageView view);
+  
+  protected abstract String getText(UsageView view);
 
   public final boolean isValid() {
     return !isFlagSet(CACHED_INVALID_MASK);
@@ -94,7 +93,7 @@ public abstract class Node extends DefaultMutableTreeNode {
     return isFlagSet(EXCLUDED_MASK);
   }
 
-  final synchronized void update(@Nonnull UsageView view, @Nonnull Consumer<Node> edtNodeChangedQueue) {
+  final synchronized void update(UsageView view, Consumer<Node> edtNodeChangedQueue) {
     boolean isDataValid = isDataValid();
     boolean isReadOnly = isDataReadOnly();
     String text = getText(view);
@@ -128,14 +127,14 @@ public abstract class Node extends DefaultMutableTreeNode {
   }
 
   // same as DefaultMutableTreeNode.insert() except it doesn't try to remove the newChild from its parent since we know it's new
-  void insertNewNode(@Nonnull Node newChild, int childIndex) {
+  void insertNewNode(Node newChild, int childIndex) {
     if (children == null) {
       children = new Vector();
     }
     children.insertElementAt(newChild, childIndex);
   }
 
-  void setExcluded(boolean excluded, @Nonnull Consumer<Node> edtNodeChangedQueue) {
+  void setExcluded(boolean excluded, Consumer<Node> edtNodeChangedQueue) {
     setFlag(EXCLUDED_MASK, excluded);
     edtNodeChangedQueue.accept(this);
   }

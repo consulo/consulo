@@ -25,7 +25,6 @@ import consulo.language.content.FileIndexFacade;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -40,14 +39,14 @@ import java.util.concurrent.atomic.AtomicLong;
 @ServiceImpl
 public class IdePsiManagerImpl extends PsiManagerImpl {
   @Inject
-  public IdePsiManagerImpl(@Nonnull Application application,
-                           @Nonnull Project project,
-                           @Nonnull Provider<FileIndexFacade> fileIndexFacadeProvider,
-                           @Nonnull PsiModificationTracker modificationTracker) {
+  public IdePsiManagerImpl(Application application,
+                           Project project,
+                           Provider<FileIndexFacade> fileIndexFacadeProvider,
+                           PsiModificationTracker modificationTracker) {
     super(application, project, fileIndexFacadeProvider, modificationTracker);
   }
 
-  public void dropResolveCacheRegularly(@Nonnull ProgressIndicator indicator) {
+  public void dropResolveCacheRegularly(ProgressIndicator indicator) {
     indicator = ProgressWrapper.unwrap(indicator);
     if (indicator instanceof ProgressIndicatorEx) {
       ((ProgressIndicatorEx)indicator).addStateDelegate(new AbstractProgressIndicatorExBase() {

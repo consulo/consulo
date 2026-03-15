@@ -15,7 +15,6 @@
  */
 package consulo.component.extension;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +79,7 @@ public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Fun
     }
   }
 
-  @Nonnull
+  
   public static <K> Function<ExtensionWalker<K>, Function<Class, K>> build(Function<K, Class> getClassFunc) {
     return new ByClassGrouper<>(getClassFunc);
   }

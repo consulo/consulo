@@ -28,8 +28,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -40,12 +39,12 @@ import java.util.Set;
 public class StructureViewCompositeModel extends StructureViewModelBase implements Disposable, StructureViewModel.ElementInfoProvider, StructureViewModel.ExpandInfoProvider {
   private final List<? extends StructureViewComposite.StructureViewDescriptor> myViews;
 
-  public StructureViewCompositeModel(@Nonnull PsiFile file, @Nullable Editor editor, @Nonnull List<? extends StructureViewComposite.StructureViewDescriptor> views) {
+  public StructureViewCompositeModel(PsiFile file, @Nullable Editor editor, List<? extends StructureViewComposite.StructureViewDescriptor> views) {
     super(file, editor, createRootNode(file, views));
     myViews = views;
   }
 
-  @Nonnull
+  
   private JBIterable<StructureViewModel> getModels() {
     return JBIterable.from(myViews).map(o -> o.structureModel);
   }
@@ -55,8 +54,8 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
     return getModels().filterMap(o -> o.getCurrentEditorElement()).first();
   }
 
-  @Nonnull
-  private static StructureViewTreeElement createRootNode(@Nonnull PsiFile file, @Nonnull List<? extends StructureViewComposite.StructureViewDescriptor> views) {
+  
+  private static StructureViewTreeElement createRootNode(PsiFile file, List<? extends StructureViewComposite.StructureViewDescriptor> views) {
     JBIterable<TreeElement> children = JBIterable.from(views).map(o -> createTreeElementFromView(file, o));
     return new StructureViewTreeElement() {
       @Override
@@ -79,13 +78,13 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         return file.canNavigateToSource();
       }
 
-      @Nonnull
+      
       @Override
       public ItemPresentation getPresentation() {
         return file.getPresentation();
       }
 
-      @Nonnull
+      
       @Override
       public TreeElement[] getChildren() {
         List<TreeElement> elements = children.toList();
@@ -94,13 +93,13 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
     };
   }
 
-  @Nonnull
+  
   @Override
   public Collection<NodeProvider> getNodeProviders() {
     return getModels().filter(ProvidingTreeModel.class).flatMap(ProvidingTreeModel::getNodeProviders).toSet();
   }
 
-  @Nonnull
+  
   @Override
   public Filter[] getFilters() {
     Set<Filter> filters = getModels().flatMap(o -> JBIterable.of(o.getFilters())).toSet();
@@ -124,7 +123,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
   }
 
   @Override
-  public boolean isAutoExpand(@Nonnull StructureViewTreeElement element) {
+  public boolean isAutoExpand(StructureViewTreeElement element) {
     if (element.getValue() instanceof StructureViewComposite.StructureViewDescriptor) return true;
     for (ExpandInfoProvider p : getModels().filter(ExpandInfoProvider.class)) {
       if (p.isAutoExpand(element)) return true;
@@ -142,7 +141,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
     return result;
   }
 
-  @Nonnull
+  
   private static TreeElement createTreeElementFromView(final PsiFile file, final StructureViewComposite.StructureViewDescriptor view) {
     return new StructureViewTreeElement() {
       @Override
@@ -165,7 +164,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         return file.canNavigateToSource();
       }
 
-      @Nonnull
+      
       @Override
       public ItemPresentation getPresentation() {
         return new ItemPresentation() {
@@ -189,7 +188,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         };
       }
 
-      @Nonnull
+      
       @Override
       public TreeElement[] getChildren() {
         return view.structureModel.getRoot().getChildren();

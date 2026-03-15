@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * <p>Runs an activity on project open.</p>
@@ -35,5 +34,5 @@ public interface StartupActivity {
   interface DumbAware extends StartupActivity, consulo.application.dumb.DumbAware {
   }
 
-  void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+  void runActivity(Project project, UIAccess uiAccess);
 }

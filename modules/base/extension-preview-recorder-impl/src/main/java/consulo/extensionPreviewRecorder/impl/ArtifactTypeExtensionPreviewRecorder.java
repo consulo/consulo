@@ -22,7 +22,6 @@ import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -39,7 +38,7 @@ public class ArtifactTypeExtensionPreviewRecorder implements ExtensionPreviewRec
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+  public void analyze(Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(ArtifactType.class).forEachExtensionSafe(it -> {
       ExtensionPreview preview = ExtensionPreview.of(ArtifactType.class, it.getId(), it);
       recorder.accept(preview);

@@ -23,7 +23,6 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBList;
 import org.intellij.lang.annotations.JdkConstants;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -77,7 +76,7 @@ public class SelectFromListDialog extends DialogWrapper {
     return myMainPanel;
   }
   
-  public void addToDialog(JComponent userComponent, @Nonnull String borderLayoutConstraints) {
+  public void addToDialog(JComponent userComponent, String borderLayoutConstraints) {
     LOG.assertTrue(!borderLayoutConstraints.equals(BorderLayout.CENTER), "Can't add any component to center");
     myMainPanel.add(userComponent, borderLayoutConstraints);
   }

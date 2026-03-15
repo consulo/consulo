@@ -9,7 +9,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 public final class LargeFileFindAllAction extends AnAction implements DumbAware {
     //private static final Logger logger = Logger.getInstance(FindAllAction.class);
@@ -24,7 +23,7 @@ public final class LargeFileFindAllAction extends AnAction implements DumbAware 
     }
 
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (StringUtil.isEmpty(searchManager.getSearchReplaceComponent().getSearchTextComponent().getText())) {
             return;
         }

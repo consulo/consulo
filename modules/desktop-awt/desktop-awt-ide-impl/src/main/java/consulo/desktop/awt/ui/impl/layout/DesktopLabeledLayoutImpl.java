@@ -20,7 +20,6 @@ import consulo.ui.Component;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.LayoutConstraint;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,9 +65,9 @@ public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCo
         return component;
     }
 
-    @Nonnull
+    
     @Override
-    public LabeledLayout add(@Nonnull Component component, @Nonnull LayoutConstraint constraint) {
+    public LabeledLayout add(Component component, LayoutConstraint constraint) {
         addImpl(component, BorderLayout.CENTER);
         return this;
     }

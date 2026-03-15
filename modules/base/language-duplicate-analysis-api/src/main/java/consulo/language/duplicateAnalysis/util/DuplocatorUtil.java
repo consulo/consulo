@@ -12,8 +12,7 @@ import consulo.language.duplicateAnalysis.iterator.SiblingNodeIterator;
 import consulo.language.psi.*;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -52,7 +51,7 @@ public class DuplocatorUtil {
     return descriptorProvider.getIgnoredTokens().contains(elementType);
   }
 
-  public static PsiElement getOnlyChild(PsiElement element, @Nonnull NodeFilter filter) {
+  public static PsiElement getOnlyChild(PsiElement element, NodeFilter filter) {
     FilteringNodeIterator it = new FilteringNodeIterator(new SiblingNodeIterator(element.getFirstChild()), filter);
     PsiElement child = it.current();
     if (child != null) {
@@ -153,10 +152,10 @@ public class DuplocatorUtil {
     return null;
   }
 
-  public static boolean match(@Nonnull EquivalenceDescriptor descriptor1,
-                              @Nonnull EquivalenceDescriptor descriptor2,
-                              @Nonnull AbstractMatchingVisitor g,
-                              @Nonnull Set<PsiElementRole> skippedRoles,
+  public static boolean match(EquivalenceDescriptor descriptor1,
+                              EquivalenceDescriptor descriptor2,
+                              AbstractMatchingVisitor g,
+                              Set<PsiElementRole> skippedRoles,
                               @Nullable DuplicatesProfile profile) {
 
     if (descriptor1.getSingleChildDescriptors().size() != descriptor2.getSingleChildDescriptors().size()) {
@@ -214,10 +213,10 @@ public class DuplocatorUtil {
     return true;
   }
 
-  private static boolean match(@Nonnull SingleChildDescriptor childDescriptor1,
-                               @Nonnull SingleChildDescriptor childDescriptor2,
-                               @Nonnull AbstractMatchingVisitor g,
-                               @Nonnull Set<PsiElementRole> skippedRoles,
+  private static boolean match(SingleChildDescriptor childDescriptor1,
+                               SingleChildDescriptor childDescriptor2,
+                               AbstractMatchingVisitor g,
+                               Set<PsiElementRole> skippedRoles,
                                @Nullable DuplicatesProfile duplicatesProfile) {
     if (childDescriptor1.getType() != childDescriptor2.getType()) {
       return false;
@@ -259,9 +258,9 @@ public class DuplocatorUtil {
     }
   }
 
-  private static boolean match(@Nonnull MultiChildDescriptor childDescriptor1,
-                               @Nonnull MultiChildDescriptor childDescriptor2,
-                               @Nonnull AbstractMatchingVisitor g) {
+  private static boolean match(MultiChildDescriptor childDescriptor1,
+                               MultiChildDescriptor childDescriptor2,
+                               AbstractMatchingVisitor g) {
 
     if (childDescriptor1.getType() != childDescriptor2.getType()) {
       return false;
@@ -300,8 +299,8 @@ public class DuplocatorUtil {
            : null;
   }
 
-  @Nonnull
-  public static ExternalizableDuplocatorState registerAndGetState(@Nonnull Language language) {
+  
+  public static ExternalizableDuplocatorState registerAndGetState(Language language) {
     MultilanguageDuplocatorSettings settings = MultilanguageDuplocatorSettings.getInstance();
     ExternalizableDuplocatorState state = settings.getState(language);
     if (state == null) {

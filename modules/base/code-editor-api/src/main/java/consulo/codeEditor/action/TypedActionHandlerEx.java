@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Extension of {@link TypedActionHandler} that can supply an action plan before actually executing an action.
@@ -49,5 +48,5 @@ public interface TypedActionHandlerEx extends TypedActionHandler {
    * @param context the current data context.
    * @param plan    the current action plan draft.
    */
-  void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan);
+  void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan);
 }

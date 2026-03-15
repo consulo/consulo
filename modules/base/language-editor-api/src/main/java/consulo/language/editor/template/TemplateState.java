@@ -20,8 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.document.util.TextRange;
 import consulo.language.editor.template.event.TemplateEditingListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,7 +33,7 @@ public interface TemplateState extends Disposable {
   int getCurrentVariableNumber();
 
   @Nullable
-  TextResult getVariableValue(@Nonnull String name);
+  TextResult getVariableValue(String name);
 
   void nextTab();
 
@@ -48,13 +47,13 @@ public interface TemplateState extends Disposable {
 
   int getSegmentsCount();
 
-  @Nonnull
+  
   TextRange getSegmentRange(int index);
 
   @Nullable
   TextRange getVariableRange(String varName);
 
-  @Nonnull
+  
   Editor getEditor();
 
   boolean isFinished();

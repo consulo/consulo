@@ -15,35 +15,34 @@
  */
 package consulo.colorScheme;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
 
 public interface FontPreferences {
-    @Nonnull
+    
     String DEFAULT_FONT_NAME = "Jetbrains Mono";
     int DEFAULT_FONT_SIZE = 13;
 
     float DEFAULT_LINE_SPACING = 1.2f;
 
-    @Nonnull
+    
     List<String> getEffectiveFontFamilies();
 
-    @Nonnull
+    
     List<String> getRealFontFamilies();
 
-    @Nonnull
+    
     String getFontFamily();
 
-    int getSize(@Nonnull String fontFamily);
+    int getSize(String fontFamily);
 
-    void copyTo(@Nonnull FontPreferences preferences);
+    void copyTo(FontPreferences preferences);
 
     boolean useLigatures();
 
-    boolean hasSize(@Nonnull String fontName);
+    boolean hasSize(String fontName);
 
     float getLineSpacing();
 
@@ -63,7 +62,7 @@ public interface FontPreferences {
      * <code>null</code> if font family with the given name is registered at the current environment
      */
     @Nullable
-    static String getFallbackName(@Nonnull String fontName, int fontSize, @Nullable EditorColorsScheme fallbackScheme) {
+    static String getFallbackName(String fontName, int fontSize, @Nullable EditorColorsScheme fallbackScheme) {
         Font plainFont = new Font(fontName, Font.PLAIN, fontSize);
         if (plainFont.getFamily().equals("Dialog") && !("Dialog".equals(fontName) || fontName.startsWith("Dialog."))) {
             return fallbackScheme == null ? DEFAULT_FONT_NAME : fallbackScheme.getEditorFontName();

@@ -31,7 +31,6 @@ import consulo.ui.web.internal.util.Mappers;
 import consulo.web.gwt.shared.ui.state.ApplicationContainerState;
 import consulo.web.gwt.shared.ui.state.ApplicationState;
 
-import jakarta.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,7 +40,7 @@ import java.util.Map;
  */
 public class WebApplicationContainerImpl extends VaadinComponentDelegate<WebApplicationContainerImpl.Vaadin> {
   public static class Vaadin extends VaadinSingleComponentContainer {
-    public void set(@Nonnull Component component) {
+    public void set(Component component) {
       setContent(TargetVaddin.to(component));
 
       markAsDirtyRecursive();
@@ -92,14 +91,14 @@ public class WebApplicationContainerImpl extends VaadinComponentDelegate<WebAppl
   }
 
   @Override
-  @Nonnull
+  
   public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 
   @RequiredUIAccess
-  @Nonnull
-  public WebApplicationContainerImpl set(@Nonnull Component component) {
+  
+  public WebApplicationContainerImpl set(Component component) {
     getVaadinComponent().set(component);
     return this;
   }

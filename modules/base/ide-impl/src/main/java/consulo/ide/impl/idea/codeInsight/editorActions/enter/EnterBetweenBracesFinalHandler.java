@@ -16,8 +16,7 @@ import consulo.language.editor.internal.EnterHandlerHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Please, don't extend the class.
@@ -26,11 +25,11 @@ import jakarta.annotation.Nullable;
 public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter {
     @Override
     public Result preprocessEnter(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull SimpleReference<Integer> caretOffsetRef,
-        @Nonnull SimpleReference<Integer> caretAdvance,
-        @Nonnull DataContext dataContext,
+        PsiFile file,
+        Editor editor,
+        SimpleReference<Integer> caretOffsetRef,
+        SimpleReference<Integer> caretAdvance,
+        DataContext dataContext,
         EditorActionHandler originalHandler
     ) {
         if (!CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
@@ -70,8 +69,8 @@ public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegat
     }
 
     protected boolean isApplicable(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
+        PsiFile file,
+        Editor editor,
         CharSequence documentText,
         int caretOffset,
         EnterBetweenBracesDelegate helper
@@ -88,7 +87,7 @@ public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegat
             !helper.bracesAreInTheSameElement(file, editor, prevCharOffset, nextCharOffset);
     }
 
-    @Nonnull
+    
     protected EnterBetweenBracesDelegate getLanguageImplementation(@Nullable Language language) {
         if (language != null) {
             EnterBetweenBracesDelegate helper = EnterBetweenBracesDelegate.forLanguage(language);
@@ -100,7 +99,7 @@ public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegat
     }
 
     protected static EnterBetweenBracesDelegate ourDefaultBetweenDelegate = new EnterBetweenBracesDelegate() {
-        @Nonnull
+        
         @Override
         public Language getLanguage() {
             return Language.ANY;

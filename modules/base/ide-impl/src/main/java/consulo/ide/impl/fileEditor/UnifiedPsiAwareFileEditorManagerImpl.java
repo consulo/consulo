@@ -30,7 +30,6 @@ import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.Component;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -58,19 +57,19 @@ public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
     }
   }
 
-  @Nonnull
+  
   @Override
   public Component getUIComponent() {
     initUI();
     return mySplitters.getUIComponent();
   }
 
-  @Nonnull
+  
   @Override
-  protected FileEditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
-                                                                              @Nonnull FileEditor[] editors,
-                                                                              @Nonnull FileEditorProvider[] providers,
-                                                                              @Nonnull FileEditorManagerEx fileEditorManager) {
+  protected FileEditorWithProviderComposite createEditorWithProviderComposite(VirtualFile file,
+                                                                              FileEditor[] editors,
+                                                                              FileEditorProvider[] providers,
+                                                                              FileEditorManagerEx fileEditorManager) {
     return new UnifiedFileEditorWithProviderComposite(file, editors, providers, fileEditorManager);
   }
 

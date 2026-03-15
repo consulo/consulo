@@ -21,9 +21,8 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -48,7 +47,7 @@ public class SelectContentStep extends BaseListPopupStep<Content> {
     return value.getIcon();
   }
 
-  @Nonnull
+  
   @Override
   public String getTextFor(Content value) {
     TabbedContent tabbedContent = asMultiTabbed(value);

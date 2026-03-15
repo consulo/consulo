@@ -20,7 +20,6 @@ import consulo.application.DataLockService;
 import consulo.application.WriteAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.Callable;
@@ -34,9 +33,9 @@ import java.util.concurrent.CompletableFuture;
 @ServiceImpl
 public class DataLockServiceImpl implements DataLockService {
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public <T> CompletableFuture<T> modalWrite(@Nonnull LocalizeValue modalText, @Nonnull Callable<T> callable) {
+    public <T> CompletableFuture<T> modalWrite(LocalizeValue modalText, Callable<T> callable) {
         CompletableFuture<T> future = new CompletableFuture<>();
         WriteAction.runAndWait(() -> {
             try {

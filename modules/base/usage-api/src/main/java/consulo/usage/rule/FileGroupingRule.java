@@ -33,8 +33,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -48,7 +47,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
 
   @Nullable
   @Override
-  public UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+  public UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
     VirtualFile virtualFile;
     if (usage instanceof UsageInFile && (virtualFile = ((UsageInFile)usage).getFile()) != null) {
       return new FileUsageGroup(myProject, virtualFile);
@@ -62,7 +61,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     private String myPresentableName;
     private Image myIcon;
 
-    public FileUsageGroup(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public FileUsageGroup(Project project, VirtualFile file) {
       myProject = project;
       myFile = file instanceof VirtualFileWindow ? ((VirtualFileWindow)file).getDelegate() : file;
       myPresentableName = myFile.getName();
@@ -102,7 +101,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return myPresentableName;
     }
@@ -133,7 +132,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    public int compareTo(@Nonnull UsageGroup otherGroup) {
+    public int compareTo(UsageGroup otherGroup) {
       int compareTexts = getText(null).compareToIgnoreCase(otherGroup.getText(null));
       if (compareTexts != 0) return compareTexts;
       if (otherGroup instanceof FileUsageGroup) {
@@ -161,7 +160,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    @Nonnull
+    
     public String getPresentableName() {
       return myPresentableName;
     }

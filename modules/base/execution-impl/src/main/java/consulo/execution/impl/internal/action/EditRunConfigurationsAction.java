@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS)
 public class EditRunConfigurationsAction extends DumbAwareAction {
@@ -48,7 +47,7 @@ public class EditRunConfigurationsAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(true);
 

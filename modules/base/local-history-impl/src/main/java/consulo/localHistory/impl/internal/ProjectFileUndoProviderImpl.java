@@ -18,7 +18,6 @@ package consulo.localHistory.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.undoRedo.ProjectUndoProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -28,7 +27,7 @@ import jakarta.inject.Inject;
 @ExtensionImpl
 public class ProjectFileUndoProviderImpl extends FileUndoProvider implements ProjectUndoProvider {
     @Inject
-    ProjectFileUndoProviderImpl(@Nonnull Project project) {
+    ProjectFileUndoProviderImpl(Project project) {
         super(project);
     }
 }

@@ -4,8 +4,7 @@ package consulo.ide.impl.idea.ui;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -18,7 +17,7 @@ public class ListFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
   private final Component[] myComponents;
   private final ObjectIntMap<Component> myComponentToIndex;
 
-  public ListFocusTraversalPolicy(@Nonnull List<? extends Component> components) {
+  public ListFocusTraversalPolicy(List<? extends Component> components) {
     myComponents = components.toArray(Component[]::new);
     myComponentToIndex = indexMap(myComponents);
   }
@@ -88,8 +87,8 @@ public class ListFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
     return null;
   }
 
-  @Nonnull
-  private static <X> ObjectIntMap<X> indexMap(@Nonnull X[] array) {
+  
+  private static <X> ObjectIntMap<X> indexMap(X[] array) {
     ObjectIntMap<X> map = ObjectMaps.newObjectIntHashMap(array.length);
     for (X x : array) {
       if (!map.containsKey(x)) {

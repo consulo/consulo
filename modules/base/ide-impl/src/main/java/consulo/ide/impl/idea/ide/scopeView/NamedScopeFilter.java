@@ -12,7 +12,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,30 +21,30 @@ public final class NamedScopeFilter implements VirtualFileFilter {
   private final NamedScope scope;
   private final String string;
 
-  public NamedScopeFilter(@Nonnull NamedScopesHolder holder, @Nonnull NamedScope scope) {
+  public NamedScopeFilter(NamedScopesHolder holder, NamedScope scope) {
     this.holder = holder;
     this.scope = scope;
     this.string = scope + "; " + scope.getClass();
   }
 
-  @Nonnull
+  
   public NamedScopesHolder getHolder() {
     return holder;
   }
 
-  @Nonnull
+  
   public NamedScope getScope() {
     return scope;
   }
 
-  @Nonnull
+  
   @Override
   public String toString() {
     return string;
   }
 
   @Override
-  public boolean accept(@Nonnull VirtualFile file) {
+  public boolean accept(VirtualFile file) {
     if (file == null) return false;
 
     PackageSet set = scope.getValue();
@@ -55,11 +54,11 @@ public final class NamedScopeFilter implements VirtualFileFilter {
     return set.contains(file, project, holder);
   }
 
-  static boolean isVisible(@Nonnull NamedScope scope) {
+  static boolean isVisible(NamedScope scope) {
     return !(scope instanceof NonProjectFilesScope || scope == DefaultScopesProvider.getAllScope());
   }
 
-  @Nonnull
+  
   static List<NamedScopeFilter> list(NamedScopesHolder... holders) {
     List<NamedScopeFilter> list = new ArrayList<>();
     NamedScope scratchesScope = null;

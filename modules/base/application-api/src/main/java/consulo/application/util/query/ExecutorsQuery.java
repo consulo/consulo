@@ -5,7 +5,6 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -19,13 +18,13 @@ public final class ExecutorsQuery<Result, Parameter> extends AbstractQuery<Resul
     private final List<? extends QueryExecutor<Result, Parameter>> myExecutors;
     private final Parameter myParameters;
 
-    public ExecutorsQuery(@Nonnull Parameter params, @Nonnull List<? extends QueryExecutor<Result, Parameter>> executors) {
+    public ExecutorsQuery(Parameter params, List<? extends QueryExecutor<Result, Parameter>> executors) {
         myParameters = params;
         myExecutors = executors;
     }
 
     @Override
-    protected boolean processResults(@Nonnull Predicate<? super Result> consumer) {
+    protected boolean processResults(Predicate<? super Result> consumer) {
         for (QueryExecutor<Result, Parameter> executor : myExecutors) {
             try {
                 ProgressManager.checkCanceled();

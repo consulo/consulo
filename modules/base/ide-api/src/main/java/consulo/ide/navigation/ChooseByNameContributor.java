@@ -18,7 +18,6 @@ package consulo.ide.navigation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @see GotoFileContributor
@@ -36,7 +35,7 @@ public interface ChooseByNameContributor {
    *                               library classes) should be included in the returned array.
    * @return the array of names.
    */
-  @Nonnull
+  
   String[] getNames(Project project, boolean includeNonProjectItems);
 
   /**
@@ -49,6 +48,6 @@ public interface ChooseByNameContributor {
    *                               library classes) should be included in the returned array.
    * @return the array of navigation items.
    */
-  @Nonnull
+  
   NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems);
 }

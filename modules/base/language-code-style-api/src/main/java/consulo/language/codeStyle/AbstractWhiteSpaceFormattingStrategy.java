@@ -21,8 +21,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstract common {@link WhiteSpaceFormattingStrategy} implementation that doesn't replace default strategy and doesn't
@@ -37,11 +36,11 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence adjustWhiteSpaceIfNecessary(
-        @Nonnull CharSequence whiteSpaceText,
-        @Nonnull CharSequence text,
+        CharSequence whiteSpaceText,
+        CharSequence text,
         int startOffset,
         int endOffset,
         CodeStyleSettings codeStyleSettings,
@@ -54,8 +53,8 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
     @Override
     @RequiredReadAction
     public CharSequence adjustWhiteSpaceIfNecessary(
-        @Nonnull CharSequence whiteSpaceText,
-        @Nonnull PsiElement startElement,
+        CharSequence whiteSpaceText,
+        PsiElement startElement,
         int startOffset,
         int endOffset,
         CodeStyleSettings codeStyleSettings
@@ -97,7 +96,7 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
 
     @Nullable
     @RequiredReadAction
-    private static PsiElement next(@Nonnull PsiElement element) {
+    private static PsiElement next(PsiElement element) {
         for (PsiElement anchor = element; anchor != null; anchor = anchor.getParent()) {
             PsiElement result = element.getNextSibling();
             if (result != null) {
@@ -108,12 +107,12 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
     }
 
     @Override
-    public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
+    public boolean containsWhitespacesOnly(ASTNode node) {
         return false;
     }
 
     @Override
-    public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
+    public boolean addWhitespace(ASTNode treePrev, ASTNode whiteSpaceElement) {
         return false;
     }
 }

@@ -32,7 +32,6 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
 
-import jakarta.annotation.Nonnull;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public final class SubServer implements CustomPortServerManager.CustomPortServic
   private final CustomPortServerManager user;
   private final BuiltInServer server;
 
-  public SubServer(@Nonnull CustomPortServerManager user, @Nonnull BuiltInServer server) {
+  public SubServer(CustomPortServerManager user, BuiltInServer server) {
     this.user = user;
     this.server = server;
 
@@ -124,7 +123,7 @@ public final class SubServer implements CustomPortServerManager.CustomPortServic
     }
 
     @Override
-    protected HttpResponse process(@Nonnull ChannelHandlerContext context, @Nonnull FullHttpRequest request, @Nonnull QueryStringDecoder urlDecoder) {
+    protected HttpResponse process(ChannelHandlerContext context, FullHttpRequest request, QueryStringDecoder urlDecoder) {
       if (handlers.isEmpty()) {
         // not yet initialized, for example, P2PTransport could add handlers after we bound.
         return null;

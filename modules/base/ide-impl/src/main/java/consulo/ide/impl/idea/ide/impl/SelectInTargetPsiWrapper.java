@@ -23,26 +23,25 @@ import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
   protected final Project myProject;
 
-  protected SelectInTargetPsiWrapper(@Nonnull Project project) {
+  protected SelectInTargetPsiWrapper(Project project) {
     myProject = project;
   }
 
   protected abstract boolean canSelect(PsiFileSystemItem file);
 
   @Override
-  public final boolean canSelect(@Nonnull SelectInContext context) {
+  public final boolean canSelect(SelectInContext context) {
     if (!isContextValid(context)) return false;
 
     return canWorkWithCustomObjects() || canSelectInner(context);
   }
 
-  protected boolean canSelectInner(@Nonnull SelectInContext context) {
+  protected boolean canSelectInner(SelectInContext context) {
     PsiFileSystemItem psiFile = getContextPsiFile(context);
     return psiFile != null && canSelect(psiFile);
   }
@@ -55,7 +54,7 @@ public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
   }
 
   @Nullable
-  protected PsiFileSystemItem getContextPsiFile(@Nonnull SelectInContext context) {
+  protected PsiFileSystemItem getContextPsiFile(SelectInContext context) {
     VirtualFile virtualFile = context.getVirtualFile();
     PsiFileSystemItem psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
     if (psiFile != null) {
@@ -72,7 +71,7 @@ public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
   }
 
   @Override
-  public final void selectIn(@Nonnull SelectInContext context, boolean requestFocus) {
+  public final void selectIn(SelectInContext context, boolean requestFocus) {
     VirtualFile file = context.getVirtualFile();
     Object selector = context.getSelectorInFile();
     if (selector == null) {

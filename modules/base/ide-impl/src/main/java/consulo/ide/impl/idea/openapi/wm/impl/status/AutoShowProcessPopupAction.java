@@ -21,7 +21,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.util.registry.Registry;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "AutoShowProcessWindow")
 public class AutoShowProcessPopupAction extends ToggleAction {
@@ -30,13 +29,13 @@ public class AutoShowProcessPopupAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return Registry.is("ide.windowSystem.autoShowProcessPopup");
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         Registry.get("ide.windowSystem.autoShowProcessPopup").setValue(state);
     }
 }

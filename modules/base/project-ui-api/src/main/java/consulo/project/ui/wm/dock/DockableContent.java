@@ -16,12 +16,11 @@
 package consulo.project.ui.wm.dock;
 
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public interface DockableContent<T> {
-  @Nonnull
+  
   T getKey();
 
   Image getPreviewImage();

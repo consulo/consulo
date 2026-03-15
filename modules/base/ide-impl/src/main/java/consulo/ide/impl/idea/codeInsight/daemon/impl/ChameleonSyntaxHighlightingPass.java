@@ -30,25 +30,24 @@ import consulo.language.psi.SyntaxTraverser;
 import consulo.project.Project;
 import consulo.util.collection.TreeTraversal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
 
-  ChameleonSyntaxHighlightingPass(@Nonnull Project project,
-                                  @Nonnull PsiFile file,
-                                  @Nonnull Document document,
-                                  @Nonnull ProperTextRange restrictRange,
-                                  @Nonnull ProperTextRange priorityRange,
+  ChameleonSyntaxHighlightingPass(Project project,
+                                  PsiFile file,
+                                  Document document,
+                                  ProperTextRange restrictRange,
+                                  ProperTextRange priorityRange,
                                   @Nullable Editor editor,
-                                  @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
+                                  HighlightInfoProcessor highlightInfoProcessor) {
     super(project, file, document, restrictRange.getStartOffset(), restrictRange.getEndOffset(), true, priorityRange, editor, highlightInfoProcessor);
   }
 
   @Override
-  public void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
+  public void collectInformationWithProgress(ProgressIndicator progress) {
     SyntaxTraverser<PsiElement> s = SyntaxTraverser.psiTraverser(myFile).filter(o -> {
       IElementType type = PsiUtilCore.getElementType(o);
       return type instanceof ILazyParseableElementType && !(type instanceof IFileElementType);
@@ -74,7 +73,7 @@ class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
     myHighlights.addAll(outside);
   }
 
-  private void collectHighlights(@Nonnull PsiElement element, @Nonnull List<? super HighlightInfo> inside, @Nonnull List<? super HighlightInfo> outside, @Nonnull ProperTextRange priorityRange) {
+  private void collectHighlights(PsiElement element, List<? super HighlightInfo> inside, List<? super HighlightInfo> outside, ProperTextRange priorityRange) {
     EditorColorsScheme scheme = ObjectUtil.notNull(getColorsScheme(), EditorColorsManager.getInstance().getGlobalScheme());
     TextAttributes defaultAttrs = scheme.getAttributes(HighlighterColors.TEXT);
 

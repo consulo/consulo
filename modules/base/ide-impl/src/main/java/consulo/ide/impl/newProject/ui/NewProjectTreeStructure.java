@@ -25,8 +25,7 @@ import consulo.ide.newModule.NewModuleContextGroup;
 import consulo.ide.newModule.NewModuleContextNode;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,15 +38,15 @@ public class NewProjectTreeStructure extends AbstractTreeStructure {
     myContext = context;
   }
 
-  @Nonnull
+  
   @Override
   public Object getRootElement() {
     return myContext;
   }
 
-  @Nonnull
+  
   @Override
-  public Object[] getChildElements(@Nonnull Object element) {
+  public Object[] getChildElements(Object element) {
     if (element instanceof NewModuleContextGroup) {
       return ((NewModuleContextGroup)element).getAll().toArray();
     }
@@ -56,13 +55,13 @@ public class NewProjectTreeStructure extends AbstractTreeStructure {
 
   @Nullable
   @Override
-  public Object getParentElement(@Nonnull Object element) {
+  public Object getParentElement(Object element) {
     return null;
   }
 
-  @Nonnull
+  
   @Override
-  public NodeDescriptor createDescriptor(@Nonnull Object element, @Nullable NodeDescriptor parentDescriptor) {
+  public NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor) {
     return new PresentableNodeDescriptor(parentDescriptor) {
 
       @Override

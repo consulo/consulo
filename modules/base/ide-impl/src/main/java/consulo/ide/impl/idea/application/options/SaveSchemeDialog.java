@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ public class SaveSchemeDialog extends DialogWrapper {
     private final JTextField mySchemeName = new JTextField();
     private final List<String> myExistingNames;
 
-    public SaveSchemeDialog(@Nonnull Component parent, String title, @Nonnull List<String> existingNames, @Nonnull String selectedName) {
+    public SaveSchemeDialog(Component parent, String title, List<String> existingNames, String selectedName) {
         super(parent, false);
         myExistingNames = existingNames;
         setTitle(title);

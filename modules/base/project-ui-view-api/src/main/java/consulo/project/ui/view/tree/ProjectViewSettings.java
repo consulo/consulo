@@ -16,14 +16,13 @@
 package consulo.project.ui.view.tree;
 
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2025-05-31
  */
 public interface ProjectViewSettings extends NodeOptions {
-    default <T> void setViewOption(@Nonnull KeyWithDefaultValue<T> key, @Nullable T value) {
+    default <T> void setViewOption(KeyWithDefaultValue<T> key, @Nullable T value) {
     }
 }

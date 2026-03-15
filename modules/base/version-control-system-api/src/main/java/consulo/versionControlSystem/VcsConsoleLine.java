@@ -7,19 +7,18 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
 public final class VcsConsoleLine {
   private final List<Pair<String, ConsoleViewContentType>> myChunks;
 
-  private VcsConsoleLine(@Nonnull List<Pair<String, ConsoleViewContentType>> chunks) {
+  private VcsConsoleLine(List<Pair<String, ConsoleViewContentType>> chunks) {
     myChunks = chunks;
   }
 
-  public void print(@Nonnull ConsoleView console) {
+  public void print(ConsoleView console) {
     ConsoleViewContentType lastType = ConsoleViewContentType.NORMAL_OUTPUT;
     for (Pair<String, ConsoleViewContentType> chunk : myChunks) {
       console.print(chunk.first, chunk.second);
@@ -29,12 +28,12 @@ public final class VcsConsoleLine {
   }
 
   @Nullable
-  public static VcsConsoleLine create(@Nullable String message, @Nonnull ConsoleViewContentType contentType) {
+  public static VcsConsoleLine create(@Nullable String message, ConsoleViewContentType contentType) {
     return create(Collections.singletonList(Pair.create(message, contentType)));
   }
 
   @Nullable
-  public static VcsConsoleLine create(@Nonnull List<Pair<String, ConsoleViewContentType>> lineChunks) {
+  public static VcsConsoleLine create(List<Pair<String, ConsoleViewContentType>> lineChunks) {
     List<Pair<String, ConsoleViewContentType>> chunks = ContainerUtil.filter(lineChunks, it -> !StringUtil.isEmptyOrSpaces(it.first));
     if (chunks.isEmpty()) return null;
     return new VcsConsoleLine(chunks);

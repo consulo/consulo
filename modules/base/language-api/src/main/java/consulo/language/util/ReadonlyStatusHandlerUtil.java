@@ -22,14 +22,13 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 23-Mar-22
  */
 public class ReadonlyStatusHandlerUtil {
-  public static boolean ensureDocumentWritable(@Nonnull Project project, @Nonnull Document document) {
+  public static boolean ensureDocumentWritable(Project project, Document document) {
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     boolean okWritable;
     if (psiFile == null) {

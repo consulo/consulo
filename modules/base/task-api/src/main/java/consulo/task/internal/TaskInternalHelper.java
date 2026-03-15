@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,5 +28,5 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TaskInternalHelper {
   @RequiredUIAccess
-  void openProxySettings(@Nonnull Project project, @Nonnull Runnable afterCallback);
+  void openProxySettings(Project project, Runnable afterCallback);
 }

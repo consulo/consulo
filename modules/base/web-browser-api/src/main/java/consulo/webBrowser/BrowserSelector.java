@@ -24,8 +24,7 @@ import consulo.ui.ex.awt.SimpleListCellRenderer;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class BrowserSelector {
         this(browser -> allowDefaultBrowser || browser != null);
     }
 
-    public BrowserSelector(@Nonnull Predicate<WebBrowser> browserCondition) {
+    public BrowserSelector(Predicate<WebBrowser> browserCondition) {
         myModel = createBrowsersComboModel(browserCondition);
         myBrowserComboWithBrowse = new ComboboxWithBrowseButton(new ComboBox(myModel));
         myBrowserComboWithBrowse.addActionListener(e -> {
@@ -85,7 +84,7 @@ public class BrowserSelector {
         return myBrowserComboWithBrowse;
     }
 
-    private static MutableCollectionComboBoxModel<WebBrowser> createBrowsersComboModel(@Nonnull Predicate<WebBrowser> browserCondition) {
+    private static MutableCollectionComboBoxModel<WebBrowser> createBrowsersComboModel(Predicate<WebBrowser> browserCondition) {
         List<WebBrowser> list = new ArrayList<>();
         if (browserCondition.test(null)) {
             list.add(null);
@@ -109,7 +108,7 @@ public class BrowserSelector {
         myBrowserComboWithBrowse.getComboBox().setSelectedItem(selectedItem);
     }
 
-    public boolean addAndSelect(@Nonnull WebBrowser browser) {
+    public boolean addAndSelect(WebBrowser browser) {
         if (myModel.contains(browser)) {
             return false;
         }

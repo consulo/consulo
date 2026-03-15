@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.Comparator;

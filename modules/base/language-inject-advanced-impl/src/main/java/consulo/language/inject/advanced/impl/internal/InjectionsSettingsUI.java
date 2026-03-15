@@ -65,8 +65,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jdom.Document;
 
@@ -141,13 +140,13 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         DefaultActionGroup group = new DefaultActionGroup();
         AnAction addAction = new AnAction(CommonLocalize.buttonAdd(), CommonLocalize.buttonAdd(), PlatformIconGroup.generalAdd()) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(!myAddActions.isEmpty());
             }
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 performAdd(e);
             }
         };
@@ -157,7 +156,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             PlatformIconGroup.generalRemove()
         ) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 boolean enabled = false;
                 for (InjInfo info : getSelectedInjections()) {
                     if (!info.bundled) {
@@ -170,7 +169,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 performRemove();
             }
         };
@@ -181,7 +180,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             PlatformIconGroup.actionsEdit()
         ) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 AnAction action = getEditAction();
                 e.getPresentation().setEnabled(action != null);
                 if (action != null) {
@@ -191,7 +190,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 performEditAction(e);
             }
         };
@@ -201,7 +200,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             PlatformIconGroup.actionsCopy()
         ) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 AnAction action = getEditAction();
                 e.getPresentation().setEnabled(action != null);
                 if (action != null) {
@@ -211,7 +210,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 InjInfo injection = getSelectedInjection();
                 if (injection != null) {
                     addInjection(injection.injection.copy());
@@ -232,14 +231,14 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         group.add(new AnAction("Enable Selected Injections", "Enable Selected Injections", PlatformIconGroup.actionsSelectall()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 performSelectedInjectionsEnabled(true);
             }
         });
         group.add(new AnAction("Disable Selected Injections", "Disable Selected Injections", PlatformIconGroup.actionsUnselectall()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 performSelectedInjectionsEnabled(false);
             }
         });
@@ -247,7 +246,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         new AnAction("Toggle") {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 performToggleAction();
             }
         }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0)), myInjectionsTable);
@@ -261,7 +260,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             ) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     List<InjInfo> injections = getSelectedInjections();
                     CfgInfo cfg = getTargetCfgInfo(injections);
                     if (cfg == null) {
@@ -283,7 +282,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 }
 
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     CfgInfo cfg = getTargetCfgInfo(getSelectedInjections());
                     e.getPresentation().setEnabled(cfg != null);
                     e.getPresentation().setText(cfg == getDefaultCfgInfo() ? "Make Global" : "Move to Project");
@@ -326,7 +325,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 doImportAction(e.getDataContext());
                 updateCountLabel();
             }
@@ -338,7 +337,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 List<BaseInjection> injections = getInjectionList(getSelectedInjections());
                 VirtualFileWrapper wrapper =
                     FileChooserFactory.getInstance().createSaveFileDialog(new FileSaverDescriptor("Export Selected " + "Injections to File...", "", "xml"), myProject).save(null, null);
@@ -358,7 +357,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(!getSelectedInjections().isEmpty());
             }
         });
@@ -444,7 +443,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         return myConfigurables;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "IntelliLang.Configuration";
@@ -610,7 +609,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Language Injections");
     }

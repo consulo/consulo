@@ -18,7 +18,6 @@ package consulo.ui.ex.action;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,8 +37,8 @@ public interface CustomUIComponentAction {
      * be shown on several toolbars simultaneously. Use {@link CustomUIComponentAction#COMPONENT_KEY}
      * to retrieve current component from a Presentation instance in {@link AnAction#update(AnActionEvent)} method.
      */
-    @Nonnull
+    
     @RequiredUIAccess
-    Component createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place);
+    Component createCustomComponent(Presentation presentation, String place);
 }
 

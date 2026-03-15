@@ -8,8 +8,7 @@ import consulo.document.util.TextRange;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ImmutableCharSequence;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -23,14 +22,14 @@ public class FrozenDocument implements DocumentEx {
     private final long myStamp;
     private volatile SoftReference<String> myTextString;
 
-    FrozenDocument(@Nonnull ImmutableCharSequence text, @Nullable LineSet lineSet, long stamp, @Nullable String textString) {
+    FrozenDocument(ImmutableCharSequence text, @Nullable LineSet lineSet, long stamp, @Nullable String textString) {
         myText = text;
         myLineSet = lineSet == null ? null : new SoftReference<>(lineSet);
         myStamp = stamp;
         myTextString = textString == null ? null : new SoftReference<>(textString);
     }
 
-    @Nonnull
+    
     private LineSet getLineSet() {
         LineSet lineSet = SoftReference.dereference(myLineSet);
         if (lineSet == null) {
@@ -47,7 +46,7 @@ public class FrozenDocument implements DocumentEx {
         return new FrozenDocument(newText, newLineSet, newStamp, null);
     }
 
-    @Nonnull
+    
     @Override
     public LineIterator createLineIterator() {
         return getLineSet().createIterator();
@@ -59,7 +58,7 @@ public class FrozenDocument implements DocumentEx {
     }
 
     @Override
-    public void replaceText(@Nonnull CharSequence chars, long newModificationStamp) {
+    public void replaceText(CharSequence chars, long newModificationStamp) {
         throw new UnsupportedOperationException();
     }
 
@@ -69,13 +68,13 @@ public class FrozenDocument implements DocumentEx {
     }
 
     @Override
-    public boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker) {
+    public boolean removeRangeMarker(RangeMarkerEx rangeMarker) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public void registerRangeMarker(
-        @Nonnull RangeMarkerEx rangeMarker,
+        RangeMarkerEx rangeMarker,
         int start,
         int end,
         boolean greedyToLeft,
@@ -86,16 +85,16 @@ public class FrozenDocument implements DocumentEx {
     }
 
     @Override
-    public boolean processRangeMarkers(@Nonnull Predicate<? super RangeMarker> processor) {
+    public boolean processRangeMarkers(Predicate<? super RangeMarker> processor) {
         return true;
     }
 
     @Override
-    public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeMarker> processor) {
+    public boolean processRangeMarkersOverlappingWith(int start, int end, Predicate<? super RangeMarker> processor) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public String getText() {
         String s = SoftReference.dereference(myTextString);
@@ -105,19 +104,19 @@ public class FrozenDocument implements DocumentEx {
         return s;
     }
 
-    @Nonnull
+    
     @Override
-    public String getText(@Nonnull TextRange range) {
+    public String getText(TextRange range) {
         return myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString();
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence getCharsSequence() {
         return myText;
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence getImmutableCharSequence() {
         return myText;
@@ -152,7 +151,7 @@ public class FrozenDocument implements DocumentEx {
     }
 
     @Override
-    public void insertString(int offset, @Nonnull CharSequence s) {
+    public void insertString(int offset, CharSequence s) {
         throw new UnsupportedOperationException();
     }
 
@@ -162,7 +161,7 @@ public class FrozenDocument implements DocumentEx {
     }
 
     @Override
-    public void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s) {
+    public void replaceString(int startOffset, int endOffset, CharSequence s) {
         throw new UnsupportedOperationException();
     }
 
@@ -176,7 +175,7 @@ public class FrozenDocument implements DocumentEx {
         return myStamp;
     }
 
-    @Nonnull
+    
     @Override
     public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) {
         throw new UnsupportedOperationException();
@@ -187,14 +186,14 @@ public class FrozenDocument implements DocumentEx {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public RangeMarker createGuardedBlock(int startOffset, int endOffset) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeGuardedBlock(@Nonnull RangeMarker block) {
+    public void removeGuardedBlock(RangeMarker block) {
         throw new UnsupportedOperationException();
     }
 
@@ -221,7 +220,7 @@ public class FrozenDocument implements DocumentEx {
     }
 
     @Override
-    public void setText(@Nonnull CharSequence text) {
+    public void setText(CharSequence text) {
         throw new UnsupportedOperationException();
     }
 
@@ -232,12 +231,12 @@ public class FrozenDocument implements DocumentEx {
 
     @Nullable
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         throw new UnsupportedOperationException();
     }
 
@@ -247,7 +246,7 @@ public class FrozenDocument implements DocumentEx {
     }
 
     @Override
-    public void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
+    public void removeEditReadOnlyListener(EditReadOnlyListener listener) {
         throw new UnsupportedOperationException();
     }
 }

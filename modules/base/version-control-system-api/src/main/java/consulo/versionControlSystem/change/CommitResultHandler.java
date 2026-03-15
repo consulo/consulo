@@ -17,7 +17,6 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.AbstractVcsHelper;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -28,7 +27,7 @@ import java.util.Collection;
  * @author Kirill Likhodedov
  */
 public interface CommitResultHandler {
-  void onSuccess(@Nonnull String commitMessage);
+  void onSuccess(String commitMessage);
 
   void onFailure();
 }

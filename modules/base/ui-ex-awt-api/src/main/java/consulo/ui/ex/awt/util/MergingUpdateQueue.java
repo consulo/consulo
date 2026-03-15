@@ -27,10 +27,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -71,15 +69,15 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   private boolean myTrackUiActivity;
   private UiActivity myUiActivity;
 
-  public MergingUpdateQueue(@NonNls @Nonnull String name, int mergingTimeSpan, boolean isActive, @Nullable JComponent modalityStateComponent) {
+  public MergingUpdateQueue(String name, int mergingTimeSpan, boolean isActive, @Nullable JComponent modalityStateComponent) {
     this(name, mergingTimeSpan, isActive, modalityStateComponent, null);
   }
 
-  public MergingUpdateQueue(@NonNls @Nonnull String name, int mergingTimeSpan, boolean isActive, @Nullable JComponent modalityStateComponent, @Nullable Disposable parent) {
+  public MergingUpdateQueue(String name, int mergingTimeSpan, boolean isActive, @Nullable JComponent modalityStateComponent, @Nullable Disposable parent) {
     this(name, mergingTimeSpan, isActive, modalityStateComponent, parent, null);
   }
 
-  public MergingUpdateQueue(@NonNls @Nonnull String name,
+  public MergingUpdateQueue(String name,
                             int mergingTimeSpan,
                             boolean isActive,
                             @Nullable JComponent modalityStateComponent,
@@ -88,7 +86,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     this(name, mergingTimeSpan, isActive, modalityStateComponent, parent, activationComponent, true);
   }
 
-  public MergingUpdateQueue(@NonNls @Nonnull String name,
+  public MergingUpdateQueue(String name,
                             int mergingTimeSpan,
                             boolean isActive,
                             @Nullable JComponent modalityStateComponent,
@@ -108,13 +106,13 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
    * @param activationComponent    if not {@code null} the tasks will be processing only when the given component is showing
    * @param thread                 specifies on which thread the tasks are executed
    */
-  public MergingUpdateQueue(@NonNls @Nonnull String name,
+  public MergingUpdateQueue(String name,
                             int mergingTimeSpan,
                             boolean isActive,
                             @Nullable JComponent modalityStateComponent,
                             @Nullable Disposable parent,
                             @Nullable JComponent activationComponent,
-                            @Nonnull Alarm.ThreadToUse thread) {
+                            Alarm.ThreadToUse thread) {
     myMergingTimeSpan = mergingTimeSpan;
     myModalityStateComponent = modalityStateComponent;
     myName = name;
@@ -137,7 +135,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  private static Alarm createAlarm(@Nonnull Alarm.ThreadToUse thread, @Nullable Disposable parent) {
+  private static Alarm createAlarm(Alarm.ThreadToUse thread, @Nullable Disposable parent) {
     return parent == null ? new Alarm(thread) : new Alarm(thread, parent);
   }
 
@@ -162,7 +160,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  @Nonnull
+  
   private List<Update> getAllScheduledUpdates() {
     return ContainerUtil.concat(myScheduledUpdates.values(), map -> map.keySet());
   }
@@ -311,11 +309,11 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return mySuspended;
   }
 
-  private static boolean isExpired(@Nonnull Update each) {
+  private static boolean isExpired(Update each) {
     return each.isDisposed() || each.isExpired();
   }
 
-  protected void execute(@Nonnull Update[] update) {
+  protected void execute(Update[] update) {
     for (Update each : update) {
       if (isExpired(each)) {
         each.setRejected();
@@ -331,7 +329,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  private void execute(@Nonnull Update each) {
+  private void execute(Update each) {
     if (myDisposed) {
       each.setRejected();
     }
@@ -343,7 +341,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   /**
    * Adds a task to be executed.
    */
-  public void queue(@Nonnull Update update) {
+  public void queue(Update update) {
     if (myDisposed) return;
 
     if (myTrackUiActivity) {
@@ -380,7 +378,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  private boolean eatThisOrOthers(@Nonnull Update update) {
+  private boolean eatThisOrOthers(Update update) {
     Map<Update, Update> updates = myScheduledUpdates.get(update.getPriority());
     if (updates != null && updates.containsKey(update)) {
       return false;
@@ -398,11 +396,11 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return false;
   }
 
-  public final void run(@Nonnull Update update) {
+  public final void run(Update update) {
     execute(new Update[]{update});
   }
 
-  private void put(@Nonnull Update update) {
+  private void put(Update update) {
     Map<Update, Update> updates = myScheduledUpdates.computeIfAbsent(update.getPriority(), __ -> new LinkedHashMap<>());
     Update existing = updates.remove(update);
     if (existing != null && existing != update) {
@@ -440,7 +438,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return myModalityStateComponent == ANY_COMPONENT ? null : getModalityState();
   }
 
-  @Nonnull
+  
   public ModalityState getModalityState() {
     if (myModalityStateComponent == null) {
       return Application.get().getNoneModalityState();
@@ -448,7 +446,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return Application.get().getModalityStateForComponent(myModalityStateComponent);
   }
 
-  public void setActivationComponent(@Nonnull JComponent c) {
+  public void setActivationComponent(JComponent c) {
     if (myUiNotifyConnector != null) {
       Disposer.dispose(myUiNotifyConnector);
     }
@@ -497,7 +495,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     UiActivityMonitor.getInstance().removeActivity(getActivityId());
   }
 
-  @Nonnull
+  
   private UiActivity getActivityId() {
     if (myUiActivity == null) {
       myUiActivity = new UiActivity.AsyncBgOperation("UpdateQueue:" + myName + hashCode());

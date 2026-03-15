@@ -18,8 +18,7 @@ package consulo.versionControlSystem.distributed.ui.awt;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -30,11 +29,11 @@ import java.util.regex.Pattern;
 public class VcsLinkedTextComponent extends JLabel {
     private static final Pattern HREF_PATTERN = Pattern.compile("<a(?:\\s+href\\s*=\\s*[\"']([^\"']*)[\"'])?\\s*>([^<]*)</a>");
 
-    @Nonnull
+    
     private String myTextBefore;
-    @Nonnull
+    
     private String myTextAfter;
-    @Nonnull
+    
     private String myHandledLink;
 
     @Nullable
@@ -43,7 +42,7 @@ public class VcsLinkedTextComponent extends JLabel {
     private boolean myUnderlined;
     private boolean myTransparent;
 
-    public VcsLinkedTextComponent(@Nonnull String text, @Nullable VcsLinkListener listener) {
+    public VcsLinkedTextComponent(String text, @Nullable VcsLinkListener listener) {
         Matcher aMatcher = HREF_PATTERN.matcher(text);
         if (aMatcher.find()) {
             myTextBefore = text.substring(0, aMatcher.start());
@@ -58,17 +57,17 @@ public class VcsLinkedTextComponent extends JLabel {
         myLinkListener = listener;
     }
 
-    public void updateLinkText(@Nonnull String text) {
+    public void updateLinkText(String text) {
         myHandledLink = text;
     }
 
-    public void fireOnClick(@Nonnull DefaultMutableTreeNode relatedNode, @Nonnull MouseEvent event) {
+    public void fireOnClick(DefaultMutableTreeNode relatedNode, MouseEvent event) {
         if (myLinkListener != null) {
             myLinkListener.hyperlinkActivated(relatedNode, event);
         }
     }
 
-    public void render(@Nonnull ColoredTreeCellRenderer renderer) {
+    public void render(ColoredTreeCellRenderer renderer) {
         boolean isActive = mySelected || myUnderlined;
         SimpleTextAttributes linkTextAttributes =
             isActive ? SimpleTextAttributes.LINK_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES;
@@ -97,7 +96,7 @@ public class VcsLinkedTextComponent extends JLabel {
         myTransparent = transparent;
     }
 
-    @Nonnull
+    
     @Override
     public String getText() {
         return myTextBefore + myHandledLink + myTextAfter;

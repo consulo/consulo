@@ -15,8 +15,7 @@
  */
 package consulo.language;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -35,7 +34,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
       return "null";
     }
   };
-  @Nonnull
+  
   private Comparable[] myComputedWeighs;
   private final Supplier<? extends T> myElement;
   private final Loc myLocation;
@@ -59,7 +58,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   }
 
   @Override
-  public int compareTo(@Nonnull WeighingComparable<T, Loc> comparable) {
+  public int compareTo(WeighingComparable<T, Loc> comparable) {
     if (myComputedWeighs == comparable.myComputedWeighs) return 0;
 
     for (int i = 0; i < myComputedWeighs.length; i++) {

@@ -25,8 +25,7 @@ import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.Objects;
@@ -47,13 +46,13 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     }
 
     @Nullable
-    public abstract String getItemNameFromModule(@Nonnull Module module);
+    public abstract String getItemNameFromModule(Module module);
 
     @Nullable
-    public abstract T getItemFromModule(@Nonnull Module module);
+    public abstract T getItemFromModule(Module module);
 
-    @Nonnull
-    public abstract NamedPointer<T> getPointer(@Nonnull ModuleRootLayer layer, @Nonnull String name);
+    
+    public abstract NamedPointer<T> getPointer(ModuleRootLayer layer, String name);
 
     @Nullable
     @Override
@@ -99,7 +98,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
 
     @RequiredReadAction
     @Override
-    public void set(@Nonnull ModuleInheritableNamedPointer<T> anotherItem) {
+    public void set(ModuleInheritableNamedPointer<T> anotherItem) {
         if (anotherItem.isNull()) {
             myModulePointer = null;
             myTargetPointer = null;
@@ -170,7 +169,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private NamedPointer<Module> createModulePointer(String name) {
         return ((ModuleRootLayerEx) myRootLayer).getConfigurationAccessor().getModulePointer(myRootLayer.getProject(), name);

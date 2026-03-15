@@ -22,8 +22,7 @@ import consulo.colorScheme.impl.internal.FontPreferencesImpl;
 import consulo.util.lang.text.CharArrayIterator;
 import consulo.util.lang.text.CharSequenceIterator;
 import org.intellij.lang.annotations.JdkConstants;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -67,12 +66,12 @@ public class FontFallbackIterator {
   private FontInfo myFontInfo;
   private FontInfo myNextFontInfo;
 
-  public FontFallbackIterator setPreferredFonts(@Nonnull FontPreferences fontPreferences) {
+  public FontFallbackIterator setPreferredFonts(FontPreferences fontPreferences) {
     myFontPreferences = fontPreferences;
     return this;
   }
 
-  public FontFallbackIterator setPreferredFont(@Nonnull String familyName, int size) {
+  public FontFallbackIterator setPreferredFont(String familyName, int size) {
     FontPreferencesImpl preferences = new FontPreferencesImpl();
     preferences.register(familyName, size);
     myFontPreferences = preferences;
@@ -89,7 +88,7 @@ public class FontFallbackIterator {
     return this;
   }
 
-  public void start(@Nonnull CharSequence text, int start, int end) {
+  public void start(CharSequence text, int start, int end) {
     assert 0 <= start && start <= end && end <= text.length() : "Text length: " + text.length() + ", start: " + start + ", end: " + end;
     CharacterIterator characterIterator = null;
     for (int i = start; i < end; i++) {
@@ -101,7 +100,7 @@ public class FontFallbackIterator {
     doStart(text, null, characterIterator, start, end);
   }
 
-  public void start(@Nonnull char[] text, int start, int end) {
+  public void start(char[] text, int start, int end) {
     assert 0 <= start && start <= end && end <= text.length : "Text length: " + text.length + ", start: " + start + ", end: " + end;
     CharacterIterator characterIterator = null;
     for (int i = start; i < end; i++) {
@@ -170,7 +169,7 @@ public class FontFallbackIterator {
     return myEnd;
   }
 
-  @Nonnull
+  
   public FontInfo getFontInfo() {
     if (myFontRenderContext == null) {
       throw new IllegalStateException("FontRenderContext must be set to generate FontInfo");
@@ -178,7 +177,7 @@ public class FontFallbackIterator {
     return myFontInfo;
   }
 
-  @Nonnull
+  
   public Font getFont() {
     return myFontInfo.getFont();
   }

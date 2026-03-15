@@ -34,8 +34,7 @@ import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkListener;
 
@@ -56,11 +55,11 @@ public abstract class XDebugProcess {
     /**
      * @param session pass <code>session</code> parameter of {@link consulo.xdebugger.XDebugProcessStarter#start} method to this constructor
      */
-    protected XDebugProcess(@Nonnull XDebugSession session) {
+    protected XDebugProcess(XDebugSession session) {
         mySession = session;
     }
 
-    @Nonnull
+    
     public final XDebugSession getSession() {
         return mySession;
     }
@@ -68,7 +67,7 @@ public abstract class XDebugProcess {
     /**
      * @return breakpoint handlers which will be used to set/clear breakpoints in the underlying debugging process
      */
-    @Nonnull
+    
     public XBreakpointHandler<?>[] getBreakpointHandlers() {
         return XBreakpointHandler.EMPTY_ARRAY;
     }
@@ -76,7 +75,7 @@ public abstract class XDebugProcess {
     /**
      * @return editor provider which will be used to produce editors for "Evaluate" and "Set Value" actions
      */
-    @Nonnull
+    
     public XDebuggerEditorsProvider getEditorsProvider() {
         return UnsupportedDebuggerEditorsProvider.INSTANCE;
     }
@@ -196,7 +195,7 @@ public abstract class XDebugProcess {
         throw new AbstractMethodError();
     }
 
-    @Nonnull
+    
     public AsyncResult<Void> stopAsync() {
         stop();
         return AsyncResult.done(null);
@@ -223,7 +222,7 @@ public abstract class XDebugProcess {
      * @deprecated Use {@link #runToPosition(XSourcePosition, XSuspendContext)} instead
      */
     @Deprecated
-    public void runToPosition(@Nonnull XSourcePosition position) {
+    public void runToPosition(XSourcePosition position) {
         throw new AbstractMethodError();
     }
 
@@ -234,7 +233,7 @@ public abstract class XDebugProcess {
      *
      * @param position position in source code
      */
-    public void runToPosition(@Nonnull XSourcePosition position, @Nullable XSuspendContext context) {
+    public void runToPosition(XSourcePosition position, @Nullable XSuspendContext context) {
         //noinspection deprecation
         runToPosition(position);
     }
@@ -260,7 +259,7 @@ public abstract class XDebugProcess {
         return null;
     }
 
-    @Nonnull
+    
     public final ProcessHandler getProcessHandler() {
         if (myProcessHandler == null) {
             myProcessHandler = doGetProcessHandler();
@@ -271,7 +270,7 @@ public abstract class XDebugProcess {
         return myProcessHandler;
     }
 
-    @Nonnull
+    
     public ExecutionConsole createConsole() {
         return TextConsoleBuilderFactory.getInstance().createBuilder(getSession().getProject()).getConsole();
     }
@@ -289,13 +288,13 @@ public abstract class XDebugProcess {
     /**
      * Override this method to provide additional actions in 'Debug' tool window
      */
-    public void registerAdditionalActions(@Nonnull DefaultActionGroup leftToolbar, @Nonnull DefaultActionGroup topToolbar, @Nonnull DefaultActionGroup settings) {
+    public void registerAdditionalActions(DefaultActionGroup leftToolbar, DefaultActionGroup topToolbar, DefaultActionGroup settings) {
     }
 
     /**
      * @return message to show in Variables View when debugger isn't paused
      */
-    @Nonnull
+    
     public LocalizeValue getCurrentStateMessage() {
         if (mySession.isStopped()) {
             return XDebuggerLocalize.debuggerStateMessageDisconnected();
@@ -313,7 +312,7 @@ public abstract class XDebugProcess {
     /**
      * Override this method to customize content of tab in 'Debug' tool window
      */
-    @Nonnull
+    
     public XDebugTabLayouter createTabLayouter() {
         return new XDebugTabLayouter() {
         };

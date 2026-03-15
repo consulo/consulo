@@ -17,7 +17,6 @@ package consulo.execution.dashboard;
 
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -25,12 +24,12 @@ import java.util.List;
  * @author konstantin.aleev
  */
 public interface RunDashboardRunConfigurationNode extends RunDashboardNode, UserDataHolder {
-  @Nonnull
+  
   RunnerAndConfigurationSettings getConfigurationSettings();
 
-  @Nonnull
+  
   List<RunDashboardCustomizer> getCustomizers();
 
-  @Nonnull
+  
   RunDashboardRunConfigurationStatus getStatus();
 }

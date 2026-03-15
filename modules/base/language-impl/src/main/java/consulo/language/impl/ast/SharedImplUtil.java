@@ -33,8 +33,7 @@ import consulo.language.util.CharTable;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 //TODO: rename/regroup?
 
@@ -84,7 +83,7 @@ public class SharedImplUtil {
     return file == null || file.isWritable();
   }
 
-  public static FileASTNode findFileElement(@Nonnull ASTNode element) {
+  public static FileASTNode findFileElement(ASTNode element) {
     ASTNode parent = element.getTreeParent();
     while (parent != null) {
       element = parent;
@@ -168,7 +167,7 @@ public class SharedImplUtil {
     return result;
   }
 
-  private static int countChildrenOfType(@Nonnull ASTNode node, @Nonnull IElementType elementType) {
+  private static int countChildrenOfType(ASTNode node, IElementType elementType) {
     // no lock is needed because all chameleons are expanded already
     int count = 0;
     for (ASTNode child = node.getFirstChildNode(); child != null; child = child.getTreeNext()) {

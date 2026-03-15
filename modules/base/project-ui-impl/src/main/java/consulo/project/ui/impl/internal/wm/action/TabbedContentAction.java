@@ -25,14 +25,13 @@ import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 public abstract class TabbedContentAction extends AnAction implements DumbAware {
     protected final ContentManager myManager;
 
     protected final ShadowAction myShadow;
 
-    protected TabbedContentAction(@Nonnull ContentManager manager, @Nonnull AnAction shortcutTemplate, @Nonnull LocalizeValue text) {
+    protected TabbedContentAction(ContentManager manager, AnAction shortcutTemplate, LocalizeValue text) {
         super(text);
         myManager = manager;
         myShadow = new ShadowAction(this, shortcutTemplate, manager.getComponent(), new Presentation(text));
@@ -40,11 +39,11 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    protected TabbedContentAction(@Nonnull ContentManager manager, @Nonnull AnAction shortcutTemplate, @Nonnull String text) {
+    protected TabbedContentAction(ContentManager manager, AnAction shortcutTemplate, String text) {
         this(manager, shortcutTemplate, LocalizeValue.of(text));
     }
 
-    protected TabbedContentAction(@Nonnull ContentManager manager, @Nonnull AnAction template) {
+    protected TabbedContentAction(ContentManager manager, AnAction template) {
         myManager = manager;
         myShadow = new ShadowAction(this, template, manager.getComponent());
     }
@@ -52,7 +51,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
     public abstract static class ForContent extends TabbedContentAction {
         protected final Content myContent;
 
-        public ForContent(@Nonnull Content content, @Nonnull AnAction shortcutTemplate, @Nonnull LocalizeValue text) {
+        public ForContent(Content content, AnAction shortcutTemplate, LocalizeValue text) {
             super(content.getManager(), shortcutTemplate, text);
             myContent = content;
             Disposer.register(content, myShadow);
@@ -60,38 +59,38 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
-        public ForContent(@Nonnull Content content, @Nonnull AnAction shortcutTemplate, String text) {
+        public ForContent(Content content, AnAction shortcutTemplate, String text) {
             super(content.getManager(), shortcutTemplate, text);
             myContent = content;
             Disposer.register(content, myShadow);
         }
 
-        public ForContent(@Nonnull Content content, AnAction template) {
+        public ForContent(Content content, AnAction template) {
             super(content.getManager(), template);
             myContent = content;
             Disposer.register(content, myShadow);
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(myManager.getIndexOfContent(myContent) >= 0);
         }
     }
 
     public static class CloseAction extends ForContent {
-        public CloseAction(@Nonnull Content content) {
+        public CloseAction(Content content) {
             super(content, ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE_ACTIVE_TAB));
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myManager.removeContent(myContent, true);
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myContent != null && myManager.canCloseContents() && myContent.isCloseable() && myManager.isSelected(
                 myContent));
@@ -111,7 +110,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Content[] contents = myManager.getContents();
             for (Content content : contents) {
                 if (myContent != content && content.isCloseable()) {
@@ -122,7 +121,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setText(myManager.getCloseAllButThisActionName());
             presentation.setEnabled(myContent != null && myManager.canCloseContents() && myManager.getContentCount() > 1);
@@ -151,7 +150,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             for (Content content : myManager.getContents()) {
                 if (content.isCloseable()) {
                     myManager.removeContent(content, true);
@@ -160,7 +159,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myManager.canCloseAllContents());
         }
     }
@@ -172,12 +171,12 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myManager.selectNextContent();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myManager.getContentCount() > 1);
             e.getPresentation().setText(myManager.getNextContentActionName());
         }
@@ -190,12 +189,12 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myManager.selectPreviousContent();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myManager.getContentCount() > 1);
             e.getPresentation().setText(myManager.getPreviousContentActionName());
         }

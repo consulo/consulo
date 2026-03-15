@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBComboBoxTableCellEditorComponent;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

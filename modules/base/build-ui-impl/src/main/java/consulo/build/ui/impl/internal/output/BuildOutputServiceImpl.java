@@ -20,7 +20,6 @@ import consulo.build.ui.output.BuildOutputInstantReader;
 import consulo.build.ui.output.BuildOutputParser;
 import consulo.build.ui.output.BuildOutputService;
 import consulo.build.ui.progress.BuildProgressListener;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.List;
 @Singleton
 public class BuildOutputServiceImpl implements BuildOutputService {
     @Override
-    public BuildOutputInstantReader.Primary createBuildOutputInstantReader(@Nonnull Object buildId, @Nonnull Object parentEventId, @Nonnull BuildProgressListener buildProgressListener, @Nonnull List<BuildOutputParser> parsers, int pushBackBufferSize, int channelBufferCapacity) {
+    public BuildOutputInstantReader.Primary createBuildOutputInstantReader(Object buildId, Object parentEventId, BuildProgressListener buildProgressListener, List<BuildOutputParser> parsers, int pushBackBufferSize, int channelBufferCapacity) {
         return new BuildOutputInstantReaderImpl(buildId, parentEventId, buildProgressListener, parsers, pushBackBufferSize, channelBufferCapacity);
     }
 }

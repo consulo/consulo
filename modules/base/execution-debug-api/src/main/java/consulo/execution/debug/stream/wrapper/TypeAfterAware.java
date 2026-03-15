@@ -2,12 +2,11 @@
 package consulo.execution.debug.stream.wrapper;
 
 import consulo.execution.debug.stream.trace.impl.handler.type.GenericType;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface TypeAfterAware {
-  @NotNull
+  
   GenericType getTypeAfter();
 }

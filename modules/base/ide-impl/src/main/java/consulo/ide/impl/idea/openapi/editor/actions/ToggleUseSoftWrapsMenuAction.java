@@ -22,7 +22,6 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * Action that toggles <code>'show soft wraps at editor'</code> option and is expected to be used at various menus.
@@ -43,7 +42,7 @@ public class ToggleUseSoftWrapsMenuAction extends AbstractToggleUseSoftWrapsActi
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         if (!e.isFromActionToolbar()) {
             e.getPresentation().setIcon(null);

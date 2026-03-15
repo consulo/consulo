@@ -32,8 +32,7 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,7 +49,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
         boolean visible = canRemoveChangeLists(e.getData(Project.KEY), changeLists);
 
@@ -68,7 +67,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
         );
     }
 
-    @Nonnull
+    
     private static String getDescription(@Nullable ChangeList[] changeLists) {
         return ActionsBundle.message(
             "action.ChangesView.RemoveChangeList.description",
@@ -106,7 +105,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
         ChangeList[] selectedLists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
 
@@ -117,7 +116,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
             (Collection) Arrays.asList(selectedLists),
             new ChangeListRemoveConfirmation() {
                 @Override
-                public boolean askIfShouldRemoveChangeLists(@Nonnull List<? extends LocalChangeList> lists) {
+                public boolean askIfShouldRemoveChangeLists(List<? extends LocalChangeList> lists) {
                     return RemoveChangeListAction.askIfShouldRemoveChangeLists(lists, project);
                 }
             }
@@ -125,7 +124,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    private static boolean askIfShouldRemoveChangeLists(@Nonnull List<? extends LocalChangeList> lists, Project project) {
+    private static boolean askIfShouldRemoveChangeLists(List<? extends LocalChangeList> lists, Project project) {
         boolean activeChangelistSelected = lists.stream().anyMatch(LocalChangeList::isDefault);
         boolean haveNoChanges = lists.stream().allMatch(l -> l.getChanges().isEmpty());
 
@@ -147,7 +146,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    static boolean confirmActiveChangeListRemoval(@Nonnull Project project, @Nonnull List<? extends LocalChangeList> lists, boolean empty) {
+    static boolean confirmActiveChangeListRemoval(Project project, List<? extends LocalChangeList> lists, boolean empty) {
         List<LocalChangeList> remainingLists = ChangeListManager.getInstance(project).getChangeListsCopy();
         remainingLists.removeAll(lists);
 

@@ -22,8 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -41,7 +40,7 @@ public class PluginTagFilterGroup extends ActionGroup implements DumbAware {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         assert e != null;

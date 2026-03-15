@@ -17,12 +17,11 @@ package consulo.language;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("See consulo.lang.LanguageVersion")
 public abstract class LanguageDialect extends Language {
-  public LanguageDialect(@Nonnull String id, @Nonnull Language baseLanguage) {
+  public LanguageDialect(String id, Language baseLanguage) {
     super(baseLanguage, id, "");
   }
 }

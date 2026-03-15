@@ -12,8 +12,7 @@ import consulo.project.Project;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -23,8 +22,8 @@ public class DefaultSearchScopeProviders {
   private DefaultSearchScopeProviders() {
   }
 
-  @Nonnull
-  public static GlobalSearchScope wrapNamedScope(@Nonnull Project project, @Nonnull NamedScope namedScope, boolean colored) {
+  
+  public static GlobalSearchScope wrapNamedScope(Project project, NamedScope namedScope, boolean colored) {
     GlobalSearchScope scope = GlobalSearchScopesCore.filterScope(project, namedScope);
     if (!colored && !(namedScope instanceof WeighedItem)) return scope;
     int weight = namedScope instanceof WeighedItem ? ((WeighedItem)namedScope).getWeight() : -1;
@@ -38,7 +37,7 @@ public class DefaultSearchScopeProviders {
     final int weight;
     final ColorValue color;
 
-    MyWeightedScope(@Nonnull GlobalSearchScope scope, int weight, ColorValue color) {
+    MyWeightedScope(GlobalSearchScope scope, int weight, ColorValue color) {
       super(scope);
       this.weight = weight;
       this.color = color;

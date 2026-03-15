@@ -20,8 +20,7 @@ import consulo.diagram.GraphPositionStrategy;
 import consulo.ui.image.Image;
 import consulo.component.util.pointer.Named;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class GraphNodeImpl<E> implements GraphNode<E>, Named {
   private final E myValue;
   private final GraphPositionStrategy myStrategy;
 
-  public GraphNodeImpl(@Nonnull String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy) {
+  public GraphNodeImpl(String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy) {
     myName = name;
     myIcon = icon;
     myValue = value;
@@ -45,7 +44,7 @@ public class GraphNodeImpl<E> implements GraphNode<E>, Named {
   }
 
   @Override
-  public void makeArrow(@Nonnull GraphNode<?> target) {
+  public void makeArrow(GraphNode<?> target) {
     myArrowNodes.add(target);
   }
 
@@ -60,12 +59,12 @@ public class GraphNodeImpl<E> implements GraphNode<E>, Named {
   }
 
   @Override
-  @Nonnull
+  
   public List<GraphNode<?>> getArrowNodes() {
     return myArrowNodes;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myName;

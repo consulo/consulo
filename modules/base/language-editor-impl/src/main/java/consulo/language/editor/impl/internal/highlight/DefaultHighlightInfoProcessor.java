@@ -29,8 +29,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +37,11 @@ import java.util.List;
 public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     @Override
     public void highlightsInsideVisiblePartAreProduced(
-        @Nonnull HighlightingSession session,
+        HighlightingSession session,
         @Nullable Editor editor,
-        @Nonnull List<? extends HighlightInfo> infos,
-        @Nonnull TextRange priorityRange,
-        @Nonnull TextRange restrictRange,
+        List<? extends HighlightInfo> infos,
+        TextRange priorityRange,
+        TextRange restrictRange,
         int groupId
     ) {
         PsiFile psiFile = session.getPsiFile();
@@ -89,7 +88,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     }
 
     @RequiredUIAccess
-    public static void repaintErrorStripeAndIcon(@Nonnull Editor editor, @Nonnull Project project) {
+    public static void repaintErrorStripeAndIcon(Editor editor, Project project) {
         EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
         markup.repaintTrafficLightIcon();
         ErrorStripeUpdateManager.getInstance(project).repaintErrorStripePanel(editor);
@@ -98,11 +97,11 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     @Override
     @RequiredUIAccess
     public void highlightsOutsideVisiblePartAreProduced(
-        @Nonnull HighlightingSession session,
+        HighlightingSession session,
         @Nullable Editor editor,
-        @Nonnull List<? extends HighlightInfo> infos,
-        @Nonnull TextRange priorityRange,
-        @Nonnull TextRange restrictedRange,
+        List<? extends HighlightInfo> infos,
+        TextRange priorityRange,
+        TextRange restrictedRange,
         int groupId
     ) {
         PsiFile psiFile = session.getPsiFile();
@@ -139,8 +138,8 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     @Override
     @RequiredReadAction
     public void allHighlightsForRangeAreProduced(
-        @Nonnull HighlightingSession session,
-        @Nonnull TextRange elementRange,
+        HighlightingSession session,
+        TextRange elementRange,
         @Nullable List<? extends HighlightInfo> infos
     ) {
         PsiFile psiFile = session.getPsiFile();
@@ -149,10 +148,10 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
 
     @RequiredReadAction
     private static void killAbandonedHighlightsUnder(
-        @Nonnull PsiFile psiFile,
-        @Nonnull TextRange range,
+        PsiFile psiFile,
+        TextRange range,
         @Nullable List<? extends HighlightInfo> infos,
-        @Nonnull HighlightingSession highlightingSession
+        HighlightingSession highlightingSession
     ) {
         Project project = psiFile.getProject();
         Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
@@ -189,24 +188,24 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
 
     @Override
     public void infoIsAvailable(
-        @Nonnull HighlightingSession session,
-        @Nonnull HighlightInfo info,
-        @Nonnull TextRange priorityRange,
-        @Nonnull TextRange restrictedRange,
+        HighlightingSession session,
+        HighlightInfo info,
+        TextRange priorityRange,
+        TextRange restrictedRange,
         int groupId
     ) {
         ((HighlightingSessionImpl)session).queueHighlightInfo(info, restrictedRange, groupId);
     }
 
     @Override
-    public void progressIsAdvanced(@Nonnull HighlightingSession highlightingSession, @Nullable Editor editor, double progress) {
+    public void progressIsAdvanced(HighlightingSession highlightingSession, @Nullable Editor editor, double progress) {
         PsiFile file = highlightingSession.getPsiFile();
         repaintTrafficIcon(file, editor, progress);
     }
 
     private final Alarm repaintIconAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-    private void repaintTrafficIcon(@Nonnull PsiFile file, @Nullable Editor editor, double progress) {
+    private void repaintTrafficIcon(PsiFile file, @Nullable Editor editor, double progress) {
         if (Application.get().isCommandLine()) {
             return;
         }

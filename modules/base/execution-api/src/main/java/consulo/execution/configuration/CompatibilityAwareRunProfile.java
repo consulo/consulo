@@ -2,7 +2,6 @@ package consulo.execution.configuration;
 
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
-import jakarta.annotation.Nonnull;
 
 public interface CompatibilityAwareRunProfile extends RunProfile {
   /**
@@ -14,5 +13,5 @@ public interface CompatibilityAwareRunProfile extends RunProfile {
    * @param configuration the run configuration to check a compatibility to run with the current configuration.
    * @return true if the configuration can still run along side with the configuration passed as parameter, false otherwise.
    */
-  boolean mustBeStoppedToRun(@Nonnull RunConfiguration configuration);
+  boolean mustBeStoppedToRun(RunConfiguration configuration);
 }

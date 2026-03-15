@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ import java.util.List;
 public interface ChangeListOwner {
   void moveChangesTo(LocalChangeList list, Change... changes);
 
-  void addUnversionedFiles(LocalChangeList list, @Nonnull List<VirtualFile> unversionedFiles);
+  void addUnversionedFiles(LocalChangeList list, List<VirtualFile> unversionedFiles);
 
   Project getProject();
 }

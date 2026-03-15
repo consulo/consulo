@@ -27,8 +27,7 @@ import consulo.language.codeStyle.lineIndent.SemanticEditorPositionFactory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -54,14 +53,14 @@ public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
   @Override
   @Nullable
   @Deprecated
-  public String getLineIndent(@Nonnull Document document, int offset) {
+  public String getLineIndent(Document document, int offset) {
     if (myProject == null) return null;
     PsiDocumentManager.getInstance(myProject).commitDocument(document);
     return CodeStyleManager.getInstance(myProject).getLineIndent(document, offset);
   }
 
   @Override
-  public String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset, boolean allowDocCommit) {
+  public String getLineIndent(Editor editor, @Nullable Language language, int offset, boolean allowDocCommit) {
     if (myProject == null) return null;
     LineIndentProvider lineIndentProvider = LineIndentProvider.findLineIndentProvider(language);
     String indent;

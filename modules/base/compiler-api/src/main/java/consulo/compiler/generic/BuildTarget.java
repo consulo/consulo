@@ -15,21 +15,20 @@
  */
 package consulo.compiler.generic;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class BuildTarget {
     public static final BuildTarget DEFAULT = new BuildTarget() {
-        @Nonnull
+        
         @Override
         public String getId() {
             return "<default>";
         }
     };
 
-    @Nonnull
+    
     public abstract String getId();
 
     @Override

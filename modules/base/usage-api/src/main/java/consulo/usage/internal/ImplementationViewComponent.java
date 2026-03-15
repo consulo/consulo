@@ -18,7 +18,6 @@ package consulo.usage.internal;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.usage.UsageView;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,7 +30,7 @@ public interface ImplementationViewComponent {
 
     JComponent getPreferredFocusableComponent();
 
-    void setHint(JBPopup hint, @Nonnull LocalizeValue title);
+    void setHint(JBPopup hint, LocalizeValue title);
 
     JComponent getComponent();
 }

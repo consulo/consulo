@@ -21,8 +21,7 @@ import consulo.language.Language;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -74,7 +73,7 @@ public abstract class AbstractBlockWrapper {
   }
 
   @Nullable
-  private static Language deriveLanguage(@Nonnull Block block) {
+  private static Language deriveLanguage(Block block) {
     if (block instanceof BlockEx) {
       return ((BlockEx)block).getLanguage();
     }
@@ -296,7 +295,7 @@ public abstract class AbstractBlockWrapper {
     }
   }
 
-  @Nonnull
+  
   private AbstractBlockWrapper getAnchorBlock(AbstractBlockWrapper child, int targetBlockStartOffset, AlignmentImpl alignment) {
     // Generally, we want to handle situation like the one below:
     //   test("text", new Runnable() {

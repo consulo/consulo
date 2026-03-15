@@ -5,7 +5,6 @@ import consulo.execution.debug.stream.trace.CollectionTreeBuilder;
 import consulo.execution.debug.stream.trace.DebuggerCommandLauncher;
 import consulo.execution.debug.stream.trace.GenericEvaluationContext;
 import consulo.execution.debug.stream.ui.TraceController;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -13,12 +12,12 @@ import java.util.Arrays;
  * @author Vitaliy.Bibaev
  */
 public class StreamTracesMappingView extends FlatView {
-  public StreamTracesMappingView(@Nonnull DebuggerCommandLauncher launcher,
-                                 @Nonnull GenericEvaluationContext context,
-                                 @Nonnull TraceController prevController,
-                                 @Nonnull TraceController nextController,
-                                 @Nonnull CollectionTreeBuilder builder,
-                                 @Nonnull String debugName) {
+  public StreamTracesMappingView(DebuggerCommandLauncher launcher,
+                                 GenericEvaluationContext context,
+                                 TraceController prevController,
+                                 TraceController nextController,
+                                 CollectionTreeBuilder builder,
+                                 String debugName) {
     super(Arrays.asList(prevController, nextController), launcher, context, builder, debugName);
   }
 }

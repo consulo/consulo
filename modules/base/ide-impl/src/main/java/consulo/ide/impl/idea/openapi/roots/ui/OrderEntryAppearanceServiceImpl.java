@@ -50,8 +50,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
@@ -62,27 +61,27 @@ import java.util.function.Consumer;
 @ServiceImpl
 public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService {
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
-  public Consumer<ColoredTextContainer> getRenderForOrderEntry(@Nonnull OrderEntry orderEntry) {
+  public Consumer<ColoredTextContainer> getRenderForOrderEntry(OrderEntry orderEntry) {
     OrderEntryType<?> type = orderEntry.getType();
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
     return editor.getRender(orderEntry);
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRenderForModule(@Nonnull Module module) {
+  public Consumer<ColoredTextContainer> getRenderForModule(Module module) {
     return it -> {
       it.setIcon(PlatformIconGroup.nodesModule());
       it.append(module.getName());
     };
   }
 
-  @Nonnull
+  
   @Override
-  public CellAppearanceEx forLibrary(Project project, @Nonnull Library library, boolean hasInvalidRoots) {
+  public CellAppearanceEx forLibrary(Project project, Library library, boolean hasInvalidRoots) {
     LibrariesConfigurator context = ShowSettingsUtil.getInstance().getLibrariesModel(project);
 
     Image icon = LibraryPresentationManager.getInstance().getCustomIcon(library, context);
@@ -104,7 +103,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     return SimpleTextCellAppearance.regular(PathUtil.getFileName(url), AllIcons.Nodes.PpLib);
   }
 
-  @Nonnull
+  
   @Override
   public CellAppearanceEx forSdk(@Nullable Sdk jdk, boolean isInComboBox, boolean selected, boolean showVersion) {
     if (jdk == null) {
@@ -141,31 +140,31 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     }
   }
 
-  @Nonnull
+  
   @Override
-  public CellAppearanceEx forContentFolder(@Nonnull ContentFolder folder) {
+  public CellAppearanceEx forContentFolder(ContentFolder folder) {
     return formatRelativePath(folder, folder.getType().getChildDirectoryIcon(null, null));
   }
 
-  @Nonnull
+  
   @Override
-  public CellAppearanceEx forModule(@Nonnull Module module) {
+  public CellAppearanceEx forModule(Module module) {
     return SimpleTextCellAppearance.regular(module.getName(), AllIcons.Nodes.Module);
   }
 
-  @Nonnull
-  private static CellAppearanceEx normalOrRedWaved(@Nonnull String text, @Nullable Image icon, boolean waved) {
+  
+  private static CellAppearanceEx normalOrRedWaved(String text, @Nullable Image icon, boolean waved) {
     return waved ? new SimpleTextCellAppearance(text, icon, new SimpleTextAttributes(SimpleTextAttributes.STYLE_WAVED, null, JBColor.RED)) : SimpleTextCellAppearance.regular(text, icon);
   }
 
-  @Nonnull
-  private static CellAppearanceEx forVirtualFilePointer(@Nonnull LightFilePointer filePointer) {
+  
+  private static CellAppearanceEx forVirtualFilePointer(LightFilePointer filePointer) {
     VirtualFile file = filePointer.getFile();
     return file != null ? FileAppearanceService.getInstance().forVirtualFile(file) : FileAppearanceService.getInstance().forInvalidUrl(filePointer.getPresentableUrl());
   }
 
-  @Nonnull
-  private static CellAppearanceEx formatRelativePath(@Nonnull ContentFolder folder, @Nonnull Image icon) {
+  
+  private static CellAppearanceEx formatRelativePath(ContentFolder folder, Image icon) {
     LightFilePointer folderFile = new LightFilePointer(folder.getUrl());
     VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(folder.getContentEntry().getUrl());
     if (file == null) return FileAppearanceService.getInstance().forInvalidUrl(folderFile.getPresentableUrl());

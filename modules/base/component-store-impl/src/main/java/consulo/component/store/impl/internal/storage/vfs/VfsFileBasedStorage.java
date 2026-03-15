@@ -35,8 +35,7 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
 import consulo.virtualFileSystem.internal.VirtualFileTracker;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -56,16 +55,16 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
     private volatile VirtualFile myCachedVirtualFile;
     private final LineSeparator myLineSeparator = LineSeparator.LF;
 
-    public VfsFileBasedStorage(@Nonnull String filePath,
-                               @Nonnull String fileSpec,
+    public VfsFileBasedStorage(String filePath,
+                               String fileSpec,
                                @Nullable RoamingType roamingType,
                                @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-                               @Nonnull String rootElementName,
-                               @Nonnull Disposable parentDisposable,
+                               String rootElementName,
+                               Disposable parentDisposable,
                                @Nullable final StateStorageListener listener,
                                @Nullable StreamProvider streamProvider,
                                boolean useXmlProlog,
-                               @Nonnull PathMacrosService pathMacrosService) {
+                               PathMacrosService pathMacrosService) {
         super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider, pathMacrosService);
 
         myFilePath = filePath;
@@ -76,22 +75,22 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
             VirtualFileTracker virtualFileTracker = Application.get().getInstance(VirtualFileTracker.class);
             virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myFile.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileListener() {
                 @Override
-                public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
+                public void fileMoved(VirtualFileMoveEvent event) {
                     myCachedVirtualFile = null;
                 }
 
                 @Override
-                public void fileDeleted(@Nonnull VirtualFileEvent event) {
+                public void fileDeleted(VirtualFileEvent event) {
                     myCachedVirtualFile = null;
                 }
 
                 @Override
-                public void fileCreated(@Nonnull VirtualFileEvent event) {
+                public void fileCreated(VirtualFileEvent event) {
                     myCachedVirtualFile = event.getFile();
                 }
 
                 @Override
-                public void contentsChanged(@Nonnull VirtualFileEvent event) {
+                public void contentsChanged(VirtualFileEvent event) {
                     listener.storageFileChanged(event, VfsFileBasedStorage.this);
                 }
             }, false, parentDisposable);
@@ -103,12 +102,12 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
     }
 
     @Override
-    protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
+    protected XmlElementStorageSaveSession createSaveSession(StorageData storageData) {
         return new FileSaveSession(storageData);
     }
 
     private class FileSaveSession extends XmlElementStorageSaveSession {
-        protected FileSaveSession(@Nonnull StorageData storageData) {
+        protected FileSaveSession(StorageData storageData) {
             super(storageData);
         }
 
@@ -140,7 +139,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
     }
 
     @Override
-    @Nonnull
+    
     protected StorageData createStorageData() {
         return new StorageData(myRootElementName, myPathMacrosService);
     }
@@ -155,13 +154,13 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
         return virtualFile;
     }
 
-    @Nonnull
+    
     public File getFile() {
         return myFile;
     }
 
     @Override
-    @Nonnull
+    
     public String getFilePath() {
         return myFilePath;
     }
@@ -213,12 +212,12 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
     }
 
     @Override
-    public void setDefaultState(@Nonnull Element element) {
+    public void setDefaultState(Element element) {
         element.setName(myRootElementName);
         super.setDefaultState(element);
     }
 
-    public void updatedFromStreamProvider(@Nonnull Set<String> changedComponentNames, boolean deleted) {
+    public void updatedFromStreamProvider(Set<String> changedComponentNames, boolean deleted) {
         if (myRoamingType == RoamingType.DISABLED) {
             // storage roaming was changed to DISABLED, but settings repository has old state
             return;

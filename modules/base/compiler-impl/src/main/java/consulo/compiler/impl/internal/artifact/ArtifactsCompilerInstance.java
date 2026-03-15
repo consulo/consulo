@@ -46,7 +46,6 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.util.*;
@@ -63,13 +62,13 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         super(context);
     }
 
-    @Nonnull
+    
     @Override
     public List<ArtifactBuildTarget> getAllTargets() {
         return getArtifactTargets(false);
     }
 
-    @Nonnull
+    
     @Override
     public List<ArtifactBuildTarget> getSelectedTargets() {
         return getArtifactTargets(true);
@@ -102,8 +101,8 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
     @Override
     public void processObsoleteTarget(
-        @Nonnull String targetId,
-        @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems
+        String targetId,
+        List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems
     ) {
         deleteFiles(
             obsoleteItems,
@@ -111,9 +110,9 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         );
     }
 
-    @Nonnull
+    
     @Override
-    public List<ArtifactCompilerCompileItem> getItems(@Nonnull ArtifactBuildTarget target) {
+    public List<ArtifactCompilerCompileItem> getItems(ArtifactBuildTarget target) {
         myBuilderContext = new ArtifactsProcessingItemsBuilderContext(myContext);
         Artifact artifact = target.getArtifact();
 
@@ -149,7 +148,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         return new ArrayList<>(myBuilderContext.getProcessingItems());
     }
 
-    private void collectItems(@Nonnull Artifact artifact, @Nonnull String outputPath) {
+    private void collectItems(Artifact artifact, String outputPath) {
         CompositePackagingElement<?> rootElement = artifact.getRootElement();
         VirtualFile outputFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
         CopyToDirectoryInstructionCreator instructionCreator =
@@ -165,10 +164,10 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     }
 
     private boolean doBuild(
-        @Nonnull Artifact artifact,
+        Artifact artifact,
         List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
         Set<ArtifactCompilerCompileItem> processedItems,
-        @Nonnull Set<String> writtenPaths,
+        Set<String> writtenPaths,
         Set<String> deletedJars
     ) {
         FULL_LOG.debug("Building " + artifact.getName());
@@ -285,7 +284,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
     }
 
-    private void onBuildStartedOrFinished(@Nonnull Artifact artifact, boolean finished) throws Exception {
+    private void onBuildStartedOrFinished(Artifact artifact, boolean finished) throws Exception {
         for (ArtifactPropertiesProvider provider : artifact.getPropertiesProviders()) {
             ArtifactProperties<?> properties = artifact.getProperties(provider);
             if (finished) {
@@ -303,10 +302,10 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
     @Override
     public void processItems(
-        @Nonnull ArtifactBuildTarget target,
-        @Nonnull List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
-        @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
-        @Nonnull OutputConsumer<ArtifactCompilerCompileItem> consumer
+        ArtifactBuildTarget target,
+        List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
+        List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
+        OutputConsumer<ArtifactCompilerCompileItem> consumer
     ) {
         Set<String> deletedJars = deleteFiles(obsoleteItems, changedItems);
 

@@ -21,7 +21,6 @@ import consulo.versionControlSystem.log.impl.internal.graph.GraphLayoutImpl;
 import consulo.versionControlSystem.log.impl.internal.util.BitSetFlags;
 import consulo.versionControlSystem.log.impl.internal.util.DfsUtil;
 import consulo.versionControlSystem.log.impl.internal.util.Flags;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,25 +29,25 @@ import static consulo.versionControlSystem.log.graph.LinearGraphUtils.getDownNod
 import static consulo.versionControlSystem.log.graph.LinearGraphUtils.getUpNodes;
 
 class BekBranchCreator {
-  @Nonnull
+  
   private final LinearGraph myPermanentGraph;
-  @Nonnull
+  
   private final GraphLayoutImpl myGraphLayout;
-  @Nonnull
+  
   private final Flags myDoneNodes;
 
-  @Nonnull
+  
   private final DfsUtil myDfsUtil = new DfsUtil();
-  @Nonnull
+  
   private final BekEdgeRestrictions myEdgeRestrictions = new BekEdgeRestrictions();
 
-  public BekBranchCreator(@Nonnull LinearGraph permanentGraph, @Nonnull GraphLayoutImpl graphLayout) {
+  public BekBranchCreator(LinearGraph permanentGraph, GraphLayoutImpl graphLayout) {
     myPermanentGraph = permanentGraph;
     myGraphLayout = graphLayout;
     myDoneNodes = new BitSetFlags(permanentGraph.nodesCount(), false);
   }
 
-  @Nonnull
+  
   public Pair<List<BekBranch>, BekEdgeRestrictions> getResult() {
     List<BekBranch> bekBranches = new ArrayList<>();
 

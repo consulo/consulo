@@ -11,8 +11,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -25,16 +24,16 @@ class FormattingRangesExtender {
   private final Document myDocument;
   private final PsiFile myFile;
 
-  FormattingRangesExtender(@Nonnull Document document, PsiFile file) {
+  FormattingRangesExtender(Document document, PsiFile file) {
     myDocument = document;
     myFile = file;
   }
 
-  public List<TextRange> getExtendedRanges(@Nonnull List<TextRange> ranges) {
+  public List<TextRange> getExtendedRanges(List<TextRange> ranges) {
     return ContainerUtil.map(ranges, range -> processRange(range));
   }
 
-  private TextRange processRange(@Nonnull TextRange originalRange) {
+  private TextRange processRange(TextRange originalRange) {
     TextRange validRange = ensureRangeIsValid(originalRange);
     ASTNode containingNode = CodeFormatterFacade.findContainingNode(myFile, expandToLine(validRange));
     if (containingNode != null && !validRange.isEmpty()) {
@@ -43,7 +42,7 @@ class FormattingRangesExtender {
     return validRange;
   }
 
-  private TextRange narrowToMaxExtensionLines(@Nonnull TextRange original, @Nonnull TextRange result) {
+  private TextRange narrowToMaxExtensionLines(TextRange original, TextRange result) {
     int startLine = Math.max(myDocument.getLineNumber(result.getStartOffset()), myDocument.getLineNumber(original.getStartOffset()) - MAX_EXTENSION_LINES);
     int endLine = Math.min(myDocument.getLineNumber(result.getEndOffset() - 1), myDocument.getLineNumber(original.getEndOffset() - 1) + MAX_EXTENSION_LINES);
     int rangeStart = Math.max(result.getStartOffset(), myDocument.getLineStartOffset(startLine));
@@ -51,7 +50,7 @@ class FormattingRangesExtender {
     return new TextRange(rangeStart, rangeEnd);
   }
 
-  private TextRange ensureRangeIsValid(@Nonnull TextRange range) {
+  private TextRange ensureRangeIsValid(TextRange range) {
     int startOffset = range.getStartOffset();
     int endOffset = range.getEndOffset();
     int docLength = myDocument.getTextLength();
@@ -63,7 +62,7 @@ class FormattingRangesExtender {
   }
 
   @Nullable
-  private TextRange trimSpaces(@Nonnull TextRange range) {
+  private TextRange trimSpaces(TextRange range) {
     int startOffset = range.getStartOffset();
     int endOffset = range.getEndOffset();
     startOffset = CharArrayUtil.shiftForward(myDocument.getCharsSequence(), startOffset, endOffset, " /t");
@@ -72,7 +71,7 @@ class FormattingRangesExtender {
     return new TextRange(startOffset, endOffset);
   }
 
-  private TextRange expandToLine(@Nonnull TextRange range) {
+  private TextRange expandToLine(TextRange range) {
     int line = myDocument.getLineNumber(range.getStartOffset());
     if (line == myDocument.getLineNumber(Math.min(range.getEndOffset(), myDocument.getTextLength()))) {
       int lineStart = myDocument.getLineStartOffset(line);
@@ -85,7 +84,7 @@ class FormattingRangesExtender {
     return range;
   }
 
-  private static TextRange getRangeWithSiblings(@Nonnull ASTNode astNode) {
+  private static TextRange getRangeWithSiblings(ASTNode astNode) {
     Ref<TextRange> result = Ref.create(astNode.getTextRange());
     IElementType elementType = astNode.getElementType();
     ASTNode sibling = astNode.getTreePrev();
@@ -99,7 +98,7 @@ class FormattingRangesExtender {
     return result.get();
   }
 
-  private static boolean processSibling(@Nonnull ASTNode node, @Nonnull Ref<TextRange> rangeRef, @Nonnull IElementType siblingType) {
+  private static boolean processSibling(ASTNode node, Ref<TextRange> rangeRef, IElementType siblingType) {
     if (node.getPsi() instanceof PsiWhiteSpace) {
       return !hasMinLineBreaks(node, 2);
     }
@@ -109,7 +108,7 @@ class FormattingRangesExtender {
     return false;
   }
 
-  private static boolean hasMinLineBreaks(@Nonnull ASTNode node, int lineBreaks) {
+  private static boolean hasMinLineBreaks(ASTNode node, int lineBreaks) {
     int count = 0;
     for (int i = 0; i < node.getChars().length(); i++) {
       if (node.getChars().charAt(i) == '\n') count++;

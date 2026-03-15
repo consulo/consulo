@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FreezeLogger {
@@ -30,6 +29,6 @@ public abstract class FreezeLogger {
     return Application.get().getInstance(FreezeLogger.class);
   }
 
-  public abstract void runUnderPerformanceMonitor(@Nullable ComponentManager project, @Nonnull Runnable action);
+  public abstract void runUnderPerformanceMonitor(@Nullable ComponentManager project, Runnable action);
 
 }

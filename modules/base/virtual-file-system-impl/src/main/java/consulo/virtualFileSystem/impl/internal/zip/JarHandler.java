@@ -38,8 +38,7 @@ import consulo.virtualFileSystem.impl.internal.FSRecords;
 import consulo.virtualFileSystem.internal.FlushingDaemon;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -61,17 +60,17 @@ public class JarHandler extends ZipHandler {
   private final ArchiveFileSystemViaArchiveFile myFileSystem;
   private volatile File myFileWithMirrorResolved;
 
-  public JarHandler(@Nonnull String path, @Nonnull ArchiveFileSystemViaArchiveFile fileSystem) {
+  public JarHandler(String path, ArchiveFileSystemViaArchiveFile fileSystem) {
     super(path);
     myFileSystem = fileSystem;
   }
 
   @Override
-  public ArchiveFile createArchiveFile(@Nonnull String path) throws IOException {
+  public ArchiveFile createArchiveFile(String path) throws IOException {
     return myFileSystem.createArchiveFile(path);
   }
 
-  @Nonnull
+  
   @Override
   protected File getFileToUse() {
     File fileWithMirrorResolved = myFileWithMirrorResolved;
@@ -86,7 +85,7 @@ public class JarHandler extends ZipHandler {
     return fileWithMirrorResolved;
   }
 
-  private File getMirrorFile(@Nonnull File originalFile) {
+  private File getMirrorFile(File originalFile) {
     if (!myFileSystem.isMakeCopyOfJar(originalFile)) return originalFile;
 
     FileAttributes originalAttributes = FileSystemUtil.getAttributes(originalFile);
@@ -205,13 +204,13 @@ public class JarHandler extends ZipHandler {
     return builder.toString();
   }
 
-  @Nonnull
+  
   private static String getJarsDir() {
     return ContainerPathManager.get().getSystemPath() + File.separatorChar + JARS_FOLDER;
   }
 
-  @Nonnull
-  private File copyToMirror(@Nonnull File original, @Nonnull File mirror) {
+  
+  private File copyToMirror(File original, File mirror) {
     ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
     if (progress != null) {
       progress.pushState();
@@ -285,14 +284,14 @@ public class JarHandler extends ZipHandler {
             new DataExternalizer<CacheLibraryInfo>() {
 
               @Override
-              public void save(@Nonnull DataOutput out, CacheLibraryInfo value) throws IOException {
+              public void save(DataOutput out, CacheLibraryInfo value) throws IOException {
                 IOUtil.writeUTF(out, value.mySnapshotPath);
                 DataInputOutputUtil.writeTIME(out, value.myModificationTime);
                 DataInputOutputUtil.writeLONG(out, value.myFileLength);
               }
 
               @Override
-              public CacheLibraryInfo read(@Nonnull DataInput in) throws IOException {
+              public CacheLibraryInfo read(DataInput in) throws IOException {
                 return new CacheLibraryInfo(IOUtil.readUTF(in), DataInputOutputUtil.readTIME(in),
                   DataInputOutputUtil.readLONG(in));
               }
@@ -315,7 +314,7 @@ public class JarHandler extends ZipHandler {
       ShutDownTracker.getInstance().registerShutdownTask(() -> flushCachedLibraryInfos());
     }
 
-    @Nonnull
+    
     private static File getVersionFile(File file) {
       return new File(file.getParentFile(), file.getName() + ".version");
     }
@@ -405,7 +404,7 @@ public class JarHandler extends ZipHandler {
       if (ourCachedLibraryInfo.isDirty()) ourCachedLibraryInfo.force();
     }
 
-    private CacheLibraryInfo(@Nonnull String path, long time, long length) {
+    private CacheLibraryInfo(String path, long time, long length) {
       mySnapshotPath = path;
       myModificationTime = time;
       myFileLength = length;

@@ -8,23 +8,22 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractRepositoryManager<T extends Repository> implements RepositoryManager<T> {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final VcsKey myVcsKey;
-    @Nonnull
+    
     private final VcsRepositoryManager myGlobalRepositoryManager;
 
-    protected AbstractRepositoryManager(@Nonnull Project project,
-                                        @Nonnull VcsRepositoryManager globalRepositoryManager,
-                                        @Nonnull VcsKey vcsKey) {
+    protected AbstractRepositoryManager(Project project,
+                                        VcsRepositoryManager globalRepositoryManager,
+                                        VcsKey vcsKey) {
         myProject = project;
         myGlobalRepositoryManager = globalRepositoryManager;
         myVcsKey = vcsKey;
@@ -42,44 +41,44 @@ public abstract class AbstractRepositoryManager<T extends Repository> implements
     }
 
     @Override
-    public void addExternalRepository(@Nonnull VirtualFile root, @Nonnull T repository) {
+    public void addExternalRepository(VirtualFile root, T repository) {
         myGlobalRepositoryManager.addExternalRepository(root, repository);
     }
 
     @Override
-    public void removeExternalRepository(@Nonnull VirtualFile root) {
+    public void removeExternalRepository(VirtualFile root) {
         myGlobalRepositoryManager.removeExternalRepository(root);
     }
 
     @Override
-    public boolean isExternal(@Nonnull T repository) {
+    public boolean isExternal(T repository) {
         return myGlobalRepositoryManager.isExternal(repository);
     }
 
     @Override
     @Nullable
-    public T getRepositoryForFile(@Nonnull VirtualFile file) {
+    public T getRepositoryForFile(VirtualFile file) {
         return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForFile(file));
     }
 
     @Nullable
-    public T getRepositoryForFileQuick(@Nonnull VirtualFile file) {
+    public T getRepositoryForFileQuick(VirtualFile file) {
         return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForFileQuick(file));
     }
 
     @Override
     @Nullable
-    public T getRepositoryForFile(@Nonnull FilePath file) {
+    public T getRepositoryForFile(FilePath file) {
         VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
         return vFile != null ? getRepositoryForFile(vFile) : null;
     }
 
-    @Nonnull
+    
     protected List<T> getRepositories(Class<T> type) {
         return ContainerUtil.findAll(myGlobalRepositoryManager.getRepositories(), type);
     }
 
-    @Nonnull
+    
     @Override
     public abstract List<T> getRepositories();
 
@@ -117,13 +116,13 @@ public abstract class AbstractRepositoryManager<T extends Repository> implements
     }
 
     @Override
-    @Nonnull
+    
     public VcsKey getVcsKey() {
         return myVcsKey;
     }
 
     @Override
-    @Nonnull
+    
     public AbstractVcs getVcs() {
         AbstractVcs vcs = ProjectLevelVcsManager.getInstance(myProject).findVcsByName(myVcsKey.getName());
         return Objects.requireNonNull(vcs);

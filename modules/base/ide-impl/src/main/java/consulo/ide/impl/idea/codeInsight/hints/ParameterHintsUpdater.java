@@ -9,8 +9,7 @@ import consulo.language.editor.inlay.HintWidthAdjustment;
 import consulo.util.dataholder.Key;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -27,13 +26,13 @@ public final class ParameterHintsUpdater {
     private final boolean myForceImmediateUpdate;
 
     private final Editor myEditor;
-    private final @Nonnull List<? extends Inlay<?>> myEditorInlays;
+    private final List<? extends Inlay<?>> myEditorInlays;
     private List<InlayUpdateInfo> myUpdateList;
 
-    ParameterHintsUpdater(@Nonnull Editor editor,
-                          @Nonnull List<? extends Inlay<?>> editorInlays,
-                          @Nonnull Int2ObjectMap<List<ParameterHintsPass.HintData>> newHints,
-                          @Nonnull Int2ObjectMap<String> hintsToPreserve,
+    ParameterHintsUpdater(Editor editor,
+                          List<? extends Inlay<?>> editorInlays,
+                          Int2ObjectMap<List<ParameterHintsPass.HintData>> newHints,
+                          Int2ObjectMap<String> hintsToPreserve,
                           boolean forceImmediateUpdate) {
         myEditor = editor;
         myNewHints = newHints;
@@ -47,7 +46,7 @@ public final class ParameterHintsUpdater {
         myEditorInlays = editorInlays;
     }
 
-    private @Nonnull List<InlayUpdateInfo> getInlayUpdates(@Nonnull List<? extends Inlay<?>> editorHints) {
+    private List<InlayUpdateInfo> getInlayUpdates(List<? extends Inlay<?>> editorHints) {
         myEditor.putUserData(HINT_REMOVAL_DELAYED, Boolean.FALSE);
 
         List<InlayUpdateInfo> updates = new ArrayList<>();
@@ -74,11 +73,11 @@ public final class ParameterHintsUpdater {
         return updates;
     }
 
-    static boolean hintRemovalDelayed(@Nonnull Editor editor) {
+    static boolean hintRemovalDelayed(Editor editor) {
         return Objects.equals(editor.getUserData(HINT_REMOVAL_DELAYED), Boolean.TRUE);
     }
 
-    private static @Nullable ParameterHintsPass.HintData findAndRemoveMatchingHint(int offset, boolean relatesToPrecedingText,
+    private static ParameterHintsPass.@Nullable HintData findAndRemoveMatchingHint(int offset, boolean relatesToPrecedingText,
                                                                                                       Int2ObjectMap<List<ParameterHintsPass.HintData>> data) {
         List<ParameterHintsPass.HintData> newHintList = data.get(offset);
         ParameterHintsPass.HintData newHint = null;
@@ -96,7 +95,7 @@ public final class ParameterHintsUpdater {
         return newHint;
     }
 
-    private boolean isPreserveHint(@Nonnull Inlay inlay, @Nullable String newText) {
+    private boolean isPreserveHint(Inlay inlay, @Nullable String newText) {
         if (newText == null) {
             newText = myHintsToPreserve.get(inlay.getOffset());
         }
@@ -142,12 +141,12 @@ public final class ParameterHintsUpdater {
         }
     }
 
-    private boolean isSameHintRemovedNear(@Nonnull String text, int index) {
+    private boolean isSameHintRemovedNear(String text, int index) {
         return getInfosNear(index).anyMatch(info -> text.equals(info.oldText));
     }
 
 
-    private boolean isSameHintAddedNear(@Nonnull String text, int index) {
+    private boolean isSameHintAddedNear(String text, int index) {
         return getInfosNear(index).anyMatch(info -> text.equals(info.newText));
     }
 
@@ -164,7 +163,7 @@ public final class ParameterHintsUpdater {
     }
 
 
-    private boolean delayRemoval(@Nonnull Inlay<?> inlay) {
+    private boolean delayRemoval(Inlay<?> inlay) {
         int offset = inlay.getOffset();
         Caret caret = myCaretMap.get(offset);
         if (caret == null) return false;
@@ -193,7 +192,7 @@ public final class ParameterHintsUpdater {
         public final boolean relatesToPrecedingText;
         public final HintWidthAdjustment widthAdjustment;
 
-        InlayUpdateInfo(int offset, @Nullable Inlay<?> current, @Nullable ParameterHintsPass.HintData newHintData) {
+        InlayUpdateInfo(int offset, @Nullable Inlay<?> current, ParameterHintsPass.@Nullable HintData newHintData) {
             this.offset = offset;
             inlay = current;
             oldText = inlay == null ? null : ParameterHintsPresentationManager.getInstance().getHintText(inlay);

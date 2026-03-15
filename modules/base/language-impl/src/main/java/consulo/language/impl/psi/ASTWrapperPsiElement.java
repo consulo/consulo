@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public class ASTWrapperPsiElement extends ASTDelegatePsiElement {
     private final ASTNode myNode;
 
-    public ASTWrapperPsiElement(@Nonnull ASTNode node) {
+    public ASTWrapperPsiElement(ASTNode node) {
         myNode = node;
     }
 
@@ -37,7 +36,7 @@ public class ASTWrapperPsiElement extends ASTDelegatePsiElement {
         return SharedImplUtil.getParent(getNode());
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public ASTNode getNode() {

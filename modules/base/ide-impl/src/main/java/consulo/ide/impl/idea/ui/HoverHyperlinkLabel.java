@@ -19,7 +19,6 @@ import consulo.util.collection.Lists;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -65,7 +64,7 @@ public class HoverHyperlinkLabel extends JLabel {
 
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 HyperlinkEvent event = new HyperlinkEvent(HoverHyperlinkLabel.this, HyperlinkEvent.EventType.ACTIVATED, null);
                 for (HyperlinkListener listener : myListeners) {
                     listener.hyperlinkUpdate(event);

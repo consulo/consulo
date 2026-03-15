@@ -23,13 +23,12 @@ import consulo.searchEverywhere.SearchEverywhereContributor;
 import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ActionSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<GotoActionModel.MatchedValue> {
-    @Nonnull
+    
     @Override
-    public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(@Nonnull AnActionEvent initEvent) {
+    public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(AnActionEvent initEvent) {
         return new ActionSearchEverywhereContributor(
             initEvent.getData(Project.KEY),
             initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT),

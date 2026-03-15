@@ -27,7 +27,6 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -41,7 +40,7 @@ public class StartNewLineBeforeAction extends EditorAction {
         }
 
         @Override
-        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
             return getHandler(IdeActions.ACTION_EDITOR_ENTER).isEnabled(editor, caret, dataContext);
         }
 
@@ -58,7 +57,7 @@ public class StartNewLineBeforeAction extends EditorAction {
             getHandler(IdeActions.ACTION_EDITOR_MOVE_LINE_END).execute(editor, caret, dataContext);
         }
 
-        private static EditorActionHandler getHandler(@Nonnull String actionId) {
+        private static EditorActionHandler getHandler(String actionId) {
             return EditorActionManager.getInstance().getActionHandler(actionId);
         }
     }

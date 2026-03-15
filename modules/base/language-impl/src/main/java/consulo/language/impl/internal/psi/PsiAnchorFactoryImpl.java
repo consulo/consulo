@@ -35,8 +35,7 @@ import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Objects;
@@ -51,9 +50,9 @@ import java.util.Set;
 public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
     private static final Logger LOG = Logger.getInstance(PsiAnchorFactoryImpl.class);
 
-    @Nonnull
+    
     @RequiredReadAction
-    public PsiAnchor create(@Nonnull PsiElement element) {
+    public PsiAnchor create(PsiElement element) {
         PsiUtilCore.ensureValid(element);
 
         PsiAnchor anchor = doCreateAnchor(element);
@@ -69,9 +68,9 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         return anchor;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private PsiAnchor doCreateAnchor(@Nonnull PsiElement element) {
+    private PsiAnchor doCreateAnchor(PsiElement element) {
         if (element instanceof PsiFile file) {
             VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile != null) {
@@ -129,9 +128,9 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         );
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private PsiAnchor wrapperOrHardReference(@Nonnull PsiElement element) {
+    private PsiAnchor wrapperOrHardReference(PsiElement element) {
         for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensionList()) {
             PsiElement anchorElement = provider.getAnchor(element);
             if (anchorElement != null && anchorElement != element) {
@@ -146,7 +145,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
 
     @Nullable
     @RequiredReadAction
-    public static StubIndexReference createStubReference(@Nonnull PsiElement element, @Nonnull PsiFile containingFile) {
+    public static StubIndexReference createStubReference(PsiElement element, PsiFile containingFile) {
         if (element instanceof StubBasedPsiElement elt && element.isPhysical()
             && (element instanceof PsiCompiledElement || canHaveStub(containingFile))) {
             IStubElementType elementType = elt.getElementType();
@@ -160,7 +159,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         return null;
     }
 
-    private static boolean canHaveStub(@Nonnull PsiFile file) {
+    private static boolean canHaveStub(PsiFile file) {
         if (!(file instanceof PsiFileImpl)) {
             return false;
         }
@@ -171,7 +170,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         return elementType != null && vFile != null && elementType.shouldBuildStubFor(vFile);
     }
 
-    public static int calcStubIndex(@Nonnull StubBasedPsiElement psi) {
+    public static int calcStubIndex(StubBasedPsiElement psi) {
         if (psi instanceof PsiFile) {
             return 0;
         }
@@ -192,11 +191,11 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         private final int myEndOffset;
 
         private TreeRangeReference(
-            @Nonnull PsiFile file,
+            PsiFile file,
             int startOffset,
             int endOffset,
-            @Nonnull IdentikitImpl info,
-            @Nonnull VirtualFile virtualFile
+            IdentikitImpl info,
+            VirtualFile virtualFile
         ) {
             myVirtualFile = virtualFile;
             myProject = file.getProject();
@@ -260,19 +259,19 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
     private static class PsiFileReference implements PsiAnchor {
         private final VirtualFile myFile;
         private final Project myProject;
-        @Nonnull
+        
         private final Language myLanguage;
 
         @RequiredReadAction
-        private PsiFileReference(@Nonnull VirtualFile file, @Nonnull PsiFile psiFile) {
+        private PsiFileReference(VirtualFile file, PsiFile psiFile) {
             myFile = file;
             myProject = psiFile.getProject();
             myLanguage = findLanguage(psiFile);
         }
 
-        @Nonnull
+        
         @RequiredReadAction
-        private static Language findLanguage(@Nonnull PsiFile file) {
+        private static Language findLanguage(PsiFile file) {
             FileViewProvider vp = file.getViewProvider();
             Set<Language> languages = vp.getLanguages();
             for (Language language : languages) {
@@ -320,12 +319,12 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
     }
 
     private static class PsiDirectoryReference implements PsiAnchor {
-        @Nonnull
+        
         private final VirtualFile myFile;
-        @Nonnull
+        
         private final Project myProject;
 
-        private PsiDirectoryReference(@Nonnull VirtualFile file, @Nonnull Project project) {
+        private PsiDirectoryReference(VirtualFile file, Project project) {
             myFile = file;
             myProject = project;
             assert file.isDirectory() : file;
@@ -369,7 +368,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
     public static PsiElement restoreFromStubIndex(
         PsiFileWithStubSupport fileImpl,
         int index,
-        @Nonnull IStubElementType elementType,
+        IStubElementType elementType,
         boolean throwIfNull
     ) {
         if (fileImpl == null) {
@@ -403,21 +402,21 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
     }
 
     public static class StubIndexReference implements PsiAnchor {
-        @Nonnull
+        
         private final VirtualFile myVirtualFile;
-        @Nonnull
+        
         private final Project myProject;
         private final int myIndex;
-        @Nonnull
+        
         private final Language myLanguage;
-        @Nonnull
+        
         private final IStubElementType myElementType;
 
         private StubIndexReference(
-            @Nonnull PsiFile file,
+            PsiFile file,
             int index,
-            @Nonnull Language language,
-            @Nonnull IStubElementType elementType
+            Language language,
+            IStubElementType elementType
         ) {
             myLanguage = language;
             myElementType = elementType;
@@ -447,7 +446,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
             return AccessRule.read(() -> restoreFromStubIndex((PsiFileWithStubSupport) getFile(), myIndex, myElementType, false));
         }
 
-        @Nonnull
+        
         public String diagnoseNull() {
             PsiFile file = AccessRule.read(this::getFile);
             try {
@@ -505,7 +504,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
             return getTextRange().getEndOffset();
         }
 
-        @Nonnull
+        
         @RequiredReadAction
         private TextRange getTextRange() {
             PsiElement resolved = retrieve();
@@ -515,12 +514,12 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
             return resolved.getTextRange();
         }
 
-        @Nonnull
+        
         public VirtualFile getVirtualFile() {
             return myVirtualFile;
         }
 
-        @Nonnull
+        
         public Project getProject() {
             return myProject;
         }

@@ -47,8 +47,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -129,19 +128,19 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         myNamedScopeManager.addScopeListener(scopeListener, this);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTitle() {
         return IdeLocalize.scopeViewTitle();
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public JComponent createComponent() {
         myViewPanel = new ScopeTreeViewPanel(myProject);
@@ -162,7 +161,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Override
-    @Nonnull
+    
     public String[] getSubIds() {
         SequencedMap<String, NamedScopeFilter> map = myFilters;
         if (map == null || map.isEmpty()) {
@@ -171,9 +170,9 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return ArrayUtil.toStringArray(map.keySet());
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getPresentableSubIdName(@Nonnull String subId) {
+    public LocalizeValue getPresentableSubIdName(String subId) {
         NamedScopeFilter filter = getFilter(subId);
         return filter == null ? getTitle() : filter.getScope().getPresentableName();
     }
@@ -189,7 +188,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         }).setAsSecondary(true);
     }
 
-    @Nonnull
+    
     @Override
     public ActionCallback updateFromRoot(boolean restoreExpandedPaths) {
         saveExpandedPaths();
@@ -270,7 +269,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         myViewPanel.setSortByType();
     }
 
-    @Nonnull
+    
     @Override
     public SelectInTarget createSelectInTarget() {
         return new ScopePaneSelectInTarget(myProject);
@@ -285,7 +284,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         Object data = super.getData(dataId);
         if (data != null) {
             return data;
@@ -293,9 +292,9 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return myViewPanel != null ? myViewPanel.getData(dataId) : null;
     }
 
-    @Nonnull
+    
     @Override
-    public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    public AsyncResult<Void> getReady(Object requestor) {
         AsyncResult<Void> callback = myViewPanel.getActionCallback();
         return myViewPanel == null ? AsyncResult.rejected() : callback != null ? callback : AsyncResult.resolved();
     }
@@ -306,7 +305,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return filter == null ? null : filter.getScope();
     }
 
-    @Nonnull
+    
     Iterable<NamedScopeFilter> getFilters() {
         return myFilters.values();
     }
@@ -317,7 +316,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return map == null || subId == null ? null : map.get(subId);
     }
 
-    @Nonnull
+    
     private static SequencedMap<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
         SequencedMap<String, NamedScopeFilter> map = new LinkedHashMap<>();
         for (NamedScopeFilter filter : NamedScopeFilter.list(holders)) {

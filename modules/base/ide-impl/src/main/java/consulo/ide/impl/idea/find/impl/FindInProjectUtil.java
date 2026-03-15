@@ -62,8 +62,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -78,7 +77,7 @@ public class FindInProjectUtil {
     private FindInProjectUtil() {
     }
 
-    public static void setDirectoryName(@Nonnull FindModel model, @Nonnull DataContext dataContext) {
+    public static void setDirectoryName(FindModel model, DataContext dataContext) {
         PsiElement psiElement = null;
         Project project = dataContext.getData(Project.KEY);
 
@@ -146,13 +145,13 @@ public class FindInProjectUtil {
     @Deprecated
     @Nullable
     @RequiredReadAction
-    public static PsiDirectory getPsiDirectory(@Nonnull FindModel findModel, @Nonnull Project project) {
+    public static PsiDirectory getPsiDirectory(FindModel findModel, Project project) {
         VirtualFile directory = getDirectory(findModel);
         return directory == null ? null : PsiManager.getInstance(project).findDirectory(directory);
     }
 
     @Nullable
-    public static VirtualFile getDirectory(@Nonnull FindModel findModel) {
+    public static VirtualFile getDirectory(FindModel findModel) {
         String directoryName = findModel.getDirectoryName();
         if (findModel.isProjectScope() || StringUtil.isEmptyOrSpaces(directoryName)) {
             return null;
@@ -179,7 +178,7 @@ public class FindInProjectUtil {
     }
 
     /* filter can have form "*.js, !*_min.js", latter means except matched by *_min.js */
-    @Nonnull
+    
     public static Predicate<CharSequence> createFileMaskCondition(@Nullable String filter) throws PatternSyntaxException {
         if (filter == null) {
             return Predicates.alwaysTrue();
@@ -223,39 +222,39 @@ public class FindInProjectUtil {
     @Deprecated
     //@ApiStatus.ScheduledForRemoval(inVersion = "2016")
     public static void findUsages(
-        @Nonnull FindModel findModel,
+        FindModel findModel,
         @Nullable PsiDirectory psiDirectory,
-        @Nonnull Project project,
-        @Nonnull Predicate<? super UsageInfo> consumer,
-        @Nonnull FindUsagesProcessPresentation processPresentation
+        Project project,
+        Predicate<? super UsageInfo> consumer,
+        FindUsagesProcessPresentation processPresentation
     ) {
         findUsages(findModel, project, consumer, processPresentation);
     }
 
     public static void findUsages(
-        @Nonnull FindModel findModel,
-        @Nonnull Project project,
-        @Nonnull Predicate<? super UsageInfo> consumer,
-        @Nonnull FindUsagesProcessPresentation processPresentation
+        FindModel findModel,
+        Project project,
+        Predicate<? super UsageInfo> consumer,
+        FindUsagesProcessPresentation processPresentation
     ) {
         findUsages(findModel, project, processPresentation, Collections.emptySet(), consumer);
     }
 
     public static void findUsages(
-        @Nonnull FindModel findModel,
-        @Nonnull Project project,
-        @Nonnull FindUsagesProcessPresentation processPresentation,
-        @Nonnull Set<? extends VirtualFile> filesToStart,
-        @Nonnull Predicate<? super UsageInfo> consumer
+        FindModel findModel,
+        Project project,
+        FindUsagesProcessPresentation processPresentation,
+        Set<? extends VirtualFile> filesToStart,
+        Predicate<? super UsageInfo> consumer
     ) {
         new FindInProjectTask(findModel, project, filesToStart).findUsages(processPresentation, consumer);
     }
 
     static boolean processUsagesInFile(
-        @Nonnull PsiFile psiFile,
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull FindModel findModel,
-        @Nonnull Predicate<? super UsageInfo> consumer
+        PsiFile psiFile,
+        VirtualFile virtualFile,
+        FindModel findModel,
+        Predicate<? super UsageInfo> consumer
     ) {
         if (findModel.getStringToFind().isEmpty()) {
             return AccessRule.read(() -> consumer.test(new UsageInfo(psiFile)));
@@ -291,11 +290,11 @@ public class FindInProjectUtil {
     }
 
     private static boolean processSomeOccurrencesInFile(
-        @Nonnull Document document,
-        @Nonnull FindModel findModel,
-        @Nonnull PsiFile psiFile,
+        Document document,
+        FindModel findModel,
+        PsiFile psiFile,
         int[] offsetRef,
-        @Nonnull Predicate<? super UsageInfo> consumer
+        Predicate<? super UsageInfo> consumer
     ) {
         CharSequence text = document.getCharsSequence();
         int textLength = document.getTextLength();
@@ -339,8 +338,8 @@ public class FindInProjectUtil {
         return true;
     }
 
-    @Nonnull
-    private static LocalizeValue getTitleForScope(@Nonnull FindModel findModel) {
+    
+    private static LocalizeValue getTitleForScope(FindModel findModel) {
         LocalizeValue scopeName;
         if (findModel.isProjectScope()) {
             scopeName = FindLocalize.findScopeProjectTitle();
@@ -363,23 +362,23 @@ public class FindInProjectUtil {
         return result;
     }
 
-    @Nonnull
-    public static UsageViewPresentation setupViewPresentation(@Nonnull FindModel findModel) {
+    
+    public static UsageViewPresentation setupViewPresentation(FindModel findModel) {
         return setupViewPresentation(FindSettings.getInstance().isShowResultsInSeparateView(), findModel);
     }
 
-    @Nonnull
-    public static UsageViewPresentation setupViewPresentation(boolean toOpenInNewTab, @Nonnull FindModel findModel) {
+    
+    public static UsageViewPresentation setupViewPresentation(boolean toOpenInNewTab, FindModel findModel) {
         UsageViewPresentation presentation = new UsageViewPresentation();
         setupViewPresentation(presentation, toOpenInNewTab, findModel);
         return presentation;
     }
 
-    public static void setupViewPresentation(UsageViewPresentation presentation, @Nonnull FindModel findModel) {
+    public static void setupViewPresentation(UsageViewPresentation presentation, FindModel findModel) {
         setupViewPresentation(presentation, FindSettings.getInstance().isShowResultsInSeparateView(), findModel);
     }
 
-    public static void setupViewPresentation(UsageViewPresentation presentation, boolean toOpenInNewTab, @Nonnull FindModel findModel) {
+    public static void setupViewPresentation(UsageViewPresentation presentation, boolean toOpenInNewTab, FindModel findModel) {
         LocalizeValue scope = getTitleForScope(findModel);
         scope = scope.map(value -> Character.toLowerCase(value.charAt(0)) + value.substring(1));
         String stringToFind = findModel.getStringToFind();
@@ -421,19 +420,19 @@ public class FindInProjectUtil {
         presentation.setReplaceMode(findModel.isReplaceState());
     }
 
-    @Nonnull
+    
     public static FindUsagesProcessPresentation setupProcessPresentation(
-        @Nonnull Project project,
-        @Nonnull UsageViewPresentation presentation
+        Project project,
+        UsageViewPresentation presentation
     ) {
         return setupProcessPresentation(project, !FindSettings.getInstance().isSkipResultsWithOneUsage(), presentation);
     }
 
-    @Nonnull
+    
     public static FindUsagesProcessPresentation setupProcessPresentation(
-        @Nonnull Project project,
+        Project project,
         boolean showPanelIfOnlyOneUsage,
-        @Nonnull UsageViewPresentation presentation
+        UsageViewPresentation presentation
     ) {
         FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
         processPresentation.setShowNotFoundMessage(true);
@@ -464,8 +463,8 @@ public class FindInProjectUtil {
         return result != null ? result : Collections.emptyList();
     }
 
-    @Nonnull
-    public static String buildStringToFindForIndicesFromRegExp(@Nonnull String stringToFind, @Nonnull Project project) {
+    
+    public static String buildStringToFindForIndicesFromRegExp(String stringToFind, Project project) {
         if (!Registry.is("idea.regexp.search.uses.indices")) {
             return "";
         }
@@ -498,7 +497,7 @@ public class FindInProjectUtil {
         });
   }
 
-    public static void initStringToFindFromDataContext(FindModel findModel, @Nonnull DataContext dataContext) {
+    public static void initStringToFindFromDataContext(FindModel findModel, DataContext dataContext) {
         Editor editor = dataContext.getData(Editor.KEY);
         FindUtil.initStringToFindWithSelection(findModel, editor);
         if (editor == null || !editor.getSelectionModel().hasSelection()) {
@@ -507,24 +506,24 @@ public class FindInProjectUtil {
     }
 
     public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, TypeSafeDataProvider {
-        @Nonnull
+        
         protected final Project myProject;
-        @Nonnull
+        
         protected final FindModel myFindModel;
 
-        public StringUsageTarget(@Nonnull Project project, @Nonnull FindModel findModel) {
+        public StringUsageTarget(Project project, FindModel findModel) {
             myProject = project;
             myFindModel = findModel.clone();
         }
 
         @Override
-        @Nonnull
+        
         public String getPresentableText() {
             UsageViewPresentation presentation = setupViewPresentation(false, myFindModel);
             return presentation.getToolwindowTitle();
         }
 
-        @Nonnull
+        
         @Override
         public String getLongDescriptiveName() {
             return getPresentableText();
@@ -546,11 +545,11 @@ public class FindInProjectUtil {
         }
 
         @Override
-        public void findUsagesInEditor(@Nonnull FileEditor editor) {
+        public void findUsagesInEditor(FileEditor editor) {
         }
 
         @Override
-        public void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights) {
+        public void highlightUsages(PsiFile file, Editor editor, boolean clearHighlights) {
         }
 
         @Override
@@ -613,7 +612,7 @@ public class FindInProjectUtil {
 
         @Override
         @RequiredReadAction
-        public void calcData(@Nonnull Key key, @Nonnull DataSink sink) {
+        public void calcData(Key key, DataSink sink) {
             if (UsageView.USAGE_SCOPE == key) {
                 SearchScope scope = getScopeFromModel(myProject, myFindModel);
                 sink.put(UsageView.USAGE_SCOPE, scope);
@@ -622,9 +621,9 @@ public class FindInProjectUtil {
     }
 
     private static void addSourceDirectoriesFromLibraries(
-        @Nonnull Project project,
-        @Nonnull VirtualFile directory,
-        @Nonnull Collection<? super VirtualFile> outSourceRoots
+        Project project,
+        VirtualFile directory,
+        Collection<? super VirtualFile> outSourceRoots
     ) {
         ProjectFileIndex index = ProjectFileIndex.SERVICE.getInstance(project);
         // if we already are in the sources, search just in this directory only
@@ -673,9 +672,9 @@ public class FindInProjectUtil {
         outSourceRoots.addAll(otherSourceRoots);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static SearchScope getScopeFromModel(@Nonnull Project project, @Nonnull FindModel findModel) {
+    public static SearchScope getScopeFromModel(Project project, FindModel findModel) {
         SearchScope customScope = findModel.isCustomScope() ? findModel.getCustomScope() : null;
         VirtualFile directory = getDirectory(findModel);
         Module module =
@@ -693,8 +692,8 @@ public class FindInProjectUtil {
                 : GlobalSearchScope.allScope(project);
     }
 
-    @Nonnull
-    private static GlobalSearchScope forDirectory(@Nonnull Project project, boolean withSubdirectories, @Nonnull VirtualFile directory) {
+    
+    private static GlobalSearchScope forDirectory(Project project, boolean withSubdirectories, VirtualFile directory) {
         Set<VirtualFile> result = new LinkedHashSet<>();
         result.add(directory);
         addSourceDirectoriesFromLibraries(project, directory, result);
@@ -702,7 +701,7 @@ public class FindInProjectUtil {
         return GlobalSearchScopesCore.directoriesScope(project, withSubdirectories, array);
     }
 
-    public static void initFileFilter(@Nonnull JComboBox<? super String> fileFilter, @Nonnull JCheckBox useFileFilter) {
+    public static void initFileFilter(JComboBox<? super String> fileFilter, JCheckBox useFileFilter) {
         fileFilter.setEditable(true);
         String[] fileMasks = FindSettings.getInstance().getRecentFileMasks();
         for (int i = fileMasks.length - 1; i >= 0; i--) {

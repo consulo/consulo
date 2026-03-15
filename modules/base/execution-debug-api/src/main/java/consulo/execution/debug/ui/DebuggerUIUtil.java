@@ -26,8 +26,7 @@ import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +78,7 @@ public class DebuggerUIUtil {
         }
     }
 
-    public static void showPopupForEditorLine(@Nonnull JBPopup popup, @Nonnull Editor editor, int line) {
+    public static void showPopupForEditorLine(JBPopup popup, Editor editor, int line) {
         RelativePoint point = getPositionForPopup(editor, line);
         if (point != null) {
             popup.show(point);
@@ -96,7 +95,7 @@ public class DebuggerUIUtil {
     }
 
     @Nullable
-    public static RelativePoint getPositionForPopup(@Nonnull Editor editor, int line) {
+    public static RelativePoint getPositionForPopup(Editor editor, int line) {
         Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
         return editor.getScrollingModel().getVisibleArea().contains(p) ? new RelativePoint(editor.getContentComponent(), p) : null;
     }

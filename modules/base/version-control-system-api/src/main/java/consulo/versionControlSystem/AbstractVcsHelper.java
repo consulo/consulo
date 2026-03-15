@@ -35,9 +35,7 @@ import consulo.versionControlSystem.merge.MergeProvider;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.text.MessageFormat;
@@ -52,32 +50,32 @@ import java.util.function.Function;
 public abstract class AbstractVcsHelper {
     protected final Project myProject;
 
-    protected AbstractVcsHelper(@Nonnull Project project) {
+    protected AbstractVcsHelper(Project project) {
         myProject = project;
     }
 
-    @Nonnull
+    
     public static AbstractVcsHelper getInstance(Project project) {
         return project.getInstance(AbstractVcsHelper.class);
     }
 
-    public void showErrors(List<VcsException> abstractVcsExceptions, @Nonnull LocalizeValue tabDisplayName) {
+    public void showErrors(List<VcsException> abstractVcsExceptions, LocalizeValue tabDisplayName) {
         showErrors(abstractVcsExceptions, tabDisplayName.get());
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void showErrors(List<VcsException> abstractVcsExceptions, @Nonnull String tabDisplayName) {
+    public void showErrors(List<VcsException> abstractVcsExceptions, String tabDisplayName) {
         showErrors(abstractVcsExceptions, LocalizeValue.of(tabDisplayName));
     }
 
-    public void showErrors(Map<HotfixData, List<VcsException>> exceptionGroups, @Nonnull LocalizeValue tabDisplayName) {
+    public void showErrors(Map<HotfixData, List<VcsException>> exceptionGroups, LocalizeValue tabDisplayName) {
         showErrors(exceptionGroups, tabDisplayName.get());
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void showErrors(Map<HotfixData, List<VcsException>> exceptionGroups, @Nonnull String tabDisplayName) {
+    public void showErrors(Map<HotfixData, List<VcsException>> exceptionGroups, String tabDisplayName) {
         showErrors(exceptionGroups, LocalizeValue.of(tabDisplayName));
     }
 
@@ -95,42 +93,42 @@ public abstract class AbstractVcsHelper {
 
     public abstract void showAnnotation(FileAnnotation annotation, VirtualFile file, AbstractVcs vcs, int line);
 
-    public void showChangesListBrowser(CommittedChangeList changelist, @Nonnull LocalizeValue title) {
+    public void showChangesListBrowser(CommittedChangeList changelist, LocalizeValue title) {
         showChangesListBrowser(changelist, title.get());
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void showChangesListBrowser(CommittedChangeList changelist, @Nls String title) {
+    public void showChangesListBrowser(CommittedChangeList changelist, String title) {
         showChangesListBrowser(changelist, LocalizeValue.ofNullable(title));
     }
 
-    public void showChangesListBrowser(CommittedChangeList changelist, @Nullable VirtualFile toSelect, @Nonnull LocalizeValue title) {
+    public void showChangesListBrowser(CommittedChangeList changelist, @Nullable VirtualFile toSelect, LocalizeValue title) {
         showChangesListBrowser(changelist, title);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void showChangesListBrowser(CommittedChangeList changelist, @Nullable VirtualFile toSelect, @Nls String title) {
+    public void showChangesListBrowser(CommittedChangeList changelist, @Nullable VirtualFile toSelect, String title) {
         showChangesListBrowser(changelist, title);
     }
 
     public abstract void showChangesBrowser(List<CommittedChangeList> changelists);
 
-    public void showChangesBrowser(List<CommittedChangeList> changelists, @Nonnull LocalizeValue title) {
+    public void showChangesBrowser(List<CommittedChangeList> changelists, LocalizeValue title) {
         showChangesBrowser(changelists, title.get());
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void showChangesBrowser(List<CommittedChangeList> changelists, @Nls String title) {
+    public void showChangesBrowser(List<CommittedChangeList> changelists, String title) {
         showChangesBrowser(changelists, LocalizeValue.ofNullable(title));
     }
 
     public void showChangesBrowser(
         CommittedChangesProvider provider,
         RepositoryLocation location,
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable Component parent
     ) {
         showChangesBrowser(provider, location, title.get(), parent);
@@ -141,25 +139,25 @@ public abstract class AbstractVcsHelper {
     public void showChangesBrowser(
         CommittedChangesProvider provider,
         RepositoryLocation location,
-        @Nls String title,
+        String title,
         @Nullable Component parent
     ) {
         showChangesBrowser(provider, location, LocalizeValue.ofNullable(title), parent);
     }
 
-    public void showWhatDiffersBrowser(@Nullable Component parent, Collection<Change> changes, @Nonnull LocalizeValue title) {
+    public void showWhatDiffersBrowser(@Nullable Component parent, Collection<Change> changes, LocalizeValue title) {
         showWhatDiffersBrowser(parent, changes, title.get());
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void showWhatDiffersBrowser(@Nullable Component parent, Collection<Change> changes, @Nls String title) {
+    public void showWhatDiffersBrowser(@Nullable Component parent, Collection<Change> changes, String title) {
         showWhatDiffersBrowser(parent, changes, LocalizeValue.ofNullable(title));
     }
 
     @Nullable
     public abstract <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(
-        @Nonnull CommittedChangesProvider<T, U> provider,
+        CommittedChangesProvider<T, U> provider,
         RepositoryLocation location
     );
 
@@ -168,7 +166,7 @@ public abstract class AbstractVcsHelper {
         VirtualFile root,
         ChangeBrowserSettings settings,
         int maxCount,
-        @Nonnull LocalizeValue title
+        LocalizeValue title
     ) {
         openCommittedChangesTab(vcs, root, settings, maxCount, title.get());
     }
@@ -190,7 +188,7 @@ public abstract class AbstractVcsHelper {
         RepositoryLocation location,
         ChangeBrowserSettings settings,
         int maxCount,
-        @Nonnull LocalizeValue title
+        LocalizeValue title
     ) {
         openCommittedChangesTab(provider, location, settings, maxCount, title.get());
     }
@@ -216,17 +214,17 @@ public abstract class AbstractVcsHelper {
      * @param mergeDialogCustomizer custom container of titles, descriptions and messages for the merge dialog.
      * @return changed files for which the merge was actually performed.
      */
-    @Nonnull
+    
     public abstract List<VirtualFile> showMergeDialog(
         List<VirtualFile> files,
         MergeProvider provider,
-        @Nonnull MergeDialogCustomizer mergeDialogCustomizer
+        MergeDialogCustomizer mergeDialogCustomizer
     );
 
     /**
      * {@link #showMergeDialog(java.util.List, MergeProvider)} without description.
      */
-    @Nonnull
+    
     public final List<VirtualFile> showMergeDialog(List<VirtualFile> files, MergeProvider provider) {
         return showMergeDialog(files, provider, new MergeDialogCustomizer());
     }
@@ -235,7 +233,7 @@ public abstract class AbstractVcsHelper {
      * {@link #showMergeDialog(java.util.List, MergeProvider)} without description and with default merge provider
      * for the current VCS.
      */
-    @Nonnull
+    
     public final List<VirtualFile> showMergeDialog(List<VirtualFile> files) {
         if (files.isEmpty()) {
             return Collections.emptyList();
@@ -257,18 +255,18 @@ public abstract class AbstractVcsHelper {
     }
 
     public abstract void showFileHistory(
-        @Nonnull VcsHistoryProvider historyProvider,
-        @Nonnull FilePath path,
-        @Nonnull AbstractVcs vcs,
+        VcsHistoryProvider historyProvider,
+        FilePath path,
+        AbstractVcs vcs,
         @Nullable String repositoryPath
     );
 
     public abstract void showFileHistory(
-        @Nonnull VcsHistoryProvider historyProvider,
+        VcsHistoryProvider historyProvider,
         @Nullable AnnotationProvider annotationProvider,
-        @Nonnull FilePath path,
+        FilePath path,
         @Nullable String repositoryPath,
-        @Nonnull AbstractVcs vcs
+        AbstractVcs vcs
     );
 
     /**
@@ -278,12 +276,12 @@ public abstract class AbstractVcsHelper {
      */
     public abstract void showRollbackChangesDialog(List<Change> changes);
 
-    @Nonnull
+    
     public List<VirtualFile> selectFilesToProcess(
         List<VirtualFile> files,
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable String prompt,
-        @Nonnull LocalizeValue singleFileTitle,
+        LocalizeValue singleFileTitle,
         Function<Object, LocalizeValue> singleFilePromptGenerator,
         VcsShowConfirmationOption confirmationOption
     ) {
@@ -299,7 +297,7 @@ public abstract class AbstractVcsHelper {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
+    
     public List<VirtualFile> selectFilesToProcess(
         List<VirtualFile> files,
         String title,
@@ -318,12 +316,12 @@ public abstract class AbstractVcsHelper {
         );
     }
 
-    @Nonnull
+    
     public List<FilePath> selectFilePathsToProcess(
         List<FilePath> files,
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable String prompt,
-        @Nonnull LocalizeValue singleFileTitle,
+        LocalizeValue singleFileTitle,
         Function<Object, LocalizeValue> singleFilePromptGenerator,
         VcsShowConfirmationOption confirmationOption
     ) {
@@ -337,7 +335,7 @@ public abstract class AbstractVcsHelper {
         );
     }
 
-    @Nonnull
+    
     public List<FilePath> selectFilePathsToProcess(
         List<FilePath> files,
         String title,
@@ -356,16 +354,16 @@ public abstract class AbstractVcsHelper {
         );
     }
 
-    @Nonnull
+    
     public Collection<FilePath> selectFilePathsToProcess(
         List<FilePath> files,
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable String prompt,
-        @Nonnull LocalizeValue singleFileTitle,
+        LocalizeValue singleFileTitle,
         Function<Object, LocalizeValue> singleFilePromptGenerator,
         VcsShowConfirmationOption confirmationOption,
-        @Nonnull LocalizeValue okActionName,
-        @Nonnull LocalizeValue cancelActionName
+        LocalizeValue okActionName,
+        LocalizeValue cancelActionName
     ) {
         return selectFilePathsToProcess(
             files,
@@ -381,7 +379,7 @@ public abstract class AbstractVcsHelper {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
+    
     public Collection<FilePath> selectFilePathsToProcess(
         List<FilePath> files,
         String title,
@@ -440,17 +438,17 @@ public abstract class AbstractVcsHelper {
      * @return true if user decides to commit the changes, false if user presses Cancel.
      */
     public abstract boolean commitChanges(
-        @Nonnull Collection<Change> changes,
-        @Nonnull LocalChangeList initialChangeList,
-        @Nonnull String commitMessage,
+        Collection<Change> changes,
+        LocalChangeList initialChangeList,
+        String commitMessage,
         @Nullable CommitResultHandler customResultHandler
     );
 
     public abstract void loadAndShowCommittedChangesDetails(
-        @Nonnull Project project,
-        @Nonnull VcsRevisionNumber revision,
-        @Nonnull VirtualFile file,
-        @Nonnull VcsKey key,
+        Project project,
+        VcsRevisionNumber revision,
+        VirtualFile file,
+        VcsKey key,
         @Nullable RepositoryLocation location,
         boolean local
     );

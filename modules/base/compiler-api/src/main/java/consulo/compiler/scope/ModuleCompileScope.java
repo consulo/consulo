@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,7 +89,7 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     }
 
     @Override
-    @Nonnull
+    
     public Module[] getAffectedModules() {
         return myScopeModules.toArray(new Module[myScopeModules.size()]);
     }

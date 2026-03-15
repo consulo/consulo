@@ -45,7 +45,6 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +63,7 @@ public class ShowRunningListAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null || project.isDisposed()) {
             return;
@@ -138,7 +137,7 @@ public class ShowRunningListAction extends AnAction {
 
     private static final Object KEY = new Object();
 
-    private static Pair<? extends JComponent, String> getCurrentState(@Nonnull List<Project> projects) {
+    private static Pair<? extends JComponent, String> getCurrentState(List<Project> projects) {
         NonOpaquePanel panel = new NonOpaquePanel(new GridLayout(0, 1, 10, 10));
         StringBuilder state = new StringBuilder();
         for (int i = 0; i < projects.size(); i++) {
@@ -187,7 +186,7 @@ public class ShowRunningListAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project[] projects = ProjectManager.getInstance().getOpenProjects();
         for (Project project : projects) {
             boolean enabled = project != null && !project.isDisposed()

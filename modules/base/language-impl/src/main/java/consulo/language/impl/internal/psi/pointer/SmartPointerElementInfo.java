@@ -7,8 +7,7 @@ import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 abstract class SmartPointerElementInfo {
   @Nullable
@@ -16,27 +15,27 @@ abstract class SmartPointerElementInfo {
     return null;
   }
 
-  void fastenBelt(@Nonnull SmartPointerManagerImpl manager) {
+  void fastenBelt(SmartPointerManagerImpl manager) {
   }
 
   @Nullable
-  abstract PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager);
+  abstract PsiElement restoreElement(SmartPointerManagerImpl manager);
 
   @Nullable
-  abstract PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager);
+  abstract PsiFile restoreFile(SmartPointerManagerImpl manager);
 
   abstract int elementHashCode(); // must be immutable
 
-  abstract boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager);
+  abstract boolean pointsToTheSameElementAs(SmartPointerElementInfo other, SmartPointerManagerImpl manager);
 
   abstract VirtualFile getVirtualFile();
 
   @Nullable
-  abstract Segment getRange(@Nonnull SmartPointerManagerImpl manager);
+  abstract Segment getRange(SmartPointerManagerImpl manager);
 
   void cleanup() {
   }
 
   @Nullable
-  abstract Segment getPsiRange(@Nonnull SmartPointerManagerImpl manager);
+  abstract Segment getPsiRange(SmartPointerManagerImpl manager);
 }

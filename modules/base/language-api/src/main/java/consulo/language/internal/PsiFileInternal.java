@@ -17,12 +17,11 @@ package consulo.language.internal;
 
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileEx;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 25.05.2024
  */
 public interface PsiFileInternal extends PsiFileEx {
-  void setOriginalFile(@Nonnull PsiFile originalFile);
+  void setOriginalFile(PsiFile originalFile);
 }

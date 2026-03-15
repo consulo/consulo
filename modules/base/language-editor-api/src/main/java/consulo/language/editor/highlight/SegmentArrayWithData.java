@@ -3,7 +3,6 @@ package consulo.language.editor.highlight;
 
 import consulo.language.ast.IElementType;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * Expands {@link SegmentArray} contract by providing ability to attach additional data to target segment,
@@ -14,11 +13,11 @@ import jakarta.annotation.Nonnull;
 public class SegmentArrayWithData extends SegmentArray {
     private DataStorage myStorage;
 
-    public SegmentArrayWithData(@Nonnull DataStorage storage) {
+    public SegmentArrayWithData(DataStorage storage) {
         myStorage = storage;
     }
 
-    @Nonnull
+    
     public DataStorage createStorage() {
         return myStorage.createStorage();
     }
@@ -34,7 +33,7 @@ public class SegmentArrayWithData extends SegmentArray {
         super.remove(startIndex, endIndex);
     }
 
-    public void replace(int startIndex, int endIndex, @Nonnull SegmentArrayWithData newData) {
+    public void replace(int startIndex, int endIndex, SegmentArrayWithData newData) {
         int oldLen = endIndex - startIndex;
         int newLen = newData.getSegmentCount();
 
@@ -55,12 +54,12 @@ public class SegmentArrayWithData extends SegmentArray {
     }
 
 
-    protected void replace(int startOffset, @Nonnull SegmentArrayWithData data, int len) {
+    protected void replace(int startOffset, SegmentArrayWithData data, int len) {
         myStorage.replace(data.myStorage, startOffset, len);
         super.replace(startOffset, data, len);
     }
 
-    public void insert(@Nonnull SegmentArrayWithData segmentArray, int startIndex) {
+    public void insert(SegmentArrayWithData segmentArray, int startIndex) {
         myStorage.insert(segmentArray.myStorage, startIndex, segmentArray.getSegmentCount(), mySegmentCount);
         super.insert(segmentArray, startIndex);
     }
@@ -72,15 +71,15 @@ public class SegmentArrayWithData extends SegmentArray {
         return myStorage.getData(index);
     }
 
-    @Nonnull
-    static int[] reallocateArray(@Nonnull int[] array, int index) {
+    
+    static int[] reallocateArray(int[] array, int index) {
         if (index < array.length) {
             return array;
         }
         return ArrayUtil.realloc(array, calcCapacity(array.length, index));
     }
 
-    public @Nonnull SegmentArrayWithData copy() {
+    public SegmentArrayWithData copy() {
         SegmentArrayWithData sa = new SegmentArrayWithData(createStorage());
         sa.mySegmentCount = mySegmentCount;
         sa.myStarts = myStarts.clone();
@@ -107,7 +106,7 @@ public class SegmentArrayWithData extends SegmentArray {
      * @return element type stored in data
      * @throws IndexOutOfBoundsException if encoded IElementType can not be found in IElementType registry
      */
-    public @Nonnull IElementType unpackTokenFromData(int data) {
+    public IElementType unpackTokenFromData(int data) {
         return myStorage.unpackTokenFromData(data);
     }
 
@@ -119,7 +118,7 @@ public class SegmentArrayWithData extends SegmentArray {
      * @param isRestartableState true if state is restartable
      * @return packed lexer state and tokenType in data
      */
-    public int packData(@Nonnull IElementType tokenType, int state, boolean isRestartableState) {
+    public int packData(IElementType tokenType, int state, boolean isRestartableState) {
         return myStorage.packData(tokenType, state, isRestartableState);
     }
 }
