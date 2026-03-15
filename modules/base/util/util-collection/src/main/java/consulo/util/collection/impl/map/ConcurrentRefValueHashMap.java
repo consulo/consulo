@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.collection.impl.map;
 
-import consulo.util.collection.Maps;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -30,7 +28,7 @@ import java.util.concurrent.ConcurrentMap;
  * Null values are NOT allowed
  */
 public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K, V> {
-  private final ConcurrentMap<K, ValueReference<K, V>> myMap = Maps.newConcurrentHashMap();
+  private final ConcurrentMap<K, ValueReference<K, V>> myMap = new java.util.concurrent.ConcurrentHashMap<>();
   protected final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
   interface ValueReference<K, V> {
@@ -184,7 +182,7 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     for (final K key : keys) {
       final V value = get(key);
       if (value != null) {
-        entries.add(new Entry<K, V>() {
+        entries.add(new Entry<>() {
           @Override
           public K getKey() {
             return key;

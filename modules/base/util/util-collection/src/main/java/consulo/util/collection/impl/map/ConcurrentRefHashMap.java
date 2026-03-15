@@ -17,7 +17,6 @@
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Maps;
 import consulo.util.lang.Comparing;
 
 import org.jspecify.annotations.Nullable;
@@ -117,7 +116,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
 
   public ConcurrentRefHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
     myHashingStrategy = hashingStrategy == THIS ? this : hashingStrategy;
-    myMap = Maps.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
+    myMap = new java.util.concurrent.ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
   }
 
   @Override
@@ -276,7 +275,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
 
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
-      return new Iterator<Map.Entry<K, V>>() {
+      return new Iterator<>() {
         private final Iterator<Map.Entry<KeyReference<K>, V>> hashIterator = hashEntrySet.iterator();
         @Nullable
         private RefEntry<K, V> next;
@@ -352,8 +351,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
       for (Map.Entry<KeyReference<K>, V> entry : hashEntrySet) {
         KeyReference<K> wk = entry.getKey();
         if (wk == null) continue;
-        Object v;
-        h += wk.hashCode() ^ ((v = entry.getValue()) == null ? 0 : v.hashCode());
+        h += wk.hashCode() ^ Objects.hashCode(entry.getValue());
       }
       return h;
     }

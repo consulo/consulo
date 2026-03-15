@@ -26,6 +26,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
@@ -42,7 +43,9 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
 
   public ConcurrentWeakKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
     myHashingStrategy = hashingStrategy;
-    myMap = Maps.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
+    ConcurrentHashMap<KeyReference<K, V>, ValueReference<K, V>> map =
+        new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
+    myMap = map;
   }
 
   public interface KeyReference<K, V> extends Supplier<K> {
