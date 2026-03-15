@@ -5,6 +5,8 @@
 module consulo.http.impl {
     requires transitive consulo.http.api;
 
+    requires java.net.http;
+
     requires consulo.project.api;
 
     requires consulo.credential.storage.api;

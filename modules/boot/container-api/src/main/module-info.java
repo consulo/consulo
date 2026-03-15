@@ -12,6 +12,8 @@ module consulo.container.api {
     requires transitive jdk.xml.dom;
     // required consulo-util-lang
     requires transitive jdk.unsupported;
+    // requires by consulo-http-impl
+    requires transitive java.net.http;
 
     requires transitive jdk.net;
 
