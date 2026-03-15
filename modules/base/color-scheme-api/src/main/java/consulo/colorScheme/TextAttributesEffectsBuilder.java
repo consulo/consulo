@@ -5,8 +5,7 @@ import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collections;
@@ -49,7 +48,7 @@ public class TextAttributesEffectsBuilder {
     /**
      * Creates a builder without any effects
      */
-    @Nonnull
+    
     public static TextAttributesEffectsBuilder create() {
         return new TextAttributesEffectsBuilder();
     }
@@ -57,8 +56,8 @@ public class TextAttributesEffectsBuilder {
     /**
      * Creates a builder with effects from {@code deepestAttributes}
      */
-    @Nonnull
-    public static TextAttributesEffectsBuilder create(@Nonnull TextAttributes deepestAttributes) {
+    
+    public static TextAttributesEffectsBuilder create(TextAttributes deepestAttributes) {
         return create().coverWith(deepestAttributes);
     }
 
@@ -66,8 +65,8 @@ public class TextAttributesEffectsBuilder {
      * Applies effects from {@code attributes} above current state of the merger. Effects may override mutually exclusive ones. E.g
      * If current state has underline and we applying attributes with wave underline, underline effect will be removed.
      */
-    @Nonnull
-    public final TextAttributesEffectsBuilder coverWith(@Nonnull TextAttributes attributes) {
+    
+    public final TextAttributesEffectsBuilder coverWith(TextAttributes attributes) {
         attributes.forEachAdditionalEffect(this::coverWith);
         coverWith(attributes.getEffectType(), attributes.getEffectColor());
         return this;
@@ -76,8 +75,8 @@ public class TextAttributesEffectsBuilder {
     /**
      * Applies effects from {@code attributes} if effect slots are not used.
      */
-    @Nonnull
-    public final TextAttributesEffectsBuilder slipUnder(@Nonnull TextAttributes attributes) {
+    
+    public final TextAttributesEffectsBuilder slipUnder(TextAttributes attributes) {
         slipUnder(attributes.getEffectType(), attributes.getEffectColor());
         attributes.forEachAdditionalEffect(this::slipUnder);
         return this;
@@ -87,7 +86,7 @@ public class TextAttributesEffectsBuilder {
      * Applies effect with {@code effectType} and {@code effectColor} to the current state. Effects may override mutually exclusive ones. E.g
      * If current state has underline and we applying attributes with wave underline, underline effect will be removed.
      */
-    @Nonnull
+    
     public TextAttributesEffectsBuilder coverWith(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
         return mutateBuilder(effectType, effectColor, myEffectsMap::put);
     }
@@ -95,16 +94,16 @@ public class TextAttributesEffectsBuilder {
     /**
      * Applies effect with {@code effectType} and {@code effectColor} to the current state if effect slot is not used.
      */
-    @Nonnull
+    
     public TextAttributesEffectsBuilder slipUnder(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
         return mutateBuilder(effectType, effectColor, myEffectsMap::putIfAbsent);
     }
 
-    @Nonnull
+    
     private TextAttributesEffectsBuilder mutateBuilder(
         @Nullable EffectType effectType,
         @Nullable ColorValue effectColor,
-        @Nonnull BiConsumer<? super EffectSlot, ? super EffectDescriptor> slotMutator
+        BiConsumer<? super EffectSlot, ? super EffectDescriptor> slotMutator
     ) {
         if (effectColor != null && effectType != null) {
             EffectSlot slot = EFFECT_SLOTS_MAP.get(effectType);
@@ -121,7 +120,7 @@ public class TextAttributesEffectsBuilder {
     /**
      * @return map of {@link EffectType} => {@link Color} representation of builder state
      */
-    @Nonnull
+    
     Map<EffectType, ColorValue> getEffectsMap() {
         if (myEffectsMap.isEmpty()) {
             return Collections.emptyMap();
@@ -141,8 +140,8 @@ public class TextAttributesEffectsBuilder {
      * @param targetAttributes passed targetAttributes
      * @apiNote this method is not a thread safe, builder can't be modified in some other thread when applying to something
      */
-    @Nonnull
-    public TextAttributes applyTo(@Nonnull TextAttributes targetAttributes) {
+    
+    public TextAttributes applyTo(TextAttributes targetAttributes) {
         Iterator<EffectDescriptor> effectsIterator = myEffectsMap.values().iterator();
         if (!effectsIterator.hasNext()) {
             targetAttributes.setEffectColor(null);
@@ -178,18 +177,18 @@ public class TextAttributesEffectsBuilder {
     }
 
     public static class EffectDescriptor {
-        @Nonnull
+        
         public final EffectType effectType;
-        @Nonnull
+        
         public final ColorValue effectColor;
 
-        private EffectDescriptor(@Nonnull EffectType effectType, @Nonnull ColorValue effectColor) {
+        private EffectDescriptor(EffectType effectType, ColorValue effectColor) {
             this.effectType = effectType;
             this.effectColor = effectColor;
         }
 
-        @Nonnull
-        static EffectDescriptor create(@Nonnull EffectType effectType, @Nonnull ColorValue effectColor) {
+        
+        static EffectDescriptor create(EffectType effectType, ColorValue effectColor) {
             return new EffectDescriptor(effectType, effectColor);
         }
     }

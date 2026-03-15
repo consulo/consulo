@@ -18,37 +18,36 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFileImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class ShelvedChangeListDragBean {
-  @Nonnull
+  
   private List<ShelvedChangeImpl> myShelvedChanges;
-  @Nonnull
+  
   private List<ShelvedBinaryFileImpl> myBinaries;
-  @Nonnull
+  
   private List<ShelvedChangeListImpl> myShelvedChangelists;
 
-  public ShelvedChangeListDragBean(@Nonnull List<ShelvedChangeImpl> shelvedChanges,
-                                   @Nonnull List<ShelvedBinaryFileImpl> binaries,
-                                   @Nonnull List<ShelvedChangeListImpl> shelvedChangelists) {
+  public ShelvedChangeListDragBean(List<ShelvedChangeImpl> shelvedChanges,
+                                   List<ShelvedBinaryFileImpl> binaries,
+                                   List<ShelvedChangeListImpl> shelvedChangelists) {
     myShelvedChanges = shelvedChanges;
     myBinaries = binaries;
     myShelvedChangelists = shelvedChangelists;
   }
 
-  @Nonnull
+  
   public List<ShelvedChangeImpl> getChanges() {
     return myShelvedChanges;
   }
 
-  @Nonnull
+  
   public List<ShelvedBinaryFileImpl> getBinaryFiles() {
     return myBinaries;
   }
 
-  @Nonnull
+  
   public List<ShelvedChangeListImpl> getShelvedChangelists() {
     return myShelvedChangelists;
   }

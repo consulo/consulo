@@ -30,8 +30,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -48,20 +47,20 @@ public abstract class AttachToProcessActionBase extends AnAction {
         Key.create("AttachToProcessAction.RECENT_ITEMS_KEY");
     private static final Logger LOG = Logger.getInstance(AttachToProcessActionBase.class);
 
-    @Nonnull
+    
     private final Supplier<? extends List<XAttachDebuggerProvider>> myAttachProvidersSupplier;
-    @Nonnull
+    
     private final LocalizeValue myAttachActionsListTitle;
-    @Nonnull
+    
     private final Supplier<? extends List<XAttachHostProvider>> myAttachHostProviderSupplier;
 
     public AttachToProcessActionBase(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon,
-        @Nonnull Supplier<? extends List<XAttachDebuggerProvider>> attachProvidersSupplier,
-        @Nonnull Supplier<? extends List<XAttachHostProvider>> attachHostProviderSupplier,
-        @Nonnull LocalizeValue attachActionsListTitle
+        Supplier<? extends List<XAttachDebuggerProvider>> attachProvidersSupplier,
+        Supplier<? extends List<XAttachHostProvider>> attachHostProviderSupplier,
+        LocalizeValue attachActionsListTitle
     ) {
         super(text, description, icon);
         myAttachProvidersSupplier = attachProvidersSupplier;
@@ -70,7 +69,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         int attachDebuggerProvidersNumber = myAttachProvidersSupplier.get().size();
         boolean enabled = project != null && attachDebuggerProvidersNumber > 0;
@@ -79,7 +78,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
 
         new Task.Backgroundable(
@@ -89,7 +88,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
             PerformInBackgroundOption.DEAF
         ) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 List<AttachItem> allItems = List.copyOf(getTopLevelItems(indicator, project));
 
                 project.getApplication().invokeLater(
@@ -141,8 +140,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
         }.queue();
     }
 
-    @Nonnull
-    protected List<? extends AttachItem> getTopLevelItems(@Nonnull ProgressIndicator indicator, @Nonnull Project project) {
+    
+    protected List<? extends AttachItem> getTopLevelItems(ProgressIndicator indicator, Project project) {
         List<AttachItem> attachHostItems = collectAttachHostsItems(project, indicator);
 
         // If any of hosts available, fold local PIDs into "Local Host" subgroup
@@ -161,7 +160,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
         return collectAttachProcessItems(project, LocalAttachHost.INSTANCE, indicator);
     }
 
-    private static void doUpdateFirstInGroup(@Nonnull List<? extends AttachItem> items) {
+    private static void doUpdateFirstInGroup(List<? extends AttachItem> items) {
         if (items.isEmpty()) {
             return;
         }
@@ -175,8 +174,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
         }
     }
 
-    @Nonnull
-    public List<AttachItem> collectAttachHostsItems(@Nonnull Project project, @Nonnull ProgressIndicator indicator) {
+    
+    public List<AttachItem> collectAttachHostsItems(Project project, ProgressIndicator indicator) {
         List<AttachItem> currentItems = new ArrayList<>();
 
         UserDataHolderBase dataHolder = new UserDataHolderBase();
@@ -199,12 +198,12 @@ public abstract class AttachToProcessActionBase extends AnAction {
         return currentItems;
     }
 
-    @Nonnull
+    
     private static List<AttachToProcessItem> getRecentItems(
-        @Nonnull List<? extends AttachToProcessItem> currentItems,
-        @Nonnull XAttachHost host,
-        @Nonnull Project project,
-        @Nonnull UserDataHolder dataHolder
+        List<? extends AttachToProcessItem> currentItems,
+        XAttachHost host,
+        Project project,
+        UserDataHolder dataHolder
     ) {
         List<AttachToProcessItem> result = new ArrayList<>();
         List<RecentItem> recentItems = getRecentItems(host, project);
@@ -246,8 +245,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
         return result;
     }
 
-    @Nonnull
-    private static Collection<ProcessInfo> getProcessInfos(@Nonnull XAttachHost host) {
+    
+    private static Collection<ProcessInfo> getProcessInfos(XAttachHost host) {
         try {
             return host.getProcessList();
         }
@@ -262,30 +261,30 @@ public abstract class AttachToProcessActionBase extends AnAction {
         }
     }
 
-    @Nonnull
-    private List<XAttachDebuggerProvider> getProvidersApplicableForHost(@Nonnull XAttachHost host) {
+    
+    private List<XAttachDebuggerProvider> getProvidersApplicableForHost(XAttachHost host) {
         return ContainerUtil.filter(
             myAttachProvidersSupplier.get(),
             provider -> provider.isAttachHostApplicable(host)
         );
     }
 
-    @Nonnull
+    
     public List<AttachToProcessItem> collectAttachProcessItems(
-        @Nonnull Project project,
-        @Nonnull XAttachHost host,
-        @Nonnull ProgressIndicator indicator
+        Project project,
+        XAttachHost host,
+        ProgressIndicator indicator
     ) {
         return doCollectAttachProcessItems(project, host, getProcessInfos(host), indicator, getProvidersApplicableForHost(host));
     }
 
-    @Nonnull
+    
     static List<AttachToProcessItem> doCollectAttachProcessItems(
-        @Nonnull Project project,
-        @Nonnull XAttachHost host,
-        @Nonnull Collection<? extends ProcessInfo> processInfos,
-        @Nonnull ProgressIndicator indicator,
-        @Nonnull List<? extends XAttachDebuggerProvider> providers
+        Project project,
+        XAttachHost host,
+        Collection<? extends ProcessInfo> processInfos,
+        ProgressIndicator indicator,
+        List<? extends XAttachDebuggerProvider> providers
     ) {
         UserDataHolderBase dataHolder = new UserDataHolderBase();
 
@@ -321,7 +320,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
         return result;
     }
 
-    public static void addToRecent(@Nonnull Project project, @Nonnull AttachToProcessItem item) {
+    public static void addToRecent(Project project, AttachToProcessItem item) {
         Map<XAttachHost, LinkedHashSet<RecentItem>> recentItems = project.getUserData(RECENT_ITEMS_KEY);
 
         if (recentItems == null) {
@@ -348,8 +347,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
         }
     }
 
-    @Nonnull
-    public static List<RecentItem> getRecentItems(@Nonnull XAttachHost host, @Nonnull Project project) {
+    
+    public static List<RecentItem> getRecentItems(XAttachHost host, Project project) {
         Map<XAttachHost, LinkedHashSet<RecentItem>> recentItems = project.getUserData(RECENT_ITEMS_KEY);
         return recentItems == null || !recentItems.containsKey(host)
             ? Collections.emptyList()
@@ -357,24 +356,24 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     public static class RecentItem {
-        @Nonnull
+        
         private final XAttachHost myHost;
-        @Nonnull
+        
         private final ProcessInfo myProcessInfo;
-        @Nonnull
+        
         private final XAttachPresentationGroup myGroup;
-        @Nonnull
+        
         private final String myDebuggerName;
 
-        public RecentItem(@Nonnull XAttachHost host, @Nonnull AttachToProcessItem item) {
+        public RecentItem(XAttachHost host, AttachToProcessItem item) {
             this(host, item.getProcessInfo(), item.getGroup(), item.getSelectedDebugger().getDebuggerDisplayName());
         }
 
         private RecentItem(
-            @Nonnull XAttachHost host,
-            @Nonnull ProcessInfo info,
-            @Nonnull XAttachPresentationGroup group,
-            @Nonnull String debuggerName
+            XAttachHost host,
+            ProcessInfo info,
+            XAttachPresentationGroup group,
+            String debuggerName
         ) {
             myHost = host;
             myProcessInfo = info;
@@ -384,30 +383,30 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
         @TestOnly
         public static RecentItem createRecentItem(
-            @Nonnull XAttachHost host,
-            @Nonnull ProcessInfo info,
-            @Nonnull XAttachPresentationGroup group,
-            @Nonnull String debuggerName
+            XAttachHost host,
+            ProcessInfo info,
+            XAttachPresentationGroup group,
+            String debuggerName
         ) {
             return new RecentItem(host, info, group, debuggerName);
         }
 
-        @Nonnull
+        
         public XAttachHost getHost() {
             return myHost;
         }
 
-        @Nonnull
+        
         public ProcessInfo getProcessInfo() {
             return myProcessInfo;
         }
 
-        @Nonnull
+        
         public XAttachPresentationGroup getGroup() {
             return myGroup;
         }
 
-        @Nonnull
+        
         public String getDebuggerName() {
             return myDebuggerName;
         }
@@ -431,25 +430,25 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     public static abstract class AttachItem<T> implements Comparable<AttachItem<T>> {
-        @Nonnull
+        
         XAttachPresentationGroup<T> myGroup;
         boolean myIsFirstInGroup;
-        @Nonnull
+        
         String myGroupName;
-        @Nonnull
+        
         Project myProject;
-        @Nonnull
+        
         UserDataHolder myDataHolder;
-        @Nonnull
+        
         T myInfo;
 
         public AttachItem(
-            @Nonnull XAttachPresentationGroup<T> group,
+            XAttachPresentationGroup<T> group,
             boolean isFirstInGroup,
-            @Nonnull String groupName,
-            @Nonnull T info,
-            @Nonnull Project project,
-            @Nonnull UserDataHolder dataHolder
+            String groupName,
+            T info,
+            Project project,
+            UserDataHolder dataHolder
         ) {
             myGroup = group;
             myIsFirstInGroup = isFirstInGroup;
@@ -463,7 +462,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
             myIsFirstInGroup = true;
         }
 
-        @Nonnull
+        
         XAttachPresentationGroup<T> getGroup() {
             return myGroup;
         }
@@ -474,16 +473,16 @@ public abstract class AttachToProcessActionBase extends AnAction {
         }
 
         @Nullable
-        protected Image getIcon(@Nonnull Project project) {
+        protected Image getIcon(Project project) {
             return myGroup.getItemIcon(project, myInfo, myDataHolder);
         }
 
         protected abstract boolean hasSubStep();
 
-        protected abstract String getText(@Nonnull Project project);
+        protected abstract String getText(Project project);
 
         @Nullable
-        protected abstract String getTooltipText(@Nonnull Project project);
+        protected abstract String getTooltipText(Project project);
 
         protected abstract List<AttachToProcessItem> getSubItems();
 
@@ -501,11 +500,11 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
     private class AttachHostItem extends AttachItem<XAttachHost> {
         AttachHostItem(
-            @Nonnull XAttachPresentationGroup<XAttachHost> group,
+            XAttachPresentationGroup<XAttachHost> group,
             boolean isFirstInGroup,
-            @Nonnull XAttachHost host,
-            @Nonnull Project project,
-            @Nonnull UserDataHolder dataHolder
+            XAttachHost host,
+            Project project,
+            UserDataHolder dataHolder
         ) {
             super(group, isFirstInGroup, group.getGroupName(), host, project, dataHolder);
         }
@@ -515,15 +514,15 @@ public abstract class AttachToProcessActionBase extends AnAction {
             return true;
         }
 
-        @Nonnull
+        
         @Override
-        public String getText(@Nonnull Project project) {
+        public String getText(Project project) {
             return myGroup.getItemDisplayText(project, myInfo, myDataHolder);
         }
 
         @Override
         @Nullable
-        public String getTooltipText(@Nonnull Project project) {
+        public String getTooltipText(Project project) {
             return myGroup.getItemDescription(project, myInfo, myDataHolder);
         }
 
@@ -534,36 +533,36 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     public static class AttachToProcessItem extends AttachItem<ProcessInfo> {
-        @Nonnull
+        
         private final List<XAttachDebugger> myDebuggers;
         private final int mySelectedDebugger;
-        @Nonnull
+        
         private final List<AttachToProcessItem> mySubItems;
-        @Nonnull
+        
         private final XAttachHost myHost;
 
         public AttachToProcessItem(
-            @Nonnull XAttachPresentationGroup<ProcessInfo> group,
+            XAttachPresentationGroup<ProcessInfo> group,
             boolean isFirstInGroup,
-            @Nonnull XAttachHost host,
-            @Nonnull ProcessInfo info,
-            @Nonnull List<XAttachDebugger> debuggers,
-            @Nonnull Project project,
-            @Nonnull UserDataHolder dataHolder
+            XAttachHost host,
+            ProcessInfo info,
+            List<XAttachDebugger> debuggers,
+            Project project,
+            UserDataHolder dataHolder
         ) {
             this(group, isFirstInGroup, group.getGroupName(), host, info, debuggers, 0, project, dataHolder);
         }
 
         public AttachToProcessItem(
-            @Nonnull XAttachPresentationGroup<ProcessInfo> group,
+            XAttachPresentationGroup<ProcessInfo> group,
             boolean isFirstInGroup,
-            @Nonnull String groupName,
-            @Nonnull XAttachHost host,
-            @Nonnull ProcessInfo info,
-            @Nonnull List<XAttachDebugger> debuggers,
+            String groupName,
+            XAttachHost host,
+            ProcessInfo info,
+            List<XAttachDebugger> debuggers,
             int selectedDebugger,
-            @Nonnull Project project,
-            @Nonnull UserDataHolder dataHolder
+            Project project,
+            UserDataHolder dataHolder
         ) {
             super(group, isFirstInGroup, groupName, info, project, dataHolder);
             assert !debuggers.isEmpty() : "debugger list should not be empty";
@@ -612,12 +611,12 @@ public abstract class AttachToProcessActionBase extends AnAction {
             );
         }
 
-        @Nonnull
+        
         public ProcessInfo getProcessInfo() {
             return myInfo;
         }
 
-        @Nonnull
+        
         public XAttachHost getHost() {
             return myHost;
         }
@@ -629,35 +628,35 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
         @Override
         @Nullable
-        public String getTooltipText(@Nonnull Project project) {
+        public String getTooltipText(Project project) {
             return myGroup.getItemDescription(project, myInfo, myDataHolder);
         }
 
         @Override
-        @Nonnull
-        public String getText(@Nonnull Project project) {
+        
+        public String getText(Project project) {
             String shortenedText = StringUtil.shortenTextWithEllipsis(myGroup.getItemDisplayText(project, myInfo, myDataHolder), 200, 0);
             int pid = myInfo.getPid();
             return (pid == -1 ? "" : pid + " ") + shortenedText;
         }
 
-        @Nonnull
+        
         public List<XAttachDebugger> getDebuggers() {
             return myDebuggers;
         }
 
         @Override
-        @Nonnull
+        
         public List<AttachToProcessItem> getSubItems() {
             return mySubItems;
         }
 
-        @Nonnull
+        
         public XAttachDebugger getSelectedDebugger() {
             return myDebuggers.get(mySelectedDebugger);
         }
 
-        public void startDebugSession(@Nonnull Project project) {
+        public void startDebugSession(Project project) {
             XAttachDebugger debugger = getSelectedDebugger();
 
             try {
@@ -670,10 +669,10 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     private static class MyBasePopupStep<T extends AttachItem> extends BaseListPopupStep<T> {
-        @Nonnull
+        
         final Project myProject;
 
-        MyBasePopupStep(@Nonnull Project project, @Nonnull LocalizeValue title, List<T> values) {
+        MyBasePopupStep(Project project, LocalizeValue title, List<T> values) {
             super(title.getNullIfEmpty(), values);
             myProject = project;
         }
@@ -700,7 +699,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     public class AttachListStep extends MyBasePopupStep<AttachItem> implements ListPopupStepEx<AttachItem> {
-        public AttachListStep(@Nonnull List<AttachItem> items, @Nonnull LocalizeValue title, @Nonnull Project project) {
+        public AttachListStep(List<AttachItem> items, LocalizeValue title, Project project) {
             super(project, title, items);
         }
 
@@ -716,7 +715,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
             return value.getIcon(myProject);
         }
 
-        @Nonnull
+        
         @Override
         public String getTextFor(AttachItem value) {
             return value.getText(myProject);
@@ -734,7 +733,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
         }
 
         @Override
-        public void setEmptyText(@Nonnull StatusText emptyText) {
+        public void setEmptyText(StatusText emptyText) {
             emptyText.setText(XDebuggerLocalize.xdebuggerAttachPopupEmptytext());
         }
 
@@ -777,7 +776,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
                 setDefaultOptionIndex(selectedItem);
             }
 
-            @Nonnull
+            
             @Override
             public String getTextFor(AttachToProcessItem value) {
                 return value.getSelectedDebugger().getDebuggerDisplayName();

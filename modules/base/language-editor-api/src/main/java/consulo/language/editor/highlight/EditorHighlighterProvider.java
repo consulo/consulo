@@ -26,8 +26,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -37,8 +36,8 @@ import java.util.Map;
 public interface EditorHighlighterProvider {
   ExtensionPointCacheKey<EditorHighlighterProvider, Map<FileType, EditorHighlighterProvider>> KEY = ExtensionPointCacheKey.groupBy("EditorHighlighterProvider", EditorHighlighterProvider::getFileType);
 
-  @Nonnull
-  static EditorHighlighterProvider forFileType(@Nonnull FileType fileType) {
+  
+  static EditorHighlighterProvider forFileType(FileType fileType) {
     Map<FileType, EditorHighlighterProvider> map = Application.get().getExtensionPoint(EditorHighlighterProvider.class).getOrBuildCache(KEY);
     return map.getOrDefault(fileType, DefaultEditorHighlighterProvider.INSTANCE);
   }
@@ -51,9 +50,9 @@ public interface EditorHighlighterProvider {
    * @param virtualFile The file to be highlighted
    * @param colors      color scheme highlighter shall be initialized with.   @return EditorHighlighter implementation
    */
-  @Nonnull
-  EditorHighlighter getEditorHighlighter(@Nullable Project project, @Nonnull FileType fileType, @Nullable VirtualFile virtualFile, @Nonnull EditorColorsScheme colors);
+  
+  EditorHighlighter getEditorHighlighter(@Nullable Project project, FileType fileType, @Nullable VirtualFile virtualFile, EditorColorsScheme colors);
 
-  @Nonnull
+  
   FileType getFileType();
 }

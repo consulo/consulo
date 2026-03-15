@@ -15,7 +15,6 @@
  */
 package consulo.awt.hacking;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.lang.reflect.Method;
 
@@ -25,7 +24,7 @@ import java.lang.reflect.Method;
  */
 public class PopupFactoryHacking {
 
-  public static void setPopupType(@Nonnull PopupFactory factory, int type) {
+  public static void setPopupType(PopupFactory factory, int type) {
     try {
       Method method = PopupFactory.class.getDeclaredMethod("setPopupType", int.class);
       method.setAccessible(true);
@@ -35,7 +34,7 @@ public class PopupFactoryHacking {
     }
   }
 
-  public static int getPopupType(@Nonnull PopupFactory factory) {
+  public static int getPopupType(PopupFactory factory) {
     try {
       Method method = PopupFactory.class.getDeclaredMethod("getPopupType");
       method.setAccessible(true);

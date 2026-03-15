@@ -21,8 +21,7 @@ import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,7 +41,7 @@ public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadi
 
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();
@@ -53,9 +52,9 @@ public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadi
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public MenuBar add(@Nonnull MenuItem menuItem) {
+  public MenuBar add(MenuItem menuItem) {
     return this;
   }
 }

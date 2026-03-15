@@ -25,8 +25,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
@@ -61,7 +60,7 @@ public class DialogBuilder implements Disposable {
         return showImpl(true).isOK();
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public AsyncResult<Void> showAsync() {
         return showAsync(true);
@@ -114,19 +113,19 @@ public class DialogBuilder implements Disposable {
         myCenterPanel = centerPanel;
     }
 
-    @Nonnull
-    public DialogBuilder centerPanel(@Nonnull JComponent centerPanel) {
+    
+    public DialogBuilder centerPanel(JComponent centerPanel) {
         myCenterPanel = centerPanel;
         return this;
     }
 
-    @Nonnull
-    public DialogBuilder setNorthPanel(@Nonnull JComponent northPanel) {
+    
+    public DialogBuilder setNorthPanel(JComponent northPanel) {
         myNorthPanel = northPanel;
         return this;
     }
 
-    public void setTitle(@Nonnull LocalizeValue title) {
+    public void setTitle(LocalizeValue title) {
         myTitle = title;
     }
 
@@ -136,16 +135,16 @@ public class DialogBuilder implements Disposable {
         myTitle = LocalizeValue.ofNullable(title);
     }
 
-    @Nonnull
-    public DialogBuilder title(@Nonnull LocalizeValue title) {
+    
+    public DialogBuilder title(LocalizeValue title) {
         myTitle = title;
         return this;
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
-    public DialogBuilder title(@Nonnull String title) {
+    
+    public DialogBuilder title(String title) {
         myTitle = LocalizeValue.of(title);
         return this;
     }
@@ -158,7 +157,7 @@ public class DialogBuilder implements Disposable {
         myDimensionServiceKey = dimensionServiceKey;
     }
 
-    public DialogBuilder dimensionKey(@Nonnull String dimensionServiceKey) {
+    public DialogBuilder dimensionKey(String dimensionServiceKey) {
         myDimensionServiceKey = dimensionServiceKey;
         return this;
     }
@@ -206,7 +205,7 @@ public class DialogBuilder implements Disposable {
         return closeAction;
     }
 
-    public void addDisposable(@Nonnull Disposable disposable) {
+    public void addDisposable(Disposable disposable) {
         Disposer.register(this, disposable);
     }
 
@@ -244,13 +243,13 @@ public class DialogBuilder implements Disposable {
         myDialogWrapper.setOKActionEnabled(isEnabled);
     }
 
-    @Nonnull
+    
     public DialogBuilder okActionEnabled(boolean isEnabled) {
         myDialogWrapper.setOKActionEnabled(isEnabled);
         return this;
     }
 
-    @Nonnull
+    
     public DialogBuilder resizable(boolean resizable) {
         myDialogWrapper.setResizable(resizable);
         return this;
@@ -333,7 +332,7 @@ public class DialogBuilder implements Disposable {
         protected Action createAction(final DialogWrapper dialogWrapper) {
             return new AbstractAction() {
                 @Override
-                public void actionPerformed(@Nonnull ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
                     dialogWrapper.close(myExitCode);
                 }
             };
@@ -361,7 +360,7 @@ public class DialogBuilder implements Disposable {
         protected LocalizeValue myText = LocalizeValue.empty();
 
         @Override
-        public void setText(@Nonnull LocalizeValue text) {
+        public void setText(LocalizeValue text) {
             myText = text;
         }
 
@@ -418,13 +417,13 @@ public class DialogBuilder implements Disposable {
         }
 
         @Override
-        @Nonnull
+        
         public LocalizeAction getOKAction() {
             return super.getOKAction();
         }
 
         @Override
-        @Nonnull
+        
         public LocalizeAction getCancelAction() {
             return super.getCancelAction();
         }
@@ -516,7 +515,7 @@ public class DialogBuilder implements Disposable {
         }
 
         @Override
-        @Nonnull
+        
         protected Action[] createActions() {
             if (myActions == null) {
                 return super.createActions();

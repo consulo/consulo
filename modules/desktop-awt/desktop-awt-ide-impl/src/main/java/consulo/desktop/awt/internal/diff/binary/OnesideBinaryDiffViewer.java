@@ -24,15 +24,14 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.fileEditor.FileEditor;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
 public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolder> {
     public static final Logger LOG = Logger.getInstance(OnesideBinaryDiffViewer.class);
 
-    public OnesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public OnesideBinaryDiffViewer(DiffContext context, DiffRequest request) {
         super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
     }
 
@@ -41,13 +40,13 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
     //
 
     @Override
-    @Nonnull
-    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
+    
+    protected Runnable performRediff(ProgressIndicator indicator) {
         JComponent notification = getSide().select(DiffNotifications.createRemovedContent(), DiffNotifications.createInsertedContent());
         return applyNotification(notification);
     }
 
-    @Nonnull
+    
     private Runnable applyNotification(@Nullable JComponent notification) {
         return () -> {
             clearDiffPresentation();
@@ -65,7 +64,7 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
     // Getters
     //
 
-    @Nonnull
+    
     FileEditor getEditor() {
         return getEditorHolder().getEditor();
     }
@@ -74,7 +73,7 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
     // Misc
     //
 
-    public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public static boolean canShowRequest(DiffContext context, DiffRequest request) {
         return OnesideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
     }
 }

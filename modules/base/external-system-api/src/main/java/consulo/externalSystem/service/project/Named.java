@@ -1,6 +1,5 @@
 package consulo.externalSystem.service.project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -11,7 +10,7 @@ public interface Named {
   /**
    * please use {@link #getExternalName()} or {@link #getInternalName()} instead
    */
-  @Nonnull
+  
   @Deprecated
   String getName();
 
@@ -19,13 +18,13 @@ public interface Named {
    * please use {@link #setExternalName(String)} or {@link #setInternalName(String)} instead
    */
   @Deprecated
-  void setName(@Nonnull String name);
+  void setName(String name);
 
-  @Nonnull
+  
   String getExternalName();
-  void setExternalName(@Nonnull String name);
+  void setExternalName(String name);
 
-  @Nonnull
+  
   String getInternalName();
-  void setInternalName(@Nonnull String name);
+  void setInternalName(String name);
 }

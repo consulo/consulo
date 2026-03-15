@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -31,15 +30,15 @@ public abstract class RemoteFileManager {
         return Application.get().getInstance(RemoteFileManager.class);
     }
 
-    public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider, @Nonnull Disposable parentDisposable);
+    public abstract void addRemoteContentProvider(RemoteContentProvider provider, Disposable parentDisposable);
 
-    public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider);
+    public abstract void addRemoteContentProvider(RemoteContentProvider provider);
 
-    public abstract void removeRemoteContentProvider(@Nonnull RemoteContentProvider provider);
+    public abstract void removeRemoteContentProvider(RemoteContentProvider provider);
 
-    public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener);
+    public abstract void addFileListener(HttpVirtualFileListener listener);
 
-    public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable);
+    public abstract void addFileListener(HttpVirtualFileListener listener, Disposable parentDisposable);
 
-    public abstract void removeFileListener(@Nonnull HttpVirtualFileListener listener);
+    public abstract void removeFileListener(HttpVirtualFileListener listener);
 }

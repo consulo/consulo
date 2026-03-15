@@ -18,7 +18,7 @@ package consulo.build.ui.event;
 import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**

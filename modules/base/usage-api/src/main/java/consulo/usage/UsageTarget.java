@@ -20,8 +20,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -38,9 +37,9 @@ public interface UsageTarget extends NavigationItem {
      * Should look for usages in one specific editor. This typicaly shows other kind of dialog and doesn't
      * result in usage view display.
      */
-    void findUsagesInEditor(@Nonnull FileEditor editor);
+    void findUsagesInEditor(FileEditor editor);
 
-    void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights);
+    void highlightUsages(PsiFile file, Editor editor, boolean clearHighlights);
 
     boolean isValid();
 

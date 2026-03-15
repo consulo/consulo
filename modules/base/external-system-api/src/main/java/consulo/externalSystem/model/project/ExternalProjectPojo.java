@@ -20,7 +20,6 @@ import consulo.externalSystem.service.project.Identifiable;
 import consulo.externalSystem.service.project.Named;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -28,9 +27,9 @@ import jakarta.annotation.Nonnull;
  */
 public class ExternalProjectPojo implements Comparable<ExternalProjectPojo> {
 
-  @Nonnull
+  
   private String myName;
-  @Nonnull
+  
   private String myPath;
 
   @SuppressWarnings("UnusedDeclaration")
@@ -39,37 +38,37 @@ public class ExternalProjectPojo implements Comparable<ExternalProjectPojo> {
     this("___DUMMY___", "___DUMMY___");
   }
 
-  public ExternalProjectPojo(@Nonnull String name, @Nonnull String path) {
+  public ExternalProjectPojo(String name, String path) {
     myName = name;
     myPath = path;
   }
 
-  @Nonnull
-  public static <T extends Named & ExternalConfigPathAware & Identifiable> ExternalProjectPojo from(@Nonnull T data) {
+  
+  public static <T extends Named & ExternalConfigPathAware & Identifiable> ExternalProjectPojo from(T data) {
     String projectUniqueName = StringUtil.isEmpty(data.getId()) ? data.getExternalName() : data.getId();
     return new ExternalProjectPojo(projectUniqueName, data.getLinkedExternalProjectPath());
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
-  @Nonnull
+  
   public String getPath() {
     return myPath;
   }
 
-  public void setPath(@Nonnull String path) {
+  public void setPath(String path) {
     myPath = path;
   }
 
   @Override
-  public int compareTo(@Nonnull ExternalProjectPojo that) {
+  public int compareTo(ExternalProjectPojo that) {
     return myName.compareTo(that.myName);
   }
 

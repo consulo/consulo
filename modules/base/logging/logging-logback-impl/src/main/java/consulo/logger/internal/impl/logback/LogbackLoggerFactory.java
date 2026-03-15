@@ -26,8 +26,7 @@ import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -50,15 +49,15 @@ public class LogbackLoggerFactory implements LoggerFactory {
         myLoggerContext = init();
     }
 
-    @Nonnull
+    
     @Override
-    public Logger getLoggerInstance(@Nonnull String name) {
+    public Logger getLoggerInstance(String name) {
         return new LogbackLogger(myLoggerContext, name);
     }
 
-    @Nonnull
+    
     @Override
-    public Logger getLoggerInstance(@Nonnull Class<?> clazz) {
+    public Logger getLoggerInstance(Class<?> clazz) {
         return new LogbackLogger(myLoggerContext, clazz);
     }
 

@@ -23,8 +23,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -40,8 +39,8 @@ public class PluginExceptionUtil {
    *
    * @param pluginClass a problematic class which caused the error
    */
-  @Nonnull
-  public static PluginException createByClass(@Nonnull String errorMessage, @Nullable Throwable cause, @Nonnull Class<?> pluginClass) {
+  
+  public static PluginException createByClass(String errorMessage, @Nullable Throwable cause, Class<?> pluginClass) {
     PluginId pluginId = PluginManager.getPluginId(pluginClass);
     return new PluginException(errorMessage, cause, pluginId);
   }
@@ -51,16 +50,16 @@ public class PluginExceptionUtil {
    *
    * @param pluginClass a problematic class which caused the error
    */
-  @Nonnull
-  public static PluginException createByClass(@Nonnull Throwable cause, @Nonnull Class<?> pluginClass) {
+  
+  public static PluginException createByClass(Throwable cause, Class<?> pluginClass) {
     String message = cause.getMessage();
 
     PluginId pluginId = PluginManager.getPluginId(pluginClass);
     return new PluginException(message != null ? message : "", cause, pluginId);
   }
 
-  @Nonnull
-  public static Set<PluginId> findAllPluginIds(@Nonnull Throwable t) {
+  
+  public static Set<PluginId> findAllPluginIds(Throwable t) {
     if (t instanceof PluginException) {
       PluginId pluginId = ((PluginException)t).getPluginId();
       return Set.of(pluginId);
@@ -94,7 +93,7 @@ public class PluginExceptionUtil {
   }
 
   @Nullable
-  public static PluginId findFirstPluginId(@Nonnull Throwable t) {
+  public static PluginId findFirstPluginId(Throwable t) {
     Set<PluginId> pluginIds = findAllPluginIds(t);
     return pluginIds.stream().filter(pluginId -> !PluginIds.isPlatformPlugin(pluginId)).findFirst().orElse(null);
   }
@@ -110,12 +109,12 @@ public class PluginExceptionUtil {
     }
   }
 
-  public static void reportDeprecatedUsage(@Nonnull String signature, @Nonnull String details) {
+  public static void reportDeprecatedUsage(String signature, String details) {
     String message = "'" + signature + "' is deprecated and going to be removed soon. " + details;
     Logger.getInstance(PluginException.class).error(message);
   }
 
-  public static void reportDeprecatedDefault(@Nonnull Class<?> violator, @Nonnull String methodName, @Nonnull String details) {
+  public static void reportDeprecatedDefault(Class<?> violator, String methodName, String details) {
     String message = "The default implementation of method '" + methodName + "' is deprecated, you need to override it in '" + violator + "'. " + details;
     Logger logger = Logger.getInstance(violator);
     logPluginError(logger, message, null, violator);

@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.ui;
 
 import consulo.disposer.Disposable;
 import consulo.execution.debug.stream.trace.TraceElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -11,11 +10,11 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface TraceContainer extends Disposable {
-  void highlight(@Nonnull List<TraceElement> elements);
+  void highlight(List<TraceElement> elements);
 
-  void select(@Nonnull List<TraceElement> elements);
+  void select(List<TraceElement> elements);
 
-  void addSelectionListener(@Nonnull ValuesSelectionListener listener);
+  void addSelectionListener(ValuesSelectionListener listener);
 
   boolean highlightedExists();
 }

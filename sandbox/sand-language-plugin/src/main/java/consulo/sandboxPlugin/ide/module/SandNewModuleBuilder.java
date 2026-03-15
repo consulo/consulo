@@ -42,7 +42,6 @@ import consulo.ui.style.StandardColors;
 import consulo.ui.util.FormBuilder;
 import consulo.ui.ex.wizard.WizardStep;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -52,11 +51,11 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class SandNewModuleBuilder implements NewModuleBuilder {
   @Override
-  public void setupContext(@Nonnull NewModuleContext context) {
+  public void setupContext(NewModuleContext context) {
     NewModuleContextGroup group = context.addGroup("sand", LocalizeValue.localizeTODO("Sand"));
 
     group.add(LocalizeValue.localizeTODO("Sand Example"), AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor<>("/moduleTemplates/Hello.zip") {
-      @Nonnull
+      
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
         return new NewModuleWizardContextBase(isNewProject);
@@ -64,7 +63,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
 
       @RequiredReadAction
       @Override
-      public void process(@Nonnull NewModuleWizardContext context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
+      public void process(NewModuleWizardContext context, ContentEntry contentEntry, ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
         assert extension != null;
         extension.setEnabled(true);
@@ -76,7 +75,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
     });
 
     group.add(LocalizeValue.localizeTODO("Empty"), AllIcons.FileTypes.Any_type, Integer.MAX_VALUE, new NewModuleBuilderProcessor<>() {
-      @Nonnull
+      
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
         return new NewModuleWizardContextBase(isNewProject);
@@ -84,7 +83,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
 
       @RequiredReadAction
       @Override
-      public void process(@Nonnull NewModuleWizardContext context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
+      public void process(NewModuleWizardContext context, ContentEntry contentEntry, ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
         assert extension != null;
         extension.setEnabled(true);
@@ -94,18 +93,18 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
     NewModuleContextGroup subGroup = group.addGroup("sand-sub", LocalizeValue.localizeTODO("Sand Inner"), AllIcons.Nodes.Folder);
 
     subGroup.add(LocalizeValue.localizeTODO("Sand Hello"), AllIcons.Nodes.Project, new NewModuleBuilderProcessor<>() {
-      @Nonnull
+      
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
         return new NewModuleWizardContextBase(isNewProject);
       }
 
       @Override
-      public void buildSteps(@Nonnull Consumer<WizardStep<NewModuleWizardContext>> consumer, @Nonnull NewModuleWizardContext context) {
+      public void buildSteps(Consumer<WizardStep<NewModuleWizardContext>> consumer, NewModuleWizardContext context) {
         consumer.accept(new UnifiedProjectOrModuleNameStep<>(context) {
           @RequiredUIAccess
           @Override
-          protected void extend(@Nonnull FormBuilder builder, Disposable uiDisposable) {
+          protected void extend(FormBuilder builder, Disposable uiDisposable) {
             builder.addLabeled(LocalizeValue.localizeTODO("Test"), ColorBox.create(StandardColors.LIGHT_RED));
 
             builder.addBottom(ListBox.create("Test1", "Test2"));
@@ -114,9 +113,9 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
 
         consumer.accept(new WizardStep<>() {
           @RequiredUIAccess
-          @Nonnull
+          
           @Override
-          public Component getComponent(@Nonnull NewModuleWizardContext context, @Nonnull Disposable uiDisposable) {
+          public Component getComponent(NewModuleWizardContext context, Disposable uiDisposable) {
             return DockLayout.create().top(Label.create(LocalizeValue.localizeTODO("Hello world from sand plugin")));
           }
         });
@@ -124,7 +123,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
 
       @RequiredReadAction
       @Override
-      public void process(@Nonnull NewModuleWizardContext context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
+      public void process(NewModuleWizardContext context, ContentEntry contentEntry, ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
         assert extension != null;
         extension.setEnabled(true);

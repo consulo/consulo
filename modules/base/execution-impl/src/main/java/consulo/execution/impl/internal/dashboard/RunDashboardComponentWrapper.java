@@ -4,8 +4,7 @@ package consulo.execution.impl.internal.dashboard;
 import consulo.project.Project;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class RunDashboardComponentWrapper extends NonOpaquePanel {
   public static final Key<Integer> CONTENT_ID_KEY = Key.create("RunDashboardContentId");
@@ -13,7 +12,7 @@ public final class RunDashboardComponentWrapper extends NonOpaquePanel {
 
   private Integer myContentId;
 
-  public RunDashboardComponentWrapper(@Nonnull Project project) {
+  public RunDashboardComponentWrapper(Project project) {
     myProject = project;
   }
 
@@ -25,7 +24,7 @@ public final class RunDashboardComponentWrapper extends NonOpaquePanel {
     myContentId = contentId;
   }
 
-  public @Nonnull Project getProject() {
+  public Project getProject() {
     return myProject;
   }
 }

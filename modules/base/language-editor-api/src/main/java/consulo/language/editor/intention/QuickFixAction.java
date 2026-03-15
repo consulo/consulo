@@ -9,8 +9,7 @@ import consulo.language.editor.internal.InspectionCacheService;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public final class QuickFixAction {
      * @deprecated This is used by TeamCity plugin
      */
     @Deprecated
-    public static void registerQuickFixAction(@Nullable HighlightInfo info, @Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nonnull LocalizeValue displayName) {
+    public static void registerQuickFixAction(@Nullable HighlightInfo info, @Nullable IntentionAction action, @Nullable List<IntentionAction> options, LocalizeValue displayName) {
         if (info == null) {
             return;
         }
@@ -59,7 +58,7 @@ public final class QuickFixAction {
         info.registerFix(action, null, LocalizeValue.empty(), fixRange, null);
     }
 
-    public static void registerQuickFixActions(@Nullable HighlightInfo info, @Nullable TextRange fixRange, @Nonnull Iterable<? extends IntentionAction> actions) {
+    public static void registerQuickFixActions(@Nullable HighlightInfo info, @Nullable TextRange fixRange, Iterable<? extends IntentionAction> actions) {
         for (IntentionAction action : actions) {
             registerQuickFixAction(info, fixRange, action);
         }

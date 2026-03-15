@@ -16,8 +16,7 @@
 package consulo.codeEditor.internal;
 
 import consulo.document.Document;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -61,8 +60,8 @@ public class KillRingTransferable implements Transferable {
      * @param endOffset   end offset of the given text during current object construction
      * @param cut         flag that identifies whether target text was cut or copied from the document
      */
-    public KillRingTransferable(@Nonnull String data,
-                                @Nonnull Document document,
+    public KillRingTransferable(String data,
+                                Document document,
                                 int startOffset,
                                 int endOffset,
                                 boolean cut) {

@@ -26,7 +26,6 @@ import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_SYNCHRONIZE)
 public class SynchronizeAction extends AnAction implements DumbAware {
@@ -36,7 +35,7 @@ public class SynchronizeAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         FileDocumentManager.getInstance().saveAllDocuments();
         SaveAndSyncHandler.getInstance().refreshOpenFiles();
         VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);

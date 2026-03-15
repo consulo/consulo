@@ -35,8 +35,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -67,9 +66,9 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
         PersistentEditorSettings editorSettings = myEditorSettingsExternalizable.get();
         CodeEditorInternalHelper codeEditorInternalHelper = myEditorInternalHelper.get();
 
@@ -130,19 +129,19 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
 
     @RequiredUIAccess
     @Override
-    protected void apply(@Nonnull LayoutWrapper component) throws ConfigurationException {
+    protected void apply(LayoutWrapper component) throws ConfigurationException {
         super.apply(component);
 
         EditorFactory.getInstance().refreshAllEditors();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Appearance");
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "editor.preferences.appearance";

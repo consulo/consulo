@@ -17,19 +17,18 @@ package consulo.index.io;
 
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Predicate;
 
 public class InvertedIndexUtil {
-  @Nonnull
-  public static <K, V, I> IntSet collectInputIdsContainingAllKeys(@Nonnull InvertedIndex<? super K, V, I> index,
-                                                                  @Nonnull Collection<? extends K> dataKeys,
+ 
+  public static <K, V, I> IntSet collectInputIdsContainingAllKeys(InvertedIndex<? super K, V, I> index,
+                                                                  Collection<? extends K> dataKeys,
                                                                   @Nullable Predicate<? super K> keyChecker,
                                                                   @Nullable Predicate<? super V> valueChecker,
-                                                                  @Nullable ValueContainer.IntPredicate idChecker) throws StorageException {
+                                                                  ValueContainer.@Nullable IntPredicate idChecker) throws StorageException {
     IntSet mainIntersection = null;
 
     for (K dataKey : dataKeys) {

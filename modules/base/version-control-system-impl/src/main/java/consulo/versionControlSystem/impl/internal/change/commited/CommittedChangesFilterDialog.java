@@ -22,8 +22,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,7 +84,7 @@ public class CommittedChangesFilterDialog extends DialogWrapper {
     }
 
     @Override
-    @NonNls
+    
     protected String getDimensionServiceKey() {
         return "AbstractVcsHelper.FilterDialog." + myPanel.getDimensionServiceKey();
     }

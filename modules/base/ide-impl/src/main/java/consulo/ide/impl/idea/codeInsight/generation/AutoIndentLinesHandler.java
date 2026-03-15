@@ -29,14 +29,13 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.document.util.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 public class AutoIndentLinesHandler implements CodeInsightActionHandler {
     private static final Logger LOG = Logger.getInstance(AutoIndentLinesHandler.class);
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         Document document = editor.getDocument();
         int startOffset;
         int endOffset;

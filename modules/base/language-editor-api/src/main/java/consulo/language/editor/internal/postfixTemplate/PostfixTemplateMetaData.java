@@ -24,8 +24,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,7 +38,7 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
   private static final Logger LOG = Logger.getInstance(PostfixTemplateMetaData.class);
   private static final String DESCRIPTION_FOLDER = "postfixTemplates";
 
-  @Nonnull
+  
   public static PostfixTemplateMetaData createMetaData(@Nullable PostfixTemplate template) {
     if (template == null) return EMPTY_METADATA;
 
@@ -58,14 +57,14 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
     super(BeforeAfterActionMetaData.EMPTY_DESCRIPTION, BeforeAfterActionMetaData.EMPTY_EXAMPLE, BeforeAfterActionMetaData.EMPTY_EXAMPLE);
   }
 
-  @Nonnull
+  
   @Override
   public TextDescriptor[] getExampleUsagesBefore() {
 
     return decorateTextDescriptor(super.getExampleUsagesBefore());
   }
 
-  @Nonnull
+  
   private TextDescriptor[] decorateTextDescriptor(TextDescriptor[] before) {
     List<TextDescriptor> list = ContainerUtil.newArrayList();
     for (final TextDescriptor descriptor : before) {
@@ -84,7 +83,7 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
     return list.toArray(new TextDescriptor[list.size()]);
   }
 
-  @Nonnull
+  
   @Override
   public TextDescriptor[] getExampleUsagesAfter() {
     return decorateTextDescriptor(super.getExampleUsagesAfter());

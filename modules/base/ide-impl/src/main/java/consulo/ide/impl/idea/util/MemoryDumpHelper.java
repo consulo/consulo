@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.util;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import consulo.util.io.zip.ZipUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -93,11 +92,11 @@ public class MemoryDumpHelper {
    * @param dumpPath the name of the snapshot file
    * @throws Exception
    */
-  public static synchronized void captureMemoryDump(@Nonnull String dumpPath) throws Exception {
+  public static synchronized void captureMemoryDump(String dumpPath) throws Exception {
     ourDumpHeap.invoke(ourMXBean, dumpPath, true);
   }
 
-  public static synchronized void captureMemoryDumpZipped(@Nonnull String zipPath) throws Exception {
+  public static synchronized void captureMemoryDumpZipped(String zipPath) throws Exception {
     File tempFile = FileUtil.createTempFile("heapDump.", ".hprof");
     FileUtil.delete(tempFile);
 

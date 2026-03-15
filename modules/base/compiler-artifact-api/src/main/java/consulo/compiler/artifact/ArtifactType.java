@@ -26,8 +26,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,16 +41,16 @@ public abstract class ArtifactType {
         ExtensionPointCacheKey.groupBy("GroupArtifactType", ArtifactType::getId);
 
     @Nullable
-    public static ArtifactType findById(@Nonnull String id) {
+    public static ArtifactType findById(String id) {
         Map<String, ArtifactType> map = Application.get().getExtensionPoint(ArtifactType.class).getOrBuildCache(GROUP);
         return map.get(id);
     }
 
     private final String myId;
-    @Nonnull
+    
     private final LocalizeValue myTitle;
 
-    protected ArtifactType(String id, @Nonnull LocalizeValue title) {
+    protected ArtifactType(String id, LocalizeValue title) {
         myId = id;
         myTitle = title;
     }
@@ -67,53 +66,53 @@ public abstract class ArtifactType {
         return myId;
     }
 
-    @Nonnull
+    
     public LocalizeValue getPresentableName() {
         return myTitle;
     }
 
-    @Nonnull
+    
     public abstract Image getIcon();
 
     @Nullable
-    public String getDefaultPathFor(@Nonnull PackagingSourceItem sourceItem) {
+    public String getDefaultPathFor(PackagingSourceItem sourceItem) {
         return getDefaultPathFor(sourceItem.getKindOfProducedElements());
     }
 
     @Nullable
-    public abstract String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind);
+    public abstract String getDefaultPathFor(PackagingElementOutputKind kind);
 
-    public boolean isSuitableItem(@Nonnull PackagingSourceItem sourceItem) {
+    public boolean isSuitableItem(PackagingSourceItem sourceItem) {
         return true;
     }
 
-    public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
+    public boolean isAvailableForAdd(ModulesProvider modulesProvider) {
         return true;
     }
 
-    @Nonnull
+    
     public abstract CompositePackagingElement<?> createRootElement(
-        @Nonnull PackagingElementFactory packagingElementFactory,
-        @Nonnull String artifactName
+        PackagingElementFactory packagingElementFactory,
+        String artifactName
     );
 
-    @Nonnull
-    public List<? extends ArtifactTemplate> getNewArtifactTemplates(@Nonnull PackagingElementResolvingContext context) {
+    
+    public List<? extends ArtifactTemplate> getNewArtifactTemplates(PackagingElementResolvingContext context) {
         return Collections.emptyList();
     }
 
     public void checkRootElement(
-        @Nonnull CompositePackagingElement<?> rootElement,
-        @Nonnull Artifact artifact,
-        @Nonnull ArtifactProblemsHolder manager
+        CompositePackagingElement<?> rootElement,
+        Artifact artifact,
+        ArtifactProblemsHolder manager
     ) {
     }
 
     @Nullable
     public List<? extends PackagingElement<?>> getSubstitution(
-        @Nonnull Artifact artifact,
-        @Nonnull PackagingElementResolvingContext context,
-        @Nonnull ArtifactType parentType
+        Artifact artifact,
+        PackagingElementResolvingContext context,
+        ArtifactType parentType
     ) {
         return null;
     }

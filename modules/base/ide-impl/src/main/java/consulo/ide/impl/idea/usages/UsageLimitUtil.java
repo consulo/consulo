@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewPresentation;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -33,9 +32,9 @@ public class UsageLimitUtil {
   public static final int USAGES_LIMIT = 1000;
 
   public static void showAndCancelIfAborted(
-    @Nonnull Project project,
-    @Nonnull String message,
-    @Nonnull UsageViewPresentation usageViewPresentation
+    Project project,
+    String message,
+    UsageViewPresentation usageViewPresentation
   ) {
     Result retCode = showTooManyUsagesWarning(project, message, usageViewPresentation);
 
@@ -48,10 +47,10 @@ public class UsageLimitUtil {
     CONTINUE, ABORT
   }
 
-  @Nonnull
-  public static Result showTooManyUsagesWarning(@Nonnull Project project,
-                                                @Nonnull String message,
-                                                @Nonnull UsageViewPresentation usageViewPresentation) {
+  
+  public static Result showTooManyUsagesWarning(Project project,
+                                                String message,
+                                                UsageViewPresentation usageViewPresentation) {
     String[] buttons = {UsageViewBundle.message("button.text.continue"), UsageViewBundle.message("button.text.abort")};
     int result = runOrInvokeAndWait(() -> {
       String title = UsageViewBundle.message("find.excessive.usages.title", StringUtil.capitalize(StringUtil.pluralize(usageViewPresentation.getUsagesWord())));
@@ -67,7 +66,7 @@ public class UsageLimitUtil {
     return result == Messages.OK ? Result.CONTINUE : Result.ABORT;
   }
 
-  private static int runOrInvokeAndWait(@Nonnull Computable<Integer> f) {
+  private static int runOrInvokeAndWait(Computable<Integer> f) {
     int[] answer = new int[1];
     try {
       GuiUtils.runOrInvokeAndWait(() -> answer[0] = f.compute());

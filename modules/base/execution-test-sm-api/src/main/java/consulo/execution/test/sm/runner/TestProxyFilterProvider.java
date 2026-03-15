@@ -16,13 +16,12 @@
 package consulo.execution.test.sm.runner;
 
 import consulo.execution.ui.console.Filter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Sergey Simonchik
  */
 public interface TestProxyFilterProvider {
     @Nullable
-    Filter getFilter(@Nonnull String nodeType, @Nonnull String nodeName, @Nullable String nodeArguments);
+    Filter getFilter(String nodeType, String nodeName, @Nullable String nodeArguments);
 }

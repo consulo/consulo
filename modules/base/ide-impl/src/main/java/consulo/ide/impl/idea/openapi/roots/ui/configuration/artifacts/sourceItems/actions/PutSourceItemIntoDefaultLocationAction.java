@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEd
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import consulo.util.lang.StringUtil;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +36,7 @@ public class PutSourceItemIntoDefaultLocationAction extends PutIntoDefaultLocati
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
     boolean enabled = false;
     Presentation presentation = e.getPresentation();
@@ -59,7 +58,7 @@ public class PutSourceItemIntoDefaultLocationAction extends PutIntoDefaultLocati
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     myArtifactEditor.getLayoutTreeComponent().putIntoDefaultLocations(mySourceItemsTree.getSelectedItems());
   }
 }

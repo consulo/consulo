@@ -45,12 +45,11 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class BookmarkImpl implements Bookmark {
     private final VirtualFile myFile;
-    @Nonnull
+    
     private final OpenFileDescriptor myTarget;
     private final Project myProject;
 
@@ -58,10 +57,10 @@ public class BookmarkImpl implements Bookmark {
     private char myMnemonic = 0;
 
     public BookmarkImpl(
-        @Nonnull Project project,
-        @Nonnull VirtualFile file,
+        Project project,
+        VirtualFile file,
         int line,
-        @Nonnull String description,
+        String description,
         boolean addHighlighter
     ) {
         myFile = file;
@@ -87,7 +86,7 @@ public class BookmarkImpl implements Bookmark {
         }
     }
 
-    public RangeHighlighter createHighlighter(@Nonnull MarkupModelEx markup) {
+    public RangeHighlighter createHighlighter(MarkupModelEx markup) {
         RangeHighlighterEx highlighter;
         int line = getLine();
         if (line >= 0) {
@@ -143,7 +142,7 @@ public class BookmarkImpl implements Bookmark {
         }
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon(boolean gutter) {
         if (myMnemonic == 0) {
@@ -171,7 +170,7 @@ public class BookmarkImpl implements Bookmark {
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile getFile() {
         return myFile;
     }
@@ -225,7 +224,7 @@ public class BookmarkImpl implements Bookmark {
 
     @Override
     @RequiredReadAction
-    @Nonnull
+    
     public String getQualifiedName() {
         String presentableUrl = myFile.getPresentableUrl();
         if (myFile.isDirectory()) {
@@ -276,17 +275,17 @@ public class BookmarkImpl implements Bookmark {
     private static class MyGutterIconRenderer extends GutterIconRenderer {
         private final BookmarkImpl myBookmark;
 
-        public MyGutterIconRenderer(@Nonnull BookmarkImpl bookmark) {
+        public MyGutterIconRenderer(BookmarkImpl bookmark) {
             myBookmark = bookmark;
         }
 
         @Override
-        @Nonnull
+        
         public Image getIcon() {
             return myBookmark.getIcon(true);
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getTooltipValue() {
             return myBookmark.getBookmarkTooltip();

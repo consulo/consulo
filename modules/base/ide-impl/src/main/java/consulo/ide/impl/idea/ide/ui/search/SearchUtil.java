@@ -32,8 +32,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -184,7 +183,7 @@ public class SearchUtil {
         }
     }
 
-    @Nonnull
+    
     public static Runnable lightOptions(
         SearchableConfigurable configurable,
         JComponent component,
@@ -346,7 +345,7 @@ public class SearchUtil {
         return () -> traverseComponentsTree(configurable, glassPanel, component, option, forceSelect);
     }
 
-    public static String markup(@Nonnull String textToMarkup, @Nullable String filter) {
+    public static String markup(String textToMarkup, @Nullable String filter) {
         if (filter == null || filter.length() == 0) {
             return textToMarkup;
         }

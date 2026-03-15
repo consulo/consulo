@@ -25,7 +25,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -39,10 +38,10 @@ public abstract class InspectionManagerBase extends InspectionManager {
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public List<ProblemDescriptor> runLocalToolLocaly(@Nonnull LocalInspectionTool tool, @Nonnull PsiFile file, @Nonnull Object state) {
+    public List<ProblemDescriptor> runLocalToolLocaly(LocalInspectionTool tool, PsiFile file, Object state) {
         ProblemsHolder holder = new ProblemsHolderImpl(this, file, false);
         LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
         final PsiElementVisitor customVisitor = tool.buildVisitor(holder, false, session, state);
@@ -64,33 +63,33 @@ public abstract class InspectionManagerBase extends InspectionManager {
         return holder.getResults();
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemsHolder createProblemsHolder(@Nonnull PsiFile file, boolean onTheFly) {
+    public ProblemsHolder createProblemsHolder(PsiFile file, boolean onTheFly) {
         return new ProblemsHolderImpl(this, file, onTheFly);
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return myProject;
     }
 
     @Override
-    public ProblemDescriptorBuilder newProblemDescriptor(@Nonnull LocalizeValue descriptionTemplate) {
+    public ProblemDescriptorBuilder newProblemDescriptor(LocalizeValue descriptionTemplate) {
         return new ProblemDescriptorBuilderImpl(descriptionTemplate);
     }
 
     @Override
-    @Nonnull
-    public CommonProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, QuickFix... fixes) {
+    
+    public CommonProblemDescriptor createProblemDescriptor(String descriptionTemplate, QuickFix... fixes) {
         return new CommonProblemDescriptorBase(fixes, LocalizeValue.of(descriptionTemplate));
     }
 
     @Override
     public ModuleProblemDescriptor createProblemDescriptor(
-        @Nonnull String descriptionTemplate,
-        @Nonnull Module module,
+        String descriptionTemplate,
+        Module module,
         QuickFix<?>... fixes
     ) {
         return new ModuleProblemDescriptorImpl(module, LocalizeValue.of(descriptionTemplate), fixes);

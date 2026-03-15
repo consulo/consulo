@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement;
 
 import consulo.colorScheme.TextAttributes;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -27,9 +26,9 @@ import java.awt.*;
  */
 public interface ArrangementColorsProvider {
 
-  @Nonnull
+  
   Color getBorderColor(boolean selected);
 
-  @Nonnull
-  TextAttributes getTextAttributes(@Nonnull ArrangementSettingsToken token, boolean selected);
+  
+  TextAttributes getTextAttributes(ArrangementSettingsToken token, boolean selected);
 }

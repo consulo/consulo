@@ -21,8 +21,8 @@ import consulo.compiler.artifact.ArtifactPointer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -55,14 +55,14 @@ public class ArtifactElementPresentation extends TreeNodePresentation {
   }
 
   @Override
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     Artifact artifact = findArtifact();
     Image icon = artifact != null ? artifact.getArtifactType().getIcon() : AllIcons.Nodes.Artifact;
     presentationData.setIcon(icon);
     presentationData.addText(getPresentableName(), artifact != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private Artifact findArtifact() {
     return myArtifactPointer != null ? myArtifactPointer.findArtifact(myContext.getArtifactModel()) : null;
   }

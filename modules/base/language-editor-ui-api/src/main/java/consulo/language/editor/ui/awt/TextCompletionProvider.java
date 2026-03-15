@@ -18,8 +18,7 @@ package consulo.language.editor.ui.awt;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.CharFilter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base interface for text completion.
@@ -33,13 +32,12 @@ public interface TextCompletionProvider {
   String getAdvertisement();
 
   @Nullable
-  String getPrefix(@Nonnull String text, int offset);
+  String getPrefix(String text, int offset);
 
-  @Nonnull
-  CompletionResultSet applyPrefixMatcher(@Nonnull CompletionResultSet result, @Nonnull String prefix);
+ 
+  CompletionResultSet applyPrefixMatcher(CompletionResultSet result, String prefix);
 
-  @Nullable
-  CharFilter.Result acceptChar(char c);
+  CharFilter.@Nullable Result acceptChar(char c);
 
-  void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull String prefix, @Nonnull CompletionResultSet result);
+  void fillCompletionVariants(CompletionParameters parameters, String prefix, CompletionResultSet result);
 }

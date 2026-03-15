@@ -18,7 +18,7 @@ package consulo.language.psi;
 
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev

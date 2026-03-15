@@ -35,8 +35,7 @@ import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -80,11 +79,11 @@ public class PopupUtil {
 
   }
 
-  public static void setPopupType(@Nonnull PopupFactory factory, int type) {
+  public static void setPopupType(PopupFactory factory, int type) {
     PopupFactoryHacking.setPopupType(factory, type);
   }
 
-  public static int getPopupType(@Nonnull PopupFactory factory) {
+  public static int getPopupType(PopupFactory factory) {
     return PopupFactoryHacking.getPopupType(factory);
   }
 
@@ -101,7 +100,7 @@ public class PopupUtil {
     return JOptionPane.getRootFrame();
   }
 
-  public static void showBalloonForActiveFrame(@Nonnull final String message, final NotificationType type) {
+  public static void showBalloonForActiveFrame(final String message, final NotificationType type) {
     Runnable runnable = new Runnable() {
       public void run() {
         IdeFrame frame = (IdeFrame)IdeFocusManager.findInstance().getLastFocusedFrame();
@@ -123,7 +122,7 @@ public class PopupUtil {
     UIUtil.invokeLaterIfNeeded(runnable);
   }
 
-  public static void showBalloonForActiveComponent(@Nonnull final String message, final NotificationType type) {
+  public static void showBalloonForActiveComponent(final String message, final NotificationType type) {
     Runnable runnable = new Runnable() {
       public void run() {
         Window[] windows = Window.getWindows();
@@ -163,7 +162,7 @@ public class PopupUtil {
     UIUtil.invokeLaterIfNeeded(runnable);
   }
 
-  public static void showBalloonForComponent(@Nonnull Component component, @Nonnull String message, NotificationType type, boolean atTop, @Nullable Disposable disposable) {
+  public static void showBalloonForComponent(Component component, String message, NotificationType type, boolean atTop, @Nullable Disposable disposable) {
     JBPopupFactory popupFactory = JBPopupFactory.getInstance();
     if (popupFactory == null) return;
     BalloonBuilder balloonBuilder = popupFactory.createHtmlTextBalloonBuilder(message, type, null);
@@ -185,7 +184,7 @@ public class PopupUtil {
     balloon.show(new RelativePoint(component, new Point(x, y)), position);
   }
 
-  public static void showForActionButtonEvent(@Nonnull JBPopup popup, @Nonnull AnActionEvent e) {
+  public static void showForActionButtonEvent(JBPopup popup, AnActionEvent e) {
     InputEvent inputEvent = e.getInputEvent();
     if (inputEvent == null) {
       popup.showInFocusCenter();

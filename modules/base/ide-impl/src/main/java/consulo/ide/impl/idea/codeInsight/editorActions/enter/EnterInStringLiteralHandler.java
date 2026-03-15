@@ -42,17 +42,16 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "inStringLiteral", order = "first")
 public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
     @Override
     public Result preprocessEnter(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull SimpleReference<Integer> caretOffsetRef,
-        @Nonnull SimpleReference<Integer> caretAdvanceRef,
-        @Nonnull DataContext dataContext,
+        PsiFile file,
+        Editor editor,
+        SimpleReference<Integer> caretOffsetRef,
+        SimpleReference<Integer> caretAdvanceRef,
+        DataContext dataContext,
         EditorActionHandler originalHandler
     ) {
         int caretOffset = caretOffsetRef.get().intValue();
@@ -116,7 +115,7 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
         return fileTypeQuoteHandler instanceof JavaLikeQuoteHandler quoteHandler ? quoteHandler : null;
     }
 
-    private static boolean isInStringLiteral(@Nonnull Editor editor, @Nonnull DataContext dataContext, int offset) {
+    private static boolean isInStringLiteral(Editor editor, DataContext dataContext, int offset) {
         Language language = EnterHandlerHelper.getContextLanguage(dataContext);
         if (offset > 0 && language != null) {
             QuoteHandler quoteHandler = LanguageQuoteHandler.forLanguage(language);

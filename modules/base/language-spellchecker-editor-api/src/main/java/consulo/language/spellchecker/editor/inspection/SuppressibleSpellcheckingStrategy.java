@@ -19,7 +19,6 @@ import consulo.language.editor.inspection.SuppressQuickFix;
 import consulo.language.psi.PsiElement;
 import consulo.language.spellcheker.SpellcheckingStrategy;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Base class to use to make spellchecking in your language suppressible.
@@ -29,10 +28,10 @@ public abstract class SuppressibleSpellcheckingStrategy extends SpellcheckingStr
     /**
      * @see consulo.language.editor.inspection.CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
      */
-    public abstract boolean isSuppressedFor(@Nonnull PsiElement element, @Nonnull String name);
+    public abstract boolean isSuppressedFor(PsiElement element, String name);
 
     /**
      * @see consulo.language.editor.inspection.BatchSuppressableTool#getBatchSuppressActions(PsiElement)
      */
-    public abstract SuppressQuickFix[] getSuppressActions(@Nonnull PsiElement element, @Nonnull String name);
+    public abstract SuppressQuickFix[] getSuppressActions(PsiElement element, String name);
 }

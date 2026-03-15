@@ -28,7 +28,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoPattern;
 import consulo.language.psi.PsiPackageSupportProviders;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -141,13 +140,13 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
     return PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments();
   }
 
-  @Nonnull
+  
   @Override
   public ActionCallback asyncCommit() {
     return PsiDocumentManager.asyncCommitDocuments(myProject);
   }
 
-  @Nonnull
+  
   @Override
   public final Object getRootElement() {
     return myRootElement;

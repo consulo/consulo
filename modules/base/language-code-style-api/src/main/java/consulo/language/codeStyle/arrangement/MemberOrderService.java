@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The whole arrangement idea is to allow to change file entries order according to the user-provided rules.
@@ -52,5 +51,5 @@ public interface MemberOrderService {
    */
   @Nullable
   @RequiredReadAction
-  PsiElement getAnchor(@Nonnull PsiElement member, @Nonnull CommonCodeStyleSettings settings, @Nonnull PsiElement context);
+  PsiElement getAnchor(PsiElement member, CommonCodeStyleSettings settings, PsiElement context);
 }

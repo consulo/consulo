@@ -37,8 +37,7 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -218,7 +217,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
 
     @Override
-    public int checkForProblems(@Nonnull M member) {
+    public int checkForProblems(M member) {
       return OK;
     }
 

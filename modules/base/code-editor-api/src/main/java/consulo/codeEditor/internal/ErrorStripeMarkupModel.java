@@ -17,12 +17,11 @@ package consulo.codeEditor.internal;
 
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-08-05
  */
 public interface ErrorStripeMarkupModel extends MarkupModel {
-    void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent);
+    void addErrorMarkerListener(ErrorStripeListener listener, Disposable parent);
 }

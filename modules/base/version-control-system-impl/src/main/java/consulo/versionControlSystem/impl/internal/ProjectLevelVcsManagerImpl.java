@@ -71,8 +71,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
@@ -172,7 +171,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     @Nullable
     @Override
-    public AbstractVcs findVcsByName(@Nonnull String name) {
+    public AbstractVcs findVcsByName(String name) {
         AbstractVcs result = myProject.isDisposed() ? null : AllVcses.getInstance(myProject).getByName(name);
         ProgressManager.checkCanceled();
         return result;
@@ -212,7 +211,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         myContentManager = null;
     }
 
-    @Nonnull
+    
     @Override
     public VcsAnnotationLocalChangesListener getAnnotationLocalChangesListener() {
         return myAnnotationLocalChangesListener;
@@ -233,7 +232,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     @Nullable
     @Override
-    public AbstractVcs getVcsFor(@Nonnull VirtualFile file) {
+    public AbstractVcs getVcsFor(VirtualFile file) {
         String vcsName = myMappings.getVcsFor(file);
         if (vcsName == null || vcsName.isEmpty()) {
             return null;
@@ -335,11 +334,11 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    public boolean checkVcsIsActive(@Nonnull String vcsId) {
+    public boolean checkVcsIsActive(String vcsId) {
         return myMappings.haveActiveVcs(vcsId);
     }
 
-    @Nonnull
+    
     @Override
     public Collection<AbstractVcs> getAllSupportedVcss() {
         return AllVcses.getInstance(myProject).getSupportedVcses();
@@ -423,7 +422,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         Disposer.dispose(myConsoleDisposer);
     }
 
-    @Nonnull
+    
     @Override
     public VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option) {
         return myOptionsAndConfirmations.getOptions(option);
@@ -434,17 +433,17 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         return myOptionsAndConfirmations.getAllOptions();
     }
 
-    @Nonnull
+    
     @Override
-    public VcsShowSettingOption getStandardOption(@Nonnull VcsConfiguration.StandardOption option, @Nonnull AbstractVcs vcs) {
+    public VcsShowSettingOption getStandardOption(VcsConfiguration.StandardOption option, AbstractVcs vcs) {
         VcsShowOptionsSettingImpl options = (VcsShowOptionsSettingImpl) getOptions(option);
         options.addApplicableVcs(vcs);
         return options;
     }
 
-    @Nonnull
+    
     @Override
-    public VcsShowSettingOption getOrCreateCustomOption(@Nonnull String vcsActionName, @Nonnull AbstractVcs vcs) {
+    public VcsShowSettingOption getOrCreateCustomOption(String vcsActionName, AbstractVcs vcs) {
         return myOptionsAndConfirmations.getOrCreateCustomOption(vcsActionName, vcs);
     }
 
@@ -577,8 +576,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    @Nonnull
-    public VcsShowConfirmationOption getStandardConfirmation(@Nonnull VcsConfiguration.StandardConfirmation option, AbstractVcs vcs) {
+    
+    public VcsShowConfirmationOption getStandardConfirmation(VcsConfiguration.StandardConfirmation option, AbstractVcs vcs) {
         VcsShowConfirmationOptionImpl result = getConfirmation(option);
         if (vcs != null) {
             result.addApplicableVcs(vcs);
@@ -592,7 +591,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    @Nonnull
+    
     public VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option) {
         return myOptionsAndConfirmations.getConfirmation(option);
     }
@@ -638,8 +637,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    @Nonnull
-    public VirtualFile[] getRootsUnderVcs(@Nonnull AbstractVcs vcs) {
+    
+    public VirtualFile[] getRootsUnderVcs(AbstractVcs vcs) {
         return myMappingsToRoots.getRootsUnderVcs(vcs);
     }
 
@@ -659,7 +658,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    @Nonnull
+    
     public VcsRoot[] getAllVcsRoots() {
         List<VcsRoot> vcsRoots = new ArrayList<>();
         AbstractVcs[] vcses = myMappings.getActiveVcses();
@@ -672,7 +671,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         return vcsRoots.toArray(new VcsRoot[vcsRoots.size()]);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getConsolidatedVcsName() {
         AbstractVcs singleVcs = getSingleVCS();
@@ -726,7 +725,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         myMappings.setDirectoryMappings(mappingsList);
     }
 
-    void writeDirectoryMappings(@Nonnull Element element) {
+    void writeDirectoryMappings(Element element) {
         if (myProject.isDefault()) {
             element.setAttribute(ATTRIBUTE_DEFAULT_PROJECT, Boolean.TRUE.toString());
         }
@@ -803,17 +802,17 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    public boolean isBackgroundTaskRunning(@Nonnull Object... keys) {
+    public boolean isBackgroundTaskRunning(Object... keys) {
         return myBackgroundRunningTasks.contains(new ActionKey(keys));
     }
 
     @Override
-    public void startBackgroundTask(@Nonnull Object... keys) {
+    public void startBackgroundTask(Object... keys) {
         LOG.assertTrue(myBackgroundRunningTasks.add(new ActionKey(keys)));
     }
 
     @Override
-    public void stopBackgroundTask(@Nonnull Object... keys) {
+    public void stopBackgroundTask(Object... keys) {
         LOG.assertTrue(myBackgroundRunningTasks.remove(new ActionKey(keys)));
     }
 
@@ -871,7 +870,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     private static class ActionKey {
         private final Object[] myObjects;
 
-        ActionKey(@Nonnull Object... objects) {
+        ActionKey(Object... objects) {
             myObjects = objects;
         }
 

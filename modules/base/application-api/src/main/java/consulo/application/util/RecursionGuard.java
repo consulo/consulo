@@ -15,8 +15,7 @@
  */
 package consulo.application.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -40,12 +39,12 @@ public abstract class RecursionGuard<Key> {
    * @return the result of the computation or {@code null} if we're entering a computation with this key on this thread recursively,
    */
   @Nullable
-  public abstract <T> T doPreventingRecursion(@Nonnull Key key, boolean memoize, @Nonnull Supplier<T> computation);
+  public abstract <T> T doPreventingRecursion(Key key, boolean memoize, Supplier<T> computation);
 
   /**
    * @deprecated Use {@link RecursionManager#markStack()} instead
    */
-  @Nonnull
+  
   @Deprecated
   public StackStamp markStack() {
     return RecursionManager.markStack();
@@ -57,7 +56,7 @@ public abstract class RecursionGuard<Key> {
    *
    * @return the current thread-local stack of keys passed to {@link #doPreventingRecursion(Key, boolean, Supplier)}.
    */
-  @Nonnull
+  
   public abstract List<? extends Key> currentStack();
 
   /**
@@ -71,7 +70,7 @@ public abstract class RecursionGuard<Key> {
    *
    * @param since the id of a computation whose result is safe to cache whilst for more nested ones it's not.
    */
-  public abstract void prohibitResultCaching(@Nonnull Key since);
+  public abstract void prohibitResultCaching(Key since);
 
   public interface StackStamp {
 

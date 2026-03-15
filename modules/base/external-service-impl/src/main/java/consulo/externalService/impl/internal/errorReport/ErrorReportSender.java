@@ -26,7 +26,6 @@ import consulo.externalService.impl.internal.repository.api.ErrorReportBean;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -75,8 +74,8 @@ public class ErrorReportSender {
         );
     }
 
-    @Nonnull
-    public static String sendAndHandleResult(@Nonnull ErrorReportBean error, long assignUserId)
+    
+    public static String sendAndHandleResult(ErrorReportBean error, long assignUserId)
         throws IOException, AuthorizationFailedException, UpdateAvailableException {
         Map<String, String> map = WebServiceApiSender.doPost(
             WebServiceApi.ERROR_REPORTER_API,

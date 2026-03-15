@@ -15,24 +15,23 @@
  */
 package consulo.language.editor.inspection.reference;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
  * @since 2007-12-18
  */
 public class RefVisitor {
-  public void visitElement(@Nonnull RefEntity elem) {}
+  public void visitElement(RefEntity elem) {}
 
-  public void visitFile(@Nonnull RefFile file) {
+  public void visitFile(RefFile file) {
     visitElement(file);
   }
 
-  public void visitModule(@Nonnull RefModule module){
+  public void visitModule(RefModule module){
     visitElement(module);
   }
 
-  public void visitDirectory(@Nonnull RefDirectory directory) {
+  public void visitDirectory(RefDirectory directory) {
     visitElement(directory);
   }
 }

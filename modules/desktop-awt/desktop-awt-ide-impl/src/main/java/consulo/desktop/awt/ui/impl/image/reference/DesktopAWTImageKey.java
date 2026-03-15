@@ -23,8 +23,7 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,7 +97,7 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
     return ourLibraryManager.getModificationCount() + ourUIModificationTracker.getModificationCount();
   }
 
-  @Nonnull
+  
   private ImageReference resolveReference() {
     long l = currentCount();
     long lastModCount = myModificationCount;
@@ -118,13 +117,13 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
     return ref;
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupId() {
     return myGroupId;
   }
 
-  @Nonnull
+  
   @Override
   public String getImageId() {
     return myImageId;
@@ -164,13 +163,13 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
       '}';
   }
 
-  @Nonnull
+  
   @Override
   public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
     return new DesktopAWTImageKey(libraryId, myGroupId, myImageId, myWidth, myHeight);
   }
 
-  @Nonnull
+  
   @Override
   public DesktopAWTImage copyWithNewSize(int width, int height) {
     return new DesktopAWTImageKey(myForceIconLibraryId, myGroupId, myImageId, width, height);

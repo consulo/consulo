@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author irengrig
@@ -29,12 +28,12 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsBaseContentProvider {
     @Nullable
-    BaseContent getBaseRevision(@Nonnull VirtualFile file);
+    BaseContent getBaseRevision(VirtualFile file);
 
-    boolean isSupported(@Nonnull VirtualFile file);
+    boolean isSupported(VirtualFile file);
 
     interface BaseContent {
-        @Nonnull
+        
         VcsRevisionNumber getRevisionNumber();
 
         @Nullable

@@ -23,7 +23,6 @@ import consulo.module.extension.ModuleExtensionHelper;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public class SandConfigurationType extends SimpleConfigurationType {
   }
 
   @Override
-  public boolean isApplicable(@Nonnull Project project) {
+  public boolean isApplicable(Project project) {
     return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
   }
 }

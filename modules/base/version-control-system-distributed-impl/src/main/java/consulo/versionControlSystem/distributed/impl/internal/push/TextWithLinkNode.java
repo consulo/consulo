@@ -19,21 +19,20 @@ package consulo.versionControlSystem.distributed.impl.internal.push;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.versionControlSystem.distributed.ui.awt.VcsLinkedTextComponent;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 public class TextWithLinkNode extends DefaultMutableTreeNode implements CustomRenderedTreeNode {
-    @Nonnull
+    
     protected VcsLinkedTextComponent myLinkedText;
 
-    public TextWithLinkNode(@Nonnull VcsLinkedTextComponent linkedText) {
+    public TextWithLinkNode(VcsLinkedTextComponent linkedText) {
         myLinkedText = linkedText;
     }
 
     @Override
-    public void render(@Nonnull ColoredTreeCellRenderer renderer) {
+    public void render(ColoredTreeCellRenderer renderer) {
         renderer.append("   ");
         myLinkedText.setSelected(renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)));
         TreeNode parent = getParent();

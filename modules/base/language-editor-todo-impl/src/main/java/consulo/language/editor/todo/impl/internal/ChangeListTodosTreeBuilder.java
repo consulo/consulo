@@ -17,7 +17,6 @@
 package consulo.language.editor.todo.impl.internal;
 
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -27,7 +26,7 @@ public class ChangeListTodosTreeBuilder extends TodoTreeBuilder {
   }
 
   @Override
-  @Nonnull
+  
   protected TodoTreeStructure createTreeStructure() {
     return new ChangeListTodosTreeStructure(myProject);
   }

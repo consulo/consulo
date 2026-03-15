@@ -18,8 +18,7 @@ package consulo.language.editor.refactoring.introduce;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This interface describes target of "Introduce" refactorings. It is used by the Target Chooser popup.
@@ -31,7 +30,7 @@ public interface IntroduceTarget {
     /**
      * @return the range of the target in the file
      */
-    @Nonnull
+    
     @RequiredReadAction
     TextRange getTextRange();
 
@@ -45,7 +44,7 @@ public interface IntroduceTarget {
     /**
      * @return string presentation of the target to use in the Target Chooser
      */
-    @Nonnull
+    
     @RequiredReadAction
     String render();
 

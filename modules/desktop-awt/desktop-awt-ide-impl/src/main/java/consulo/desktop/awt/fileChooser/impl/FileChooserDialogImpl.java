@@ -56,8 +56,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -89,18 +88,18 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     private MergingUpdateQueue myUiUpdater;
     private boolean myTreeIsUpdating;
 
-    public FileChooserDialogImpl(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project) {
+    public FileChooserDialogImpl(FileChooserDescriptor descriptor, @Nullable Project project) {
         super(project, true);
         myChooserDescriptor = descriptor;
         myProject = project;
         setTitle(getChooserTitle(descriptor));
     }
 
-    public FileChooserDialogImpl(@Nonnull FileChooserDescriptor descriptor, @Nonnull Component parent) {
+    public FileChooserDialogImpl(FileChooserDescriptor descriptor, Component parent) {
         this(descriptor, parent, null);
     }
 
-    public FileChooserDialogImpl(@Nonnull FileChooserDescriptor descriptor, @Nonnull Component parent, @Nullable Project project) {
+    public FileChooserDialogImpl(FileChooserDescriptor descriptor, Component parent, @Nullable Project project) {
         super(parent, true);
         myChooserDescriptor = descriptor;
         myProject = project;
@@ -112,9 +111,9 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     @Override
-    @Nonnull
+    
     @RequiredUIAccess
-    public VirtualFile[] choose(@Nullable ComponentManager project, @Nonnull VirtualFile... toSelect) {
+    public VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelect) {
         init();
         if ((myProject == null) && (project != null)) {
             myProject = (Project)project;
@@ -136,7 +135,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     @Override
     @RequiredUIAccess
-    public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+    public void choose(@Nullable VirtualFile toSelect, Consumer<List<VirtualFile>> callback) {
         init();
         restoreSelection(toSelect);
         show();
@@ -148,10 +147,10 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
-    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelect) {
+    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
         init();
         if ((myProject == null) && (project != null)) {
             myProject = (Project)project;
@@ -181,7 +180,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
         init();
@@ -240,7 +239,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         ApplicationPropertiesComponent.getInstance().setValues(RECENT_FILES_KEY, ArrayUtil.toStringArray(files));
     }
 
-    @Nonnull
+    
     private String[] getRecentFiles() {
         String[] array = ApplicationPropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
         if (array == null) {
@@ -491,7 +490,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return tree;
     }
 
-    @Nonnull
+    
     protected Tree createInternalTree() {
         return new Tree();
     }
@@ -575,7 +574,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
 
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
+        public Object getData(Key<?> dataId) {
             if (VirtualFile.KEY_OF_ARRAY == dataId) {
                 return myFileSystemTree.getSelectedFiles();
             }

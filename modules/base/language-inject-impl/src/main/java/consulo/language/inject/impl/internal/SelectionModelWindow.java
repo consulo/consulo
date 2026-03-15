@@ -13,8 +13,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.document.DocumentWindow;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class SelectionModelWindow implements SelectionModel {
   private final SelectionModel myHostModel;
@@ -110,12 +109,12 @@ class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  public void addSelectionListener(@Nonnull SelectionListener listener) {
+  public void addSelectionListener(SelectionListener listener) {
     myHostModel.addSelectionListener(listener);
   }
 
   @Override
-  public void removeSelectionListener(@Nonnull SelectionListener listener) {
+  public void removeSelectionListener(SelectionListener listener) {
     myHostModel.removeSelectionListener(listener);
   }
 
@@ -135,12 +134,12 @@ class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  public void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
+  public void setBlockSelection(LogicalPosition blockStart, LogicalPosition blockEnd) {
     myHostModel.setBlockSelection(myInjectedEditor.injectedToHost(blockStart), myInjectedEditor.injectedToHost(blockEnd));
   }
 
   @Override
-  @Nonnull
+  
   public int[] getBlockSelectionStarts() {
     int[] result = myHostModel.getBlockSelectionStarts();
     for (int i = 0; i < result.length; i++) {
@@ -150,7 +149,7 @@ class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  @Nonnull
+  
   public int[] getBlockSelectionEnds() {
     int[] result = myHostModel.getBlockSelectionEnds();
     for (int i = 0; i < result.length; i++) {

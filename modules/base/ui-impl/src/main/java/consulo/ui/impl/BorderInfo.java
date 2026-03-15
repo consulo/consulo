@@ -19,8 +19,7 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
 * @author VISTALL
@@ -32,7 +31,7 @@ public class BorderInfo {
   private ColorValue myColorValue;
   private int myWidth;
 
-  public BorderInfo(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
+  public BorderInfo(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
     myBorderPosition = borderPosition;
     myBorderStyle = borderStyle;
     myColorValue = colorValue;

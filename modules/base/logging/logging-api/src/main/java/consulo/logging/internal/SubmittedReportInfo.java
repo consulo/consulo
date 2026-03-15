@@ -15,7 +15,7 @@
  */
 package consulo.logging.internal;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Simple bean representing error submission status.

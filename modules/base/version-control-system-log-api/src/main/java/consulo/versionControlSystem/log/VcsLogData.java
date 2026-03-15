@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,15 +27,15 @@ import java.util.Set;
  * @since 21/01/2023
  */
 public interface VcsLogData extends Disposable, VcsLogDataProvider {
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   Map<VirtualFile, VcsUser> getCurrentUser();
 
-  @Nonnull
+  
   Set<VcsUser> getAllUsers();
 
-  @Nonnull
-  VcsLogProvider getLogProvider(@Nonnull VirtualFile root);
+  
+  VcsLogProvider getLogProvider(VirtualFile root);
 }

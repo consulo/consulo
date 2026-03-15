@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringEscapeUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.table.TableCellEditor;
 import java.awt.datatransfer.DataFlavor;
@@ -99,7 +98,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
                 return environmentVariable.getDescription();
             }
 
-            @Nonnull
+            
             @Override
             public TableCellEditor getEditor(EnvironmentVariable variable) {
                 StringWithNewLinesCellEditor editor = new StringWithNewLinesCellEditor();
@@ -140,13 +139,13 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         return element.getName().isEmpty() && element.getValue().isEmpty();
     }
 
-    @Nonnull
+    
     @Override
     protected AnAction[] createExtraActions() {
         AnAction copyButton = new AnAction(CodeEditorLocalize.actionCopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 stopEditing();
                 StringBuilder sb = new StringBuilder();
                 List<EnvironmentVariable> variables = getSelection();
@@ -164,7 +163,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(!getSelection().isEmpty());
             }
         };
@@ -175,7 +174,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 removeSelected();
                 stopEditing();
                 String content = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
@@ -217,7 +216,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         return !selection.getIsPredefined();
     }
 
-    @Nonnull
+    
     public static Map<String, String> parseEnvsFromText(String content) {
         Map<String, String> result = new LinkedHashMap<>();
         if (content != null && content.contains("=")) {

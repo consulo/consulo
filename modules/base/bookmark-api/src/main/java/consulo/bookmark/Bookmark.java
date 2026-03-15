@@ -21,8 +21,7 @@ import consulo.navigation.Navigatable;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,10 +31,10 @@ public interface Bookmark extends Navigatable {
   @Nullable
   Document getDocument();
 
-  @Nonnull
+  
   VirtualFile getFile();
 
-  @Nonnull
+  
   @Deprecated(forRemoval = true)
   default Image getIcon() {
     return getIcon(true);
@@ -45,7 +44,7 @@ public interface Bookmark extends Navigatable {
 
   char getMnemonic();
 
-  @Nonnull
+  
   Image getIcon(boolean gutter);
 
   boolean isValid();
@@ -53,6 +52,6 @@ public interface Bookmark extends Navigatable {
   int getLine();
 
   @RequiredReadAction
-  @Nonnull
+  
   String getQualifiedName();
 }

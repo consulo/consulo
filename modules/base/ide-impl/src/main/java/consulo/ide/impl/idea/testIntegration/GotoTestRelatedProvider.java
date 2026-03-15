@@ -22,7 +22,6 @@ import consulo.language.navigation.GotoRelatedProvider;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +31,9 @@ import java.util.List;
  */
 @ExtensionImpl
 public class GotoTestRelatedProvider extends GotoRelatedProvider {
-  @Nonnull
+  
   @Override
-  public List<? extends GotoRelatedItem> getItems(@Nonnull DataContext context) {
+  public List<? extends GotoRelatedItem> getItems(DataContext context) {
     PsiFile file = context.getData(PsiFile.KEY);
     List<PsiElement> result;
     boolean isTest = TestFinderHelper.isTest(file);

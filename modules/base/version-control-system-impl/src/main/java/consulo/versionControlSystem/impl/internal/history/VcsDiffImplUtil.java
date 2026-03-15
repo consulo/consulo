@@ -30,7 +30,6 @@ import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -40,11 +39,11 @@ import static consulo.diff.internal.DiffUserDataKeysEx.VCS_DIFF_RIGHT_CONTENT_TI
 public class VcsDiffImplUtil {
 
     @RequiredUIAccess
-    public static void showDiffFor(@Nonnull Project project,
-                                   @Nonnull Collection<Change> changes,
-                                   @Nonnull String revNumTitle1,
-                                   @Nonnull String revNumTitle2,
-                                   @Nonnull FilePath filePath) {
+    public static void showDiffFor(Project project,
+                                   Collection<Change> changes,
+                                   String revNumTitle1,
+                                   String revNumTitle2,
+                                   FilePath filePath) {
         if (filePath.isDirectory()) {
             showChangesDialog(project, getDialogTitle(filePath, revNumTitle1, revNumTitle2), new ArrayList<>(changes));
         }
@@ -57,9 +56,9 @@ public class VcsDiffImplUtil {
                 revTitlesMap.put(VCS_DIFF_LEFT_CONTENT_TITLE, revNumTitle1);
                 revTitlesMap.put(VCS_DIFF_RIGHT_CONTENT_TITLE, revNumTitle2);
                 ShowDiffContext showDiffContext = new ShowDiffContext() {
-                    @Nonnull
+                    
                     @Override
-                    public Map<Key, Object> getChangeContext(@Nonnull Change change) {
+                    public Map<Key, Object> getChangeContext(Change change) {
                         return revTitlesMap;
                     }
                 };
@@ -68,20 +67,20 @@ public class VcsDiffImplUtil {
         }
     }
 
-    @Nonnull
-    private static String getDialogTitle(@Nonnull FilePath filePath, @Nonnull String revNumTitle1,
-                                         @Nonnull String revNumTitle2) {
+    
+    private static String getDialogTitle(FilePath filePath, String revNumTitle1,
+                                         String revNumTitle2) {
         return String.format("Difference between %s and %s versions in %s", revNumTitle1, revNumTitle2, filePath.getName());
     }
 
-    @Nonnull
-    public static String getRevisionTitle(@Nonnull String revision, boolean localMark) {
+    
+    public static String getRevisionTitle(String revision, boolean localMark) {
         return revision +
             (localMark ? " (" + VcsLocalize.diffTitleLocal().get() + ")" : "");
     }
 
     @RequiredUIAccess
-    public static void showChangesDialog(@Nonnull Project project, @Nonnull String title, @Nonnull List<Change> changes) {
+    public static void showChangesDialog(Project project, String title, List<Change> changes) {
         DialogBuilder dialogBuilder = new DialogBuilder(project);
 
         dialogBuilder.setTitle(title);

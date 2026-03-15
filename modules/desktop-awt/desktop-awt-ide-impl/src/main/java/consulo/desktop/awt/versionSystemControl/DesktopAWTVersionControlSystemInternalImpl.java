@@ -28,7 +28,6 @@ import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.internal.VersionControlSystemInternal;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
@@ -42,7 +41,7 @@ import java.util.Collection;
 @Singleton
 public class DesktopAWTVersionControlSystemInternalImpl implements VersionControlSystemInternal {
     @Override
-    public String getHtmlWithFonts(@Nonnull String input, int style, @Nonnull Font baseFont) {
+    public String getHtmlWithFonts(String input, int style, Font baseFont) {
         int start = baseFont.canDisplayUpTo(input);
         if (start == -1) {
             return input;
@@ -81,11 +80,11 @@ public class DesktopAWTVersionControlSystemInternalImpl implements VersionContro
     }
 
     @Override
-    public void showDiffFor(@Nonnull Project project,
-                            @Nonnull Collection<Change> changes,
-                            @Nonnull String head,
-                            @Nonnull String compare,
-                            @Nonnull VirtualFile file) {
+    public void showDiffFor(Project project,
+                            Collection<Change> changes,
+                            String head,
+                            String compare,
+                            VirtualFile file) {
         VcsDiffImplUtil.showDiffFor(
             project,
             changes,

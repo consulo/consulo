@@ -31,7 +31,6 @@ import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.virtualFileSystem.ContentRevisionVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -45,7 +44,7 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
     Change[] changes = e.getRequiredData(VcsDataKeys.SELECTED_CHANGES);
     for (Change change: changes) {
@@ -58,7 +57,7 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     Change[] changes = e.getData(VcsDataKeys.SELECTED_CHANGES);
     boolean isModalContext = Objects.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT), Boolean.TRUE);

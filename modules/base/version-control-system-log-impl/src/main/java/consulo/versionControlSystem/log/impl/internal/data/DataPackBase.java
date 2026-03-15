@@ -17,29 +17,28 @@ package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.log.VcsLogProvider;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
 class DataPackBase {
-  @Nonnull
+  
   protected final Map<VirtualFile, VcsLogProvider> myLogProviders;
-  @Nonnull
+  
   protected final RefsModel myRefsModel;
   protected final boolean myIsFull;
 
-  DataPackBase(@Nonnull Map<VirtualFile, VcsLogProvider> providers, @Nonnull RefsModel refsModel, boolean isFull) {
+  DataPackBase(Map<VirtualFile, VcsLogProvider> providers, RefsModel refsModel, boolean isFull) {
     myLogProviders = providers;
     myRefsModel = refsModel;
     myIsFull = isFull;
   }
 
-  @Nonnull
+  
   public Map<VirtualFile, VcsLogProvider> getLogProviders() {
     return myLogProviders;
   }
 
-  @Nonnull
+  
   public RefsModel getRefsModel() {
     return myRefsModel;
   }

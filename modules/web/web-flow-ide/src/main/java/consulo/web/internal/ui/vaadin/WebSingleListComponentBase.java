@@ -28,8 +28,7 @@ import consulo.ui.model.MutableListModelListener;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -53,19 +52,19 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
     if (myModel instanceof MutableListModel mutableListModel) {
       mutableListModel.adddListener(new MutableListModelListener() {
         @Override
-        public void itemAdded(@Nonnull Object item) {
+        public void itemAdded(Object item) {
           component.setItems(ContainerUtil.collect(model.iterator()));
         }
 
         @Override
-        public void itemRemoved(@Nonnull Object item) {
+        public void itemRemoved(Object item) {
           component.setItems(ContainerUtil.collect(model.iterator()));
         }
       });
     }
   }
 
-  @Nonnull
+  
   //@Override
   public ListModel<V> getListModel() {
     return myModel;

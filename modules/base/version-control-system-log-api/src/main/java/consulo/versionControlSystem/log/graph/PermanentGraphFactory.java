@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log.graph;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -29,8 +28,8 @@ import java.util.Set;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface PermanentGraphFactory {
     <CommitId> PermanentGraph<CommitId> newInstance(
-        @Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
-        @Nonnull GraphColorManager<CommitId> graphColorManager,
-        @Nonnull Set<CommitId> branchesCommitId
+        List<? extends GraphCommit<CommitId>> graphCommits,
+        GraphColorManager<CommitId> graphColorManager,
+        Set<CommitId> branchesCommitId
     );
 }

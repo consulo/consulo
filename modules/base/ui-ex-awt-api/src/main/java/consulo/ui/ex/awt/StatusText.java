@@ -9,8 +9,7 @@ import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,17 +34,17 @@ public abstract class StatusText {
     @Nullable
     private Component myOwner;
     private Component myMouseTarget;
-    @Nonnull
+    
     private final MouseMotionListener myMouseMotionListener;
-    @Nonnull
+    
     private final ClickListener myClickListener;
 
     private boolean myIsDefaultText;
 
     private String myText = "";
-    @Nonnull
+    
     protected final SimpleColoredComponent myComponent = new SimpleColoredComponent();
-    @Nonnull
+    
     private final SimpleColoredComponent mySecondaryComponent = new SimpleColoredComponent();
     private final List<ActionListener> myClickListeners = Lists.newLockFreeCopyOnWriteList();
     private final List<ActionListener> mySecondaryListeners = Lists.newLockFreeCopyOnWriteList();
@@ -62,7 +61,7 @@ public abstract class StatusText {
     public StatusText() {
         myClickListener = new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 if (e.getButton() == MouseEvent.BUTTON1 && clickCount == 1) {
                     ActionListener actionListener = findActionListenerAt(e.getPoint());
                     if (actionListener != null) {
@@ -107,7 +106,7 @@ public abstract class StatusText {
         return myFontSet;
     }
 
-    public void setFont(@Nonnull Font font) {
+    public void setFont(Font font) {
         myComponent.setFont(font);
         mySecondaryComponent.setFont(font);
         myFontSet = true;
@@ -136,8 +135,8 @@ public abstract class StatusText {
 
     @Nullable
     private static ActionListener findListener(
-        @Nonnull SimpleColoredComponent component,
-        @Nonnull List<? extends ActionListener> listeners,
+        SimpleColoredComponent component,
+        List<? extends ActionListener> listeners,
         int xCoord
     ) {
         int index = component.findFragmentAt(xCoord);
@@ -186,16 +185,16 @@ public abstract class StatusText {
         return this;
     }
 
-    @Nonnull
+    
     public String getText() {
         return myText;
     }
 
-    public StatusText setText(@Nonnull LocalizeValue text) {
+    public StatusText setText(LocalizeValue text) {
         return setText(text, DEFAULT_ATTRIBUTES);
     }
 
-    public StatusText setText(@Nonnull LocalizeValue text, SimpleTextAttributes attrs) {
+    public StatusText setText(LocalizeValue text, SimpleTextAttributes attrs) {
         return clear().appendText(text, attrs);
     }
 
@@ -230,15 +229,15 @@ public abstract class StatusText {
         }
     }
 
-    public StatusText appendText(@Nonnull LocalizeValue text) {
+    public StatusText appendText(LocalizeValue text) {
         return appendText(text, DEFAULT_ATTRIBUTES);
     }
 
-    public StatusText appendText(@Nonnull LocalizeValue text, SimpleTextAttributes attrs) {
+    public StatusText appendText(LocalizeValue text, SimpleTextAttributes attrs) {
         return appendText(text, attrs, null);
     }
 
-    public StatusText appendText(@Nonnull LocalizeValue text, SimpleTextAttributes attrs, ActionListener listener) {
+    public StatusText appendText(LocalizeValue text, SimpleTextAttributes attrs, ActionListener listener) {
         if (myIsDefaultText) {
             clear();
             myIsDefaultText = false;
@@ -278,8 +277,8 @@ public abstract class StatusText {
         myVerticalFlow = isVerticalFlow;
     }
 
-    @Nonnull
-    public StatusText appendSecondaryText(@Nonnull LocalizeValue text, @Nonnull SimpleTextAttributes attrs, @Nullable ActionListener listener) {
+    
+    public StatusText appendSecondaryText(LocalizeValue text, SimpleTextAttributes attrs, @Nullable ActionListener listener) {
         mySecondaryComponent.append(text, attrs);
         mySecondaryListeners.add(listener);
         if (listener != null) {
@@ -291,8 +290,8 @@ public abstract class StatusText {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
-    public StatusText appendSecondaryText(@Nonnull String text, @Nonnull SimpleTextAttributes attrs, @Nullable ActionListener listener) {
+    
+    public StatusText appendSecondaryText(String text, SimpleTextAttributes attrs, @Nullable ActionListener listener) {
         return appendSecondaryText(LocalizeValue.of(text), attrs, listener);
     }
 
@@ -329,7 +328,7 @@ public abstract class StatusText {
         viewport.repaint(textBoundsInViewport);
     }
 
-    private void doPaintStatusText(@Nonnull Graphics g, @Nonnull Rectangle bounds) {
+    private void doPaintStatusText(Graphics g, Rectangle bounds) {
         if (!hasSecondaryText()) {
             paintComponentInBounds(myComponent, g, bounds);
         }
@@ -345,8 +344,8 @@ public abstract class StatusText {
         }
     }
 
-    @Nonnull
-    protected Rectangle adjustComponentBounds(@Nonnull JComponent component, @Nonnull Rectangle bounds) {
+    
+    protected Rectangle adjustComponentBounds(JComponent component, Rectangle bounds) {
         Dimension size = component.getPreferredSize();
 
         if (myVerticalFlow) {
@@ -363,19 +362,19 @@ public abstract class StatusText {
         return mySecondaryComponent.getCharSequence(false).length() > 0;
     }
 
-    private static void paintComponentInBounds(@Nonnull SimpleColoredComponent component, @Nonnull Graphics g, @Nonnull Rectangle bounds) {
+    private static void paintComponentInBounds(SimpleColoredComponent component, Graphics g, Rectangle bounds) {
         Graphics2D g2 = (Graphics2D) g.create(bounds.x, bounds.y, bounds.width, bounds.height);
         component.setBounds(0, 0, bounds.width, bounds.height);
         component.paint(g2);
         g2.dispose();
     }
 
-    @Nonnull
+    
     public SimpleColoredComponent getComponent() {
         return myComponent;
     }
 
-    @Nonnull
+    
     public SimpleColoredComponent getSecondaryComponent() {
         return mySecondaryComponent;
     }

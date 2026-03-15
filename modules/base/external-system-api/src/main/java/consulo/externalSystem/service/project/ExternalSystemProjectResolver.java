@@ -21,8 +21,7 @@ import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines common interface for resolving external system project..
@@ -51,11 +50,11 @@ public interface ExternalSystemProjectResolver<S extends ExternalSystemExecution
      * @throws IllegalStateException    if it's not possible to resolve target project info
      */
     @Nullable
-    DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
-                                             @Nonnull String projectPath,
+    DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
+                                             String projectPath,
                                              boolean isPreviewMode,
                                              @Nullable S settings,
-                                             @Nonnull ExternalSystemTaskNotificationListener listener)
+                                             ExternalSystemTaskNotificationListener listener)
         throws ExternalSystemException, IllegalArgumentException, IllegalStateException;
 
     /**
@@ -63,6 +62,6 @@ public interface ExternalSystemProjectResolver<S extends ExternalSystemExecution
      * @param listener callback to be notified about the cancellation
      * @return true if the task execution was successfully stopped, false otherwise or if target external system does not support the task cancellation
      */
-    boolean cancelTask(@Nonnull ExternalSystemTaskId taskId, @Nonnull ExternalSystemTaskNotificationListener listener);
+    boolean cancelTask(ExternalSystemTaskId taskId, ExternalSystemTaskNotificationListener listener);
 }
 

@@ -23,7 +23,6 @@ import consulo.language.psi.search.TodoItem;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.PresentationData;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,20 +31,20 @@ import java.util.Collections;
 public class SingleFileToDoNode extends BaseToDoNode<PsiFile> {
   private final TodoFileNode myFileNode;
 
-  public SingleFileToDoNode(Project project, @Nonnull PsiFile value, TodoTreeBuilder builder) {
+  public SingleFileToDoNode(Project project, PsiFile value, TodoTreeBuilder builder) {
     super(project, value, builder);
     myFileNode = new TodoFileNode(getProject(), value, myBuilder, true);
   }
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     return new ArrayList<>(Collections.singleton(myFileNode));
   }
 
   @Override
-  public void update(@Nonnull PresentationData presentation) {
+  public void update(PresentationData presentation) {
   }
 
   @Override

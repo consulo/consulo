@@ -31,7 +31,6 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_CLOSE_ALL_EDITORS)
 public class CloseAllEditorsAction extends AnAction implements DumbAware {
@@ -65,7 +64,7 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
         LocalizeValue text = editorWindow != null && editorWindow.inSplitter()

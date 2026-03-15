@@ -19,16 +19,15 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface UseScopeEnlarger {
-  @Nonnull
-  static SearchScope getUseScope(@Nonnull PsiElement element) {
+  
+  static SearchScope getUseScope(PsiElement element) {
     Project project = element.getProject();
     SearchScope scope = element.getUseScope();
     for (UseScopeEnlarger enlarger : project.getExtensionList(UseScopeEnlarger.class)) {
@@ -41,5 +40,5 @@ public interface UseScopeEnlarger {
   }
 
   @Nullable
-  SearchScope getAdditionalUseScope(@Nonnull PsiElement element);
+  SearchScope getAdditionalUseScope(PsiElement element);
 }

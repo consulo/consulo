@@ -23,7 +23,6 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 
 public class RevertSelectedChangesAction extends RevertCommittedStuffAbstractAction {
     @Override
@@ -35,7 +34,7 @@ public class RevertSelectedChangesAction extends RevertCommittedStuffAbstractAct
         presentation.setEnabled(allSelectedChangeListsAreRevertable(e));
     }
 
-    @Nonnull
+    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.EDT;

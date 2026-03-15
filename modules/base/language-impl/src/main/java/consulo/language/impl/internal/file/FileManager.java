@@ -23,8 +23,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -32,41 +31,41 @@ import java.util.List;
 public interface FileManager extends Disposable {
     @Nullable
     @RequiredReadAction
-    PsiFile findFile(@Nonnull VirtualFile vFile);
+    PsiFile findFile(VirtualFile vFile);
 
     @Nullable
     @RequiredReadAction
-    PsiDirectory findDirectory(@Nonnull VirtualFile vFile);
+    PsiDirectory findDirectory(VirtualFile vFile);
 
     @RequiredWriteAction
-    default void reloadFromDisk(@Nonnull PsiFile file) {
+    default void reloadFromDisk(PsiFile file) {
         reloadFromDisk(file, false);
     }
 
-    default void reloadFromDisk(@Nonnull PsiFile file, boolean ignoreDocument) {
+    default void reloadFromDisk(PsiFile file, boolean ignoreDocument) {
     }
 
     @Nullable
     @RequiredReadAction
-    PsiFile getCachedPsiFile(@Nonnull VirtualFile vFile);
+    PsiFile getCachedPsiFile(VirtualFile vFile);
 
     @TestOnly
     void cleanupForNextTest();
 
     @RequiredReadAction
-    FileViewProvider findViewProvider(@Nonnull VirtualFile file);
+    FileViewProvider findViewProvider(VirtualFile file);
 
     @RequiredReadAction
-    FileViewProvider findCachedViewProvider(@Nonnull VirtualFile file);
+    FileViewProvider findCachedViewProvider(VirtualFile file);
 
     @RequiredReadAction
-    void setViewProvider(@Nonnull VirtualFile virtualFile, FileViewProvider fileViewProvider);
+    void setViewProvider(VirtualFile virtualFile, FileViewProvider fileViewProvider);
 
-    @Nonnull
+    
     List<PsiFile> getAllCachedFiles();
 
-    @Nonnull
-    FileViewProvider createFileViewProvider(@Nonnull VirtualFile file, boolean physical);
+    
+    FileViewProvider createFileViewProvider(VirtualFile file, boolean physical);
 
     default void processFileTypesChanged() {
     }
@@ -74,7 +73,7 @@ public interface FileManager extends Disposable {
     default void markInitialized() {
     }
 
-    default PsiDirectory getCachedDirectory(@Nonnull VirtualFile vFile) {
+    default PsiDirectory getCachedDirectory(VirtualFile vFile) {
         return null;
     }
 
@@ -82,15 +81,15 @@ public interface FileManager extends Disposable {
     }
 
     @RequiredReadAction
-    default PsiFile getCachedPsiFileInner(@Nonnull VirtualFile file) {
+    default PsiFile getCachedPsiFileInner(VirtualFile file) {
         return null;
     }
 
     @RequiredWriteAction
-    default void forceReload(@Nonnull VirtualFile vFile) {
+    default void forceReload(VirtualFile vFile) {
     }
 
-    default void removeFilesAndDirsRecursively(@Nonnull VirtualFile vFile) {
+    default void removeFilesAndDirsRecursively(VirtualFile vFile) {
     }
 
     default boolean isInitialized() {

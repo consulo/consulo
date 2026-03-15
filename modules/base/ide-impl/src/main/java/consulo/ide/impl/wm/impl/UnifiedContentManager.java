@@ -25,8 +25,7 @@ import consulo.ui.Component;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 /**
@@ -36,11 +35,11 @@ import jakarta.annotation.Nullable;
 public class UnifiedContentManager extends ContentManagerBase {
   private Component myComponent;
 
-  public UnifiedContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
+  public UnifiedContentManager(ContentUI contentUI, boolean canCloseContents, Project project) {
     super(contentUI, canCloseContents, project);
   }
 
-  @Nonnull
+  
   @Override
   protected AsyncResult<Void> requestFocusForComponent() {
     return getFocusManager().requestFocus(myComponent, true);
@@ -51,14 +50,14 @@ public class UnifiedContentManager extends ContentManagerBase {
     return false; //TODO [VISTALL]
   }
 
-  @Nonnull
+  
   @Override
   public AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced) {
     return AsyncResult.resolved();  //TODO [VISTALL]
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public Component getUIComponent() {
     if (myComponent == null) {

@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * RefactoringActionHandler is an implementation of IDEA refactoring,
@@ -45,7 +44,7 @@ public interface RefactoringActionHandler {
    *                    (it is recommended to pass DataManager.getDataContext() instead of null)
    */
   @RequiredUIAccess
-  void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext);
+  void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext);
 
   /**
    * Invokes refactoring action from elsewhere (not from editor). Some refactorings
@@ -57,5 +56,5 @@ public interface RefactoringActionHandler {
    *                    (it is recommended to pass DataManager.getDataContext() instead of null)
    */
   @RequiredUIAccess
-  void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext);
+  void invoke(Project project, PsiElement[] elements, DataContext dataContext);
 }

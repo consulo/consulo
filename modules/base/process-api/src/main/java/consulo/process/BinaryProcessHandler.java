@@ -15,13 +15,12 @@
  */
 package consulo.process;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 04/06/2023
  */
 public interface BinaryProcessHandler extends ProcessHandler {
-  @Nonnull
+  
   byte[] getOutput();
 }

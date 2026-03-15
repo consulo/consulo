@@ -22,8 +22,7 @@ import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.http.HttpMethod;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -50,7 +49,7 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
       return response;
     }
 
-    public static JsonResponse asError(@Nonnull String message) {
+    public static JsonResponse asError(String message) {
       JsonResponse response = new JsonResponse();
       response.success = false;
       response.message = message;
@@ -60,7 +59,7 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
 
   private String myApiUrl;
 
-  protected JsonBaseRequestHandler(@Nonnull String apiUrl) {
+  protected JsonBaseRequestHandler(String apiUrl) {
     myApiUrl = "/api/" + apiUrl;
   }
 
@@ -69,18 +68,18 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
     return getMethod() == request.method() && myApiUrl.equals(request.path());
   }
 
-  @Nonnull
-  protected HttpResponse writeResponse(@Nonnull Object responseObject, @Nonnull HttpRequest request) throws IOException {
+  
+  protected HttpResponse writeResponse(Object responseObject, HttpRequest request) throws IOException {
     String jsonResponse = JsonService.getInstance().toJson(responseObject);
 
     return HttpResponse.ok("application/json; charset=utf-8", jsonResponse.getBytes(StandardCharsets.UTF_8));
   }
 
-  @Nonnull
+  
   public String getApiUrl() {
     return myApiUrl;
   }
 
-  @Nonnull
+  
   protected abstract HttpMethod getMethod();
 }

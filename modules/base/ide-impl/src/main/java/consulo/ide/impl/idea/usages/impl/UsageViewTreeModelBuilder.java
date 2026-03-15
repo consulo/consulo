@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewPresentation;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -34,7 +33,7 @@ public class UsageViewTreeModelBuilder extends DefaultTreeModel {
   private UsageTargetNode[] myTargetNodes;
   private final String myTargetsNodeText;
 
-  public UsageViewTreeModelBuilder(@Nonnull UsageViewPresentation presentation, @Nonnull UsageTarget[] targets) {
+  public UsageViewTreeModelBuilder(UsageViewPresentation presentation, UsageTarget[] targets) {
     super(GroupNode.createRoot());
     myRootNode = (GroupNode.Root)root;
     myTargetsNodeText = presentation.getTargetsNodeText();
@@ -74,9 +73,9 @@ public class UsageViewTreeModelBuilder extends DefaultTreeModel {
       return false;
     }
 
-    @Nonnull
+    
     @Override
-    protected String getText(@Nonnull UsageView view) {
+    protected String getText(UsageView view) {
       return getUserObject().toString();
     }
   }

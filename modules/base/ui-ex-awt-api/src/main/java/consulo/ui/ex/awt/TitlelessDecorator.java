@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,13 +32,13 @@ public interface TitlelessDecorator {
     String MAIN_WINDOW = "MainWindow";
     String WELCOME_WINDOW = "WelcomeWindow";
 
-    @Nonnull
-    static TitlelessDecorator of(@Nonnull JRootPane pane) {
+    
+    static TitlelessDecorator of(JRootPane pane) {
         return of(pane, "");
     }
 
-    @Nonnull
-    static TitlelessDecorator of(@Nonnull JRootPane pane, @Nonnull String windowId) {
+    
+    static TitlelessDecorator of(JRootPane pane, String windowId) {
         PlatformOperatingSystem os = Platform.current().os();
         if (os.isMac()) {
             return new MacFrameDecorator(pane);
@@ -78,7 +77,7 @@ public interface TitlelessDecorator {
 
         }
 
-        @Nonnull
+        
         @Override
         public JComponent modifyRightComponent(JComponent rootPanel, JComponent rightComponent) {
             JPanel panel = new JPanel(new BorderLayout());
@@ -170,7 +169,7 @@ public interface TitlelessDecorator {
 
     void makeLeftComponentLower(JComponent component);
 
-    @Nonnull
+    
     default JComponent modifyRightComponent(JComponent parent, JComponent rightComponent) {
         return rightComponent;
     }

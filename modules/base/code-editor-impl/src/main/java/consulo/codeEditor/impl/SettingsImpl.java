@@ -28,8 +28,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +103,7 @@ public class SettingsImpl implements EditorSettings {
         this(null, null, EditorKind.MAIN_EDITOR);
     }
 
-    public SettingsImpl(@Nullable EditorEx editor, @Nullable Project project, @Nonnull EditorKind kind) {
+    public SettingsImpl(@Nullable EditorEx editor, @Nullable Project project, EditorKind kind) {
         myEditor = editor;
         myLanguage = editor != null && project != null ? getDocumentLanguage(project, editor.getDocument()) : null;
         if (EditorKind.CONSOLE.equals(kind)) {
@@ -228,7 +227,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Nullable
     @RequiredReadAction
-    private static Language getDocumentLanguage(@Nullable Project project, @Nonnull Document document) {
+    private static Language getDocumentLanguage(@Nullable Project project, Document document) {
         if (project != null) {
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
             PsiFile file = documentManager.getPsiFile(document);
@@ -262,7 +261,7 @@ public class SettingsImpl implements EditorSettings {
         fireEditorRefresh();
     }
 
-    @Nonnull
+    
     @Override
     public List<Integer> getSoftMargins() {
         if (mySoftMargins != null) {

@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.util.PopupUtil;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

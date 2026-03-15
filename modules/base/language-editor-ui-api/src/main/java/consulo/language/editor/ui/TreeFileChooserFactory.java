@@ -22,8 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -35,20 +34,20 @@ public abstract class TreeFileChooserFactory {
     return project.getInstance(TreeFileChooserFactory.class);
   }
 
-  @Nonnull
-  public abstract TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable Predicate<PsiFile> filter);
+  
+  public abstract TreeFileChooser createFileChooser(String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable Predicate<PsiFile> filter);
 
 
-  @Nonnull
-  public abstract TreeFileChooser createFileChooser(@Nonnull String title,
+  
+  public abstract TreeFileChooser createFileChooser(String title,
                                                     @Nullable PsiFile initialFile,
                                                     @Nullable FileType fileType,
                                                     @Nullable Predicate<PsiFile> filter,
                                                     boolean disableStructureProviders);
 
 
-  @Nonnull
-  public abstract TreeFileChooser createFileChooser(@Nonnull String title,
+  
+  public abstract TreeFileChooser createFileChooser(String title,
                                                     @Nullable PsiFile initialFile,
                                                     @Nullable FileType fileType,
                                                     @Nullable Predicate<PsiFile> filter,

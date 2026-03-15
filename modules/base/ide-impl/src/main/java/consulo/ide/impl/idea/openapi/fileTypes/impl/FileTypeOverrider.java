@@ -10,8 +10,7 @@ import consulo.language.internal.FileTypeManagerEx;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows to override the file type for a file. Overrides take precedence over all other ways of determining the type of the file
@@ -27,5 +26,5 @@ public interface FileTypeOverrider {
     ExtensionPointName<FileTypeOverrider> EP_NAME = ExtensionPointName.create(FileTypeOverrider.class);
 
     @Nullable
-    FileType getOverriddenFileType(@Nonnull VirtualFile file);
+    FileType getOverriddenFileType(VirtualFile file);
 }

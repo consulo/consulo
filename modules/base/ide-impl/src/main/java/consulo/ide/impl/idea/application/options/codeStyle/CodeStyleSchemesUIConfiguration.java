@@ -26,8 +26,7 @@ import consulo.ide.ServiceManager;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.net.MalformedURLException;
@@ -77,7 +76,7 @@ public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent
       return null;
     }
 
-    public static void setRecentImportFile(@Nonnull VirtualFile recentFile) {
+    public static void setRecentImportFile(VirtualFile recentFile) {
       CodeStyleSchemesUIConfiguration configuration = getInstance();
       if (configuration != null) {
         URL url = VirtualFileUtil.convertToURL(recentFile.getUrl());

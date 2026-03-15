@@ -31,7 +31,6 @@ import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Modifier;
@@ -49,7 +48,7 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
     myBuddy = new ByteBuddy().with(ClassFileVersion.JAVA_V11).with(TypeValidation.DISABLED);
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
   public <T> T create(Class<T> superClass,

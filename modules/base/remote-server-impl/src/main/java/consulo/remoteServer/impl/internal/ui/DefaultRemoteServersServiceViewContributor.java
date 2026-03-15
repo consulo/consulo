@@ -19,7 +19,6 @@ import consulo.remoteServer.runtime.ServerConnection;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -28,17 +27,17 @@ public class DefaultRemoteServersServiceViewContributor extends RemoteServersSer
     private final ServiceViewDescriptor myContributorDescriptor = new DefaultRemoteServersServiceViewDescriptor();
 
     @Override
-    public @Nonnull ServiceViewDescriptor getViewDescriptor(@Nonnull Project project) {
+    public ServiceViewDescriptor getViewDescriptor(Project project) {
         return myContributorDescriptor;
     }
 
     @Override
-    public boolean accept(@Nonnull RemoteServer server) {
+    public boolean accept(RemoteServer server) {
         return isDefaultRemoteServer(server);
     }
 
     @Override
-    public void selectLog(@Nonnull AbstractTreeNode deploymentNode, @Nonnull String logName) {
+    public void selectLog(AbstractTreeNode deploymentNode, String logName) {
         ServersTreeStructure.DeploymentNodeImpl node = ObjectUtil.tryCast(deploymentNode, ServersTreeStructure.DeploymentNodeImpl.class);
         if (node == null) {
             return;
@@ -64,7 +63,7 @@ public class DefaultRemoteServersServiceViewContributor extends RemoteServersSer
     }
 
     @Override
-    public @Nonnull ActionGroups getActionGroups() {
+    public ActionGroups getActionGroups() {
         return RemoteServersServiceViewContributor.ActionGroups.SHARED_ACTION_GROUPS;
     }
 
@@ -101,18 +100,18 @@ public class DefaultRemoteServersServiceViewContributor extends RemoteServersSer
         }
 
         @Override
-        public @Nonnull String getToolWindowId() {
+        public String getToolWindowId() {
             return getId();
         }
 
         @Override
-        @Nonnull
+        
         public Image getToolWindowIcon() {
             return PlatformIconGroup.toolwindowsToolwindowservices();
         }
 
         @Override
-        public @Nonnull String getStripeTitle() {
+        public String getStripeTitle() {
             String title = getToolWindowId();
             return title;
         }

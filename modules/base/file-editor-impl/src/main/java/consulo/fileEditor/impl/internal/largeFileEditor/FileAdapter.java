@@ -6,7 +6,6 @@ import consulo.logging.Logger;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.EOFException;
 import java.io.FileNotFoundException;
@@ -30,7 +29,7 @@ public final class FileAdapter {
     private volatile long cashedFileSize = UNDEFINED; // in bytes
 
     @VisibleForTesting
-    public FileAdapter(int pageSize, int maxPageBorderShift, @Nonnull VirtualFile vFile) throws FileNotFoundException {
+    public FileAdapter(int pageSize, int maxPageBorderShift, VirtualFile vFile) throws FileNotFoundException {
         this.pageSize = pageSize;
         this.maxPageBorderShift = maxPageBorderShift;
         this.vFile = vFile;
@@ -110,7 +109,7 @@ public final class FileAdapter {
         return pageSize;
     }
 
-    @Nonnull
+    
     VirtualFile getVirtualFile() {
         return vFile;
     }

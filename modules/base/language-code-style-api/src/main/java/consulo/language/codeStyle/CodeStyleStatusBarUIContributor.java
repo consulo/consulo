@@ -6,8 +6,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface CodeStyleStatusBarUIContributor {
     /**
@@ -16,14 +15,14 @@ public interface CodeStyleStatusBarUIContributor {
      * @param file The current virtual file.
      * @return True if any actions are available, false otherwise.
      */
-    boolean areActionsAvailable(@Nonnull VirtualFile file);
+    boolean areActionsAvailable(VirtualFile file);
 
     /**
      * @param file The current PSI file
      * @return An array of actions available for the given PSI file or {@code null} if no actions are available.
      */
     @Nullable
-    AnAction[] getActions(@Nonnull PsiFile file);
+    AnAction[] getActions(PsiFile file);
 
     /**
      * @return A title used for a group of actions opened from the status bar or {@code null} if no title is shown.
@@ -50,7 +49,7 @@ public interface CodeStyleStatusBarUIContributor {
      */
     @Nullable
     @Deprecated
-    default String getAdvertisementText(@Nonnull PsiFile psiFile) {
+    default String getAdvertisementText(PsiFile psiFile) {
         return null;
     }
 
@@ -61,7 +60,7 @@ public interface CodeStyleStatusBarUIContributor {
      * @return The disable action or null if not available.
      */
     @Nullable
-    AnAction createDisableAction(@Nonnull Project project);
+    AnAction createDisableAction(Project project);
 
     /**
      * Creates an action showing all files related to the code style modification feature.
@@ -70,7 +69,7 @@ public interface CodeStyleStatusBarUIContributor {
      * @return The "Show all" action or {@code null} if not applicable;
      */
     @Nullable
-    default AnAction createShowAllAction(@Nonnull Project project) {
+    default AnAction createShowAllAction(Project project) {
         return null;
     }
 
@@ -86,8 +85,8 @@ public interface CodeStyleStatusBarUIContributor {
      * @param psiFile The currently open {@code PsiFile}.
      * @return A status text to be shown in code style widget for the given {@code PsiFile}
      */
-    @Nonnull
-    default String getStatusText(@Nonnull PsiFile psiFile) {
+    
+    default String getStatusText(PsiFile psiFile) {
         return "*";
     }
 }

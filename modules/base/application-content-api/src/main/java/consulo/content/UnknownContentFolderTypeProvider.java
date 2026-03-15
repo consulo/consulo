@@ -21,7 +21,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,19 +31,19 @@ public class UnknownContentFolderTypeProvider extends ContentFolderTypeProvider 
     super(id);
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Actions.Help;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("Unknown");
   }
 
-  @Nonnull
+  
   @Override
   public ColorValue getGroupColor() {
     return StandardColors.DARK_GRAY;

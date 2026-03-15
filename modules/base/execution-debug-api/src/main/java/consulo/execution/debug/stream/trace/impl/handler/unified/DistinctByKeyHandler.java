@@ -9,7 +9,6 @@ import consulo.execution.debug.stream.wrapper.CallArgument;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.impl.CallArgumentImpl;
 import consulo.execution.debug.stream.wrapper.impl.IntermediateStreamCallImpl;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +65,7 @@ public class DistinctByKeyHandler extends HandlerBase.Intermediate {
         this(callNumber, call, dsl, "apply", 0, dsl.getTypes().ANY(), dsl.getTypes().ANY());
     }
 
-    @Nonnull
+    
     @Override
     public List<VariableDeclaration> additionalVariablesDeclaration() {
         var extractor = dsl.declaration(myExtractorVariable, new TextExpression(myKeyExtractor.getText()), false);
@@ -81,7 +80,7 @@ public class DistinctByKeyHandler extends HandlerBase.Intermediate {
         return variables;
     }
 
-    @Nonnull
+    
     @Override
     public IntermediateStreamCall transformCall(IntermediateStreamCall call) {
         Lambda newKeyExtractor = dsl.lambda("x", context -> {
@@ -108,7 +107,7 @@ public class DistinctByKeyHandler extends HandlerBase.Intermediate {
         return new Expression[0];
     }
 
-    @Nonnull
+    
     @Override
     public CodeBlock prepareResult() {
         var keys2TimesBefore = dsl.map(myKeyType, dsl.getTypes().list(dsl.getTypes().INT()), "keys2Times", getMapArguments());
@@ -167,19 +166,19 @@ public class DistinctByKeyHandler extends HandlerBase.Intermediate {
         });
     }
 
-    @Nonnull
+    
     @Override
     public Expression getResultExpression() {
         return dsl.newArray(dsl.getTypes().ANY(), myPeekHandler.getResultExpression(), new TextExpression(TRANSITIONS_ARRAY_NAME));
     }
 
-    @Nonnull
+    
     @Override
     public List<IntermediateStreamCall> additionalCallsBefore() {
         return myPeekHandler.additionalCallsBefore();
     }
 
-    @Nonnull
+    
     @Override
     public List<IntermediateStreamCall> additionalCallsAfter() {
         var callsAfter = new ArrayList<>(myPeekHandler.additionalCallsAfter());

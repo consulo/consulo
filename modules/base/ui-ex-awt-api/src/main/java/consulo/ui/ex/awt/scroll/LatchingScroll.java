@@ -5,8 +5,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseWheelEvent;
@@ -66,7 +65,7 @@ public final class LatchingScroll {
 
   private static
   @Nullable
-  Component getViewportView(@Nonnull JScrollPane pane) {
+  Component getViewportView(JScrollPane pane) {
     JViewport viewport = pane.getViewport();
     if (viewport != null) {
       return viewport.getView();

@@ -22,28 +22,27 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public class LocalQuickFixOnPsiElementAsIntentionAdapter implements SyntheticIntentionAction {
   private final LocalQuickFixOnPsiElement myFix;
 
-  public LocalQuickFixOnPsiElementAsIntentionAdapter(@Nonnull LocalQuickFixOnPsiElement fix) {
+  public LocalQuickFixOnPsiElementAsIntentionAdapter(LocalQuickFixOnPsiElement fix) {
     myFix = fix;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return myFix.getName();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return myFix.isAvailable();
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     myFix.applyFix();
   }
 

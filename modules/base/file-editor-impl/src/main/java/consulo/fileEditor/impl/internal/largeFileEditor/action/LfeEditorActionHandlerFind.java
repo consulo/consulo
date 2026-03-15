@@ -7,29 +7,28 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.LargeFileEditor;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public final class LfeEditorActionHandlerFind extends LfeBaseEditorActionHandler {
 
     @Override
-    protected void doExecuteInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                  @Nonnull Editor editor,
+    protected void doExecuteInLfe(LargeFileEditor largeFileEditor,
+                                  Editor editor,
                                   @Nullable Caret caret,
                                   DataContext dataContext) {
         largeFileEditor.getSearchManager().onSearchActionHandlerExecuted();
     }
 
     @Override
-    protected boolean isEnabledInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                     @Nonnull Editor editor,
-                                     @Nonnull Caret caret,
+    protected boolean isEnabledInLfe(LargeFileEditor largeFileEditor,
+                                     Editor editor,
+                                     Caret caret,
                                      DataContext dataContext) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_FIND;

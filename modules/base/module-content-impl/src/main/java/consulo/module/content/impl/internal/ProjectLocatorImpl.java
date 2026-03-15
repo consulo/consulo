@@ -22,8 +22,7 @@ import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
 import consulo.project.internal.SingleProjectHolder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -81,7 +80,7 @@ public class ProjectLocatorImpl extends ProjectLocator {
     }
 
     @Override
-    @Nonnull
+    
     public Collection<Project> getProjectsForFile(VirtualFile file) {
         if (file == null) {
             return Collections.emptyList();

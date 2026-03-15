@@ -21,8 +21,7 @@ import consulo.versionControlSystem.change.BinaryContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.RawFileLoader;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,13 +56,13 @@ public class ShelvedBinaryContentRevision implements BinaryContentRevision {
     throw new IllegalStateException();
   }
 
-  @Nonnull
+  
   @Override
   public FilePath getFile() {
     return myPath;
   }
 
-  @Nonnull
+  
   @Override
   public VcsRevisionNumber getRevisionNumber() {
     return new VcsRevisionNumber() {

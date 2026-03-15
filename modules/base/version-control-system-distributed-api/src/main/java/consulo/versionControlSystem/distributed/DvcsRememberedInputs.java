@@ -15,8 +15,7 @@
  */
 package consulo.versionControlSystem.distributed;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class DvcsRememberedInputs {
     public String userName;
   }
 
-  @Nonnull
+  
   public State getState() {
     return myState;
   }
@@ -47,11 +46,11 @@ public class DvcsRememberedInputs {
     myState = state;
   }
 
-  public void addUrl(@Nonnull String url) {
+  public void addUrl(String url) {
     addUrl(url, "");
   }
 
-  public void addUrl(@Nonnull String url, @Nonnull String userName) {
+  public void addUrl(String url, String userName) {
     for (UrlAndUserName visitedUrl : myState.visitedUrls) {
       if (visitedUrl.url.equalsIgnoreCase(url)) {  // don't add multiple entries for a single url
         if (!userName.isEmpty()) {                 // rewrite username, unless no username is specified
@@ -68,7 +67,7 @@ public class DvcsRememberedInputs {
   }
 
   @Nullable
-  public String getUserNameForUrl(@Nonnull String url) {
+  public String getUserNameForUrl(String url) {
     for (UrlAndUserName urlAndUserName : myState.visitedUrls) {
       if (urlAndUserName.url.equalsIgnoreCase(url)) {
         return urlAndUserName.userName;
@@ -77,7 +76,7 @@ public class DvcsRememberedInputs {
     return null;
   }
 
-  @Nonnull
+  
   public List<String> getVisitedUrls() {
     List<String> urls = new ArrayList<>(myState.visitedUrls.size());
     for (UrlAndUserName urlAndUserName : myState.visitedUrls) {

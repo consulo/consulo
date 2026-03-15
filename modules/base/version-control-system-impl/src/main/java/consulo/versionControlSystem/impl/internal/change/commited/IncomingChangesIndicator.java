@@ -27,7 +27,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.commited.CommittedChangesAdapter;
 import consulo.versionControlSystem.change.commited.CommittedChangesListener;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

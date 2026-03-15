@@ -26,8 +26,7 @@ import consulo.project.Project;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author lesya
@@ -37,7 +36,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     private final FormattingDocumentModel myDocumentModel;
     @Nullable
     private final FormattingModel myOriginalFormattingModel;
-    @Nonnull
+    
     private final Document myDocument;
     private final Project myProject;
     private final CodeStyleSettings mySettings;
@@ -47,7 +46,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     @Deprecated
     public DocumentBasedFormattingModel(
         Block rootBlock,
-        @Nonnull Document document,
+        Document document,
         Project project,
         CodeStyleSettings settings,
         FileType fileType,
@@ -63,7 +62,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
         myOriginalFormattingModel = null;
     }
 
-    public DocumentBasedFormattingModel(@Nonnull Block rootBlock, @Nonnull CodeStyleSettings settings, @Nonnull PsiFile file) {
+    public DocumentBasedFormattingModel(Block rootBlock, CodeStyleSettings settings, PsiFile file) {
         this(rootBlock, file.getProject(), settings, file.getFileType(), file);
     }
 
@@ -85,8 +84,8 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     }
 
     public DocumentBasedFormattingModel(
-        @Nonnull FormattingModel originalModel,
-        @Nonnull Document document,
+        FormattingModel originalModel,
+        Document document,
         Project project,
         CodeStyleSettings settings,
         FileType fileType,
@@ -103,13 +102,13 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     }
 
     @Override
-    @Nonnull
+    
     public Block getRootBlock() {
         return myRootBlock;
     }
 
     @Override
-    @Nonnull
+    
     public FormattingDocumentModel getDocumentModel() {
         return myDocumentModel;
     }
@@ -279,7 +278,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
         return mySettings.getIndentOptions(myFileType);
     }
 
-    @Nonnull
+    
     public Document getDocument() {
         return myDocument;
     }

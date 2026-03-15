@@ -24,7 +24,6 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.WritingAccessProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
     myManager = (ChangeListManagerImpl)manager;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<VirtualFile> requestWriting(VirtualFile... files) {
     ChangelistConflictTracker.Options options = myManager.getConflictTracker().getOptions();
@@ -86,7 +85,7 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
   }
 
   @Override
-  public boolean isPotentiallyWritable(@Nonnull VirtualFile file) {
+  public boolean isPotentiallyWritable(VirtualFile file) {
     return true;
   }
 }

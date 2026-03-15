@@ -31,7 +31,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "GotoSuperMethod")
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
@@ -41,7 +40,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
         super(ActionLocalize.actionGotosupermethodText(), ActionLocalize.actionGotosupermethodDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return this;
@@ -49,7 +48,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
         int offset = editor.getCaretModel().getOffset();
@@ -67,7 +66,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         if (Application.get().getExtensionPoint(GotoSuperActionHander.class).hasAnyExtensions()) {
             event.getPresentation().setVisible(true);
             super.update(event);

@@ -27,8 +27,7 @@ import consulo.execution.ui.console.HyperlinkInfoBase;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -145,7 +144,7 @@ public class DiffHyperlink implements Printable {
 
   public class DiffHyperlinkInfo extends HyperlinkInfoBase {
     @Override
-    public void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
+    public void navigate(Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
       DataManager dataManager = DataManager.getInstance();
       DataContext dataContext = hyperlinkLocationPoint != null ? dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent()) : dataManager.getDataContext();
       ViewAssertEqualsDiffAction.openDiff(dataContext, DiffHyperlink.this);

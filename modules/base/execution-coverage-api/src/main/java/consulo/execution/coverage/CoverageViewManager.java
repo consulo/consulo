@@ -21,7 +21,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -84,7 +83,7 @@ public class CoverageViewManager implements PersistentStateComponent<CoverageVie
         }
     }
 
-    public static CoverageViewManager getInstance(@Nonnull Project project) {
+    public static CoverageViewManager getInstance(Project project) {
         return project.getInstance(CoverageViewManager.class);
     }
 

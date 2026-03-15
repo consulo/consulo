@@ -18,19 +18,18 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 import consulo.project.Project;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public abstract class PlaceInProjectStructure {
-  @Nonnull
+  
   public abstract ProjectStructureElement getContainingElement();
 
   @Nullable
   public abstract String getPlacePath();
 
-  @Nonnull
-  public abstract AsyncResult<Void> navigate(@Nonnull Project project);
+  
+  public abstract AsyncResult<Void> navigate(Project project);
 }

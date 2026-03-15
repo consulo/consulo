@@ -1,7 +1,6 @@
 package consulo.language.editor.refactoring.extractMethod;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +14,7 @@ public class SimpleMatch {
   private final Map<String, String> myChangedParameters;
   private String myChangedOutput;
 
-  public SimpleMatch(@Nonnull PsiElement start, @Nonnull PsiElement endElement) {
+  public SimpleMatch(PsiElement start, PsiElement endElement) {
     myStartElement = start;
     myEndElement = endElement;
     myChangedParameters = new HashMap<String, String>();
@@ -33,11 +32,11 @@ public class SimpleMatch {
     return myChangedParameters;
   }
 
-  public void changeParameter(@Nonnull String from, @Nonnull String to) {
+  public void changeParameter(String from, String to) {
     myChangedParameters.put(from, to);
   }
 
-  public void changeOutput(@Nonnull String to) {
+  public void changeOutput(String to) {
     myChangedOutput = to;
   }
 

@@ -24,8 +24,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.event.XDebuggerManagerListener;
 import consulo.execution.debug.stream.ChainStatus;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -38,30 +37,30 @@ public final class StreamDebuggerManager implements XDebuggerManagerListener, Di
     private final ConcurrentHashMap<XDebugSession, TraceDebuggerStateListener> sessionStates = new ConcurrentHashMap<>();
 
     @Inject
-    public StreamDebuggerManager(@Nonnull Project project) {
+    public StreamDebuggerManager(Project project) {
         project.getMessageBus().connect().subscribe(XDebuggerManagerListener.class, this);
     }
 
     @Override
-    public void processStarted(@Nonnull XDebugProcess debugProcess) {
+    public void processStarted(XDebugProcess debugProcess) {
         XDebugSession session = debugProcess.getSession();
 
         sessionStates.put(session, new TraceDebuggerStateListener(session, this));
     }
 
     @Override
-    public void processStopped(@Nonnull XDebugProcess debugProcess) {
+    public void processStopped(XDebugProcess debugProcess) {
         sessionStates.remove(debugProcess.getSession());
     }
 
     @Nullable
-    public ChainStatus getChainStatus(@Nonnull XDebugSession id) {
+    public ChainStatus getChainStatus(XDebugSession id) {
         TraceDebuggerStateListener listener = sessionStates.get(id);
         return listener != null ? listener.getChainStatus() : null;
     }
 
-    @Nonnull
-    public static StreamDebuggerManager getInstance(@Nonnull Project project) {
+    
+    public static StreamDebuggerManager getInstance(Project project) {
         return project.getInstance(StreamDebuggerManager.class);
     }
 

@@ -51,7 +51,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.File;
@@ -81,23 +80,23 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     private static final YesResult ALWAYS_YES = new YesResult(PlatformIconGroup.actionsCompile());
 
-    @Nonnull
+    
     private final Project myProject;
     private final CompilerManager myCompilerManager;
 
     @Inject
-    public BuiltInCompilerRunner(@Nonnull Project project, CompilerManager compilerManager) {
+    public BuiltInCompilerRunner(Project project, CompilerManager compilerManager) {
         myProject = project;
         myCompilerManager = compilerManager;
     }
 
-    @Nonnull
+    
     @Override
-    public Result checkAvailable(@Nonnull DataContext dataContext) {
+    public Result checkAvailable(DataContext dataContext) {
         return ALWAYS_YES;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("BuiltIn");
@@ -189,7 +188,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         CompileScope intermediateSources = compileDriver.attachIntermediateOutputDirectories(
             new CompositeScope(CompileScope.EMPTY_ARRAY) {
                 @Override
-                @Nonnull
+                
                 public Module[] getAffectedModules() {
                     return context.getCompileScope().getAffectedModules();
                 }

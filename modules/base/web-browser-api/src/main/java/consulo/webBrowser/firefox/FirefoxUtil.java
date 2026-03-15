@@ -19,8 +19,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -68,7 +67,7 @@ public class FirefoxUtil {
     }
 
     @Nullable
-    public static FirefoxProfile findProfileByNameOrDefault(@Nullable String name, @Nonnull List<FirefoxProfile> profiles) {
+    public static FirefoxProfile findProfileByNameOrDefault(@Nullable String name, List<FirefoxProfile> profiles) {
         for (FirefoxProfile profile : profiles) {
             if (profile.getName().equals(name)) {
                 return profile;
@@ -91,7 +90,7 @@ public class FirefoxUtil {
         return profiles.get(0);
     }
 
-    @Nonnull
+    
     public static List<FirefoxProfile> computeProfiles(@Nullable File profilesFile) {
         if (profilesFile == null || !profilesFile.isFile()) {
             return Collections.emptyList();

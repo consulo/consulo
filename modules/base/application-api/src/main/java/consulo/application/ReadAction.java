@@ -18,40 +18,39 @@ package consulo.application;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.Callable;
 
-@Nonnull
+
 public final class ReadAction<T> {
     @Deprecated
     public static AccessToken start() {
         return ApplicationManager.getApplication().acquireReadActionLock();
     }
 
-    public static <E extends Throwable> void run(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
+    public static <E extends Throwable> void run(@RequiredReadAction ThrowableRunnable<E> action) throws E {
         Application.get().runReadAction((ThrowableSupplier<Object, E>) () -> {
             action.run();
             return null;
         });
     }
 
-    @Nonnull
-    public static <T, E extends Throwable> T computeNotNull(@Nonnull @RequiredReadAction ThrowableSupplier<T, E> action) throws E {
+    
+    public static <T, E extends Throwable> T computeNotNull(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         return Application.get().runReadAction(action);
     }
 
-    public static <T, E extends Throwable> T compute(@Nonnull @RequiredReadAction ThrowableSupplier<T, E> action) throws E {
+    public static <T, E extends Throwable> T compute(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         return Application.get().runReadAction(action);
     }
 
     /**
      * Create an {@link NonBlockingReadAction} builder to run the given Runnable in non-blocking read action on a background thread.
      */
-    @Nonnull
+    
     @Contract(pure = true)
-    public static NonBlockingReadAction<Void> nonBlocking(@RequiredReadAction @Nonnull Runnable task) {
+    public static NonBlockingReadAction<Void> nonBlocking(@RequiredReadAction Runnable task) {
         return nonBlocking(() -> {
             task.run();
             return null;
@@ -61,9 +60,9 @@ public final class ReadAction<T> {
     /**
      * Create an {@link NonBlockingReadAction} builder to run the given Callable in a non-blocking read action on a background thread.
      */
-    @Nonnull
+    
     @Contract(pure = true)
-    public static <T> NonBlockingReadAction<T> nonBlocking(@RequiredReadAction @Nonnull Callable<T> task) {
+    public static <T> NonBlockingReadAction<T> nonBlocking(@RequiredReadAction Callable<T> task) {
         return AsyncExecutionService.getService().buildNonBlockingReadAction(task);
     }
 }

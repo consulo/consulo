@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.Configurable;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import consulo.execution.debug.setting.XDebuggerSettings;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
@@ -37,9 +36,9 @@ final class BuiltInServerDebuggerConfigurableProvider extends XDebuggerSettings<
     super("buildin-server");
   }
 
-  @Nonnull
+  
   @Override
-  public Collection<? extends Configurable> createConfigurables(@Nonnull DebuggerSettingsCategory category) {
+  public Collection<? extends Configurable> createConfigurables(DebuggerSettingsCategory category) {
     if (category == DebuggerSettingsCategory.GENERAL) {
       return List.of(new BuiltInServerConfigurable());
     }

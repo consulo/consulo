@@ -20,7 +20,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PathsList;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -35,26 +34,26 @@ public interface OrderRootsEnumerator {
   /**
    * @return all roots processed by this enumerator
    */
-  @Nonnull
+  
   VirtualFile[] getRoots();
 
   /**
    * @return urls of all roots processed by this enumerator
    */
-  @Nonnull
+  
   String[] getUrls();
 
   /**
    * @return list of path to all roots processed by this enumerator
    */
-  @Nonnull
+  
   PathsList getPathsList();
 
   /**
    * Add all source roots processed by this enumerator to <code>list</code>
    * @param list list
    */
-  void collectPaths(@Nonnull PathsList list);
+  void collectPaths(PathsList list);
 
   /**
    * If roots for this enumerator are already evaluated the cached result will be used. Otherwise roots will be evaluated and cached for
@@ -63,7 +62,7 @@ public interface OrderRootsEnumerator {
    * option is used
    * @return this instance
    */
-  @Nonnull
+  
   OrderRootsEnumerator usingCache();
 
   /**
@@ -73,7 +72,7 @@ public interface OrderRootsEnumerator {
    *
    * @return this instance
    */
-  @Nonnull
+  
   OrderRootsEnumerator withoutSelfModuleOutput();
 
   /**
@@ -82,6 +81,6 @@ public interface OrderRootsEnumerator {
    * @param provider function to evaluate roots for an order entry
    * @return this instance
    */
-  @Nonnull
-  OrderRootsEnumerator usingCustomRootProvider(@Nonnull Function<OrderEntry, VirtualFile[]> provider);
+  
+  OrderRootsEnumerator usingCustomRootProvider(Function<OrderEntry, VirtualFile[]> provider);
 }

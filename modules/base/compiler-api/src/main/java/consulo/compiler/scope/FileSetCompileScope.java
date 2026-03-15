@@ -24,7 +24,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -59,7 +58,7 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
         return myIncludeTestScope;
     }
 
-    @Nonnull
+    
     @Override
     public Module[] getAffectedModules() {
         return myAffectedModules;
@@ -69,7 +68,7 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
         return Collections.unmodifiableCollection(myRootFiles);
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getFiles(FileType fileType) {
         List<VirtualFile> files = new ArrayList<>();
@@ -125,7 +124,7 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
     private static void addRecursively(final Collection<VirtualFile> container, VirtualFile fromDirectory, final FileType fileType) {
         VirtualFileUtil.visitChildrenRecursively(fromDirectory, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT) {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile child) {
+            public boolean visitFile(VirtualFile child) {
                 if (!child.isDirectory() && (fileType == null || fileType.equals(child.getFileType()))) {
                     container.add(child);
                 }

@@ -17,7 +17,6 @@ package consulo.document;
 
 import consulo.util.collection.PeekableIterator;
 
-import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
@@ -53,10 +52,10 @@ public interface MarkupIterator<T> extends PeekableIterator<T> {
     }
   };
 
-  @Nonnull
-  static <T> MarkupIterator<T> mergeIterators(@Nonnull MarkupIterator<T> iterator1,
-                                              @Nonnull MarkupIterator<T> iterator2,
-                                              @Nonnull Comparator<? super T> comparator) {
+  
+  static <T> MarkupIterator<T> mergeIterators(MarkupIterator<T> iterator1,
+                                              MarkupIterator<T> iterator2,
+                                              Comparator<? super T> comparator) {
     return new MarkupIterator<T>() {
       @Override
       public void dispose() {
@@ -74,7 +73,7 @@ public interface MarkupIterator<T> extends PeekableIterator<T> {
         return choose().next();
       }
 
-      @Nonnull
+      
       private MarkupIterator<T> choose() {
         T t1 = iterator1.hasNext() ? iterator1.peek() : null;
         T t2 = iterator2.hasNext() ? iterator2.peek() : null;

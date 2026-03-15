@@ -19,7 +19,6 @@ package consulo.execution.debug;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents position in a source file. Use {@link XDebuggerUtil#createPosition} and {@link XDebuggerUtil#createPositionByOffset} to
@@ -37,9 +36,9 @@ public interface XSourcePosition {
    */
   int getOffset();
 
-  @Nonnull
+  
   VirtualFile getFile();
 
-  @Nonnull
-  Navigatable createNavigatable(@Nonnull Project project);
+  
+  Navigatable createNavigatable(Project project);
 }

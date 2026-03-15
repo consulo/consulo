@@ -18,7 +18,6 @@ package consulo.desktop.awt.ui.impl.image;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageReference;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -63,13 +62,13 @@ public class DesktopAWTSimpleImageImpl extends JBUI.RasterJBIcon implements Imag
     return myHeight;
   }
 
-  @Nonnull
+  
   @Override
   public DesktopAWTImage copyWithNewSize(int width, int height) {
     return new DesktopAWTSimpleImageImpl(myImageReference, width, height);
   }
 
-  @Nonnull
+  
   @Override
   public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
     return this;

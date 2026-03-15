@@ -18,7 +18,7 @@ package consulo.desktop.awt.settings;
 import consulo.configurable.Configurable;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface OptionsEditorColleague {
   default AsyncResult<Void> onSelected(@Nullable Configurable configurable, Configurable oldConfigurable) {

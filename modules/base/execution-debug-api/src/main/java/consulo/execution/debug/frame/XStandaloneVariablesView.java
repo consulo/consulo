@@ -17,7 +17,6 @@ package consulo.execution.debug.frame;
 
 import consulo.annotation.UsedInPlugin;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,6 +28,6 @@ import javax.swing.*;
 public interface XStandaloneVariablesView extends Disposable {
     void rebuildView();
 
-    @Nonnull
+    
     JComponent getComponent();
 }

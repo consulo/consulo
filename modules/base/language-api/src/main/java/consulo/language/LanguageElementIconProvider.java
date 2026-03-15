@@ -24,8 +24,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,10 +35,10 @@ public interface LanguageElementIconProvider extends LanguageExtension {
   ExtensionPointCacheKey<LanguageElementIconProvider, ByLanguageValue<LanguageElementIconProvider>> KEY = ExtensionPointCacheKey.create("LanguageElementIconProvider", LanguageOneToOne.build());
 
   @Nullable
-  static LanguageElementIconProvider forLanguage(@Nonnull Language language) {
+  static LanguageElementIconProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageElementIconProvider.class).getOrBuildCache(KEY).get(language);
   }
 
-  @Nonnull
+  
   Image getImage();
 }

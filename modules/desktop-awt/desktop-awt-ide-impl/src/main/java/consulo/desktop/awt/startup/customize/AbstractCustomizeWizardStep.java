@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.UIUtil;
 
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
 
     protected abstract String getHTMLFooter();
 
-    @Nonnull
+    
     protected static Color getSelectionBackground() {
         return ColorUtil.mix(
             UIUtil.getListSelectionBackground(true),
@@ -69,7 +68,7 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
         panel.setOpaque(anchorButton.isSelected());
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
+            public boolean onClick(MouseEvent event, int clickCount) {
                 if (allowInverse) {
                     anchorButton.setSelected(!anchorButton.isSelected());
                 }

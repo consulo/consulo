@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -62,17 +61,17 @@ public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutCompo
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public TwoComponentSplitLayout setFirstComponent(@Nonnull Component component) {
+  public TwoComponentSplitLayout setFirstComponent(Component component) {
     addImpl(component, "first");
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public TwoComponentSplitLayout setSecondComponent(@Nonnull Component component) {
+  public TwoComponentSplitLayout setSecondComponent(Component component) {
     addImpl(component, "second");
     return this;
   }

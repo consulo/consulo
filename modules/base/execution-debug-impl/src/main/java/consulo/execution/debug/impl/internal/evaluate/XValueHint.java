@@ -55,8 +55,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,13 +81,13 @@ public class XValueHint extends AbstractValueHint {
     private static final Key<XValueHint> HINT_KEY = Key.create("allows only one value hint per editor");
 
     public XValueHint(
-        @Nonnull Project project,
-        @Nonnull Editor editor,
-        @Nonnull Point point,
-        @Nonnull ValueHintType type,
-        @Nonnull ExpressionInfo expressionInfo,
-        @Nonnull XDebuggerEvaluator evaluator,
-        @Nonnull XDebugSession session
+        Project project,
+        Editor editor,
+        Point point,
+        ValueHintType type,
+        ExpressionInfo expressionInfo,
+        XDebuggerEvaluator evaluator,
+        XDebugSession session
     ) {
         super(project, editor, point, type, expressionInfo.getTextRange());
 
@@ -126,7 +125,7 @@ public class XValueHint extends AbstractValueHint {
             ShortcutSet shortcut = ActionManager.getInstance().getAction("ShowErrorDescription").getShortcutSet();
             new DumbAwareAction() {
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     hideHint();
                     Point point = new Point(myPoint.x, myPoint.y + getEditor().getLineHeight());
                     new XValueHint(
@@ -176,7 +175,7 @@ public class XValueHint extends AbstractValueHint {
     protected void evaluateAndShowHint() {
         myEvaluator.evaluate(myExpression, new XEvaluationCallbackBase() {
             @Override
-            public void evaluated(@Nonnull final XValue result) {
+            public void evaluated(final XValue result) {
                 result.computePresentation(new XValueNodePresentationConfigurator.ConfigurableXValueNodeImpl() {
                     private XFullValueEvaluator myFullValueEvaluator;
                     private boolean myShown = false;
@@ -184,7 +183,7 @@ public class XValueHint extends AbstractValueHint {
                     @Override
                     public void applyPresentation(
                         @Nullable Image icon,
-                        @Nonnull XValuePresentation valuePresenter,
+                        XValuePresentation valuePresenter,
                         boolean hasChildren
                     ) {
                         if (isHintHidden()) {
@@ -230,7 +229,7 @@ public class XValueHint extends AbstractValueHint {
                     }
 
                     @Override
-                    public void setFullValueEvaluator(@Nonnull XFullValueEvaluator fullValueEvaluator) {
+                    public void setFullValueEvaluator(XFullValueEvaluator fullValueEvaluator) {
                         myFullValueEvaluator = fullValueEvaluator;
                     }
 
@@ -258,7 +257,7 @@ public class XValueHint extends AbstractValueHint {
             }
 
             @Override
-            public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 if (getType() == ValueHintType.MOUSE_CLICK_HINT) {
                     ApplicationManager.getApplication().invokeLater(() -> showHint(HintUtil.createErrorLabel(errorMessage.get())));
                 }
@@ -267,7 +266,7 @@ public class XValueHint extends AbstractValueHint {
         }, myExpressionPosition);
     }
 
-    private void showTree(@Nonnull XValue value) {
+    private void showTree(XValue value) {
         XValueMarkers<?, ?> valueMarkers = myDebugSession.getValueMarkers();
         XDebuggerTreeCreator creator = new XDebuggerTreeCreator(
             myDebugSession.getProject(),

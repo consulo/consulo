@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Anton Katilin
@@ -41,12 +40,12 @@ public abstract class FileEditorProviderManager {
    * an empty array if there are no such providers. Please note that returned array
    * is constructed with respect to editor policies.
    */
-  @Nonnull
-  public abstract FileEditorProvider[] getProviders(@Nonnull Project project, @Nonnull VirtualFile file);
+  
+  public abstract FileEditorProvider[] getProviders(Project project, VirtualFile file);
 
   /**
    * @return may be null
    */
   @Nullable
-  public abstract FileEditorProvider getProvider(@Nonnull String editorTypeId);
+  public abstract FileEditorProvider getProvider(String editorTypeId);
 }

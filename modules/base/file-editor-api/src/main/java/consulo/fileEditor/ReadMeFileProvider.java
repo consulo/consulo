@@ -17,8 +17,7 @@ package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 
@@ -31,5 +30,5 @@ import java.nio.file.Path;
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ReadMeFileProvider {
     @Nullable
-    Path resolveFile(@Nonnull Path projectPath);
+    Path resolveFile(Path projectPath);
 }

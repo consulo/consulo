@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.wizard;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;

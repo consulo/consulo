@@ -20,8 +20,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -35,15 +34,15 @@ public abstract class ComputableActionGroup extends ActionGroup implements DumbA
         setPopup(popup);
     }
 
-    protected ComputableActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected ComputableActionGroup(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected ComputableActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected ComputableActionGroup(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
-    protected ComputableActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+    protected ComputableActionGroup(LocalizeValue text, boolean popup) {
         super(text, popup);
     }
 
@@ -52,16 +51,16 @@ public abstract class ComputableActionGroup extends ActionGroup implements DumbA
         return true;
     }
 
-    @Nonnull
+    
     protected ModificationTracker getModificationTracker() {
         return ModificationTracker.NEVER_CHANGED;
     }
 
-    @Nonnull
-    protected abstract AnAction[] computeChildren(@Nonnull ActionManager manager);
+    
+    protected abstract AnAction[] computeChildren(ActionManager manager);
 
     @Override
-    @Nonnull
+    
     public final AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (e == null) {
             return EMPTY_ARRAY;

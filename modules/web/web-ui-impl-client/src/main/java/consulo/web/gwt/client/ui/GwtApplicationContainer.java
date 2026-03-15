@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.util.GwtUIUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ import java.util.List;
  * @since 2020-11-21
  */
 public class GwtApplicationContainer extends SimplePanel {
-  public void build(@Nonnull List<Widget> widgets) {
+  public void build(List<Widget> widgets) {
     GwtUIUtil.fill(this);
 
     if (widgets.isEmpty()) {

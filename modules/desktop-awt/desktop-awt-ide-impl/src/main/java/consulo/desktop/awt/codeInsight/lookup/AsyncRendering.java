@@ -10,7 +10,6 @@ import consulo.language.psi.stub.DumbModeAccessType;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -25,8 +24,8 @@ public final class AsyncRendering {
     myLookup = lookup;
   }
 
-  @Nonnull
-  LookupElementPresentation getLastComputed(@Nonnull LookupElement element) {
+  
+  LookupElementPresentation getLastComputed(LookupElement element) {
     return Objects.requireNonNull(element.getUserData(LAST_COMPUTED_PRESENTATION));
   }
 
@@ -34,7 +33,7 @@ public final class AsyncRendering {
     element.putUserData(LAST_COMPUTED_PRESENTATION, presentation);
   }
 
-  void scheduleRendering(@Nonnull LookupElement element, @Nonnull LookupElementRenderer<?> renderer) {
+  void scheduleRendering(LookupElement element, LookupElementRenderer<?> renderer) {
     synchronized (LAST_COMPUTATION) {
       cancelRendering(element);
 
@@ -67,7 +66,7 @@ public final class AsyncRendering {
     myLookup.myCellRenderer.scheduleUpdateLookupWidthFromVisibleItems();
   }
 
-  public static void cancelRendering(@Nonnull LookupElement item) {
+  public static void cancelRendering(LookupElement item) {
     synchronized (LAST_COMPUTATION) {
       CancellablePromise<?> promise = item.getUserData(LAST_COMPUTATION);
       if (promise != null) {

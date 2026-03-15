@@ -4,8 +4,7 @@ import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -15,10 +14,10 @@ import java.util.function.Function;
  */
 public class CommonProblemDescriptorBase implements CommonProblemDescriptor {
     private final QuickFix[] myFixes;
-    @Nonnull
+    
     private final LocalizeValue myDescriptionTemplate;
 
-    public CommonProblemDescriptorBase(QuickFix[] fixes, @Nonnull LocalizeValue descriptionTemplate) {
+    public CommonProblemDescriptorBase(QuickFix[] fixes, LocalizeValue descriptionTemplate) {
         if (fixes == null) {
             myFixes = null;
         }
@@ -32,7 +31,7 @@ public class CommonProblemDescriptorBase implements CommonProblemDescriptor {
         myDescriptionTemplate = descriptionTemplate;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescriptionTemplate() {
         return myDescriptionTemplate;

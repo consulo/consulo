@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 class VirtualFilePointerImpl implements VirtualFilePointer {
   private static final Logger LOG = Logger.getInstance(VirtualFilePointerImpl.class);
@@ -42,7 +41,7 @@ class VirtualFilePointerImpl implements VirtualFilePointer {
   }
 
   @Override
-  @Nonnull
+  
   public String getFileName() {
     FilePointerPartNode node = checkDisposed(myNode);
     if (node == null) return "";
@@ -66,7 +65,7 @@ class VirtualFilePointerImpl implements VirtualFilePointer {
   }
 
   @Override
-  @Nonnull
+  
   public String getUrl() {
     FilePointerPartNode node = myNode;
     if (node == null) return "";
@@ -80,7 +79,7 @@ class VirtualFilePointerImpl implements VirtualFilePointer {
   }
 
   @Override
-  @Nonnull
+  
   public String getPresentableUrl() {
     FilePointerPartNode node = checkDisposed(myNode);
     if (node == null) return "";

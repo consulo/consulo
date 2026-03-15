@@ -5,28 +5,27 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.function.Supplier;
 
 public class DefaultCustomComponentAction extends AnAction implements CustomComponentAction {
-    @Nonnull
+    
     private final Supplier<? extends JComponent> myProducer;
 
-    public DefaultCustomComponentAction(@Nonnull Supplier<? extends JComponent> producer) {
+    public DefaultCustomComponentAction(Supplier<? extends JComponent> producer) {
         myProducer = producer;
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         //do nothing
     }
 
-    @Nonnull
+    
     @Override
-    public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+    public JComponent createCustomComponent(Presentation presentation, String place) {
         return myProducer.get();
     }
 }

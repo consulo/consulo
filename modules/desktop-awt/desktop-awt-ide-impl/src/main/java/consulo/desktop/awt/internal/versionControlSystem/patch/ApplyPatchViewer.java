@@ -61,8 +61,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,53 +73,53 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final DiffContext myContext;
-    @Nonnull
+    
     private final ApplyPatchRequest myPatchRequest;
 
-    @Nonnull
+    
     private final TextEditorHolder myResultHolder;
-    @Nonnull
+    
     private final TextEditorHolder myPatchHolder;
-    @Nonnull
+    
     private final EditorEx myResultEditor;
-    @Nonnull
+    
     private final EditorEx myPatchEditor;
 
-    @Nonnull
+    
     private final SimpleDiffPanel myPanel;
-    @Nonnull
+    
     private final TwosideContentPanel myContentPanel;
 
-    @Nonnull
+    
     private final MyModel myModel;
 
-    @Nonnull
+    
     private final FocusTrackerSupport<Side> myFocusTrackerSupport;
-    @Nonnull
+    
     private final MyPrevNextDifferenceIterable myPrevNextDifferenceIterable;
-    @Nonnull
+    
     private final StatusPanel myStatusPanel;
-    @Nonnull
+    
     private final MyFoldingModel myFoldingModel;
 
-    @Nonnull
+    
     private final SetEditorSettingsAction myEditorSettingsAction;
 
     // Changes with known AppliedTo. Ordered as in result-editor
-    @Nonnull
+    
     private final List<ApplyPatchChange> myResultChanges = new ArrayList<>();
     // All changes. Ordered as in patch-editor
-    @Nonnull
+    
     private final List<ApplyPatchChange> myPatchChanges = new ArrayList<>();
     // All changes. Ordered as in result-editor. Non-applied changes are at the very beginning with model ranges [-1. -1)
-    @Nonnull
+    
     private final List<ApplyPatchChange> myModelChanges = new ArrayList<>();
 
     private boolean myDisposed;
 
-    public ApplyPatchViewer(@Nonnull DiffContext context, @Nonnull ApplyPatchRequest request) {
+    public ApplyPatchViewer(DiffContext context, ApplyPatchRequest request) {
         myProject = context.getProject();
         myContext = context;
         myPatchRequest = request;
@@ -184,7 +183,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         ProxyUndoRedoAction.register(myProject, myResultEditor, myContentPanel);
     }
 
-    @Nonnull
+    
     protected List<AnAction> createToolbarActions() {
         List<AnAction> group = new ArrayList<>();
 
@@ -199,7 +198,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         return group;
     }
 
-    @Nonnull
+    
     private List<AnAction> createEditorPopupActions() {
         List<AnAction> group = new ArrayList<>();
 
@@ -238,12 +237,12 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         return !DiffImplUtil.canMakeWritable(myResultEditor.getDocument());
     }
 
-    @Nonnull
+    
     public MyModel getModel() {
         return myModel;
     }
 
-    @Nonnull
+    
     public List<ApplyPatchChange> getModelChanges() {
         return myModelChanges;
     }
@@ -252,12 +251,12 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         return myDisposed;
     }
 
-    @Nonnull
+    
     public StatusPanel getStatusPanel() {
         return myStatusPanel;
     }
 
-    @Nonnull
+    
     public JComponent getComponent() {
         return myPanel;
     }
@@ -267,29 +266,29 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         return myResultEditor.getContentComponent();
     }
 
-    @Nonnull
+    
     public EditorEx getResultEditor() {
         return myResultEditor;
     }
 
-    @Nonnull
+    
     public EditorEx getPatchEditor() {
         return myPatchEditor;
     }
 
-    @Nonnull
+    
     public Side getCurrentSide() {
         return myFocusTrackerSupport.getCurrentSide();
     }
 
-    @Nonnull
+    
     public List<ApplyPatchChange> getPatchChanges() {
         return myPatchChanges;
     }
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (Project.KEY == dataId) {
             return myProject;
         }
@@ -299,12 +298,12 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         return null;
     }
 
-    @Nonnull
+    
     public TextDiffSettings getTextSettings() {
         return TextDiffSettings.getSettings("ApplyPatch");
     }
 
-    @Nonnull
+    
     public FoldingModelSupport.Settings getFoldingModelSettings() {
         TextDiffSettings settings = getTextSettings();
         return new FoldingModelSupport.Settings(settings.getContextRange(), settings.isExpandByDefault());
@@ -406,7 +405,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
     }
 
-    public void scrollToChange(@Nonnull ApplyPatchChange change, @Nonnull Side masterSide, boolean forceScroll) {
+    public void scrollToChange(ApplyPatchChange change, Side masterSide, boolean forceScroll) {
         if (change.getResultRange() == null) {
             DiffImplUtil.moveCaret(myPatchEditor, change.getPatchRange().start);
             myPatchEditor.getScrollingModel().scrollToCaret(forceScroll ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
@@ -457,12 +456,12 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     @Deprecated(forRemoval = true)
     @RequiredUIAccess
-    public void executeCommand(@Nullable String commandName, @Nonnull @RequiredUIAccess Runnable task) {
+    public void executeCommand(@Nullable String commandName, @RequiredUIAccess Runnable task) {
         newPatchCommand().name(LocalizeValue.ofNullable(commandName)).run(task);
     }
 
     class MyModel extends MergeModelBase<ApplyPatchChange.State> {
-        public MyModel(@Nullable Project project, @Nonnull Document document) {
+        public MyModel(@Nullable Project project, Document document) {
             super(project, document);
         }
 
@@ -473,7 +472,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
             change.reinstallHighlighters();
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
         protected ApplyPatchChange.State storeChangeState(int index) {
@@ -483,7 +482,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
         @Override
         @RequiredUIAccess
-        protected void restoreChangeState(@Nonnull ApplyPatchChange.State state) {
+        protected void restoreChangeState(ApplyPatchChange.State state) {
             super.restoreChangeState(state);
             ApplyPatchChange change = myModelChanges.get(state.myIndex);
 
@@ -503,7 +502,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     }
 
     @RequiredUIAccess
-    public void markChangeResolved(@Nonnull ApplyPatchChange change) {
+    public void markChangeResolved(ApplyPatchChange change) {
         if (change.isResolved()) {
             return;
         }
@@ -514,7 +513,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     }
 
     @RequiredWriteAction
-    public void replaceChange(@Nonnull ApplyPatchChange change) {
+    public void replaceChange(ApplyPatchChange change) {
         LineRange resultRange = change.getResultRange();
         LineRange patchRange = change.getPatchInsertionRange();
         if (resultRange == null || change.isResolved()) {
@@ -539,13 +538,13 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
-        protected boolean isEnabled(@Nonnull ApplyPatchChange change) {
+        protected boolean isEnabled(ApplyPatchChange change) {
             return !change.isResolved() && change.getStatus() == AppliedTextPatch.HunkStatus.EXACTLY_APPLIED;
         }
 
         @Override
         @RequiredWriteAction
-        protected void apply(@Nonnull List<ApplyPatchChange> changes) {
+        protected void apply(List<ApplyPatchChange> changes) {
             for (int i = changes.size() - 1; i >= 0; i--) {
                 replaceChange(changes.get(i));
             }
@@ -564,13 +563,13 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
-        protected boolean isEnabled(@Nonnull ApplyPatchChange change) {
+        protected boolean isEnabled(ApplyPatchChange change) {
             return !change.isResolved();
         }
 
         @Override
         @RequiredUIAccess
-        protected void apply(@Nonnull List<ApplyPatchChange> changes) {
+        protected void apply(List<ApplyPatchChange> changes) {
             for (ApplyPatchChange change : changes) {
                 markChangeResolved(change);
             }
@@ -585,7 +584,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (myShortcut) {
                 // consume shortcut even if there are nothing to do - avoid calling some other action
                 e.getPresentation().setEnabledAndVisible(true);
@@ -607,7 +606,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Editor editor = e.getData(Editor.KEY);
             Side side = Side.fromValue(Arrays.asList(myResultEditor, myPatchEditor), editor);
             if (editor == null || side == null) {
@@ -624,7 +623,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
                 .run(() -> apply(selectedChanges));
         }
 
-        private boolean isSomeChangeSelected(@Nonnull Side side) {
+        private boolean isSomeChangeSelected(Side side) {
             EditorEx editor = side.select(myResultEditor, myPatchEditor);
             List<Caret> carets = editor.getCaretModel().getAllCarets();
             if (carets.size() != 1) {
@@ -654,9 +653,9 @@ class ApplyPatchViewer implements DataProvider, Disposable {
             return false;
         }
 
-        @Nonnull
+        
         @RequiredUIAccess
-        private List<ApplyPatchChange> getSelectedChanges(@Nonnull Side side) {
+        private List<ApplyPatchChange> getSelectedChanges(Side side) {
             BitSet lines = DiffImplUtil.getSelectedLines(side.select(myResultEditor, myPatchEditor));
 
             List<ApplyPatchChange> affectedChanges = new ArrayList<>();
@@ -676,10 +675,10 @@ class ApplyPatchViewer implements DataProvider, Disposable {
             return affectedChanges;
         }
 
-        protected abstract boolean isEnabled(@Nonnull ApplyPatchChange change);
+        protected abstract boolean isEnabled(ApplyPatchChange change);
 
         @RequiredWriteAction
-        protected abstract void apply(@Nonnull List<ApplyPatchChange> changes);
+        protected abstract void apply(List<ApplyPatchChange> changes);
     }
 
     private class ApplyNonConflictsAction extends DumbAwareAction {
@@ -688,7 +687,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             boolean enabled = ContainerUtil.exists(
                 myModelChanges,
                 c -> !c.isResolved() && c.getStatus() != AppliedTextPatch.HunkStatus.NOT_APPLIED
@@ -698,7 +697,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             List<ApplyPatchChange> changes = myModelChanges;
             if (changes.isEmpty()) {
                 return;
@@ -729,7 +728,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             EditorEx targetEditor = getCurrentSide().other().select(myResultEditor, myPatchEditor);
             AWTDiffUtil.requestFocus(myProject, targetEditor.getContentComponent());
         }
@@ -753,7 +752,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             DocumentContent resultContent = myPatchRequest.getResultContent();
             DocumentContent localContent = DiffContentFactory.getInstance().create(myPatchRequest.getLocalContent(), resultContent);
 
@@ -777,39 +776,39 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     //
 
     private class MyPrevNextDifferenceIterable extends PrevNextDifferenceIterableBase<ApplyPatchChange> {
-        @Nonnull
+        
         @Override
         protected List<ApplyPatchChange> getChanges() {
             return getCurrentSide().select(myResultChanges, myPatchChanges);
         }
 
-        @Nonnull
+        
         @Override
         protected EditorEx getEditor() {
             return getCurrentSide().select(myResultEditor, myPatchEditor);
         }
 
         @Override
-        protected int getStartLine(@Nonnull ApplyPatchChange change) {
+        protected int getStartLine(ApplyPatchChange change) {
             //noinspection ConstantConditions
             return getCurrentSide().select(change.getResultRange(), change.getPatchAffectedRange()).start;
         }
 
         @Override
-        protected int getEndLine(@Nonnull ApplyPatchChange change) {
+        protected int getEndLine(ApplyPatchChange change) {
             //noinspection ConstantConditions
             return getCurrentSide().select(change.getResultRange(), change.getPatchAffectedRange()).end;
         }
 
         @Override
-        protected void scrollToChange(@Nonnull ApplyPatchChange change) {
+        protected void scrollToChange(ApplyPatchChange change) {
             ApplyPatchViewer.this.scrollToChange(change, getCurrentSide(), true);
         }
     }
 
     private class MyDividerPainter implements DiffSplitter.Painter, DiffDividerDrawUtil.DividerPaintable {
         @Override
-        public void paint(@Nonnull Graphics g, @Nonnull JComponent divider) {
+        public void paint(Graphics g, JComponent divider) {
             Graphics2D gg = DiffDividerDrawUtil.getDividerGraphics(g, divider, myPatchEditor.getComponent());
 
             gg.setColor(TargetAWT.to(DiffDrawUtil.getDividerColor(myPatchEditor)));
@@ -821,7 +820,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
-        public void process(@Nonnull Handler handler) {
+        public void process(Handler handler) {
             for (ApplyPatchChange change : myResultChanges) {
                 LineRange resultRange = change.getResultRange();
                 LineRange patchRange = change.getPatchRange();
@@ -845,14 +844,14 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     private static class MyFoldingModel extends FoldingModelSupport {
         private final MyPaintable myPaintable = new MyPaintable(0, 1);
 
-        public MyFoldingModel(@Nonnull EditorEx editor, @Nonnull Disposable disposable) {
+        public MyFoldingModel(EditorEx editor, Disposable disposable) {
             super(new EditorEx[]{editor}, disposable);
         }
 
         @RequiredUIAccess
         public void install(
             @Nullable List<ApplyPatchChange> changes,
-            @Nonnull FoldingModelSupport.Settings settings
+            FoldingModelSupport.Settings settings
         ) {
             //noinspection ConstantConditions
             Iterator<int[]> it = map(

@@ -26,22 +26,21 @@ import consulo.diff.util.TextDiffType;
 import consulo.diff.util.ThreeSide;
 import consulo.document.util.TextRange;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ThreesideDiffChangeBase {
-  @Nonnull
+  
   private final MergeConflictType myType;
 
-  @Nonnull
+  
   protected final List<RangeHighlighter> myHighlighters = new ArrayList<>();
-  @Nonnull
+  
   protected final List<RangeHighlighter> myInnerHighlighters = new ArrayList<>();
 
-  public ThreesideDiffChangeBase(@Nonnull MergeConflictType type) {
+  public ThreesideDiffChangeBase(MergeConflictType type) {
     myType = type;
   }
 
@@ -83,24 +82,24 @@ public abstract class ThreesideDiffChangeBase {
   // Getters
   //
 
-  public abstract int getStartLine(@Nonnull ThreeSide side);
+  public abstract int getStartLine(ThreeSide side);
 
-  public abstract int getEndLine(@Nonnull ThreeSide side);
+  public abstract int getEndLine(ThreeSide side);
 
-  public abstract boolean isResolved(@Nonnull ThreeSide side);
+  public abstract boolean isResolved(ThreeSide side);
 
-  @Nonnull
-  protected abstract Editor getEditor(@Nonnull ThreeSide side);
+  
+  protected abstract Editor getEditor(ThreeSide side);
 
   @Nullable
   protected abstract MergeInnerDifferences getInnerFragments();
 
-  @Nonnull
+  
   public TextDiffType getDiffType() {
     return myType.getDiffType();
   }
 
-  @Nonnull
+  
   public MergeConflictType getType() {
     return myType;
   }
@@ -109,11 +108,11 @@ public abstract class ThreesideDiffChangeBase {
     return getDiffType() == TextDiffType.CONFLICT;
   }
 
-  public boolean isChange(@Nonnull Side side) {
+  public boolean isChange(Side side) {
     return myType.isChange(side);
   }
 
-  public boolean isChange(@Nonnull ThreeSide side) {
+  public boolean isChange(ThreeSide side) {
     return myType.isChange(side);
   }
 
@@ -121,7 +120,7 @@ public abstract class ThreesideDiffChangeBase {
   // Highlighters
   //
 
-  protected void createHighlighter(@Nonnull ThreeSide side) {
+  protected void createHighlighter(ThreeSide side) {
     Editor editor = getEditor(side);
 
     TextDiffType type = getDiffType();
@@ -134,7 +133,7 @@ public abstract class ThreesideDiffChangeBase {
     myHighlighters.addAll(DiffDrawUtil.createHighlighter(editor, startLine, endLine, type, ignored, resolved, shouldHideWithoutLineNumbers));
   }
 
-  protected void createInnerHighlighter(@Nonnull ThreeSide side) {
+  protected void createInnerHighlighter(ThreeSide side) {
     if (isResolved(side)) return;
     MergeInnerDifferences innerFragments = getInnerFragments();
     if (innerFragments == null) return;

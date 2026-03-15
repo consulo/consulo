@@ -25,7 +25,6 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -42,7 +41,7 @@ public class RefreshFileChooserAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         RefreshQueue.getInstance().refresh(true, true, null, IdeaModalityState.current(), ManagingFS.getInstance().getLocalRoots());
     }
 }

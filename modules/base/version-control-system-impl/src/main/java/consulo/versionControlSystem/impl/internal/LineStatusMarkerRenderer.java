@@ -33,8 +33,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.function.PairConsumer;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -43,24 +42,24 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
-    @Nonnull
+   
     protected final VcsRange myRange;
 
-    public LineStatusMarkerRenderer(@Nonnull VcsRange range) {
+    public LineStatusMarkerRenderer(VcsRange range) {
         myRange = range;
     }
 
-    @Nonnull
+   
     @Override
     public LocalizeValue getTooltipValue() {
         return LocalizeValue.empty();
     }
 
-    @Nonnull
+   
     public static RangeHighlighter createRangeHighlighter(
-        @Nonnull VcsRange range,
-        @Nonnull TextRange textRange,
-        @Nonnull MarkupModel markupModel
+        VcsRange range,
+        TextRange textRange,
+        MarkupModel markupModel
     ) {
         TextAttributes attributes = getTextAttributes(range);
 
@@ -81,19 +80,19 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         return highlighter;
     }
 
-    @Nonnull
+   
     public static LineMarkerRenderer createRenderer(
-        @Nonnull VcsRange range,
+        VcsRange range,
         @Nullable Function<Editor, LineStatusMarkerPopup> popupBuilder
     ) {
         return new LineStatusMarkerRenderer(range) {
             @Override
-            public boolean canDoAction(@Nonnull MouseEvent e) {
+            public boolean canDoAction(MouseEvent e) {
                 return popupBuilder != null && isInsideMarkerArea(e);
             }
 
             @Override
-            public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
+            public void doAction(Editor editor, MouseEvent e) {
                 LineStatusMarkerPopup popup = popupBuilder != null ? popupBuilder.apply(editor) : null;
                 if (popup != null) {
                     popup.showHint(e);
@@ -102,12 +101,12 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         };
     }
 
-    @Nonnull
+   
     public static LineMarkerRenderer createRenderer(
         int line1,
         int line2,
-        @Nonnull ColorValue color,
-        @Nonnull LocalizeValue tooltip,
+        ColorValue color,
+        LocalizeValue tooltip,
         @Nullable BiConsumer<Editor, MouseEvent> action
     ) {
         return new ActiveGutterRenderer() {
@@ -123,19 +122,19 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
                 }
             }
 
-            @Nonnull
+           
             @Override
             public LocalizeValue getTooltipValue() {
                 return tooltip;
             }
 
             @Override
-            public boolean canDoAction(@Nonnull MouseEvent e) {
+            public boolean canDoAction(MouseEvent e) {
                 return isInsideMarkerArea(e);
             }
 
             @Override
-            public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
+            public void doAction(Editor editor, MouseEvent e) {
                 if (action != null) {
                     action.accept(editor, e);
                 }
@@ -145,19 +144,19 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
+   
     public static LineMarkerRenderer createRenderer(
         int line1,
         int line2,
-        @Nonnull ColorValue color,
+        ColorValue color,
         @Nullable String tooltip,
         @Nullable PairConsumer<Editor, MouseEvent> action
     ) {
         return createRenderer(line1, line2, color, LocalizeValue.ofNullable(tooltip), action);
     }
 
-    @Nonnull
-    private static TextAttributes getTextAttributes(@Nonnull final VcsRange range) {
+   
+    private static TextAttributes getTextAttributes(final VcsRange range) {
         return new TextAttributes() {
             @Override
             public ColorValue getErrorStripeColor() {
@@ -166,8 +165,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         };
     }
 
-    @Nonnull
-    private static LocalizeValue getTooltipText(@Nonnull VcsRange range) {
+   
+    private static LocalizeValue getTooltipText(VcsRange range) {
         if (range.getLine1() == range.getLine2()) {
             return range.getVcsLine1() + 1 == range.getVcsLine2()
                 ? VcsLocalize.tooltipTextLineBeforeDeleted(range.getLine1() + 1)
@@ -245,7 +244,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
 
     private static void paintRect(
-        @Nonnull Graphics2D g,
+        Graphics2D g,
         @Nullable ColorValue color,
         @Nullable ColorValue borderColor,
         int x1,
@@ -265,8 +264,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         }
     }
 
-    @Nonnull
-    public static Rectangle getMarkerArea(@Nonnull Editor editor, @Nonnull Rectangle r, int line1, int line2) {
+   
+    public static Rectangle getMarkerArea(Editor editor, Rectangle r, int line1, int line2) {
         EditorGutterComponentEx gutter = ((EditorEx)editor).getGutterComponentEx();
         int x = r.x + JBUI.scale(1); // leave 1px for brace highlighters
         int endX = gutter.getWhitespaceSeparatorOffset();
@@ -286,13 +285,13 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         return new Rectangle(x, y, endX - x, endY - y);
     }
 
-    public static boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
+    public static boolean isInsideMarkerArea(MouseEvent e) {
         EditorGutterComponentEx gutter = (EditorGutterComponentEx)e.getComponent();
         return gutter.isInsideMarkerArea(e);
     }
 
     private static void paintTriangle(
-        @Nonnull Graphics2D g,
+        Graphics2D g,
         Editor editor,
         @Nullable ColorValue color,
         @Nullable ColorValue borderColor,
@@ -317,12 +316,11 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         }
     }
 
-    private static float getEditorScale(@Nonnull Editor editor) {
+    private static float getEditorScale(Editor editor) {
         return editor instanceof RealEditor ? ((RealEditor)editor).getScale() : 1.0f;
     }
 
-    @Nullable
-    private static ColorValue getGutterColor(@Nonnull VcsRange.InnerRange range, @Nullable Editor editor) {
+    private static ColorValue getGutterColor(VcsRange.@Nullable InnerRange range, @Nullable Editor editor) {
         EditorColorsScheme scheme = getColorScheme(editor);
         return switch (range.getType()) {
             case VcsRange.INSERTED -> scheme.getColor(EditorColors.ADDED_LINES_COLOR);
@@ -334,7 +332,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
 
     @Nullable
-    private static ColorValue getErrorStripeColor(@Nonnull VcsRange range, @Nullable Editor editor) {
+    private static ColorValue getErrorStripeColor(VcsRange range, @Nullable Editor editor) {
         EditorColorsScheme scheme = getColorScheme(editor);
         return switch (range.getType()) {
             case VcsRange.INSERTED -> scheme.getAttributes(DiffColors.DIFF_INSERTED).getErrorStripeColor();
@@ -345,7 +343,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
 
     @Nullable
-    private static ColorValue getGutterColor(@Nonnull VcsRange range, @Nullable Editor editor) {
+    private static ColorValue getGutterColor(VcsRange range, @Nullable Editor editor) {
         EditorColorsScheme scheme = getColorScheme(editor);
         return switch (range.getType()) {
             case VcsRange.INSERTED -> scheme.getColor(EditorColors.ADDED_LINES_COLOR);
@@ -360,7 +358,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         return getColorScheme(editor).getColor(EditorColors.BORDER_LINES_COLOR);
     }
 
-    @Nonnull
+   
     private static EditorColorsScheme getColorScheme(@Nullable Editor editor) {
         return editor != null ? editor.getColorsScheme() : EditorColorsManager.getInstance().getGlobalScheme();
     }
@@ -370,11 +368,11 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     //
 
     @Override
-    public boolean canDoAction(@Nonnull MouseEvent e) {
+    public boolean canDoAction(MouseEvent e) {
         return false;
     }
 
     @Override
-    public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
+    public void doAction(Editor editor, MouseEvent e) {
     }
 }

@@ -18,8 +18,7 @@ package consulo.codeEditor.impl.softwrap;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.ColorProvider;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -133,7 +132,7 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     initDelegateIfNecessary();
     if (!myEditor.getSettings().isAllSoftWrapsShown()) {
       int visualLine = y / lineHeight;
@@ -146,13 +145,13 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int getDrawingHorizontalOffset(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     initDelegateIfNecessary();
     return myDelegate.getDrawingHorizontalOffset(g, drawingType, x, y, lineHeight);
   }
 
   @Override
-  public int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidth(SoftWrapDrawingType drawingType) {
     initDelegateIfNecessary();
     return myDelegate.getMinDrawingWidth(drawingType);
   }

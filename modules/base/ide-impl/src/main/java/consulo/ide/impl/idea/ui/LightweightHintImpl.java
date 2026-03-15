@@ -18,7 +18,6 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -62,7 +61,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
     private Predicate<TooltipEvent> myAutoHideTester = tooltipEvent -> true;
 
-    public LightweightHintImpl(@Nonnull JComponent component) {
+    public LightweightHintImpl(JComponent component) {
         myComponent = component;
     }
 
@@ -123,7 +122,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
      * appears on 250 layer.
      */
     @Override
-    public void show(@Nonnull JComponent parentComponent, int x, int y, JComponent focusBackComponent, @Nonnull final HintHint hintHint) {
+    public void show(JComponent parentComponent, int x, int y, JComponent focusBackComponent, final HintHint hintHint) {
         myParentComponent = parentComponent;
         myHintHint = hintHint;
 
@@ -412,12 +411,12 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
     }
 
     @Override
-    public final void addHintListener(@Nonnull HintListener listener) {
+    public final void addHintListener(HintListener listener) {
         myListenerList.add(HintListener.class, listener);
     }
 
     @Override
-    public final void removeHintListener(@Nonnull HintListener listener) {
+    public final void removeHintListener(HintListener listener) {
         myListenerList.remove(HintListener.class, listener);
     }
 
@@ -442,7 +441,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
     }
 
     @Override
-    public void setLocation(@Nonnull RelativePoint point) {
+    public void setLocation(RelativePoint point) {
         if (isRealPopup()) {
             myPopup.setLocation(point.getScreenPoint());
         }

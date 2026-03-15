@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.fileType;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author valentin
@@ -26,12 +25,12 @@ import jakarta.annotation.Nonnull;
 public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile {
 
   @Override
-  @Nonnull
+  
   public String getDefaultExtension() {
     return "fakeExtension";
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return Image.empty(Image.DEFAULT_ICON_SIZE);

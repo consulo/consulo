@@ -18,8 +18,6 @@ package consulo.virtualFileSystem.internal;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.StubVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -28,13 +26,13 @@ public class FakeVirtualFile extends StubVirtualFile {
   private final VirtualFile myParent;
   private final String myName;
 
-  public FakeVirtualFile(@Nonnull VirtualFile parent, @Nonnull String name) {
+  public FakeVirtualFile(VirtualFile parent, String name) {
     myName = name;
     myParent = parent;
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile getParent() {
     return myParent;
   }
@@ -44,7 +42,7 @@ public class FakeVirtualFile extends StubVirtualFile {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     String basePath = myParent.getPath();
@@ -52,8 +50,8 @@ public class FakeVirtualFile extends StubVirtualFile {
   }
 
   @Override
-  @Nonnull
-  @NonNls
+  
+  
   public String getName() {
     return myName;
   }

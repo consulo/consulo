@@ -20,7 +20,6 @@ import consulo.document.Document;
 import consulo.index.io.ID;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class PerIndexDocumentVersionMap {
     private int mapVersion;
     private long docVersion;
 
-    private IdVersionInfo(@Nonnull ID<?, ?> id, long docVersion, int mapVersion) {
+    private IdVersionInfo(ID<?, ?> id, long docVersion, int mapVersion) {
       this.docVersion = docVersion;
       this.mapVersion = mapVersion;
       this.id = id;
@@ -45,7 +44,7 @@ public class PerIndexDocumentVersionMap {
   }
 
   private static final Key<List<IdVersionInfo>> KEY = Key.create("UnsavedDocIdVersionInfo");
-  public long set(@Nonnull Document document, @Nonnull ID<?, ?> indexId, long value) {
+  public long set(Document document, ID<?, ?> indexId, long value) {
     List<IdVersionInfo> list = document.getUserData(KEY);
     if (list == null) {
       list = ((UserDataHolderEx)document).putUserDataIfAbsent(KEY, new ArrayList<>());
@@ -68,7 +67,7 @@ public class PerIndexDocumentVersionMap {
     }
   }
 
-  public long get(@Nonnull Document document, @Nonnull ID<?, ?> indexId) {
+  public long get(Document document, ID<?, ?> indexId) {
     List<IdVersionInfo> list = document.getUserData(KEY);
     if (list == null) {
       return INVALID_STAMP;
@@ -88,7 +87,7 @@ public class PerIndexDocumentVersionMap {
     }
   }
 
-  public void clearForDocument(@Nonnull Document document) {
+  public void clearForDocument(Document document) {
     document.putUserData(KEY, new ArrayList<>());
   }
   public void clear() {

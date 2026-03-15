@@ -29,8 +29,7 @@ import consulo.execution.internal.ConfigurationFromContextImpl;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -211,7 +210,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
         return null;
     }
 
-    protected RunnerAndConfigurationSettings cloneTemplateConfiguration(@Nonnull ConfigurationContext context) {
+    protected RunnerAndConfigurationSettings cloneTemplateConfiguration(ConfigurationContext context) {
         RunConfiguration original = context.getOriginalConfiguration(myConfigurationFactory.getType());
         if (original != null) {
             return RunManager.getInstance(context.getProject()).createConfiguration(original.clone(), myConfigurationFactory);
@@ -219,7 +218,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
         return RunManager.getInstance(context.getProject()).createRunConfiguration("", myConfigurationFactory);
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public static <T extends RunConfigurationProducer> T getInstance(Class<? extends T> aClass) {
         return Application.get().getExtensionPoint(RunConfigurationProducer.class).findExtensionOrFail(aClass);
@@ -227,7 +226,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public RunConfiguration createLightConfiguration(@Nonnull ConfigurationContext context) {
+    public RunConfiguration createLightConfiguration(ConfigurationContext context) {
         RunConfiguration configuration = myConfigurationFactory.createTemplateConfiguration(context.getProject());
         SimpleReference<PsiElement> ref = new SimpleReference<>(context.getPsiLocation());
         try {

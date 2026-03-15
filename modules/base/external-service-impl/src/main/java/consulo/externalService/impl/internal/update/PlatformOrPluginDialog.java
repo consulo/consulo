@@ -48,8 +48,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -65,9 +64,9 @@ import java.util.function.Predicate;
  * @since 2016-11-07
  */
 public class PlatformOrPluginDialog extends DialogWrapper {
-    @Nonnull
+    
     private JComponent myRoot;
-    @Nonnull
+    
     private List<PlatformOrPluginNode> myNodes;
     @Nullable
     private Project myProject;
@@ -76,15 +75,15 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     private final boolean myModalProgress;
     @Nullable
     private String myPlatformVersion;
-    @Nonnull
+    
     private Predicate<PluginId> myGreenStrategy;
-    @Nonnull
+    
     private PlatformOrPluginUpdateResultType myType;
 
     @SuppressWarnings("unchecked")
     public PlatformOrPluginDialog(
         @Nullable Project project,
-        @Nonnull PlatformOrPluginUpdateResult updateResult,
+        PlatformOrPluginUpdateResult updateResult,
         @Nullable Predicate<PluginId> greenStrategy,
         @Nullable Consumer<Collection<PluginDescriptor>> afterCallback,
         boolean modalProgress
@@ -148,12 +147,12 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         });
 
         PluginsList pluginsList = new PluginsList(null) {
-            @Nonnull
+            
             @Override
             protected PluginsListRender createRender(PluginsPanel pluginsPanel) {
                 return new PluginsListRender(null) {
                     @Override
-                    protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginDescriptor) {
+                    protected void updatePresentation(boolean isSelected, PluginDescriptor pluginDescriptor) {
                         PlatformOrPluginNode node =
                             ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginDescriptor.getPluginId()));
                         assert node != null;

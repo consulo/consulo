@@ -38,7 +38,6 @@ import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.io.*;
@@ -292,7 +291,7 @@ class HTMLTextPainter {
     myColumn++;
   }
 
-  private void writeLineNumber(@NonNls Writer writer) throws IOException {
+  private void writeLineNumber(Writer writer) throws IOException {
     writer.write('\n');
     myColumn = 0;
     lineCount++;
@@ -316,7 +315,7 @@ class HTMLTextPainter {
     }
   }
 
-  private void writeHeader(@NonNls Writer writer, String title) throws IOException {
+  private void writeHeader(Writer writer, String title) throws IOException {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     writer.write("<html>\r\n");
     writer.write("<head>\r\n");
@@ -335,7 +334,7 @@ class HTMLTextPainter {
     writer.write("<pre>\r\n");
   }
 
-  private void writeStyles(@NonNls Writer writer) throws IOException {
+  private void writeStyles(Writer writer) throws IOException {
     writer.write("<style type=\"text/css\">\n");
     writer.write(".ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }\n");
     HighlighterIterator hIterator = myHighlighter.createIterator(myOffset);
@@ -363,7 +362,7 @@ class HTMLTextPainter {
     writer.write("</style>\n");
   }
 
-  private static void writeFooter(@NonNls Writer writer) throws IOException {
+  private static void writeFooter(Writer writer) throws IOException {
     writer.write("</pre>\r\n");
     writer.write("</body>\r\n");
     writer.write("</html>");

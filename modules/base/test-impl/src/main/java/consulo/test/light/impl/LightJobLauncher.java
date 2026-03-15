@@ -23,8 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.Job;
 import consulo.application.util.concurrent.JobLauncher;
 import consulo.component.ProcessCanceledException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -41,26 +40,26 @@ import java.util.function.Predicate;
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightJobLauncher extends JobLauncher {
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {
+  public <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things, ProgressIndicator progress, Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     ApplicationEx app = (ApplicationEx)Application.get();
     return invokeConcurrentlyUnderProgress(things, progress, app.isReadAccessAllowed(), app.isInImpatientReader(), thingProcessor);
   }
 
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things,
+  public <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things,
                                                      ProgressIndicator progress,
                                                      boolean runInReadAction,
                                                      boolean failFastOnAcquireReadAction,
-                                                     @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {
+                                                     Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     for (T thing : things) {
       if (!thingProcessor.test(thing)) return false;
     }
     return true;
   }
 
-  @Nonnull
+  
   @Override
-  public Job<Void> submitToJobThread(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
+  public Job<Void> submitToJobThread(Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
     action.run();
     if (onDoneCallback != null) {
       onDoneCallback.accept(CompletableFuture.completedFuture(null));

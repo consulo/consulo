@@ -16,15 +16,14 @@
 package consulo.diff.fragment;
 
 import consulo.diff.util.ThreeSide;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public interface MergeLineFragment {
-  int getStartLine(@Nonnull ThreeSide side);
+  int getStartLine(ThreeSide side);
 
-  int getEndLine(@Nonnull ThreeSide side);
+  int getEndLine(ThreeSide side);
 
   @Nullable
   List<MergeWordFragment> getInnerFragments();

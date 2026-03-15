@@ -19,8 +19,7 @@ import consulo.document.util.TextRange;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 // IMPL class hardcoding logic to react to errors/warnings found during highlighting
@@ -28,38 +27,38 @@ import java.util.List;
 public abstract class HighlightInfoProcessor {
   // HInfos for visible part of file/block are produced.
   // Will remove all range-highlighters from there and replace them with passed infos
-  public void highlightsInsideVisiblePartAreProduced(@Nonnull HighlightingSession session,
+  public void highlightsInsideVisiblePartAreProduced(HighlightingSession session,
                                                      @Nullable Editor editor,
-                                                     @Nonnull List<? extends HighlightInfo> infos,
-                                                     @Nonnull TextRange priorityRange,
-                                                     @Nonnull TextRange restrictRange, int groupId) {
+                                                     List<? extends HighlightInfo> infos,
+                                                     TextRange priorityRange,
+                                                     TextRange restrictRange, int groupId) {
   }
 
-  public void highlightsOutsideVisiblePartAreProduced(@Nonnull HighlightingSession session,
+  public void highlightsOutsideVisiblePartAreProduced(HighlightingSession session,
                                                       @Nullable Editor editor,
-                                                      @Nonnull List<? extends HighlightInfo> infos,
-                                                      @Nonnull TextRange priorityRange,
-                                                      @Nonnull TextRange restrictedRange, int groupId) {
+                                                      List<? extends HighlightInfo> infos,
+                                                      TextRange priorityRange,
+                                                      TextRange restrictedRange, int groupId) {
   }
 
   // new HInfo became available during highlighting.
   // Incrementally add this HInfo in EDT iff there were nothing there before.
-  public void infoIsAvailable(@Nonnull HighlightingSession session, @Nonnull HighlightInfo info, @Nonnull TextRange priorityRange, @Nonnull TextRange restrictedRange, int groupId) {
+  public void infoIsAvailable(HighlightingSession session, HighlightInfo info, TextRange priorityRange, TextRange restrictedRange, int groupId) {
   }
 
   // this range is over.
   // Can queue to EDT to remove abandoned bijective highlighters from this range. All the rest abandoned highlighters have to wait until *AreProduced().
-  public void allHighlightsForRangeAreProduced(@Nonnull HighlightingSession session, @Nonnull TextRange elementRange, @Nullable List<? extends HighlightInfo> infos) {
+  public void allHighlightsForRangeAreProduced(HighlightingSession session, TextRange elementRange, @Nullable List<? extends HighlightInfo> infos) {
   }
 
-  public void progressIsAdvanced(@Nonnull HighlightingSession highlightingSession, @Nullable Editor editor, double progress) {
+  public void progressIsAdvanced(HighlightingSession highlightingSession, @Nullable Editor editor, double progress) {
   }
 
 
   private static final HighlightInfoProcessor EMPTY = new HighlightInfoProcessor() {
   };
 
-  @Nonnull
+  
   public static HighlightInfoProcessor getEmpty() {
     return EMPTY;
   }

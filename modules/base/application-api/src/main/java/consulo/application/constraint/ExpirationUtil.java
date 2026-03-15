@@ -20,7 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.disposer.WeakReferenceDisposableWrapper;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.function.Consumer;
 

@@ -19,9 +19,7 @@ package consulo.language.psi.path;
 import consulo.language.util.ProcessingContext;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -33,7 +31,7 @@ public interface CustomizableReferenceProvider {
   public final class CustomizationKey<T> {
     private final String myOptionDescription;
 
-    public CustomizationKey(@NonNls String optionDescription) {
+    public CustomizationKey(String optionDescription) {
       myOptionDescription = optionDescription;
     }
 
@@ -60,6 +58,6 @@ public interface CustomizableReferenceProvider {
   void setOptions(@Nullable Map<CustomizationKey,Object> options);
   @Nullable Map<CustomizationKey,Object> getOptions();
 
-  @Nonnull
-  public abstract PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext matchingContext);
+  
+  public abstract PsiReference[] getReferencesByElement(PsiElement element, ProcessingContext matchingContext);
 }

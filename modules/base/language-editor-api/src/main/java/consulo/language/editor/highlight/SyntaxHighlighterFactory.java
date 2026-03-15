@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -47,7 +46,7 @@ public abstract class SyntaxHighlighterFactory implements LanguageExtension {
    * @param virtualFile might be necessary to collect file specific settings
    * @return {@code SyntaxHighlighter} interface implementation for the given file type
    */
-  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+  public static SyntaxHighlighter getSyntaxHighlighter(Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     SyntaxHighlighterFactory highlighterFactory = Application.get().getExtensionPoint(SyntaxHighlighterFactory.class).getOrBuildCache(KEY).get(language);
     assert highlighterFactory != null;
     return highlighterFactory.getSyntaxHighlighter(project, virtualFile);
@@ -85,13 +84,13 @@ public abstract class SyntaxHighlighterFactory implements LanguageExtension {
    * @param virtualFile might be necessary to collect file specific settings
    * @return <code>SyntaxHighlighter</code> interface implementation for this particular language.
    */
-  @Nonnull
+  
   public abstract SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile);
 
   /**
    * Target language for this highlighter
    */
   @Override
-  @Nonnull
+  
   public abstract Language getLanguage();
 }

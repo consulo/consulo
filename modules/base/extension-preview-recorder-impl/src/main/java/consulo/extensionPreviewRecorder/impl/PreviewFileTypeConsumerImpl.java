@@ -25,8 +25,7 @@ import consulo.virtualFileSystem.fileType.matcher.ExactFileNameMatcher;
 import consulo.virtualFileSystem.fileType.matcher.ExtensionFileNameMatcher;
 import consulo.virtualFileSystem.fileType.matcher.WildcardFileNameMatcher;
 import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
@@ -48,12 +47,12 @@ public class PreviewFileTypeConsumerImpl implements FileTypeConsumer {
   }
 
   @Override
-  public void consume(@Nonnull FileType fileType) {
+  public void consume(FileType fileType) {
     consume(fileType, fileType.getDefaultExtension());
   }
 
   @Override
-  public void consume(@Nonnull FileType fileType, String extensions) {
+  public void consume(FileType fileType, String extensions) {
     if (extensions.isEmpty()) {
       return;
     }
@@ -65,13 +64,13 @@ public class PreviewFileTypeConsumerImpl implements FileTypeConsumer {
   }
 
   @Override
-  public void consume(@Nonnull FileType fileType, FileNameMatcher... fileNameMatchers) {
+  public void consume(FileType fileType, FileNameMatcher... fileNameMatchers) {
     for (FileNameMatcher fileNameMatcher : fileNameMatchers) {
       record(fileNameMatcher);
     }
   }
 
-  private void record(@Nonnull FileNameMatcher fileNameMatcher) {
+  private void record(FileNameMatcher fileNameMatcher) {
     String id = buildMatcherIdentify(fileNameMatcher);
     if (id == null) {
       return;

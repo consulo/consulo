@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.language.editor.inspection.scheme.Profile;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface ProfileChangeAdapter {

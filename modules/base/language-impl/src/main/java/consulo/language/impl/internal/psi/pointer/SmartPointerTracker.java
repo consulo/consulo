@@ -14,8 +14,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ class SmartPointerTracker {
     LowMemoryWatcher.register(() -> processQueue(), ApplicationManager.getApplication());
   }
 
-  synchronized boolean addReference(@Nonnull PointerReference reference, @Nonnull SmartPsiElementPointerImpl pointer) {
+  synchronized boolean addReference(PointerReference reference, SmartPsiElementPointerImpl pointer) {
     if (!isActual(reference.file, reference.key)) {
       // this pointer list has been removed by another thread; clients should get/create an up-to-date list and try adding to it
       return false;
@@ -56,7 +55,7 @@ class SmartPointerTracker {
     return true;
   }
 
-  private boolean isActual(@Nonnull VirtualFile file, @Nonnull Key<SmartPointerTracker> key) {
+  private boolean isActual(VirtualFile file, Key<SmartPointerTracker> key) {
     return file.getUserData(key) == this;
   }
 
@@ -82,7 +81,7 @@ class SmartPointerTracker {
     nextAvailableIndex = index;
   }
 
-  synchronized void removeReference(@Nonnull PointerReference reference) {
+  synchronized void removeReference(PointerReference reference) {
     int index = reference.index;
     if (index < 0) return;
 
@@ -103,14 +102,14 @@ class SmartPointerTracker {
     }
   }
 
-  private void assertActual(@Nonnull VirtualFile file, @Nonnull Key<SmartPointerTracker> refKey) {
+  private void assertActual(VirtualFile file, Key<SmartPointerTracker> refKey) {
     if (!isActual(file, refKey)) {
       SmartPointerTracker another = file.getUserData(refKey);
       throw new AssertionError("Smart pointer list mismatch:" + " size=" + size + ", ref.key=" + refKey + (another != null ? "; has another pointer list with size " + another.size : ""));
     }
   }
 
-  private void processAlivePointers(@Nonnull Processor<? super SmartPsiElementPointerImpl<?>> processor) {
+  private void processAlivePointers(Processor<? super SmartPsiElementPointerImpl<?>> processor) {
     for (int i = 0; i < nextAvailableIndex; i++) {
       PointerReference ref = references[i];
       if (ref == null) continue;
@@ -146,7 +145,7 @@ class SmartPointerTracker {
     }
   }
 
-  synchronized void updateMarkers(@Nonnull FrozenDocument frozen, @Nonnull List<? extends DocumentEvent> events) {
+  synchronized void updateMarkers(FrozenDocument frozen, List<? extends DocumentEvent> events) {
     boolean stillSorted = markerCache.updateMarkers(frozen, events);
     if (!stillSorted) {
       mySorted = false;
@@ -154,22 +153,22 @@ class SmartPointerTracker {
   }
 
   @Nullable
-  synchronized Segment getUpdatedRange(@Nonnull SelfElementInfo info, @Nonnull FrozenDocument document, @Nonnull List<? extends DocumentEvent> events) {
+  synchronized Segment getUpdatedRange(SelfElementInfo info, FrozenDocument document, List<? extends DocumentEvent> events) {
     return markerCache.getUpdatedRange(info, document, events);
   }
 
   @Nullable
-  synchronized Segment getUpdatedRange(@Nonnull PsiFile containingFile, @Nonnull Segment segment, boolean isSegmentGreedy, @Nonnull FrozenDocument frozen, @Nonnull List<? extends DocumentEvent> events) {
+  synchronized Segment getUpdatedRange(PsiFile containingFile, Segment segment, boolean isSegmentGreedy, FrozenDocument frozen, List<? extends DocumentEvent> events) {
     return MarkerCache.getUpdatedRange(containingFile, segment, isSegmentGreedy, frozen, events);
   }
 
-  synchronized void switchStubToAst(@Nonnull AnchorElementInfo info, @Nonnull PsiElement element) {
+  synchronized void switchStubToAst(AnchorElementInfo info, PsiElement element) {
     info.switchToTreeRange(element);
     markerCache.rangeChanged();
     mySorted = false;
   }
 
-  synchronized void fastenBelts(@Nonnull SmartPointerManagerImpl manager) {
+  synchronized void fastenBelts(SmartPointerManagerImpl manager) {
     processQueue();
     processAlivePointers(pointer -> {
       pointer.getElementInfo().fastenBelt(manager);
@@ -186,7 +185,7 @@ class SmartPointerTracker {
     });
   }
 
-  private static <E extends PsiElement> void updatePointerTarget(@Nonnull SmartPsiElementPointerImpl<E> pointer, @Nullable Segment pointerRange) {
+  private static <E extends PsiElement> void updatePointerTarget(SmartPsiElementPointerImpl<E> pointer, @Nullable Segment pointerRange) {
     E cachedElement = pointer.getCachedElement();
     if (cachedElement == null) {
       return;
@@ -241,13 +240,13 @@ class SmartPointerTracker {
   }
 
   static class PointerReference extends WeakReference<SmartPsiElementPointerImpl<?>> {
-    @Nonnull
+    
     final VirtualFile file;
-    @Nonnull
+    
     final Key<SmartPointerTracker> key;
     private int index = -2;
 
-    PointerReference(@Nonnull SmartPsiElementPointerImpl<?> pointer, @Nonnull VirtualFile containingFile, @Nonnull Key<SmartPointerTracker> key) {
+    PointerReference(SmartPsiElementPointerImpl<?> pointer, VirtualFile containingFile, Key<SmartPointerTracker> key) {
       super(pointer, ourQueue);
       file = containingFile;
       this.key = key;

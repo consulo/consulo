@@ -25,8 +25,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.EventObject;
@@ -54,21 +53,21 @@ public abstract class XDebugView implements Disposable {
 
   protected abstract void clear();
 
-  public abstract void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session);
+  public abstract void processSessionEvent(SessionEvent event, XDebugSession session);
 
   @Nullable
-  protected static XDebugSession getSession(@Nonnull EventObject e) {
+  protected static XDebugSession getSession(EventObject e) {
     Component component = e.getSource() instanceof Component ? (Component)e.getSource() : null;
     return component == null ? null : getSession(component);
   }
 
   @Nullable
-  public static XDebugSession getSession(@Nonnull Component component) {
+  public static XDebugSession getSession(Component component) {
     return getData(XDebugSession.DATA_KEY, component);
   }
 
   @Nullable
-  protected VirtualFile getCurrentFile(@Nonnull Component component) {
+  protected VirtualFile getCurrentFile(Component component) {
     XDebugSession session = getSession(component);
     if (session != null) {
       XSourcePosition position = session.getCurrentPosition();
@@ -81,7 +80,7 @@ public abstract class XDebugView implements Disposable {
 
 
   @Nullable
-  public static <T> T getData(Key<T> key, @Nonnull Component component) {
+  public static <T> T getData(Key<T> key, Component component) {
     DataContext dataContext = DataManager.getInstance().getDataContext(component);
     ViewContext viewContext = dataContext.getData(ViewContext.CONTEXT_KEY);
     ContentManager contentManager = viewContext == null ? null : viewContext.getContentManager();

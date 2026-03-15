@@ -29,8 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ven
@@ -48,7 +47,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
 
     @Override
     @RequiredReadAction
-    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    public boolean isEnabledOnElements(PsiElement[] elements) {
         return false;
     }
 
@@ -58,7 +57,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         RefactoringActionHandler handler = ReadAction.compute(() -> getHandler(e.getDataContext()));
         if (handler instanceof TitledHandler titledHandler) {
@@ -77,13 +76,13 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
 
     @Nullable
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider) {
         return null;
     }
 
     @Nullable
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, PsiElement element) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider, PsiElement element) {
         PsiFile file = element.getContainingFile();
         if (file == null) {
             return null;

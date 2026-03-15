@@ -24,8 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
@@ -41,20 +40,20 @@ public interface TargetElementUtilExtender {
   String ELEMENT_NAME_ACCEPTED = "element name accepted";
   String LOOKUP_ITEM_ACCEPTED = "lookup item accepted";
 
-  default void collectAllAccepted(@Nonnull Set<String> set) {
+  default void collectAllAccepted(Set<String> set) {
   }
 
-  default void collectDefinitionSearchFlags(@Nonnull Set<String> set) {
+  default void collectDefinitionSearchFlags(Set<String> set) {
   }
 
-  default void collectReferenceSearchFlags(@Nonnull Set<String> set) {
+  default void collectReferenceSearchFlags(Set<String> set) {
   }
 
-  default boolean isIdentifierPart(@Nonnull PsiFile file, @Nonnull CharSequence text, int offset) {
+  default boolean isIdentifierPart(PsiFile file, CharSequence text, int offset) {
     return false;
   }
 
-  default boolean isAcceptableReferencedElement(PsiElement element, @Nonnull PsiElement referenceOrReferencedElement) {
+  default boolean isAcceptableReferencedElement(PsiElement element, PsiElement referenceOrReferencedElement) {
     return true;
   }
 
@@ -64,21 +63,21 @@ public interface TargetElementUtilExtender {
   }
 
   @Nullable
-  default PsiElement adjustReference(@Nonnull PsiReference ref) {
+  default PsiElement adjustReference(PsiReference ref) {
     return null;
   }
 
   @Nullable
-  default PsiElement getReferenceOrReferencedElement(@Nonnull PsiReference reference, @Nonnull Set<String> flags) {
+  default PsiElement getReferenceOrReferencedElement(PsiReference reference, Set<String> flags) {
     return null;
   }
 
   @Nullable
-  default PsiElement modifyReferenceOrReferencedElement(@Nullable PsiElement refElement, @Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull Set<String> flags, int offset) {
+  default PsiElement modifyReferenceOrReferencedElement(@Nullable PsiElement refElement, PsiFile file, Editor editor, Set<String> flags, int offset) {
     return null;
   }
 
-  default boolean includeSelfInGotoImplementation(@Nonnull PsiElement element) {
+  default boolean includeSelfInGotoImplementation(PsiElement element) {
     return true;
   }
 
@@ -92,17 +91,17 @@ public interface TargetElementUtilExtender {
   }
 
   @Nullable
-  default Collection<PsiElement> getTargetCandidates(@Nonnull PsiReference reference) {
+  default Collection<PsiElement> getTargetCandidates(PsiReference reference) {
     return null;
   }
 
   @Nullable
-  default PsiElement getNamedElement(@Nonnull PsiElement element) {
+  default PsiElement getNamedElement(PsiElement element) {
     return null;
   }
 
   @Nullable
-  default PsiElement modifyTargetElement(@Nonnull PsiElement element, @Nonnull Set<String> flags) {
+  default PsiElement modifyTargetElement(PsiElement element, Set<String> flags) {
     return null;
   }
 }

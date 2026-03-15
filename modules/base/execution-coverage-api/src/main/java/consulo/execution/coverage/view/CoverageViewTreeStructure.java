@@ -9,7 +9,6 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,16 +32,16 @@ public class CoverageViewTreeStructure extends AbstractTreeStructure {
         myRootNode = (CoverageListRootNode) myCoverageViewExtension.createRootNode();
     }
 
-    @Nonnull
+    
     @Override
     public Object getRootElement() {
         return myRootNode;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public Object[] getChildElements(@Nonnull Object element) {
+    public Object[] getChildElements(Object element) {
         return getChildren(element, myData, myStateBean);
     }
 
@@ -66,15 +65,15 @@ public class CoverageViewTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         PsiElement psiElement = (PsiElement) element;
         return myCoverageViewExtension.getParentElement(psiElement);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public CoverageViewDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+    public CoverageViewDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         return new CoverageViewDescriptor(myProject, parentDescriptor, element);
     }
 

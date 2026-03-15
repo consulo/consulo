@@ -6,7 +6,6 @@ import consulo.document.Document;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -15,15 +14,15 @@ public final class UndoUtil {
     }
 
     @RequiredUIAccess
-    public static void writeInRunUndoTransparentAction(@Nonnull Runnable runnable) {
+    public static void writeInRunUndoTransparentAction(Runnable runnable) {
         CommandProcessor.getInstance().runUndoTransparentAction(() -> Application.get().runWriteAction(runnable));
     }
 
-    public static void disableUndoFor(@Nonnull Document document) {
+    public static void disableUndoFor(Document document) {
         document.putUserData(UndoConstants.DONT_RECORD_UNDO, Boolean.TRUE);
     }
 
-    public static void disableUndoIn(@Nonnull Document document, @Nonnull Runnable runnable) {
+    public static void disableUndoIn(Document document, Runnable runnable) {
         document.putUserData(UndoConstants.DONT_RECORD_UNDO, Boolean.TRUE);
         try {
             runnable.run();
@@ -33,23 +32,23 @@ public final class UndoUtil {
         }
     }
 
-    public static void disableUndoFor(@Nonnull VirtualFile file) {
+    public static void disableUndoFor(VirtualFile file) {
         file.putUserData(UndoConstants.DONT_RECORD_UNDO, Boolean.TRUE);
     }
 
-    public static void enableUndoFor(@Nonnull Document document) {
+    public static void enableUndoFor(Document document) {
         document.putUserData(UndoConstants.DONT_RECORD_UNDO, null);
     }
 
-    public static boolean isUndoDisabledFor(@Nonnull Document document) {
+    public static boolean isUndoDisabledFor(Document document) {
         return Boolean.TRUE.equals(document.getUserData(UndoConstants.DONT_RECORD_UNDO));
     }
 
-    public static boolean isUndoDisabledFor(@Nonnull VirtualFile file) {
+    public static boolean isUndoDisabledFor(VirtualFile file) {
         return Boolean.TRUE.equals(file.getUserData(UndoConstants.DONT_RECORD_UNDO));
     }
 
-    public static void forceUndoIn(@Nonnull VirtualFile file, @Nonnull Runnable runnable) {
+    public static void forceUndoIn(VirtualFile file, Runnable runnable) {
         file.putUserData(UndoConstants.FORCE_RECORD_UNDO, Boolean.TRUE);
         try {
             runnable.run();
@@ -59,11 +58,11 @@ public final class UndoUtil {
         }
     }
 
-    public static void setForceUndoFlag(@Nonnull VirtualFile file, boolean flag) {
+    public static void setForceUndoFlag(VirtualFile file, boolean flag) {
         file.putUserData(UndoConstants.FORCE_RECORD_UNDO, flag ? Boolean.TRUE : null);
     }
 
-    public static boolean isForceUndoFlagSet(@Nonnull VirtualFile file) {
+    public static boolean isForceUndoFlagSet(VirtualFile file) {
         return Objects.equals(file.getUserData(UndoConstants.FORCE_RECORD_UNDO), Boolean.TRUE);
     }
 }

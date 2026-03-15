@@ -40,8 +40,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base implementation of {@link RunProfileState}. Takes care of putting together a process and a console and wrapping them into an
@@ -71,7 +70,7 @@ public abstract class CommandLineState implements RunProfileState {
         return myEnvironment.getRunnerSettings();
     }
 
-    @Nonnull
+    
     public ExecutionTarget getExecutionTarget() {
         return myEnvironment.getExecutionTarget();
     }
@@ -81,8 +80,8 @@ public abstract class CommandLineState implements RunProfileState {
     }
 
     @Override
-    @Nonnull
-    public ExecutionResult execute(@Nonnull Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+    
+    public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
         ProcessHandler processHandler = startProcess();
         ConsoleView console = createConsole(executor);
         if (console != null) {
@@ -92,7 +91,7 @@ public abstract class CommandLineState implements RunProfileState {
     }
 
     @Nullable
-    protected ConsoleView createConsole(@Nonnull Executor executor) throws ExecutionException {
+    protected ConsoleView createConsole(Executor executor) throws ExecutionException {
         TextConsoleBuilder builder = getConsoleBuilder();
         return builder != null ? builder.getConsole() : null;
     }
@@ -104,7 +103,7 @@ public abstract class CommandLineState implements RunProfileState {
      * @throws ExecutionException if the execution failed.
      * @see GeneralCommandLine
      */
-    @Nonnull
+    
     protected abstract ProcessHandler startProcess() throws ExecutionException;
 
     protected AnAction[] createActions(ConsoleView console, ProcessHandler processHandler) {
@@ -137,18 +136,18 @@ public abstract class CommandLineState implements RunProfileState {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return myConsole.isOutputPaused();
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             myConsole.setOutputPaused(flag);
             Application.get().invokeLater(() -> update(event));
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent event) {
+        public void update(AnActionEvent event) {
             super.update(event);
             Presentation presentation = event.getPresentation();
             boolean isRunning = myProcessHandler != null && !myProcessHandler.isProcessTerminated();

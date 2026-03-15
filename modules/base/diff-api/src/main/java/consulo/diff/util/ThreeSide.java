@@ -18,8 +18,7 @@ package consulo.diff.util;
 import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Function;
 
@@ -34,7 +33,7 @@ public enum ThreeSide {
     myIndex = index;
   }
 
-  @Nonnull
+  
   public static ThreeSide fromIndex(int index) {
     if (index == 0) return LEFT;
     if (index == 1) return BASE;
@@ -60,50 +59,50 @@ public enum ThreeSide {
     throw new IllegalStateException();
   }
 
-  @Nonnull
-  public <T> T selectNotNull(@Nonnull T left, @Nonnull T base, @Nonnull T right) {
+  
+  public <T> T selectNotNull(T left, T base, T right) {
     if (myIndex == 0) return left;
     if (myIndex == 1) return base;
     if (myIndex == 2) return right;
     throw new IllegalStateException();
   }
 
-  public int select(@Nonnull int[] array) {
+  public int select(int[] array) {
     assert array.length == 3;
     return array[myIndex];
   }
 
-  public <T> T select(@Nonnull T[] array) {
+  public <T> T select(T[] array) {
     assert array.length == 3;
     return array[myIndex];
   }
 
-  @Nonnull
-  public <T> T selectNotNull(@Nonnull T[] array) {
+  
+  public <T> T selectNotNull(T[] array) {
     assert array.length == 3;
     return array[myIndex];
   }
 
-  public <T> T select(@Nonnull List<T> list) {
+  public <T> T select(List<T> list) {
     assert list.size() == 3;
     return list.get(myIndex);
   }
 
-  @Nonnull
-  public <T> T selectNotNull(@Nonnull List<T> list) {
+  
+  public <T> T selectNotNull(List<T> list) {
     assert list.size() == 3;
     return list.get(myIndex);
   }
 
   @Nullable
-  public static <T> ThreeSide fromValue(@Nonnull List<? extends T> list, @Nullable T value) {
+  public static <T> ThreeSide fromValue(List<? extends T> list, @Nullable T value) {
     assert list.size() == 3;
     int index = list.indexOf(value);
     return index != -1 ? fromIndex(index) : null;
   }
 
-  @Nonnull
-  public static <T> List<T> map(@Nonnull Function<ThreeSide, T> function) {
+  
+  public static <T> List<T> map(Function<ThreeSide, T> function) {
     return ContainerUtil.list(function.apply(LEFT), function.apply(BASE), function.apply(RIGHT));
   }
 }

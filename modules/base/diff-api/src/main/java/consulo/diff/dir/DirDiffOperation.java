@@ -21,7 +21,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.style.ComponentColors;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 

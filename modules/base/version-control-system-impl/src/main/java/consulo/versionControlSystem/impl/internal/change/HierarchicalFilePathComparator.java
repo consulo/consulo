@@ -19,7 +19,6 @@ import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -40,7 +39,7 @@ public class HierarchicalFilePathComparator implements Comparator<FilePath> {
   }
 
   @Override
-  public int compare(@Nonnull FilePath filePath1, @Nonnull FilePath filePath2) {
+  public int compare(FilePath filePath1, FilePath filePath2) {
     String path1 = FileUtil.toSystemIndependentName(filePath1.getPath());
     String path2 = FileUtil.toSystemIndependentName(filePath2.getPath());
 

@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -33,14 +32,14 @@ import java.io.IOException;
  */
 public class PruneEmptyDirectoriesAction extends AnAction {
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
         e.getPresentation().setEnabled(files != null && files.length > 0);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VirtualFile[] files = e.getRequiredData(VirtualFile.KEY_OF_ARRAY);
         FileTypeManager ftManager = FileTypeManager.getInstance();
         try {
@@ -56,7 +55,7 @@ public class PruneEmptyDirectoriesAction extends AnAction {
         VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
             @Override
             @RequiredUIAccess
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (file.isDirectory()) {
                     if (ftManager.isFileIgnored(file)) {
                         return false;
@@ -71,7 +70,7 @@ public class PruneEmptyDirectoriesAction extends AnAction {
 
             @Override
             @RequiredUIAccess
-            public void afterChildrenVisited(@Nonnull VirtualFile file) {
+            public void afterChildrenVisited(VirtualFile file) {
                 if (file.isDirectory() && file.getChildren().length == 0) {
                     delete(file);
                 }

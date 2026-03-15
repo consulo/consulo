@@ -27,8 +27,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -46,7 +45,7 @@ public class PostfixDescriptionPanel implements Disposable {
     initializeExamplePanel(myBeforePanel);
   }
 
-  public void reset(@Nonnull PostfixTemplateMetaData actionMetaData) {
+  public void reset(PostfixTemplateMetaData actionMetaData) {
 
     TextDescriptor url = actionMetaData.getDescription();
     String description = getDescription(url);
@@ -56,7 +55,7 @@ public class PostfixDescriptionPanel implements Disposable {
     showUsages(myAfterPanel, ArrayUtil.getFirstElement(actionMetaData.getExampleUsagesAfter()));
   }
 
-  @Nonnull
+  
   private static String getDescription(TextDescriptor url) {
     try {
       return url.getText();
@@ -67,7 +66,7 @@ public class PostfixDescriptionPanel implements Disposable {
     return "";
   }
 
-  private static void showUsages(@Nonnull JPanel panel, @Nullable TextDescriptor exampleUsage) {
+  private static void showUsages(JPanel panel, @Nullable TextDescriptor exampleUsage) {
     String text = "";
     FileType fileType = PlainTextFileType.INSTANCE;
     if (exampleUsage != null) {
@@ -87,7 +86,7 @@ public class PostfixDescriptionPanel implements Disposable {
     panel.repaint();
   }
 
-  private void initializeExamplePanel(@Nonnull JPanel panel) {
+  private void initializeExamplePanel(JPanel panel) {
     panel.setLayout(new BorderLayout());
     ActionUsagePanel actionUsagePanel = new ActionUsagePanel();
     panel.add(actionUsagePanel);

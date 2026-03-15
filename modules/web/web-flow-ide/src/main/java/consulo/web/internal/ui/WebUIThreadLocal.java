@@ -16,7 +16,6 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.UI;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ public class WebUIThreadLocal {
     ourUI.set(ui);
   }
 
-  @Nonnull
+  
   public static UI getUI() {
     UI ui = ourUI.get();
     if (ui != null) {

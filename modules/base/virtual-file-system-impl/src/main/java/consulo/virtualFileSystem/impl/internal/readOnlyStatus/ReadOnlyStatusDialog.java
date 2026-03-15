@@ -26,7 +26,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.HandleType;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,7 +99,7 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
                 //noinspection unchecked
                 myChangelist.setRenderer(new ColoredListCellRenderer<String>() {
                     @Override
-                    protected void customizeCellRenderer(@Nonnull JList<? extends String> list, String value, int index, boolean selected, boolean hasFocus) {
+                    protected void customizeCellRenderer(JList<? extends String> list, String value, int index, boolean selected, boolean hasFocus) {
                         if (value == null) {
                             return;
                         }

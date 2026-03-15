@@ -17,12 +17,11 @@ package consulo.project.ui.wm.dock;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface DockContainerFactory {
-  @Nonnull
+  
   String getId();
 
   DockContainer createContainer(DockManager dockManager, DockableContent content);

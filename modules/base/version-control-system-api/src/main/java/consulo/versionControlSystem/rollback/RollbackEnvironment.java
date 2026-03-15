@@ -22,7 +22,6 @@ import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -47,7 +46,7 @@ public interface RollbackEnvironment extends VcsProviderMarker {
    * @param listener
    * @return list of errors occurred, or an empty list if no errors occurred.
    */
-  void rollbackChanges(List<Change> changes, List<VcsException> vcsExceptions, @Nonnull RollbackProgressListener listener);
+  void rollbackChanges(List<Change> changes, List<VcsException> vcsExceptions, RollbackProgressListener listener);
 
   /**
    * Rolls back the deletion of files which have been deleted locally but not scheduled for deletion

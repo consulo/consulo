@@ -34,8 +34,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -57,8 +56,8 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   }
 
   @Override
-  @Nonnull
-  public FileEditorProvider[] getProviders(@Nonnull Project project, @Nonnull VirtualFile file) {
+  
+  public FileEditorProvider[] getProviders(Project project, VirtualFile file) {
     // Collect all possible editors
     List<FileEditorProvider> sharedProviders = new ArrayList<>();
     boolean doNotShowTextEditor = false;
@@ -88,7 +87,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
   @Override
   @Nullable
-  public FileEditorProvider getProvider(@Nonnull String editorTypeId) {
+  public FileEditorProvider getProvider(String editorTypeId) {
     for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
       if (provider.getEditorTypeId().equals(editorTypeId)) {
         return provider;
@@ -97,7 +96,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public FileEditorProviderManagerState getState() {
     return myState;

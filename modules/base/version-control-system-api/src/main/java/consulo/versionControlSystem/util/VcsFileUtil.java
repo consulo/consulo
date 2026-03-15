@@ -30,8 +30,7 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.SystemIndependent;
 
 import java.io.File;
@@ -65,9 +64,9 @@ public class VcsFileUtil {
    * @return list of result values
    * @throws VcsException
    */
-  @Nonnull
-  public static <T> List<T> foreachChunk(@Nonnull List<String> arguments,
-                                         @Nonnull ThrowableFunction<List<String>, List<? extends T>, VcsException> processor)
+  
+  public static <T> List<T> foreachChunk(List<String> arguments,
+                                         ThrowableFunction<List<String>, List<? extends T>, VcsException> processor)
           throws VcsException {
     return foreachChunk(arguments, 1, processor);
   }
@@ -82,11 +81,11 @@ public class VcsFileUtil {
    * @return list of result values
    * @throws VcsException
    */
-  @Nonnull
+  
   public static <T> List<T> foreachChunk(
-    @Nonnull List<String> arguments,
+    List<String> arguments,
     int groupSize,
-    @Nonnull ThrowableFunction<List<String>, List<? extends T>, VcsException> processor
+    ThrowableFunction<List<String>, List<? extends T>, VcsException> processor
   ) throws VcsException {
     List<T> result = new ArrayList<>();
 
@@ -105,9 +104,9 @@ public class VcsFileUtil {
    * @param consumer  consumer to feed each chunk
    * @throws VcsException
    */
-  public static void foreachChunk(@Nonnull List<String> arguments,
+  public static void foreachChunk(List<String> arguments,
                                   int groupSize,
-                                  @Nonnull ThrowableConsumer<List<String>, VcsException> consumer)
+                                  ThrowableConsumer<List<String>, VcsException> consumer)
           throws VcsException {
     List<List<String>> chunks = chunkArguments(arguments, groupSize);
 
@@ -125,8 +124,8 @@ public class VcsFileUtil {
    * @param arguments the arguments to chunk
    * @return a list of lists of arguments
    */
-  @Nonnull
-  public static List<List<String>> chunkArguments(@Nonnull List<String> arguments) {
+  
+  public static List<List<String>> chunkArguments(List<String> arguments) {
     return chunkArguments(arguments, 1);
   }
 
@@ -137,8 +136,8 @@ public class VcsFileUtil {
    * @param groupSize size of argument groups that should be put in the same chunk
    * @return a list of lists of arguments
    */
-  @Nonnull
-  public static List<List<String>> chunkArguments(@Nonnull List<String> arguments, int groupSize) {
+  
+  public static List<List<String>> chunkArguments(List<String> arguments, int groupSize) {
     assert arguments.size() % groupSize == 0 : "Arguments size should be divisible by group size";
 
     ArrayList<List<String>> rc = new ArrayList<>();
@@ -190,15 +189,15 @@ public class VcsFileUtil {
    * @param files the file list
    * @return chunked relative paths
    */
-  public static List<List<String>> chunkFiles(@Nonnull VirtualFile root, @Nonnull Collection<VirtualFile> files) {
+  public static List<List<String>> chunkFiles(VirtualFile root, Collection<VirtualFile> files) {
     return chunkArguments(toRelativeFiles(root, files));
   }
 
-  public static String getRelativeFilePath(VirtualFile file, @Nonnull VirtualFile baseDir) {
+  public static String getRelativeFilePath(VirtualFile file, VirtualFile baseDir) {
     return getRelativeFilePath(file.getPath(), baseDir);
   }
 
-  public static String getRelativeFilePath(String file, @Nonnull VirtualFile baseDir) {
+  public static String getRelativeFilePath(String file, VirtualFile baseDir) {
     if (Platform.current().os().isWindows()) {
       file = file.replace('\\', '/');
     }
@@ -307,7 +306,7 @@ public class VcsFileUtil {
    * @return a list of relative paths
    * @throws IllegalArgumentException if some path is not under root.
    */
-  public static List<String> toRelativePaths(@Nonnull VirtualFile root, @Nonnull Collection<FilePath> filePaths) {
+  public static List<String> toRelativePaths(VirtualFile root, Collection<FilePath> filePaths) {
     ArrayList<String> rc = new ArrayList<>(filePaths.size());
     for (FilePath path : filePaths) {
       rc.add(relativePath(root, path));
@@ -323,7 +322,7 @@ public class VcsFileUtil {
    * @return a list of relative paths
    * @throws IllegalArgumentException if some path is not under root.
    */
-  public static List<String> toRelativeFiles(@Nonnull VirtualFile root, @Nonnull Collection<VirtualFile> files) {
+  public static List<String> toRelativeFiles(VirtualFile root, Collection<VirtualFile> files) {
     ArrayList<String> rc = new ArrayList<>(files.size());
     for (VirtualFile file : files) {
       rc.add(relativePath(root, file));
@@ -331,7 +330,7 @@ public class VcsFileUtil {
     return rc;
   }
 
-  public static void markFilesDirty(@Nonnull Project project, @Nonnull Collection<VirtualFile> affectedFiles) {
+  public static void markFilesDirty(Project project, Collection<VirtualFile> affectedFiles) {
     VcsDirtyScopeManager dirty = VcsDirtyScopeManager.getInstance(project);
     for (VirtualFile file : affectedFiles) {
       if (file.isDirectory()) {
@@ -343,7 +342,7 @@ public class VcsFileUtil {
     }
   }
 
-  public static void markFilesDirty(@Nonnull Project project, @Nonnull List<FilePath> affectedFiles) {
+  public static void markFilesDirty(Project project, List<FilePath> affectedFiles) {
     VcsDirtyScopeManager dirty = VcsDirtyScopeManager.getInstance(project);
     for (FilePath file : affectedFiles) {
       if (file.isDirectory()) {
@@ -394,15 +393,15 @@ public class VcsFileUtil {
   /**
    * @see FileUtil#toCanonicalPath
    */
-  public static boolean isAncestor(@Nonnull @SystemIndependent String ancestor, @Nonnull @SystemIndependent String path, boolean strict) {
+  public static boolean isAncestor(@SystemIndependent String ancestor, @SystemIndependent String path, boolean strict) {
     return FileUtil.startsWith(path, ancestor, SystemInfo.isFileSystemCaseSensitive, strict);
   }
 
-  public static boolean isAncestor(@Nonnull FilePath ancestor, @Nonnull FilePath path, boolean strict) {
+  public static boolean isAncestor(FilePath ancestor, FilePath path, boolean strict) {
     return isAncestor(ancestor.getPath(), path.getPath(), strict);
   }
 
-  public static boolean isAncestor(@Nonnull VirtualFile root, @Nonnull FilePath path) {
+  public static boolean isAncestor(VirtualFile root, FilePath path) {
     return isAncestor(root.getPath(), path.getPath(), false);
   }
 }

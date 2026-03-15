@@ -20,7 +20,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -55,7 +54,7 @@ class ComboBoxVisibilityGroup extends ComboBoxAction {
         return myValue;
     }
 
-    @Nonnull
+    
     @Override
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
         return myGroup;

@@ -30,8 +30,7 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.jdom.JDOMUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -49,13 +48,13 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         myId = Key.create(mirrorProviderName);
     }
 
-    @Nonnull
+    
     @Override
     public Key<UnknownTask> getId() {
         return myId;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ExecutionLocalize.beforeLaunchRunUnknownTask();
@@ -67,7 +66,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         return PlatformIconGroup.actionsHelp();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription(UnknownTask task) {
         return LocalizeValue.join(
@@ -77,7 +76,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         );
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, UnknownTask task) {
@@ -89,7 +88,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, UnknownTask task) {
         return AsyncResult.resolved();

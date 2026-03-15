@@ -37,8 +37,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -56,7 +55,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
 
   @Nullable
   @Override
-  public Image getIcon(@Nonnull VirtualFile file) {
+  public Image getIcon(VirtualFile file) {
     File ioFile = VirtualFileUtil.virtualToIoFile(file);
     for (ModuleImportProvider provider : myProviders) {
       if (provider.canImport(ioFile)) {
@@ -67,7 +66,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Override
-  public boolean canOpenProject(@Nonnull File file) {
+  public boolean canOpenProject(File file) {
     for (ModuleImportProvider provider : myProviders) {
       if (provider.canImport(file)) {
         return true;
@@ -77,9 +76,9 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
     return false;
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext openContext) {
+  public AsyncResult<Project> doOpenProjectAsync(VirtualFile virtualFile, UIAccess uiAccess, ProjectOpenContext openContext) {
     File ioPath = VirtualFileUtil.virtualToIoFile(virtualFile);
 
     List<ModuleImportProvider> targetProviders =

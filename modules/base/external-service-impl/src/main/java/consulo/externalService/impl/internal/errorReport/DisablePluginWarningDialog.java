@@ -13,7 +13,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +54,7 @@ public class DisablePluginWarningDialog extends DialogWrapper {
         return myContentPane;
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         if (Platform.current().os().isMac()) {

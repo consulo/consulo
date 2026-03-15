@@ -27,8 +27,7 @@ import consulo.localize.LocalizeValue;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,7 +37,7 @@ import java.util.Set;
 public class GotoClassModel2 extends FilteringGotoByModel<Language> {
     private String[] mySeparators;
 
-    public GotoClassModel2(@Nonnull Project project) {
+    public GotoClassModel2(Project project) {
         super(project, project.getApplication().getExtensionList(GotoClassOrTypeContributor.class));
     }
 
@@ -65,7 +64,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
         return IdeLocalize.promptGotoclassEnterClassName().get();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getCheckBoxName() {
         return IdeLocalize.checkboxIncludeNonProjectClasses();
@@ -116,7 +115,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
     }
 
     @Override
-    @Nonnull
+    
     public String[] getSeparators() {
         if (mySeparators == null) {
             mySeparators = getSeparatorsFromContributors(getContributorList());
@@ -140,9 +139,9 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
         return "procedures.navigating.goto.class";
     }
 
-    @Nonnull
+    
     @Override
-    public String removeModelSpecificMarkup(@Nonnull String pattern) {
+    public String removeModelSpecificMarkup(String pattern) {
         if (pattern.startsWith("@")) {
             return pattern.substring(1);
         }

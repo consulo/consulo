@@ -30,8 +30,7 @@ import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
@@ -39,13 +38,13 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class GeneralHighlightingPassFactory implements MainHighlightingPassFactory {
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.UPDATE_FOLDING}, false, Pass.UPDATE_ALL);
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     TextRange textRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.UPDATE_ALL);
     if (textRange == null) return new EmptyPass(file.getProject(), editor.getDocument());
     ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
@@ -53,7 +52,7 @@ public class GeneralHighlightingPassFactory implements MainHighlightingPassFacto
   }
 
   @Override
-  public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file, @Nonnull Document document, @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
+  public TextEditorHighlightingPass createMainHighlightingPass(PsiFile file, Document document, HighlightInfoProcessor highlightInfoProcessor) {
     // no applying to the editor - for read-only analysis only
     return new GeneralHighlightingPass(file.getProject(), file, document, 0, file.getTextLength(), true, new ProperTextRange(0, document.getTextLength()), null, highlightInfoProcessor);
   }

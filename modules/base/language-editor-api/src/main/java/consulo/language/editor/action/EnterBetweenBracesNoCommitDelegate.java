@@ -7,11 +7,10 @@ import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBracesDelegate {
   @Override
-  public boolean bracesAreInTheSameElement(@Nonnull PsiFile file, @Nonnull Editor editor, int lBraceOffset, int rBraceOffset) {
+  public boolean bracesAreInTheSameElement(PsiFile file, Editor editor, int lBraceOffset, int rBraceOffset) {
     HighlighterIterator it = createBeforeIterator(editor, lBraceOffset + 1);
     while (!it.atEnd() && it.getStart() < rBraceOffset) {
       it.advance();
@@ -23,7 +22,7 @@ public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBra
   }
 
   @Override
-  public boolean isInComment(@Nonnull PsiFile file, @Nonnull Editor editor, int offset) {
+  public boolean isInComment(PsiFile file, Editor editor, int offset) {
     HighlighterIterator it = createBeforeIterator(editor, offset);
     return !it.atEnd() && isCommentType((IElementType)it.getTokenType());
   }
@@ -31,12 +30,12 @@ public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBra
   public abstract boolean isCommentType(IElementType type);
 
   @Override
-  public void formatAtOffset(@Nonnull PsiFile file, @Nonnull Editor editor, int offset, Language language) {
+  public void formatAtOffset(PsiFile file, Editor editor, int offset, Language language) {
     LanguageEditorInternalHelper.getInstance().adjustLineIndentNoCommit(language, editor.getDocument(), editor, offset);
   }
 
-  @Nonnull
-  public static HighlighterIterator createBeforeIterator(@Nonnull Editor editor, int caretOffset) {
+  
+  public static HighlighterIterator createBeforeIterator(Editor editor, int caretOffset) {
     return editor.getHighlighter().createIterator(caretOffset == 0 ? 0 : caretOffset - 1);
   }
 }

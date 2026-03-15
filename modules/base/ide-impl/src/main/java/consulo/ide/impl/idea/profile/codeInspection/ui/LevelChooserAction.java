@@ -31,7 +31,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.action.ComboBoxAction;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.SortedSet;
@@ -52,7 +51,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
         mySeverityRegistrar = severityRegistrar;
     }
 
-    @Nonnull
+    
     @Override
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
         DefaultActionGroup group = new DefaultActionGroup();
@@ -67,7 +66,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
         group.add(new DumbAwareAction("Edit severities...") {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(Project.KEY), myChosen, mySeverityRegistrar);
                 if (dlg.showAndGet()) {
                     HighlightInfoType type = dlg.getSelectedType();
@@ -120,7 +119,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             HighlightSeverity severity = getSeverity();
             setChosen(severity);
             onChosen(severity);

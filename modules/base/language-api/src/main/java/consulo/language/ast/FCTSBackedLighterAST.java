@@ -19,33 +19,32 @@ import consulo.language.util.CharTable;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
 import java.util.AbstractList;
 import java.util.List;
 
 public class FCTSBackedLighterAST extends LighterAST {
-  @Nonnull
+  
   private final FlyweightCapableTreeStructure<LighterASTNode> myTreeStructure;
 
-  public FCTSBackedLighterAST(@Nonnull CharTable charTable, @Nonnull FlyweightCapableTreeStructure<LighterASTNode> treeStructure) {
+  public FCTSBackedLighterAST(CharTable charTable, FlyweightCapableTreeStructure<LighterASTNode> treeStructure) {
     super(charTable);
     myTreeStructure = treeStructure;
   }
 
-  @Nonnull
+  
   @Override
   public LighterASTNode getRoot() {
     return myTreeStructure.getRoot();
   }
 
   @Override
-  public LighterASTNode getParent(@Nonnull LighterASTNode node) {
+  public LighterASTNode getParent(LighterASTNode node) {
     return myTreeStructure.getParent(node);
   }
 
-  @Nonnull
+  
   @Override
-  public List<LighterASTNode> getChildren(@Nonnull LighterASTNode parent) {
+  public List<LighterASTNode> getChildren(LighterASTNode parent) {
     SimpleReference<LighterASTNode[]> into = SimpleReference.create();
     int numKids = myTreeStructure.getChildren(myTreeStructure.prepareForGetChildren(parent), into);
     if (numKids == 0) {

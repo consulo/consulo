@@ -21,8 +21,7 @@ import consulo.ui.TreeNode;
 import consulo.ui.image.Image;
 import org.eclipse.swt.widgets.TreeItem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -74,7 +73,7 @@ public class DesktopSwtTreeNode<E> implements TreeNode<E> {
     }
 
     @Override
-    public void setRenderer(@Nonnull BiConsumer<E, TextItemPresentation> renderer) {
+    public void setRenderer(BiConsumer<E, TextItemPresentation> renderer) {
         myRenderer = renderer;
     }
 

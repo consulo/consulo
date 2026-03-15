@@ -18,8 +18,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +32,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
         setPopup(true);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         Project project = e != null ? e.getData(Project.KEY) : null;
@@ -53,14 +52,14 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
         private final StatusBarWidgetFactory myWidgetFactory;
         private final StatusBarWidgetsManagerImpl myManager;
 
-        private ToggleWidgetAction(@Nonnull StatusBarWidgetFactory widgetFactory, StatusBarWidgetsManagerImpl manager) {
+        private ToggleWidgetAction(StatusBarWidgetFactory widgetFactory, StatusBarWidgetsManagerImpl manager) {
             super(LocalizeValue.localizeTODO(widgetFactory.getDisplayName()));
             myWidgetFactory = widgetFactory;
             myManager = manager;
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             Project project = e.getData(Project.KEY);
             if (project == null) {
@@ -77,13 +76,13 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return StatusBarWidgetSettings.getInstance().isEnabled(myWidgetFactory);
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             StatusBarWidgetSettings.getInstance().setEnabled(myWidgetFactory, state);
             for (Project project : ProjectManager.getInstance().getOpenProjects()) {
                 StatusBarWidgetsManager.getInstance(project).updateWidget(myWidgetFactory, UIAccess.current());
@@ -94,7 +93,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
     private static class HideCurrentWidgetAction extends DumbAwareAction {
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             StatusBarWidgetFactory factory = getFactory(e);
             if (factory == null) {
                 return;
@@ -107,7 +106,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             StatusBarWidgetFactory factory = getFactory(e);
             e.getPresentation().setEnabledAndVisible(factory != null && factory.isConfigurable());
@@ -117,7 +116,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
         }
 
         @Nullable
-        private static StatusBarWidgetFactory getFactory(@Nonnull AnActionEvent e) {
+        private static StatusBarWidgetFactory getFactory(AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             String hoveredWidgetId = e.getData(StatusBarEx.HOVERED_WIDGET_ID);
             if (project != null && hoveredWidgetId != null && e.hasData(StatusBar.KEY)) {

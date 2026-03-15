@@ -36,8 +36,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -114,10 +113,10 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
         return chooserDescriptor;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull VirtualFile[] value) {
+    public List<OrderEntry> createOrderEntries(ModifiableModuleRootLayer layer, VirtualFile[] value) {
         List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, Arrays.asList(value));
         if (chosenFiles.isEmpty()) {
             return Collections.emptyList();

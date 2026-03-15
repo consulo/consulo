@@ -16,8 +16,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,7 +98,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
      * It guaranties readability of selected text in any LAF.
      */
     @Override
-    public final void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
+    public final void append(String fragment, SimpleTextAttributes attributes, boolean isMainText) {
         if (mySelected) {
             super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), mySelectionForeground), isMainText);
         }
@@ -112,7 +111,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     }
 
     @Override
-    @Nonnull
+    
     public Dimension getPreferredSize() {
         // There is a bug in BasicComboPopup. It does not add renderer into CellRendererPane,
         // so font can be null here.
@@ -129,7 +128,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
         return UIUtil.updateListRowHeight(result);
     }
 
-    protected abstract void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);
+    protected abstract void customizeCellRenderer(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);
 
     /**
      * Copied AS IS

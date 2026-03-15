@@ -60,8 +60,7 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -250,7 +249,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
      * modal context.
      * @throws IllegalArgumentException if <code>component</code> is <code>null</code>.
      */
-    public static boolean isModalContext(@Nonnull Component component) {
+    public static boolean isModalContext(Component component) {
         Window awtWindow = UIUtil.getWindow(component);
 
         consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
@@ -561,13 +560,13 @@ public final class IdeKeyEventDispatcher implements Disposable {
     }
 
     private final ActionProcessor myActionProcessor = new ActionProcessor() {
-        @Nonnull
+        
         @Override
         public AnActionEvent createEvent(
             InputEvent inputEvent,
-            @Nonnull DataContext context,
-            @Nonnull String place,
-            @Nonnull Presentation presentation,
+            DataContext context,
+            String place,
+            Presentation presentation,
             ActionManager manager
         ) {
             return new AnActionEvent(
@@ -584,13 +583,13 @@ public final class IdeKeyEventDispatcher implements Disposable {
         }
 
         @Override
-        public void onUpdatePassed(InputEvent inputEvent, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent) {
+        public void onUpdatePassed(InputEvent inputEvent, AnAction action, AnActionEvent actionEvent) {
             setState(KeyState.STATE_PROCESSED);
             setPressedWasProcessed(inputEvent.getID() == KeyEvent.KEY_PRESSED);
         }
 
         @Override
-        public void performAction(@Nonnull InputEvent e, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent) {
+        public void performAction(InputEvent e, AnAction action, AnActionEvent actionEvent) {
             e.consume();
 
             DataContext ctx = actionEvent.getDataContext();
@@ -615,7 +614,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
     };
 
     @RequiredUIAccess
-    public boolean processAction(InputEvent e, @Nonnull ActionProcessor processor) {
+    public boolean processAction(InputEvent e, ActionProcessor processor) {
         ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
         Project project = myContext.getDataContext().getData(Project.KEY);
         boolean dumb = project != null && DumbService.getInstance(project).isDumb();
@@ -851,8 +850,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
     private static class SecondaryKeystrokePopup extends ListPopupImpl {
         private SecondaryKeystrokePopup(
-            @Nonnull KeyStroke firstKeystroke,
-            @Nonnull List<Pair<AnAction, KeyStroke>> actions,
+            KeyStroke firstKeystroke,
+            List<Pair<AnAction, KeyStroke>> actions,
             DataContext context
         ) {
             super(buildStep(actions, context));
@@ -860,8 +859,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
         }
 
         private void registerActions(
-            @Nonnull KeyStroke firstKeyStroke,
-            @Nonnull List<Pair<AnAction, KeyStroke>> actions,
+            KeyStroke firstKeyStroke,
+            List<Pair<AnAction, KeyStroke>> actions,
             DataContext ctx
         ) {
             ContainerUtil.process(
@@ -897,7 +896,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
             );
         }
 
-        private static void invokeAction(@Nonnull AnAction action, DataContext ctx) {
+        private static void invokeAction(AnAction action, DataContext ctx) {
             AnActionEvent event = new AnActionEvent(
                 null,
                 ctx,
@@ -916,7 +915,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
             return new ActionListCellRenderer();
         }
 
-        private static ListPopupStep buildStep(@Nonnull List<Pair<AnAction, KeyStroke>> actions, DataContext ctx) {
+        private static ListPopupStep buildStep(List<Pair<AnAction, KeyStroke>> actions, DataContext ctx) {
             return new BaseListPopupStep<Pair<AnAction, KeyStroke>>(
                 "Choose an action",
                 ContainerUtil.findAll(
@@ -942,7 +941,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
         private static class ActionListCellRenderer extends ColoredListCellRenderer {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
                 if (value instanceof Pair) {
                     //noinspection unchecked
                     Pair<AnAction, KeyStroke> pair = (Pair<AnAction, KeyStroke>)value;

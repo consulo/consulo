@@ -2,8 +2,7 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -12,13 +11,13 @@ import java.util.Map;
  * @author Vitaliy.Bibaev
  */
 public interface TraceInfo {
-  @Nonnull
+  
   StreamCall getCall();
 
-  @Nonnull
+  
   Map<Integer, TraceElement> getValuesOrderBefore();
 
-  @Nonnull
+  
   Map<Integer, TraceElement> getValuesOrderAfter();
 
   @Nullable

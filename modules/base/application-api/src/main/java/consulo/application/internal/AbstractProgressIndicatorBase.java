@@ -18,8 +18,7 @@ import consulo.util.collection.primitive.doubles.DoubleList;
 import consulo.util.collection.primitive.doubles.DoubleLists;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -143,22 +142,22 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  public void setTextValue(@Nonnull LocalizeValue text) {
+  public void setTextValue(LocalizeValue text) {
     myText = text;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getTextValue() {
     return myText;
   }
 
   @Override
-  public void setText2Value(@Nonnull LocalizeValue text) {
+  public void setText2Value(LocalizeValue text) {
     myText2 = text;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText2Value() {
     return myText2;
@@ -233,7 +232,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  @Nonnull
+  
   public ModalityState getModalityState() {
     return myModalityState;
   }
@@ -284,7 +283,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     return isModal();
   }
 
-  public void initStateFrom(@Nonnull ProgressIndicator indicator) {
+  public void initStateFrom(ProgressIndicator indicator) {
     synchronized (getLock()) {
       myRunning = indicator.isRunning();
       myCanceled = indicator.isCanceled();
@@ -310,28 +309,28 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     myShouldStartActivity = false;
   }
 
-  @Nonnull
+  
   private Stack<LocalizeValue> getTextStack() {
     Stack<LocalizeValue> stack = myTextStack;
     if (stack == null) myTextStack = stack = new Stack<>(2);
     return stack;
   }
 
-  @Nonnull
+  
   private DoubleList getFractionStack() {
     DoubleList stack = myFractionStack;
     if (stack == null) myFractionStack = stack = DoubleLists.newArrayList(2);
     return stack;
   }
 
-  @Nonnull
+  
   private Stack<LocalizeValue> getText2Stack() {
     Stack<LocalizeValue> stack = myText2Stack;
     if (stack == null) myText2Stack = stack = new Stack<>(2);
     return stack;
   }
 
-  @Nonnull
+  
   protected Object getLock() {
     return lock;
   }

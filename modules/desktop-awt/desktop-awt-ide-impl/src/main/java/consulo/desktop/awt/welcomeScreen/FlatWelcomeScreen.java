@@ -35,7 +35,6 @@ import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -216,12 +215,12 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     }
 
     @Override
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(String title) {
         myWelcomeFrame.setTitle(title);
     }
 
     @Override
-    public void removeSlide(@Nonnull JComponent target) {
+    public void removeSlide(JComponent target) {
         JBCardLayout layout = (JBCardLayout) getLayout();
 
         layout.swipe(this, MAIN, JBCardLayout.SwipeDirection.BACKWARD, () -> remove(target));

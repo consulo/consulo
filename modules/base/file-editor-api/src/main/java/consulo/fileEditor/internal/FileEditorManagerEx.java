@@ -25,21 +25,20 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class FileEditorManagerEx extends FileEditorManager implements BusyObject {
   protected final List<EditorDataProvider> myDataProviders = new ArrayList<>();
 
-  public static FileEditorManagerEx getInstanceEx(@Nonnull Project project) {
+  public static FileEditorManagerEx getInstanceEx(Project project) {
     return (FileEditorManagerEx)getInstance(project);
   }
 
   @Override
   @Nullable
-  public final Object getData(@Nonnull Key dataId, @Nonnull Editor editor, @Nonnull Caret caret) {
+  public final Object getData(Key dataId, Editor editor, Caret caret) {
     for (EditorDataProvider dataProvider : myDataProviders) {
       Object o = dataProvider.getData(dataId, editor, caret);
       if (o != null) return o;
@@ -48,7 +47,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   }
 
   @Override
-  public void registerExtraEditorDataProvider(@Nonnull EditorDataProvider provider, Disposable parentDisposable) {
+  public void registerExtraEditorDataProvider(EditorDataProvider provider, Disposable parentDisposable) {
     myDataProviders.add(provider);
     if (parentDisposable != null) {
       Disposer.register(parentDisposable, () -> myDataProviders.remove(provider));

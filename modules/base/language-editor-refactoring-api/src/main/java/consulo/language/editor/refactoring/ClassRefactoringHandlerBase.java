@@ -13,7 +13,6 @@ import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
@@ -31,7 +30,7 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         int offset = editor.getCaretModel().getOffset();
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         PsiElement position = file.findElementAt(offset);
@@ -58,7 +57,7 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         PsiFile file = dataContext.getData(PsiFile.KEY);
         Editor editor = dataContext.getData(Editor.KEY);
         showDialog(project, elements[0], editor, file, dataContext);
@@ -70,9 +69,9 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
 
     protected abstract String getHelpId();
 
-    @Nonnull
+    
     protected abstract LocalizeValue getTitle();
 
-    @Nonnull
+    
     protected abstract LocalizeValue getInvalidPositionMessage();
 }

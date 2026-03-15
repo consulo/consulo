@@ -5,8 +5,7 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.disposer.Disposable;
 import consulo.document.RangeMarker;
 import consulo.util.dataholder.UserDataHolderEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -24,13 +23,13 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
     /**
      * Returns editor, this custom visual element belongs to.
      */
-    @Nonnull
+    
     Editor getEditor();
 
     /**
      * Defines relative position of inlay element with respect to the containing text.
      */
-    @Nonnull
+    
     Placement getPlacement();
 
     /**
@@ -60,7 +59,7 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
      * Returns current visual position of the inlay's left boundary. For 'block' elements, this is just a visual position associated with
      * inlay's offset.
      */
-    @Nonnull
+    
     VisualPosition getVisualPosition();
 
     /**
@@ -72,7 +71,7 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
     /**
      * Returns renderer, which defines size and representation for this inlay.
      */
-    @Nonnull
+    
     T getRenderer();
 
     /**
@@ -119,7 +118,7 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
      * @see InlayModel#addBlockElement(int, InlayProperties, EditorCustomElementRenderer)
      * @see InlayModel#addAfterLineEndElement(int, InlayProperties, EditorCustomElementRenderer)
      */
-    @Nonnull
+    
     default InlayProperties getProperties() {
         return new InlayProperties();
     }

@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -43,7 +42,7 @@ public interface MemberInfoModel<T extends PsiElement, M extends MemberInfoBase<
    */
   Boolean isFixedAbstract(M member);
 
-  int checkForProblems(@Nonnull M member);
+  int checkForProblems(M member);
 
   String getTooltipText(M member);
 }

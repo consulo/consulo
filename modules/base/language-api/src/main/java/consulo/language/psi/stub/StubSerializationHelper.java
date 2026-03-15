@@ -17,8 +17,7 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,13 +40,13 @@ public class StubSerializationHelper {
   private final boolean myUnmodifiable;
   private final RecentStringInterner myStringInterner;
 
-  public StubSerializationHelper(@Nonnull DataEnumeratorEx<String> nameStorage, boolean unmodifiable, @Nonnull Disposable parentDisposable) {
+  public StubSerializationHelper(DataEnumeratorEx<String> nameStorage, boolean unmodifiable, Disposable parentDisposable) {
     myNameStorage = nameStorage;
     myUnmodifiable = unmodifiable;
     myStringInterner = new RecentStringInterner(parentDisposable);
   }
 
-  public void assignId(@Nonnull ObjectStubSerializerProvider serializer, String name) throws IOException {
+  public void assignId(ObjectStubSerializerProvider serializer, String name) throws IOException {
     ObjectStubSerializerProvider old = myNameToLazySerializer.put(name, serializer);
     if (old != null) {
       ObjectStubSerializer existing = old.getObjectStubSerializer();
@@ -81,20 +80,20 @@ public class StubSerializationHelper {
     }
   }
 
-  private ObjectStubSerializer<Stub, Stub> writeSerializerId(Stub stub, @Nonnull DataOutput stream, IntEnumerator serializerLocalEnumerator) throws IOException {
+  private ObjectStubSerializer<Stub, Stub> writeSerializerId(Stub stub, DataOutput stream, IntEnumerator serializerLocalEnumerator) throws IOException {
     ObjectStubSerializer<Stub, Stub> serializer = StubSerializationUtil.getSerializer(stub);
     DataInputOutputUtil.writeINT(stream, serializerLocalEnumerator.enumerate(getClassId(serializer)));
     return serializer;
   }
 
-  private void serializeSelf(Stub stub, @Nonnull StubOutputStream stream, IntEnumerator serializerLocalEnumerator) throws IOException {
+  private void serializeSelf(Stub stub, StubOutputStream stream, IntEnumerator serializerLocalEnumerator) throws IOException {
     if (((ObjectStubBase)stub).isDangling()) {
       stream.writeByte(0);
     }
     writeSerializerId(stub, stream, serializerLocalEnumerator).serialize(stub, stream);
   }
 
-  private void serializeChildren(@Nonnull Stub parent, @Nonnull StubOutputStream stream, IntEnumerator serializerLocalEnumerator) throws IOException {
+  private void serializeChildren(Stub parent, StubOutputStream stream, IntEnumerator serializerLocalEnumerator) throws IOException {
     List<? extends Stub> children = parent.getChildrenStubs();
     DataInputOutputUtil.writeINT(stream, children.size());
     for (Stub child : children) {
@@ -103,7 +102,7 @@ public class StubSerializationHelper {
     }
   }
 
-  public void serialize(@Nonnull Stub rootStub, @Nonnull OutputStream stream) throws IOException {
+  public void serialize(Stub rootStub, OutputStream stream) throws IOException {
     BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream();
     FileLocalStringEnumerator storage = new FileLocalStringEnumerator(true);
     IntEnumerator selializerIdLocalEnumerator = new IntEnumerator();
@@ -149,8 +148,8 @@ public class StubSerializationHelper {
 
   private static final ThreadLocal<ObjectStubSerializer> ourRootStubSerializer = new ThreadLocal<>();
 
-  @Nonnull
-  public Stub deserialize(@Nonnull InputStream stream) throws IOException, SerializerNotFoundException {
+  
+  public Stub deserialize(InputStream stream) throws IOException, SerializerNotFoundException {
     FileLocalStringEnumerator storage = new FileLocalStringEnumerator(false);
     StubInputStream inputStream = new StubInputStream(stream, storage);
     IntEnumerator serializerLocalEnumerator = IntEnumerator.read(inputStream);
@@ -315,7 +314,7 @@ public class StubSerializationHelper {
     return myStringInterner.get(str);
   }
 
-  public void reSerializeStub(@Nonnull DataInputStream inStub, @Nonnull DataOutputStream outStub, @Nonnull StubSerializationHelper newSerializationHelper) throws IOException {
+  public void reSerializeStub(DataInputStream inStub, DataOutputStream outStub, StubSerializationHelper newSerializationHelper) throws IOException {
     IntEnumerator currentSerializerEnumerator = IntEnumerator.read(inStub);
     currentSerializerEnumerator.dump(outStub, id -> {
       String name = myIdToName.get(id);
@@ -334,7 +333,7 @@ public class StubSerializationHelper {
     return serializer;
   }
 
-  @Nonnull
+  
   private ObjectStubSerializer instantiateSerializer(int id, @Nullable Stub parentStub) throws SerializerNotFoundException {
     String name = myIdToName.get(id);
     ObjectStubSerializerProvider lazy = name == null ? null : myNameToLazySerializer.get(name);

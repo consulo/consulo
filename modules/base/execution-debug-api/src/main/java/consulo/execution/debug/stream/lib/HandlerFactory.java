@@ -5,16 +5,14 @@ import consulo.execution.debug.stream.trace.IntermediateCallHandler;
 import consulo.execution.debug.stream.trace.TerminatorCallHandler;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface HandlerFactory {
-  @Nonnull
-  IntermediateCallHandler getForIntermediate(int number, @Nonnull IntermediateStreamCall call);
+  
+  IntermediateCallHandler getForIntermediate(int number, IntermediateStreamCall call);
 
-  @Nonnull
-  TerminatorCallHandler getForTermination(@Nonnull TerminatorStreamCall call, @Nonnull @NonNls String resultExpression);
+  
+  TerminatorCallHandler getForTermination(TerminatorStreamCall call, String resultExpression);
 }

@@ -7,8 +7,7 @@ import consulo.application.ReadAction;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -70,7 +69,7 @@ public interface AsyncFileListener {
    */
   @Contract(pure = true)
   @Nullable
-  ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events);
+  ChangeApplier prepareChange(List<? extends VFileEvent> events);
 
   interface ChangeApplier {
     /**

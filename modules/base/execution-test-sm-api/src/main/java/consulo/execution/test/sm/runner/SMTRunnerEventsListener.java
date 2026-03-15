@@ -18,8 +18,7 @@ package consulo.execution.test.sm.runner;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -33,31 +32,31 @@ public interface SMTRunnerEventsListener {
      *
      * @param testsRoot
      */
-    void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot);
+    void onTestingStarted(SMTestProxy.SMRootTestProxy testsRoot);
 
     /**
      * After test framework finish testing
      *
      * @param testsRootNode
      */
-    void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot);
+    void onTestingFinished(SMTestProxy.SMRootTestProxy testsRoot);
 
     /*
      * Tests count in next suite. For several suites this method will be invoked several times
      */
     void onTestsCountInSuite(int count);
 
-    void onTestStarted(@Nonnull SMTestProxy test);
+    void onTestStarted(SMTestProxy test);
 
-    void onTestFinished(@Nonnull SMTestProxy test);
+    void onTestFinished(SMTestProxy test);
 
-    void onTestFailed(@Nonnull SMTestProxy test);
+    void onTestFailed(SMTestProxy test);
 
-    void onTestIgnored(@Nonnull SMTestProxy test);
+    void onTestIgnored(SMTestProxy test);
 
-    void onSuiteFinished(@Nonnull SMTestProxy suite);
+    void onSuiteFinished(SMTestProxy suite);
 
-    void onSuiteStarted(@Nonnull SMTestProxy suite);
+    void onSuiteStarted(SMTestProxy suite);
 
     // Custom progress statistics
 

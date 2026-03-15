@@ -16,7 +16,6 @@
 package consulo.component.persist.scheme;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +78,7 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
   }
 
   @Override
-  @Nonnull
+  
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;
   }
@@ -93,7 +92,7 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
     return result;
   }
 
-  @Nonnull
+  
   protected CompoundScheme<T> createNewInstance(String name) {
       return new CompoundScheme<T>(name);
   }

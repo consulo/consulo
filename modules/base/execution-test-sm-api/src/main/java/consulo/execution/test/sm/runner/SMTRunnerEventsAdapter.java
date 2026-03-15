@@ -15,19 +15,18 @@
  */
 package consulo.execution.test.sm.runner;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik
  */
 public class SMTRunnerEventsAdapter implements SMTRunnerEventsListener {
     @Override
-    public void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
+    public void onTestingStarted(SMTestProxy.SMRootTestProxy testsRoot) {
     }
 
     @Override
-    public void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
+    public void onTestingFinished(SMTestProxy.SMRootTestProxy testsRoot) {
     }
 
     @Override
@@ -35,27 +34,27 @@ public class SMTRunnerEventsAdapter implements SMTRunnerEventsListener {
     }
 
     @Override
-    public void onTestStarted(@Nonnull SMTestProxy test) {
+    public void onTestStarted(SMTestProxy test) {
     }
 
     @Override
-    public void onTestFinished(@Nonnull SMTestProxy test) {
+    public void onTestFinished(SMTestProxy test) {
     }
 
     @Override
-    public void onTestFailed(@Nonnull SMTestProxy test) {
+    public void onTestFailed(SMTestProxy test) {
     }
 
     @Override
-    public void onTestIgnored(@Nonnull SMTestProxy test) {
+    public void onTestIgnored(SMTestProxy test) {
     }
 
     @Override
-    public void onSuiteStarted(@Nonnull SMTestProxy suite) {
+    public void onSuiteStarted(SMTestProxy suite) {
     }
 
     @Override
-    public void onSuiteFinished(@Nonnull SMTestProxy suite) {
+    public void onSuiteFinished(SMTestProxy suite) {
     }
 
     // Custom progress status

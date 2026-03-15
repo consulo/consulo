@@ -21,7 +21,6 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.versionControlSystem.impl.internal.patch.PatchFileType;
-import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
 import java.io.File;
@@ -31,14 +30,14 @@ import java.util.List;
 public class PatchFileDropHandler extends CustomFileDropHandler {
 
   @Override
-  public boolean canHandle(@Nonnull Transferable t, Editor editor) {
+  public boolean canHandle(Transferable t, Editor editor) {
     List<File> list = FileCopyPasteUtil.getFileList(t);
     if (list == null || list.size() != 1) return false;
     return PatchFileType.isPatchFile(list.get(0));
   }
 
   @Override
-  public boolean handleDrop(@Nonnull Transferable t, Editor editor, @Nonnull Project project) {
+  public boolean handleDrop(Transferable t, Editor editor, Project project) {
     List<File> list = FileCopyPasteUtil.getFileList(t);
     if (list == null || list.size() != 1) return false;
     return ApplyPatchAction.showAndGetApplyPatch(project, list.get(0));

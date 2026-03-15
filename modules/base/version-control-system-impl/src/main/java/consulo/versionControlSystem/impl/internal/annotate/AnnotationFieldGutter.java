@@ -29,8 +29,7 @@ import consulo.util.lang.Couple;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -41,16 +40,16 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
-    @Nonnull
+    
     protected final FileAnnotation myAnnotation;
-    @Nonnull
+    
     private final TextAnnotationPresentation myPresentation;
     @Nullable
     private Couple<Map<VcsRevisionNumber, ColorValue>> myColorScheme;
 
     AnnotationFieldGutter(
-        @Nonnull FileAnnotation annotation,
-        @Nonnull TextAnnotationPresentation presentation,
+        FileAnnotation annotation,
+        TextAnnotationPresentation presentation,
         @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme
     ) {
         myAnnotation = annotation;
@@ -62,7 +61,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         return LocalizeValue.empty();

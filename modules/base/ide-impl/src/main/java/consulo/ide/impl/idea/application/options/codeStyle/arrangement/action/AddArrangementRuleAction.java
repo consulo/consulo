@@ -26,7 +26,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.primitive.ints.IntList;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -44,7 +43,7 @@ public class AddArrangementRuleAction extends AbstractArrangementRuleAction impl
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ArrangementMatchingRulesControl control = getRulesControl(e);
         if (control == null) {
             return;
@@ -67,12 +66,12 @@ public class AddArrangementRuleAction extends AbstractArrangementRuleAction impl
         scrollRowToVisible(control, rowToEdit);
     }
 
-    @Nonnull
-    protected Object createNewRule(@Nonnull ArrangementMatchingRulesControl control) {
+    
+    protected Object createNewRule(ArrangementMatchingRulesControl control) {
         return new EmptyArrangementRuleComponent(control.getEmptyRowHeight());
     }
 
-    protected void showEditor(@Nonnull ArrangementMatchingRulesControl control, int rowToEdit) {
+    protected void showEditor(ArrangementMatchingRulesControl control, int rowToEdit) {
         control.showEditor(rowToEdit);
     }
 }

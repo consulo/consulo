@@ -23,7 +23,6 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -35,7 +34,7 @@ public class XSetValueAction extends XDebuggerTreeActionBase {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         XValueNodeImpl node = getSelectedNode(e.getDataContext());
         Presentation presentation = e.getPresentation();
@@ -48,12 +47,12 @@ public class XSetValueAction extends XDebuggerTreeActionBase {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(XValueNodeImpl node, AnActionEvent e) {
         return super.isEnabled(node, e) && node.getValueContainer().getModifier() != null;
     }
 
     @Override
-    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+    protected void perform(XValueNodeImpl node, String nodeName, AnActionEvent e) {
         SetValueInplaceEditor.show(node, nodeName);
     }
 }

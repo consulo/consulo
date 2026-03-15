@@ -18,8 +18,7 @@ package consulo.application.util;
 import consulo.application.Application;
 import consulo.util.collection.WeakList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -44,7 +43,7 @@ public class SofterReference<T> {
     LowMemoryWatcher.register(SofterReference::onLowMemory, Application.get());
   }
 
-  public SofterReference(@Nonnull T referent) {
+  public SofterReference(T referent) {
     ourRegistry.add(this);
     myRef = new SoftReference<T>(referent);
   }

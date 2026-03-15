@@ -3,8 +3,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ide.localize.IdeLocalize;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows to apply IDE-specific customizations to the terms used in platform UI features.
@@ -67,7 +66,7 @@ public class IdeUICustomization {
    * Allows to replace the text of the given action (only for the actions/groups that support this mechanism)
    */
   @Nullable
-  public String getActionText(@Nonnull String actionId) {
+  public String getActionText(String actionId) {
     return null;
   }
 }

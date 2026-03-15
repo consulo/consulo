@@ -29,7 +29,6 @@ import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -227,7 +226,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     }
 
     @RequiredUIAccess
-    private NewCodeStyleSettingsPanel ensurePanel(@Nonnull CodeStyleScheme scheme) {
+    private NewCodeStyleSettingsPanel ensurePanel(CodeStyleScheme scheme) {
         String name = scheme.getName();
         if (!mySettingsPanels.containsKey(name)) {
             if (myUiDisposable == null) {
@@ -278,7 +277,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
         return mySettingsPanels.get(scheme.getName()).isModified();
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public Set<String> processListOptions() {
         CodeStyleScheme defaultScheme = CodeStyleSchemes.getInstance().getDefaultScheme();
@@ -287,15 +286,15 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     }
 
     @Override
-    public void tabChanged(@Nonnull TabbedLanguageCodeStylePanel source, @Nonnull String tabTitle) {
+    public void tabChanged(TabbedLanguageCodeStylePanel source, String tabTitle) {
         myProperties.setValue(getSelectedTabPropertyName(source), tabTitle);
         for (NewCodeStyleSettingsPanel panel : getPanels()) {
             panel.tabChanged(source, tabTitle);
         }
     }
 
-    @Nonnull
-    private static String getSelectedTabPropertyName(@Nonnull TabbedLanguageCodeStylePanel panel) {
+    
+    private static String getSelectedTabPropertyName(TabbedLanguageCodeStylePanel panel) {
         Language language = panel.getDefaultLanguage();
         return SELECTED_TAB + (language != null ? "." + language.getID() : "");
     }

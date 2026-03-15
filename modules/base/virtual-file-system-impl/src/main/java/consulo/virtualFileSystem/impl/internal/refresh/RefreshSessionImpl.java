@@ -15,8 +15,7 @@ import consulo.virtualFileSystem.impl.internal.AsyncEventSupport;
 import consulo.virtualFileSystem.impl.internal.local.LocalFileSystemImpl;
 import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +45,7 @@ public class RefreshSessionImpl extends RefreshSession {
   private final ModalityState myModality;
   private boolean myLaunched;
 
-  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState modality) {
+  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, ModalityState modality) {
     myIsAsync = async;
     myIsRecursive = recursive;
     myFinishRunnable = finishRunnable;
@@ -54,7 +53,7 @@ public class RefreshSessionImpl extends RefreshSession {
     myStartTrace = rememberStartTrace();
   }
 
-  public RefreshSessionImpl(@Nonnull List<? extends VFileEvent> events) {
+  public RefreshSessionImpl(List<? extends VFileEvent> events) {
     this(false, false, null, Application.get().getDefaultModalityState());
     myEvents.addAll(events);
   }
@@ -76,7 +75,7 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   @Override
-  public void addAllFiles(@Nonnull Collection<? extends VirtualFile> files) {
+  public void addAllFiles(Collection<? extends VirtualFile> files) {
     for (VirtualFile file : files) {
       if (file == null) {
         LOG.error("null passed among " + files);
@@ -88,7 +87,7 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   @Override
-  public void addFile(@Nonnull VirtualFile file) {
+  public void addFile(VirtualFile file) {
     if (myLaunched) {
       throw new IllegalStateException("Adding files is only allowed before launch");
     }
@@ -177,7 +176,7 @@ public class RefreshSessionImpl extends RefreshSession {
     }
   }
 
-  public void fireEvents(@Nonnull List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
+  public void fireEvents(List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
     try {
       if ((myFinishRunnable != null || !events.isEmpty()) && !ApplicationManager.getApplication().isDisposed()) {
         if (LOG.isDebugEnabled()) LOG.debug("events are about to fire: " + events);
@@ -218,7 +217,7 @@ public class RefreshSessionImpl extends RefreshSession {
     mySemaphore.waitFor();
   }
 
-  @Nonnull
+  
   ModalityState getModality() {
     return myModality;
   }
@@ -228,7 +227,7 @@ public class RefreshSessionImpl extends RefreshSession {
     return myWorkQueue.size() <= 1 ? "" : myWorkQueue.size() + " roots in queue.";
   }
 
-  @Nonnull
+  
   public List<? extends VFileEvent> getEvents() {
     return new ArrayList<>(new LinkedHashSet<>(myEvents));
   }

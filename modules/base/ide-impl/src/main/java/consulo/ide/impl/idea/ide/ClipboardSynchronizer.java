@@ -18,8 +18,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -55,7 +54,7 @@ public class ClipboardSynchronizer implements Disposable {
 
   private final ClipboardHandler myClipboardHandler;
 
-  @Nonnull
+  
   public static ClipboardSynchronizer getInstance() {
     return Application.get().getComponent(ClipboardSynchronizer.class);
   }
@@ -82,7 +81,7 @@ public class ClipboardSynchronizer implements Disposable {
     myClipboardHandler.dispose();
   }
 
-  public void areDataFlavorsAvailableAsync(@Nonnull Consumer<? super Boolean> callback, @Nonnull DataFlavor... flavors) {
+  public void areDataFlavorsAvailableAsync(Consumer<? super Boolean> callback, DataFlavor... flavors) {
     Supplier<Boolean> availabilitySupplier = () -> ClipboardUtil.handleClipboardSafely(() -> myClipboardHandler.areDataFlavorsAvailable(flavors), () -> false);
 
     Boolean available = availabilitySupplier.get();
@@ -105,7 +104,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
   }
 
-  public void getContentsAsync(@Nonnull Consumer<? super Transferable> callback) {
+  public void getContentsAsync(Consumer<? super Transferable> callback) {
     Supplier<Transferable> transferableSupplier = () -> ClipboardUtil.handleClipboardSafely(myClipboardHandler::getContents, () -> null);
 
     Transferable transferable = transferableSupplier.get();
@@ -128,7 +127,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
   }
 
-  public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
+  public boolean areDataFlavorsAvailable(DataFlavor... flavors) {
     return ClipboardUtil.handleClipboardSafely(() -> myClipboardHandler.areDataFlavorsAvailable(flavors), () -> false);
   }
 
@@ -138,7 +137,7 @@ public class ClipboardSynchronizer implements Disposable {
   }
 
   @Nullable
-  public Object getData(@Nonnull DataFlavor dataFlavor) {
+  public Object getData(DataFlavor dataFlavor) {
     return ClipboardUtil.handleClipboardSafely(() -> {
       try {
         return myClipboardHandler.getData(dataFlavor);
@@ -150,7 +149,7 @@ public class ClipboardSynchronizer implements Disposable {
     }, () -> null);
   }
 
-  public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
+  public void setContent(Transferable content, ClipboardOwner owner) {
     myClipboardHandler.setContent(content, owner);
   }
 
@@ -181,7 +180,7 @@ public class ClipboardSynchronizer implements Disposable {
     public void dispose() {
     }
 
-    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(DataFlavor... flavors) {
       Clipboard clipboard = getClipboard();
       if (clipboard == null) return false;
       for (DataFlavor flavor : flavors) {
@@ -200,12 +199,12 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Nullable
-    public Object getData(@Nonnull DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+    public Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
       Clipboard clipboard = getClipboard();
       return clipboard == null ? null : clipboard.getData(dataFlavor);
     }
 
-    public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
+    public void setContent(Transferable content, ClipboardOwner owner) {
       Clipboard clipboard = getClipboard();
       if (clipboard != null) {
         clipboard.setContents(content, owner);
@@ -225,7 +224,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Override
-    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(DataFlavor... flavors) {
       if (myFullTransferable == null) return super.areDataFlavorsAvailable(flavors);
       Transferable contents = getContents();
       return contents != null && ClipboardSynchronizer.areDataFlavorsAvailable(contents, flavors);
@@ -252,14 +251,14 @@ public class ClipboardSynchronizer implements Disposable {
 
     @Override
     @Nullable
-    public Object getData(@Nonnull DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+    public Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
       if (myFullTransferable == null) return super.getData(dataFlavor);
       Transferable contents = getContents();
       return contents == null ? null : contents.getTransferData(dataFlavor);
     }
 
     @Override
-    public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
+    public void setContent(Transferable content, ClipboardOwner owner) {
       if (Registry.is("ide.mac.useNativeClipboard") && content.isDataFlavorSupported(DataFlavor.stringFlavor)) {
         try {
           String stringData = (String)content.getTransferData(DataFlavor.stringFlavor);
@@ -355,7 +354,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Override
-    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(DataFlavor... flavors) {
       Transferable currentContent = myCurrentContent;
       if (currentContent != null) {
         return ClipboardSynchronizer.areDataFlavorsAvailable(currentContent, flavors);
@@ -386,7 +385,7 @@ public class ClipboardSynchronizer implements Disposable {
 
     @Override
     @Nullable
-    public Object getData(@Nonnull DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+    public Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
       Transferable currentContent = myCurrentContent;
       if (currentContent != null) {
         return currentContent.getTransferData(dataFlavor);
@@ -401,7 +400,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Override
-    public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
+    public void setContent(Transferable content, ClipboardOwner owner) {
       myCurrentContent = content;
       super.setContent(content, owner);
     }
@@ -445,7 +444,7 @@ public class ClipboardSynchronizer implements Disposable {
     private volatile Transferable myContent = null;
 
     @Override
-    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(DataFlavor... flavors) {
       Transferable content = myContent;
       return content != null && ClipboardSynchronizer.areDataFlavorsAvailable(content, flavors);
     }
@@ -457,12 +456,12 @@ public class ClipboardSynchronizer implements Disposable {
 
     @Override
     @Nullable
-    public Object getData(@Nonnull DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+    public Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
       return myContent.getTransferData(dataFlavor);
     }
 
     @Override
-    public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
+    public void setContent(Transferable content, ClipboardOwner owner) {
       myContent = content;
     }
 

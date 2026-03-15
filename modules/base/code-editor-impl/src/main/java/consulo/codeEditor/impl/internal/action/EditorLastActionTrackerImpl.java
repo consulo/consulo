@@ -33,8 +33,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -91,26 +90,26 @@ public class EditorLastActionTrackerImpl implements EditorLastActionTracker, Dis
     }
 
     @Override
-    public void mousePressed(@Nonnull EditorMouseEvent e) {
+    public void mousePressed(EditorMouseEvent e) {
         resetLastAction();
     }
 
     @Override
-    public void mouseClicked(@Nonnull EditorMouseEvent e) {
+    public void mouseClicked(EditorMouseEvent e) {
         resetLastAction();
     }
 
     @Override
-    public void mouseReleased(@Nonnull EditorMouseEvent e) {
+    public void mouseReleased(EditorMouseEvent e) {
         resetLastAction();
     }
 
     @Override
-    public void mouseEntered(@Nonnull EditorMouseEvent e) {
+    public void mouseEntered(EditorMouseEvent e) {
     }
 
     @Override
-    public void mouseExited(@Nonnull EditorMouseEvent e) {
+    public void mouseExited(EditorMouseEvent e) {
     }
 
     private String getActionId(AnAction action) {

@@ -45,8 +45,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -93,13 +92,13 @@ public abstract class VcsVFSListener implements Disposable {
     }
 
     private class MyAsyncVfsListener implements AsyncFileListener {
-        private static boolean isBeforeEvent(@Nonnull VFileEvent event) {
+        private static boolean isBeforeEvent(VFileEvent event) {
             return event instanceof VFileDeleteEvent
                 || event instanceof VFileMoveEvent
                 || event instanceof VFilePropertyChangeEvent;
         }
 
-        private static boolean isAfterEvent(@Nonnull VFileEvent event) {
+        private static boolean isAfterEvent(VFileEvent event) {
             return event instanceof VFileCreateEvent
                 || event instanceof VFileCopyEvent
                 || event instanceof VFileMoveEvent;
@@ -107,7 +106,7 @@ public abstract class VcsVFSListener implements Disposable {
 
         @Nullable
         @Override
-        public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+        public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
             List<VFileContentChangeEvent> contentChangedEvents = new ArrayList<>();
             List<VFileEvent> beforeEvents = new ArrayList<>();
             List<VFileEvent> afterEvents = new ArrayList<>();
@@ -180,7 +179,7 @@ public abstract class VcsVFSListener implements Disposable {
         private void processEventsInBackground(List<? extends VFileEvent> events) {
             new Task.Backgroundable(myProject, VcsLocalize.progressTitleVersionControlProcessingChangedFiles(), true) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     try {
                         indicator.checkCanceled();
                         myProcessor.processAfterEvents(events);
@@ -215,7 +214,7 @@ public abstract class VcsVFSListener implements Disposable {
 
     private final DiryFilesStateProcessor myProcessor;
 
-    protected VcsVFSListener(@Nonnull Project project, @Nonnull AbstractVcs vcs) {
+    protected VcsVFSListener(Project project, AbstractVcs vcs) {
         myProject = project;
         myVcs = vcs;
         myChangeListManager = ChangeListManager.getInstance(project);
@@ -237,24 +236,24 @@ public abstract class VcsVFSListener implements Disposable {
             }
 
             @Override
-            protected void processMovedFile(@Nonnull VirtualFile file, @Nonnull String newParentPath, @Nonnull String newName) {
+            protected void processMovedFile(VirtualFile file, String newParentPath, String newName) {
                 VcsVFSListener.this.processMovedFile(file, newParentPath, newName);
 
                 super.processMovedFile(file, newParentPath, newName);
             }
 
             @Override
-            protected boolean isEventIgnored(@Nonnull VFileEvent event) {
+            protected boolean isEventIgnored(VFileEvent event) {
                 return VcsVFSListener.this.isEventIgnored(event);
             }
 
             @Override
-            protected boolean filterOutByStatus(@Nonnull FileStatus status) {
+            protected boolean filterOutByStatus(FileStatus status) {
                 return VcsVFSListener.this.filterOutByStatus(status);
             }
 
             @Override
-            protected boolean shouldIgnoreDeletion(@Nonnull FileStatus status) {
+            protected boolean shouldIgnoreDeletion(FileStatus status) {
                 return VcsVFSListener.this.shouldIgnoreDeletion(status);
             }
 
@@ -281,7 +280,7 @@ public abstract class VcsVFSListener implements Disposable {
     public void dispose() {
     }
 
-    protected boolean isEventIgnored(@Nonnull VFileEvent event) {
+    protected boolean isEventIgnored(VFileEvent event) {
         FilePath filePath = DiryFilesStateProcessor.getEventFilePath(event);
         return !isUnderMyVcs(filePath) || myChangeListManager.isIgnoredFile(filePath);
     }
@@ -294,14 +293,14 @@ public abstract class VcsVFSListener implements Disposable {
         return filePath != null && ReadAction.compute(() -> !myProject.isDisposed() && myVcsManager.getVcsFor(filePath) == myVcs);
     }
 
-    protected boolean isEventAccepted(@Nonnull VFileEvent event) {
+    protected boolean isEventAccepted(VFileEvent event) {
         return !event.isFromRefresh() && (event.getFileSystem() instanceof LocalFileSystem);
     }
 
     /**
      * Determine if the listener should not process files with the given status.
      */
-    protected boolean filterOutByStatus(@Nonnull FileStatus status) {
+    protected boolean filterOutByStatus(FileStatus status) {
         return status == FileStatus.IGNORED || status == FileStatus.UNKNOWN;
     }
 
@@ -330,7 +329,7 @@ public abstract class VcsVFSListener implements Disposable {
         executeAdd(addedFiles, copyFromMap);
     }
 
-    protected void executeAdd(@Nonnull List<VirtualFile> addedFiles, @Nonnull Map<VirtualFile, VirtualFile> copyFromMap) {
+    protected void executeAdd(List<VirtualFile> addedFiles, Map<VirtualFile, VirtualFile> copyFromMap) {
         Application application = myProject.getApplication();
 
         if (application.isDispatchThread()) {
@@ -348,8 +347,8 @@ public abstract class VcsVFSListener implements Disposable {
      * @param copyFromMap the copied files
      */
     protected void performAddingWithConfirmation(
-        @Nonnull List<VirtualFile> addedFiles,
-        @Nonnull Map<VirtualFile, VirtualFile> copyFromMap
+        List<VirtualFile> addedFiles,
+        Map<VirtualFile, VirtualFile> copyFromMap
     ) {
         VcsShowConfirmationOption.Value addOption = myAddOption.getValue();
         LOG.debug("executeAdd. add-option: ", addOption, ", files to add: ", addedFiles);
@@ -367,8 +366,8 @@ public abstract class VcsVFSListener implements Disposable {
         performAdding(filesToProcess, copyFromMap);
     }
 
-    @Nonnull
-    protected List<VirtualFile> selectFilesToAdd(@Nonnull List<VirtualFile> addFiles) {
+    
+    protected List<VirtualFile> selectFilesToAdd(List<VirtualFile> addFiles) {
         return selectFilesForOption(
             myAddOption,
             addFiles,
@@ -378,12 +377,12 @@ public abstract class VcsVFSListener implements Disposable {
         );
     }
 
-    @Nonnull
+    
     private List<VirtualFile> selectFilesForOption(
-        @Nonnull VcsShowConfirmationOption option,
-        @Nonnull List<VirtualFile> files,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue singleFileTitle,
+        VcsShowConfirmationOption option,
+        List<VirtualFile> files,
+        LocalizeValue title,
+        LocalizeValue singleFileTitle,
         Function<Object, LocalizeValue> singleFilePromptGenerator
     ) {
         VcsShowConfirmationOption.Value optionValue = option.getValue();
@@ -409,15 +408,15 @@ public abstract class VcsVFSListener implements Disposable {
         return selectedFiles != null ? new ArrayList<>(selectedFiles) : List.of();
     }
 
-    @Nonnull
+    
     private List<FilePath> selectFilePathsForOption(
-        @Nonnull VcsShowConfirmationOption option,
-        @Nonnull List<FilePath> files,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue singleFileTitle,
+        VcsShowConfirmationOption option,
+        List<FilePath> files,
+        LocalizeValue title,
+        LocalizeValue singleFileTitle,
         Function<Object, LocalizeValue> singleFilePromptGenerator,
-        @Nonnull LocalizeValue okActionName,
-        @Nonnull LocalizeValue cancelActionName
+        LocalizeValue okActionName,
+        LocalizeValue cancelActionName
     ) {
         VcsShowConfirmationOption.Value optionValue = option.getValue();
         if (optionValue == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) {
@@ -480,7 +479,7 @@ public abstract class VcsVFSListener implements Disposable {
      * @param deletedFiles deleted files set
      * @return selected files or null (that is considered as empty file set)
      */
-    @Nonnull
+    
     protected List<FilePath> selectFilePathsToDelete(List<FilePath> deletedFiles) {
         return selectFilePathsForOption(
             myRemoveOption,
@@ -498,10 +497,10 @@ public abstract class VcsVFSListener implements Disposable {
      *
      * @see #processBeforeContentsChange()
      */
-    protected void beforeContentsChange(@Nonnull List<VFileContentChangeEvent> events) {
+    protected void beforeContentsChange(List<VFileContentChangeEvent> events) {
     }
 
-    protected void processMovedFile(@Nonnull VirtualFile file, @Nonnull String newParentPath, @Nonnull String newName) {
+    protected void processMovedFile(VirtualFile file, String newParentPath, String newName) {
     }
 
     private void executeMoveRename() {
@@ -522,11 +521,11 @@ public abstract class VcsVFSListener implements Disposable {
         return true;
     }
 
-    protected boolean shouldIgnoreDeletion(@Nonnull FileStatus status) {
+    protected boolean shouldIgnoreDeletion(FileStatus status) {
         return false;
     }
 
-    @Nonnull
+    
     protected LocalizeValue getAddTitleValue() {
         return LocalizeValue.ofNullable(getAddTitle());
     }
@@ -537,7 +536,7 @@ public abstract class VcsVFSListener implements Disposable {
         return getAddTitleValue().get();
     }
 
-    @Nonnull
+    
     protected LocalizeValue getSingleFileAddTitleValue() {
         return LocalizeValue.ofNullable(getSingleFileAddTitle());
     }
@@ -548,7 +547,7 @@ public abstract class VcsVFSListener implements Disposable {
         return getSingleFileAddTitleValue().get();
     }
 
-    @Nonnull
+    
     protected Function<Object, LocalizeValue> getSingleFileAddPromptGenerator() {
         return param -> LocalizeValue.of(MessageFormat.format(getSingleFileAddPromptTemplate(), param));
     }
@@ -561,7 +560,7 @@ public abstract class VcsVFSListener implements Disposable {
 
     protected abstract void performAdding(Collection<VirtualFile> addedFiles, Map<VirtualFile, VirtualFile> copyFromMap);
 
-    @Nonnull
+    
     protected LocalizeValue getDeleteTitleValue() {
         return LocalizeValue.ofNullable(getDeleteTitle());
     }
@@ -572,7 +571,7 @@ public abstract class VcsVFSListener implements Disposable {
         return getDeleteTitleValue().get();
     }
 
-    @Nonnull
+    
     protected LocalizeValue getSingleFileDeleteTitleValue() {
         return LocalizeValue.ofNullable(getSingleFileDeleteTitle());
     }
@@ -583,7 +582,7 @@ public abstract class VcsVFSListener implements Disposable {
         return getSingleFileDeleteTitleValue().get();
     }
 
-    @Nonnull
+    
     protected Function<Object, LocalizeValue> getSingleFileDeletePromptGenerator() {
         return param -> LocalizeValue.of(MessageFormat.format(getSingleFileDeletePromptTemplate(), param));
     }

@@ -53,8 +53,7 @@ import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +65,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     private static final Logger LOG = Logger.getInstance(HighlightUsagesHandler.class);
 
     @RequiredUIAccess
-    public static void invoke(@Nonnull Project project, @Nonnull Editor editor, PsiFile file) {
+    public static void invoke(Project project, Editor editor, PsiFile file) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
         SelectionModel selectionModel = editor.getSelectionModel();
@@ -105,7 +104,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     }
 
     @RequiredUIAccess
-    private static void performHighlighting(@Nonnull Editor editor, @Nonnull HighlightUsagesHandlerBase<? extends PsiElement> handlerBase) {
+    private static void performHighlighting(Editor editor, HighlightUsagesHandlerBase<? extends PsiElement> handlerBase) {
         String hintText = handlerBase.getHintText();
         String statusText = handlerBase.getStatusText();
         List<TextRange> readUsages = handlerBase.getReadUsages();
@@ -138,7 +137,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
     @Nullable
     @RequiredUIAccess
-    private static UsageTarget[] getUsageTargets(@Nonnull Editor editor, PsiFile file) {
+    private static UsageTarget[] getUsageTargets(Editor editor, PsiFile file) {
         UsageTarget[] usageTargets = UsageTargetUtil.findUsageTargets(editor, file);
 
         if (usageTargets == null) {
@@ -175,7 +174,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     }
 
     @RequiredUIAccess
-    private static void handleNoUsageTargets(PsiFile file, @Nonnull Editor editor, SelectionModel selectionModel, @Nonnull Project project) {
+    private static void handleNoUsageTargets(PsiFile file, Editor editor, SelectionModel selectionModel, Project project) {
         if (file.findElementAt(editor.getCaretModel().getOffset()) instanceof PsiWhiteSpace) {
             return;
         }
@@ -196,7 +195,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public static HighlightUsagesHandlerBase<PsiElement> createCustomHandler(@Nonnull Editor editor, @Nonnull PsiFile file) {
+    public static HighlightUsagesHandlerBase<PsiElement> createCustomHandler(Editor editor, PsiFile file) {
         return file.getApplication().getExtensionPoint(HighlightUsagesHandlerFactory.class)
             .computeSafeIfAny(it -> it.createHighlightUsagesHandler(editor, file));
     }
@@ -261,7 +260,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         private final PsiFile myFile;
         private final boolean myClearHighlights;
 
-        public DoHighlightRunnable(@Nonnull List<PsiReference> refs, @Nonnull Project project, @Nonnull PsiElement target, Editor editor, PsiFile file, boolean clearHighlights) {
+        public DoHighlightRunnable(List<PsiReference> refs, Project project, PsiElement target, Editor editor, PsiFile file, boolean clearHighlights) {
             myRefs = refs;
             myProject = project;
             myTarget = target;
@@ -285,9 +284,9 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
     @RequiredUIAccess
     public static void highlightReferences(
-        @Nonnull Project project,
-        @Nonnull PsiElement element,
-        @Nonnull List<PsiReference> refs,
+        Project project,
+        PsiElement element,
+        List<PsiReference> refs,
         Editor editor,
         PsiFile file,
         boolean clearHighlights
@@ -387,7 +386,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         }
     }
 
-    public static boolean isClearHighlights(@Nonnull Editor editor) {
+    public static boolean isClearHighlights(Editor editor) {
         if (editor instanceof EditorWindow editorWindow) {
             editor = editorWindow.getDelegate();
         }
@@ -437,8 +436,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
     @RequiredUIAccess
     private static void doHighlightRefs(HighlightManager highlightManager,
-                                        @Nonnull Editor editor,
-                                        @Nonnull List<PsiReference> refs,
+                                        Editor editor,
+                                        List<PsiReference> refs,
                                         TextAttributesKey attributesKey,
                                         boolean clearHighlights) {
         List<TextRange> textRanges = new ArrayList<>(refs.size());
@@ -451,16 +450,16 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     /**
      * @deprecated Use {@link #collectRangesToHighlight}
      */
-    @Nonnull
+    
     @Deprecated
     @RequiredReadAction
-    public static List<TextRange> getRangesToHighlight(@Nonnull PsiReference ref) {
+    public static List<TextRange> getRangesToHighlight(PsiReference ref) {
         return collectRangesToHighlight(ref, new ArrayList<>());
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static List<TextRange> collectRangesToHighlight(@Nonnull PsiReference ref, @Nonnull List<TextRange> result) {
+    public static List<TextRange> collectRangesToHighlight(PsiReference ref, List<TextRange> result) {
         for (TextRange relativeRange : ReferenceRange.getRanges(ref)) {
             PsiElement element = ref.getElement();
             TextRange range = safeCut(element.getTextRange(), relativeRange);

@@ -47,8 +47,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -69,7 +68,7 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
     private final Provider<IntentionManagerSettings> mySettingsProvider;
 
     @Inject
-    public IntentionManagerImpl(@Nonnull Application application, @Nonnull Provider<IntentionManagerSettings> settingsProvider) {
+    public IntentionManagerImpl(Application application, Provider<IntentionManagerSettings> settingsProvider) {
         mySettingsProvider = settingsProvider;
 
         addAction(new EditInspectionToolsSettingsInSuppressedPlaceIntention());
@@ -78,8 +77,8 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
     }
 
     @Override
-    @Nonnull
-    public List<IntentionAction> getStandardIntentionOptions(@Nonnull HighlightDisplayKey displayKey, @Nonnull PsiElement context) {
+    
+    public List<IntentionAction> getStandardIntentionOptions(HighlightDisplayKey displayKey, PsiElement context) {
         List<IntentionAction> options = new ArrayList<>();
         options.add(new EditInspectionToolsSettingsAction(displayKey));
         options.add(new RunInspectionIntention(displayKey));
@@ -114,21 +113,21 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
     }
 
     @Override
-    @Nonnull
-    public LocalQuickFix convertToFix(@Nonnull final IntentionAction action) {
+    
+    public LocalQuickFix convertToFix(final IntentionAction action) {
         if (action instanceof LocalQuickFix) {
             return (LocalQuickFix) action;
         }
         return new LocalQuickFix() {
             @Override
-            @Nonnull
+            
             public LocalizeValue getName() {
                 return action.getText();
             }
 
             @Override
             @RequiredReadAction
-            public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+            public void applyFix(Project project, ProblemDescriptor descriptor) {
                 PsiFile psiFile = descriptor.getPsiElement().getContainingFile();
                 try {
                     action.invoke(project, new LazyEditor(psiFile), psiFile);
@@ -141,17 +140,17 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
     }
 
     @Override
-    public void addAction(@Nonnull IntentionAction action) {
+    public void addAction(IntentionAction action) {
         myActions.add(action);
     }
 
     @Override
-    @Nonnull
+    
     public IntentionAction[] getIntentionActions() {
         return ArrayUtil.stripTrailingNulls(myActions.toArray(new IntentionAction[myActions.size()]));
     }
 
-    @Nonnull
+    
     @Override
     public IntentionAction[] getAvailableIntentionActions() {
         IntentionManagerSettings settings = getSettings();
@@ -165,13 +164,13 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
         return list.toArray(new IntentionAction[list.size()]);
     }
 
-    @Nonnull
+    
     @Override
     public IntentionAction createCleanupAllIntention() {
         return CleanupAllIntention.INSTANCE;
     }
 
-    @Nonnull
+    
     @Override
     public List<IntentionAction> getCleanupIntentionOptions() {
         ArrayList<IntentionAction> options = new ArrayList<>();
@@ -185,7 +184,7 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
     }
 
-    @Nonnull
+    
     private IntentionManagerSettings getSettings() {
         return mySettingsProvider.get();
     }

@@ -29,7 +29,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
         getTemplatePresentation().setText("In All Scopes");
     }
 
-    @Nonnull
+    
     @Override
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
         DefaultActionGroup group = new DefaultActionGroup();
@@ -89,7 +88,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
         group.add(new DumbAwareAction("Edit Scopes Order...") {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 ScopesOrderDialog dlg = new ScopesOrderDialog(myInspectionProfile, myProject);
                 if (dlg.showAndGet()) {
                     onScopesOrderChanged();
@@ -119,7 +118,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
             group.add(new DumbAwareAction(scopeName) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     for (Descriptor defaultDescriptor : defaultDescriptors) {
                         inspectionProfile.addScope(
                             defaultDescriptor.getToolWrapper().createCopy(),

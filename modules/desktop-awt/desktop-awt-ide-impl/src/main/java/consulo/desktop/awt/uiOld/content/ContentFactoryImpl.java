@@ -27,26 +27,25 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.*;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 @Singleton
 @ServiceImpl
 public class ContentFactoryImpl implements ContentFactory {
-  @Nonnull
+  
   @Override
-  public ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull ComponentManager project) {
+  public ContentManager createContentManager(ContentUI contentUI, boolean canCloseContents, ComponentManager project) {
     return new DesktopContentManagerImpl(contentUI, canCloseContents, (Project)project);
   }
 
-  @Nonnull
+  
   @Override
-  public ContentManager createContentManager(boolean canCloseContents, @Nonnull ComponentManager project) {
+  public ContentManager createContentManager(boolean canCloseContents, ComponentManager project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
   }
 
-  @Nonnull
+  
   @Override
   public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
     if (component == null) {
@@ -58,13 +57,13 @@ public class ContentFactoryImpl implements ContentFactory {
 
   // TODO [VISTALL] AWT & Swing dependency
   // region AWT & Swing dependency
-  @Nonnull
+  
   @Override
   public ContentImpl createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
     return new ContentImpl(component, displayName, isLockable);
   }
 
-  @Nonnull
+  
   @Override
   public TabbedContent createTabbedContent(javax.swing.JComponent component, String displayName, boolean isPinnable, String titlePrefix) {
     return new TabbedContentImpl(component, displayName, isPinnable, titlePrefix);

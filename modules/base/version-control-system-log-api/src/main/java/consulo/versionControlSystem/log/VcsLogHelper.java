@@ -19,7 +19,6 @@ import consulo.annotation.UsedInPlugin;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,5 +34,5 @@ public interface VcsLogHelper {
     }
 
     @UsedInPlugin
-    <Commit extends TimedVcsCommit> List<Commit> sortByDateTopoOrder(@Nonnull Collection<Commit> commits);
+    <Commit extends TimedVcsCommit> List<Commit> sortByDateTopoOrder(Collection<Commit> commits);
 }

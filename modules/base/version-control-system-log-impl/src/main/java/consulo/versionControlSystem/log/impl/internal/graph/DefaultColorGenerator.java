@@ -2,7 +2,6 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 
 import consulo.ui.ex.JBColor;
 import consulo.versionControlSystem.log.ColorGenerator;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -18,7 +17,7 @@ public class DefaultColorGenerator implements ColorGenerator {
     ourColorMap.put(GraphColorManagerImpl.DEFAULT_COLOR, JBColor.BLACK);
   }
 
-  @Nonnull
+  
   @Override
   public JBColor getColor(int branchNumber) {
     JBColor color = ourColorMap.get(branchNumber);
@@ -33,7 +32,7 @@ public class DefaultColorGenerator implements ColorGenerator {
     return Math.abs(n) % 100 + 70;
   }
 
-  @Nonnull
+  
   private static JBColor calcColor(int indexColor) {
     int r = indexColor * 200 + 30;
     int g = indexColor * 130 + 50;

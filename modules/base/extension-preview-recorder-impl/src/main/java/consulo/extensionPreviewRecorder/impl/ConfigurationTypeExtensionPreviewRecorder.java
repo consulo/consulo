@@ -22,7 +22,6 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.execution.configuration.ConfigurationType;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -39,7 +38,7 @@ public class ConfigurationTypeExtensionPreviewRecorder implements ExtensionPrevi
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+  public void analyze(Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(ConfigurationType.class).forEachExtensionSafe(it -> {
       ExtensionPreview preview = ExtensionPreview.of(ConfigurationType.class, it.getId(), it);
 

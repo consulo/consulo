@@ -22,29 +22,28 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 class DirElementInfo extends SmartPointerElementInfo {
-  @Nonnull
+  
   private final VirtualFile myVirtualFile;
-  @Nonnull
+  
   private final Project myProject;
 
 
-  DirElementInfo(@Nonnull PsiDirectory directory) {
+  DirElementInfo(PsiDirectory directory) {
     myProject = directory.getProject();
     myVirtualFile = directory.getVirtualFile();
   }
 
   @Override
-  PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager) {
+  PsiElement restoreElement(SmartPointerManagerImpl manager) {
     return SelfElementInfo.restoreDirectoryFromVirtual(myVirtualFile, myProject);
   }
 
   @Override
-  PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager) {
+  PsiFile restoreFile(SmartPointerManagerImpl manager) {
     return null;
   }
 
@@ -54,24 +53,24 @@ class DirElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
+  boolean pointsToTheSameElementAs(SmartPointerElementInfo other, SmartPointerManagerImpl manager) {
     return other instanceof DirElementInfo && Objects.equals(myVirtualFile, ((DirElementInfo)other).myVirtualFile);
   }
 
-  @Nonnull
+  
   @Override
   VirtualFile getVirtualFile() {
     return myVirtualFile;
   }
 
   @Override
-  Segment getRange(@Nonnull SmartPointerManagerImpl manager) {
+  Segment getRange(SmartPointerManagerImpl manager) {
     return null;
   }
 
   @Nullable
   @Override
-  Segment getPsiRange(@Nonnull SmartPointerManagerImpl manager) {
+  Segment getPsiRange(SmartPointerManagerImpl manager) {
     return null;
   }
 

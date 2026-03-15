@@ -2,27 +2,26 @@
 package consulo.execution.debug.stream.wrapper.impl;
 
 import consulo.execution.debug.stream.wrapper.CallArgument;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public class CallArgumentImpl implements CallArgument {
-  private final @Nonnull String myType;
-  private final @Nonnull String myText;
+  private final String myType;
+  private final String myText;
 
-  public CallArgumentImpl(@Nonnull String type, @Nonnull String text) {
+  public CallArgumentImpl(String type, String text) {
     myType = type;
     myText = text;
   }
 
   @Override
-  public @Nonnull String getType() {
+  public String getType() {
     return myType;
   }
 
   @Override
-  public @Nonnull String getText() {
+  public String getText() {
     return myText;
   }
 }

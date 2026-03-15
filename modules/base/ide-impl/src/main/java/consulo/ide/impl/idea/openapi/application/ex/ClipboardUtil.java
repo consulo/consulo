@@ -19,8 +19,7 @@ import consulo.application.Application;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.awt.CopyPasteManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.function.Supplier;
@@ -28,7 +27,7 @@ import java.util.function.Supplier;
 public class ClipboardUtil {
   private static final Logger LOG = Logger.getInstance(ClipboardUtil.class);
 
-  public static <E> E handleClipboardSafely(@Nonnull Supplier<? extends E> supplier, @Nonnull Supplier<? extends E> onFail) {
+  public static <E> E handleClipboardSafely(Supplier<? extends E> supplier, Supplier<? extends E> onFail) {
     try {
       return supplier.get();
     }

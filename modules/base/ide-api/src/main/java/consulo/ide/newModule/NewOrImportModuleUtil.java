@@ -35,28 +35,27 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 public class NewOrImportModuleUtil {
   private static final Logger LOG = Logger.getInstance(NewOrImportModuleUtil.class);
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static Module doCreate(@Nonnull NewModuleBuilderProcessor<NewModuleWizardContext> processor,
-                                @Nonnull NewModuleWizardContext context,
-                                @Nonnull Project project,
-                                @Nonnull VirtualFile baseDir) {
+  public static Module doCreate(NewModuleBuilderProcessor<NewModuleWizardContext> processor,
+                                NewModuleWizardContext context,
+                                Project project,
+                                VirtualFile baseDir) {
     return doCreate(processor, context, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   @SuppressWarnings("unchecked")
-  public static Module doCreate(@Nonnull NewModuleBuilderProcessor<NewModuleWizardContext> processor,
-                                @Nonnull NewModuleWizardContext context,
-                                @Nonnull ModifiableModuleModel modifiableModel,
-                                @Nonnull VirtualFile baseDir,
+  public static Module doCreate(NewModuleBuilderProcessor<NewModuleWizardContext> processor,
+                                NewModuleWizardContext context,
+                                ModifiableModuleModel modifiableModel,
+                                VirtualFile baseDir,
                                 boolean requireModelCommit) {
     String name = StringUtil.notNullize(context.getName(), baseDir.getName());
 
@@ -82,9 +81,9 @@ public class NewOrImportModuleUtil {
     return newModule;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
-  public static <T extends ModuleImportContext> AsyncResult<Project> importProject(@Nonnull T context, @Nonnull ModuleImportProvider<T> importProvider) {
+  public static <T extends ModuleImportContext> AsyncResult<Project> importProject(T context, ModuleImportProvider<T> importProvider) {
     ProjectManager projectManager = ProjectManager.getInstance();
     String projectFilePath = context.getPath();
     String projectName = context.getName();

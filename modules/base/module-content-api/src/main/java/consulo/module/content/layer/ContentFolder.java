@@ -19,8 +19,7 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -37,7 +36,7 @@ public interface ContentFolder extends Synthetic {
    * Returns the type of root directory
    * @return
    */
-  @Nonnull
+  
   ContentFolderTypeProvider getType();
 
   /**
@@ -53,7 +52,7 @@ public interface ContentFolder extends Synthetic {
    *
    * @return this <code>ContentFolder</code>s {@link ContentEntry}.
    */
-  @Nonnull
+  
   ContentEntry getContentEntry();
 
   /**
@@ -61,14 +60,14 @@ public interface ContentFolder extends Synthetic {
    *
    * @return the root directory URL.
    */
-  @Nonnull
+  
   String getUrl();
 
-  @Nonnull
+  
   Map<Key, Object> getProperties();
 
   @Nullable
-  <T> T getPropertyValue(@Nonnull Key<T> key);
+  <T> T getPropertyValue(Key<T> key);
 
-  <T> void setPropertyValue(@Nonnull Key<T> key, @Nullable T value);
+  <T> void setPropertyValue(Key<T> key, @Nullable T value);
 }

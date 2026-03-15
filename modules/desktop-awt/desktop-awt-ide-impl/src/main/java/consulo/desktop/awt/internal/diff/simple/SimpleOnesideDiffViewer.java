@@ -39,8 +39,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +49,13 @@ import static consulo.diff.internal.DiffImplUtil.getLineCount;
 public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     public static final Logger LOG = Logger.getInstance(SimpleOnesideDiffViewer.class);
 
-    @Nonnull
+    
     private final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
 
-    @Nonnull
+    
     private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
 
-    public SimpleOnesideDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public SimpleOnesideDiffViewer(DiffContext context, DiffRequest request) {
         super(context, (ContentDiffRequest)request);
     }
 
@@ -70,7 +69,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         super.onDispose();
     }
 
-    @Nonnull
+    
     @Override
     protected List<AnAction> createToolbarActions() {
         List<AnAction> group = new ArrayList<>();
@@ -86,7 +85,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         return group;
     }
 
-    @Nonnull
+    
     @Override
     protected List<AnAction> createPopupActions() {
         List<AnAction> group = new ArrayList<>();
@@ -121,8 +120,8 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     //
 
     @Override
-    @Nonnull
-    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
+    
+    protected Runnable performRediff(ProgressIndicator indicator) {
         return () -> {
             clearDiffPresentation();
 
@@ -160,7 +159,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     }
 
     @RequiredUIAccess
-    protected boolean doScrollToContext(@Nonnull DiffNavigationContext context) {
+    protected boolean doScrollToContext(DiffNavigationContext context) {
         if (getSide().isLeft()) {
             return false;
         }
@@ -180,7 +179,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     //
 
     @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-    public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public static boolean canShowRequest(DiffContext context, DiffRequest request) {
         return OnesideTextDiffViewer.canShowRequest(context, request);
     }
 
@@ -228,7 +227,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
             int lineCount = getLineCount(getEditor().getDocument());
             return new LineRange(0, lineCount);

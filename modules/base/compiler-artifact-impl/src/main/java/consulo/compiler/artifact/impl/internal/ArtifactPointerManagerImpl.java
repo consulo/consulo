@@ -29,8 +29,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -46,17 +45,17 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
     myArtifactManagerProvider = artifactManagerProvider;
     project.getMessageBus().connect().subscribe(ArtifactListener.class, new ArtifactListener() {
       @Override
-      public void artifactRemoved(@Nonnull Artifact artifact) {
+      public void artifactRemoved(Artifact artifact) {
         unregisterPointer(artifact);
       }
 
       @Override
-      public void artifactAdded(@Nonnull Artifact artifact) {
+      public void artifactAdded(Artifact artifact) {
         updatePointers(artifact);
       }
 
       @Override
-      public void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
+      public void artifactChanged(Artifact artifact, String oldName) {
         updatePointers(artifact, oldName);
       }
     });
@@ -67,15 +66,15 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
     super.unregisterPointers(value);
   }
 
-  @Nonnull
+  
   @Override
-  public ArtifactPointer create(@Nonnull Artifact value) {
+  public ArtifactPointer create(Artifact value) {
     return (ArtifactPointer)super.create(value);
   }
 
-  @Nonnull
+  
   @Override
-  public ArtifactPointer create(@Nonnull String name) {
+  public ArtifactPointer create(String name) {
     return (ArtifactPointer)super.create(name);
   }
 
@@ -85,20 +84,20 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
    * It will be called from consulo.compiler.artifact.element.ArtifactPackagingElement, while ArtifactManager#loadState()
    */
   @Override
-  @Nonnull
-  public ArtifactPointer create(@Nonnull ArtifactManager artifactManager, @Nonnull String name) {
+  
+  public ArtifactPointer create(ArtifactManager artifactManager, String name) {
     return (ArtifactPointer)create(name, artifactManager::findArtifact);
   }
 
-  @Nonnull
+  
   @Override
-  public ArtifactPointer create(@Nonnull Artifact artifact, @Nonnull ArtifactModel artifactModel) {
+  public ArtifactPointer create(Artifact artifact, ArtifactModel artifactModel) {
     return create(artifactModel.getOriginalArtifact(artifact));
   }
 
   @Nullable
   @Override
-  protected Artifact findByName(@Nonnull String name) {
+  protected Artifact findByName(String name) {
     return myArtifactManagerProvider.get().findArtifact(name);
   }
 

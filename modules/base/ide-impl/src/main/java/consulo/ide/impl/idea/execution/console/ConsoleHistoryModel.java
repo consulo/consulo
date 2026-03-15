@@ -18,8 +18,7 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.application.ui.UISettings;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -44,7 +43,7 @@ class ConsoleHistoryModel extends SimpleModificationTracker {
         return new ConsoleHistoryModel(this);
     }
 
-    public void resetEntries(@Nonnull List<String> entries) {
+    public void resetEntries(List<String> entries) {
         synchronized (myLock) {
             myEntries.clear();
             myEntries.addAll(entries.subList(0, Math.min(entries.size(), getMaxHistorySize())));

@@ -6,7 +6,6 @@ import consulo.execution.debug.stream.wrapper.CallArgument;
 import consulo.execution.debug.stream.wrapper.StreamCallType;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -18,13 +17,13 @@ public class TerminatorStreamCallImpl extends StreamCallImpl implements Terminat
   private final GenericType myReturnType;
   private final Boolean myReturnsVoid;
 
-  public TerminatorStreamCallImpl(@Nonnull String name,
-                                  @Nonnull String genericArgs,
-                                  @Nonnull List<CallArgument> args,
-                                  @Nonnull GenericType typeBefore,
-                                  @Nonnull GenericType resultType,
-                                  @Nonnull TextRange range,
-                                  @Nonnull Boolean returnsVoid
+  public TerminatorStreamCallImpl(String name,
+                                  String genericArgs,
+                                  List<CallArgument> args,
+                                  GenericType typeBefore,
+                                  GenericType resultType,
+                                  TextRange range,
+                                  Boolean returnsVoid
                                   ) {
     super(name, genericArgs, args, StreamCallType.TERMINATOR, range);
     myTypeBefore = typeBefore;
@@ -33,12 +32,12 @@ public class TerminatorStreamCallImpl extends StreamCallImpl implements Terminat
   }
 
   @Override
-  public @Nonnull GenericType getTypeBefore() {
+  public GenericType getTypeBefore() {
     return myTypeBefore;
   }
 
   @Override
-  public @Nonnull GenericType getResultType() {
+  public GenericType getResultType() {
     return myReturnType;
   }
 

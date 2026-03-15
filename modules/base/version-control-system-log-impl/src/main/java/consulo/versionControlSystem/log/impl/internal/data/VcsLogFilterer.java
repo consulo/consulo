@@ -17,25 +17,24 @@ package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
-import jakarta.annotation.Nonnull;
 
 /**
  */
 public interface VcsLogFilterer {
 
-  void addVisiblePackChangeListener(@Nonnull VisiblePackChangeListener listener);
+  void addVisiblePackChangeListener(VisiblePackChangeListener listener);
 
-  void removeVisiblePackChangeListener(@Nonnull VisiblePackChangeListener listener);
+  void removeVisiblePackChangeListener(VisiblePackChangeListener listener);
 
   void onRefresh();
 
   void setValid(boolean validate);
 
-  void onFiltersChange(@Nonnull VcsLogFilterCollection filters);
+  void onFiltersChange(VcsLogFilterCollection filters);
 
-  void onSortTypeChange(@Nonnull PermanentGraph.SortType sortType);
+  void onSortTypeChange(PermanentGraph.SortType sortType);
 
-  void moreCommitsNeeded(@Nonnull Runnable onLoaded);
+  void moreCommitsNeeded(Runnable onLoaded);
 
   boolean isValid();
 }

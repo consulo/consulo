@@ -22,7 +22,6 @@ import consulo.versionControlSystem.log.impl.internal.graph.GraphColorManagerImp
 import consulo.versionControlSystem.util.StopWatch;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Function;
@@ -30,23 +29,23 @@ import java.util.function.Function;
 public class DataPack extends DataPackBase {
   public static final DataPack EMPTY = createEmptyInstance();
 
-  @Nonnull
+  
   private final PermanentGraph<Integer> myPermanentGraph;
 
-  DataPack(@Nonnull RefsModel refsModel,
-           @Nonnull PermanentGraph<Integer> permanentGraph,
-           @Nonnull Map<VirtualFile, VcsLogProvider> providers,
+  DataPack(RefsModel refsModel,
+           PermanentGraph<Integer> permanentGraph,
+           Map<VirtualFile, VcsLogProvider> providers,
            boolean full) {
     super(providers, refsModel, full);
     myPermanentGraph = permanentGraph;
   }
 
-  @Nonnull
+  
   static DataPack build(
-    @Nonnull List<? extends GraphCommit<Integer>> commits,
-    @Nonnull Map<VirtualFile, CompressedRefs> refs,
-    @Nonnull Map<VirtualFile, VcsLogProvider> providers,
-    @Nonnull VcsLogStorage hashMap,
+    List<? extends GraphCommit<Integer>> commits,
+    Map<VirtualFile, CompressedRefs> refs,
+    Map<VirtualFile, VcsLogProvider> providers,
+    VcsLogStorage hashMap,
     boolean full
   ) {
     RefsModel refsModel;
@@ -69,8 +68,8 @@ public class DataPack extends DataPackBase {
     return new DataPack(refsModel, permanentGraph, providers, full);
   }
 
-  @Nonnull
-  public static Function<Integer, Hash> createHashGetter(@Nonnull VcsLogStorage hashMap) {
+  
+  public static Function<Integer, Hash> createHashGetter(VcsLogStorage hashMap) {
     return commitIndex -> {
       CommitId commitId = hashMap.getCommitId(commitIndex);
       if (commitId == null) return null;
@@ -78,8 +77,8 @@ public class DataPack extends DataPackBase {
     };
   }
 
-  @Nonnull
-  private static Set<Integer> getHeads(@Nonnull List<? extends GraphCommit<Integer>> commits) {
+  
+  private static Set<Integer> getHeads(List<? extends GraphCommit<Integer>> commits) {
     TIntHashSet parents = new TIntHashSet();
     for (GraphCommit<Integer> commit : commits) {
       for (int parent : commit.getParents()) {
@@ -96,8 +95,8 @@ public class DataPack extends DataPackBase {
     return heads;
   }
 
-  @Nonnull
-  private static Set<Integer> getBranchCommitHashIndexes(@Nonnull Collection<VcsRef> branches, @Nonnull VcsLogStorage hashMap) {
+  
+  private static Set<Integer> getBranchCommitHashIndexes(Collection<VcsRef> branches, VcsLogStorage hashMap) {
     Set<Integer> result = new HashSet<>();
     for (VcsRef vcsRef : branches) {
       result.add(hashMap.getCommitIndex(vcsRef.getCommitHash(), vcsRef.getRoot()));
@@ -105,8 +104,8 @@ public class DataPack extends DataPackBase {
     return result;
   }
 
-  @Nonnull
-  public static Map<VirtualFile, VcsLogRefManager> getRefManagerMap(@Nonnull Map<VirtualFile, VcsLogProvider> logProviders) {
+  
+  public static Map<VirtualFile, VcsLogRefManager> getRefManagerMap(Map<VirtualFile, VcsLogProvider> logProviders) {
     Map<VirtualFile, VcsLogRefManager> map = new HashMap<>();
     for (Map.Entry<VirtualFile, VcsLogProvider> entry : logProviders.entrySet()) {
       map.put(entry.getKey(), entry.getValue().getReferenceManager());
@@ -114,14 +113,14 @@ public class DataPack extends DataPackBase {
     return map;
   }
 
-  @Nonnull
+  
   private static DataPack createEmptyInstance() {
     RefsModel emptyModel =
       new RefsModel(new HashMap<>(), new HashSet<>(), VcsLogStorageImpl.EMPTY, new HashMap<>());
     return new DataPack(emptyModel, EmptyPermanentGraph.getInstance(), Collections.<VirtualFile, VcsLogProvider>emptyMap(), false);
   }
 
-  @Nonnull
+  
   public PermanentGraph<Integer> getPermanentGraph() {
     return myPermanentGraph;
   }

@@ -55,8 +55,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.LinkedHashMap;
@@ -83,9 +82,9 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     };
 
-    @Nonnull
+    
     public static XDebugSessionTab create(
-        @Nonnull XDebugSessionImpl session,
+        XDebugSessionImpl session,
         @Nullable Image icon,
         @Nullable ExecutionEnvironment environment,
         @Nullable RunContentDescriptor contentToReuse
@@ -106,12 +105,12 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return tab;
     }
 
-    @Nonnull
+    
     public RunnerLayoutUi getUi() {
         return myUi;
     }
 
-    private XDebugSessionTab(@Nonnull XDebugSessionImpl session, @Nullable Image icon, @Nullable ExecutionEnvironment environment) {
+    private XDebugSessionTab(XDebugSessionImpl session, @Nullable Image icon, @Nullable ExecutionEnvironment environment) {
         super(session.getProject(), "Debug", session.getSessionName(), GlobalSearchScope.allScope(session.getProject()));
 
         setSession(session, environment, icon);
@@ -142,11 +141,11 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         rebuildViews();
     }
 
-    private void addVariablesAndWatches(@Nonnull XDebugSessionImpl session) {
+    private void addVariablesAndWatches(XDebugSessionImpl session) {
         myUi.addContent(createVariablesContent(session), 0, PlaceInGrid.center, false);
     }
 
-    private void setSession(@Nonnull XDebugSessionImpl session, @Nullable ExecutionEnvironment environment, @Nullable Image icon) {
+    private void setSession(XDebugSessionImpl session, @Nullable ExecutionEnvironment environment, @Nullable Image icon) {
         myEnvironment = environment;
         mySession = session;
         mySessionData = session.getSessionData();
@@ -176,7 +175,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (XWatchesView.DATA_KEY == dataId) {
             return myWatchesView;
         }
@@ -199,7 +198,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return super.getData(dataId);
     }
 
-    private Content createVariablesContent(@Nonnull XDebugSessionImpl session) {
+    private Content createVariablesContent(XDebugSessionImpl session) {
         XVariablesView variablesView;
         variablesView = myWatchesView = new XWatchesViewImpl(session, true);
         registerView(DebuggerContentInfo.VARIABLES_CONTENT, variablesView);
@@ -218,7 +217,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return result;
     }
 
-    @Nonnull
+    
     private Content createFramesContent() {
         XFramesView framesView = new XFramesView(myProject);
         registerView(DebuggerContentInfo.FRAME_CONTENT, framesView);
@@ -250,7 +249,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return myWatchesView;
     }
 
-    private void attachToSession(@Nonnull XDebugSessionImpl session) {
+    private void attachToSession(XDebugSessionImpl session) {
         for (XDebugView view : myViews.values()) {
             attachViewToSession(session, view);
         }
@@ -305,7 +304,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     }
 
-    private static void attachViewToSession(@Nonnull XDebugSessionImpl session, @Nullable XDebugView view) {
+    private static void attachViewToSession(XDebugSessionImpl session, @Nullable XDebugView view) {
         if (view != null) {
             session.addSessionListener(new XDebugViewSessionListener(view, session), view);
         }
@@ -321,14 +320,14 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return myRunContentDescriptor;
     }
 
-    public static void showWatchesView(@Nonnull XDebugSessionImpl session) {
+    public static void showWatchesView(XDebugSessionImpl session) {
         XDebugSessionTab tab = session.getSessionTab();
         if (tab != null) {
             showView(session, tab.getWatchesContentId());
         }
     }
 
-    public static void showFramesView(@Nonnull XDebugSessionImpl session) {
+    public static void showFramesView(XDebugSessionImpl session) {
         showView(session, DebuggerContentInfo.FRAME_CONTENT);
     }
 
@@ -374,12 +373,12 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     }
 
-    @Nonnull
+    
     private String getWatchesContentId() {
         return DebuggerContentInfo.VARIABLES_CONTENT;
     }
 
-    private void registerView(String contentId, @Nonnull XDebugView view) {
+    private void registerView(String contentId, XDebugView view) {
         myViews.put(contentId, view);
         Disposer.register(myRunContentDescriptor, view);
     }
@@ -396,7 +395,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     }
 
-    public @Nullable Content findOrRestoreContentIfNeeded(@Nonnull String contentId) {
+    public @Nullable Content findOrRestoreContentIfNeeded(String contentId) {
         RunnerContentUi contentUi = myUi instanceof RunnerLayoutUiImpl o ? o.getContentUI() : null;
         if (contentUi != null) {
             return contentUi.findOrRestoreContentIfNeeded(contentId);

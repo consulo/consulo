@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
@@ -55,7 +54,7 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Component focusedComponent = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         Editor editor = e.getData(Editor.KEY);
@@ -134,7 +133,7 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean enabled = isEnabled(e);
         if (ActionPlaces.isPopupPlace(e.getPlace())) {
             e.getPresentation().setVisible(enabled);
@@ -144,7 +143,7 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
         }
     }
 
-    private static boolean isEnabled(@Nonnull AnActionEvent e) {
+    private static boolean isEnabled(AnActionEvent e) {
         if (!(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JComponent component)) {
             return false;
         }

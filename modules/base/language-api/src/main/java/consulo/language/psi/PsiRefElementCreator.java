@@ -17,14 +17,13 @@ package consulo.language.psi;
 
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface PsiRefElementCreator<Parent, Child> {
 
-  @Nonnull
-  Child createChild(@Nonnull Parent parent) throws IncorrectOperationException;
+  
+  Child createChild(Parent parent) throws IncorrectOperationException;
 
 }

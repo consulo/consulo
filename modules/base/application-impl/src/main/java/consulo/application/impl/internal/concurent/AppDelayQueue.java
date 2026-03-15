@@ -17,7 +17,6 @@ package consulo.application.impl.internal.concurent;
 
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +99,7 @@ public class AppDelayQueue extends DelayQueue<SchedulingWrapper.MyScheduledFutur
     }
   }
 
-  @Nonnull
+  
   public Thread getThread() {
     return scheduledToPooledTransferrer;
   }

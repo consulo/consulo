@@ -5,15 +5,14 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.OuterLanguageElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Inserts the {@link OuterLanguageElement} so that it isn't a first child of the parent (unless it's the very first element in the file).
  */
 public abstract class MiddleTreePatcher implements TreePatcher {
   @Override
-  public void insert(@Nonnull CompositeElement parent, TreeElement anchorBefore, @Nonnull OuterLanguageElement toInsert) {
+  public void insert(CompositeElement parent, TreeElement anchorBefore, OuterLanguageElement toInsert) {
     anchorBefore = findTopmostAnchor(anchorBefore);
     if (anchorBefore != null) {
       anchorBefore.rawInsertBeforeMe((TreeElement)toInsert);

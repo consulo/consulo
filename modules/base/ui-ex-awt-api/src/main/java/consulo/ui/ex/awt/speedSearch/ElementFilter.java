@@ -6,8 +6,7 @@ import consulo.disposer.Disposer;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -16,7 +15,7 @@ public interface ElementFilter<T> {
   boolean shouldBeShowing(T value);
 
   interface Active<T> extends ElementFilter<T> {
-    @Nonnull
+    
     Promise<?> fireUpdate(@Nullable T preferredSelection, boolean adjustSelection, boolean now);
 
     void addListener(Listener<T> listener, Disposable parent);
@@ -25,7 +24,7 @@ public interface ElementFilter<T> {
       Set<Listener<T>> myListeners = new CopyOnWriteArraySet<>();
 
       @Override
-      @Nonnull
+      
       public Promise<?> fireUpdate(@Nullable T preferredSelection, boolean adjustSelection, boolean now) {
         return Promises.all(ContainerUtil.map(myListeners, listener -> listener.update(preferredSelection, adjustSelection, now)));
       }
@@ -44,7 +43,7 @@ public interface ElementFilter<T> {
   }
 
   interface Listener<T> {
-    @Nonnull
+    
     Promise<Void> update(@Nullable T preferredSelection, boolean adjustSelection, boolean now);
   }
 }

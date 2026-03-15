@@ -18,14 +18,13 @@ package consulo.ui.ex;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 public interface CopyProvider {
   Key<CopyProvider> KEY = Key.create(CopyProvider.class);
 
-  void performCopy(@Nonnull DataContext dataContext);
+  void performCopy(DataContext dataContext);
 
-  boolean isCopyEnabled(@Nonnull DataContext dataContext);
+  boolean isCopyEnabled(DataContext dataContext);
 
-  boolean isCopyVisible(@Nonnull DataContext dataContext);
+  boolean isCopyVisible(DataContext dataContext);
 }

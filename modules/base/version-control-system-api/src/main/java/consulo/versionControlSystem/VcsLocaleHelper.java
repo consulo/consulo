@@ -17,7 +17,6 @@ package consulo.versionControlSystem;
 
 import consulo.application.util.registry.Registry;
 
-import jakarta.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -27,8 +26,8 @@ public class VcsLocaleHelper {
   private static final String DEFAULT_EXECUTABLE_LOCALE_VALUE = "en_US.UTF-8";
   private static final String REGISTRY_KEY_SUFFIX = ".executable.locale";
 
-  @Nonnull
-  public static String getDefaultLocaleFromRegistry(@Nonnull String prefix) {
+  
+  public static String getDefaultLocaleFromRegistry(String prefix) {
     String registryKey = prefix + REGISTRY_KEY_SUFFIX;
     try {
       return Registry.stringValue(registryKey);
@@ -38,8 +37,8 @@ public class VcsLocaleHelper {
     }
   }
 
-  @Nonnull
-  public static Map<String, String> getDefaultLocaleEnvironmentVars(@Nonnull String prefix) {
+  
+  public static Map<String, String> getDefaultLocaleEnvironmentVars(String prefix) {
     Map<String, String> envMap = new LinkedHashMap<>();
     String defaultLocale = getDefaultLocaleFromRegistry(prefix);
     if (defaultLocale.isEmpty()) { // let skip locale definition if needed

@@ -20,7 +20,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.GridBag;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,10 +31,10 @@ import java.awt.*;
  */
 public class TitleWithToolbar extends JPanel {
 
-  public TitleWithToolbar(@Nonnull String title,
-                          @Nonnull String actionGroupId,
-                          @Nonnull String place,
-                          @Nonnull JComponent targetComponent)
+  public TitleWithToolbar(String title,
+                          String actionGroupId,
+                          String place,
+                          JComponent targetComponent)
   {
     super(new GridBagLayout());
     ActionManager actionManager = ActionManager.getInstance();
@@ -51,10 +50,10 @@ public class TitleWithToolbar extends JPanel {
   private class MyTitleComponent extends JComponent {
 
     private final Dimension myMinimumSize;
-    @Nonnull
+    
     private final Border myBorder;
 
-    MyTitleComponent(@Nonnull String title) {
+    MyTitleComponent(String title) {
       myBorder = IdeBorderFactory.createTitledBorder(title);
       Insets insets = myBorder.getBorderInsets(TitleWithToolbar.this);
       myMinimumSize = new Dimension(1, insets.top);

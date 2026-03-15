@@ -29,8 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows to invoke and control Find, Replace and Find Usages operations.
@@ -44,7 +43,7 @@ public abstract class FindManager {
 
   public abstract void setPreviousFindModel(FindModel previousFindModel);
 
-  public abstract void showSettingsAndFindUsages(@Nonnull NavigationItem[] targets);
+  public abstract void showSettingsAndFindUsages(NavigationItem[] targets);
 
   /**
    * Returns the find manager instance for the specified project.
@@ -65,7 +64,7 @@ public abstract class FindManager {
    * @param okHandler Will be executed after doOkAction
    */
   @RequiredUIAccess
-  public abstract void showFindDialog(@Nonnull FindModel model, @Nonnull @RequiredUIAccess Runnable okHandler);
+  public abstract void showFindDialog(FindModel model, @RequiredUIAccess Runnable okHandler);
 
   /**
    * Shows a replace prompt dialog for the specified replace operation.
@@ -76,7 +75,7 @@ public abstract class FindManager {
    * interface.
    */
   @PromptResultValue
-  public abstract int showPromptDialog(@Nonnull FindModel model, @Nonnull LocalizeValue title);
+  public abstract int showPromptDialog(FindModel model, LocalizeValue title);
 
   /**
    * Returns the settings of the last performed Find in File operation, or the
@@ -84,7 +83,7 @@ public abstract class FindManager {
    *
    * @return the last Find in File settings.
    */
-  @Nonnull
+  
   public abstract FindModel getFindInFileModel();
 
   /**
@@ -93,7 +92,7 @@ public abstract class FindManager {
    *
    * @return the last Find in Project settings.
    */
-  @Nonnull
+  
   public abstract FindModel getFindInProjectModel();
 
   /**
@@ -107,8 +106,8 @@ public abstract class FindManager {
    * @param model  the settings for the search, including the string to find.
    * @return the result of the search.
    */
-  @Nonnull
-  public abstract FindResult findString(@Nonnull CharSequence text, int offset, @Nonnull FindModel model);
+  
+  public abstract FindResult findString(CharSequence text, int offset, FindModel model);
 
   /**
    * Searches for the specified substring in the specified character sequence,
@@ -121,8 +120,8 @@ public abstract class FindManager {
    * @param model  the settings for the search, including the string to find.
    * @return the result of the search.
    */
-  @Nonnull
-  public abstract FindResult findString(@Nonnull CharSequence text, int offset, @Nonnull FindModel model,
+  
+  public abstract FindResult findString(CharSequence text, int offset, FindModel model,
                                         @Nullable VirtualFile findContextFile);
 
   /**
@@ -135,7 +134,7 @@ public abstract class FindManager {
    * interface. May be only {@link PromptResult#CANCEL} or {@link PromptResult#SKIP} for bad replace operation
    */
   @PromptResultValue
-  public abstract int showMalformedReplacementPrompt(@Nonnull FindModel model, LocalizeValue title, MalformedReplacementStringException exception);
+  public abstract int showMalformedReplacementPrompt(FindModel model, LocalizeValue title, MalformedReplacementStringException exception);
 
   public static class MalformedReplacementStringException extends Exception {
     public MalformedReplacementStringException(String s) {
@@ -157,8 +156,8 @@ public abstract class FindManager {
    * @param documentText source text in which the string was found (matters for regex searches)
    * @return the string to replace the specified found string.
    */
-  public abstract String getStringToReplace(@Nonnull String foundString, @Nonnull FindModel model,
-                                            int startOffset, @Nonnull CharSequence documentText) throws MalformedReplacementStringException;
+  public abstract String getStringToReplace(String foundString, FindModel model,
+                                            int startOffset, CharSequence documentText) throws MalformedReplacementStringException;
 
   /**
    * Gets the flag indicating whether the "Find Next" and "Find Previous" actions are
@@ -218,7 +217,7 @@ public abstract class FindManager {
    * @param editor editor, for which find model shall be retreived for
    * @return the model to use for the operations.
    */
-  public abstract FindModel getFindNextModel(@Nonnull Editor editor);
+  public abstract FindModel getFindNextModel(Editor editor);
 
   /**
    * Checks if the Find Usages action is available for the specified element.
@@ -227,15 +226,15 @@ public abstract class FindManager {
    * @return true if Find Usages is available, false otherwise.
    * @see FindUsagesProvider#canFindUsagesFor(PsiElement)
    */
-  public abstract boolean canFindUsages(@Nonnull PsiElement element);
+  public abstract boolean canFindUsages(PsiElement element);
 
   /**
    * Performs the Find Usages operation for the specified element.
    *
    * @param element the element to find the usages for.
    */
-  public abstract void findUsages(@Nonnull PsiElement element);
-  public abstract void findUsagesInScope(@Nonnull PsiElement element, @Nonnull SearchScope searchScope);
+  public abstract void findUsages(PsiElement element);
+  public abstract void findUsagesInScope(PsiElement element, SearchScope searchScope);
 
   /**
    * Shows the Find Usages dialog (if {@code showDialog} is true} and performs the Find Usages operation for the
@@ -245,7 +244,7 @@ public abstract class FindManager {
    * @param showDialog true if find usages settings dialog needs to be shown.
    * @since idea 12
    */
-  public abstract void findUsages(@Nonnull PsiElement element, boolean showDialog);
+  public abstract void findUsages(PsiElement element, boolean showDialog);
 
   /**
    * Performs a "Find Usages in File" operation for the specified element.
@@ -253,7 +252,7 @@ public abstract class FindManager {
    * @param element the element for which the find is performed.
    * @param editor  the editor in which the find is performed.
    */
-  public abstract void findUsagesInEditor(@Nonnull PsiElement element, @Nonnull FileEditor editor);
+  public abstract void findUsagesInEditor(PsiElement element, FileEditor editor);
 
   /**
    * Performs a "Find Next" operation after "Find Usages in File" or
@@ -263,7 +262,7 @@ public abstract class FindManager {
    * @return true if the operation was performed (not necessarily found anything),
    *         false if an error occurred during the operation.
    */
-  public abstract boolean findNextUsageInEditor(@Nonnull FileEditor editor);
+  public abstract boolean findNextUsageInEditor(FileEditor editor);
 
   /**
    * Performs a "Find Previous" operation after "Find Usages in File" or
@@ -273,10 +272,10 @@ public abstract class FindManager {
    * @return true if the operation was performed (not necessarily found anything),
    *         false if an error occurred during the operation.
    */
-  public abstract boolean findPreviousUsageInEditor(@Nonnull FileEditor editor);
+  public abstract boolean findPreviousUsageInEditor(FileEditor editor);
 
   @Nullable
-  public abstract FindUsagesHandler getFindUsagesHandler(@Nonnull PsiElement element, boolean forHighlightUsages);
+  public abstract FindUsagesHandler getFindUsagesHandler(PsiElement element, boolean forHighlightUsages);
 
   @MagicConstant(valuesFromClass = FindManager.PromptResult.class)
   public @interface PromptResultValue {}

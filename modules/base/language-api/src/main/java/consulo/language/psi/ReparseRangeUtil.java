@@ -19,7 +19,6 @@ import consulo.document.Document;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @see consulo.language.impl.internal.psi.diff.BlockSupport
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public class ReparseRangeUtil {
   private static final Logger LOG = Logger.getInstance(ReparseRangeUtil.class);
 
-  public static void reparseRange(@Nonnull PsiFile file, int startOffset, int endOffset, @Nonnull CharSequence newText) throws IncorrectOperationException {
+  public static void reparseRange(PsiFile file, int startOffset, int endOffset, CharSequence newText) throws IncorrectOperationException {
     LOG.assertTrue(file.isValid());
     Document document = file.getViewProvider().getDocument();
     assert document != null;

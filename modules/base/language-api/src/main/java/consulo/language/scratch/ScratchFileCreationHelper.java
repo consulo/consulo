@@ -20,8 +20,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -32,15 +31,15 @@ import java.util.function.Supplier;
 public abstract class ScratchFileCreationHelper implements LanguageExtension {
     private static final ExtensionPointCacheKey<ScratchFileCreationHelper, ByLanguageValue<ScratchFileCreationHelper>> KEY =
         ExtensionPointCacheKey.create("ScratchFileCreationHelper", LanguageOneToOne.build(new ScratchFileCreationHelper() {
-            @Nonnull
+            
             @Override
             public Language getLanguage() {
                 return Language.ANY;
             }
         }));
 
-    @Nonnull
-    public static ScratchFileCreationHelper forLanguage(@Nonnull Language language) {
+    
+    public static ScratchFileCreationHelper forLanguage(Language language) {
         return Application.get().getExtensionPoint(ScratchFileCreationHelper.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
@@ -48,15 +47,15 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
      * Override to change the default initial text for a scratch file stored in {@link Context#text} field.
      * Return true if the text is set up as needed and no further considerations are necessary.
      */
-    public boolean prepareText(@Nonnull Project project, @Nonnull Context context, @Nonnull DataContext dataContext) {
+    public boolean prepareText(Project project, Context context, DataContext dataContext) {
         return false;
     }
 
-    public void beforeCreate(@Nonnull Project project, @Nonnull Context context) {
+    public void beforeCreate(Project project, Context context) {
     }
 
     public static class Context {
-        @Nonnull
+        
         public String text = "";
         public Language language;
         public int caretOffset;
@@ -71,7 +70,7 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
     }
 
     @Nullable
-    public static PsiFile parseHeader(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
+    public static PsiFile parseHeader(Project project, Language language, String text) {
         LanguageFileType fileType = language.getAssociatedFileType();
         CharSequence fileSnippet = StringUtil.first(text, 10 * 1024, false);
         PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
@@ -82,9 +81,9 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
         );
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public static String reformat(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
+    public static String reformat(Project project, Language language, String text) {
         return LanguageInternal.getInstance().reformatScratch(project, language, text);
     }
 }

@@ -25,8 +25,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,17 +61,17 @@ public abstract class DvcsQuickListContentProvider implements VcsQuickListConten
         return actions;
     }
 
-    @Nonnull
+    
     protected abstract String getVcsName();
 
-    protected abstract void addVcsSpecificActions(@Nonnull ActionManager manager, @Nonnull List<AnAction> actions);
+    protected abstract void addVcsSpecificActions(ActionManager manager, List<AnAction> actions);
 
     @Override
-    public boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @Nullable DataContext dataContext) {
+    public boolean replaceVcsActionsFor(AbstractVcs activeVcs, @Nullable DataContext dataContext) {
         return getVcsName().equals(activeVcs.getId());
     }
 
-    protected static void addSeparator(@Nonnull List<AnAction> actions) {
+    protected static void addSeparator(List<AnAction> actions) {
         actions.add(AnSeparator.create());
     }
 

@@ -35,7 +35,6 @@ import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -58,7 +57,7 @@ import java.util.function.Supplier;
 public interface Application extends ComponentManager, CoroutineContextOwner {
     Key<Application> KEY = Key.of(Application.class);
 
-    @Nonnull
+    
     @SuppressWarnings("deprecation")
     @Deprecated
     @DeprecationInfo("Use injecting context")
@@ -76,7 +75,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @param action the runnable to execute.
      */
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action) {
+    default void invokeLaterOnWriteThread(Runnable action) {
         throw new AbstractMethodError();
     }
 
@@ -87,7 +86,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param action the runnable to execute.
      * @param modal  the state in which action will be executed
      */
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
+    default void invokeLaterOnWriteThread(Runnable action, ModalityState modal) {
         throw new AbstractMethodError();
     }
 
@@ -100,7 +99,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param modal   the state in which action will be executed
      * @param expired condition to check before execution.
      */
-    default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
+    default void invokeLaterOnWriteThread(Runnable action, ModalityState modal, BooleanSupplier expired) {
         throw new AbstractMethodError();
     }
 
@@ -110,7 +109,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @param action the action to run.
      */
-    void runReadAction(@RequiredReadAction @Nonnull Runnable action);
+    void runReadAction(@RequiredReadAction Runnable action);
 
     /**
      * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -120,14 +119,14 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param computation the computation to perform.
      * @return the result returned by the computation.
      */
-    <T> T runReadAction(@RequiredReadAction @Nonnull Supplier<T> computation);
+    <T> T runReadAction(@RequiredReadAction Supplier<T> computation);
 
     /**
      * Grab the lock and run the action, in a non-blocking fashion
      *
      * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
      */
-    boolean tryRunReadAction(@RequiredReadAction @Nonnull Runnable action);
+    boolean tryRunReadAction(@RequiredReadAction Runnable action);
 
     /**
      * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -138,7 +137,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the result returned by the computation.
      * @throws E re-frown from ThrowableComputable
      */
-    <T, E extends Throwable> T runReadAction(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
+    <T, E extends Throwable> T runReadAction(@RequiredReadAction ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
@@ -147,7 +146,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param action the action to run
      */
     @RequiredUIAccess
-    void runWriteAction(@RequiredWriteAction @Nonnull Runnable action);
+    void runWriteAction(@RequiredWriteAction Runnable action);
 
     /**
      * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -158,7 +157,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the result returned by the computation.
      */
     @RequiredUIAccess
-    <T> T runWriteAction(@RequiredWriteAction @Nonnull Supplier<T> computation);
+    <T> T runWriteAction(@RequiredWriteAction Supplier<T> computation);
 
     /**
      * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -170,7 +169,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @throws E re-frown from ThrowableComputable
      */
     @RequiredUIAccess
-    <T, E extends Throwable> T runWriteAction(@RequiredWriteAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
+    <T, E extends Throwable> T runWriteAction(@RequiredWriteAction ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Returns {@code true} if there is currently executing write action of the specified class.
@@ -178,7 +177,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param actionClass the class of the write action to return.
      * @return {@code true} if the action is running, or {@code false} if no action of the specified class is currently executing.
      */
-    boolean hasWriteAction(@Nonnull Class<?> actionClass);
+    boolean hasWriteAction(Class<?> actionClass);
 
     /**
      * Asserts whether the read access is allowed.
@@ -210,7 +209,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @param listener the listener to add
      */
-    void addApplicationListener(@Nonnull ApplicationListener listener);
+    void addApplicationListener(ApplicationListener listener);
 
     /**
      * Adds an {@link ApplicationListener}.
@@ -218,14 +217,14 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param listener the listener to add
      * @param parent   the parent disposable which dispose will trigger this listener removal
      */
-    void addApplicationListener(@Nonnull ApplicationListener listener, @Nonnull Disposable parent);
+    void addApplicationListener(ApplicationListener listener, Disposable parent);
 
     /**
      * Removes an {@link ApplicationListener}.
      *
      * @param listener the listener to remove
      */
-    void removeApplicationListener(@Nonnull ApplicationListener listener);
+    void removeApplicationListener(ApplicationListener listener);
 
     /**
      * Saves all open documents and projects.
@@ -285,7 +284,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @param runnable the runnable to execute.
      */
-    void invokeLater(@RequiredUIAccess @Nonnull Runnable runnable);
+    void invokeLater(@RequiredUIAccess Runnable runnable);
 
     /**
      * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -295,7 +294,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param runnable the runnable to execute.
      * @param expired  condition to check before execution.
      */
-    void invokeLater(@RequiredUIAccess @Nonnull Runnable runnable, @Nonnull BooleanSupplier expired);
+    void invokeLater(@RequiredUIAccess Runnable runnable, BooleanSupplier expired);
 
     /**
      * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -305,7 +304,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param runnable the runnable to execute.
      * @param state    the state in which the runnable will be executed.
      */
-    void invokeLater(@RequiredUIAccess @Nonnull Runnable runnable, @Nonnull ModalityState state);
+    void invokeLater(@RequiredUIAccess Runnable runnable, ModalityState state);
 
     /**
      * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -317,13 +316,13 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param state    the state in which the runnable will be executed.
      * @param expired  condition to check before execution.
      */
-    void invokeLater(@RequiredUIAccess @Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull BooleanSupplier expired);
+    void invokeLater(@RequiredUIAccess Runnable runnable, ModalityState state, BooleanSupplier expired);
 
     /**
      * Same as {@link #invokeAndWait(Runnable, ModalityState)}, using {@link #getDefaultModalityState()}.
      */
     @RequiredUIAccess
-    default void invokeAndWait(@RequiredUIAccess @Nonnull Runnable runnable) throws ProcessCanceledException {
+    default void invokeAndWait(@RequiredUIAccess Runnable runnable) throws ProcessCanceledException {
         invokeAndWait(runnable, getDefaultModalityState());
     }
 
@@ -340,14 +339,14 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param modalityState the state in which the runnable will be executed.
      */
     @RequiredUIAccess
-    void invokeAndWait(@RequiredUIAccess @Nonnull Runnable runnable, @Nonnull ModalityState modalityState);
+    void invokeAndWait(@RequiredUIAccess Runnable runnable, ModalityState modalityState);
 
     /**
      * Returns the current modality state for the Swing dispatch thread.
      *
      * @return the current modality state.
      */
-    @Nonnull
+    
     ModalityState getCurrentModalityState();
 
     /**
@@ -356,8 +355,8 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param c the component for which the modality state is requested.
      * @return the modality state.
      */
-    @Nonnull
-    default ModalityState getModalityStateForComponent(@Nonnull Component c) {
+    
+    default ModalityState getModalityStateForComponent(Component c) {
         throw new AbstractMethodError("AWT/Swing dependency");
     }
 
@@ -367,7 +366,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return the modality state for the current thread.
      */
-    @Nonnull
+    
     ModalityState getDefaultModalityState();
 
     /**
@@ -376,7 +375,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return the modality state for no modal dialogs.
      */
-    @Nonnull
+    
     default ModalityState getNoneModalityState() {
         return ModalityState.nonModal();
     }
@@ -386,7 +385,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return modality state
      */
-    @Nonnull
+    
     default ModalityState getAnyModalityState() {
         return ModalityState.any();
     }
@@ -424,7 +423,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
         return false;
     }
 
-    @Nonnull
+    
     default ProgressIndicatorProvider getProgressManager() {
         return getComponent(ProgressIndicatorProvider.class);
     }
@@ -438,8 +437,8 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param action to be executed
      * @return future result
      */
-    @Nonnull
-    Future<?> executeOnPooledThread(@Nonnull Runnable action);
+    
+    Future<?> executeOnPooledThread(Runnable action);
 
     /**
      * Requests pooled thread to execute the action
@@ -447,8 +446,8 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param action to be executed
      * @return future result
      */
-    @Nonnull
-    <T> Future<T> executeOnPooledThread(@Nonnull Callable<T> action);
+    
+    <T> Future<T> executeOnPooledThread(Callable<T> action);
 
     /**
      * @return true if application is currently disposing (but not yet disposed completely)
@@ -493,28 +492,28 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * @return Application icon. In sandbox icon maybe different. Size 16x16
      */
-    @Nonnull
+    
     Image getIcon();
 
     /**
      * @return Application icon. In sandbox icon maybe different. Better for downscale
      */
-    @Nonnull
+    
     default Image getBigIcon() {
         return getIcon();
     }
 
-    @Nonnull
+    
     default LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Consulo");
     }
 
-    @Nonnull
+    
     default SemVer getVersion() {
         return AppSemVer.STUB_VER;
     }
 
-    @Nonnull
+    
     default BuildNumber getBuildNumber() {
         return BuildNumber.fallback();
     }
@@ -522,7 +521,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * @return last UIAccess for application
      */
-    @Nonnull
+    
     UIAccess getLastUIAccess();
 
     /**
@@ -540,7 +539,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     default CoroutineContext coroutineContext() {
         throw new UnsupportedOperationException();
@@ -551,7 +550,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * Returns lock used for read operations, should be closed in finally block
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use runReadAction(Runnable)")
     AccessToken acquireReadActionLock();
@@ -559,11 +558,11 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * Returns lock used for write operations, should be closed in finally block
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use runWriteAction(Runnable)")
     @RequiredUIAccess
-    AccessToken acquireWriteActionLock(@Nonnull Class marker);
+    AccessToken acquireWriteActionLock(Class marker);
 
     @Deprecated
     @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")

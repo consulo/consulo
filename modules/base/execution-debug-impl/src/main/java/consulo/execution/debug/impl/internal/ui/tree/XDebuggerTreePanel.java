@@ -30,9 +30,7 @@ import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.dnd.DnDDragStartBean;
 import consulo.ui.ex.awt.dnd.DnDSource;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,11 +42,11 @@ public class XDebuggerTreePanel implements DnDSource {
   private final XDebuggerTree myTree;
   private final JPanel myMainPanel;
 
-  public XDebuggerTreePanel(@Nonnull Project project,
-                            @Nonnull XDebuggerEditorsProvider editorsProvider,
-                            @Nonnull Disposable parentDisposable,
+  public XDebuggerTreePanel(Project project,
+                            XDebuggerEditorsProvider editorsProvider,
+                            Disposable parentDisposable,
                             @Nullable XSourcePosition sourcePosition,
-                            @Nonnull @NonNls String popupActionGroupId,
+                            String popupActionGroupId,
                             @Nullable XValueMarkers<?, ?> markers) {
     myTree = new XDebuggerTree(project, editorsProvider, sourcePosition, popupActionGroupId, markers);
     myMainPanel = new JPanel(new BorderLayout());
@@ -80,7 +78,7 @@ public class XDebuggerTreePanel implements DnDSource {
   }
 
   @Override
-  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
+  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
     XValueNodeImpl[] nodes = getNodesToDrag();
     if (nodes.length == 1) {
       return DnDAwareTree.getDragImage(myTree, nodes[0].getPath(), dragOrigin);

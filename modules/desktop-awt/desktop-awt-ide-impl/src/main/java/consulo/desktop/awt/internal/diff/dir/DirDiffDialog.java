@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.table.JBTable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -63,7 +62,7 @@ public class DirDiffDialog extends DialogWrapper {
     return myDiffPanel.getTable();
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     return new Action[]{};

@@ -23,7 +23,6 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class TranslationCompilerPostStartupActivity implements PostStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl) TranslatingCompilerFilesMonitor.getInstance();
 
         monitor.startAsyncScan(project);

@@ -21,8 +21,7 @@ import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.proxy.EventDispatcher;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +43,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     myOriginalArtifacts = new ArrayList<>(originalArtifacts);
     addListener(new ArtifactListener() {
       @Override
-      public void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
+      public void artifactChanged(Artifact artifact, String oldName) {
         artifactsChanged();
       }
     });
@@ -66,17 +65,17 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   }
 
   @Override
-  @Nonnull
-  public ModifiableArtifact addArtifact(@Nonnull String name, @Nonnull ArtifactType artifactType) {
+  
+  public ModifiableArtifact addArtifact(String name, ArtifactType artifactType) {
     return addArtifact(name,
                        artifactType,
                        artifactType.createRootElement(PackagingElementFactory.getInstance(myArtifactManager.getProject()), name));
   }
 
   @Override
-  @Nonnull
-  public ModifiableArtifact addArtifact(@Nonnull String name,
-                                        @Nonnull ArtifactType artifactType,
+  
+  public ModifiableArtifact addArtifact(String name,
+                                        ArtifactType artifactType,
                                         CompositePackagingElement<?> rootElement) {
     String uniqueName = generateUniqueName(name);
     String outputPath = ArtifactUtil.getDefaultArtifactOutputPath(uniqueName, myArtifactManager.getProject());
@@ -102,17 +101,17 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   }
 
   @Override
-  public void addListener(@Nonnull ArtifactListener listener) {
+  public void addListener(ArtifactListener listener) {
     myDispatcher.addListener(listener);
   }
 
   @Override
-  public void removeListener(@Nonnull ArtifactListener listener) {
+  public void removeListener(ArtifactListener listener) {
     myDispatcher.addListener(listener);
   }
 
   @Override
-  public void removeArtifact(@Nonnull Artifact artifact) {
+  public void removeArtifact(Artifact artifact) {
     ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     ArtifactImpl original = myModifiable2Original.remove(artifactImpl);
     if (original != null) {
@@ -128,8 +127,8 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   }
 
   @Override
-  @Nonnull
-  public ModifiableArtifact getOrCreateModifiableArtifact(@Nonnull Artifact artifact) {
+  
+  public ModifiableArtifact getOrCreateModifiableArtifact(Artifact artifact) {
     ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     if (myModifiable2Original.containsKey(artifactImpl)) {
       return artifactImpl;
@@ -147,15 +146,15 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   }
 
   @Override
-  @Nonnull
-  public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
+  
+  public Artifact getOriginalArtifact(Artifact artifact) {
     ArtifactImpl original = myModifiable2Original.get(artifact);
     return original != null ? original : artifact;
   }
 
   @Override
-  @Nonnull
-  public ArtifactImpl getArtifactByOriginal(@Nonnull Artifact artifact) {
+  
+  public ArtifactImpl getArtifactByOriginal(Artifact artifact) {
     ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     ArtifactImpl copy = myArtifact2ModifiableCopy.get(artifactImpl);
     return copy != null ? copy : artifactImpl;

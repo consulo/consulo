@@ -21,8 +21,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -55,7 +54,7 @@ class ExtensionImplOrderable<K> implements LoadingOrder.Orderable {
     }
   }
 
-  protected void reportFirstLastRestriction(@Nonnull PluginDescriptor apiPlugin) {
+  protected void reportFirstLastRestriction(PluginDescriptor apiPlugin) {
     // we allow it in platform impl
     if (PluginIds.isPlatformPlugin(myValue.getValue().getPluginId())) {
       return;

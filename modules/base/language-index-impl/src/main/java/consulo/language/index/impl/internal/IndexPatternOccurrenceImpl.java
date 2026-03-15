@@ -6,7 +6,6 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternOccurrence;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ class IndexPatternOccurrenceImpl implements IndexPatternOccurrence {
   private final IndexPattern myPattern;
   private final List<TextRange> myAdditionalRanges;
 
-  IndexPatternOccurrenceImpl(@Nonnull PsiFile file, int startOffset, int endOffset, @Nonnull IndexPattern pattern, @Nonnull List<TextRange> additionalRanges) {
+  IndexPatternOccurrenceImpl(PsiFile file, int startOffset, int endOffset, IndexPattern pattern, List<TextRange> additionalRanges) {
     myFile = file;
     myStartOffset = startOffset;
     myEndOffset = endOffset;
@@ -29,25 +28,25 @@ class IndexPatternOccurrenceImpl implements IndexPatternOccurrence {
   }
 
   @Override
-  @Nonnull
+  
   public PsiFile getFile() {
     return myFile;
   }
 
   @Override
-  @Nonnull
+  
   public TextRange getTextRange() {
     return new TextRange(myStartOffset, myEndOffset);
   }
 
-  @Nonnull
+  
   @Override
   public List<TextRange> getAdditionalTextRanges() {
     return myAdditionalRanges;
   }
 
   @Override
-  @Nonnull
+  
   public IndexPattern getPattern() {
     return myPattern;
   }

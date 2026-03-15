@@ -22,7 +22,6 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.task.TaskRepositoryType;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -39,7 +38,7 @@ public class TaskRepositoryTypeExtensionPreviewRecorder implements ExtensionPrev
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+  public void analyze(Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(TaskRepositoryType.class).forEachExtensionSafe(it -> {
       ExtensionPreview preview = ExtensionPreview.of(TaskRepositoryType.class, it.getId(), it);
       recorder.accept(preview);

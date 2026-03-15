@@ -28,14 +28,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_SELECT_ALL)
 public class SelectAllAction extends TextComponentEditorAction implements DumbAware {
     private static class Handler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             CommandProcessor.getInstance().newCommand()
                 .project(dataContext.getData(Project.KEY))
                 .name(IdeLocalize.commandSelectAll())
@@ -48,7 +47,7 @@ public class SelectAllAction extends TextComponentEditorAction implements DumbAw
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Editor editor = TextComponentEditorAction.getEditorFromContext(event.getDataContext());
         event.getPresentation().setEnabled(editor != null);
     }

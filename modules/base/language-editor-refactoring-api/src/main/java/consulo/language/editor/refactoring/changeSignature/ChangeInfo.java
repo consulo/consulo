@@ -18,7 +18,6 @@ package consulo.language.editor.refactoring.changeSignature;
 
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents the set of changes performed by a "Change Signature" refactoring.
@@ -32,7 +31,7 @@ public interface ChangeInfo {
    *
    * @return parameter list.
    */
-  @Nonnull
+  
   ParameterInfo[] getNewParameters();
 
   boolean isParameterSetOrOrderChanged();

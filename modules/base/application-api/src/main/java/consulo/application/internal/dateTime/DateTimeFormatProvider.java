@@ -18,7 +18,7 @@ package consulo.application.internal.dateTime;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.platform.Platform;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.text.DateFormat;
 

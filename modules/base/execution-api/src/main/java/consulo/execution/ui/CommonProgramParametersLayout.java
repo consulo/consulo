@@ -39,8 +39,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.util.FormBuilder;
 import consulo.util.io.PathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -58,10 +57,10 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
 
     private Component myLayout;
 
-    @Nonnull
+    
     protected final DialogService myDialogService;
 
-    public CommonProgramParametersLayout(@Nonnull DialogService dialogService) {
+    public CommonProgramParametersLayout(DialogService dialogService) {
         myDialogService = dialogService;
     }
 
@@ -98,18 +97,18 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
     }
 
     @RequiredUIAccess
-    protected void addBefore(@Nonnull FormBuilder builder) {
+    protected void addBefore(FormBuilder builder) {
         // nothing
     }
 
     @RequiredUIAccess
-    protected void addAfter(@Nonnull FormBuilder builder) {
+    protected void addAfter(FormBuilder builder) {
         // nothing
     }
 
     @RequiredUIAccess
     @Override
-    @Nonnull
+    
     public Component getComponent() {
         return myLayout;
     }

@@ -45,8 +45,7 @@ import consulo.util.collection.FactoryMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -95,7 +94,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         T[] elements,
         boolean allowEmptySelection,
         boolean allowMultiSelection,
-        @Nonnull Project project,
+        Project project,
         @Nullable JComponent headerPanel,
         JComponent[] optionControls
     ) {
@@ -105,7 +104,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     }
 
     @RequiredUIAccess
-    public MemberChooser(T[] elements, boolean allowEmptySelection, boolean allowMultiSelection, @Nonnull Project project) {
+    public MemberChooser(T[] elements, boolean allowEmptySelection, boolean allowMultiSelection, Project project) {
         this(elements, allowEmptySelection, allowMultiSelection, project, false);
     }
 
@@ -114,7 +113,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         T[] elements,
         boolean allowEmptySelection,
         boolean allowMultiSelection,
-        @Nonnull Project project,
+        Project project,
         boolean isInsertOverrideVisible
     ) {
         this(elements, allowEmptySelection, allowMultiSelection, project, isInsertOverrideVisible, null);
@@ -125,7 +124,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         T[] elements,
         boolean allowEmptySelection,
         boolean allowMultiSelection,
-        @Nonnull Project project,
+        Project project,
         boolean isInsertOverrideVisible,
         @Nullable JComponent headerPanel
     ) {
@@ -137,7 +136,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     protected MemberChooser(
         boolean allowEmptySelection,
         boolean allowMultiSelection,
-        @Nonnull Project project,
+        Project project,
         boolean isInsertOverrideVisible,
         @Nullable JComponent headerPanel,
         @Nullable JComponent[] optionControls
@@ -283,7 +282,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         myTree.setSelectionPaths(selectionPaths.toArray(new TreePath[selectionPaths.size()]));
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>();
@@ -435,7 +434,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         return new ColoredTreeCellRenderer() {
             @Override
             public void customizeCellRenderer(
-                @Nonnull JTree tree,
+                JTree tree,
                 Object value,
                 boolean selected,
                 boolean expanded,
@@ -450,8 +449,8 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         };
     }
 
-    @Nonnull
-    protected String convertElementText(@Nonnull String originalElementText) {
+    
+    protected String convertElementText(String originalElementText) {
         String res = originalElementText;
 
         int i = res.indexOf(':');
@@ -893,13 +892,13 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return isAlphabeticallySorted();
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             myAlphabeticallySorted = flag;
             setSortComparator(flag ? new AlphaComparator() : new OrderComparator());
             if (flag) {
@@ -918,19 +917,19 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return myShowClasses;
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             setShowClasses(flag);
         }
 
         @Override
         @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myContainerNodes.size() > 1);
@@ -948,7 +947,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreeUtil.expandAll(myTree);
         }
     }
@@ -964,7 +963,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreeUtil.collapseAll(myTree, 1);
         }
     }

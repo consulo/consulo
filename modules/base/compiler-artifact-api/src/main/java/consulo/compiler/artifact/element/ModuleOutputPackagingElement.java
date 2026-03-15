@@ -19,8 +19,7 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -30,12 +29,12 @@ public interface ModuleOutputPackagingElement {
   @Nullable
   String getModuleName();
 
-  @Nonnull
+  
   ContentFolderTypeProvider getContentFolderType();
 
   @Nullable
   Module findModule(PackagingElementResolvingContext context);
 
-  @Nonnull
+  
   Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context);
 }

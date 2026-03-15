@@ -23,7 +23,7 @@ import consulo.fileEditor.EditorTabColorProvider;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

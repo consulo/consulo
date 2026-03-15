@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.table;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -70,6 +69,6 @@ public abstract class ComponentsListFocusTraversalPolicy extends FocusTraversalP
     return components.isEmpty() ? null : components.get(0);
   }
 
-  @Nonnull
+  
   protected abstract List<Component> getOrderedComponents();
 }

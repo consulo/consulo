@@ -18,7 +18,6 @@ package consulo.language.psi;
 
 import consulo.language.psi.scope.GlobalSearchScope;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +29,7 @@ public interface PsiDirectoryContainer extends PsiNamedElement {
    *
    * @return the array of directories.
    */
-  @Nonnull
+  
   PsiDirectory[] getDirectories();
 
   /**
@@ -39,6 +38,6 @@ public interface PsiDirectoryContainer extends PsiNamedElement {
    * @param scope the scope in which directories are searched.
    * @return the array of directories.
    */
-  @Nonnull
-  PsiDirectory[] getDirectories(@Nonnull GlobalSearchScope scope);
+  
+  PsiDirectory[] getDirectories(GlobalSearchScope scope);
 }

@@ -17,8 +17,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -121,12 +120,12 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
 
     @RequiredUIAccess
     @Override
-    public JComponent createOptionsPanel(@Nonnull Disposable uiDisposable) {
+    public JComponent createOptionsPanel(Disposable uiDisposable) {
         mySettingsPanel.add(BorderLayout.CENTER, ConfigurableUIMigrationUtil.createComponent(myConfigurable, uiDisposable));
         return myMainPanel;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.ofNullable(myServerName);
@@ -187,7 +186,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
             myTester.testConnection(this::testFinished);
         }
 
-        public void testFinished(boolean connected, @Nonnull String connectionStatus) {
+        public void testFinished(boolean connected, String connectionStatus) {
             UIUtil.invokeLaterIfNeeded(() -> {
                 if (myConnectionTester == this) {
                     setConnectionStatus(!connected, connected,

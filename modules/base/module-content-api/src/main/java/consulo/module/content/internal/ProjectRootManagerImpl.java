@@ -38,7 +38,6 @@ import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -144,13 +143,13 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @Override
-    @Nonnull
+    
     public ProjectFileIndex getFileIndex() {
         return ProjectFileIndex.getInstance(myProject);
     }
 
     @Override
-    @Nonnull
+    
     public List<String> getContentRootUrls() {
         List<String> result = new ArrayList<>();
         for (Module module : getModuleManager().getModules()) {
@@ -161,7 +160,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile[] getContentRoots() {
         List<VirtualFile> result = new ArrayList<>();
         for (Module module : getModuleManager().getModules()) {
@@ -181,15 +180,15 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         return VirtualFileUtil.toVirtualFileArray(result);
     }
 
-    @Nonnull
+    
     @Override
     public OrderEnumerator orderEntries() {
         return new ProjectOrderEnumerator(myProject, myRootsCache);
     }
 
-    @Nonnull
+    
     @Override
-    public OrderEnumerator orderEntries(@Nonnull Collection<? extends Module> modules) {
+    public OrderEnumerator orderEntries(Collection<? extends Module> modules) {
         return new ModulesOrderEnumerator(myProject, modules);
     }
 
@@ -210,7 +209,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     private int myRootsChangesDepth = 0;
 
     @Override
-    public void mergeRootsChangesDuring(@Nonnull Runnable runnable) {
+    public void mergeRootsChangesDuring(Runnable runnable) {
         if (getBatchSession(false).myBatchLevel == 0 && !myMergedCallStarted) {
             LOG.assertTrue(myRootsChangesDepth == 0, "Merged rootsChanged not allowed inside rootsChanged, rootsChanged level == " + myRootsChangesDepth);
             myMergedCallStarted = true;
@@ -249,7 +248,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @Override
-    public void makeRootsChange(@Nonnull Runnable runnable, boolean filetypes, boolean fireEvents) {
+    public void makeRootsChange(Runnable runnable, boolean filetypes, boolean fireEvents) {
         if (myProject.isDisposed()) {
             return;
         }
@@ -397,12 +396,12 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @Override
-    public void addOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry) {
+    public void addOrderWithTracking(OrderEntryWithTracking orderEntry) {
         myModuleExtensionWithSdkOrderEntries.add(orderEntry);
     }
 
     @Override
-    public void removeOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry) {
+    public void removeOrderWithTracking(OrderEntryWithTracking orderEntry) {
         myModuleExtensionWithSdkOrderEntries.remove(orderEntry);
     }
 
@@ -491,7 +490,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         }
     }
 
-    @Nonnull
+    
     public VirtualFilePointerListener getRootsValidityChangedListener() {
         return myRootsValidityChangedListener;
     }

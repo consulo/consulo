@@ -19,7 +19,6 @@ package consulo.ui.ex.awt.tree;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.ui.ex.CopyProvider;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.datatransfer.Clipboard;
@@ -36,7 +35,7 @@ public class TreeCopyProvider implements CopyProvider {
     }
 
     @Override
-    public void performCopy(@Nonnull DataContext dataContext) {
+    public void performCopy(DataContext dataContext) {
         try {
             Clipboard clipboard = myTree.getToolkit().getSystemClipboard();
             myTree.getTransferHandler().exportToClipboard(myTree, clipboard, TransferHandler.COPY);
@@ -48,12 +47,12 @@ public class TreeCopyProvider implements CopyProvider {
     }
 
     @Override
-    public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+    public boolean isCopyEnabled(DataContext dataContext) {
         return myTree.getSelectionPath() != null;
     }
 
     @Override
-    public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+    public boolean isCopyVisible(DataContext dataContext) {
         return true;
     }
 }

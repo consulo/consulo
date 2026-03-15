@@ -31,8 +31,7 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.impl.internal.change.ChangesViewManagerImpl;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +45,8 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
     }
 
     protected AbstractMissingFilesAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
@@ -93,7 +92,7 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
 
     protected abstract boolean synchronously();
 
-    @Nonnull
+    
     protected abstract LocalizeValue getName();
 
     protected abstract List<VcsException> processFiles(AbstractVcs vcs, List<FilePath> files);

@@ -6,7 +6,6 @@ import consulo.ui.ex.awt.scroll.LatchingScroll;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.ScrollBarUI;
@@ -78,7 +77,7 @@ public class JBScrollPane extends JScrollPane {
         setBorder(IdeBorderFactory.createBorder());
     }
 
-    public static boolean canBePreprocessed(@Nonnull MouseEvent e, @Nonnull JScrollBar bar) {
+    public static boolean canBePreprocessed(MouseEvent e, JScrollBar bar) {
         if (e.getID() == MouseEvent.MOUSE_MOVED || e.getID() == MouseEvent.MOUSE_PRESSED) {
             ScrollBarUI ui = bar.getUI();
             if (ui instanceof BasicScrollBarUI) {

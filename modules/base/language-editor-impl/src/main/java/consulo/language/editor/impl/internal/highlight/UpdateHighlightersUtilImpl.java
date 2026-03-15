@@ -35,8 +35,7 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -51,16 +50,16 @@ public class UpdateHighlightersUtilImpl {
 
     @RequiredUIAccess
     public static void addHighlighterToEditorIncrementally(
-        @Nonnull Project project,
-        @Nonnull Document document,
-        @Nonnull PsiFile file,
+        Project project,
+        Document document,
+        PsiFile file,
         int startOffset,
         int endOffset,
-        @Nonnull HighlightInfoImpl info,
+        HighlightInfoImpl info,
         @Nullable EditorColorsScheme colorsScheme,
         // if null global scheme will be used
         int group,
-        @Nonnull Map<TextRange, RangeMarker> ranges2markersCache
+        Map<TextRange, RangeMarker> ranges2markersCache
     ) {
         UIAccess.assertIsUIThread();
         if (UpdateHighlightersUtil.isFileLevelOrGutterAnnotation(info)) {
@@ -145,13 +144,13 @@ public class UpdateHighlightersUtilImpl {
 
     @RequiredUIAccess
     public static void setHighlightersInRange(
-        @Nonnull Project project,
-        @Nonnull Document document,
-        @Nonnull TextRange range,
+        Project project,
+        Document document,
+        TextRange range,
         @Nullable EditorColorsScheme colorsScheme,
         // if null global scheme will be used
-        @Nonnull List<? extends HighlightInfo> infos,
-        @Nonnull MarkupModelEx markup,
+        List<? extends HighlightInfo> infos,
+        MarkupModelEx markup,
         int group
     ) {
         UIAccess.assertIsUIThread();
@@ -233,9 +232,9 @@ public class UpdateHighlightersUtilImpl {
     }
 
     private static boolean isWarningCoveredByError(
-        @Nonnull HighlightInfo info,
-        @Nonnull Collection<HighlightInfo> overlappingIntervals,
-        @Nonnull SeverityRegistrar severityRegistrar
+        HighlightInfo info,
+        Collection<HighlightInfo> overlappingIntervals,
+        SeverityRegistrar severityRegistrar
     ) {
         if (!isSevere(info, severityRegistrar)) {
             for (HighlightInfo overlapping : overlappingIntervals) {
@@ -248,9 +247,9 @@ public class UpdateHighlightersUtilImpl {
     }
 
     private static boolean isCovered(
-        @Nonnull HighlightInfo warning,
-        @Nonnull SeverityRegistrar severityRegistrar,
-        @Nonnull HighlightInfo candidate
+        HighlightInfo warning,
+        SeverityRegistrar severityRegistrar,
+        HighlightInfo candidate
     ) {
         if (!isCoveredByOffsets(warning, candidate)) {
             return false;
@@ -262,22 +261,22 @@ public class UpdateHighlightersUtilImpl {
         return isSevere(candidate, severityRegistrar);
     }
 
-    private static boolean isSevere(@Nonnull HighlightInfo info, @Nonnull SeverityRegistrar severityRegistrar) {
+    private static boolean isSevere(HighlightInfo info, SeverityRegistrar severityRegistrar) {
         HighlightSeverity severity = info.getSeverity();
         return severityRegistrar.compare(HighlightSeverity.ERROR, severity) <= 0 || severity == HighlightInfoType.SYMBOL_TYPE_SEVERITY;
     }
 
     private static void createOrReuseHighlighterFor(
-        @Nonnull HighlightInfoImpl info,
+        HighlightInfoImpl info,
         @Nullable EditorColorsScheme colorsScheme,
         // if null global scheme will be used
-        @Nonnull Document document,
+        Document document,
         int group,
-        @Nonnull PsiFile psiFile,
-        @Nonnull MarkupModelEx markup,
+        PsiFile psiFile,
+        MarkupModelEx markup,
         @Nullable HighlightersRecycler infosToRemove,
-        @Nonnull Map<TextRange, RangeMarker> ranges2markersCache,
-        @Nonnull SeverityRegistrar severityRegistrar
+        Map<TextRange, RangeMarker> ranges2markersCache,
+        SeverityRegistrar severityRegistrar
     ) {
         int infoStartOffset = info.getStartOffset();
         int infoEndOffset = info.getEndOffset();
@@ -369,7 +368,7 @@ public class UpdateHighlightersUtilImpl {
         }
     }
 
-    private static int getLayer(@Nonnull HighlightInfoImpl info, @Nonnull SeverityRegistrar severityRegistrar) {
+    private static int getLayer(HighlightInfoImpl info, SeverityRegistrar severityRegistrar) {
         HighlightSeverity severity = info.getSeverity();
         int layer;
         if (severity == HighlightSeverity.WARNING) {
@@ -393,31 +392,31 @@ public class UpdateHighlightersUtilImpl {
         return layer;
     }
 
-    @Nonnull
+    
     private static RangeMarker getOrCreate(
-        @Nonnull Document document,
-        @Nonnull Map<TextRange, RangeMarker> ranges2markersCache,
-        @Nonnull TextRange textRange
+        Document document,
+        Map<TextRange, RangeMarker> ranges2markersCache,
+        TextRange textRange
     ) {
         return ranges2markersCache.computeIfAbsent(textRange, __ -> document.createRangeMarker(textRange));
     }
 
     private static final Key<Boolean> TYPING_INSIDE_HIGHLIGHTER_OCCURRED = Key.create("TYPING_INSIDE_HIGHLIGHTER_OCCURRED");
 
-    public static boolean isWhitespaceOptimizationAllowed(@Nonnull Document document) {
+    public static boolean isWhitespaceOptimizationAllowed(Document document) {
         return document.getUserData(TYPING_INSIDE_HIGHLIGHTER_OCCURRED) == null;
     }
 
-    private static void disableWhiteSpaceOptimization(@Nonnull Document document) {
+    private static void disableWhiteSpaceOptimization(Document document) {
         document.putUserData(TYPING_INSIDE_HIGHLIGHTER_OCCURRED, Boolean.TRUE);
     }
 
-    private static void clearWhiteSpaceOptimizationFlag(@Nonnull Document document) {
+    private static void clearWhiteSpaceOptimizationFlag(Document document) {
         document.putUserData(TYPING_INSIDE_HIGHLIGHTER_OCCURRED, null);
     }
 
     @RequiredUIAccess
-    public static void updateHighlightersByTyping(@Nonnull Project project, @Nonnull DocumentEvent e) {
+    public static void updateHighlightersByTyping(Project project, DocumentEvent e) {
         UIAccess.assertIsUIThread();
 
         Document document = e.getDocument();
@@ -477,7 +476,7 @@ public class UpdateHighlightersUtilImpl {
     }
 
     @RequiredReadAction
-    public static void assertMarkupConsistent(@Nonnull MarkupModel markup, @Nonnull Project project) {
+    public static void assertMarkupConsistent(MarkupModel markup, Project project) {
         if (!RedBlackTreeVerifier.VERIFY) {
             return;
         }
@@ -518,15 +517,15 @@ public class UpdateHighlightersUtilImpl {
     // set highlights inside startOffset,endOffset but outside priorityRange
     @RequiredUIAccess
     static void setHighlightersOutsideRange(
-        @Nonnull Project project,
-        @Nonnull Document document,
-        @Nonnull PsiFile psiFile,
-        @Nonnull List<? extends HighlightInfo> infos,
+        Project project,
+        Document document,
+        PsiFile psiFile,
+        List<? extends HighlightInfo> infos,
         @Nullable EditorColorsScheme colorsScheme,
         // if null global scheme will be used
         int startOffset,
         int endOffset,
-        @Nonnull ProperTextRange priorityRange,
+        ProperTextRange priorityRange,
         int group
     ) {
         UIAccess.assertIsUIThread();

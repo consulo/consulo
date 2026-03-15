@@ -22,9 +22,7 @@ import consulo.application.Application;
 import consulo.util.collection.Maps;
 import consulo.util.lang.lazy.LazyValue;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -46,10 +44,10 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * identifier was already registered.
      * @deprecated Use {@link #createTextAttributesKey(String, TextAttributesKey)} to guarantee compatibility with generic color schemes.
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #of()")
-    public static TextAttributesKey createTextAttributesKey(@Nonnull String externalName, TextAttributes defaultAttributes) {
+    public static TextAttributesKey createTextAttributesKey(String externalName, TextAttributes defaultAttributes) {
         TextAttributesKey key = find(externalName);
         if (key.myDefaultAttributes == null || key.myDefaultAttributes == NULL_ATTRIBUTES) {
             key.myDefaultAttributes = defaultAttributes;
@@ -73,10 +71,10 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * @return the new key instance, or an existing instance if the key with the same
      * identifier was already registered.
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #of()")
-    public static TextAttributesKey createTextAttributesKey(@Nonnull String externalName, TextAttributesKey fallbackAttributeKey) {
+    public static TextAttributesKey createTextAttributesKey(String externalName, TextAttributesKey fallbackAttributeKey) {
         return of(externalName, fallbackAttributeKey);
     }
 
@@ -87,10 +85,10 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * @return the new key instance, or an existing instance if the key with the same
      * identifier was already registered.
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #of()")
-    public static TextAttributesKey createTextAttributesKey(@Nonnull String externalName) {
+    public static TextAttributesKey createTextAttributesKey(String externalName) {
         return find(externalName);
     }
 
@@ -101,8 +99,8 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * @return the new key instance, or an existing instance if the key with the same
      * identifier was already registered.
      */
-    @Nonnull
-    public static TextAttributesKey of(@Nonnull String externalName) {
+    
+    public static TextAttributesKey of(String externalName) {
         return find(externalName);
     }
 
@@ -122,8 +120,8 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * @return the new key instance, or an existing instance if the key with the same
      * identifier was already registered.
      */
-    @Nonnull
-    public static TextAttributesKey of(@Nonnull String externalName, TextAttributesKey fallbackAttributeKey) {
+    
+    public static TextAttributesKey of(String externalName, TextAttributesKey fallbackAttributeKey) {
         TextAttributesKey key = find(externalName);
         key.setFallbackAttributeKey(fallbackAttributeKey);
         return key;
@@ -143,7 +141,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
     }
 
     //read external only
-    public TextAttributesKey(@Nonnull Element element) {
+    public TextAttributesKey(Element element) {
         this(JDOMExternalizerUtil.readField(element, "myExternalName"));
         Element myDefaultAttributesElement = JDOMExternalizerUtil.getOption(element, "myDefaultAttributes");
         if (myDefaultAttributesElement != null) {
@@ -151,8 +149,8 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
         }
     }
 
-    @Nonnull
-    public static TextAttributesKey find(@Nonnull String externalName) {
+    
+    public static TextAttributesKey find(String externalName) {
         return Maps.cacheOrGet(ourRegistry, externalName, new TextAttributesKey(externalName));
     }
 
@@ -166,7 +164,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
     }
 
     @Override
-    public int compareTo(@Nonnull TextAttributesKey key) {
+    public int compareTo(TextAttributesKey key) {
         return myExternalName.compareTo(key.myExternalName);
     }
 

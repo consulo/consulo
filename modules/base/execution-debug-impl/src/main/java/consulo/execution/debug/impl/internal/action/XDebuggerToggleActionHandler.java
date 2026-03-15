@@ -20,23 +20,22 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XDebugSession;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class XDebuggerToggleActionHandler extends DebuggerToggleActionHandler {
-  public final boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
+  public final boolean isEnabled(Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && isEnabled(session, event);
   }
 
-  public boolean isSelected(@Nonnull Project project, AnActionEvent event) {
+  public boolean isSelected(Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && isSelected(session, event);
   }
 
-  public void setSelected(@Nonnull Project project, AnActionEvent event, boolean state) {
+  public void setSelected(Project project, AnActionEvent event, boolean state) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session != null) {
       setSelected(session, event, state);

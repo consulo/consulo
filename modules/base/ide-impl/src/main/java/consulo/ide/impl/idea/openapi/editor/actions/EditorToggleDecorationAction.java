@@ -22,33 +22,32 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  * @since 2002-05-14
  */
 public abstract class EditorToggleDecorationAction extends ToggleAction implements DumbAware {
-    protected EditorToggleDecorationAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected EditorToggleDecorationAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     @Override
     @RequiredUIAccess
-    public final void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public final void setSelected(AnActionEvent e, boolean state) {
         Editor editor = e.getRequiredData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         setOption(editor, state);
         editor.getComponent().repaint();
     }
 
     @Override
-    public final boolean isSelected(@Nonnull AnActionEvent e) {
+    public final boolean isSelected(AnActionEvent e) {
         Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         return editor != null && getOption(editor);
     }
 
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(e.hasData(EditorKeys.EDITOR_EVEN_IF_INACTIVE));
     }

@@ -23,8 +23,7 @@ import consulo.platform.CpuArchitecture;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -34,7 +33,7 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class SystemUsageCollector extends UsagesCollector {
-    @Nonnull
+    
     @Override
     public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
         Platform current = Platform.current();
@@ -43,7 +42,7 @@ public class SystemUsageCollector extends UsagesCollector {
         return Set.of(new UsageDescriptor(os.name() + " - " + arch.name(), 1));
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupId() {
         return "consulo:system";

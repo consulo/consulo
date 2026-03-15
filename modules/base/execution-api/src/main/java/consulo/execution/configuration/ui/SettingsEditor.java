@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UserActivityWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -48,7 +47,7 @@ public abstract class SettingsEditor<Settings> implements Disposable {
 
     protected abstract void applyEditorTo(Settings s) throws ConfigurationException;
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo(value = "Implement interface via overriding 'createUIComponent()' method")
     protected JComponent createEditor() {

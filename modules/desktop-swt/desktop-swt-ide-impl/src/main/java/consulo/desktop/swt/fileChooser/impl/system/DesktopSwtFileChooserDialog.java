@@ -28,8 +28,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,16 +42,16 @@ public class DesktopSwtFileChooserDialog implements FileChooserDialog, PathChoos
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
     return chooseAsync(null, new VirtualFile[]{toSelect});
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelect) {
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
     Window focusedWindow = Window.getActiveWindow();
 
     AsyncResult<VirtualFile[]> result = AsyncResult.undefined();

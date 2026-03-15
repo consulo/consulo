@@ -16,8 +16,7 @@ import consulo.ui.ex.tree.TreeAnchorizerValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
@@ -105,7 +104,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     return myAttributes;
   }
 
-  @Nonnull
+  
   public String getText() {
     return myText;
   }
@@ -170,7 +169,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     super.setOpaque(false);
   }
 
-  @Nonnull
+  
   @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
@@ -190,7 +189,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     return object instanceof PsiElement && ((PsiElement)object).getContainingFile() != null;
   }
 
-  @Nonnull
+  
   @Override
   public Dimension getMinimumSize() {
     return getPreferredSize();
@@ -229,7 +228,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
 
   @Nullable
   @Override
-  public Object getData(@Nonnull Key dataId) {
+  public Object getData(Key dataId) {
     return myPanel.getDataImpl(dataId, this, () -> JBIterable.of(getObject()));
   }
 

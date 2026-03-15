@@ -17,7 +17,6 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "GotoSymbol")
@@ -25,14 +24,14 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
     private final Application myApplication;
 
     @Inject
-    public GotoSymbolAction(@Nonnull Application application) {
+    public GotoSymbolAction(Application application) {
         super(ActionLocalize.actionGotosymbolText(), ActionLocalize.actionGotosymbolDescription());
         myApplication = application;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -48,7 +47,7 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
     }
 
     @Override
-    public void gotoActionPerformed(@Nonnull AnActionEvent e) {
+    public void gotoActionPerformed(AnActionEvent e) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.symbol");
 
         Project project = e.getData(Project.KEY);
@@ -63,7 +62,7 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
             model,
             new GotoActionCallback<Language>() {
                 @Override
-                protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {
+                protected ChooseByNameFilter<Language> createFilter(ChooseByNamePopup popup) {
                     return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
                 }
 

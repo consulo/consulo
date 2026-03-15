@@ -15,8 +15,7 @@
  */
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents constraints for some action. Constraints are used to specify
@@ -46,7 +45,7 @@ public class Constraints implements Cloneable {
    * @param anchor             anchor
    * @param relativeToActionId Id of the relative action
    */
-  public Constraints(@Nonnull Anchor anchor, @Nullable String relativeToActionId) {
+  public Constraints(Anchor anchor, @Nullable String relativeToActionId) {
     myAnchor = anchor;
     myRelativeToActionId = relativeToActionId;
   }

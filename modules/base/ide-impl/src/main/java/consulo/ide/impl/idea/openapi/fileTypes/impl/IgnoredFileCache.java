@@ -9,7 +9,6 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.util.collection.ConcurrentBitSet;
 import consulo.component.messagebus.MessageBusConnection;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -21,24 +20,24 @@ final class IgnoredFileCache {
   private final IgnoredPatternSet myIgnoredPatterns;
   private int myVfsEventNesting;
 
-  IgnoredFileCache(@Nonnull IgnoredPatternSet ignoredPatterns) {
+  IgnoredFileCache(IgnoredPatternSet ignoredPatterns) {
     myIgnoredPatterns = ignoredPatterns;
     MessageBusConnection connect = ApplicationManager.getApplication().getMessageBus().connect();
     connect.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
-      public void before(@Nonnull List<? extends VFileEvent> events) {
+      public void before(List<? extends VFileEvent> events) {
         // during VFS event processing the system may be in inconsistent state, don't cache it
         myVfsEventNesting++;
         clearCacheForChangedFiles(events);
       }
 
       @Override
-      public void after(@Nonnull List<? extends VFileEvent> events) {
+      public void after(List<? extends VFileEvent> events) {
         clearCacheForChangedFiles(events);
         myVfsEventNesting--;
       }
 
-      private void clearCacheForChangedFiles(@Nonnull List<? extends VFileEvent> events) {
+      private void clearCacheForChangedFiles(List<? extends VFileEvent> events) {
         for (VFileEvent event : events) {
           if (event instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent)event).isRename()) {
             VirtualFile file = event.getFile();
@@ -56,7 +55,7 @@ final class IgnoredFileCache {
     myNonIgnoredIds.clear();
   }
 
-  boolean isFileIgnored(@Nonnull VirtualFile file) {
+  boolean isFileIgnored(VirtualFile file) {
     boolean idable = myVfsEventNesting == 0 && file instanceof NewVirtualFile;
     if (!idable) {
       return calcIgnored(file);

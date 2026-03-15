@@ -15,17 +15,16 @@
  */
 package consulo.component.impl.internal.messagebus;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 25/01/2023
  */
 public interface Message<T> {
-  @Nonnull
+  
   Class<T> getTopicClass();
 
-  @Nonnull
+  
   String getMethodName();
 
   void invoke(T handler) throws Throwable;

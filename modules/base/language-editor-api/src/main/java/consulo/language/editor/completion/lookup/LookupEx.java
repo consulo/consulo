@@ -19,8 +19,7 @@ import consulo.application.util.matcher.PrefixMatcher;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -55,7 +54,7 @@ public interface LookupEx extends Lookup, Disposable {
 
   void setStartCompletionWhenNothingMatches(boolean startCompletionWhenNothingMatches);
 
-  void addAdvertisement(@Nonnull String text, @Nullable Image icon);
+  void addAdvertisement(String text, @Nullable Image icon);
 
   int getLookupOriginalStart();
 
@@ -107,7 +106,7 @@ public interface LookupEx extends Lookup, Disposable {
 
   LookupAdvertiser getAdvertiser();
 
-  Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> items, boolean hideSingleValued);
+  Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> items, boolean hideSingleValued);
 
   void moveUp();
 

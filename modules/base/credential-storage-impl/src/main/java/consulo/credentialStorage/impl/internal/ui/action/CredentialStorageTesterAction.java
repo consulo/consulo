@@ -35,7 +35,6 @@ import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.util.FormBuilder;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -48,15 +47,15 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
 
         private final PasswordSafe myPasswordSafe;
 
-        public CredentialStorageDialogDescriptor(@Nonnull LocalizeValue title, PasswordSafe passwordSafe) {
+        public CredentialStorageDialogDescriptor(LocalizeValue title, PasswordSafe passwordSafe) {
             super(title);
             myPasswordSafe = passwordSafe;
         }
 
         @RequiredUIAccess
-        @Nonnull
+        
         @Override
-        public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
+        public Component createCenterComponent(Disposable uiDisposable) {
             FormBuilder builder = FormBuilder.create();
 
             TextBox serviceBox = TextBox.create("Internal");
@@ -103,7 +102,7 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
             return builder.build();
         }
 
-        @Nonnull
+        
         @Override
         public AnAction[] createActions(boolean inverseOrder) {
             return AnAction.EMPTY_ARRAY;
@@ -128,7 +127,7 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         LocalizeValue action = e.getPresentation().getTextValue();
 
         Dialog dialog = myDialogService.build(e.getRequiredData(Project.KEY), new CredentialStorageDialogDescriptor(action, myPasswordSafe));

@@ -22,7 +22,6 @@ import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ class TranslactionCompilerMonitorCachesInvalidator extends CachesInvalidator {
         myTranslatingCompilerFilesMonitorProvider = translatingCompilerFilesMonitorProvider;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("Invalidate compiler cache");

@@ -29,10 +29,8 @@ import consulo.util.jdom.JDOMUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -45,23 +43,23 @@ import java.util.Map;
  */
 public class InspectionProfileConvertor {
   private final Map<String, HighlightDisplayLevel> myDisplayLevelMap = new HashMap<>();
-  @NonNls public static final String OLD_HIGHTLIGHTING_SETTINGS_PROFILE = "EditorHighlightingSettings";
-  @NonNls public static final String OLD_DEFAUL_PROFILE = "OldDefaultProfile";
+  public static final String OLD_HIGHTLIGHTING_SETTINGS_PROFILE = "EditorHighlightingSettings";
+  public static final String OLD_DEFAUL_PROFILE = "OldDefaultProfile";
 
   private static final Logger LOG = Logger.getInstance(InspectionProfileConvertor.class);
 
-  @NonNls private static final String INSPECTIONS_TAG = "inspections";
-  @NonNls private static final String NAME_ATT = "name";
-  @NonNls private static final String INSP_TOOL_TAG = "inspection_tool";
-  @NonNls private static final String CLASS_ATT = "class";
-  @NonNls private static final String VERSION_ATT = "version";
-  @NonNls private static final String PROFILE_NAME_ATT = "profile_name";
-  @NonNls private static final String OPTION_TAG = "option";
-  @NonNls private static final String DISPLAY_LEVEL_MAP_OPTION = "DISPLAY_LEVEL_MAP";
-  @NonNls protected static final String VALUE_ATT = "value";
-  @NonNls private static final String DEFAULT_XML = "Default.xml";
-  @NonNls private static final String XML_EXTENSION = ".xml";
-  @NonNls public static final String LEVEL_ATT = "level";
+  private static final String INSPECTIONS_TAG = "inspections";
+  private static final String NAME_ATT = "name";
+  private static final String INSP_TOOL_TAG = "inspection_tool";
+  private static final String CLASS_ATT = "class";
+  private static final String VERSION_ATT = "version";
+  private static final String PROFILE_NAME_ATT = "profile_name";
+  private static final String OPTION_TAG = "option";
+  private static final String DISPLAY_LEVEL_MAP_OPTION = "DISPLAY_LEVEL_MAP";
+  protected static final String VALUE_ATT = "value";
+  private static final String DEFAULT_XML = "Default.xml";
+  private static final String XML_EXTENSION = ".xml";
+  public static final String LEVEL_ATT = "level";
   private final InspectionProfileManager myManager;
 
   public InspectionProfileConvertor(InspectionProfileManager manager) {
@@ -69,7 +67,7 @@ public class InspectionProfileConvertor {
     renameOldDefaultsProfile();
   }
 
-  private boolean retrieveOldSettings(@Nonnull Element element) {
+  private boolean retrieveOldSettings(Element element) {
     boolean hasOldSettings = false;
     for (Object obj : element.getChildren(OPTION_TAG)) {
       Element option = (Element)obj;
@@ -124,7 +122,7 @@ public class InspectionProfileConvertor {
 
     File[] files = profileDirectory.listFiles(new FileFilter() {
       @Override
-      public boolean accept(@Nonnull File pathname) {
+      public boolean accept(File pathname) {
         return pathname.getPath().endsWith(File.separator + DEFAULT_XML);
       }
     });

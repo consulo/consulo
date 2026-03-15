@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ui;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,14 +28,14 @@ import javax.swing.*;
  */
 public abstract class ColoredListCellRendererWrapper<T> extends ColoredListCellRenderer<T> {
   @Override
-  protected final void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+  protected final void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
     @SuppressWarnings("unchecked") T t = (T)value;
     doCustomize(list, t, index, selected, hasFocus);
   }
 
   protected abstract void doCustomize(JList list, T value, int index, boolean selected, boolean hasFocus);
 
-  public void append(@Nonnull SimpleColoredText text) {
+  public void append(SimpleColoredText text) {
     text.appendToComponent(this);
   }
 }

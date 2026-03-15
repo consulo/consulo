@@ -19,7 +19,6 @@ import consulo.codeEditor.event.VisibleAreaListener;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -28,17 +27,17 @@ import java.awt.*;
  * @see Editor#getScrollingModel()
  */
 public interface ScrollingModel {
-  @Nonnull
+  
   Rectangle getVisibleArea();
 
-  @Nonnull
+  
   Rectangle getVisibleAreaOnScrollingFinished();
 
-  void scrollToCaret(@Nonnull ScrollType scrollType);
+  void scrollToCaret(ScrollType scrollType);
 
-  void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType);
+  void scrollTo(LogicalPosition pos, ScrollType scrollType);
 
-  void runActionOnScrollingFinished(@RequiredUIAccess  @Nonnull Runnable action);
+  void runActionOnScrollingFinished(@RequiredUIAccess  Runnable action);
 
   void disableAnimation();
 
@@ -58,9 +57,9 @@ public interface ScrollingModel {
 
   void scroll(int horizontalOffset, int verticalOffset);
 
-  void addVisibleAreaListener(@Nonnull VisibleAreaListener listener);
+  void addVisibleAreaListener(VisibleAreaListener listener);
 
-  void addVisibleAreaListener(@Nonnull VisibleAreaListener listener, @Nonnull Disposable disposable);
+  void addVisibleAreaListener(VisibleAreaListener listener, Disposable disposable);
 
-  void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener);
+  void removeVisibleAreaListener(VisibleAreaListener listener);
 }

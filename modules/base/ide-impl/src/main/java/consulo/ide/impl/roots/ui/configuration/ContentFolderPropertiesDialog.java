@@ -32,8 +32,7 @@ import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -63,8 +62,8 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
         public ChooseProvidersDialog(
             Project project,
             List<? extends ContentFolderPropertyProvider<?>> items,
-            @Nonnull LocalizeValue title,
-            @Nonnull LocalizeValue description
+            LocalizeValue title,
+            LocalizeValue description
         ) {
             super(project, items, title, description);
         }

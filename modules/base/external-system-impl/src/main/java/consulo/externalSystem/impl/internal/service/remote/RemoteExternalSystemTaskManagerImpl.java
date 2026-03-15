@@ -19,8 +19,7 @@ import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.task.ExternalSystemTaskManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -34,20 +33,20 @@ public class RemoteExternalSystemTaskManagerImpl<S extends ExternalSystemExecuti
         extends AbstractRemoteExternalSystemService<S> implements RemoteExternalSystemTaskManager<S>
 {
 
-  @Nonnull
+  
   private final ExternalSystemTaskManager<S> myDelegate;
 
-  public RemoteExternalSystemTaskManagerImpl(@Nonnull ExternalSystemTaskManager<S> delegate) {
+  public RemoteExternalSystemTaskManagerImpl(ExternalSystemTaskManager<S> delegate) {
     myDelegate = delegate;
   }
 
   @Override
-  public void executeTasks(@Nonnull final ExternalSystemTaskId id,
-                           @Nonnull final List<String> taskNames,
-                           @Nonnull final String projectPath,
+  public void executeTasks(final ExternalSystemTaskId id,
+                           final List<String> taskNames,
+                           final String projectPath,
                            @Nullable final S settings,
-                           @Nonnull final List<String> vmOptions,
-                           @Nonnull final List<String> scriptParameters,
+                           final List<String> vmOptions,
+                           final List<String> scriptParameters,
                            @Nullable final String debuggerSetup) throws RemoteException, ExternalSystemException
   {
     execute(id, new Supplier<Object>() {
@@ -62,7 +61,7 @@ public class RemoteExternalSystemTaskManagerImpl<S extends ExternalSystemExecuti
   }
 
   @Override
-  public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+  public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
   {
     return myDelegate.cancelTask(id, getNotificationListener());
   }

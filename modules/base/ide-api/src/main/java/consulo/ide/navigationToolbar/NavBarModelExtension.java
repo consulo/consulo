@@ -23,8 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -48,7 +47,7 @@ public interface NavBarModelExtension {
     }
 
     @Nullable
-    PsiElement getParent(@Nonnull PsiElement psiElement);
+    PsiElement getParent(PsiElement psiElement);
 
     @Nullable
     PsiElement adjustElement(PsiElement psiElement);
@@ -56,16 +55,16 @@ public interface NavBarModelExtension {
     Collection<VirtualFile> additionalRoots(Project project);
 
     @Nullable
-    default Object getData(@Nonnull Key<?> dataId, @Nonnull DataProvider provider) {
+    default Object getData(Key<?> dataId, DataProvider provider) {
         return null;
     }
 
     @Nullable
-    default String getPopupMenuGroup(@Nonnull DataProvider provider) {
+    default String getPopupMenuGroup(DataProvider provider) {
         return null;
     }
 
-    default PsiElement getLeafElement(@Nonnull DataContext dataContext) {
+    default PsiElement getLeafElement(DataContext dataContext) {
         return null;
     }
 

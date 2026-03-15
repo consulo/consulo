@@ -18,8 +18,7 @@ package consulo.http.impl.internal.proxy;
 import consulo.container.boot.ContainerPathManager;
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Properties;
@@ -39,14 +38,14 @@ public class SharedProxyConfig {
         public final int port;
         @Nullable
         public final String login;
-        @Nonnull
+        
         public final char[] password;
 
         public ProxyParameters(@Nullable String host, int port) {
             this(host, port, null, new char[0]);
         }
 
-        public ProxyParameters(@Nullable String host, int port, @Nullable String login, @Nonnull char[] password) {
+        public ProxyParameters(@Nullable String host, int port, @Nullable String login, char[] password) {
             this.host = host;
             this.port = port;
             this.login = login;
@@ -75,7 +74,7 @@ public class SharedProxyConfig {
         return null;
     }
 
-    public static boolean store(@Nonnull ProxyParameters params) {
+    public static boolean store(ProxyParameters params) {
         if (params.host != null) {
             try {
                 Properties props = new Properties();

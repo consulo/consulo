@@ -9,8 +9,7 @@ import consulo.util.lang.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -523,7 +522,7 @@ public class PagedFileStorage implements Forceable {
       myDefaultStorageLockContext.unlock();
     }
 
-    private int registerPagedFileStorage(@Nonnull PagedFileStorage storage) {
+    private int registerPagedFileStorage(PagedFileStorage storage) {
       int registered = myIndex2Storage.size();
       assert registered <= MAX_LIVE_STORAGES_COUNT;
       int value = registered << FILE_INDEX_SHIFT;
@@ -618,7 +617,7 @@ public class PagedFileStorage implements Forceable {
       disposeRemovedSegments();
     }
 
-    @Nonnull
+    
     private ByteBufferWrapper createValue(Integer key) {
       int storageIndex = key & FILE_INDEX_MASK;
       PagedFileStorage owner = getRegisteredPagedFileStorageByIndex(storageIndex);

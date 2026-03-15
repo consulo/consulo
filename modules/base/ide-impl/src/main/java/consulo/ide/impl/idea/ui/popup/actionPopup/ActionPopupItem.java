@@ -24,8 +24,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -52,12 +51,12 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
 
     private boolean myIsEnabled;
 
-    @Nonnull
+    
     private List<ActionPopupItem> myInlineActions;
 
     ActionPopupItem(
-        @Nonnull AnAction action,
-        @Nonnull LocalizeValue actionText
+        AnAction action,
+        LocalizeValue actionText
     ) {
         myAction = action;
         myTextValue = actionText;
@@ -71,7 +70,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
     }
 
     ActionPopupItem(
-        @Nonnull AnAction action,
+        AnAction action,
         @Nullable Character mnemonicChar,
         boolean mnemonicsEnabled,
         boolean honorActionMnemonics,
@@ -92,12 +91,12 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         myInlineActions = Collections.emptyList();
     }
 
-    @Nonnull
+    
     public List<ActionPopupItem> getInlineItems() {
         return myInlineActions;
     }
 
-    void updateFromPresentation(@Nonnull PresentationFactory presentationFactory, @Nonnull String actionPlace) {
+    void updateFromPresentation(PresentationFactory presentationFactory, String actionPlace) {
         Presentation presentation = presentationFactory.getPresentation(myAction);
         updateFromPresentation(presentation, actionPlace);
 
@@ -105,7 +104,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         myInlineActions = createInlineItems(presentationFactory, actionPlace, inlineActions);
     }
 
-    void updateFromPresentation(@Nonnull Presentation presentation, @Nonnull String actionPlace) {
+    void updateFromPresentation(Presentation presentation, String actionPlace) {
         myPresentation.copyFrom(presentation, null, true);
 
         if (myAction instanceof AnSeparator anSeparator) {
@@ -175,9 +174,9 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         return null;
     }
 
-    @Nonnull
-    private List<ActionPopupItem> createInlineItems(@Nonnull PresentationFactory presentationFactory,
-                                                    @Nonnull String actionPlace,
+    
+    private List<ActionPopupItem> createInlineItems(PresentationFactory presentationFactory,
+                                                    String actionPlace,
                                                     @Nullable List<? extends AnAction> inlineActions) {
         if (inlineActions == null) {
             return Collections.emptyList();
@@ -197,17 +196,17 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         }
     }
 
-    @Nonnull
+    
     Presentation clonePresentation() {
         return myPresentation.clone();
     }
 
-    @Nonnull
+    
     public AnAction getAction() {
         return myAction;
     }
 
-    @Nonnull
+    
     public LocalizeValue getText() {
         return myTextValue;
     }
@@ -236,11 +235,11 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
     }
 
     @Nullable
-    public <T> T getClientProperty(@Nonnull Key<T> key) {
+    public <T> T getClientProperty(Key<T> key) {
         return myPresentation.getClientProperty(key);
     }
 
-    @Nonnull
+    
     public KeepPopupOnPerform getKeepPopupOnPerform() {
         return myPresentation.getKeepPopupOnPerform();
     }
@@ -259,12 +258,12 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
 
     @Nullable
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return myPresentation.getClientProperty(key);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         myPresentation.putClientProperty(key, value);
     }
 }

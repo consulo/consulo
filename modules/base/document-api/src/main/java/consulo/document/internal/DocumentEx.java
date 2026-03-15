@@ -21,8 +21,7 @@ import consulo.document.RangeMarker;
 import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,18 +31,18 @@ public interface DocumentEx extends Document {
     default void setStripTrailingSpacesEnabled(boolean isEnabled) {
     }
 
-    @Nonnull
+    
     LineIterator createLineIterator();
 
     void setModificationStamp(long modificationStamp);
 
-    default void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
+    default void addEditReadOnlyListener(EditReadOnlyListener listener) {
     }
 
-    default void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
+    default void removeEditReadOnlyListener(EditReadOnlyListener listener) {
     }
 
-    void replaceText(@Nonnull CharSequence chars, long newModificationStamp);
+    void replaceText(CharSequence chars, long newModificationStamp);
 
     default void suppressGuardedExceptions() {
     }
@@ -58,11 +57,11 @@ public interface DocumentEx extends Document {
     default void clearLineModificationFlags() {
     }
 
-    boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker);
+    boolean removeRangeMarker(RangeMarkerEx rangeMarker);
 
-    void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer);
+    void registerRangeMarker(RangeMarkerEx rangeMarker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer);
 
-    @Nonnull
+    
     default List<RangeMarker> getGuardedBlocks() {
         return Collections.emptyList();
     }
@@ -71,13 +70,13 @@ public interface DocumentEx extends Document {
      * Get all range markers
      * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
      */
-    boolean processRangeMarkers(@Nonnull Predicate<? super RangeMarker> processor);
+    boolean processRangeMarkers(Predicate<? super RangeMarker> processor);
 
     /**
      * Get range markers which {@link TextRange#intersects(int, int)} the specified range
      * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
      */
-    boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeMarker> processor);
+    boolean processRangeMarkersOverlappingWith(int start, int end, Predicate<? super RangeMarker> processor);
 
     /**
      * @return modification stamp. Guaranteed to be strictly increasing on each change unlike the {@link #getModificationStamp()} which can change arbitrarily.
@@ -97,7 +96,7 @@ public interface DocumentEx extends Document {
     default void clearLineModificationFlags(int startLine, int endLine) {
     }
 
-    default void clearLineModificationFlagsExcept(@Nonnull int[] caretLines) {
+    default void clearLineModificationFlagsExcept(int[] caretLines) {
     }
 
     default void setReadonlyFragmentModificationHandler(ReadonlyFragmentModificationHandler readonlyFragmentModificationHandler) {
@@ -114,7 +113,7 @@ public interface DocumentEx extends Document {
         return false;
     }
 
-    default void documentCreatedFrom(@Nonnull VirtualFile f, int tabSize) {
+    default void documentCreatedFrom(VirtualFile f, int tabSize) {
         throw new UnsupportedOperationException();
     }
 }

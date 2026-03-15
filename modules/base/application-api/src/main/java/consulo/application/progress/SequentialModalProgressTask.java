@@ -18,8 +18,7 @@ package consulo.application.progress;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -46,17 +45,17 @@ public class SequentialModalProgressTask extends Task.Modal {
   private ProgressIndicator myIndicator;
   private SequentialTask myTask;
 
-  public SequentialModalProgressTask(@Nullable ComponentManager project, @Nonnull String title) {
+  public SequentialModalProgressTask(@Nullable ComponentManager project, String title) {
     this(project, title, true);
   }
 
-  public SequentialModalProgressTask(@Nullable ComponentManager project, @Nonnull String title, boolean canBeCancelled) {
+  public SequentialModalProgressTask(@Nullable ComponentManager project, String title, boolean canBeCancelled) {
     super(project, title, canBeCancelled);
     myTitle = title;
   }
 
   @Override
-  public void run(@Nonnull ProgressIndicator indicator) {
+  public void run(ProgressIndicator indicator) {
     try {
       doRun(indicator);
     }
@@ -68,7 +67,7 @@ public class SequentialModalProgressTask extends Task.Modal {
     }
   }
 
-  public void doRun(@Nonnull ProgressIndicator indicator) throws InvocationTargetException, InterruptedException {
+  public void doRun(ProgressIndicator indicator) throws InvocationTargetException, InterruptedException {
     final SequentialTask task = myTask;
     if (task == null) {
       return;
@@ -126,7 +125,7 @@ public class SequentialModalProgressTask extends Task.Modal {
    * 
    * @param task  task to be executed
    */
-  protected void prepare(@Nonnull SequentialTask task) {
+  protected void prepare(SequentialTask task) {
     task.prepare();
   }
 }

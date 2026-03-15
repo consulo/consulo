@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystemProvider;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -35,9 +34,9 @@ public class ArchiveFileSystemByProvider extends ArchiveFileSystemViaArchiveFile
     myProvider = provider;
   }
 
-  @Nonnull
+  
   @Override
-  public ArchiveFile createArchiveFile(@Nonnull String filePath) throws IOException {
+  public ArchiveFile createArchiveFile(String filePath) throws IOException {
     return myProvider.createArchiveFile(filePath);
   }
 }

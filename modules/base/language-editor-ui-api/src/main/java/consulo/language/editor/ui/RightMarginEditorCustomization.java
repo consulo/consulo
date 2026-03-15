@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 import consulo.colorScheme.EditorColorsManager;
-import jakarta.annotation.Nonnull;
 
 public class RightMarginEditorCustomization extends SimpleEditorCustomization {
 
@@ -33,7 +32,7 @@ public class RightMarginEditorCustomization extends SimpleEditorCustomization {
   }
 
   @Override
-  public void customize(@Nonnull EditorEx editor) {
+  public void customize(EditorEx editor) {
     if (isEnabled()) {
       editor.getSettings().setRightMarginShown(true);
       editor.getSettings().setRightMargin(getRightMarginColumns());

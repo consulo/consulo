@@ -15,7 +15,6 @@
  */
 package consulo.proxy.advanced.internal;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;
 
 /**
@@ -23,6 +22,6 @@ import java.lang.reflect.InvocationHandler;
  * @since 2020-09-10
  */
 public interface AdvancedProxyFacade {
-  @Nonnull
+  
   <T> T create(Class<T> superClass, Class[] interfaces, InvocationHandler invocationHandler, boolean interceptObjectMethods, Object[] superConstructorArguments);
 }

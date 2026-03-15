@@ -34,8 +34,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -49,10 +48,10 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
     @RequiredUIAccess
     public XDebuggerExpressionEditorImpl(
         Project project,
-        @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
+        XDebuggerEditorsProvider debuggerEditorsProvider,
         @Nullable String historyId,
         @Nullable XSourcePosition sourcePosition,
-        @Nonnull XExpression text,
+        XExpression text,
         final boolean multiline,
         boolean editorFont
     ) {
@@ -69,7 +68,7 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
             }
 
             @Override
-            public Object getData(@Nonnull Key dataId) {
+            public Object getData(Key dataId) {
                 if (LangDataKeys.CONTEXT_LANGUAGES == dataId) {
                     return new Language[]{myExpression.getLanguage()};
                 }

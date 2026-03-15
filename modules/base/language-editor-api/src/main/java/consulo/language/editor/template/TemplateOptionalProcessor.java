@@ -24,30 +24,29 @@ import consulo.document.RangeMarker;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateOptionalProcessor {
-    @Nonnull
+    
     KeyWithDefaultValue<Boolean> getKey();
 
     void processText(Project project, Template template, Document document, RangeMarker templateRange, Editor editor);
 
-    @Nonnull
+    
     LocalizeValue getOptionText();
 
-    default boolean isEnabled(@Nonnull Template template) {
+    default boolean isEnabled(Template template) {
         return template.getOption(getKey());
     }
 
-    default void setEnabled(@Nonnull Template template, boolean value) {
+    default void setEnabled(Template template, boolean value) {
         template.setOption(getKey(), value);
     }
 
-    default boolean isVisible(@Nonnull Template template) {
+    default boolean isVisible(Template template) {
         return template.containsOption(getKey());
     }
 }

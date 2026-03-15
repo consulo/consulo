@@ -5,8 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -104,11 +103,11 @@ public abstract class ExpirableConstrainedExecution<E extends ConstrainedExecuti
     return cloneWith(constraints, cancellationConditions, expirationSet);
   }
 
-  @Nonnull
+  
   protected abstract E cloneWith(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirationSet);
 
   @Override
-  @Nonnull
+  
   public E withConstraint(ContextConstraint constraint, Disposable parentDisposable) {
     Expiration expirableHandle = new DisposableExpiration(parentDisposable);
     ContextConstraint expirableConstraint = new ExpirableContextConstraint(constraint, expirableHandle);
@@ -173,7 +172,7 @@ public abstract class ExpirableConstrainedExecution<E extends ConstrainedExecuti
     }
   }
 
-  @Nonnull
+  
   private static <T> Set<T> appendSet(Set<? extends T> set, T value) {
     Set<T> newSet = new HashSet<>(set);
     newSet.add(value);

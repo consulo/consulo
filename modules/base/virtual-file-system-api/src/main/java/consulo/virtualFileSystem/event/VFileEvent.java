@@ -18,8 +18,7 @@ package consulo.virtualFileSystem.event;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -56,7 +55,7 @@ public abstract class VFileEvent {
    * asynchronously from the event dispatching procedure
    * (e.g. {@code event.getPath()} can become not equal to {@code event.getFile().getPath()}).
    */
-  @Nonnull
+  
   public String getPath() {
     String path = myCachedPath;
     if (path == null) {
@@ -65,7 +64,7 @@ public abstract class VFileEvent {
     return path;
   }
 
-  @Nonnull
+  
   protected abstract String computePath();
 
   /**
@@ -78,7 +77,7 @@ public abstract class VFileEvent {
   @Nullable
   public abstract VirtualFile getFile();
 
-  @Nonnull
+  
   public abstract VirtualFileSystem getFileSystem();
 
   public abstract boolean isValid();

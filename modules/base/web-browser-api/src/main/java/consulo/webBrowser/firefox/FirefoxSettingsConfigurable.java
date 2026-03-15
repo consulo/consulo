@@ -34,8 +34,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -157,7 +156,7 @@ public class FirefoxSettingsConfigurable implements Configurable {
     public void disposeUIResources() {
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return WebBrowserLocalize.displayNameFirefoxSettings();

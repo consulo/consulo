@@ -23,8 +23,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.internal.TouchBarControllerInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,30 +42,30 @@ public sealed interface TouchBarController permits TouchBarControllerInternal {
 
     boolean isEnabled();
 
-    default void setButtonActions(@Nonnull JComponent component,
+    default void setButtonActions(JComponent component,
                                   Collection<? extends JButton> buttons,
                                   Collection<? extends JButton> principal,
                                   JButton defaultButton) {
         setButtonActions(component, buttons, principal, defaultButton, null);
     }
 
-    void setButtonActions(@Nonnull JComponent component,
+    void setButtonActions(JComponent component,
                           Collection<? extends JButton> buttons,
                           Collection<? extends JButton> principal,
                           JButton defaultButton,
                           @Nullable ActionGroup extraActions);
 
     @Nullable
-    Disposable showWindowActions(@Nonnull Component contentPane);
+    Disposable showWindowActions(Component contentPane);
 
-    default void setActions(@Nonnull JComponent component, @Nonnull String actionId) {
+    default void setActions(JComponent component, String actionId) {
         ActionGroup action = (ActionGroup) ActionManager.getInstance().getAction(actionId);
         setActions(component, Objects.requireNonNull(action, () -> "Can't find action group: " + actionId));
     }
 
-    default void setActions(@Nonnull JComponent component, @Nonnull AnAction anAction) {
+    default void setActions(JComponent component, AnAction anAction) {
         setActions(component, ActionGroup.of(anAction));
     }
 
-    void setActions(@Nonnull JComponent component, @Nullable ActionGroup group);
+    void setActions(JComponent component, @Nullable ActionGroup group);
 }

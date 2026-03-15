@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.openapi.editor;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A way to abstract various properties of an editor (as being visible to a user) away from Swing.
@@ -21,14 +20,14 @@ public class EditorActivityManager {
   /**
    * Determines whether an editor is visible to a user
    */
-  public boolean isVisible(@Nonnull Editor editor) {
+  public boolean isVisible(Editor editor) {
     return ApplicationManager.getApplication().isHeadlessEnvironment() || editor.getContentComponent().isShowing();
   }
 
   /**
    * Determines whether an editor has focus
    */
-  public boolean isFocused(@Nonnull Editor editor) {
+  public boolean isFocused(Editor editor) {
     return ApplicationManager.getApplication().isHeadlessEnvironment() || editor.getContentComponent().hasFocus();
   }
 }

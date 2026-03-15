@@ -20,7 +20,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XToggleLineBreakpointActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -38,7 +37,7 @@ public class ToggleTemporaryLineBreakpointAction extends XDebuggerActionBase imp
         );
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

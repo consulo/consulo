@@ -31,7 +31,6 @@ import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,7 +86,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
         }
 
         @Override
-        protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
             Color bgColor = UIUtil.getListBackground();
 
             if (value instanceof PsiElement element && !element.isValid()) {

@@ -16,12 +16,11 @@
 package consulo.versionControlSystem.distributed.ui.awt;
 
 import consulo.annotation.UsedInPlugin;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @UsedInPlugin
 public class VcsEditableTextComponent extends VcsLinkedTextComponent implements VcsEditableComponent {
-    public VcsEditableTextComponent(@Nonnull String text, @Nullable VcsLinkListener listener) {
+    public VcsEditableTextComponent(String text, @Nullable VcsLinkListener listener) {
         super(text, listener);
     }
 }

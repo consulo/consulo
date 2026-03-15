@@ -21,19 +21,18 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public abstract class LocalHistoryActionWithDialog extends LocalHistoryAction {
     protected LocalHistoryActionWithDialog() {
     }
 
-    protected LocalHistoryActionWithDialog(@Nonnull LocalizeValue text) {
+    protected LocalHistoryActionWithDialog(LocalizeValue text) {
         super(text);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         showDialog(e.getData(Project.KEY), getGateway(), getFile(e), e);
     }
 

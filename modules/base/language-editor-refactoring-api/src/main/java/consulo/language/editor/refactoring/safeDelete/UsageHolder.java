@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.usage.UsageInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -62,7 +61,7 @@ class UsageHolder {
         return file != null && GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, project);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public LocalizeValue getDescription() {
         PsiElement element = myElementPointer.getElement();

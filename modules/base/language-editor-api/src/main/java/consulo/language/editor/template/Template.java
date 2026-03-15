@@ -18,7 +18,6 @@ package consulo.language.editor.template;
 
 import consulo.language.editor.template.context.TemplateContext;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -31,11 +30,11 @@ public interface Template {
 
     Set<String> INTERNAL_VARS_SET = Set.of(END, SELECTION, SELECTION_START, SELECTION_END);
 
-    void addTextSegment(@Nonnull String text);
+    void addTextSegment(String text);
 
     void addVariableSegment(String name);
 
-    default Variable addVariable(String name, @Nonnull Expression defaultValueExpression, boolean isAlwaysStopAt) {
+    default Variable addVariable(String name, Expression defaultValueExpression, boolean isAlwaysStopAt) {
         return addVariable(name, defaultValueExpression, defaultValueExpression, isAlwaysStopAt);
     }
 
@@ -121,15 +120,15 @@ public interface Template {
 
     String getString();
 
-    @Nonnull
+    
     Template copy();
 
-    @Nonnull
+    
     TemplateContext getTemplateContext();
 
-    void setOption(@Nonnull KeyWithDefaultValue<Boolean> key, boolean value);
+    void setOption(KeyWithDefaultValue<Boolean> key, boolean value);
 
-    boolean getOption(@Nonnull KeyWithDefaultValue<Boolean> key);
+    boolean getOption(KeyWithDefaultValue<Boolean> key);
 
-    boolean containsOption(@Nonnull KeyWithDefaultValue<Boolean> key);
+    boolean containsOption(KeyWithDefaultValue<Boolean> key);
 }

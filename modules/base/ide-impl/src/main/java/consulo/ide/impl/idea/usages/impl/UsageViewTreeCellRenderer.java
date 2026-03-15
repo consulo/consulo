@@ -31,7 +31,6 @@ import consulo.ui.style.StyleManager;
 import consulo.usage.*;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -53,7 +52,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   private final UsageViewPresentation myPresentation;
   private final UsageView myView;
 
-  UsageViewTreeCellRenderer(@Nonnull UsageView view) {
+  UsageViewTreeCellRenderer(UsageView view) {
     myView = view;
     myPresentation = view.getPresentation();
     setIpad(STANDARD_IPAD_NOWIFI);
@@ -62,7 +61,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   private Dimension cachedPreferredSize;
 
   @Override
-  public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+  public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     boolean showAsReadOnly = false;
     if (value instanceof Node && value != tree.getModel().getRoot()) {
       Node node = (Node)value;
@@ -145,7 +144,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   }
 
   // computes the node text regardless of the node visibility
-  @Nonnull
+  
   String getPlainTextForNode(Object value) {
     boolean showAsReadOnly = false;
     StringBuilder result = new StringBuilder();
@@ -224,8 +223,8 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     AFTER_VISIBLE_RECT
   }
 
-  @Nonnull
-  RowLocation isRowVisible(int row, @Nonnull Rectangle visibleRect) {
+  
+  RowLocation isRowVisible(int row, Rectangle visibleRect) {
     Dimension pref;
     if (cachedPreferredSize == null) {
       cachedPreferredSize = pref = getPreferredSize();
@@ -246,7 +245,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     return y < vis.getStartOffset() ? RowLocation.BEFORE_VISIBLE_RECT : RowLocation.AFTER_VISIBLE_RECT;
   }
 
-  private static SimpleTextAttributes patchAttrs(@Nonnull Node node, @Nonnull SimpleTextAttributes original) {
+  private static SimpleTextAttributes patchAttrs(Node node, SimpleTextAttributes original) {
     if (node.isExcluded()) {
       original = new SimpleTextAttributes(original.getStyle() | SimpleTextAttributes.STYLE_STRIKEOUT, original.getFgColor(), original.getWaveColor());
     }

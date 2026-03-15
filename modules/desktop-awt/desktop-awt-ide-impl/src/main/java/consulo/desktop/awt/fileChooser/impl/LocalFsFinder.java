@@ -27,8 +27,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.platform.Platform;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
   private File myBaseDir = Platform.current().user().homePath().toFile();
 
   @Override
-  public LookupFile find(@Nonnull String path) {
+  public LookupFile find(String path) {
     VirtualFile byUrl = VirtualFileManager.getInstance().findFileByUrl(path);
     if (byUrl != null) {
       return new VfsFile(this, byUrl);
@@ -66,7 +65,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
   }
 
   @Override
-  public String normalize(@Nonnull String path) {
+  public String normalize(String path) {
     File file = new File(path);
     if (file.isAbsolute()) return file.getAbsolutePath();
 
@@ -78,7 +77,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
     return File.separator;
   }
 
-  public void setBaseDir(@Nonnull File baseDir) {
+  public void setBaseDir(File baseDir) {
     myBaseDir = baseDir;
   }
 

@@ -6,7 +6,6 @@ import consulo.application.internal.BackgroundTaskUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.concurrent.ExecutionException;
@@ -21,29 +20,29 @@ public class ZipperUpdater {
   private final Alarm.ThreadToUse myThreadToUse;
   private boolean myIsEmpty;
 
-  public ZipperUpdater(int delay, @Nonnull Disposable parentDisposable) {
+  public ZipperUpdater(int delay, Disposable parentDisposable) {
     myDelay = delay;
     myIsEmpty = true;
     myThreadToUse = Alarm.ThreadToUse.POOLED_THREAD;
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, parentDisposable);
   }
 
-  public ZipperUpdater(int delay, Alarm.ThreadToUse threadToUse, @Nonnull Disposable parentDisposable) {
+  public ZipperUpdater(int delay, Alarm.ThreadToUse threadToUse, Disposable parentDisposable) {
     myDelay = delay;
     myThreadToUse = threadToUse;
     myIsEmpty = true;
     myAlarm = new Alarm(threadToUse, parentDisposable);
   }
 
-  public void queue(@Nonnull Runnable runnable) {
+  public void queue(Runnable runnable) {
     queue(runnable, false);
   }
 
-  private void queue(@Nonnull Runnable runnable, boolean urgent) {
+  private void queue(Runnable runnable, boolean urgent) {
     queue(runnable, urgent, false);
   }
 
-  public void queue(@Nonnull final Runnable runnable, boolean urgent, boolean anyModality) {
+  public void queue(final Runnable runnable, boolean urgent, boolean anyModality) {
     synchronized (myLock) {
       if (myAlarm.isDisposed()) return;
       boolean wasRaised = myRaised;
@@ -97,7 +96,7 @@ public class ZipperUpdater {
   }
 
   @TestOnly
-  public void waitForAllExecuted(long timeout, @Nonnull TimeUnit unit) {
+  public void waitForAllExecuted(long timeout, TimeUnit unit) {
     try {
       myAlarm.waitForAllExecuted(timeout, unit);
     }

@@ -17,8 +17,7 @@ package consulo.language.editor.ui;
 
 import consulo.proxy.EventDispatcher;
 import consulo.ui.Component;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public abstract class VisibilityPanelBase<V> {
 
     public abstract void setVisibility(V visibility);
 
-    @Nonnull
+    
     public abstract Component getComponent();
 
     public void addListener(VisibilityPanelListener listener) {

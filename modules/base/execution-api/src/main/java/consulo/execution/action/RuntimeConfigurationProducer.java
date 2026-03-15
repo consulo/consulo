@@ -34,8 +34,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -93,7 +92,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
     }
 
     @Nullable
-    public RunnerAndConfigurationSettings findExistingConfiguration(@Nonnull Location location, ConfigurationContext context) {
+    public RunnerAndConfigurationSettings findExistingConfiguration(Location location, ConfigurationContext context) {
         assert isClone;
         RunManager runManager = RunManager.getInstance(location.getProject());
         List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(getConfigurationType());
@@ -118,7 +117,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
     @Nullable
     protected RunnerAndConfigurationSettings findExistingByElement(
         Location location,
-        @Nonnull List<RunnerAndConfigurationSettings> existingConfigurations,
+        List<RunnerAndConfigurationSettings> existingConfigurations,
         ConfigurationContext context
     ) {
         assert isClone;
@@ -205,7 +204,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
             myConfig = config;
         }
 
-        @Nonnull
+        
         @Override
         public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
             return myConfig.getConfigurationEditor();
@@ -218,7 +217,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
         }
 
         @Override
-        public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
+        public RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
             return myConfig.getState(executor, env);
         }
 
@@ -247,7 +246,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
         }
 
         @Override
-        @Nonnull
+        
         public Module[] getModules() {
             return Module.EMPTY_ARRAY;
         }

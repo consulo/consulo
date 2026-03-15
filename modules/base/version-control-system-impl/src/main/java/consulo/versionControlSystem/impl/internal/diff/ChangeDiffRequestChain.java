@@ -7,22 +7,21 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-    @Nonnull
+    
     private final List<ChangeDiffRequestProducer> myRequests;
     private int myIndex;
 
-    public ChangeDiffRequestChain(@Nonnull List<ChangeDiffRequestProducer> requests) {
+    public ChangeDiffRequestChain(List<ChangeDiffRequestProducer> requests) {
         myRequests = requests;
     }
 
-    @Nonnull
+    
     @Override
     public List<? extends ChangeDiffRequestProducer> getRequests() {
         return myRequests;
@@ -39,9 +38,9 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
         myIndex = index;
     }
 
-    @Nonnull
+    
     @Override
-    public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
+    public AnAction createGoToChangeAction(Consumer<Integer> onSelected) {
         return new ChangeGoToChangePopupAction<>(this, onSelected) {
             @Override
             protected int findSelectedStep(@Nullable Change change) {
@@ -57,13 +56,13 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
                 return -1;
             }
 
-            @Nonnull
+            
             @Override
             protected List<Change> getChanges() {
                 return ContainerUtil.mapNotNull(myChain.getRequests(),  ChangeDiffRequestProducer::getChange);
             }
 
-            @Nonnull
+            
             @Override
             protected Change getCurrentSelection() {
                 return myChain.getRequests().get(myChain.getIndex()).getChange();

@@ -16,7 +16,6 @@
 package consulo.execution.test.sm.runner.state;
 
 import consulo.execution.test.sm.runner.SMTestProxy;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class SuiteInProgressState extends TestInProgressState {
     private final SMTestProxy mySuiteProxy;
     private Boolean isDefectWasReallyFound = null; // null - is unset
 
-    public SuiteInProgressState(@Nonnull SMTestProxy suiteProxy) {
+    public SuiteInProgressState(SMTestProxy suiteProxy) {
         mySuiteProxy = suiteProxy;
     }
 

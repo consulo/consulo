@@ -18,7 +18,6 @@ package consulo.language.impl.internal.psi.include;
 
 import consulo.language.psi.include.FileIncludeInfo;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -29,7 +28,7 @@ class FileIncludeInfoImpl extends FileIncludeInfo {
 
   public final String providerId;
 
-  public FileIncludeInfoImpl(@Nonnull String path, int offset, boolean runtimeOnly, String providerId) {
+  public FileIncludeInfoImpl(String path, int offset, boolean runtimeOnly, String providerId) {
     super(new File(path).getName(), path, offset, runtimeOnly);
     this.providerId = providerId;
   }

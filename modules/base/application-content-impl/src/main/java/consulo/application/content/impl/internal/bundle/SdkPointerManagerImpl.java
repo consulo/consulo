@@ -26,8 +26,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -37,25 +36,25 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implements SdkPointerManager {
-  @Nonnull
+  
   private final Provider<SdkTable> mySdkTableProvider;
 
   @Inject
-  public SdkPointerManagerImpl(@Nonnull Application application, @Nonnull Provider<SdkTable> sdkTableProvider) {
+  public SdkPointerManagerImpl(Application application, Provider<SdkTable> sdkTableProvider) {
     mySdkTableProvider = sdkTableProvider;
     application.getMessageBus().connect().subscribe(SdkTableListener.class, new SdkTableListener() {
       @Override
-      public void sdkAdded(@Nonnull Sdk sdk) {
+      public void sdkAdded(Sdk sdk) {
         updatePointers(sdk);
       }
 
       @Override
-      public void sdkRemoved(@Nonnull Sdk sdk) {
+      public void sdkRemoved(Sdk sdk) {
         unregisterPointer(sdk);
       }
 
       @Override
-      public void sdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
+      public void sdkNameChanged(Sdk sdk, String previousName) {
         updatePointers(sdk, previousName);
       }
     });
@@ -63,11 +62,11 @@ public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implemen
 
   @Nullable
   @Override
-  protected Sdk findByName(@Nonnull String name) {
+  protected Sdk findByName(String name) {
     return mySdkTableProvider.get().findSdk(name);
   }
 
-  public void updatePointers(@Nonnull List<? extends Sdk> sdks) {
+  public void updatePointers(List<? extends Sdk> sdks) {
     for (Sdk sdk : sdks) {
       updatePointers(sdk);
     }

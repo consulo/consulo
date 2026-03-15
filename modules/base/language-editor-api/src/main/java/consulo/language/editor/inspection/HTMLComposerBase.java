@@ -25,8 +25,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.module.content.util.ProjectUtilCore;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -125,7 +124,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
             refElement.accept(new RefVisitor() {
                 @RequiredReadAction
                 @Override
-                public void visitFile(@Nonnull RefFile file) {
+                public void visitFile(RefFile file) {
                     PsiFile psiFile = file.getPsiElement();
                     if (psiFile != null) {
                         buf.append(B_OPENING);

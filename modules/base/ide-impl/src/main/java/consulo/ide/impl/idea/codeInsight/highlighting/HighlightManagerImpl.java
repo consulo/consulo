@@ -40,8 +40,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -115,7 +114,7 @@ public class HighlightManagerImpl extends HighlightManager {
     }
 
     @Nullable
-    public Map<RangeHighlighter, HighlightInfoFlags> getHighlightInfoMap(@Nonnull Editor editor, boolean toCreate) {
+    public Map<RangeHighlighter, HighlightInfoFlags> getHighlightInfoMap(Editor editor, boolean toCreate) {
         if (editor instanceof EditorWindow) {
             return getHighlightInfoMap(((EditorWindow) editor).getDelegate(), toCreate);
         }
@@ -126,8 +125,8 @@ public class HighlightManagerImpl extends HighlightManager {
         return map;
     }
 
-    @Nonnull
-    public RangeHighlighter[] getHighlighters(@Nonnull Editor editor) {
+    
+    public RangeHighlighter[] getHighlighters(Editor editor) {
         Map<RangeHighlighter, HighlightInfoFlags> highlightersMap = getHighlightInfoMap(editor, false);
         if (highlightersMap == null) {
             return RangeHighlighter.EMPTY_ARRAY;
@@ -142,7 +141,7 @@ public class HighlightManagerImpl extends HighlightManager {
         return set.toArray(new RangeHighlighter[set.size()]);
     }
 
-    private RangeHighlighter addSegmentHighlighter(@Nonnull Editor editor,
+    private RangeHighlighter addSegmentHighlighter(Editor editor,
                                                    int startOffset,
                                                    int endOffset,
                                                    TextAttributesKey attributesKey,
@@ -156,7 +155,7 @@ public class HighlightManagerImpl extends HighlightManager {
     }
 
     @Override
-    public boolean removeSegmentHighlighter(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter) {
+    public boolean removeSegmentHighlighter(Editor editor, RangeHighlighter highlighter) {
         Map<RangeHighlighter, HighlightInfoFlags> map = getHighlightInfoMap(editor, false);
         if (map == null) {
             return false;
@@ -175,9 +174,9 @@ public class HighlightManagerImpl extends HighlightManager {
 
     @Override
     @RequiredReadAction
-    public void addOccurrenceHighlights(@Nonnull Editor editor,
-                                        @Nonnull PsiReference[] occurrences,
-                                        @Nonnull TextAttributesKey attributesKey,
+    public void addOccurrenceHighlights(Editor editor,
+                                        PsiReference[] occurrences,
+                                        TextAttributesKey attributesKey,
                                         boolean hideByTextChange,
                                         @Nullable Collection<RangeHighlighter> outHighlighters) {
         if (occurrences.length == 0) {
@@ -212,9 +211,9 @@ public class HighlightManagerImpl extends HighlightManager {
 
     @RequiredReadAction
     @Override
-    public void addOccurrenceHighlights(@Nonnull Editor editor,
-                                        @Nonnull PsiElement[] elements,
-                                        @Nonnull TextAttributesKey attributesKey,
+    public void addOccurrenceHighlights(Editor editor,
+                                        PsiElement[] elements,
+                                        TextAttributesKey attributesKey,
                                         boolean hideByTextChange,
                                         @Nullable Collection<RangeHighlighter> outHighlighters) {
         if (elements.length == 0) {
@@ -237,7 +236,7 @@ public class HighlightManagerImpl extends HighlightManager {
     }
 
     @Override
-    public void addOccurrenceHighlight(@Nonnull Editor editor,
+    public void addOccurrenceHighlight(Editor editor,
                                        int start,
                                        int end,
                                        TextAttributesKey attributesKey,
@@ -250,10 +249,10 @@ public class HighlightManagerImpl extends HighlightManager {
     }
 
     @Override
-    public void addRangeHighlight(@Nonnull Editor editor,
+    public void addRangeHighlight(Editor editor,
                                   int startOffset,
                                   int endOffset,
-                                  @Nonnull TextAttributesKey attributesKey,
+                                  TextAttributesKey attributesKey,
                                   boolean hideByTextChange,
                                   boolean hideByAnyKey,
                                   @Nullable Collection<RangeHighlighter> highlighters) {
@@ -268,7 +267,7 @@ public class HighlightManagerImpl extends HighlightManager {
         addOccurrenceHighlight(editor, startOffset, endOffset, attributesKey, flags, highlighters);
     }
 
-    public boolean hideHighlights(@Nonnull Editor editor, @HideFlags int mask) {
+    public boolean hideHighlights(Editor editor, @HideFlags int mask) {
         Map<RangeHighlighter, HighlightInfoFlags> map = getHighlightInfoMap(editor, false);
         if (map == null) {
             return false;

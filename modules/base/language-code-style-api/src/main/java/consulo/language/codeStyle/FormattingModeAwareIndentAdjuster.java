@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.document.Document;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Used to differentiate between line indent adjustment on a new line after Enter and explicit indent adjustment action.
@@ -34,7 +33,7 @@ public interface FormattingModeAwareIndentAdjuster {
      * @param mode     The mode: {@link FormattingMode#ADJUST_INDENT} or {@link FormattingMode#ADJUST_INDENT_ON_ENTER}
      * @return Adjusted offset.
      */
-    int adjustLineIndent(@Nonnull Document document, int offset, FormattingMode mode);
+    int adjustLineIndent(Document document, int offset, FormattingMode mode);
 
     FormattingMode getCurrentFormattingMode();
 }

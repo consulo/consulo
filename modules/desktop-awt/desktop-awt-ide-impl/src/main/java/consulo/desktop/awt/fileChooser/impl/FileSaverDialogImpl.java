@@ -24,8 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.UIBundle;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -41,7 +40,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
   protected final JComboBox myExtensions = new JComboBox();
   protected final FileSaverDescriptor myDescriptor;
 
-  public FileSaverDialogImpl(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent) {
+  public FileSaverDialogImpl(FileSaverDescriptor descriptor, Component parent) {
     super(descriptor, parent);
     myDescriptor = descriptor;
     for (String ext : descriptor.getFileExtensions()) {
@@ -50,7 +49,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     setTitle(getChooserTitle(descriptor));
   }
 
-  public FileSaverDialogImpl(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project) {
+  public FileSaverDialogImpl(FileSaverDescriptor descriptor, @Nullable Project project) {
     super(descriptor, project);
     myDescriptor = descriptor;
     for (String ext : descriptor.getFileExtensions()) {
@@ -64,7 +63,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     return title != null ? title : UIBundle.message("file.chooser.save.dialog.default.title");
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
     init();
     restoreSelection(baseDir);

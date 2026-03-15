@@ -21,8 +21,7 @@ import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BasicUndoableAction implements UndoableAction {
   private final DocumentReference[] myRefs;
@@ -35,14 +34,14 @@ public abstract class BasicUndoableAction implements UndoableAction {
     myRefs = refs;
   }
 
-  public BasicUndoableAction(@Nonnull Document... docs) {
+  public BasicUndoableAction(Document... docs) {
     myRefs = new DocumentReference[docs.length];
     for (int i = 0; i < docs.length; i++) {
       myRefs[i] = DocumentReferenceManager.getInstance().create(docs[i]);
     }
   }
 
-  public BasicUndoableAction(@Nonnull VirtualFile... files) {
+  public BasicUndoableAction(VirtualFile... files) {
     myRefs = new DocumentReference[files.length];
     for (int i = 0; i < files.length; i++) {
       myRefs[i] = DocumentReferenceManager.getInstance().create(files[i]);

@@ -53,8 +53,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -85,7 +84,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
                 return;
             }
 
-            @Nonnull CompletionResultSet result = _result.caseInsensitive();
+            CompletionResultSet result = _result.caseInsensitive();
             PsiElement e = parameters.getPosition();
             Project project = e.getProject();
 
@@ -207,7 +206,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     }
 
     @RequiredReadAction
-    private static boolean fileMatchesPathPrefix(@Nullable PsiFileSystemItem file, @Nonnull List<String> pathPrefix) {
+    private static boolean fileMatchesPathPrefix(@Nullable PsiFileSystemItem file, List<String> pathPrefix) {
         if (file == null) {
             return false;
         }
@@ -234,7 +233,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
         return true;
     }
 
-    private static String[] getAllNames(@Nonnull Project project) {
+    private static String[] getAllNames(Project project) {
         Set<String> names = new HashSet<>();
         for (ChooseByNameContributor contributor : project.getApplication().getExtensionList(GotoFileContributor.class)) {
             try {
@@ -278,7 +277,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
         return Language.ANY;
@@ -293,7 +292,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
         private final List<FileReferenceHelper> myHelpers;
 
         @RequiredReadAction
-        public FilePathLookupItem(@Nonnull PsiFile file, @Nonnull List<FileReferenceHelper> helpers) {
+        public FilePathLookupItem(PsiFile file, List<FileReferenceHelper> helpers) {
             myName = file.getName();
             myPath = file.getVirtualFile().getPath();
 
@@ -311,14 +310,14 @@ public class FilePathCompletionContributor extends CompletionContributor {
             return String.format("%s%s", myName, myInfo == null ? "" : " (" + myInfo + ")");
         }
 
-        @Nonnull
+        
         @Override
         public Object getObject() {
             return myFile;
         }
 
         @Override
-        @Nonnull
+        
         public String getLookupString() {
             return myName;
         }

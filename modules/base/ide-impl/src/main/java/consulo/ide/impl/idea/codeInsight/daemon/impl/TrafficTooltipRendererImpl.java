@@ -28,7 +28,6 @@ import consulo.ui.ex.awt.hint.HintListener;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.component.util.ComparableObject;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.EventObject;
 
@@ -40,7 +39,7 @@ class TrafficTooltipRendererImpl extends ComparableObject.Impl implements Traffi
   private final Runnable onHide;
   private TrafficLightRenderer myTrafficLightRenderer;
 
-  TrafficTooltipRendererImpl(@Nonnull Runnable onHide, @Nonnull Editor editor) {
+  TrafficTooltipRendererImpl(Runnable onHide, Editor editor) {
     super(editor);
     this.onHide = onHide;
   }
@@ -55,7 +54,7 @@ class TrafficTooltipRendererImpl extends ComparableObject.Impl implements Traffi
   }
 
   @Override
-  public LightweightHintImpl show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
+  public LightweightHintImpl show(Editor editor, Point p, boolean alignToRight, TooltipGroup group, HintHint hintHint) {
     myTrafficLightRenderer = (TrafficLightRenderer)((EditorMarkupModel)editor.getMarkupModel()).getErrorStripeRenderer();
     myPanel = new TrafficProgressPanel(myTrafficLightRenderer, editor, hintHint);
     repaintTooltipWindow();

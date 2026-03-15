@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +38,7 @@ public class DesktopColorizeImageImpl extends JBUI.CachingScalableJBIcon<Desktop
         myColorValue = colorValue;
     }
 
-    @Nonnull
+    
     @Override
     protected DesktopColorizeImageImpl copy() {
         return new DesktopColorizeImageImpl(myBaseImage, myColorValue);
@@ -50,8 +49,8 @@ public class DesktopColorizeImageImpl extends JBUI.CachingScalableJBIcon<Desktop
         UIUtil.drawImage(g, colorize(myBaseImage, TargetAWT.to(myColorValue), false), x, y, null);
     }
 
-    @Nonnull
-    private BufferedImage colorize(@Nonnull Icon source, @Nonnull Color color, boolean keepGray) {
+    
+    private BufferedImage colorize(Icon source, Color color, boolean keepGray) {
         float[] base = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 
         BufferedImage image = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);

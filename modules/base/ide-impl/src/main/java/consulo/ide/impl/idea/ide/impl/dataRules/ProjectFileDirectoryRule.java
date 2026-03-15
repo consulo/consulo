@@ -21,7 +21,6 @@ import consulo.dataContext.GetDataRule;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -29,14 +28,14 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ProjectFileDirectoryRule implements GetDataRule<VirtualFile> {
-  @Nonnull
+  
   @Override
   public Key<VirtualFile> getKey() {
     return Project.PROJECT_FILE_DIRECTORY;
   }
 
   @Override
-  public VirtualFile getData(@Nonnull DataProvider dataProvider) {
+  public VirtualFile getData(DataProvider dataProvider) {
     VirtualFile dir = dataProvider.getDataUnchecked(Project.PROJECT_FILE_DIRECTORY);
     if (dir == null) {
       Project project = dataProvider.getDataUnchecked(Project.KEY);

@@ -24,7 +24,6 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.UpdateOrStatusOptionsDialog;
-import jakarta.annotation.Nonnull;
 
 import java.util.SequencedMap;
 
@@ -53,7 +52,7 @@ public interface ActionInfo {
             String scopeName
         ) {
             return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
-                @Nonnull
+                
                 @Override
                 protected LocalizeValue getRealTitle() {
                     return VcsLocalize.actionDisplayNameUpdateScope(scopeName);
@@ -118,7 +117,7 @@ public interface ActionInfo {
             String scopeName
         ) {
             return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
-                @Nonnull
+                
                 @Override
                 protected LocalizeValue getRealTitle() {
                     return VcsLocalize.actionDisplayNameCheckScopeStatus(scopeName);
@@ -188,7 +187,7 @@ public interface ActionInfo {
             String scopeName
         ) {
             return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
-                @Nonnull
+                
                 @Override
                 protected LocalizeValue getRealTitle() {
                     return VcsLocalize.actionDisplayNameIntegrateScope(scopeName);

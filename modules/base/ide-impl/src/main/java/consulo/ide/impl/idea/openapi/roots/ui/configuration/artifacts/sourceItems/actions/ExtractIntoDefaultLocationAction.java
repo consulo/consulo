@@ -31,7 +31,6 @@ import consulo.compiler.artifact.PackagingElementProcessor;
 import consulo.compiler.artifact.element.FileCopyPackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,7 +84,7 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
                     PackagingElementPath.EMPTY,
                     new PackagingElementProcessor<PackagingElement<?>>() {
                         @Override
-                        public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
+                        public boolean process(PackagingElement<?> element, PackagingElementPath path) {
                             if (element instanceof FileCopyPackagingElement copyPackagingElement) {
                                 VirtualFile file = copyPackagingElement.findFile();
                                 if (file != null) {

@@ -34,8 +34,7 @@ import consulo.usage.*;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,30 +52,30 @@ import java.util.regex.Pattern;
 public class ConflictsDialog extends DialogWrapper {
     private static final int SHOW_CONFLICTS_EXIT_CODE = 4;
 
-    @Nonnull
+    
     private Collection<LocalizeValue> myConflictDescriptions;
     private MultiMap<PsiElement, LocalizeValue> myElementConflictDescription;
     private final Project myProject;
     private Runnable myDoRefactoringRunnable;
     private final boolean myCanShowConflictsInView;
-    @Nonnull
+    
     private LocalizeValue myCommandName;
 
-    public ConflictsDialog(@Nonnull Project project, @Nonnull MultiMap<PsiElement, LocalizeValue> conflictDescriptions) {
+    public ConflictsDialog(Project project, MultiMap<PsiElement, LocalizeValue> conflictDescriptions) {
         this(project, conflictDescriptions, null, true, true);
     }
 
     public ConflictsDialog(
-        @Nonnull Project project,
-        @Nonnull MultiMap<PsiElement, LocalizeValue> conflictDescriptions,
+        Project project,
+        MultiMap<PsiElement, LocalizeValue> conflictDescriptions,
         @Nullable Runnable doRefactoringRunnable
     ) {
         this(project, conflictDescriptions, doRefactoringRunnable, true, true);
     }
 
     public ConflictsDialog(
-        @Nonnull Project project,
-        @Nonnull MultiMap<PsiElement, LocalizeValue> conflictDescriptions,
+        Project project,
+        MultiMap<PsiElement, LocalizeValue> conflictDescriptions,
         @Nullable Runnable doRefactoringRunnable,
         boolean alwaysShowOkButton,
         boolean canShowConflictsInView
@@ -99,7 +98,7 @@ public class ConflictsDialog extends DialogWrapper {
     }
 
     @Deprecated
-    public ConflictsDialog(Project project, @Nonnull Collection<LocalizeValue> conflictDescriptions) {
+    public ConflictsDialog(Project project, Collection<LocalizeValue> conflictDescriptions) {
         super(project, true);
         myProject = project;
         myConflictDescriptions = conflictDescriptions;
@@ -111,12 +110,12 @@ public class ConflictsDialog extends DialogWrapper {
 
     @Deprecated
     @SuppressWarnings("deprecation")
-    public ConflictsDialog(Project project, @Nonnull LocalizeValue... conflictDescriptions) {
+    public ConflictsDialog(Project project, LocalizeValue... conflictDescriptions) {
         this(project, Arrays.asList(conflictDescriptions));
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         Action okAction = getOKAction();
         boolean showUsagesButton = myElementConflictDescription != null && myCanShowConflictsInView;
@@ -163,7 +162,7 @@ public class ConflictsDialog extends DialogWrapper {
         return panel;
     }
 
-    public void setCommandName(@Nonnull LocalizeValue commandName) {
+    public void setCommandName(LocalizeValue commandName) {
         myCommandName = commandName;
     }
 
@@ -214,7 +213,7 @@ public class ConflictsDialog extends DialogWrapper {
 
                 usages[i++] = isRead || isWrite
                     ? new ReadWriteAccessUsageInfo2UsageAdapter(new UsageInfo(element), isRead, isWrite) {
-                    @Nonnull
+                    
                     @Override
                     public UsagePresentation getPresentation() {
                         UsagePresentation usagePresentation = super.getPresentation();
@@ -222,7 +221,7 @@ public class ConflictsDialog extends DialogWrapper {
                     }
                 }
                     : new UsageInfo2UsageAdapter(new UsageInfo(element)) {
-                    @Nonnull
+                    
                     @Override
                     public UsagePresentation getPresentation() {
                         UsagePresentation usagePresentation = super.getPresentation();
@@ -248,7 +247,7 @@ public class ConflictsDialog extends DialogWrapper {
                 " (" + Pattern.compile("<[^<>]*>").matcher(StringUtil.join(elementConflicts, "\n")).replaceAll("") + ")";
             return new UsagePresentation() {
                 @Override
-                @Nonnull
+                
                 public TextChunk[] getText() {
                     TextChunk[] chunks = usagePresentation.getText();
                     return ArrayUtil.append(
@@ -261,7 +260,7 @@ public class ConflictsDialog extends DialogWrapper {
                 }
 
                 @Override
-                @Nonnull
+                
                 public String getPlainText() {
                     return usagePresentation.getPlainText() + conflictDescription;
                 }
@@ -284,11 +283,11 @@ public class ConflictsDialog extends DialogWrapper {
                 .replaceAll("");
 
             @Override
-            @Nonnull
+            
             public UsagePresentation getPresentation() {
                 return new UsagePresentation() {
                     @Override
-                    @Nonnull
+                    
                     public TextChunk[] getText() {
                         return new TextChunk[0];
                     }
@@ -305,7 +304,7 @@ public class ConflictsDialog extends DialogWrapper {
                     }
 
                     @Override
-                    @Nonnull
+                    
                     public String getPlainText() {
                         return myConflictDescription;
                     }

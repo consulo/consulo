@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
@@ -36,15 +35,15 @@ public class TableUtil {
   }
 
   public interface ItemChecker {
-    boolean isOperationApplyable(@Nonnull TableModel model, int row);
+    boolean isOperationApplyable(TableModel model, int row);
   }
 
-  @Nonnull
-  public static List<Object[]> removeSelectedItems(@Nonnull JTable table) {
+  
+  public static List<Object[]> removeSelectedItems(JTable table) {
     return removeSelectedItems(table, null);
   }
 
-  public static void selectRows(@Nonnull JTable table, @Nonnull int[] viewRows) {
+  public static void selectRows(JTable table, int[] viewRows) {
     ListSelectionModel selectionModel = table.getSelectionModel();
     selectionModel.clearSelection();
     int count = table.getRowCount();
@@ -55,7 +54,7 @@ public class TableUtil {
     }
   }
 
-  public static void scrollSelectionToVisible(@Nonnull JTable table){
+  public static void scrollSelectionToVisible(JTable table){
     ListSelectionModel selectionModel = table.getSelectionModel();
     int maxSelectionIndex = selectionModel.getMaxSelectionIndex();
     int minSelectionIndex = selectionModel.getMinSelectionIndex();
@@ -72,8 +71,8 @@ public class TableUtil {
     table.scrollRectToVisible(new Rectangle(selectPoint, new Dimension(minCellRect.width / 2,allHeight)));
   }
 
-  @Nonnull
-  public static List<Object[]> removeSelectedItems(@Nonnull JTable table, @Nullable ItemChecker applyable) {
+  
+  public static List<Object[]> removeSelectedItems(JTable table, @Nullable ItemChecker applyable) {
     final TableModel model = table.getModel();
     if (!(model instanceof ItemRemovable)) {
       throw new RuntimeException("model must be instance of ItemRemovable");
@@ -100,7 +99,7 @@ public class TableUtil {
     return ContainerUtil.reverse(removedItems);
   }
 
-  public static boolean doRemoveSelectedItems(@Nonnull JTable table, @Nonnull ItemRemovable itemRemovable, @Nullable ItemChecker applyable) {
+  public static boolean doRemoveSelectedItems(JTable table, ItemRemovable itemRemovable, @Nullable ItemChecker applyable) {
     if (table.isEditing()) {
       table.getCellEditor().stopCellEditing();
     }
@@ -140,7 +139,7 @@ public class TableUtil {
     return true;
   }
 
-  public static int moveSelectedItemsUp(@Nonnull JTable table) {
+  public static int moveSelectedItemsUp(JTable table) {
     if (table.isEditing()){
       table.getCellEditor().stopCellEditing();
     }
@@ -167,7 +166,7 @@ public class TableUtil {
     return counter;
   }
 
-  public static int moveSelectedItemsDown(@Nonnull JTable table) {
+  public static int moveSelectedItemsDown(JTable table) {
     if (table.isEditing()){
       table.getCellEditor().stopCellEditing();
     }
@@ -194,7 +193,7 @@ public class TableUtil {
     return counter;
   }
 
-  public static void editCellAt(@Nonnull JTable table, int row, int column) {
+  public static void editCellAt(JTable table, int row, int column) {
     if (table.editCellAt(row, column)) {
       Component component = table.getEditorComponent();
       if (component != null) {
@@ -203,7 +202,7 @@ public class TableUtil {
     }
   }
 
-  public static void stopEditing(@Nonnull JTable table) {
+  public static void stopEditing(JTable table) {
     if (table.isEditing()) {
       TableCellEditor cellEditor = table.getCellEditor();
       if (cellEditor != null) {
@@ -223,12 +222,12 @@ public class TableUtil {
     }
   }
 
-  public static void ensureSelectionExists(@Nonnull JTable table) {
+  public static void ensureSelectionExists(JTable table) {
     if (table.getSelectedRow() != -1 || table.getRowCount() == 0) return;
     table.setRowSelectionInterval(0, 0);
   }
 
-  public static void setupCheckboxColumn(@Nonnull JTable table, int columnIndex) {
+  public static void setupCheckboxColumn(JTable table, int columnIndex) {
     TableColumnModel cModel = table.getColumnModel();
     setupCheckboxColumn(cModel.getColumn(columnIndex), cModel.getColumnMargin());
   }
@@ -239,11 +238,11 @@ public class TableUtil {
    * Or use {@link #setupCheckboxColumn(TableColumn, int)} with {@link TableColumnModel#getColumnMargin()} accounted for.
    */
   @Deprecated
-  public static void setupCheckboxColumn(@Nonnull TableColumn column) {
+  public static void setupCheckboxColumn(TableColumn column) {
     setupCheckboxColumn(column, 0);
   }
 
-  public static void setupCheckboxColumn(@Nonnull TableColumn column, int additionalWidth) {
+  public static void setupCheckboxColumn(TableColumn column, int additionalWidth) {
     int checkboxWidth = new JCheckBox().getPreferredSize().width + additionalWidth;
     column.setResizable(false);
     column.setPreferredWidth(checkboxWidth);
@@ -251,7 +250,7 @@ public class TableUtil {
     column.setMinWidth(checkboxWidth);
   }
 
-  public static void updateScroller(@Nonnull JTable table) {
+  public static void updateScroller(JTable table) {
     JScrollPane scrollPane = UIUtil.getParentOfType(JScrollPane.class, table);
     if (scrollPane != null) {
       scrollPane.revalidate();

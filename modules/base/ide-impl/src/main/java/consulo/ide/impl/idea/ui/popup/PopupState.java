@@ -5,9 +5,8 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -25,22 +24,22 @@ public abstract class PopupState<Popup> {
   private long timeHiddenAt;
 
 
-  @Nonnull
+  
   public static PopupState<JBPopup> forPopup() {
     return new JBPopupState();
   }
 
-  @Nonnull
+  
   public static PopupState<JPopupMenu> forPopupMenu() {
     return new JPopupMenuState();
   }
 
-  @Nonnull
+  
   public static PopupState<Balloon> forBalloon() {
     return new BalloonState();
   }
 
-  public void prepareToShow(@Nonnull Popup popup) {
+  public void prepareToShow(Popup popup) {
     hidePopup();
     addListener(popup);
     reference = new WeakReference<>(popup);
@@ -73,13 +72,13 @@ public abstract class PopupState<Popup> {
     return reference == null ? null : reference.get();
   }
 
-  abstract void addListener(@Nonnull Popup popup);
+  abstract void addListener(Popup popup);
 
-  abstract void removeListener(@Nonnull Popup popup);
+  abstract void removeListener(Popup popup);
 
-  abstract boolean isShowing(@Nonnull Popup popup);
+  abstract boolean isShowing(Popup popup);
 
-  abstract void hide(@Nonnull Popup popup);
+  abstract void hide(Popup popup);
 
   void onHide() {
     Popup popup = getPopup();
@@ -92,28 +91,28 @@ public abstract class PopupState<Popup> {
 
   private static final class JBPopupState extends PopupState<JBPopup> implements JBPopupListener {
     @Override
-    void addListener(@Nonnull JBPopup popup) {
+    void addListener(JBPopup popup) {
       popup.addListener(this);
     }
 
     @Override
-    void removeListener(@Nonnull JBPopup popup) {
+    void removeListener(JBPopup popup) {
       popup.removeListener(this);
     }
 
     @Override
-    boolean isShowing(@Nonnull JBPopup popup) {
+    boolean isShowing(JBPopup popup) {
       return popup.isVisible();
     }
 
     @Override
-    void hide(@Nonnull JBPopup popup) {
+    void hide(JBPopup popup) {
       popup.cancel();
       removeListener(popup);
     }
 
     @Override
-    public void onClosed(@Nonnull LightweightWindowEvent event) {
+    public void onClosed(LightweightWindowEvent event) {
       onHide();
     }
   }
@@ -121,22 +120,22 @@ public abstract class PopupState<Popup> {
 
   private static final class JPopupMenuState extends PopupState<JPopupMenu> implements PopupMenuListener {
     @Override
-    void addListener(@Nonnull JPopupMenu menu) {
+    void addListener(JPopupMenu menu) {
       menu.addPopupMenuListener(this);
     }
 
     @Override
-    void removeListener(@Nonnull JPopupMenu menu) {
+    void removeListener(JPopupMenu menu) {
       menu.removePopupMenuListener(this);
     }
 
     @Override
-    boolean isShowing(@Nonnull JPopupMenu menu) {
+    boolean isShowing(JPopupMenu menu) {
       return menu.isShowing();
     }
 
     @Override
-    void hide(@Nonnull JPopupMenu menu) {
+    void hide(JPopupMenu menu) {
       menu.setVisible(false);
       removeListener(menu);
     }
@@ -158,29 +157,29 @@ public abstract class PopupState<Popup> {
 
   private static final class BalloonState extends PopupState<Balloon> implements JBPopupListener {
     @Override
-    void addListener(@Nonnull Balloon balloon) {
+    void addListener(Balloon balloon) {
       balloon.addListener(this);
     }
 
     @Override
-    void removeListener(@Nonnull Balloon balloon) {
+    void removeListener(Balloon balloon) {
       // there is no method to remove a listener from a balloon
       // we assume that all listeners will be removed when it is hidden
     }
 
     @Override
-    boolean isShowing(@Nonnull Balloon balloon) {
+    boolean isShowing(Balloon balloon) {
       return !balloon.isDisposed();
     }
 
     @Override
-    void hide(@Nonnull Balloon balloon) {
+    void hide(Balloon balloon) {
       balloon.hide();
       removeListener(balloon);
     }
 
     @Override
-    public void onClosed(@Nonnull LightweightWindowEvent event) {
+    public void onClosed(LightweightWindowEvent event) {
       onHide();
     }
   }

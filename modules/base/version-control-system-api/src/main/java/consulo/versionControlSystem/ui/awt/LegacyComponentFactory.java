@@ -25,8 +25,7 @@ import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,8 +41,8 @@ public interface LegacyComponentFactory {
                                              List<FilePath> originalFiles,
                                              String prompt,
                                              VcsShowConfirmationOption confirmationOption,
-                                             @Nonnull LocalizeValue okActionName,
-                                             @Nonnull LocalizeValue cancelActionName,
+                                             LocalizeValue okActionName,
+                                             LocalizeValue cancelActionName,
                                              boolean showDoNotAskOption);
 
     LegacyDialog createSelectFilesDialog(Project project,
@@ -67,8 +66,8 @@ public interface LegacyComponentFactory {
                                                           boolean selectableFiles,
                                                           boolean deletableFiles);
 
-    ChangesBrowserTree<FilePath> createFilePathChangesTreeList(@Nonnull Project project,
-                                                               @Nonnull List<FilePath> originalFiles,
+    ChangesBrowserTree<FilePath> createFilePathChangesTreeList(Project project,
+                                                               List<FilePath> originalFiles,
                                                                boolean showCheckboxes,
                                                                boolean highlightProblems,
                                                                @Nullable Runnable inclusionListener);

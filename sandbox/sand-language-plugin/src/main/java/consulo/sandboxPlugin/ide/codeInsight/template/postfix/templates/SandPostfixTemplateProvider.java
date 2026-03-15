@@ -23,7 +23,6 @@ import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.psi.PsiFile;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -32,7 +31,7 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class SandPostfixTemplateProvider extends PostfixTemplateProvider {
-  @Nonnull
+  
   @Override
   public Set<PostfixTemplate> buildTemplates() {
     return Set.of(new TestTemplate(this), new DDTemplate(this));
@@ -44,22 +43,22 @@ public class SandPostfixTemplateProvider extends PostfixTemplateProvider {
   }
 
   @Override
-  public void preExpand(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public void preExpand(PsiFile file, Editor editor) {
 
   }
 
   @Override
-  public void afterExpand(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public void afterExpand(PsiFile file, Editor editor) {
 
   }
 
-  @Nonnull
+  
   @Override
-  public PsiFile preCheck(@Nonnull PsiFile copyFile, @Nonnull Editor realEditor, int currentOffset) {
+  public PsiFile preCheck(PsiFile copyFile, Editor realEditor, int currentOffset) {
     return copyFile;
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return SandLanguage.INSTANCE;

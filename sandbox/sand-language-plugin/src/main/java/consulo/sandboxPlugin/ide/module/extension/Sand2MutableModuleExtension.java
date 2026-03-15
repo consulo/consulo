@@ -24,15 +24,14 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 30.08.14
  */
 public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements MutableModuleExtension<Sand2ModuleExtension> {
-  public Sand2MutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
+  public Sand2MutableModuleExtension(String id, ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }
 
@@ -42,14 +41,14 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
   }
 
   @Override
-  public boolean isModified(@Nonnull Sand2ModuleExtension originalExtension) {
+  public boolean isModified(Sand2ModuleExtension originalExtension) {
     return myIsEnabled != originalExtension.isEnabled();
   }
 
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
+  public Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
     VerticalLayout vertical = VerticalLayout.create();
     vertical.add(CheckBox.create(LocalizeValue.localizeTODO("Check Me (New UI)")));
     return vertical;

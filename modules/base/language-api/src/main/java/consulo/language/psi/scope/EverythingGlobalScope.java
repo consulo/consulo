@@ -20,7 +20,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -33,19 +32,19 @@ public class EverythingGlobalScope extends GlobalSearchScope {
   public EverythingGlobalScope() {
   }
 
-  @Nonnull
+  
   @Override
   public String getDisplayName() {
     return "All Places";
   }
 
   @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return true;
   }
 
@@ -55,7 +54,7 @@ public class EverythingGlobalScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return true;
   }
 
@@ -64,15 +63,15 @@ public class EverythingGlobalScope extends GlobalSearchScope {
     return true;
   }
 
-  @Nonnull
+  
   @Override
-  public GlobalSearchScope union(@Nonnull SearchScope scope) {
+  public GlobalSearchScope union(SearchScope scope) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public SearchScope intersectWith(@Nonnull SearchScope scope2) {
+  public SearchScope intersectWith(SearchScope scope2) {
     return scope2;
   }
 }

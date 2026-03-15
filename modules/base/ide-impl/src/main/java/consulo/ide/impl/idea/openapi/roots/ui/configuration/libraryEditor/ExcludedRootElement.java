@@ -20,16 +20,15 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class ExcludedRootElement extends LibraryTableTreeContentElement<ExcludedRootElement> {
-  @Nonnull
+  
   private final String myUrl;
 
-  public ExcludedRootElement(@Nonnull NodeDescriptor parentDescriptor, String rootUrl, @Nonnull String excludedUrl) {
+  public ExcludedRootElement(NodeDescriptor parentDescriptor, String rootUrl, String excludedUrl) {
     super(parentDescriptor);
     myUrl = excludedUrl;
     if (excludedUrl.startsWith(rootUrl)) {
@@ -43,7 +42,7 @@ public class ExcludedRootElement extends LibraryTableTreeContentElement<Excluded
     setIcon(AllIcons.Modules.ExcludeRoot);
   }
 
-  @Nonnull
+  
   public String getUrl() {
     return myUrl;
   }

@@ -20,8 +20,7 @@ import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.ui.TestTreeView;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
@@ -43,7 +42,7 @@ public class SMTRunnerTestTreeView extends TestTreeView {
 
     @Nullable
     @Override
-    public SMTestProxy getSelectedTest(@Nonnull TreePath selectionPath) {
+    public SMTestProxy getSelectedTest(TreePath selectionPath) {
         Object lastComponent = selectionPath.getLastPathComponent();
         assert lastComponent != null;
 
@@ -70,7 +69,7 @@ public class SMTRunnerTestTreeView extends TestTreeView {
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (SM_TEST_RUNNER_VIEW == dataId) {
             return this;
         }

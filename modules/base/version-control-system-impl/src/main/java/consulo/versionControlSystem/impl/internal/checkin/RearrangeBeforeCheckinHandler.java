@@ -30,8 +30,7 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +41,7 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
     private final Project myProject;
     private final CheckinProjectPanel myPanel;
 
-    public RearrangeBeforeCheckinHandler(@Nonnull Project project, @Nonnull CheckinProjectPanel panel) {
+    public RearrangeBeforeCheckinHandler(Project project, CheckinProjectPanel panel) {
         myProject = project;
         myPanel = panel;
     }

@@ -16,11 +16,8 @@
 package consulo.execution.debug.breakpoint.ui;
 
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -40,17 +37,17 @@ public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
     return false;
   }
 
-  protected XBreakpointGroupingRule(@Nonnull @NonNls String id, @NonNls @Nls String presentableName) {
+  protected XBreakpointGroupingRule(String id, String presentableName) {
     myId = id;
     myPresentableName = presentableName;
   }
 
-  @Nonnull
+  
   public String getPresentableName() {
     return myPresentableName;
   }
 
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
@@ -60,7 +57,7 @@ public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
   }
 
   @Nullable
-  public abstract G getGroup(@Nonnull B breakpoint, @Nonnull Collection<G> groups);
+  public abstract G getGroup(B breakpoint, Collection<G> groups);
 
   @Nullable
   public Image getIcon() {

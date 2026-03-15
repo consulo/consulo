@@ -6,7 +6,6 @@ import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -54,7 +53,7 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
 
     @Override
     @RequiredUIAccess
-    public void elementsAdded(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list) {
+    public void elementsAdded(List<? extends SearchEverywhereFoundElementInfo> list) {
         UIAccess.assertIsUIThread();
         myBuffer.addEvent(new Event(Event.ADD, list));
         scheduleFlushBuffer();
@@ -62,7 +61,7 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
 
     @Override
     @RequiredUIAccess
-    public void elementsRemoved(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list) {
+    public void elementsRemoved(List<? extends SearchEverywhereFoundElementInfo> list) {
         UIAccess.assertIsUIThread();
         myBuffer.addEvent(new Event(Event.REMOVE, list));
         scheduleFlushBuffer();
@@ -70,7 +69,7 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
 
     @Override
     @RequiredUIAccess
-    public void searchFinished(@Nonnull Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors) {
+    public void searchFinished(Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors) {
         UIAccess.assertIsUIThread();
         myBuffer.flush(myFlushConsumer);
         myDelegateExecutor.execute(() -> myDelegateListener.searchFinished(hasMoreContributors));

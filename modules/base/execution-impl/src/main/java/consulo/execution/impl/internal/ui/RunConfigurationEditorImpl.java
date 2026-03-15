@@ -24,8 +24,7 @@ import consulo.execution.executor.Executor;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -61,7 +60,7 @@ public class RunConfigurationEditorImpl implements RunConfigurationEditor {
 
     @RequiredUIAccess
     @Override
-    public void editOne(@Nonnull RunnerAndConfigurationSettings configuration) {
+    public void editOne(RunnerAndConfigurationSettings configuration) {
         if (EarlyAccessProgramManager.is(RunConfigurationFileEditorEarlyAccessDescriptor.class)) {
             UIAccess.current().give(() -> {
                     Map<String, String> map = Map.of(RunConfigurationEditorProvider.RUN_CONFIGURATION_ID, configuration.getUniqueID());

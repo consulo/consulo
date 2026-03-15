@@ -21,7 +21,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.fileChooser.localize.FileChooserLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,8 +37,8 @@ public class FileChooserBundle extends AbstractBundle {
     super(BUNDLE);
   }
 
-  @Nonnull
-  public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
+  
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return INSTANCE.getMessage(key, params);
   }
 }

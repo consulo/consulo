@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -66,7 +65,7 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
     /**
      * Creates an icon of the size of the provided icon base.
      */
-    public static EmptyIcon create(@Nonnull Icon base) {
+    public static EmptyIcon create(Icon base) {
         return create(base.getIconWidth(), base.getIconHeight());
     }
 
@@ -97,13 +96,13 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
         myUseCache = icon.myUseCache;
     }
 
-    @Nonnull
+    
     @Override
     protected EmptyIcon copy() {
         return new EmptyIcon(this);
     }
 
-    @Nonnull
+    
     @Override
     public EmptyIcon withIconPreScaled(boolean preScaled) {
         if (myUseCache && isIconPreScaled() != preScaled) {
@@ -172,7 +171,7 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
             super(icon);
         }
 
-        @Nonnull
+        
         @Override
         protected EmptyIconUIResource copy() {
             return new EmptyIconUIResource(this);

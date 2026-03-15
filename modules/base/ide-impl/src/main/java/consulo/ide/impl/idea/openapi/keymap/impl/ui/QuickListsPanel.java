@@ -32,8 +32,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -205,7 +204,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         return new QuickList(myQuickListPanel.getDisplayName(), myQuickListPanel.getDescription(), ids, false);
     }
 
-    @Nonnull
+    
     private QuickList[] getCurrentQuickListIds() {
         if (myCurrentIndex > -1 && myQuickListsModel.getSize() > myCurrentIndex) {
             updateList(myCurrentIndex);
@@ -218,7 +217,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         return lists;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "quick.lists";
@@ -226,14 +225,14 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
 
     private static class MyQuickListCellRenderer extends ColoredListCellRenderer {
         @Override
-        protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
             setBackground(UIUtil.getListBackground(selected));
             QuickList quickList = (QuickList) value;
             append(quickList.getName());
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Quick Lists");
@@ -247,7 +246,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    public JComponent createComponent(Disposable uiDisposable) {
         myRoot = new JPanel(new BorderLayout());
         myRightPanel = new JPanel(new BorderLayout());
 

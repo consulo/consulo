@@ -29,8 +29,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -112,12 +111,12 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
         return Collections.unmodifiableMap(myViewMap);
     }
 
-    public boolean shouldConsume(@Nonnull Object buildId) {
+    public boolean shouldConsume(Object buildId) {
         return myBuildsMap.containsKey(buildId);
     }
 
     @Override
-    public void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
+    public void onEvent(Object buildId, BuildEvent event) {
         List<Runnable> runOnEdt = new SmartList<>();
         AbstractViewManager.BuildInfo buildInfo;
         if (event instanceof StartBuildEvent) {
@@ -452,13 +451,13 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
             return null;
         }
 
-        @Nonnull
+        
         @Override
         public String getNextOccurenceActionName() {
             return IdeLocalize.actionNextProblem().get();
         }
 
-        @Nonnull
+        
         @Override
         public String getPreviousOccurenceActionName() {
             return IdeLocalize.actionPreviousProblem().get();

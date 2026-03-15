@@ -18,7 +18,6 @@ package consulo.compiler;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,6 +27,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.MODULE)
 public interface ModuleAdditionalOutputDirectoriesProvider {
-    @Nonnull
+    
     List<ModuleAdditionalOutputDirectory> getOutputDirectories();
 }

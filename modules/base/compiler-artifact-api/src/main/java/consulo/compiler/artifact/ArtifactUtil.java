@@ -33,8 +33,7 @@ import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.function.Predicate;
@@ -46,7 +45,7 @@ public class ArtifactUtil {
   private ArtifactUtil() {
   }
 
-  public static CompositePackagingElement<?> copyFromRoot(@Nonnull CompositePackagingElement<?> oldRoot, @Nonnull Project project) {
+  public static CompositePackagingElement<?> copyFromRoot(CompositePackagingElement<?> oldRoot, Project project) {
     CompositePackagingElement<?> newRoot = (CompositePackagingElement<?>)copyElement(oldRoot, project);
     copyChildren(oldRoot, newRoot, project);
     return newRoot;
@@ -55,14 +54,14 @@ public class ArtifactUtil {
 
   public static void copyChildren(CompositePackagingElement<?> oldParent,
                                   CompositePackagingElement<?> newParent,
-                                  @Nonnull Project project) {
+                                  Project project) {
     for (PackagingElement<?> child : oldParent.getChildren()) {
       newParent.addOrFindChild(copyWithChildren(child, project));
     }
   }
 
-  @Nonnull
-  public static <S> PackagingElement<S> copyWithChildren(@Nonnull PackagingElement<S> element, @Nonnull Project project) {
+  
+  public static <S> PackagingElement<S> copyWithChildren(PackagingElement<S> element, Project project) {
     PackagingElement<S> copy = copyElement(element, project);
     if (element instanceof CompositePackagingElement<?>) {
       copyChildren((CompositePackagingElement<?>)element, (CompositePackagingElement<?>)copy, project);
@@ -70,31 +69,31 @@ public class ArtifactUtil {
     return copy;
   }
 
-  @Nonnull
-  private static <S> PackagingElement<S> copyElement(@Nonnull PackagingElement<S> element, @Nonnull Project project) {
+  
+  private static <S> PackagingElement<S> copyElement(PackagingElement<S> element, Project project) {
     //noinspection unchecked
     PackagingElement<S> copy = (PackagingElement<S>)element.getType().createEmpty(project);
     copy.loadState(ArtifactManager.getInstance(project), element.getState());
     return copy;
   }
 
-  public static <E extends PackagingElement<?>> boolean processPackagingElements(@Nonnull Artifact artifact,
+  public static <E extends PackagingElement<?>> boolean processPackagingElements(Artifact artifact,
                                                                                  @Nullable PackagingElementType<E> type,
-                                                                                 @Nonnull final Predicate<? super E> processor,
-                                                                                 @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                                                 final Predicate<? super E> processor,
+                                                                                 PackagingElementResolvingContext resolvingContext,
                                                                                  boolean processSubstitutions) {
     return processPackagingElements(artifact, type, new PackagingElementProcessor<>() {
       @Override
-      public boolean process(@Nonnull E e, @Nonnull PackagingElementPath path) {
+      public boolean process(E e, PackagingElementPath path) {
         return processor.test(e);
       }
     }, resolvingContext, processSubstitutions);
   }
 
-  public static <E extends PackagingElement<?>> boolean processPackagingElements(@Nonnull Artifact artifact,
+  public static <E extends PackagingElement<?>> boolean processPackagingElements(Artifact artifact,
                                                                                  @Nullable PackagingElementType<E> type,
-                                                                                 @Nonnull PackagingElementProcessor<? super E> processor,
-                                                                                 @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                                                 PackagingElementProcessor<? super E> processor,
+                                                                                 PackagingElementResolvingContext resolvingContext,
                                                                                  boolean processSubstitutions) {
     return processPackagingElements(artifact.getRootElement(),
                                     type,
@@ -106,8 +105,8 @@ public class ArtifactUtil {
 
   public static <E extends PackagingElement<?>> boolean processPackagingElements(PackagingElement<?> rootElement,
                                                                                  @Nullable PackagingElementType<E> type,
-                                                                                 @Nonnull PackagingElementProcessor<? super E> processor,
-                                                                                 @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                                                 PackagingElementProcessor<? super E> processor,
+                                                                                 PackagingElementResolvingContext resolvingContext,
                                                                                  boolean processSubstitutions,
                                                                                  ArtifactType artifactType) {
     return processElementRecursively(rootElement,
@@ -122,11 +121,11 @@ public class ArtifactUtil {
 
   private static <E extends PackagingElement<?>> boolean processElementsRecursively(List<? extends PackagingElement<?>> elements,
                                                                                     @Nullable PackagingElementType<E> type,
-                                                                                    @Nonnull PackagingElementProcessor<? super E> processor,
-                                                                                    @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                                                    PackagingElementProcessor<? super E> processor,
+                                                                                    PackagingElementResolvingContext resolvingContext,
                                                                                     boolean processSubstitutions,
                                                                                     ArtifactType artifactType,
-                                                                                    @Nonnull PackagingElementPath path,
+                                                                                    PackagingElementPath path,
                                                                                     Set<PackagingElement<?>> processed) {
     for (PackagingElement<?> element : elements) {
       if (!processElementRecursively(element, type, processor, resolvingContext, processSubstitutions, artifactType, path, processed)) {
@@ -141,7 +140,7 @@ public class ArtifactUtil {
                                                                  PackagingElementResolvingContext context) {
     processPackagingElements(artifact.getRootElement(), null, new PackagingElementProcessor<>() {
       @Override
-      public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
+      public boolean process(PackagingElement<?> element, PackagingElementPath path) {
         return processor.test(element);
       }
 
@@ -152,13 +151,13 @@ public class ArtifactUtil {
     }, context, true, artifact.getArtifactType());
   }
 
-  private static <E extends PackagingElement<?>> boolean processElementRecursively(@Nonnull PackagingElement<?> element,
+  private static <E extends PackagingElement<?>> boolean processElementRecursively(PackagingElement<?> element,
                                                                                    @Nullable PackagingElementType<E> type,
-                                                                                   @Nonnull PackagingElementProcessor<? super E> processor,
-                                                                                   @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                                                   PackagingElementProcessor<? super E> processor,
+                                                                                   PackagingElementResolvingContext resolvingContext,
                                                                                    boolean processSubstitutions,
                                                                                    ArtifactType artifactType,
-                                                                                   @Nonnull PackagingElementPath path,
+                                                                                   PackagingElementPath path,
                                                                                    Set<PackagingElement<?>> processed) {
     if (!processor.shouldProcess(element) || !processed.add(element)) {
       return true;
@@ -198,7 +197,7 @@ public class ArtifactUtil {
     return true;
   }
 
-  public static void removeDuplicates(@Nonnull CompositePackagingElement<?> parent) {
+  public static void removeDuplicates(CompositePackagingElement<?> parent) {
     List<PackagingElement<?>> prevChildren = new ArrayList<>();
 
     List<PackagingElement<?>> toRemove = new ArrayList<>();
@@ -237,7 +236,7 @@ public class ArtifactUtil {
   }
 
   @Nullable
-  public static String getDefaultArtifactOutputPath(@Nonnull String artifactName, @Nonnull Project project) {
+  public static String getDefaultArtifactOutputPath(String artifactName, Project project) {
     CompilerConfiguration extension = CompilerConfiguration.getInstance(project);
     String outputUrl = extension.getCompilerOutputUrl();
     if (outputUrl == null || outputUrl.length() == 0) {
@@ -248,19 +247,19 @@ public class ArtifactUtil {
     return VirtualFileUtil.urlToPath(outputUrl) + "/artifacts/" + FileUtil.sanitizeFileName(artifactName);
   }
 
-  public static <E extends PackagingElement<?>> boolean processElementsWithSubstitutions(@Nonnull List<? extends PackagingElement<?>> elements,
-                                                                                         @Nonnull PackagingElementResolvingContext context,
-                                                                                         @Nonnull ArtifactType artifactType,
-                                                                                         @Nonnull PackagingElementPath parentPath,
-                                                                                         @Nonnull PackagingElementProcessor<E> processor) {
+  public static <E extends PackagingElement<?>> boolean processElementsWithSubstitutions(List<? extends PackagingElement<?>> elements,
+                                                                                         PackagingElementResolvingContext context,
+                                                                                         ArtifactType artifactType,
+                                                                                         PackagingElementPath parentPath,
+                                                                                         PackagingElementProcessor<E> processor) {
     return processElementsWithSubstitutions(elements, context, artifactType, parentPath, processor, new HashSet<>());
   }
 
-  private static <E extends PackagingElement<?>> boolean processElementsWithSubstitutions(@Nonnull List<? extends PackagingElement<?>> elements,
-                                                                                          @Nonnull PackagingElementResolvingContext context,
-                                                                                          @Nonnull ArtifactType artifactType,
-                                                                                          @Nonnull PackagingElementPath parentPath,
-                                                                                          @Nonnull PackagingElementProcessor<E> processor,
+  private static <E extends PackagingElement<?>> boolean processElementsWithSubstitutions(List<? extends PackagingElement<?>> elements,
+                                                                                          PackagingElementResolvingContext context,
+                                                                                          ArtifactType artifactType,
+                                                                                          PackagingElementPath parentPath,
+                                                                                          PackagingElementProcessor<E> processor,
                                                                                           Set<PackagingElement<?>> processed) {
     for (PackagingElement<?> element : elements) {
       if (!processed.add(element)) {
@@ -286,10 +285,10 @@ public class ArtifactUtil {
     return true;
   }
 
-  public static List<PackagingElement<?>> findByRelativePath(@Nonnull CompositePackagingElement<?> parent,
-                                                             @Nonnull String relativePath,
-                                                             @Nonnull PackagingElementResolvingContext context,
-                                                             @Nonnull ArtifactType artifactType) {
+  public static List<PackagingElement<?>> findByRelativePath(CompositePackagingElement<?> parent,
+                                                             String relativePath,
+                                                             PackagingElementResolvingContext context,
+                                                             ArtifactType artifactType) {
     final List<PackagingElement<?>> result = new ArrayList<>();
     processElementsByRelativePath(parent,
                                   relativePath,
@@ -298,8 +297,8 @@ public class ArtifactUtil {
                                   PackagingElementPath.EMPTY,
                                   new PackagingElementProcessor<>() {
                                     @Override
-                                    public boolean process(@Nonnull PackagingElement<?> packagingElement,
-                                                           @Nonnull PackagingElementPath path) {
+                                    public boolean process(PackagingElement<?> packagingElement,
+                                                           PackagingElementPath path) {
                                       result.add(packagingElement);
                                       return true;
                                     }
@@ -307,12 +306,12 @@ public class ArtifactUtil {
     return result;
   }
 
-  public static boolean processElementsByRelativePath(@Nonnull CompositePackagingElement<?> parent,
-                                                      @Nonnull String relativePath,
-                                                      @Nonnull final PackagingElementResolvingContext context,
-                                                      @Nonnull final ArtifactType artifactType,
-                                                      @Nonnull PackagingElementPath parentPath,
-                                                      @Nonnull final PackagingElementProcessor<PackagingElement<?>> processor) {
+  public static boolean processElementsByRelativePath(CompositePackagingElement<?> parent,
+                                                      String relativePath,
+                                                      final PackagingElementResolvingContext context,
+                                                      final ArtifactType artifactType,
+                                                      PackagingElementPath parentPath,
+                                                      final PackagingElementProcessor<PackagingElement<?>> processor) {
     relativePath = StringUtil.trimStart(relativePath, "/");
     if (relativePath.length() == 0) {
       return true;
@@ -327,8 +326,8 @@ public class ArtifactUtil {
                                             artifactType,
                                             parentPath.appendComposite(parent), new PackagingElementProcessor<>() {
         @Override
-        public boolean process(@Nonnull PackagingElement<?> element,
-                               @Nonnull PackagingElementPath path) {
+        public boolean process(PackagingElement<?> element,
+                               PackagingElementPath path) {
           boolean process = false;
           if (element instanceof CompositePackagingElement && firstName.equals(((CompositePackagingElement<?>)element).getName())) {
             process = true;
@@ -358,20 +357,20 @@ public class ArtifactUtil {
       });
   }
 
-  public static boolean processDirectoryChildren(@Nonnull CompositePackagingElement<?> parent,
-                                                 @Nonnull PackagingElementPath pathToParent,
-                                                 @Nonnull String relativePath,
-                                                 @Nonnull final PackagingElementResolvingContext context,
-                                                 @Nonnull final ArtifactType artifactType,
-                                                 @Nonnull final PackagingElementProcessor<PackagingElement<?>> processor) {
+  public static boolean processDirectoryChildren(CompositePackagingElement<?> parent,
+                                                 PackagingElementPath pathToParent,
+                                                 String relativePath,
+                                                 final PackagingElementResolvingContext context,
+                                                 final ArtifactType artifactType,
+                                                 final PackagingElementProcessor<PackagingElement<?>> processor) {
     return processElementsByRelativePath(parent,
                                          relativePath,
                                          context,
                                          artifactType,
                                          pathToParent, new PackagingElementProcessor<>() {
         @Override
-        public boolean process(@Nonnull PackagingElement<?> element,
-                               @Nonnull PackagingElementPath path) {
+        public boolean process(PackagingElement<?> element,
+                               PackagingElementPath path) {
           if (element instanceof DirectoryPackagingElement) {
             List<PackagingElement<?>> children =
               ((DirectoryPackagingElement)element).getChildren();
@@ -397,8 +396,8 @@ public class ArtifactUtil {
     processPackagingElements(artifact, ExtractedDirectoryElementType.getInstance(), processor, context, processSubstitutions);
   }
 
-  public static Collection<Trinity<Artifact, PackagingElementPath, String>> findContainingArtifactsWithOutputPaths(@Nonnull final VirtualFile file,
-                                                                                                                   @Nonnull Project project,
+  public static Collection<Trinity<Artifact, PackagingElementPath, String>> findContainingArtifactsWithOutputPaths(final VirtualFile file,
+                                                                                                                   Project project,
                                                                                                                    Artifact[] artifacts) {
     final boolean isResourceFile = ResourceCompilerConfiguration.getInstance(project).isResourceFile(file);
     final List<Trinity<Artifact, PackagingElementPath, String>> result = new ArrayList<>();
@@ -406,7 +405,7 @@ public class ArtifactUtil {
     for (final Artifact artifact : artifacts) {
       processPackagingElements(artifact, null, new PackagingElementProcessor<>() {
         @Override
-        public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
+        public boolean process(PackagingElement<?> element, PackagingElementPath path) {
           if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
             VirtualFile root = ((FileOrDirectoryCopyPackagingElement)element).findFile();
             if (root != null && VirtualFileUtil.isAncestor(root, file, false)) {
@@ -436,9 +435,9 @@ public class ArtifactUtil {
   }
 
   @Nullable
-  private static String getRelativePathInSources(@Nonnull VirtualFile file,
-                                                 @Nonnull ModuleOutputPackagingElement moduleElement,
-                                                 @Nonnull PackagingElementResolvingContext context) {
+  private static String getRelativePathInSources(VirtualFile file,
+                                                 ModuleOutputPackagingElement moduleElement,
+                                                 PackagingElementResolvingContext context) {
     for (VirtualFile sourceRoot : moduleElement.getSourceRoots(context)) {
       if (VirtualFileUtil.isAncestor(sourceRoot, file, true)) {
         return VirtualFileUtil.getRelativePath(file, sourceRoot, '/');
@@ -481,8 +480,8 @@ public class ArtifactUtil {
                                      artifactType,
                                      PackagingElementPath.EMPTY, new PackagingElementProcessor<>() {
         @Override
-        public boolean process(@Nonnull PackagingElement<?> element,
-                               @Nonnull PackagingElementPath elementPath) {
+        public boolean process(PackagingElement<?> element,
+                               PackagingElementPath elementPath) {
           //todo[nik] replace by method findSourceFile() in PackagingElement
           if (element instanceof CompositePackagingElement) {
             CompositePackagingElement<?> compositeElement = (CompositePackagingElement<?>)element;
@@ -518,9 +517,9 @@ public class ArtifactUtil {
     return result;
   }
 
-  public static boolean processParents(@Nonnull Artifact artifact,
-                                       @Nonnull PackagingElementResolvingContext context,
-                                       @Nonnull ParentElementProcessor processor,
+  public static boolean processParents(Artifact artifact,
+                                       PackagingElementResolvingContext context,
+                                       ParentElementProcessor processor,
                                        int maxLevel) {
     return processParents(artifact,
                           context,
@@ -530,9 +529,9 @@ public class ArtifactUtil {
                           new HashSet<>());
   }
 
-  private static boolean processParents(@Nonnull final Artifact artifact,
-                                        @Nonnull final PackagingElementResolvingContext context,
-                                        @Nonnull final ParentElementProcessor processor,
+  private static boolean processParents(final Artifact artifact,
+                                        final PackagingElementResolvingContext context,
+                                        final ParentElementProcessor processor,
                                         FList<Pair<Artifact, CompositePackagingElement<?>>> pathToElement,
                                         final int maxLevel,
                                         final Set<Artifact> processed) {
@@ -562,7 +561,7 @@ public class ArtifactUtil {
           }
 
           @Override
-          public boolean process(@Nonnull ArtifactPackagingElement element, @Nonnull PackagingElementPath path) {
+          public boolean process(ArtifactPackagingElement element, PackagingElementPath path) {
             if (artifact.getName().equals(element.getArtifactName())) {
               FList<Pair<Artifact, CompositePackagingElement<?>>> currentPath = pathFromRoot;
               List<CompositePackagingElement<?>> parents = path.getParents();
@@ -595,8 +594,8 @@ public class ArtifactUtil {
     return true;
   }
 
-  public static void removeChildrenRecursively(@Nonnull CompositePackagingElement<?> element,
-                                               @Nonnull Predicate<PackagingElement<?>> condition) {
+  public static void removeChildrenRecursively(CompositePackagingElement<?> element,
+                                               Predicate<PackagingElement<?>> condition) {
     List<PackagingElement<?>> toRemove = new ArrayList<>();
     for (PackagingElement<?> child : element.getChildren()) {
       if (child instanceof CompositePackagingElement<?>) {
@@ -619,14 +618,14 @@ public class ArtifactUtil {
     return !StringUtil.isEmpty(outputPath) && artifact.getRootElement() instanceof ArtifactRootElement<?>;
   }
 
-  public static Set<Module> getModulesIncludedInArtifacts(@Nonnull Collection<? extends Artifact> artifacts,
-                                                          @Nonnull Project project) {
+  public static Set<Module> getModulesIncludedInArtifacts(Collection<? extends Artifact> artifacts,
+                                                          Project project) {
     // not interest in includeTestScope
     return getModulesIncludedInArtifacts(artifacts, project, new boolean[1]);
   }
 
-  public static Set<Module> getModulesIncludedInArtifacts(@Nonnull Collection<? extends Artifact> artifacts,
-                                                          @Nonnull Project project,
+  public static Set<Module> getModulesIncludedInArtifacts(Collection<? extends Artifact> artifacts,
+                                                          Project project,
                                                           boolean[] includeTestScope) {
     Set<Module> modules = new HashSet<>();
     PackagingElementResolvingContext resolvingContext = ArtifactManager.getInstance(project).getResolvingContext();
@@ -648,7 +647,7 @@ public class ArtifactUtil {
     return modules;
   }
 
-  public static Collection<Artifact> getArtifactsContainingModuleOutput(@Nonnull Module module) {
+  public static Collection<Artifact> getArtifactsContainingModuleOutput(Module module) {
     ArtifactManager artifactManager = ArtifactManager.getInstance(module.getProject());
     PackagingElementResolvingContext context = artifactManager.getResolvingContext();
     Set<Artifact> result = new HashSet<>();
@@ -687,7 +686,7 @@ public class ArtifactUtil {
   }
 
   @Nullable
-  private static PackagingElement<?> findArchiveOrDirectoryByName(@Nonnull CompositePackagingElement<?> parent, @Nonnull String name) {
+  private static PackagingElement<?> findArchiveOrDirectoryByName(CompositePackagingElement<?> parent, String name) {
     for (PackagingElement<?> element : parent.getChildren()) {
       if (element instanceof ArchivePackagingElement && ((ArchivePackagingElement)element).getArchiveFileName().equals(name) ||
         element instanceof DirectoryPackagingElement && ((DirectoryPackagingElement)element).getDirectoryName().equals(name)) {
@@ -697,10 +696,10 @@ public class ArtifactUtil {
     return null;
   }
 
-  @Nonnull
-  public static String suggestFileName(@Nonnull CompositePackagingElement<?> parent,
-                                       @Nonnull String prefix,
-                                       @Nonnull String suffix) {
+  
+  public static String suggestFileName(CompositePackagingElement<?> parent,
+                                       String prefix,
+                                       String suffix) {
     String name = prefix + suffix;
     int i = 2;
     while (findArchiveOrDirectoryByName(parent, name) != null) {
@@ -709,7 +708,7 @@ public class ArtifactUtil {
     return name;
   }
 
-  public static String trimForwardSlashes(@Nonnull String path) {
+  public static String trimForwardSlashes(String path) {
     while (path.length() != 0 && (path.charAt(0) == '/' || path.charAt(0) == File.separatorChar)) {
       path = path.substring(1);
     }
@@ -730,7 +729,7 @@ public class ArtifactUtil {
     return builder.toString();
   }
 
-  public static String appendToPath(@Nonnull String basePath, @Nonnull String relativePath) {
+  public static String appendToPath(String basePath, String relativePath) {
     boolean endsWithSlash = StringUtil.endsWithChar(basePath, '/') || StringUtil.endsWithChar(basePath, '\\');
     boolean startsWithSlash = StringUtil.startsWithChar(relativePath, '/') || StringUtil.startsWithChar(relativePath, '\\');
     String tail;

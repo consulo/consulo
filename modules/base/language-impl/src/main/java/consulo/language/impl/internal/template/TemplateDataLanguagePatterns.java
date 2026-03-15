@@ -33,7 +33,7 @@ import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

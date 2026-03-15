@@ -21,8 +21,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.HashMap;
@@ -54,7 +53,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     private final SpacingImpl myReadOnlySpacing = new SpacingImpl(0, 0, 0, true, false, true, 0, false, 0);
 
     @Override
-    public Alignment createAlignment(boolean applyToNonFirstBlocksOnLine, @Nonnull Alignment.Anchor anchor) {
+    public Alignment createAlignment(boolean applyToNonFirstBlocksOnLine, Alignment.Anchor anchor) {
         return new AlignmentImpl(applyToNonFirstBlocksOnLine, anchor);
     }
 
@@ -76,7 +75,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Override
-    public void setProgressTask(@Nonnull FormattingProgressCallback progressIndicator) {
+    public void setProgressTask(FormattingProgressCallback progressIndicator) {
         if (!FormatterUtil.isFormatterCalledExplicitly()) {
             return;
         }
@@ -123,7 +122,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Nullable
-    private static Couple<Block> getBlockAtOffset(@Nullable Block parent, @Nonnull Block block, int offset) {
+    private static Couple<Block> getBlockAtOffset(@Nullable Block parent, Block block, int offset) {
         TextRange textRange = block.getTextRange();
         int startOffset = textRange.getStartOffset();
         int endOffset = textRange.getEndOffset();
@@ -143,7 +142,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Nullable
-    private static Block findPreviousSibling(@Nonnull Block parent, Block block) {
+    private static Block findPreviousSibling(Block parent, Block block) {
         Block result = null;
         for (Block subBlock : parent.getSubBlocks()) {
             if (subBlock == block) {
@@ -167,30 +166,30 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Override
-    @Nonnull
+    
     public Spacing createSpacing(int minOffset, int maxOffset, int minLineFeeds, boolean keepLineBreaks, int keepBlankLines) {
         return getSpacingImpl(minOffset, maxOffset, minLineFeeds, false, false, keepLineBreaks, keepBlankLines, false, 0);
     }
 
     @Override
-    @Nonnull
+    
     public Spacing getReadOnlySpacing() {
         return myReadOnlySpacing;
     }
 
-    @Nonnull
+    
     @Override
-    public Spacing createDependentLFSpacing(int minSpaces, int maxSpaces, @Nonnull TextRange dependencyRange, boolean keepLineBreaks, int keepBlankLines, @Nonnull DependentSpacingRule rule) {
+    public Spacing createDependentLFSpacing(int minSpaces, int maxSpaces, TextRange dependencyRange, boolean keepLineBreaks, int keepBlankLines, DependentSpacingRule rule) {
         return new DependantSpacingImpl(minSpaces, maxSpaces, dependencyRange, keepLineBreaks, keepBlankLines, rule);
     }
 
-    @Nonnull
+    
     @Override
-    public Spacing createDependentLFSpacing(int minSpaces, int maxSpaces, @Nonnull List<TextRange> dependentRegion, boolean keepLineBreaks, int keepBlankLines, @Nonnull DependentSpacingRule rule) {
+    public Spacing createDependentLFSpacing(int minSpaces, int maxSpaces, List<TextRange> dependentRegion, boolean keepLineBreaks, int keepBlankLines, DependentSpacingRule rule) {
         return new DependantSpacingImpl(minSpaces, maxSpaces, dependentRegion, keepLineBreaks, keepBlankLines, rule);
     }
 
-    @Nonnull
+    
     private FormattingProgressCallback getProgressCallback() {
         FormattingProgressCallback result = myProgressTask.get();
         return result == null ? FormattingProgressCallback.EMPTY : result;
@@ -202,7 +201,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
         try {
             validateModel(model);
             SequentialTask task = new MyFormattingTask() {
-                @Nonnull
+                
                 @Override
                 protected FormatProcessor buildProcessor() {
                     FormatOptions options = new FormatOptions(settings, indentOptions, affectedRanges);
@@ -224,7 +223,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
                                            final CommonCodeStyleSettings.IndentOptions indentOptions,
                                            final TextRange affectedRange) throws IncorrectOperationException {
         SequentialTask task = new MyFormattingTask() {
-            @Nonnull
+            
             @Override
             protected FormatProcessor buildProcessor() {
                 FormatProcessor result = new FormatProcessor(model, rootBlock, settings, indentOptions, new FormatTextRanges(affectedRange, true), FormattingProgressCallback.EMPTY);
@@ -235,7 +234,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
         execute(task);
     }
 
-    private void execute(@Nonnull SequentialTask task) {
+    private void execute(SequentialTask task) {
         disableFormatting();
         Application application = ApplicationManager.getApplication();
         FormattingProgressTask progressTask = myProgressTask.getAndSet(null);
@@ -352,7 +351,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
         return offset;
     }
 
-    @Nonnull
+    
     private static FormatProcessor buildProcessorAndWrapBlocks(FormattingModel model,
                                                                CodeStyleSettings settings,
                                                                CommonCodeStyleSettings.IndentOptions indentOptions,
@@ -448,7 +447,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Nullable
-    private static WhiteSpace getWhiteSpaceAtOffset(int offset, @Nonnull FormatProcessor formatProcessor) {
+    private static WhiteSpace getWhiteSpaceAtOffset(int offset, FormatProcessor formatProcessor) {
         LeafBlockWrapper blockAfterOffset = formatProcessor.getBlockRangesMap().getBlockAtOrAfter(offset);
         if (blockAfterOffset != null) {
             if (!blockAfterOffset.contains(offset)) {
@@ -520,27 +519,27 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Override
-    public Indent getIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
+    public Indent getIndent(Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
         return getIndent(type, 0, relativeToDirectParent, enforceIndentToChildren);
     }
 
     @Override
-    public Indent getSmartIndent(@Nonnull Indent.Type type) {
+    public Indent getSmartIndent(Indent.Type type) {
         return new ExpandableIndent(type);
     }
 
     @Override
-    public Indent getSmartIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent) {
+    public Indent getSmartIndent(Indent.Type type, boolean relativeToDirectParent) {
         return new ExpandableIndent(type, relativeToDirectParent);
     }
 
     @Override
-    public Indent getIndent(@Nonnull Indent.Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
+    public Indent getIndent(Indent.Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
         return new IndentImpl(type, false, spaces, relativeToDirectParent, enforceIndentToChildren);
     }
 
     @Override
-    public Indent getIndent(@Nonnull Indent.Type type, boolean absolute, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
+    public Indent getIndent(Indent.Type type, boolean absolute, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
         return new IndentImpl(type, absolute, spaces, relativeToDirectParent, enforceIndentToChildren);
     }
 
@@ -550,19 +549,19 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Override
-    @Nonnull
+    
     public Spacing createSafeSpacing(boolean shouldKeepLineBreaks, int keepBlankLines) {
         return getSpacingImpl(0, 0, 0, false, true, shouldKeepLineBreaks, keepBlankLines, false, 0);
     }
 
     @Override
-    @Nonnull
+    
     public Spacing createKeepingFirstColumnSpacing(int minSpace, int maxSpace, boolean keepLineBreaks, int keepBlankLines) {
         return getSpacingImpl(minSpace, maxSpace, -1, false, false, keepLineBreaks, keepBlankLines, true, 0);
     }
 
     @Override
-    @Nonnull
+    
     public Spacing createSpacing(int minSpaces, int maxSpaces, int minLineFeeds, boolean keepLineBreaks, int keepBlankLines, int prefLineFeeds) {
         return getSpacingImpl(minSpaces, maxSpaces, minLineFeeds, false, false, keepLineBreaks, keepBlankLines, false, prefLineFeeds);
     }
@@ -629,7 +628,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Nullable
-    public <T> T runWithFormattingDisabled(@Nonnull Computable<T> runnable) {
+    public <T> T runWithFormattingDisabled(Computable<T> runnable) {
         disableFormatting();
         try {
             return runnable.compute();
@@ -664,7 +663,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
             myDone = true;
         }
 
-        @Nonnull
+        
         protected abstract FormatProcessor buildProcessor();
     }
 

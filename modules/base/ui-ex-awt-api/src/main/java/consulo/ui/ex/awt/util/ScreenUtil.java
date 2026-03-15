@@ -3,8 +3,7 @@ package consulo.ui.ex.awt.util;
 
 import consulo.ui.ex.awt.JBInsets;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,11 +20,11 @@ public final class ScreenUtil {
     private ScreenUtil() {
     }
 
-    public static boolean isVisible(@Nonnull Point location) {
+    public static boolean isVisible(Point location) {
         return getScreenRectangle(location).contains(location);
     }
 
-    public static boolean isVisible(@Nonnull Rectangle bounds) {
+    public static boolean isVisible(Rectangle bounds) {
         if (bounds.isEmpty()) {
             return false;
         }
@@ -112,11 +111,11 @@ public final class ScreenUtil {
         return new Rectangle(minX, minY, maxX - minX, maxY - minY);
     }
 
-    public static Rectangle getScreenRectangle(@Nonnull Point p) {
+    public static Rectangle getScreenRectangle(Point p) {
         return getScreenRectangle(p.x, p.y);
     }
 
-    public static Rectangle getScreenRectangle(@Nonnull Component component) {
+    public static Rectangle getScreenRectangle(Component component) {
         GraphicsConfiguration configuration = component.getGraphicsConfiguration();
         if (configuration != null) {
             return getScreenRectangle(configuration);
@@ -305,11 +304,11 @@ public final class ScreenUtil {
     }
 
 
-    public static void moveToFit(@Nonnull Rectangle rectangle, @Nonnull Rectangle container, @Nullable Insets padding) {
+    public static void moveToFit(Rectangle rectangle, Rectangle container, @Nullable Insets padding) {
         moveToFit(rectangle, container, padding, false);
     }
 
-    public static void moveToFit(@Nonnull Rectangle rectangle, @Nonnull Rectangle container, @Nullable Insets padding, boolean crop) {
+    public static void moveToFit(Rectangle rectangle, Rectangle container, @Nullable Insets padding, boolean crop) {
         Rectangle move = new Rectangle(rectangle);
         JBInsets.addTo(move, padding);
 

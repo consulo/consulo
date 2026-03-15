@@ -23,7 +23,6 @@ import consulo.usage.UsageTarget;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageGroupingRule;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +38,7 @@ class UsageNodeTreeBuilder {
   private UsageGroupingRule[] myGroupingRules;
   private UsageFilteringRule[] myFilteringRules;
 
-  UsageNodeTreeBuilder(@Nonnull UsageTarget[] targets, @Nonnull UsageGroupingRule[] groupingRules, @Nonnull UsageFilteringRule[] filteringRules, @Nonnull GroupNode root, @Nonnull Project project) {
+  UsageNodeTreeBuilder(UsageTarget[] targets, UsageGroupingRule[] groupingRules, UsageFilteringRule[] filteringRules, GroupNode root, Project project) {
     myTargets = targets;
     myGroupingRules = groupingRules;
     myFilteringRules = filteringRules;
@@ -47,19 +46,19 @@ class UsageNodeTreeBuilder {
     myProject = project;
   }
 
-  public void setGroupingRules(@Nonnull UsageGroupingRule[] rules) {
+  public void setGroupingRules(UsageGroupingRule[] rules) {
     myGroupingRules = rules;
   }
 
-  void setFilteringRules(@Nonnull UsageFilteringRule[] rules) {
+  void setFilteringRules(UsageFilteringRule[] rules) {
     myFilteringRules = rules;
   }
 
-  public boolean isVisible(@Nonnull Usage usage) {
+  public boolean isVisible(Usage usage) {
     return Arrays.stream(myFilteringRules).allMatch(rule -> rule.isVisible(usage, myTargets));
   }
 
-  UsageNode appendOrGet(@Nonnull Usage usage, boolean filterDuplicateLines, @Nonnull Consumer<? super Node> edtInsertedUnderQueue) {
+  UsageNode appendOrGet(Usage usage, boolean filterDuplicateLines, Consumer<? super Node> edtInsertedUnderQueue) {
     if (!isVisible(usage)) return null;
 
     boolean dumb = DumbService.isDumb(myProject);

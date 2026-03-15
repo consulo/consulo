@@ -22,7 +22,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ViewNavigationBar")
 public class ViewNavigationBarAction extends ToggleAction implements DumbAware {
@@ -31,13 +30,13 @@ public class ViewNavigationBarAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return UISettings.getInstance().SHOW_NAVIGATION_BAR;
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         UISettings uiSettings = UISettings.getInstance();
         uiSettings.SHOW_NAVIGATION_BAR = state;
         uiSettings.fireUISettingsChanged();

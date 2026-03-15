@@ -2,7 +2,6 @@
 package consulo.ui.ex.awt.tree;
 
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -30,9 +29,9 @@ public final class RestoreSelectionListener implements TreeSelectionListener {
                 // restore a path selection only if nothing is selected now
                 SimpleReference<TreePath> reference = new SimpleReference<>();
                 TreeVisitor visitor = new TreeVisitor.ByTreePath<>(path, o -> o) {
-                  @Nonnull
+                  
                   @Override
-                  protected Action visit(@Nonnull TreePath path, Object component) {
+                  protected Action visit(TreePath path, Object component) {
                     Action action = super.visit(path, component);
                     if (action == Action.CONTINUE || action == Action.INTERRUPT) reference.set(path);
                     return action;

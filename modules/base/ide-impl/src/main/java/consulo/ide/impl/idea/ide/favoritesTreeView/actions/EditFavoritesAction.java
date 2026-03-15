@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.ui.ex.awt.CommonActionsPanel;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -34,7 +33,7 @@ import java.util.Set;
 public class EditFavoritesAction extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         FavoritesViewTreeBuilder treeBuilder = e.getRequiredData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
         String listName = e.getRequiredData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
@@ -49,7 +48,7 @@ public class EditFavoritesAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         CommonActionsPanel.Buttons button = CommonActionsPanel.Buttons.EDIT;
         e.getPresentation().setText(button.getText());
         e.getPresentation().setIcon(button.getIcon());

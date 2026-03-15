@@ -17,8 +17,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.lang.Pair;
 import consulo.util.lang.TimeoutUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Objects;
@@ -29,7 +28,7 @@ public class TBItemButton extends TBItem {
     private static final int TEST_DELAY_MS = Integer.getInteger("touchbar.test.delay", 0);
     private static final Executor ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Touchbar buttons updater", 2);
 
-    final @Nullable TouchBarStats.AnActionStats actionStats;
+    final TouchBarStats.@Nullable AnActionStats actionStats;
 
     private @Nullable String myText;
     private @Nullable String myHint;
@@ -41,7 +40,7 @@ public class TBItemButton extends TBItem {
 
     // action parameters
     private @Nullable Runnable action;
-    private @Nullable NSTLibrary.Action nativeCallback;
+    private NSTLibrary.@Nullable Action nativeCallback;
     private boolean executeOnEdt = true;
     private ModalityState modality = null;
 
@@ -49,7 +48,7 @@ public class TBItemButton extends TBItem {
     protected int myFlags = 0;
     protected int updateOptions;
 
-    TBItemButton(@Nullable ItemListener listener, @Nullable TouchBarStats.AnActionStats actionStats) {
+    TBItemButton(@Nullable ItemListener listener, TouchBarStats.@Nullable AnActionStats actionStats) {
         super("button", listener);
         this.actionStats = actionStats;
     }
@@ -87,7 +86,7 @@ public class TBItemButton extends TBItem {
     }
 
     // convenience method
-    void setIconFromPresentation(@Nonnull Presentation presentation) {
+    void setIconFromPresentation(Presentation presentation) {
         Image icon;
         boolean needGetDisabledIcon = false;
         if (presentation.isEnabled()) {
@@ -105,7 +104,7 @@ public class TBItemButton extends TBItem {
     }
 
     // convenience method
-    void setIconAndTextFromPresentation(@Nonnull Presentation presentation, @Nullable TouchbarActionCustomizations touchBarAction) {
+    void setIconAndTextFromPresentation(Presentation presentation, @Nullable TouchbarActionCustomizations touchBarAction) {
         if (touchBarAction != null) {
             if (touchBarAction.isShowImage() && touchBarAction.isShowText()) {
                 setIconFromPresentation(presentation);

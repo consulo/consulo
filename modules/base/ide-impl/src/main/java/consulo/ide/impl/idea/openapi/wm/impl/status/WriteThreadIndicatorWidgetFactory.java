@@ -13,8 +13,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,20 +25,20 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 @ExtensionImpl(id = "writeActionWidget", order = "before memoryIndicatorWidget, last")
 public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory {
     @Override
-    @Nonnull
+    
     public String getDisplayName() {
         return UILocalize.statusBarWriteThreadWidgetName().get();
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project) {
+    public boolean isAvailable(Project project) {
         return project.getApplication().isInternal();
     }
 
     @Override
     public
-    @Nonnull
-    StatusBarWidget createWidget(@Nonnull Project project) {
+    
+    StatusBarWidget createWidget(Project project) {
         return new WriteThreadWidget(this);
     }
 
@@ -49,7 +48,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
     }
 
     @Override
-    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+    public boolean canBeEnabledOn(StatusBar statusBar) {
         return Application.get().isInternal();
     }
 
@@ -79,13 +78,13 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
             myFactory = factory;
         }
 
-        @Nonnull
+        
         @Override
         public String getId() {
             return myFactory.getId();
         }
 
-        @Nonnull
+        
         @Override
         public JComponent getComponent() {
             return myComponent;
@@ -99,7 +98,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
 
 
         @Override
-        public void install(@Nonnull StatusBar statusBar) {
+        public void install(StatusBar statusBar) {
             BaseApplication application = ObjectUtil.tryCast(Application.get(), BaseApplication.class);
             if (application == null) {
                 return;

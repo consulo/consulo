@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 /**
@@ -85,13 +84,13 @@ public final class HighlightSeverity implements Comparable<HighlightSeverity> {
      *             if two annotations with different severity levels cover the same text range, only
      *             the annotation with a higher severity level is displayed.
      */
-    public HighlightSeverity(@Nonnull String name, int val) {
+    public HighlightSeverity(String name, int val) {
         myName = name;
         myVal = val;
     }
 
     //read external only
-    public HighlightSeverity(@Nonnull Element element) {
+    public HighlightSeverity(Element element) {
         this(JDOMExternalizerUtil.readField(element, "myName"), Integer.valueOf(JDOMExternalizerUtil.readField(element, "myVal")));
     }
 
@@ -101,7 +100,7 @@ public final class HighlightSeverity implements Comparable<HighlightSeverity> {
     }
 
     @Override
-    public int compareTo(@Nonnull HighlightSeverity highlightSeverity) {
+    public int compareTo(HighlightSeverity highlightSeverity) {
         return myVal - highlightSeverity.myVal;
     }
 
@@ -132,7 +131,7 @@ public final class HighlightSeverity implements Comparable<HighlightSeverity> {
         return 31 * result + myVal;
     }
 
-    @Nonnull
+    
     public String getName() {
         return myName;
     }

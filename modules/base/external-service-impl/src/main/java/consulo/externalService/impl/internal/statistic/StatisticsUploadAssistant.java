@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -33,9 +32,9 @@ import java.util.function.Predicate;
 public class StatisticsUploadAssistant {
     private static final Logger LOG = Logger.getInstance(StatisticsUploadAssistant.class);
 
-    @Nonnull
+    
     public static Map<String, Set<PatchedUsage>> getPatchedUsages(
-        @Nonnull Map<String, Set<UsageDescriptor>> allUsages,
+        Map<String, Set<UsageDescriptor>> allUsages,
         Map<String, Set<UsageDescriptor>> sentUsageMap
     ) {
         Map<String, Set<PatchedUsage>> patchedUsages = mapToPatchedUsagesMap(allUsages);
@@ -70,9 +69,9 @@ public class StatisticsUploadAssistant {
         return patchedUsages;
     }
 
-    @Nonnull
+    
     private static Map<String, Set<PatchedUsage>> packCollection(
-        @Nonnull Map<String, Set<PatchedUsage>> patchedUsages,
+        Map<String, Set<PatchedUsage>> patchedUsages,
         Predicate<PatchedUsage> condition
     ) {
         Map<String, Set<PatchedUsage>> result = new LinkedHashMap<>();
@@ -86,8 +85,8 @@ public class StatisticsUploadAssistant {
         return result;
     }
 
-    @Nonnull
-    private static <T> Set<T> packCollection(@Nonnull Collection<T> set, @Nonnull Predicate<T> condition) {
+    
+    private static <T> Set<T> packCollection(Collection<T> set, Predicate<T> condition) {
         Set<T> result = new LinkedHashSet<>();
         for (T t : set) {
             if (condition.test(t)) {
@@ -99,8 +98,8 @@ public class StatisticsUploadAssistant {
 
     @Nullable
     public static <T extends UsageDescriptor> T findDescriptor(
-        @Nonnull Map<String, Set<T>> descriptors,
-        @Nonnull Pair<String, String> id
+        Map<String, Set<T>> descriptors,
+        Pair<String, String> id
     ) {
         Set<T> usages = descriptors.get(id.getFirst());
         if (usages == null) {
@@ -110,8 +109,8 @@ public class StatisticsUploadAssistant {
         return ContainerUtil.find(usages, t -> id.getSecond().equals(t.getKey()));
     }
 
-    @Nonnull
-    public static Map<String, Set<UsageDescriptor>> getAllUsages(@Nullable Project project, @Nonnull Set<String> disabledGroups) {
+    
+    public static Map<String, Set<UsageDescriptor>> getAllUsages(@Nullable Project project, Set<String> disabledGroups) {
         Map<String, Set<UsageDescriptor>> usageDescriptors = new LinkedHashMap<>();
 
         Application.get().getExtensionPoint(UsagesCollector.class).forEachExtensionSafe(usagesCollector -> {

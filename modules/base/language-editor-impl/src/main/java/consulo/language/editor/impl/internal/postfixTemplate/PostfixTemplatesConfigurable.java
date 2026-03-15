@@ -30,8 +30,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +75,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
             myShortcutComboBox.setEnabled(pluginEnabled);
         }
 
-        @Nonnull
+        
         @Override
         public Component get() {
             return myLayout;
@@ -85,7 +84,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
 
     private Configurable[] myChildren;
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "editing.postfixCompletion";
@@ -97,7 +96,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
         return "editor.preferences.completion";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Postfix Completion");
@@ -110,7 +109,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
         return list.toArray(new Configurable[list.size()]);
     }
 
-    @Nonnull
+    
     @Override
     public Configurable[] getConfigurables() {
         if (myChildren == null) {
@@ -119,16 +118,16 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
         return myChildren;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    protected Layout createPanel(@Nonnull Disposable uiDisposable) {
+    protected Layout createPanel(Disposable uiDisposable) {
         return new Layout();
     }
 
     @Override
     @RequiredUIAccess
-    protected boolean isModified(@Nonnull Layout component) {
+    protected boolean isModified(Layout component) {
         PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
         return component.myPostfixTemplatesEnabled.getValue() != templatesSettings.isPostfixTemplatesEnabled()
             || component.myCompletionEnabledCheckbox.getValue() != templatesSettings.isTemplatesCompletionEnabled()
@@ -137,7 +136,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
 
     @Override
     @RequiredUIAccess
-    protected void apply(@Nonnull Layout component) throws ConfigurationException {
+    protected void apply(Layout component) throws ConfigurationException {
         PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
 
         templatesSettings.setPostfixTemplatesEnabled(component.myPostfixTemplatesEnabled.getValue());
@@ -147,7 +146,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
 
     @Override
     @RequiredUIAccess
-    protected void reset(@Nonnull Layout component) {
+    protected void reset(Layout component) {
         PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
 
         component.myPostfixTemplatesEnabled.setValue(templatesSettings.isPostfixTemplatesEnabled());
@@ -159,7 +158,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
 
     @Override
     @RequiredUIAccess
-    protected void disposeUIResources(@Nonnull Layout component) {
+    protected void disposeUIResources(Layout component) {
         super.disposeUIResources(component);
 
         myChildren = null;

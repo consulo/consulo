@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPoint;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This filters can be used to prevent error highlighting (invalid code, unresolved references etc.) in files outside of project scope.
@@ -35,9 +34,9 @@ public abstract class ProblemHighlightFilter {
      * @param psiFile file to decide about
      * @return false if this filter disables highlighting for given file, true if filter enables highlighting or can't decide
      */
-    public abstract boolean shouldHighlight(@Nonnull PsiFile psiFile);
+    public abstract boolean shouldHighlight(PsiFile psiFile);
 
-    public boolean shouldProcessInBatch(@Nonnull PsiFile psiFile) {
+    public boolean shouldProcessInBatch(PsiFile psiFile) {
         return shouldHighlight(psiFile);
     }
 

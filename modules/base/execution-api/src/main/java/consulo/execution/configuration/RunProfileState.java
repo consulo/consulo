@@ -21,8 +21,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.process.ExecutionException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Describes a process which is ready to be started. Normally, a RunProfileState contains an initialized command line, set of environment
@@ -42,5 +41,5 @@ public interface RunProfileState {
    * @throws ExecutionException if the execution has failed.
    */
   @Nullable
-  ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException;
+  ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException;
 }

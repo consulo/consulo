@@ -20,8 +20,7 @@ import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -30,15 +29,15 @@ abstract public class CustomLiveTemplateBase implements CustomLiveTemplate {
    * Implementation should returns {@code true} if it has own lookup item in completion autopopup
    * and it is supposed that template should be expanded while completion auto-popup is active.
    */
-  public boolean hasCompletionItem(@Nonnull CustomTemplateCallback callback, int offset) {
+  public boolean hasCompletionItem(CustomTemplateCallback callback, int offset) {
     return false;
   }
 
   /**
    * Return lookup elements for popup that appears on ListTemplateAction (Ctrl + J)
    */
-  @Nonnull
-  public Collection<? extends CustomLiveTemplateLookupElement> getLookupElements(@Nonnull PsiFile file, @Nonnull Editor editor, int offset) {
+  
+  public Collection<? extends CustomLiveTemplateLookupElement> getLookupElements(PsiFile file, Editor editor, int offset) {
     return Collections.emptyList();
   }
 
@@ -53,7 +52,7 @@ abstract public class CustomLiveTemplateBase implements CustomLiveTemplate {
   }
 
   @Nullable
-  public String computeTemplateKeyWithoutContextChecking(@Nonnull CustomTemplateCallback callback) {
+  public String computeTemplateKeyWithoutContextChecking(CustomTemplateCallback callback) {
     return computeTemplateKey(callback);
   }
 

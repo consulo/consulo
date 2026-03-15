@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
 public abstract class SystemNotifications {
   private static final SystemNotifications NULL = new SystemNotifications() {
     @Override
-    public void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text) { }
+    public void notify(String notificationName, String title, String text) { }
   };
 
   public static SystemNotifications getInstance() {
@@ -40,5 +39,5 @@ public abstract class SystemNotifications {
     return true;
   }
 
-  public abstract void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text);
+  public abstract void notify(String notificationName, String title, String text);
 }

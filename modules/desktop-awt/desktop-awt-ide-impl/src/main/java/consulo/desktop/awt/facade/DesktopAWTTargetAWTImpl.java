@@ -36,8 +36,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
 import consulo.util.lang.BitUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -63,7 +62,7 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
 
         @RequiredUIAccess
         @Override
-        public void setTitle(@Nonnull String title) {
+        public void setTitle(String title) {
         }
     }
 
@@ -84,26 +83,26 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
         }
     }
 
-    @Nonnull
+   
     @Override
-    public Component wrap(@Nonnull java.awt.Component component) {
+    public Component wrap(java.awt.Component component) {
         return new TempComponentWrapper(component);
     }
 
     @Override
-    public Image wrap(@Nonnull Icon icon) {
+    public Image wrap(Icon icon) {
         return new DesktopImageOverIconImpl(icon);
     }
 
     @Override
-    @Nonnull
-    public java.awt.Dimension to(@Nonnull Size2D size) {
+   
+    public java.awt.Dimension to(Size2D size) {
         return JBUI.size(size.width(), size.height());
     }
 
     @Override
-    @Nonnull
-    public java.awt.Color to(@Nonnull RGBColor color) {
+   
+    public java.awt.Color to(RGBColor color) {
         return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
 
@@ -147,7 +146,7 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
 
     @Override
     @Contract("null -> null")
-    public Component from(@Nullable java.awt.Component component) {
+    public Component from(java.awt.@Nullable Component component) {
         if (component == null) {
             return null;
         }
@@ -181,7 +180,7 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
 
     @Override
     @Contract("null -> null")
-    public Window from(@Nullable java.awt.Window window) {
+    public Window from(java.awt.@Nullable Window window) {
         if (StartupError.hasStartupError) {
             return null;
         }
@@ -242,7 +241,7 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
 
     @Override
     @Contract("null -> null")
-    public Rectangle2D from(@Nullable java.awt.Rectangle rectangle) {
+    public Rectangle2D from(java.awt.@Nullable Rectangle rectangle) {
         if (rectangle == null) {
             return null;
         }
@@ -251,7 +250,7 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
 
     @Override
     @Contract("null -> null")
-    public ColorValue from(@Nullable java.awt.Color color) {
+    public ColorValue from(java.awt.@Nullable Color color) {
         if (color == null) {
             return null;
         }
@@ -277,7 +276,7 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
 
     @Override
     @Contract("null -> null")
-    public Image from(@Nullable javax.swing.Icon icon) {
+    public Image from(javax.swing.@Nullable Icon icon) {
         if (icon == null) {
             return null;
         }
@@ -289,9 +288,9 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
         throw new IllegalArgumentException(icon + "' is not supported");
     }
 
-    @Nonnull
+   
     @Override
-    public Font to(@Nonnull consulo.ui.font.Font font) {
+    public Font to(consulo.ui.font.Font font) {
         if (font instanceof DesktopFontImpl) {
             return ((DesktopFontImpl) font).getFont();
         }
@@ -340,11 +339,11 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
     }
 
     @Override
-    public java.awt.Image toAWTImage(@Nonnull Image image) {
+    public java.awt.Image toAWTImage(Image image) {
         return new DesktopAWTScalableImage(image);
     }
 
-    public static SimpleTextAttributes from(@Nonnull TextAttribute textAttribute) {
+    public static SimpleTextAttributes from(TextAttribute textAttribute) {
         int mask = 0;
 
         mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_PLAIN, BitUtil.isSet(textAttribute.getStyle(), TextAttribute.STYLE_PLAIN));

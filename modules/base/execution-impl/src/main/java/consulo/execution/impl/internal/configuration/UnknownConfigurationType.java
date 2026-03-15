@@ -23,7 +23,6 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -35,13 +34,13 @@ public class UnknownConfigurationType implements ConfigurationType {
 
   public static final String NAME = "Unknown";
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO(NAME);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getConfigurationTypeDescription() {
     return LocalizeValue.localizeTODO("Configuration which cannot be loaded due to some reasons");
@@ -53,7 +52,7 @@ public class UnknownConfigurationType implements ConfigurationType {
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return NAME;
   }

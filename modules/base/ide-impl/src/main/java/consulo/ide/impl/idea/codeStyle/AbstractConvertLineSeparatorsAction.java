@@ -30,7 +30,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -40,20 +39,20 @@ import java.io.IOException;
 public abstract class AbstractConvertLineSeparatorsAction extends ToggleAction {
     private static final Logger LOG = Logger.getInstance(AbstractConvertLineSeparatorsAction.class);
 
-    @Nonnull
+    
     private final String mySeparator;
 
-    protected AbstractConvertLineSeparatorsAction(@Nonnull LocalizeValue text, @Nonnull LineSeparator separator) {
+    protected AbstractConvertLineSeparatorsAction(LocalizeValue text, LineSeparator separator) {
         this(text, separator.getSeparatorString());
     }
 
-    protected AbstractConvertLineSeparatorsAction(@Nonnull LocalizeValue text, @Nonnull String separator) {
+    protected AbstractConvertLineSeparatorsAction(LocalizeValue text, String separator) {
         super(text);
         mySeparator = separator;
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return false;
@@ -65,7 +64,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends ToggleAction {
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         if (!state) {
             return;
         }
@@ -99,7 +98,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends ToggleAction {
         }
     }
 
-    public static boolean shouldProcess(@Nonnull VirtualFile file, @Nonnull Project project) {
+    public static boolean shouldProcess(VirtualFile file, Project project) {
         return !file.isDirectory()
             && file.isWritable()
             && !FileTypeRegistry.getInstance().isFileIgnored(file)
@@ -109,7 +108,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends ToggleAction {
     }
 
     @RequiredUIAccess
-    public static void changeLineSeparators(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull String newSeparator) {
+    public static void changeLineSeparators(Project project, VirtualFile virtualFile, String newSeparator) {
         FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
         Document document = fileDocumentManager.getCachedDocument(virtualFile);
         if (document != null) {

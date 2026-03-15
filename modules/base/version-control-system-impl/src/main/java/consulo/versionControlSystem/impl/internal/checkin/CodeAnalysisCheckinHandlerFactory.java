@@ -21,7 +21,6 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "code-analysis", order = "after optimize-imports")
 public class CodeAnalysisCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
-  @Nonnull
+  
   public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
     return new CodeAnalysisBeforeCheckinHandler(panel.getProject(), panel);
   }

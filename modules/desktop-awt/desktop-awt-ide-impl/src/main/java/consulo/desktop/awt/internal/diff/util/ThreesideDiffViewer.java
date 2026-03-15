@@ -36,27 +36,25 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ThreesideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  @Nonnull
+  
   protected final SimpleDiffPanel myPanel;
-  @Nonnull
+  
   protected final ThreesideContentPanel myContentPanel;
 
-  @Nonnull
+  
   private final List<T> myHolders;
 
-  @Nonnull
+  
   private final FocusTrackerSupport<ThreeSide> myFocusTrackerSupport;
 
-  public ThreesideDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request, @Nonnull EditorHolderFactory<T> factory) {
+  public ThreesideDiffViewer(DiffContext context, ContentDiffRequest request, EditorHolderFactory<T> factory) {
     super(context, request);
 
     myHolders = createEditorHolders(factory);
@@ -96,8 +94,8 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     myFocusTrackerSupport.updateContextHints(myRequest, myContext);
   }
 
-  @Nonnull
-  protected List<T> createEditorHolders(@Nonnull EditorHolderFactory<T> factory) {
+  
+  protected List<T> createEditorHolders(EditorHolderFactory<T> factory) {
     List<DiffContent> contents = myRequest.getContents();
 
     List<T> holders = new ArrayList<>(3);
@@ -114,7 +112,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     }
   }
 
-  @Nonnull
+  
   protected List<JComponent> createTitles() {
     return AWTDiffUtil.createSyncHeightComponents(AWTDiffUtil.createSimpleTitles(myRequest));
   }
@@ -123,7 +121,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
   // Getters
   //
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -136,28 +134,28 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     return getCurrentEditorHolder().getPreferredFocusedComponent();
   }
 
-  @Nonnull
+  
   public ThreeSide getCurrentSide() {
     return myFocusTrackerSupport.getCurrentSide();
   }
 
-  protected void setCurrentSide(@Nonnull ThreeSide side) {
+  protected void setCurrentSide(ThreeSide side) {
     myFocusTrackerSupport.setCurrentSide(side);
   }
 
-  @Nonnull
+  
   protected List<T> getEditorHolders() {
     return myHolders;
   }
 
-  @Nonnull
+  
   protected T getCurrentEditorHolder() {
     return getCurrentSide().select(getEditorHolders());
   }
 
   @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     if (VirtualFile.KEY == dataId) {
       return DiffImplUtil.getVirtualFile(myRequest, getCurrentSide());
     }
@@ -177,9 +175,9 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     return getCurrentSide().select(getRequest().getContents()).getNavigatable();
   }
 
-  public static <T extends EditorHolder> boolean canShowRequest(@Nonnull DiffContext context,
-                                                                @Nonnull DiffRequest request,
-                                                                @Nonnull EditorHolderFactory<T> factory) {
+  public static <T extends EditorHolder> boolean canShowRequest(DiffContext context,
+                                                                DiffRequest request,
+                                                                EditorHolderFactory<T> factory) {
     if (!(request instanceof ContentDiffRequest)) return false;
 
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
@@ -200,12 +198,12 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
 
   protected enum PartialDiffMode {LEFT_BASE, BASE_RIGHT, LEFT_RIGHT}
   protected class ShowPartialDiffAction extends DumbAwareAction {
-    @Nonnull
+    
     protected final ThreeSide mySide1;
-    @Nonnull
+    
     protected final ThreeSide mySide2;
 
-    public ShowPartialDiffAction(@Nonnull PartialDiffMode mode) {
+    public ShowPartialDiffAction(PartialDiffMode mode) {
       String id;
       switch (mode) {
         case LEFT_BASE:
@@ -231,12 +229,12 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       DiffRequest request = createRequest();
       DiffManager.getInstance().showDiff(myProject, request, new DiffDialogHints(null, myPanel));
     }
 
-    @Nonnull
+    
     protected SimpleDiffRequest createRequest() {
       List<DiffContent> contents = myRequest.getContents();
       List<String> titles = myRequest.getContentTitles();

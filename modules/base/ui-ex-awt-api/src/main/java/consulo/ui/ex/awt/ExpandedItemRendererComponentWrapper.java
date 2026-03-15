@@ -19,8 +19,7 @@ import consulo.ui.ex.awt.accessibility.AbstractAccessibleContextDelegate;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -33,7 +32,7 @@ public class ExpandedItemRendererComponentWrapper extends JComponent {
    * @deprecated use {@link #wrap(Component)}} instead to create an instance
    */
   @Deprecated
-  private ExpandedItemRendererComponentWrapper(@Nonnull final Component rendererComponent) {
+  private ExpandedItemRendererComponentWrapper(final Component rendererComponent) {
     add(rendererComponent);
     setOpaque(false);
     setLayout(new AbstractLayoutManager() {
@@ -59,16 +58,16 @@ public class ExpandedItemRendererComponentWrapper extends JComponent {
   private ExpandedItemRendererComponentWrapper() {
   }
 
-  @Nonnull
-  public static ExpandedItemRendererComponentWrapper wrap(@Nonnull Component rendererComponent) {
+  
+  public static ExpandedItemRendererComponentWrapper wrap(Component rendererComponent) {
     if (rendererComponent instanceof Accessible) {
       return new MyComponent(rendererComponent, (Accessible)rendererComponent);
     }
     return new ExpandedItemRendererComponentWrapper(rendererComponent);
   }
 
-  @Nonnull
-  public static Component unwrap(@Nonnull Component rendererComponent) {
+  
+  public static Component unwrap(Component rendererComponent) {
     if (rendererComponent instanceof ExpandedItemRendererComponentWrapper) {
       Component component = ((ExpandedItemRendererComponentWrapper)rendererComponent).getDelegate();
       return component;
@@ -80,7 +79,7 @@ public class ExpandedItemRendererComponentWrapper extends JComponent {
     private final Accessible myAccessible;
     private AccessibleContext myDefaultAccessibleContext;
 
-    MyComponent(@Nonnull Component comp, @Nonnull Accessible accessible) {
+    MyComponent(Component comp, Accessible accessible) {
       super(comp);
       myAccessible = accessible;
     }
@@ -106,7 +105,7 @@ public class ExpandedItemRendererComponentWrapper extends JComponent {
      * needs to come from the default implementation to avoid infinite parent/child cycle.
      */
     protected class AccessibleMyComponent extends AbstractAccessibleContextDelegate {
-      @Nonnull
+      
       @Override
       protected AccessibleContext getDelegate() {
         return myAccessible.getAccessibleContext();

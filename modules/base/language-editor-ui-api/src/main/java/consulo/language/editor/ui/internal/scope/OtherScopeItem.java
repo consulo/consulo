@@ -3,14 +3,13 @@ package consulo.language.editor.ui.internal.scope;
 
 import consulo.language.editor.internal.ModelScopeItem;
 import consulo.language.editor.scope.AnalysisScope;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class OtherScopeItem implements ModelScopeItem {
   private final AnalysisScope myScope;
 
   @Nullable
-  public static OtherScopeItem tryCreate(@Nonnull AnalysisScope scope) {
+  public static OtherScopeItem tryCreate(AnalysisScope scope) {
     if (scope.getScopeType() != AnalysisScope.PROJECT
       && scope.getScopeType() != AnalysisScope.MODULE
       && scope.getScopeType() != AnalysisScope.UNCOMMITTED_FILES

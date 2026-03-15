@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.dnd.*;
 import consulo.ui.ex.awt.internal.LinuxDragAndDropSupport;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

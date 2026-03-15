@@ -8,7 +8,6 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,20 +23,20 @@ public class LoadingDecorator {
     Alarm myStartAlarm;
     boolean myStartRequest;
 
-    public LoadingDecorator(JComponent content, @Nonnull Disposable parent, int startDelayMs) {
+    public LoadingDecorator(JComponent content, Disposable parent, int startDelayMs) {
         this(content, parent, startDelayMs, false);
     }
 
-    public LoadingDecorator(JComponent content, @Nonnull Disposable parent, int startDelayMs, boolean useMinimumSize) {
+    public LoadingDecorator(JComponent content, Disposable parent, int startDelayMs, boolean useMinimumSize) {
         this(content, parent, startDelayMs, useMinimumSize, new AsyncProcessIcon.Big("Loading"));
     }
 
     public LoadingDecorator(
         JComponent content,
-        @Nonnull Disposable parent,
+        Disposable parent,
         int startDelayMs,
         boolean useMinimumSize,
-        @Nonnull AsyncProcessIcon icon
+        AsyncProcessIcon icon
     ) {
         myPane = new MyLayeredPane(useMinimumSize ? content : null);
         myLoadingLayer = new LoadingLayer(icon);
@@ -175,7 +174,7 @@ public class LoadingDecorator {
         private float myCurrentAlpha;
         private final NonOpaquePanel myTextComponent;
 
-        private LoadingLayer(@Nonnull AsyncProcessIcon processIcon) {
+        private LoadingLayer(AsyncProcessIcon processIcon) {
             setOpaque(false);
             setVisible(false);
             myProgress = processIcon;

@@ -34,8 +34,7 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -381,7 +380,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LanguageTodoLocalize.titleTodo();
@@ -435,7 +434,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "preferences.toDoOptions";
     }

@@ -30,8 +30,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +40,7 @@ import java.util.List;
  * @since 2009-08-13
  */
 public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements ContainerBasedSuppressQuickFix, InjectionAwareSuppressQuickFix, Iconable {
-  @Nonnull
+  
   protected final String myID;
   private final boolean myReplaceOtherSuppressionIds;
   private ThreeState myShouldBeAppliedToInjectionHost = ThreeState.UNSURE;
@@ -55,23 +54,23 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
    * @param replaceOtherSuppressionIds Merge suppression policy. If false new tool id will be append to the end
    *                                   otherwise replace other ids
    */
-  public AbstractBatchSuppressByNoInspectionCommentFix(@Nonnull String ID, boolean replaceOtherSuppressionIds) {
+  public AbstractBatchSuppressByNoInspectionCommentFix(String ID, boolean replaceOtherSuppressionIds) {
     myID = ID;
     myReplaceOtherSuppressionIds = replaceOtherSuppressionIds;
   }
 
   @Override
-  public void setShouldBeAppliedToInjectionHost(@Nonnull ThreeState shouldBeAppliedToInjectionHost) {
+  public void setShouldBeAppliedToInjectionHost(ThreeState shouldBeAppliedToInjectionHost) {
     myShouldBeAppliedToInjectionHost = shouldBeAppliedToInjectionHost;
   }
 
-  @Nonnull
+  
   @Override
   public ThreeState isShouldBeAppliedToInjectionHost() {
     return myShouldBeAppliedToInjectionHost;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return getText();
@@ -84,12 +83,12 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
 
   private LocalizeValue myText = LocalizeValue.empty();
 
-  @Nonnull
+  
   public LocalizeValue getText() {
     return myText;
   }
 
-  protected void setText(@Nonnull LocalizeValue text) {
+  protected void setText(LocalizeValue text) {
     myText = text;
   }
 
@@ -103,19 +102,19 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   }
 
   @Override
-  public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+  public void applyFix(Project project, ProblemDescriptor descriptor) {
     PsiElement element = descriptor.getStartElement();
     if (element == null) return;
     invoke(project, element);
   }
 
-  protected final void replaceSuppressionComment(@Nonnull PsiElement comment) {
+  protected final void replaceSuppressionComment(PsiElement comment) {
     SuppressionUtil.replaceSuppressionComment(comment, myID, myReplaceOtherSuppressionIds, getCommentLanguage(comment));
   }
 
-  protected void createSuppression(@Nonnull Project project,
-                                   @Nonnull PsiElement element,
-                                   @Nonnull PsiElement container) throws IncorrectOperationException {
+  protected void createSuppression(Project project,
+                                   PsiElement element,
+                                   PsiElement container) throws IncorrectOperationException {
     SuppressionUtil.createSuppression(project, container, myID, getCommentLanguage(element));
   }
 
@@ -124,17 +123,17 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
    * @return language that will be used for comment creating.
    * In common case language will be the same as language of quickfix target
    */
-  @Nonnull
-  protected Language getCommentLanguage(@Nonnull PsiElement element) {
+  
+  protected Language getCommentLanguage(PsiElement element) {
     return element.getLanguage();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, @Nonnull PsiElement context) {
+  public boolean isAvailable(Project project, PsiElement context) {
     return context.isValid() && PsiManager.getInstance(project).isInProject(context) && getContainer(context) != null;
   }
 
-  public void invoke(@Nonnull Project project, @Nonnull PsiElement element) throws IncorrectOperationException {
+  public void invoke(Project project, PsiElement element) throws IncorrectOperationException {
     if (!isAvailable(project, element)) return;
     PsiElement container = getContainer(element);
     if (container == null) return;
@@ -160,8 +159,8 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
     return false;
   }
 
-  @jakarta.annotation.Nullable
-  protected List<? extends PsiElement> getCommentsFor(@Nonnull PsiElement container) {
+  @Nullable
+  protected List<? extends PsiElement> getCommentsFor(PsiElement container) {
     PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {
       return null;

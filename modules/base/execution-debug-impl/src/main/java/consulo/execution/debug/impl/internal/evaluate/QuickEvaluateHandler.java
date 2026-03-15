@@ -17,8 +17,7 @@ package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -27,12 +26,12 @@ import java.awt.*;
  */
 public abstract class QuickEvaluateHandler {
 
-  public abstract boolean isEnabled(@Nonnull Project project);
+  public abstract boolean isEnabled(Project project);
 
   @Nullable
-  public abstract AbstractValueHint createValueHint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Point point, ValueHintType type);
+  public abstract AbstractValueHint createValueHint(Project project, Editor editor, Point point, ValueHintType type);
 
-  public abstract boolean canShowHint(@Nonnull Project project);
+  public abstract boolean canShowHint(Project project);
 
   public abstract int getValueLookupDelay(Project project);
 }

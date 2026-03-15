@@ -32,8 +32,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -52,7 +51,7 @@ public class ConfigureHighlightingLevel {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             PsiFile file = provider.getPsi(language);
             if (file == null) {
                 return false;
@@ -76,7 +75,7 @@ public class ConfigureHighlightingLevel {
 
         @RequiredUIAccess
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             if (!state) {
                 return;
             }

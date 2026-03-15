@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.Gray;
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Objects;
@@ -34,18 +33,18 @@ public class ColorIcon extends EmptyIcon {
     private boolean myBorder;
     private int myColorSize;
 
-    public ColorIcon(int size, int colorSize, @Nonnull Color color, boolean border) {
+    public ColorIcon(int size, int colorSize, Color color, boolean border) {
         super(size, size);
         myColor = color;
         myColorSize = colorSize;
         myBorder = border;
     }
 
-    public ColorIcon(int size, @Nonnull Color color, boolean border) {
+    public ColorIcon(int size, Color color, boolean border) {
         this(size, size, color, border);
     }
 
-    public ColorIcon(int size, @Nonnull Color color) {
+    public ColorIcon(int size, Color color) {
         this(size, color, false);
     }
 
@@ -56,7 +55,7 @@ public class ColorIcon extends EmptyIcon {
         myColorSize = icon.myColorSize;
     }
 
-    @Nonnull
+    
     @Override
     protected ColorIcon copy() {
         return new ColorIcon(this);

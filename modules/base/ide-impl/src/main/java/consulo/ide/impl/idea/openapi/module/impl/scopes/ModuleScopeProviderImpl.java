@@ -22,7 +22,6 @@ import consulo.module.content.scope.ModuleAwareSearchScope;
 import consulo.module.content.scope.ModuleWithDependenciesScope;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -37,11 +36,11 @@ public class ModuleScopeProviderImpl implements ModuleScopeProviderInternal {
   private ModuleWithDependentsTestScope myModuleTestsWithDependentsScope;
 
   @Inject
-  public ModuleScopeProviderImpl(@Nonnull Module module) {
+  public ModuleScopeProviderImpl(Module module) {
     myModule = module;
   }
 
-  @Nonnull
+  
   private ModuleWithDependenciesScope getCachedScope(@ModuleWithDependenciesScopeImpl.ScopeConstant int options) {
     ModuleWithDependenciesScope scope = myScopeCache.get(options);
     if (scope == null) {
@@ -52,43 +51,43 @@ public class ModuleScopeProviderImpl implements ModuleScopeProviderInternal {
   }
 
   @Override
-  @Nonnull
+  
   public ModuleWithDependenciesScope getModuleScope() {
     return getCachedScope(ModuleWithDependenciesScopeImpl.COMPILE | ModuleWithDependenciesScopeImpl.TESTS);
   }
 
-  @Nonnull
+  
   @Override
   public ModuleWithDependenciesScope getModuleScope(boolean includeTests) {
     return getCachedScope(ModuleWithDependenciesScopeImpl.COMPILE | (includeTests ? ModuleWithDependenciesScopeImpl.TESTS : 0));
   }
 
   @Override
-  @Nonnull
+  
   public ModuleWithDependenciesScope getModuleWithLibrariesScope() {
     return getCachedScope(ModuleWithDependenciesScopeImpl.COMPILE | ModuleWithDependenciesScopeImpl.TESTS | ModuleWithDependenciesScopeImpl.LIBRARIES);
   }
 
   @Override
-  @Nonnull
+  
   public ModuleWithDependenciesScope getModuleWithDependenciesScope() {
     return getCachedScope(ModuleWithDependenciesScopeImpl.COMPILE | ModuleWithDependenciesScopeImpl.TESTS | ModuleWithDependenciesScopeImpl.MODULES);
   }
 
-  @Nonnull
+  
   @Override
   public ModuleWithDependenciesScope getModuleContentScope() {
     return getCachedScope(ModuleWithDependenciesScopeImpl.CONTENT);
   }
 
-  @Nonnull
+  
   @Override
   public ModuleWithDependenciesScope getModuleContentWithDependenciesScope() {
     return getCachedScope(ModuleWithDependenciesScopeImpl.CONTENT | ModuleWithDependenciesScopeImpl.MODULES);
   }
 
   @Override
-  @Nonnull
+  
   public ModuleWithDependenciesScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests) {
     return getCachedScope(ModuleWithDependenciesScopeImpl.COMPILE |
                           ModuleWithDependenciesScopeImpl.MODULES |
@@ -96,13 +95,13 @@ public class ModuleScopeProviderImpl implements ModuleScopeProviderInternal {
   }
 
   @Override
-  @Nonnull
+  
   public ModuleAwareSearchScope getModuleWithDependentsScope() {
     return getModuleTestsWithDependentsScope().getBaseScope();
   }
 
   @Override
-  @Nonnull
+  
   public ModuleWithDependentsTestScope getModuleTestsWithDependentsScope() {
     ModuleWithDependentsTestScope scope = myModuleTestsWithDependentsScope;
     if (scope == null) {
@@ -112,7 +111,7 @@ public class ModuleScopeProviderImpl implements ModuleScopeProviderInternal {
   }
 
   @Override
-  @Nonnull
+  
   public ModuleWithDependenciesScope getModuleRuntimeScope(boolean includeTests) {
     return getCachedScope(
             ModuleWithDependenciesScopeImpl.MODULES | ModuleWithDependenciesScopeImpl.LIBRARIES | (includeTests ? ModuleWithDependenciesScopeImpl.TESTS : 0));

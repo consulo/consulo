@@ -49,8 +49,7 @@ import consulo.versionControlSystem.merge.MergeData;
 import consulo.versionControlSystem.merge.MergeDiffUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -65,18 +64,18 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
 
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final Change myChange;
-    @Nonnull
+    
     private final Map<Key, Object> myChangeContext;
 
-    private ChangeDiffRequestProducer(@Nullable Project project, @Nonnull Change change, @Nonnull Map<Key, Object> changeContext) {
+    private ChangeDiffRequestProducer(@Nullable Project project, Change change, Map<Key, Object> changeContext) {
         myChange = change;
         myProject = project;
         myChangeContext = changeContext;
     }
 
-    @Nonnull
+    
     public Change getChange() {
         return myChange;
     }
@@ -86,13 +85,13 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return myProject;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return ChangesUtil.getFilePath(myChange).getPath();
     }
 
-    public static boolean isEquals(@Nonnull Change change1, @Nonnull Change change2) {
+    public static boolean isEquals(Change change1, Change change2) {
         for (ChangeDiffViewerWrapperProvider provider : ChangeDiffViewerWrapperProvider.EP_NAME.getExtensionList()) {
             ThreeState equals = provider.isEquals(change1, change2);
             if (equals == ThreeState.NO) {
@@ -122,15 +121,15 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
     }
 
     @Nullable
-    public static ChangeDiffRequestProducer create(@Nullable Project project, @Nonnull Change change) {
+    public static ChangeDiffRequestProducer create(@Nullable Project project, Change change) {
         return create(project, change, Collections.<Key, Object>emptyMap());
     }
 
     @Nullable
     public static ChangeDiffRequestProducer create(
         @Nullable Project project,
-        @Nonnull Change change,
-        @Nonnull Map<Key, Object> changeContext
+        Change change,
+        Map<Key, Object> changeContext
     ) {
         if (!canCreate(project, change)) {
             return null;
@@ -138,7 +137,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return new ChangeDiffRequestProducer(project, change, changeContext);
     }
 
-    public static boolean canCreate(@Nullable Project project, @Nonnull Change change) {
+    public static boolean canCreate(@Nullable Project project, Change change) {
         for (ChangeDiffViewerWrapperProvider provider : ChangeDiffViewerWrapperProvider.EP_NAME.getExtensionList()) {
             if (provider.canCreate(project, change)) {
                 return true;
@@ -163,11 +162,11 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return aRev == null || !aRev.getFile().isDirectory();
     }
 
-    @Nonnull
+    
     @Override
     public DiffRequest process(
-        @Nonnull UserDataHolder context,
-        @Nonnull ProgressIndicator indicator
+        UserDataHolder context,
+        ProgressIndicator indicator
     ) throws DiffRequestProducerException, ProcessCanceledException {
         try {
             return loadCurrentContents(context, indicator);
@@ -181,10 +180,10 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         }
     }
 
-    @Nonnull
+    
     protected DiffRequest loadCurrentContents(
-        @Nonnull UserDataHolder context,
-        @Nonnull ProgressIndicator indicator
+        UserDataHolder context,
+        ProgressIndicator indicator
     ) throws DiffRequestProducerException {
         DiffRequestProducerException wrapperException = null;
         DiffRequestProducerException requestException = null;
@@ -242,12 +241,12 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return request;
     }
 
-    @Nonnull
+    
     private DiffRequest createRequest(
         @Nullable Project project,
-        @Nonnull Change change,
-        @Nonnull UserDataHolder context,
-        @Nonnull ProgressIndicator indicator
+        Change change,
+        UserDataHolder context,
+        ProgressIndicator indicator
     ) throws DiffRequestProducerException {
         if (ChangesUtil.isTextConflictingChange(change)) { // three side diff
             // FIXME: This part is ugly as a VCS merge subsystem itself.
@@ -362,8 +361,8 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         }
     }
 
-    @Nonnull
-    public static String getRequestTitle(@Nonnull Change change) {
+    
+    public static String getRequestTitle(Change change) {
         ContentRevision bRev = change.getBeforeRevision();
         ContentRevision aRev = change.getAfterRevision();
 
@@ -386,8 +385,8 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         }
     }
 
-    @Nonnull
-    public static String getRevisionTitle(@Nullable ContentRevision revision, @Nonnull String defaultValue) {
+    
+    public static String getRevisionTitle(@Nullable ContentRevision revision, String defaultValue) {
         if (revision == null) {
             return defaultValue;
         }
@@ -398,12 +397,12 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return title;
     }
 
-    @Nonnull
+    
     public static DiffContent createContent(
         @Nullable Project project,
         @Nullable ContentRevision revision,
-        @Nonnull UserDataHolder context,
-        @Nonnull ProgressIndicator indicator
+        UserDataHolder context,
+        ProgressIndicator indicator
     ) throws DiffRequestProducerException {
         try {
             indicator.checkCanceled();
@@ -453,9 +452,9 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
 
     public static void checkContentRevision(
         @Nullable Project project,
-        @Nonnull ContentRevision rev,
-        @Nonnull UserDataHolder context,
-        @Nonnull ProgressIndicator indicator
+        ContentRevision rev,
+        UserDataHolder context,
+        ProgressIndicator indicator
     ) throws DiffRequestProducerException {
         if (rev.getFile().isDirectory()) {
             throw new DiffRequestProducerException("Can't show diff for directory");

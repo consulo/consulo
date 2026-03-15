@@ -34,8 +34,7 @@ import consulo.ui.util.ShowNotifier;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import kava.beans.PropertyChangeListener;
 
@@ -58,21 +57,21 @@ public class TextEditorProviderImpl extends TextEditorProvider {
     }
 
     @Override
-    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public boolean accept(Project project, VirtualFile file) {
         return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);
     }
 
     @RequiredUIAccess
     @Override
-    @Nonnull
-    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    
+    public FileEditor createEditor(Project project, VirtualFile file) {
         LOG.assertTrue(accept(project, file));
         return new TextEditorImpl(project, file, this);
     }
 
     @Override
-    @Nonnull
-    public TextEditor getTextEditor(@Nonnull Editor editor) {
+    
+    public TextEditor getTextEditor(Editor editor) {
         TextEditor textEditor = editor.getUserData(TEXT_EDITOR_KEY);
         if (textEditor == null) {
             textEditor = createWrapperForEditor(editor);
@@ -82,8 +81,8 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         return textEditor;
     }
 
-    @Nonnull
-    protected EditorWrapper createWrapperForEditor(@Nonnull Editor editor) {
+    
+    protected EditorWrapper createWrapperForEditor(Editor editor) {
         return new EditorWrapper(editor);
     }
 
@@ -136,7 +135,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
     }
 
-    private static void setRelativeCaretPosition(@Nonnull Editor editor, int position) {
+    private static void setRelativeCaretPosition(Editor editor, int position) {
         int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
         editor.getScrollingModel().scrollVertically(caretY - position);
     }
@@ -144,18 +143,18 @@ public class TextEditorProviderImpl extends TextEditorProvider {
     public class EditorWrapper extends UserDataHolderBase implements TextEditor {
         private final Editor myEditor;
 
-        public EditorWrapper(@Nonnull Editor editor) {
+        public EditorWrapper(Editor editor) {
             myEditor = editor;
         }
 
         @Override
-        @Nonnull
+        
         public Editor getEditor() {
             return myEditor;
         }
 
         @Override
-        @Nonnull
+        
         public JComponent getComponent() {
             return myEditor.getComponent();
         }
@@ -178,7 +177,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        @Nonnull
+        
         public String getName() {
             return "Text";
         }
@@ -209,13 +208,13 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        @Nonnull
-        public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+        
+        public FileEditorState getState(FileEditorStateLevel level) {
             return getStateImpl(null, myEditor, level);
         }
 
         @Override
-        public void setState(@Nonnull FileEditorState state) {
+        public void setState(FileEditorState state) {
             setStateImpl(null, myEditor, (TextEditorState) state);
         }
 
@@ -242,11 +241,11 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
         }
 
         @Override
-        public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
         }
 
         @Override
@@ -260,12 +259,12 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        public boolean canNavigateTo(@Nonnull Navigatable navigatable) {
+        public boolean canNavigateTo(Navigatable navigatable) {
             return false;
         }
 
         @Override
-        public void navigateTo(@Nonnull Navigatable navigatable) {
+        public void navigateTo(Navigatable navigatable) {
         }
     }
 }

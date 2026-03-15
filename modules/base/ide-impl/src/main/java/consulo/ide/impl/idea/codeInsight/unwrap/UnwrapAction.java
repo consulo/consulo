@@ -25,7 +25,6 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Unwrap")
 public class UnwrapAction extends BaseCodeInsightAction {
@@ -34,7 +33,7 @@ public class UnwrapAction extends BaseCodeInsightAction {
         setEnabledInModalContext(true);
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new UnwrapHandler();
@@ -42,7 +41,7 @@ public class UnwrapAction extends BaseCodeInsightAction {
 
     @Override
     @RequiredReadAction
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return !UnwrapDescriptor.forLanguage(file.getLanguage()).isEmpty();
     }
 }

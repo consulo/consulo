@@ -32,7 +32,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 final class ChameleonSyntaxHighlightingPassFactory implements MainHighlightingPassFactory {
@@ -41,13 +40,13 @@ final class ChameleonSyntaxHighlightingPassFactory implements MainHighlightingPa
   }
 
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.UPDATE_ALL}, false, -1);
   }
 
-  @Nonnull
+  
   @Override
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     Project project = file.getProject();
     TextRange restrict = FileStatusMapImpl.getDirtyTextRange(editor, Pass.UPDATE_ALL);
     if (restrict == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(project, editor.getDocument());
@@ -55,9 +54,9 @@ final class ChameleonSyntaxHighlightingPassFactory implements MainHighlightingPa
     return new ChameleonSyntaxHighlightingPass(project, file, editor.getDocument(), ProperTextRange.create(restrict), priority, editor, new DefaultHighlightInfoProcessor());
   }
 
-  @Nonnull
+  
   @Override
-  public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file, @Nonnull Document document, @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
+  public TextEditorHighlightingPass createMainHighlightingPass(PsiFile file, Document document, HighlightInfoProcessor highlightInfoProcessor) {
     ProperTextRange range = ProperTextRange.from(0, document.getTextLength());
     return new ChameleonSyntaxHighlightingPass(file.getProject(), file, document, range, range, null, highlightInfoProcessor);
   }

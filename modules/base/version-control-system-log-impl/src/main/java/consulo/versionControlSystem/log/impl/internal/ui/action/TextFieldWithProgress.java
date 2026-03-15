@@ -20,21 +20,20 @@ import consulo.language.editor.ui.awt.TextFieldWithCompletion;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public abstract class TextFieldWithProgress extends JPanel {
-    @Nonnull
+    
     private final TextFieldWithCompletion myTextField;
-    @Nonnull
+    
     private final AsyncProcessIcon myProgressIcon;
 
     public TextFieldWithProgress(
-        @Nonnull Project project,
-        @Nonnull TextCompletionProvider completionProvider
+        Project project,
+        TextCompletionProvider completionProvider
     ) {
         super(new BorderLayout());
         setBorder(IdeBorderFactory.createEmptyBorder(3));

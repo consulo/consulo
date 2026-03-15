@@ -43,8 +43,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -57,7 +56,7 @@ import java.util.List;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoint> {
-    @Nonnull
+    
     public static XBreakpointPanelProvider getInstance() {
         return Application.get().getInstance(XBreakpointPanelProvider.class);
     }
@@ -99,7 +98,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
     @Override
     @Nullable
-    public XBreakpoint<?> findBreakpoint(@Nonnull Project project, @Nonnull Document document, int offset) {
+    public XBreakpoint<?> findBreakpoint(Project project, Document document, int offset) {
         XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
         int line = document.getLineNumber(offset);
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
@@ -156,17 +155,17 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
         }
 
         @Override
-        public void breakpointAdded(@Nonnull XBreakpoint<?> breakpoint) {
+        public void breakpointAdded(XBreakpoint<?> breakpoint) {
             myListener.breakpointsChanged();
         }
 
         @Override
-        public void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
+        public void breakpointRemoved(XBreakpoint<?> breakpoint) {
             myListener.breakpointsChanged();
         }
 
         @Override
-        public void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
+        public void breakpointChanged(XBreakpoint<?> breakpoint) {
             myListener.breakpointsChanged();
         }
     }
@@ -183,7 +182,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myType.addBreakpoint(e.getData(Project.KEY), null);
         }
     }

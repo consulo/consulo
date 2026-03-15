@@ -15,7 +15,6 @@ import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 import consulo.logging.Logger;
 import consulo.util.lang.ShutDownTracker;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -29,30 +28,30 @@ public class FileContentHashIndexExtension extends FileBasedIndexExtension<Integ
   private static final Logger LOG = Logger.getInstance(FileContentHashIndexExtension.class);
   public static final ID<Integer, Void> HASH_INDEX_ID = ID.create("file.content.hash.index");
 
-  @Nonnull
+  
   private final ContentHashesUtil.HashEnumerator myEnumerator;
   private final int myDirHash;
 
-  @Nonnull
-  public static FileContentHashIndexExtension create(@Nonnull File enumeratorDir, @Nonnull Disposable parent) throws IOException {
+  
+  public static FileContentHashIndexExtension create(File enumeratorDir, Disposable parent) throws IOException {
     FileContentHashIndexExtension extension = new FileContentHashIndexExtension(enumeratorDir);
     Disposer.register(parent, extension);
     return extension;
   }
 
-  private FileContentHashIndexExtension(@Nonnull File enumeratorDir) throws IOException {
+  private FileContentHashIndexExtension(File enumeratorDir) throws IOException {
     myEnumerator = new ContentHashesUtil.HashEnumerator(enumeratorDir);
     myDirHash = enumeratorDir.getAbsolutePath().hashCode();
     ShutDownTracker.getInstance().registerShutdownTask(() -> closeEnumerator());
   }
 
-  @Nonnull
+  
   @Override
   public ID<Integer, Void> getName() {
     return HASH_INDEX_ID;
   }
 
-  @Nonnull
+  
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     throw new UnsupportedOperationException();
@@ -63,7 +62,7 @@ public class FileContentHashIndexExtension extends FileBasedIndexExtension<Integ
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public DataIndexer<Integer, Void, FileContent> getIndexer() {
     return fc -> {
@@ -82,13 +81,13 @@ public class FileContentHashIndexExtension extends FileBasedIndexExtension<Integ
     };
   }
 
-  @Nonnull
+  
   @Override
   public KeyDescriptor<Integer> getKeyDescriptor() {
     return EnumeratorIntegerDescriptor.INSTANCE;
   }
 
-  @Nonnull
+  
   @Override
   public DataExternalizer<Void> getValueExternalizer() {
     return VoidDataExternalizer.INSTANCE;
@@ -104,18 +103,18 @@ public class FileContentHashIndexExtension extends FileBasedIndexExtension<Integ
     closeEnumerator();
   }
 
-  @Nonnull
+  
   @Override
   public DataExternalizer<Collection<Integer>> createExternalizer() {
     return new DataExternalizer<Collection<Integer>>() {
       @Override
-      public void save(@Nonnull DataOutput out, Collection<Integer> value) throws IOException {
+      public void save(DataOutput out, Collection<Integer> value) throws IOException {
         assert value.isEmpty() || value.size() == 1;
         DataInputOutputUtil.writeINT(out, value.isEmpty() ? 0 : value.iterator().next());
       }
 
       @Override
-      public Collection<Integer> read(@Nonnull DataInput in) throws IOException {
+      public Collection<Integer> read(DataInput in) throws IOException {
         int id = DataInputOutputUtil.readINT(in);
         return id == 0 ? Collections.emptyList() : Collections.singleton(id);
       }
@@ -134,9 +133,9 @@ public class FileContentHashIndexExtension extends FileBasedIndexExtension<Integ
     }
   }
 
-  @Nonnull
+  
   @Override
-  public UpdatableIndex<Integer, Void, FileContent> createIndexImplementation(@Nonnull FileBasedIndexExtension<Integer, Void> extension, @Nonnull IndexStorage<Integer, Void> storage)
+  public UpdatableIndex<Integer, Void, FileContent> createIndexImplementation(FileBasedIndexExtension<Integer, Void> extension, IndexStorage<Integer, Void> storage)
           throws IOException {
     return new FileContentHashIndex(((FileContentHashIndexExtension)extension), storage);
   }

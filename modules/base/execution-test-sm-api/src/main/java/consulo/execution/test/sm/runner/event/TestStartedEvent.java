@@ -17,17 +17,16 @@ package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.TestStarted;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TestStartedEvent extends BaseStartedNodeEvent {
     private boolean myConfig;
 
-    public TestStartedEvent(@Nonnull TestStarted testStarted, @Nullable String locationUrl) {
+    public TestStartedEvent(TestStarted testStarted, @Nullable String locationUrl) {
         this(testStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(testStarted));
     }
 
-    public TestStartedEvent(@Nonnull TestStarted testStarted, @Nullable String locationUrl, @Nullable String metainfo) {
+    public TestStartedEvent(TestStarted testStarted, @Nullable String locationUrl, @Nullable String metainfo) {
         super(
             testStarted.getTestName(),
             TreeNodeEvent.getNodeId(testStarted),
@@ -53,11 +52,11 @@ public class TestStartedEvent extends BaseStartedNodeEvent {
         super(name, id, parentId, locationUrl, metainfo, nodeType, nodeArgs, running);
     }
 
-    public TestStartedEvent(@Nonnull String name, @Nullable String locationUrl) {
+    public TestStartedEvent(String name, @Nullable String locationUrl) {
         this(name, locationUrl, null);
     }
 
-    public TestStartedEvent(@Nonnull String name, @Nullable String locationUrl, @Nullable String metainfo) {
+    public TestStartedEvent(String name, @Nullable String locationUrl, @Nullable String metainfo) {
         super(name, null, null, locationUrl, metainfo, null, null, true);
     }
 

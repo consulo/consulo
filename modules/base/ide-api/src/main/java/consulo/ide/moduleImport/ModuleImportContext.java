@@ -18,8 +18,7 @@ package consulo.ide.moduleImport;
 import consulo.disposer.Disposable;
 import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -56,22 +55,22 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
   }
 
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
   @Override
-  public void setPath(@Nonnull String path) {
+  public void setPath(String path) {
     myPath = path;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myName;
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     return myPath;

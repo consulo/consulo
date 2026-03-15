@@ -7,7 +7,6 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Point2D;
 import consulo.ui.Size2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -18,7 +17,7 @@ final class WindowStateBean extends BaseWindowStateBean {
   }
 
   @Override
-  public void applyTo(@Nonnull Window window) {
+  public void applyTo(Window window) {
     Point2D location = getLocation();
     Size2D size = getSize();
     int extendedState = getExtendedState();
@@ -39,7 +38,7 @@ final class WindowStateBean extends BaseWindowStateBean {
     }
   }
 
-  void applyFrom(@Nonnull Window window) {
+  void applyFrom(Window window) {
     if (window.isVisible()) {
       boolean windowFullScreen = isFullScreen(window);
       setFullScreen(windowFullScreen);
@@ -55,7 +54,7 @@ final class WindowStateBean extends BaseWindowStateBean {
     }
   }
 
-  private static boolean isFullScreen(@Nonnull Window window) {
+  private static boolean isFullScreen(Window window) {
     consulo.ui.Window uiWindow = TargetAWT.from(window);
 
     IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);

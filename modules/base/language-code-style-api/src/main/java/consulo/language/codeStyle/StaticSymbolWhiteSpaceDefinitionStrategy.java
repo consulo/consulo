@@ -18,7 +18,6 @@ package consulo.language.codeStyle;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * {@link WhiteSpaceFormattingStrategy} implementation that is pre-configured with the set of symbols that may
@@ -47,7 +46,7 @@ public abstract class StaticSymbolWhiteSpaceDefinitionStrategy extends AbstractW
     }
 
     @Override
-    public int check(@Nonnull CharSequence text, int start, int end) {
+    public int check(CharSequence text, int start, int end) {
         for (int i = start; i < end; i++) {
             char c = text.charAt(i);
             if (!myWhiteSpaceSymbols.contains(c)) {

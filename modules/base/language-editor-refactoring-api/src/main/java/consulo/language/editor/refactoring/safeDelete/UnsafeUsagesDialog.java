@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,11 +34,11 @@ import java.util.Collection;
  */
 public class UnsafeUsagesDialog extends DialogWrapper {
     private JEditorPane myMessagePane;
-    @Nonnull
+    
     private final Collection<LocalizeValue> myConflictDescriptions;
     public static final int VIEW_USAGES_EXIT_CODE = NEXT_USER_EXIT_CODE;
 
-    public UnsafeUsagesDialog(@Nonnull Collection<LocalizeValue> conflictDescriptions, Project project) {
+    public UnsafeUsagesDialog(Collection<LocalizeValue> conflictDescriptions, Project project) {
         super(project, true);
         myConflictDescriptions = conflictDescriptions;
         setTitle(RefactoringLocalize.usagesDetected());
@@ -48,7 +47,7 @@ public class UnsafeUsagesDialog extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         ViewUsagesAction viewUsagesAction = new ViewUsagesAction();
 

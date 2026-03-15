@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.util.pointer.NamedPointerManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SdkPointerManager extends NamedPointerManager<Sdk> {
-  @Nonnull
+  
   static SdkPointerManager getInstance() {
     return Application.get().getInstance(SdkPointerManager.class);
   }

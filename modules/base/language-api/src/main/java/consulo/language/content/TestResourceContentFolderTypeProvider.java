@@ -26,7 +26,6 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -39,7 +38,7 @@ public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProv
     private static final Supplier<TestResourceContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
     );
 
-    @Nonnull
+    
     public static TestResourceContentFolderTypeProvider getInstance() {
         return INSTANCE.get();
     }
@@ -53,19 +52,19 @@ public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProv
         return 200;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.modulesTestresourcesroot();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ProjectLocalize.moduleToggleTestResourcesAction();
     }
 
-    @Nonnull
+    
     @Override
     public ColorValue getGroupColor() {
         return new RGBColor(115, 149, 3);

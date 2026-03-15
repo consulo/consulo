@@ -5,8 +5,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -87,7 +86,7 @@ public interface DocumentationProvider {
    * {@link #generateDoc(PsiElement, PsiElement)} will be used to fetch corresponding content.
    */
   @Nullable
-  default String generateHoverDoc(@Nonnull PsiElement element, @Nullable PsiElement originalElement) {
+  default String generateHoverDoc(PsiElement element, @Nullable PsiElement originalElement) {
     return generateDoc(element, originalElement);
   }
 

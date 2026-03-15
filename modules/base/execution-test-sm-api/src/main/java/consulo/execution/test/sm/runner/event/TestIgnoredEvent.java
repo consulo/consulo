@@ -17,27 +17,26 @@ package consulo.execution.test.sm.runner.event;
 
 import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jetbrains.buildServer.messages.serviceMessages.TestIgnored;
 
 public class TestIgnoredEvent extends TreeNodeEvent {
     private final String myIgnoreComment;
     private final String myStacktrace;
 
-    public TestIgnoredEvent(@Nonnull String testName, @Nonnull String ignoreComment, @Nullable String stacktrace) {
+    public TestIgnoredEvent(String testName, String ignoreComment, @Nullable String stacktrace) {
         super(testName, null);
         myIgnoreComment = ignoreComment;
         myStacktrace = stacktrace;
     }
 
-    public TestIgnoredEvent(@Nonnull TestIgnored testIgnored, @Nullable String stacktrace) {
+    public TestIgnoredEvent(TestIgnored testIgnored, @Nullable String stacktrace) {
         super(testIgnored.getTestName(), TreeNodeEvent.getNodeId(testIgnored));
         myIgnoreComment = testIgnored.getIgnoreComment();
         myStacktrace = stacktrace;
     }
 
-    @Nonnull
+    
     public String getIgnoreComment() {
         if (StringUtil.isEmpty(myIgnoreComment)) {
             return SMTestLocalize.smTestRunnerStatesTestIsIgnored().get();
@@ -51,7 +50,7 @@ public class TestIgnoredEvent extends TreeNodeEvent {
     }
 
     @Override
-    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+    protected void appendToStringInfo(StringBuilder buf) {
         append(buf, "ignoreComment", myIgnoreComment);
         append(buf, "stacktrace", myStacktrace);
     }

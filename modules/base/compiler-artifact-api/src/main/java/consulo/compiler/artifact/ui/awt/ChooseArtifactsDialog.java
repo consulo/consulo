@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,8 +31,8 @@ public class ChooseArtifactsDialog extends ChooseElementsDialog<Artifact> {
     public ChooseArtifactsDialog(
         Project project,
         List<? extends Artifact> items,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue description
+        LocalizeValue title,
+        LocalizeValue description
     ) {
         super(project, items, title, description, true);
     }

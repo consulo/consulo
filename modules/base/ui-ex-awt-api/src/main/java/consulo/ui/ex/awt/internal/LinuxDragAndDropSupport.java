@@ -17,8 +17,7 @@ package consulo.ui.ex.awt.internal;
 
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -46,7 +45,7 @@ public class LinuxDragAndDropSupport {
   private LinuxDragAndDropSupport() { }
 
   @Nullable
-  public static List<File> getFiles(@Nonnull Transferable transferable) throws IOException, UnsupportedFlavorException {
+  public static List<File> getFiles(Transferable transferable) throws IOException, UnsupportedFlavorException {
     if (transferable.isDataFlavorSupported(uriListFlavor)) {
       Object transferData = transferable.getTransferData(uriListFlavor);
       return getFiles(transferData.toString());
@@ -60,7 +59,7 @@ public class LinuxDragAndDropSupport {
     return null;
   }
 
-  @Nonnull
+  
   private static List<File> getFiles(@Nullable String transferData) {
     List<File> fileList = new ArrayList<>();
 
@@ -81,12 +80,12 @@ public class LinuxDragAndDropSupport {
     return fileList;
   }
 
-  @Nonnull
-  public static String toUriList(@Nonnull List<File> files) {
+  
+  public static String toUriList(List<File> files) {
     return StringUtil.join(files, file -> file.toURI().toString(), "\n");
   }
 
-  public static boolean isMoveOperation(@Nonnull Transferable transferable) {
+  public static boolean isMoveOperation(Transferable transferable) {
     if (transferable.isDataFlavorSupported(gnomeFileListFlavor)) {
       try {
         Object transferData = transferable.getTransferData(gnomeFileListFlavor);

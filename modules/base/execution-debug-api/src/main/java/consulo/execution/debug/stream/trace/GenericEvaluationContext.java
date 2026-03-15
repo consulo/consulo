@@ -3,9 +3,8 @@ package consulo.execution.debug.stream.trace;
 
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public interface GenericEvaluationContext {
-  @Nonnull
+  
   Project getProject();
 }

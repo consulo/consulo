@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
@@ -65,13 +64,13 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
         myCommandSupplier = commandSupplier;
     }
 
-    @Nonnull
+    
     @Override
     public String getSearchProviderId() {
         return getClass().getSimpleName();
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupName() {
         return IdeLocalize.searcheverywhereRunConfigsTabName().get();
@@ -89,9 +88,9 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
 
     @Override
     public boolean processSelectedItem(
-        @Nonnull ChooseRunConfigurationPopup.ItemWrapper selected,
+        ChooseRunConfigurationPopup.ItemWrapper selected,
         int modifiers,
-        @Nonnull String searchText
+        String searchText
     ) {
         RunnerAndConfigurationSettings settings = ObjectUtil.tryCast(selected.getValue(), RunnerAndConfigurationSettings.class);
         if (settings != null) {
@@ -106,19 +105,18 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
         return true;
     }
 
-    @Nullable
     @Override
-    public Object getDataForItem(@Nonnull ChooseRunConfigurationPopup.ItemWrapper element, @Nonnull Key dataId) {
+    public Object getDataForItem(ChooseRunConfigurationPopup.@Nullable ItemWrapper element, Key dataId) {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public ListCellRenderer<? super ChooseRunConfigurationPopup.ItemWrapper> getElementsRenderer() {
         return renderer;
     }
 
-    @Nonnull
+    
     @Override
     public List<SearchEverywhereCommandInfo> getSupportedCommands() {
         return Arrays.asList(RUN_COMMAND, DEBUG_COMMAND);
@@ -126,9 +124,9 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
 
     @Override
     public void fetchElements(
-        @Nonnull String pattern,
-        @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Predicate<? super ChooseRunConfigurationPopup.ItemWrapper> predicate
+        String pattern,
+        ProgressIndicator progressIndicator,
+        Predicate<? super ChooseRunConfigurationPopup.ItemWrapper> predicate
     ) {
         if (StringUtil.isEmptyOrSpaces(pattern)) {
             return;
@@ -273,7 +271,7 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
 
     @Nullable
     private static Executor findExecutor(
-        @Nonnull RunnerAndConfigurationSettings settings,
+        RunnerAndConfigurationSettings settings,
         @MagicConstant(intValues = {RUN_MODE, DEBUG_MODE}) int mode
     ) {
         Executor runExecutor = DefaultRunExecutor.getRunExecutorInstance();

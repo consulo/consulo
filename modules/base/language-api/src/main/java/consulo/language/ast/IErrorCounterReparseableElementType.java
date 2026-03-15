@@ -18,21 +18,19 @@ package consulo.language.ast;
 
 import consulo.language.Language;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 public abstract class IErrorCounterReparseableElementType extends IReparseableElementType {
   public static final int NO_ERRORS = 0;
   public static final int FATAL_ERROR = Integer.MIN_VALUE;
 
-  public IErrorCounterReparseableElementType(@NonNls String debugName, Language language) {
+  public IErrorCounterReparseableElementType(String debugName, Language language) {
     super(debugName, language);
   }
 
   public abstract int getErrorsCount(CharSequence seq, Language fileLanguage, Project project);
 
   @Override
-  public boolean isParsable(@Nonnull CharSequence buffer, @Nonnull Language fileLanguage, @Nonnull Project project) {
+  public boolean isParsable(CharSequence buffer, Language fileLanguage, Project project) {
     return getErrorsCount(buffer, fileLanguage, project) == NO_ERRORS;
   }
 }

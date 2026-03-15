@@ -18,14 +18,13 @@ package consulo.dataContext;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GetDataRule<T> {
-    @Nonnull
+    
     Key<T> getKey();
 
     @Nullable
-    T getData(@Nonnull DataProvider dataProvider);
+    T getData(DataProvider dataProvider);
 }

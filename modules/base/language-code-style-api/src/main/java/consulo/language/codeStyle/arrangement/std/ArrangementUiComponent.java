@@ -19,8 +19,7 @@ import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,15 +40,15 @@ public interface ArrangementUiComponent {
   @Nullable
   ArrangementSettingsToken getToken();
 
-  @Nonnull
+  
   Set<ArrangementSettingsToken> getAvailableTokens();
 
-  void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException;
+  void chooseToken(ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException;
 
-  @Nonnull
+  
   ArrangementMatchCondition getMatchCondition();
 
-  @Nonnull
+  
   JComponent getUiComponent();
 
   /**
@@ -77,7 +76,7 @@ public interface ArrangementUiComponent {
    */
   void setSelected(boolean selected);
 
-  void setData(@Nonnull Object data);
+  void setData(Object data);
 
   void reset();
 
@@ -92,15 +91,15 @@ public interface ArrangementUiComponent {
    * @return       bounds to be repainted (in screen coordinates) if any; <code>null</code> otherwise
    */
   @Nullable
-  Rectangle onMouseMove(@Nonnull MouseEvent event);
+  Rectangle onMouseMove(MouseEvent event);
 
-  void onMouseRelease(@Nonnull MouseEvent event);
+  void onMouseRelease(MouseEvent event);
 
   @Nullable
   Rectangle onMouseExited();
 
   @Nullable
-  Rectangle onMouseEntered(@Nonnull MouseEvent e);
+  Rectangle onMouseEntered(MouseEvent e);
 
   /**
    * @param width   the width to get baseline for
@@ -109,7 +108,7 @@ public interface ArrangementUiComponent {
    */
   int getBaselineToUse(int width, int height);
 
-  void setListener(@Nonnull Listener listener);
+  void setListener(Listener listener);
 
   /**
    * Method to process second click on the component,

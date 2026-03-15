@@ -16,7 +16,6 @@
 package consulo.project;
 
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,24 +26,24 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class ProjectGroup {
-  private @Nonnull
+  private 
   String myName = "";
   private String myProjectPaths = "";
   private boolean myExpanded = false;
   private boolean myTutorials = false; //used in different places, i.e. closing tutorials group should hide all nested items too
 
-  public ProjectGroup(@Nonnull String name) {
+  public ProjectGroup(String name) {
     myName = name;
   }
 
   public ProjectGroup() {}
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 

@@ -9,7 +9,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Evgeny.Zakrevsky
@@ -23,7 +22,7 @@ public class PlaySavedMacros extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
             IdeLocalize.popupTitlePlaySavedMacros().get(),
             new MacrosGroup(),

@@ -23,7 +23,6 @@ import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -36,12 +35,12 @@ public class ProgressManagerQueue {
   private final Object myLock;
   private final Queue<Runnable> myQueue;
   private final Runnable myQueueWorker;
-  @Nonnull
+  
   private final Project myProject;
   private volatile boolean myIsStarted;
   private boolean myActive;
 
-  public ProgressManagerQueue(@Nonnull Project project, @Nonnull String title) {
+  public ProgressManagerQueue(Project project, String title) {
     myProject = project;
     myLock = new Object();
     myQueue = new ArrayDeque<>();
@@ -50,7 +49,7 @@ public class ProgressManagerQueue {
     myProgressManager = ProgressManager.getInstance();
     myQueuePollTask = new Task.Backgroundable(project, title) {
       @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
+      public void run(ProgressIndicator indicator) {
         myQueueWorker.run();
       }
     };
@@ -90,7 +89,7 @@ public class ProgressManagerQueue {
     }
   }
 
-  public void run(@Nonnull Runnable stuff) {
+  public void run(Runnable stuff) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       runStuff(stuff);
       return;

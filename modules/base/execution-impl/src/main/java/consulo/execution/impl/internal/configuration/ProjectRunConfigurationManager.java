@@ -26,7 +26,6 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -51,7 +50,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
   private List<Element> myUnloadedElements;
 
   @Inject
-  public ProjectRunConfigurationManager(@Nonnull RunManager manager) {
+  public ProjectRunConfigurationManager(RunManager manager) {
     myManager = (RunManagerImpl)manager;
   }
 
@@ -110,7 +109,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
 
   static class RunConfigurationStateSplitter extends StateSplitterEx {
     @Override
-    public List<Pair<Element, String>> splitState(@Nonnull Element state) {
+    public List<Pair<Element, String>> splitState(Element state) {
       return splitState(state, RunManagerImpl.NAME_ATTR);
     }
   }

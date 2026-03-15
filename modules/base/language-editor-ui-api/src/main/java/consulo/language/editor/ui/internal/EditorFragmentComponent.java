@@ -22,8 +22,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -146,7 +145,7 @@ public class EditorFragmentComponent extends JPanel {
         setBorder(createEditorFragmentBorder(editor));
     }
 
-    private static int getWidthLimit(@Nonnull Editor editor) {
+    private static int getWidthLimit(Editor editor) {
         Component component = editor.getComponent();
         int screenWidth = ScreenUtil.getScreenRectangle(component).width;
         if (screenWidth > 0) {
@@ -312,15 +311,15 @@ public class EditorFragmentComponent extends JPanel {
         return color;
     }
 
-    @Nonnull
-    public static CompoundBorder createEditorFragmentBorder(@Nonnull Editor editor) {
+    
+    public static CompoundBorder createEditorFragmentBorder(Editor editor) {
         ColorValue borderColor = editor.getColorsScheme().getColor(EditorColors.SELECTED_TEARLINE_COLOR);
         Border outsideBorder = JBUI.Borders.customLine(TargetAWT.to(borderColor), LINE_BORDER_THICKNESS);
         Border insideBorder = JBUI.Borders.empty(EMPTY_BORDER_THICKNESS, EMPTY_BORDER_THICKNESS);
         return BorderFactory.createCompoundBorder(outsideBorder, insideBorder);
     }
 
-    public static int getAvailableVisualLinesAboveEditor(@Nonnull Editor editor) {
+    public static int getAvailableVisualLinesAboveEditor(Editor editor) {
         int availableVisualLines = 2;
         JComponent editorComponent = editor.getComponent();
         Container editorComponentParent = editorComponent.getParent();

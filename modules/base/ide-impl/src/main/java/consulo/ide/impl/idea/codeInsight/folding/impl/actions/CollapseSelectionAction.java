@@ -21,7 +21,6 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.folding.impl.CollapseSelectionHandler;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ven
@@ -32,7 +31,7 @@ public class CollapseSelectionAction extends BaseCodeInsightAction implements Du
         super(ActionLocalize.actionCollapseselectionText(), ActionLocalize.actionCollapseselectionDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new CollapseSelectionHandler();

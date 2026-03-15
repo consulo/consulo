@@ -24,7 +24,7 @@ import consulo.process.ExecutionException;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

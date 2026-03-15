@@ -8,8 +8,7 @@ import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.LargeFileEditor;
 import consulo.fileEditor.internal.largeFileEditor.LargeEditorActionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class LfeBaseEditorActionHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
     private EditorActionHandler originalHandler;
@@ -20,7 +19,7 @@ public abstract class LfeBaseEditorActionHandler extends EditorActionHandler imp
     }
 
     @Override
-    protected final void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+    protected final void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         LargeFileEditor largeFileEditor = LargeEditorActionUtil.tryGetLargeFileEditorManagerFromEditor(editor);
         if (largeFileEditor != null) {
             doExecuteInLfe(largeFileEditor, editor, caret, dataContext);
@@ -33,7 +32,7 @@ public abstract class LfeBaseEditorActionHandler extends EditorActionHandler imp
     }
 
     @Override
-    protected final boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    protected final boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
         LargeFileEditor largeFileEditor = LargeEditorActionUtil.tryGetLargeFileEditorManagerFromEditor(editor);
         if (largeFileEditor != null) {
             return isEnabledInLfe(largeFileEditor, editor, caret, dataContext);
@@ -49,13 +48,13 @@ public abstract class LfeBaseEditorActionHandler extends EditorActionHandler imp
         return originalHandler;
     }
 
-    protected abstract void doExecuteInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                           @Nonnull Editor editor,
+    protected abstract void doExecuteInLfe(LargeFileEditor largeFileEditor,
+                                           Editor editor,
                                            @Nullable Caret caret,
                                            DataContext dataContext);
 
-    protected abstract boolean isEnabledInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                              @Nonnull Editor editor,
-                                              @Nonnull Caret caret,
+    protected abstract boolean isEnabledInLfe(LargeFileEditor largeFileEditor,
+                                              Editor editor,
+                                              Caret caret,
                                               DataContext dataContext);
 }

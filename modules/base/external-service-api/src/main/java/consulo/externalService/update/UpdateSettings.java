@@ -18,7 +18,6 @@ package consulo.externalService.update;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,15 +25,15 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface UpdateSettings {
-    @Nonnull
+    
     public static UpdateSettings getInstance() {
         return Application.get().getInstance(UpdateSettings.class);
     }
 
-    @Nonnull
+    
     UpdateChannel getChannel();
 
-    void setChannel(@Nonnull UpdateChannel channel);
+    void setChannel(UpdateChannel channel);
 
     boolean isEnable();
 

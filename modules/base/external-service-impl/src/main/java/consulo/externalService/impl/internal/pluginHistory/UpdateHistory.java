@@ -25,8 +25,7 @@ import consulo.component.persist.Storage;
 import consulo.container.plugin.PluginId;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -72,7 +71,7 @@ public class UpdateHistory implements PersistentStateComponent<UpdateHistory.Sta
         return myState.showExperimentalWarning;
     }
 
-    @Nonnull
+    
     public String getHistoryVersion(PluginId pluginId, String defaultVersion) {
         return myState.pluginVersions.getOrDefault(pluginId.getIdString(), defaultVersion);
     }

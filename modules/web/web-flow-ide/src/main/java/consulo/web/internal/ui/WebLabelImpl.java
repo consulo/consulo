@@ -19,8 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.LabelOptions;
 import consulo.web.internal.ui.vaadin.VaadinLabelComponentBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ public class WebLabelImpl extends WebLabelBase<WebLabelImpl.Vaadin> {
     super(text, options);
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();

@@ -10,8 +10,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -66,11 +65,11 @@ public abstract class CompletionService {
   }
 
   protected abstract CompletionResultSet createResultSet(CompletionParameters parameters, Consumer<? super CompletionResult> consumer,
-                                                         @Nonnull CompletionContributor contributor, PrefixMatcher matcher);
+                                                         CompletionContributor contributor, PrefixMatcher matcher);
 
   protected abstract String suggestPrefix(CompletionParameters parameters);
 
-  @Nonnull
+  
   protected abstract PrefixMatcher createMatcher(String prefix, boolean typoTolerant);
 
 

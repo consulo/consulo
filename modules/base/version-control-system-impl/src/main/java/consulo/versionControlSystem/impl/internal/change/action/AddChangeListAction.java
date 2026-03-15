@@ -31,7 +31,6 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.impl.internal.ui.awt.NewChangelistDialog;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -49,7 +48,7 @@ public class AddChangeListAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         NewChangelistDialog dlg = new NewChangelistDialog(project);
         dlg.show();
@@ -80,7 +79,7 @@ public class AddChangeListAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
             ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
             e.getPresentation().setVisible(lists != null && lists.length > 0);

@@ -15,7 +15,6 @@
  */
 package consulo.http.ws;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -25,16 +24,16 @@ import java.util.function.Consumer;
  * @since 2026-03-15
  */
 public interface WebSocketConnectionBuilder {
-    WebSocketConnectionBuilder onOpen(@Nonnull Consumer<WebSocketSession> consumer);
+    WebSocketConnectionBuilder onOpen(Consumer<WebSocketSession> consumer);
 
-    WebSocketConnectionBuilder onText(@Nonnull BiConsumer<WebSocketSession, String> consumer);
+    WebSocketConnectionBuilder onText(BiConsumer<WebSocketSession, String> consumer);
 
-    WebSocketConnectionBuilder onBinary(@Nonnull BiConsumer<WebSocketSession, byte[]> consumer);
+    WebSocketConnectionBuilder onBinary(BiConsumer<WebSocketSession, byte[]> consumer);
 
-    WebSocketConnectionBuilder onClose(@Nonnull Consumer<WebSocketSession> consumer);
+    WebSocketConnectionBuilder onClose(Consumer<WebSocketSession> consumer);
 
-    WebSocketConnectionBuilder onError(@Nonnull BiConsumer<WebSocketSession, Throwable> consumer);
+    WebSocketConnectionBuilder onError(BiConsumer<WebSocketSession, Throwable> consumer);
 
-    @Nonnull
+    
     WebSocketSession connect(String url) throws Exception;
 }

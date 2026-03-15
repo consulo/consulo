@@ -17,7 +17,7 @@ package consulo.language.pattern;
 
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

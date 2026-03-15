@@ -11,8 +11,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -25,7 +24,7 @@ public class LocalChangeListImpl extends LocalChangeList {
   private Collection<Change> myChanges = new HashSet<>();
   private Collection<Change> myReadChangesCache = null;
   private String myId;
-  @Nonnull
+  
   private String myName;
   private String myComment = "";
   @Nullable private Object myData;
@@ -61,18 +60,18 @@ public class LocalChangeListImpl extends LocalChangeList {
     }
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return myId;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     if (! myName.equals(name)) {
       setNameImpl(name);
     }
@@ -89,7 +88,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     }
   }
 
-  void setNameImpl(@Nonnull String name) {
+  void setNameImpl(String name) {
     if (StringUtil.isEmptyOrSpaces(name) && Registry.is("vcs.log.empty.change.list.creation")) {
       LOG.info("Creating a changelist with empty name");
     }
@@ -161,13 +160,13 @@ public class LocalChangeListImpl extends LocalChangeList {
     return result;
   }
 
-  private static boolean isIgnoredChange(@Nonnull Change change, @Nonnull Project project) {
+  private static boolean isIgnoredChange(Change change, Project project) {
     boolean beforeRevIgnored = change.getBeforeRevision() == null || isIgnoredRevision(change.getBeforeRevision(), project);
     boolean afterRevIgnored = change.getAfterRevision() == null || isIgnoredRevision(change.getAfterRevision(), project);
     return beforeRevIgnored && afterRevIgnored;
   }
 
-  private static boolean isIgnoredRevision(@Nonnull ContentRevision revision, @Nonnull Project project) {
+  private static boolean isIgnoredRevision(ContentRevision revision, Project project) {
     return ReadAction.compute(() -> {
       if (project.isDisposed()) {
         return false;

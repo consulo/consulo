@@ -12,10 +12,9 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 public class RunAnythingRunProfileState extends CommandLineState {
-    public RunAnythingRunProfileState(@Nonnull ExecutionEnvironment environment, @Nonnull String originalCommand) {
+    public RunAnythingRunProfileState(ExecutionEnvironment environment, String originalCommand) {
         super(environment);
 
         RunAnythingCommandHandler handler = RunAnythingCommandHandler.getMatchedHandler(originalCommand);
@@ -24,7 +23,7 @@ public class RunAnythingRunProfileState extends CommandLineState {
         }
     }
 
-    @Nonnull
+    
     private RunAnythingRunProfile getRunProfile() {
         RunProfile runProfile = getEnvironment().getRunProfile();
         if (runProfile instanceof RunAnythingRunProfile runAnythingRunProfile) {
@@ -33,7 +32,7 @@ public class RunAnythingRunProfileState extends CommandLineState {
         throw new IllegalStateException("Got " + runProfile + " instead of RunAnything profile");
     }
 
-    @Nonnull
+    
     @Override
     protected ProcessHandler startProcess() throws ExecutionException {
         RunAnythingRunProfile runProfile = getRunProfile();
@@ -56,7 +55,7 @@ public class RunAnythingRunProfileState extends CommandLineState {
                 printCustomCommandOutput();
             }
 
-            private void print(@Nonnull LocalizeValue message, @Nonnull Key consoleViewContentType) {
+            private void print(LocalizeValue message, Key consoleViewContentType) {
                 processHandler.notifyTextAvailable(message.get(), consoleViewContentType);
             }
 

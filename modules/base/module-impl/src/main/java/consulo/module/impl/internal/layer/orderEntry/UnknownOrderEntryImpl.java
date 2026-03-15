@@ -23,31 +23,31 @@ import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements ClonableOrderEntry {
-  public UnknownOrderEntryImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootLayer) {
+  public UnknownOrderEntryImpl(OrderEntryType<?> provider, ModuleRootLayerImpl rootLayer) {
     super(provider, rootLayer);
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile[] getFiles(OrderRootType type) {
     return VirtualFile.EMPTY_ARRAY;
   }
 
-  @Nonnull
+  
   @Override
   public String[] getUrls(OrderRootType rootType) {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  @Nonnull
+  
   @Override
   public String getPresentableName() {
     return "Unknown Order Entry. Type: " + getType().getId();
@@ -58,19 +58,19 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public Module getOwnerModule() {
     return getRootModel().getModule();
   }
 
   @Override
-  public <R> R accept(RootPolicy<R> policy, @jakarta.annotation.Nullable R initialValue) {
+  public <R> R accept(RootPolicy<R> policy, @Nullable R initialValue) {
     return policy.visitOrderEntry(this, initialValue);
   }
 
   @Override
-  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
+  public boolean isEquivalentTo(OrderEntry other) {
     return getType() == other.getType();
   }
 

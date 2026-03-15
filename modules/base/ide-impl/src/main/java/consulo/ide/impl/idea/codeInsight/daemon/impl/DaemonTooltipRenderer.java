@@ -13,16 +13,14 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 class DaemonTooltipRenderer extends LineTooltipRenderer {
-    @NonNls
+    
     protected static final String END_MARKER = "<!-- end marker -->";
 
 
@@ -35,13 +33,13 @@ class DaemonTooltipRenderer extends LineTooltipRenderer {
     }
 
     @Override
-    protected void onHide(@Nonnull JComponent contentComponent) {
+    protected void onHide(JComponent contentComponent) {
         ShowErrorDescriptionAction.rememberCurrentWidth(contentComponent.getWidth());
     }
 
-    @Nonnull
+    
     @Override
-    protected String dressDescription(@Nonnull Editor editor, @Nonnull String tooltipText, boolean expand) {
+    protected String dressDescription(Editor editor, String tooltipText, boolean expand) {
         if (!expand) {
             return super.dressDescription(editor, tooltipText, false);
         }
@@ -77,13 +75,13 @@ class DaemonTooltipRenderer extends LineTooltipRenderer {
         return super.dressDescription(editor, tooltipText, true);
     }
 
-    @Nonnull
-    protected List<String> getProblems(@Nonnull String tooltipText) {
+    
+    protected List<String> getProblems(String tooltipText) {
         return StringUtil.split(UIUtil.getHtmlBody(new Html(tooltipText).setKeepFont(true)), UIUtil.BORDER_LINE);
     }
 
-    @Nonnull
-    protected String getHtmlForProblemWithLink(@Nonnull String problem) {
+    
+    protected String getHtmlForProblemWithLink(String problem) {
         Html html = new Html(problem).setKeepFont(true);
         return UIUtil.getHtmlBody(html).replace(
             DaemonLocalize.inspectionExtendedDescription().get(),
@@ -92,7 +90,7 @@ class DaemonTooltipRenderer extends LineTooltipRenderer {
     }
 
     @Nullable
-    protected static String getLinkRef(@NonNls String text) {
+    protected static String getLinkRef(String text) {
         String linkWithRef = "<a href=\"";
         int linkStartIdx = text.indexOf(linkWithRef);
         if (linkStartIdx >= 0) {
@@ -105,12 +103,12 @@ class DaemonTooltipRenderer extends LineTooltipRenderer {
         return null;
     }
 
-    @Nonnull
+    
     protected Color getDescriptionTitleColor() {
         return JBColor.namedColor("ToolTip.infoForeground", new JBColor(0x919191, 0x919191));
     }
 
-    @Nonnull
+    
     @Override
     public LineTooltipRenderer createRenderer(@Nullable String text, int width) {
         return new DaemonTooltipRenderer(text, width, getEqualityObjects());

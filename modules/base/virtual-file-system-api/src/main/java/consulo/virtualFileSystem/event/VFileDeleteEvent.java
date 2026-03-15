@@ -18,24 +18,23 @@ package consulo.virtualFileSystem.event;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public class VFileDeleteEvent extends VFileEvent {
-  @Nonnull
+  
   private final VirtualFile myFile;
   private int myDepth = -1;
 
-  public VFileDeleteEvent(@Nullable Object requestor, @Nonnull VirtualFile file, boolean isFromRefresh) {
+  public VFileDeleteEvent(@Nullable Object requestor, VirtualFile file, boolean isFromRefresh) {
     super(requestor, isFromRefresh);
     myFile = file;
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile getFile() {
     return myFile;
   }
@@ -45,13 +44,13 @@ public class VFileDeleteEvent extends VFileEvent {
     return "VfsEvent[deleted: " + myFile.getUrl() + "]";
   }
 
-  @Nonnull
+  
   @Override
   protected String computePath() {
     return myFile.getPath();
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();

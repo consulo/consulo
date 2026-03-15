@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.ui.ModalityState;
 import consulo.virtualFileSystem.event.VFileEvent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -34,35 +33,35 @@ public abstract class RefreshQueue {
     return Application.get().getInstance(RefreshQueue.class);
   }
 
-  @Nonnull
+  
   public final RefreshSession createSession(boolean async, boolean recursive, @Nullable Runnable finishRunnable) {
     return createSession(async, recursive, finishRunnable, Application.get().getDefaultModalityState());
   }
 
-  @Nonnull
-  public abstract RefreshSession createSession(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState state);
+  
+  public abstract RefreshSession createSession(boolean async, boolean recursive, @Nullable Runnable finishRunnable, ModalityState state);
 
-  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull VirtualFile... files) {
+  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, VirtualFile... files) {
     refresh(async, recursive, finishRunnable, Application.get().getDefaultModalityState(), files);
   }
 
-  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull Collection<? extends VirtualFile> files) {
+  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, Collection<? extends VirtualFile> files) {
     refresh(async, recursive, finishRunnable, Application.get().getDefaultModalityState(), files);
   }
 
-  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState state, @Nonnull VirtualFile... files) {
+  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, ModalityState state, VirtualFile... files) {
     RefreshSession session = createSession(async, recursive, finishRunnable, state);
     session.addAllFiles(files);
     session.launch();
   }
 
-  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState state, @Nonnull Collection<? extends VirtualFile> files) {
+  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, ModalityState state, Collection<? extends VirtualFile> files) {
     RefreshSession session = createSession(async, recursive, finishRunnable, state);
     session.addAllFiles(files);
     session.launch();
   }
 
-  public abstract void processSingleEvent(@Nonnull VFileEvent event);
+  public abstract void processSingleEvent(VFileEvent event);
 
   public abstract void cancelSession(long id);
 

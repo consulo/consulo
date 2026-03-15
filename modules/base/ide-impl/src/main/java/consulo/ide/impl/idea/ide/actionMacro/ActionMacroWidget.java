@@ -31,7 +31,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +61,7 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
 
     ActionMacroWidget() {
         myPresentation = new WidgetPresentation() {
-            @Nonnull
+            
             @Override
             public LocalizeValue getTooltipText() {
                 return LocalizeValue.localizeTODO("Macro is being recorded now");
@@ -138,13 +137,13 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
         }, Balloon.Position.above);
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return myIcon;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "MacroRecording";
@@ -160,7 +159,7 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         showBalloon();
     }
 

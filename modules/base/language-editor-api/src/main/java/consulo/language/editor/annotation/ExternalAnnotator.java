@@ -26,8 +26,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -41,8 +40,8 @@ import java.util.List;
 public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> implements LanguageExtension {
   private static final ExtensionPointCacheKey<ExternalAnnotator, ByLanguageValue<List<ExternalAnnotator>>> KEY = ExtensionPointCacheKey.create("ExternalAnnotator", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<ExternalAnnotator> forLanguage(@Nonnull Language language) {
+  
+  public static List<ExternalAnnotator> forLanguage(Language language) {
     return Application.get().getExtensionPoint(ExternalAnnotator.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -54,7 +53,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> i
    * @return see {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
    */
   @Nullable
-  public InitialInfoType collectInformation(@Nonnull PsiFile file) {
+  public InitialInfoType collectInformation(PsiFile file) {
     return null;
   }
 
@@ -69,7 +68,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> i
    * @return information to pass to {@link ExternalAnnotator#doAnnotate(InitialInfoType)} or {@code null} if annotation should be skipped
    */
   @Nullable
-  public InitialInfoType collectInformation(@Nonnull PsiFile file, @Nonnull Editor editor, boolean hasErrors) {
+  public InitialInfoType collectInformation(PsiFile file, Editor editor, boolean hasErrors) {
     return hasErrors ? null : collectInformation(file);
   }
 
@@ -92,6 +91,6 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> i
    * @param annotationResult annotation result acquired through {@link ExternalAnnotator#doAnnotate(InitialInfoType)}
    * @param holder           container which receives annotations
    */
-  public void apply(@Nonnull PsiFile file, AnnotationResultType annotationResult, @Nonnull AnnotationHolder holder) {
+  public void apply(PsiFile file, AnnotationResultType annotationResult, AnnotationHolder holder) {
   }
 }

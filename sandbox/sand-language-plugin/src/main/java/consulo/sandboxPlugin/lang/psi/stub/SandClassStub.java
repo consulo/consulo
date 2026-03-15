@@ -21,7 +21,7 @@ import consulo.language.psi.stub.NamedStubBase;
 import consulo.language.psi.stub.StubElement;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

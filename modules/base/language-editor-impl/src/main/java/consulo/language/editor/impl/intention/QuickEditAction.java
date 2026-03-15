@@ -42,8 +42,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +66,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
 
     @Override
     @RequiredReadAction
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         return getRangePair(file, editor) != null;
     }
 
@@ -98,12 +97,12 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
     }
 
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         invokeImpl(project, editor, file);
     }
 
     @RequiredReadAction
-    public QuickEditHandler invokeImpl(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public QuickEditHandler invokeImpl(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         int offset = editor.getCaretModel().getOffset();
         Pair<PsiElement, TextRange> pair = ObjectUtil.assertNotNull(getRangePair(file, editor));
 
@@ -126,7 +125,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
         return false;
     }
 
-    @Nonnull
+    
     private QuickEditHandler getHandler(Project project, PsiFile injectedFile, Editor editor, PsiFile origFile) {
         QuickEditHandler handler = getExistingHandler(injectedFile);
         if (handler != null && handler.isValid()) {
@@ -136,7 +135,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
         return handler;
     }
 
-    public static QuickEditHandler getExistingHandler(@Nonnull PsiFile injectedFile) {
+    public static QuickEditHandler getExistingHandler(PsiFile injectedFile) {
         InjectedLanguageManagerInternal injectedLanguageManager = (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(injectedFile.getProject());
 
         PsiLanguageInjectionHost.Place shreds = injectedLanguageManager.getShreds(injectedFile);
@@ -164,12 +163,12 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
     }
 
     @Nullable
-    public JComponent createBalloonComponent(@Nonnull PsiFile file) {
+    public JComponent createBalloonComponent(PsiFile file) {
         return null;
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getText() {
         if (myLastLanguageName == null) {
             return LocalizeValue.localizeTODO("Edit Injected Fragment");

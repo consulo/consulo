@@ -21,23 +21,21 @@ import consulo.execution.debug.frame.XValueNode;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.Obsolescent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
 public final class XValueNodePresentationConfigurator {
     public interface ConfigurableXValueNode {
-        void applyPresentation(@Nullable Image icon, @Nonnull XValuePresentation valuePresenter, boolean hasChildren);
+        void applyPresentation(@Nullable Image icon, XValuePresentation valuePresenter, boolean hasChildren);
     }
 
     public static abstract class ConfigurableXValueNodeImpl implements ConfigurableXValueNode, XValueNode {
         @Override
         public void setPresentation(
             @Nullable Image icon,
-            @NonNls @Nullable String type,
-            @NonNls @Nonnull String value,
+            @Nullable String type,
+            String value,
             boolean hasChildren
         ) {
             XValueNodePresentationConfigurator.setPresentation(icon, type, value, hasChildren, this);
@@ -46,23 +44,23 @@ public final class XValueNodePresentationConfigurator {
         @Override
         public void setPresentation(
             @Nullable Image icon,
-            @NonNls @Nullable String type,
-            @NonNls @Nonnull String separator,
-            @NonNls @Nullable String value,
+            @Nullable String type,
+            String separator,
+            @Nullable String value,
             boolean hasChildren
         ) {
             XValueNodePresentationConfigurator.setPresentation(icon, type, separator, value, hasChildren, this);
         }
 
         @Override
-        public void setPresentation(@Nullable Image icon, @Nonnull XValuePresentation presentation, boolean hasChildren) {
+        public void setPresentation(@Nullable Image icon, XValuePresentation presentation, boolean hasChildren) {
             XValueNodePresentationConfigurator.setPresentation(icon, presentation, hasChildren, this);
         }
     }
 
     public static void setPresentation(
         @Nullable Image icon,
-        @Nonnull XValuePresentation presentation,
+        XValuePresentation presentation,
         boolean hasChildren,
         ConfigurableXValueNode node
     ) {
@@ -71,8 +69,8 @@ public final class XValueNodePresentationConfigurator {
 
     public static void setPresentation(
         @Nullable Image icon,
-        @NonNls @Nullable String type,
-        @NonNls @Nonnull String value,
+        @Nullable String type,
+        String value,
         boolean hasChildren,
         ConfigurableXValueNode node
     ) {
@@ -81,9 +79,9 @@ public final class XValueNodePresentationConfigurator {
 
     public static void setPresentation(
         @Nullable Image icon,
-        @NonNls @Nullable String type,
-        @NonNls @Nonnull String separator,
-        @NonNls @Nullable String value,
+        @Nullable String type,
+        String separator,
+        @Nullable String value,
         boolean hasChildren,
         ConfigurableXValueNode node
     ) {
@@ -97,8 +95,8 @@ public final class XValueNodePresentationConfigurator {
 
     public static void setPresentation(
         @Nullable Image icon,
-        @NonNls @Nullable String type,
-        @NonNls @Nonnull String value,
+        @Nullable String type,
+        String value,
         @Nullable Function<String, String> valuePresenter,
         boolean hasChildren, ConfigurableXValueNode node
     ) {
@@ -114,7 +112,7 @@ public final class XValueNodePresentationConfigurator {
 
     private static void doSetPresentation(
         @Nullable Image icon,
-        @Nonnull XValuePresentation presentation,
+        XValuePresentation presentation,
         boolean hasChildren,
         ConfigurableXValueNode node
     ) {
@@ -149,7 +147,7 @@ public final class XValueNodePresentationConfigurator {
         }
 
         @Override
-        public void renderValue(@Nonnull XValueTextRenderer renderer) {
+        public void renderValue(XValueTextRenderer renderer) {
             renderer.renderValue(valuePresenter.apply(myValue));
         }
     }

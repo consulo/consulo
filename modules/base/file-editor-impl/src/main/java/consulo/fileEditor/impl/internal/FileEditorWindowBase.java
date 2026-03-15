@@ -29,8 +29,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Objects;
@@ -73,7 +72,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
         }
     }
 
-    protected void updateFileBackgroundColor(@Nonnull VirtualFile file) {
+    protected void updateFileBackgroundColor(VirtualFile file) {
         int index = findEditorIndex(findFileComposite(file));
         if (index != -1) {
             ColorValue color = EditorTabPresentationUtil.getEditorTabBackgroundColor(getManager().getProject(), file, this);
@@ -86,7 +85,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
      */
     @Nullable
     @RequiredReadAction
-    protected Image getFileIcon(@Nonnull VirtualFile file) {
+    protected Image getFileIcon(VirtualFile file) {
         UIAccess.assetIsNotUIThread();
         if (!file.isValid()) {
             return UnknownFileType.INSTANCE.getIcon();
@@ -145,7 +144,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
         }
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getFiles() {
         int tabCount = getTabCount();
@@ -167,7 +166,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
         return -1;
     }
 
-    @Nonnull
+    
     @Override
     public FileEditorWithProviderComposite[] getEditors() {
         int tabCount = getTabCount();
@@ -178,7 +177,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
         return res;
     }
 
-    @Nonnull
+    
     @Override
     public abstract FileEditorManagerImpl getManager();
 

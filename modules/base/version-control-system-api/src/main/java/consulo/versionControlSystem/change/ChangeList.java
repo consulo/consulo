@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.change;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -25,7 +24,7 @@ import java.util.Collection;
 public interface ChangeList {
   Collection<Change> getChanges();
 
-  @Nonnull
+  
   String getName();
 
   String getComment();

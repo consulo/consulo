@@ -35,7 +35,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 import java.io.File;
@@ -58,18 +57,18 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
     private final State state;
     private volatile List<Root> roots;
 
-    public FileTreeModel(@Nonnull FileChooserDescriptor descriptor, FileRefresher refresher) {
+    public FileTreeModel(FileChooserDescriptor descriptor, FileRefresher refresher) {
         this(descriptor, refresher, true, false);
     }
 
-    public FileTreeModel(@Nonnull FileChooserDescriptor descriptor, FileRefresher refresher, boolean sortDirectories, boolean sortArchives) {
+    public FileTreeModel(FileChooserDescriptor descriptor, FileRefresher refresher, boolean sortDirectories, boolean sortArchives) {
         if (refresher != null) {
             register(this, refresher);
         }
         state = new State(descriptor, refresher, sortDirectories, sortArchives);
         Application.get().getMessageBus().connect(this).subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
-            public void after(@Nonnull List<? extends VFileEvent> events) {
+            public void after(List<? extends VFileEvent> events) {
                 invoker.invoke(() -> process(events));
             }
         });
@@ -87,7 +86,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
     }
 
     @Override
-    public Object getUniqueID(@Nonnull TreePath path) {
+    public Object getUniqueID(TreePath path) {
         Object object = path.getLastPathComponent();
         TreePath parent = path.getParentPath();
         return parent != null && object instanceof Node node
@@ -104,7 +103,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
             : parent != null || object != state ? null : deque.toArray();
     }
 
-    @Nonnull
+    
     @Override
     public InvokerImpl getInvoker() {
         return invoker;

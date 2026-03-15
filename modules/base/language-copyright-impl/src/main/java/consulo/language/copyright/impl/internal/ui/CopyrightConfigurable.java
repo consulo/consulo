@@ -38,9 +38,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +46,7 @@ import java.util.Map;
 
 public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> implements Configurable.NoScroll {
     public static class PreviewDialog extends DialogWrapper {
-        @Nonnull
+        
         private final String myText;
         private final Dimension mySize;
 
@@ -56,7 +54,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
 
         private final Project myProject;
 
-        public PreviewDialog(@Nullable Project project, @Nonnull String text, @Nonnull Dimension size) {
+        public PreviewDialog(@Nullable Project project, String text, Dimension size) {
             super(project);
             myProject = project;
             myText = text;
@@ -65,7 +63,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
             init();
         }
 
-        @Nonnull
+        
         @Override
         protected Action[] createActions() {
             return new Action[]{getOKAction()};
@@ -123,7 +121,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
         group.add(new AnAction("Preview", null, PlatformIconGroup.actionsPreview()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 try {
                     String evaluate =
                         CopyrightGenerator.getInstance(project).generate(null, null, myCopyrightEditor.getDocument().getText());
@@ -141,14 +139,14 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
             group.add(new AnAction("Reset To", null, PlatformIconGroup.generalReset()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
                     for (PredefinedCopyrightProvider provider : point) {
                         for (Map.Entry<LocalizeValue, String> entry : provider.getCopyrightTexts().entrySet()) {
                             actionGroup.add(new AnAction(entry.getKey()) {
                                 @RequiredUIAccess
                                 @Override
-                                public void actionPerformed(@Nonnull AnActionEvent e) {
+                                public void actionPerformed(AnActionEvent e) {
                                     String text = entry.getValue();
                                     WriteAction.run(() -> myCopyrightDocument.setText(text));
                                 }

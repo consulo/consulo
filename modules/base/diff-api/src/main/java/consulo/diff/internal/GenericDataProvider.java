@@ -3,8 +3,7 @@ package consulo.diff.internal;
 
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +26,7 @@ public class GenericDataProvider implements DataProvider {
   }
 
   @Override
-  public Object getData(@Nonnull Key dataId) {
+  public Object getData(Key dataId) {
     Object data = myGenericData.get(dataId);
     if (data != null) return data;
     return myParentProvider != null ? myParentProvider.getData(dataId) : null;

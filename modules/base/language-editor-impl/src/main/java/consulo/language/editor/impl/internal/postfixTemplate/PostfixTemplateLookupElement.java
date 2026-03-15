@@ -21,31 +21,30 @@ import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.template.CustomLiveTemplateLookupElement;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 public class PostfixTemplateLookupElement extends CustomLiveTemplateLookupElement {
-  @Nonnull
+  
   private final PostfixTemplate myTemplate;
-  @Nonnull
+  
   private final PostfixTemplateProvider myProvider;
 
 
-  public PostfixTemplateLookupElement(@Nonnull PostfixLiveTemplate liveTemplate,
-                                      @Nonnull PostfixTemplate postfixTemplate,
-                                      @Nonnull String templateKey,
-                                      @Nonnull PostfixTemplateProvider provider,
+  public PostfixTemplateLookupElement(PostfixLiveTemplate liveTemplate,
+                                      PostfixTemplate postfixTemplate,
+                                      String templateKey,
+                                      PostfixTemplateProvider provider,
                                       boolean sudden) {
     super(liveTemplate, templateKey, StringUtil.trimStart(templateKey, "."), postfixTemplate.getDescription(), sudden, true);
     myTemplate = postfixTemplate;
     myProvider = provider;
   }
 
-  @Nonnull
+  
   public PostfixTemplate getPostfixTemplate() {
     return myTemplate;
   }
 
-  @Nonnull
+  
   public PostfixTemplateProvider getProvider() {
     return myProvider;
   }

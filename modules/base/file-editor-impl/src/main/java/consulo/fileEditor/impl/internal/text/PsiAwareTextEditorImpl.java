@@ -35,7 +35,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -44,11 +43,11 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
   private TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
   @RequiredUIAccess
-  public PsiAwareTextEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, TextEditorProviderImpl provider) {
+  public PsiAwareTextEditorImpl(Project project, VirtualFile file, TextEditorProviderImpl provider) {
     super(project, file, provider);
   }
 
-  @Nonnull
+  
   @Override
   public Runnable loadEditorInBackground() {
     Runnable baseAction = super.loadEditorInBackground();
@@ -69,7 +68,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     };
   }
 
-  @Nonnull
+  
   @Override
   protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
     return new PsiAwareTextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
@@ -91,10 +90,10 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     private final Project myProject;
     private final VirtualFile myFile;
 
-    private PsiAwareTextEditorComponent(@Nonnull Project project,
-                                        @Nonnull VirtualFile file,
-                                        @Nonnull TextEditorImpl textEditor,
-                                        @Nonnull TextEditorComponentContainerFactory factory) {
+    private PsiAwareTextEditorComponent(Project project,
+                                        VirtualFile file,
+                                        TextEditorImpl textEditor,
+                                        TextEditorComponentContainerFactory factory) {
       super(project, file, textEditor, factory);
       myProject = project;
       myFile = file;
@@ -110,7 +109,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
       if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
         LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
         if (lookup != null && lookup.isVisible()) {

@@ -8,8 +8,7 @@ import consulo.versionControlSystem.log.VcsLogStorage;
 import consulo.versionControlSystem.log.impl.internal.data.index.VcsLogIndex;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -19,10 +18,10 @@ import java.util.Map;
  */
 public class CommitDetailsGetter extends AbstractDataGetter<VcsFullCommitDetails> {
 
-  CommitDetailsGetter(@Nonnull VcsLogStorage hashMap,
-                      @Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
-                      @Nonnull VcsLogIndex index,
-                      @Nonnull Disposable parentDisposable) {
+  CommitDetailsGetter(VcsLogStorage hashMap,
+                      Map<VirtualFile, VcsLogProvider> logProviders,
+                      VcsLogIndex index,
+                      Disposable parentDisposable) {
     super(hashMap, logProviders, new VcsCommitCache<>(), index, parentDisposable);
   }
 
@@ -32,10 +31,10 @@ public class CommitDetailsGetter extends AbstractDataGetter<VcsFullCommitDetails
     return null;
   }
 
-  @Nonnull
+  
   @Override
-  protected List<? extends VcsFullCommitDetails> readDetails(@Nonnull VcsLogProvider logProvider, @Nonnull VirtualFile root,
-                                                             @Nonnull List<String> hashes) throws VcsException {
+  protected List<? extends VcsFullCommitDetails> readDetails(VcsLogProvider logProvider, VirtualFile root,
+                                                             List<String> hashes) throws VcsException {
     return VcsLogUtil.getDetails(logProvider, root, hashes);
   }
 }

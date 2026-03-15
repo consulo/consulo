@@ -23,8 +23,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -80,7 +79,7 @@ public class CachedVcsContext implements VcsContext {
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile[] getSelectedFiles() {
     return mySelectedFiles;
   }
@@ -116,7 +115,7 @@ public class CachedVcsContext implements VcsContext {
   }
 
   @Override
-  @Nonnull
+  
   public FilePath[] getSelectedFilePaths() {
     return mySelectedFilePaths;
   }

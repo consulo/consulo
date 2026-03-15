@@ -19,17 +19,16 @@ import consulo.document.Document;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-04-20
  */
 public interface FileStatusFacade {
-    FileStatus getFileStatus(@Nonnull VirtualFile virtualFile);
+    FileStatus getFileStatus(VirtualFile virtualFile);
 
-    @Nonnull
-    ThreeState getNotChangedDirectoryParentingStatus(@Nonnull VirtualFile virtualFile);
+    
+    ThreeState getNotChangedDirectoryParentingStatus(VirtualFile virtualFile);
 
-    void refreshFileStatusFromDocument(@Nonnull VirtualFile virtualFile, @Nonnull Document doc);
+    void refreshFileStatusFromDocument(VirtualFile virtualFile, Document doc);
 }

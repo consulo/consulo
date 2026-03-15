@@ -19,7 +19,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import org.jdom.Element;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

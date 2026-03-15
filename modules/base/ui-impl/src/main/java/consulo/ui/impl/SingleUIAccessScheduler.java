@@ -16,7 +16,6 @@
 package consulo.ui.impl;
 
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -32,7 +31,7 @@ public abstract class SingleUIAccessScheduler extends BaseUIAccessScheduler {
     myUiAccess = uiAccess;
   }
 
-  @Nonnull
+  
   @Override
   protected UIAccess uiAccess() {
     return myUiAccess;

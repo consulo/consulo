@@ -21,7 +21,6 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringHash;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class UsedColors {
@@ -29,19 +28,19 @@ public class UsedColors {
 
   public static final AtomicInteger counter = new AtomicInteger();
   private static class UsedColor {
-    @Nonnull
+    
     final String name;
     final int index;
 
-    UsedColor(@Nonnull String name, int index) {
+    UsedColor(String name, int index) {
       this.name = name;
       this.index = index;
       counter.incrementAndGet();
     }
   }
 
-  public static int getOrAddColorIndex(@Nonnull UserDataHolder context,
-                                       @Nonnull String name,
+  public static int getOrAddColorIndex(UserDataHolder context,
+                                       String name,
                                        int colorsCount) {
     int colorIndex;
     while (true) {
@@ -97,12 +96,12 @@ public class UsedColors {
     return colorIndex;
   }
 
-  private static int hashColor(@Nonnull String name, int colorsCount) {
+  private static int hashColor(String name, int colorsCount) {
     return Math.abs(StringHash.murmur(name, 0x55AA)) % colorsCount;
   }
 
   @Contract(pure = true)
-  private static int indexOfMin(@Nonnull int[] values, int start, int end) {
+  private static int indexOfMin(int[] values, int start, int end) {
     int min = Integer.MAX_VALUE;
     int minIndex = start;
     for (int i = start; i < end; i++) {

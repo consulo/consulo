@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.versionControlSystem.log.TimedVcsCommit;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +23,8 @@ import java.util.List;
 
 public class VcsLogSorter {
 
-  @Nonnull
-  public static <Commit extends TimedVcsCommit> List<Commit> sortByDateTopoOrder(@Nonnull Collection<Commit> commits) {
+  
+  public static <Commit extends TimedVcsCommit> List<Commit> sortByDateTopoOrder(Collection<Commit> commits) {
     return new VcsLogJoiner.NewCommitIntegrator<>(new ArrayList<>(), commits).getResultList();
   }
 }

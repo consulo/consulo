@@ -23,7 +23,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedTipOfDayManager implements TipOfDayManager {
   @Override
-  public void scheduleShow(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
+  public void scheduleShow(UIAccess uiAccess, Project project) {
 
   }
 

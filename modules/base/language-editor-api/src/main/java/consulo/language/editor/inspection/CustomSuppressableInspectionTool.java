@@ -20,8 +20,7 @@ import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This interface needs to be implemented by implementers of {@link LocalInspectionTool} and {@link GlobalInspectionTool}
@@ -46,5 +45,5 @@ public interface CustomSuppressableInspectionTool {
    * @param element the element to check
    * @return true if the inspection is suppressed, false otherwise.
    */
-  boolean isSuppressedFor(@Nonnull PsiElement element);
+  boolean isSuppressedFor(PsiElement element);
 }

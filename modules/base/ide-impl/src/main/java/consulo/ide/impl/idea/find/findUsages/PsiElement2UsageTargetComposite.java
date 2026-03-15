@@ -28,7 +28,6 @@ import consulo.usage.UsageInfoToUsageConverter;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -36,9 +35,9 @@ public class PsiElement2UsageTargetComposite extends PsiElement2UsageTargetAdapt
     private final UsageInfoToUsageConverter.TargetElementsDescriptor myDescriptor;
 
     public PsiElement2UsageTargetComposite(
-        @Nonnull PsiElement[] primaryElements,
-        @Nonnull PsiElement[] secondaryElements,
-        @Nonnull FindUsagesOptions options
+        PsiElement[] primaryElements,
+        PsiElement[] secondaryElements,
+        FindUsagesOptions options
     ) {
         super(primaryElements[0], options);
         myDescriptor = new UsageInfoToUsageConverter.TargetElementsDescriptor(primaryElements, secondaryElements);
@@ -70,12 +69,12 @@ public class PsiElement2UsageTargetComposite extends PsiElement2UsageTargetAdapt
         return VirtualFileUtil.toVirtualFileArray(files);
     }
 
-    @Nonnull
+    
     public PsiElement[] getPrimaryElements() {
         return myDescriptor.getPrimaryElements();
     }
 
-    @Nonnull
+    
     public PsiElement[] getSecondaryElements() {
         return myDescriptor.getAdditionalElements();
     }

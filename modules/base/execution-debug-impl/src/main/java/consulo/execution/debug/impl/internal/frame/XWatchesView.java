@@ -18,7 +18,6 @@ package consulo.execution.debug.impl.internal.frame;
 import consulo.util.dataholder.Key;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ import java.util.List;
 public interface XWatchesView {
   Key<XWatchesView> DATA_KEY = Key.create("XDEBUGGER_WATCHES_VIEW");
 
-  void addWatchExpression(@Nonnull XExpression expression, int index, boolean navigateToWatchNode);
+  void addWatchExpression(XExpression expression, int index, boolean navigateToWatchNode);
 
   void removeWatches(List<? extends XDebuggerTreeNode> nodes);
 

@@ -18,8 +18,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -58,24 +57,24 @@ public class ExternalSystemFacadeManager {
     private final Map<IntegrationKey, Pair<RemoteExternalSystemFacade, ExternalSystemExecutionSettings>> myRemoteFacades
         = ContainerUtil.newConcurrentMap();
 
-    @Nonnull
+    
     private final Lock myLock = new ReentrantLock();
 
-    @Nonnull
+    
     private final RemoteExternalSystemProgressNotificationManager myProgressManager;
 
-    @Nonnull
+    
     private final InProcessExternalSystemCommunicationManager myInProcessCommunicationManager;
 
     @Inject
-    public ExternalSystemFacadeManager(@Nonnull ExternalSystemProgressNotificationManager notificationManager,
-                                       @Nonnull InProcessExternalSystemCommunicationManager inProcessCommunicationManager) {
+    public ExternalSystemFacadeManager(ExternalSystemProgressNotificationManager notificationManager,
+                                       InProcessExternalSystemCommunicationManager inProcessCommunicationManager) {
         myProgressManager = (RemoteExternalSystemProgressNotificationManager) notificationManager;
         myInProcessCommunicationManager = inProcessCommunicationManager;
     }
 
-    @Nonnull
-    private static Project findProject(@Nonnull IntegrationKey key) {
+    
+    private static Project findProject(IntegrationKey key) {
         ProjectManager projectManager = ProjectManager.getInstance();
         for (Project project : projectManager.getOpenProjects()) {
             if (key.getIdeProjectName().equals(project.getName()) && key.getIdeProjectLocationHash().equals(project.getLocationHash())) {
@@ -85,14 +84,14 @@ public class ExternalSystemFacadeManager {
         return projectManager.getDefaultProject();
     }
 
-    public void onProjectRename(@Nonnull String oldName, @Nonnull String newName) {
+    public void onProjectRename(String oldName, String newName) {
         onProjectRename(myFacadeWrappers, oldName, newName);
         onProjectRename(myRemoteFacades, oldName, newName);
     }
 
-    private static <V> void onProjectRename(@Nonnull Map<IntegrationKey, V> data,
-                                            @Nonnull String oldName,
-                                            @Nonnull String newName) {
+    private static <V> void onProjectRename(Map<IntegrationKey, V> data,
+                                            String oldName,
+                                            String newName) {
         Set<IntegrationKey> keys = new HashSet<>(data.keySet());
         for (IntegrationKey key : keys) {
             if (!key.getIdeProjectName().equals(oldName)) {
@@ -116,10 +115,10 @@ public class ExternalSystemFacadeManager {
      * @return gradle api facade to use
      * @throws Exception in case of inability to return the facade
      */
-    @Nonnull
+    
     public RemoteExternalSystemFacade getFacade(@Nullable Project project,
-                                                @Nonnull String externalProjectPath,
-                                                @Nonnull ProjectSystemId externalSystemId) throws Exception {
+                                                String externalProjectPath,
+                                                ProjectSystemId externalSystemId) throws Exception {
         if (project == null) {
             project = ProjectManager.getInstance().getDefaultProject();
         }
@@ -135,7 +134,7 @@ public class ExternalSystemFacadeManager {
         return myFacadeWrappers.get(key);
     }
 
-    public Object doInvoke(@Nonnull IntegrationKey key, @Nonnull Project project, Method method, Object[] args, int invocationNumber)
+    public Object doInvoke(IntegrationKey key, Project project, Method method, Object[] args, int invocationNumber)
         throws Throwable {
         RemoteExternalSystemFacade facade = doGetFacade(key, project);
         try {
@@ -156,13 +155,13 @@ public class ExternalSystemFacadeManager {
         return myInProcessCommunicationManager;
     }
 
-    public ExternalSystemCommunicationManager getCommunicationManager(@Nonnull ProjectSystemId externalSystemId) {
+    public ExternalSystemCommunicationManager getCommunicationManager(ProjectSystemId externalSystemId) {
         return myInProcessCommunicationManager;
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Nonnull
-    private RemoteExternalSystemFacade doGetFacade(@Nonnull IntegrationKey key, @Nonnull Project project) throws Exception {
+    
+    private RemoteExternalSystemFacade doGetFacade(IntegrationKey key, Project project) throws Exception {
         ExternalSystemCommunicationManager myCommunicationManager = myInProcessCommunicationManager;
 
         ExternalSystemManager manager = ExternalSystemApiUtil.getManager(key.getExternalSystemId());
@@ -192,9 +191,9 @@ public class ExternalSystemFacadeManager {
     }
 
     @SuppressWarnings("unchecked")
-    @Nonnull
-    private RemoteExternalSystemFacade doCreateFacade(@Nonnull IntegrationKey key, @Nonnull Project project,
-                                                      @Nonnull ExternalSystemCommunicationManager communicationManager) throws Exception {
+    
+    private RemoteExternalSystemFacade doCreateFacade(IntegrationKey key, Project project,
+                                                      ExternalSystemCommunicationManager communicationManager) throws Exception {
         RemoteExternalSystemFacade facade = communicationManager.acquire(project.getName(), key.getExternalSystemId());
         if (facade == null) {
             throw new IllegalStateException("Can't obtain facade to working with external api at the remote process. Project: " + project);
@@ -216,9 +215,9 @@ public class ExternalSystemFacadeManager {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean prepare(@Nonnull ExternalSystemCommunicationManager communicationManager,
-                            @Nonnull Project project, @Nonnull IntegrationKey key,
-                            @Nonnull Pair<RemoteExternalSystemFacade, ExternalSystemExecutionSettings> pair) {
+    private boolean prepare(ExternalSystemCommunicationManager communicationManager,
+                            Project project, IntegrationKey key,
+                            Pair<RemoteExternalSystemFacade, ExternalSystemExecutionSettings> pair) {
         if (!communicationManager.isAlive(pair.first)) {
             return false;
         }
@@ -236,7 +235,7 @@ public class ExternalSystemFacadeManager {
         }
     }
 
-    public boolean isTaskActive(@Nonnull ExternalSystemTaskId id) {
+    public boolean isTaskActive(ExternalSystemTaskId id) {
         Map<IntegrationKey, Pair<RemoteExternalSystemFacade, ExternalSystemExecutionSettings>> copy
             = new HashMap<>(myRemoteFacades);
         for (Map.Entry<IntegrationKey, Pair<RemoteExternalSystemFacade, ExternalSystemExecutionSettings>> entry : copy.entrySet()) {
@@ -261,10 +260,10 @@ public class ExternalSystemFacadeManager {
 
     private class MyHandler implements InvocationHandler {
 
-        @Nonnull
+        
         private final AtomicReference<IntegrationKey> myKey = new AtomicReference<IntegrationKey>();
 
-        MyHandler(@Nonnull IntegrationKey key) {
+        MyHandler(IntegrationKey key) {
             myKey.set(key);
         }
 

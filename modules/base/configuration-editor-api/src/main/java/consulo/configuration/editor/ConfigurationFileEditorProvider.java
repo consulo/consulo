@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,13 +31,13 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConfigurationFileEditorProvider {
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
+    
     Image getIcon();
 
-    @Nonnull
+    
     LocalizeValue getName();
 
     @Nullable
@@ -46,6 +45,6 @@ public interface ConfigurationFileEditorProvider {
         return ConfigurationEditorColor.DEFAULT_COLOR;
     }
 
-    @Nonnull
-    ConfigurationFileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file);
+    
+    ConfigurationFileEditor createEditor(Project project, VirtualFile file);
 }

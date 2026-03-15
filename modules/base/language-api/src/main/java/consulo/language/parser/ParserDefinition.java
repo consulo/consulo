@@ -32,8 +32,7 @@ import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersion;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the implementation of a parser for a custom language.
@@ -45,12 +44,12 @@ public interface ParserDefinition extends LanguageExtension {
     @Nullable
     @Deprecated
     @DeprecationInfo("prefer Application parameter")
-    static ParserDefinition forLanguage(@Nonnull Language language) {
+    static ParserDefinition forLanguage(Language language) {
         return forLanguage(Application.get(), language);
     }
 
     @Nullable
-    static ParserDefinition forLanguage(@Nonnull Application application, @Nonnull Language language) {
+    static ParserDefinition forLanguage(Application application, Language language) {
         return ParserDefinitionExtensionPoint.forLanguage(application, language);
     }
 
@@ -58,7 +57,7 @@ public interface ParserDefinition extends LanguageExtension {
      * Language of parser definition
      */
     @Override
-    @Nonnull
+    
     Language getLanguage();
 
     /**
@@ -68,8 +67,8 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the lexer instance.
      */
-    @Nonnull
-    Lexer createLexer(@Nonnull LanguageVersion languageVersion);
+    
+    Lexer createLexer(LanguageVersion languageVersion);
 
     /**
      * Returns the parser for parsing files in the specified project.
@@ -77,15 +76,15 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the parser instance.
      */
-    @Nonnull
-    PsiParser createParser(@Nonnull LanguageVersion languageVersion);
+    
+    PsiParser createParser(LanguageVersion languageVersion);
 
     /**
      * Returns the element type of the node describing a file in the specified language.
      *
      * @return the file node element type.
      */
-    @Nonnull
+    
     IFileElementType getFileNodeType();
 
     /**
@@ -99,8 +98,8 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the set of whitespace token types.
      */
-    @Nonnull
-    default TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
+    
+    default TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
         return TokenSet.WHITE_SPACE;
     }
 
@@ -112,8 +111,8 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the set of comment token types.
      */
-    @Nonnull
-    TokenSet getCommentTokens(@Nonnull LanguageVersion languageVersion);
+    
+    TokenSet getCommentTokens(LanguageVersion languageVersion);
 
     /**
      * Returns the set of element types which are treated as string literals. "Search in strings"
@@ -122,8 +121,8 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the set of string literal element types.
      */
-    @Nonnull
-    TokenSet getStringLiteralElements(@Nonnull LanguageVersion languageVersion);
+    
+    TokenSet getStringLiteralElements(LanguageVersion languageVersion);
 
     /**
      * Creates a PSI element for the specified AST node. The AST tree is a simple, semantic-free
@@ -133,9 +132,9 @@ public interface ParserDefinition extends LanguageExtension {
      * @param node the node for which the PSI element should be returned.
      * @return the PSI element matching the element type of the AST node.
      */
-    @Nonnull
+    
     @RequiredReadAction
-    default PsiElement createElement(@Nonnull ASTNode node) {
+    default PsiElement createElement(ASTNode node) {
         throw new UnsupportedOperationException("#createElement() is not implemented for elementType: " + node.getElementType());
     }
 
@@ -145,8 +144,8 @@ public interface ParserDefinition extends LanguageExtension {
      * @param viewProvider virtual file.
      * @return the PSI file element.
      */
-    @Nonnull
-    PsiFile createFile(@Nonnull FileViewProvider viewProvider);
+    
+    PsiFile createFile(FileViewProvider viewProvider);
 
     /**
      * Checks if the specified two token types need to be separated by a space according to the language grammar.
@@ -157,7 +156,7 @@ public interface ParserDefinition extends LanguageExtension {
      * @param right the second token to check.
      * @return the spacing requirements.
      */
-    @Nonnull
+    
     default SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right) {
         //noinspection deprecation
         return spaceExistanceTypeBetweenTokens(left, right);
@@ -167,7 +166,7 @@ public interface ParserDefinition extends LanguageExtension {
      * @deprecated Override {@link ParserDefinition#spaceExistenceTypeBetweenTokens(ASTNode, ASTNode)} instead
      */
     @Deprecated
-    @Nonnull
+    
     default SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
         return SpaceRequirements.MAY;
     }

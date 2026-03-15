@@ -19,8 +19,7 @@ import consulo.proxy.advanced.internal.AdvancedProxyFacade;
 import consulo.proxy.advanced.internal.impl.bytebuddy.ByteBuddyAdvancedProxyFacade;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.util.Collection;
 import java.util.Objects;
@@ -36,7 +35,7 @@ public final class AdvancedProxyBuilder<T> {
     ourAdvancedProxyFacade = new ByteBuddyAdvancedProxyFacade();
   }
 
-  @Nonnull
+  
   public static <K> AdvancedProxyBuilder<K> create(@Nullable Class<K> superClass) {
     return new AdvancedProxyBuilder<>(superClass);
   }
@@ -53,36 +52,36 @@ public final class AdvancedProxyBuilder<T> {
     mySuperClass = superClass;
   }
 
-  @Nonnull
-  public AdvancedProxyBuilder<T> withSuperConstructorArguments(@Nonnull Object... args) {
+  
+  public AdvancedProxyBuilder<T> withSuperConstructorArguments(Object... args) {
     mySuperConstructorArguments = args;
     return this;
   }
 
-  @Nonnull
-  public AdvancedProxyBuilder<T> withInterfaces(@Nonnull Class... interfaces) {
+  
+  public AdvancedProxyBuilder<T> withInterfaces(Class... interfaces) {
     myInterfaces = interfaces;
     return this;
   }
 
-  @Nonnull
-  public AdvancedProxyBuilder<T> withInterfaces(@Nonnull Collection<Class> interfaces) {
+  
+  public AdvancedProxyBuilder<T> withInterfaces(Collection<Class> interfaces) {
     return withInterfaces(interfaces.toArray(ArrayUtil.EMPTY_CLASS_ARRAY));
   }
 
-  @Nonnull
-  public AdvancedProxyBuilder<T> withInvocationHandler(@Nonnull InvocationHandler invocationHandler) {
+  
+  public AdvancedProxyBuilder<T> withInvocationHandler(InvocationHandler invocationHandler) {
     myInvocationHandler = invocationHandler;
     return this;
   }
 
-  @Nonnull
+  
   public AdvancedProxyBuilder<T> withInterceptObjectMethods(boolean interceptObjectMethods) {
     myInterceptObjectMethods = interceptObjectMethods;
     return this;
   }
 
-  @Nonnull
+  
   public T build() {
     Objects.requireNonNull(myInvocationHandler, "invocation handler must be set");
     return ourAdvancedProxyFacade.create(mySuperClass, myInterfaces, myInvocationHandler, myInterceptObjectMethods, mySuperConstructorArguments);

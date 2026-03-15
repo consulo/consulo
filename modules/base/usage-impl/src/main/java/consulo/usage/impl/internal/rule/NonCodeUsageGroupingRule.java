@@ -22,8 +22,6 @@ import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageInFile;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author max
@@ -39,7 +37,7 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     private static final UsageGroup INSTANCE = new CodeUsageGroup();
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return view == null ? UsageViewBundle.message("node.group.code.usages") : view.getPresentation().getCodeUsagesString();
     }
@@ -51,7 +49,7 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public int compareTo(@Nonnull UsageGroup usageGroup) {
+    public int compareTo(UsageGroup usageGroup) {
       if (usageGroup instanceof DynamicUsageGroup) {
         return -1;
       }
@@ -63,7 +61,7 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     public static final UsageGroup INSTANCE = new UsageInGeneratedCodeGroup();
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return view == null ? UsageViewBundle.message("node.usages.in.generated.code") : view.getPresentation().getUsagesInGeneratedCodeString();
     }
@@ -74,7 +72,7 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public int compareTo(@Nonnull UsageGroup usageGroup) {
+    public int compareTo(UsageGroup usageGroup) {
       return usageGroup == this ? 0 : -1;
     }
   }
@@ -83,7 +81,7 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     public static final UsageGroup INSTANCE = new NonCodeUsageGroup();
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return view == null ? UsageViewBundle.message("node.group.code.usages") : view.getPresentation().getNonCodeUsagesString();
     }
@@ -99,17 +97,17 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public int compareTo(@Nonnull UsageGroup usageGroup) {
+    public int compareTo(UsageGroup usageGroup) {
       return usageGroup == this ? 0 : -1;
     }
   }
 
   private static class DynamicUsageGroup extends UsageGroupBase {
     public static final UsageGroup INSTANCE = new DynamicUsageGroup();
-    @NonNls private static final String DYNAMIC_CAPTION = "Dynamic usages";
+    private static final String DYNAMIC_CAPTION = "Dynamic usages";
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       if (view == null) {
         return DYNAMIC_CAPTION;
@@ -127,13 +125,13 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public int compareTo(@Nonnull UsageGroup usageGroup) {
+    public int compareTo(UsageGroup usageGroup) {
       return usageGroup == this ? 0 : 1;
     }
   }
 
   @Override
-  public UsageGroup groupUsage(@Nonnull Usage usage) {
+  public UsageGroup groupUsage(Usage usage) {
     if (usage instanceof UsageInFile) {
       VirtualFile file = ((UsageInFile)usage).getFile();
       if (file != null) {

@@ -19,7 +19,6 @@ import consulo.module.Module;
 import consulo.module.UnloadedModuleDescription;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 
@@ -30,9 +29,9 @@ import java.util.Set;
 public interface ModuleAwareSearchScope extends ProjectAwareSearchScope {
   boolean isSearchInLibraries();
 
-  public abstract boolean isSearchInModuleContent(@Nonnull Module aModule);
+  public abstract boolean isSearchInModuleContent(Module aModule);
 
-  default boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
+  default boolean isSearchInModuleContent(Module aModule, boolean testSources) {
     return isSearchInModuleContent(aModule);
   }
 
@@ -40,7 +39,7 @@ public interface ModuleAwareSearchScope extends ProjectAwareSearchScope {
     return false;
   }
 
-  @Nonnull
+  
   default Collection<UnloadedModuleDescription> getUnloadedModulesBelongingToScope() {
     return Set.of();
   }

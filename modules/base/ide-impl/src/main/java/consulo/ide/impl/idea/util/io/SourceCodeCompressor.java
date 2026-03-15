@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.io;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,7 +38,7 @@ public class SourceCodeCompressor {
   }
 
   static {
-    @NonNls String preset_buf_string =
+    String preset_buf_string =
       "                   ;\r\n\r\n\r\n\r\n\n\n\n { {\r\n }\r\n = == != < > >= <= ? : ++ += -- -= [] [i] () ()) ())) (); ()); ())); () {" +
       "// /* /** */ * opyright (c)package com.import java.utilimport javax.swingimport java.awt" +
       "import com.intellijimport org.import gnu.*;new super(this(public interface extends implements " +

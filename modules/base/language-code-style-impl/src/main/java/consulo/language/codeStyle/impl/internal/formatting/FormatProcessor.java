@@ -20,8 +20,7 @@ import consulo.document.Document;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.*;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,10 +31,10 @@ public class FormatProcessor {
   private final boolean myReformatContext;
   private final Document myDocument;
 
-  @Nonnull
+  
   private final FormattingProgressCallback myProgressCallback;
 
-  @Nonnull
+  
   private final StateProcessor myStateProcessor;
 
   public FormatProcessor(FormattingDocumentModel docModel,
@@ -43,11 +42,11 @@ public class FormatProcessor {
                          CodeStyleSettings settings,
                          CommonCodeStyleSettings.IndentOptions indentOptions,
                          @Nullable FormatTextRanges affectedRanges,
-                         @Nonnull FormattingProgressCallback progressCallback) {
+                         FormattingProgressCallback progressCallback) {
     this(docModel, rootBlock, new FormatOptions(settings, indentOptions, affectedRanges), progressCallback);
   }
 
-  public FormatProcessor(FormattingDocumentModel model, Block block, FormatOptions options, @Nonnull FormattingProgressCallback callback) {
+  public FormatProcessor(FormattingDocumentModel model, Block block, FormatOptions options, FormattingProgressCallback callback) {
     myProgressCallback = callback;
 
     CommonCodeStyleSettings.IndentOptions defaultIndentOption = options.myIndentOptions;
@@ -185,7 +184,7 @@ public class FormatProcessor {
   }
 
   @Nullable
-  private static ChildAttributesInfo getChildAttributesInfo(@Nonnull Block block, int index, @Nullable AbstractBlockWrapper parent) {
+  private static ChildAttributesInfo getChildAttributesInfo(Block block, int index, @Nullable AbstractBlockWrapper parent) {
     if (parent == null) {
       return null;
     }
@@ -326,8 +325,8 @@ public class FormatProcessor {
    * @param block block to check
    * @return the most nested block of the given one that shares the same text range if any; given block otherwise
    */
-  @Nonnull
-  private static AbstractBlockWrapper getLastNestedCompositeBlockForSameRange(@Nonnull AbstractBlockWrapper block) {
+  
+  private static AbstractBlockWrapper getLastNestedCompositeBlockForSameRange(AbstractBlockWrapper block) {
     if (!(block instanceof CompositeBlockWrapper)) {
       return block;
     }

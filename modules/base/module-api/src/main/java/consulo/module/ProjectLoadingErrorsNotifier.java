@@ -20,7 +20,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -29,7 +28,7 @@ import java.util.Collection;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ProjectLoadingErrorsNotifier {
 
-  public static ProjectLoadingErrorsNotifier getInstance(@Nonnull Project project) {
+  public static ProjectLoadingErrorsNotifier getInstance(Project project) {
     return project.getInstance(ProjectLoadingErrorsNotifier.class);
   }
 

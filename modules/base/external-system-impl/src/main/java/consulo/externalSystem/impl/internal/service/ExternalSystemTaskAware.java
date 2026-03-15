@@ -2,7 +2,6 @@ package consulo.externalSystem.impl.internal.service;
 
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
-import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -24,7 +23,7 @@ public interface ExternalSystemTaskAware {
    *            <code>false</code> otherwise
    * @throws RemoteException      as required by RMI
    */
-  boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException;
+  boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException;
 
   /**
    * Allows to cancel the target task by the current service.
@@ -35,7 +34,7 @@ public interface ExternalSystemTaskAware {
    *            <code>false</code> otherwise
    * @throws RemoteException      as required by RMI
    */
-  boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException;
+  boolean cancelTask(ExternalSystemTaskId id) throws RemoteException;
 
   /**
    * Allows to ask current service for all tasks being executed at the moment.  
@@ -43,6 +42,6 @@ public interface ExternalSystemTaskAware {
    * @return      ids of all tasks being executed at the moment grouped by type
    * @throws RemoteException      as required by RMI
    */
-  @Nonnull
+  
   Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException;
 }

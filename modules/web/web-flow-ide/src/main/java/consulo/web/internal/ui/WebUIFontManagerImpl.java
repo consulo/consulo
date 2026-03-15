@@ -18,7 +18,6 @@ package consulo.web.internal.ui;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.impl.internal.UIFontManagerImpl;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -28,7 +27,7 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class WebUIFontManagerImpl extends UIFontManagerImpl {
-  @Nonnull
+  
   @Override
   protected Pair<String, Integer> resolveSystemFontData() {
     // TODO wrong

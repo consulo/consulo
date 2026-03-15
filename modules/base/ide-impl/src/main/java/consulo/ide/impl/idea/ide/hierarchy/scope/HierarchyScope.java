@@ -19,7 +19,6 @@ import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -28,18 +27,18 @@ import java.util.Map;
  * @since 2025-04-24
  */
 public interface HierarchyScope {
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
+    
     LocalizeValue getPresentableName();
 
-    boolean isInScope(PsiElement baseClass, @Nonnull PsiElement srcElement);
+    boolean isInScope(PsiElement baseClass, PsiElement srcElement);
 
-    @Nonnull
+    
     SearchScope getSearchScope(PsiElement thisClass);
 
-    static HierarchyScope find(@Nonnull Project project, String id) {
+    static HierarchyScope find(Project project, String id) {
         if (id == null) {
             return AllHierarchyScope.INSTANCE;
         }

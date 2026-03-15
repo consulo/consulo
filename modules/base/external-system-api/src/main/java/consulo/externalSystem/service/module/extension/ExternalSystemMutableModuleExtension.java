@@ -17,17 +17,16 @@ package consulo.externalSystem.service.module.extension;
 
 import consulo.module.extension.MutableModuleExtension;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 03-Jun-17
  */
 public interface ExternalSystemMutableModuleExtension<T extends ExternalSystemModuleExtension<T>> extends ExternalSystemModuleExtension<T>, MutableModuleExtension<T> {
-  void setOption(@Nonnull String key, @Nullable String value);
+  void setOption(String key, @Nullable String value);
 
-  void removeOption(@Nonnull String key);
+  void removeOption(String key);
 
   void removeAllOptions();
 }

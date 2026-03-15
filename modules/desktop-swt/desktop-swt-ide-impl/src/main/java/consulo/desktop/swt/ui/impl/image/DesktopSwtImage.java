@@ -17,18 +17,17 @@ package consulo.desktop.swt.ui.impl.image;
 
 import org.eclipse.swt.graphics.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 10/07/2021
  */
 public interface DesktopSwtImage {
-  @Nonnull
+  
   static Image toSWTImage(consulo.ui.image.Image image) {
     return ((DesktopSwtImage)image).toSWTImage();
   }
 
-  @Nonnull
+  
   Image toSWTImage();
 }

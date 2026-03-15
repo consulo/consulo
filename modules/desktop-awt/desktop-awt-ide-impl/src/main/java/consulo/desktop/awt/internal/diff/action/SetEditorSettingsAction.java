@@ -30,26 +30,24 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
-    @Nonnull
+   
     private final TextDiffSettingsHolder.TextDiffSettings myTextSettings;
-    @Nonnull
+   
     private final List<? extends Editor> myEditors;
-    @Nullable
-    private SyncScrollSupport.Support mySyncScrollSupport;
+    private SyncScrollSupport.@Nullable Support mySyncScrollSupport;
 
-    @Nonnull
+   
     private final AnAction[] myActions;
 
     public SetEditorSettingsAction(
-        @Nonnull TextDiffSettingsHolder.TextDiffSettings settings,
-        @Nonnull List<? extends Editor> editors
+        TextDiffSettingsHolder.TextDiffSettings settings,
+        List<? extends Editor> editors
     ) {
         super(DiffLocalize.editorSettings(), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
         setPopup(true);
@@ -73,7 +71,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
                 }
 
                 @Override
-                public void apply(@Nonnull Editor editor, boolean value) {
+                public void apply(Editor editor, boolean value) {
                     if (editor.getSettings().isWhitespacesShown() != value) {
                         editor.getSettings().setWhitespacesShown(value);
                         editor.getComponent().repaint();
@@ -92,7 +90,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
                 }
 
                 @Override
-                public void apply(@Nonnull Editor editor, boolean value) {
+                public void apply(Editor editor, boolean value) {
                     if (editor.getSettings().isLineNumbersShown() != value) {
                         editor.getSettings().setLineNumbersShown(value);
                         editor.getComponent().repaint();
@@ -111,7 +109,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
                 }
 
                 @Override
-                public void apply(@Nonnull Editor editor, boolean value) {
+                public void apply(Editor editor, boolean value) {
                     if (editor.getSettings().isIndentGuidesShown() != value) {
                         editor.getSettings().setIndentGuidesShown(value);
                         editor.getComponent().repaint();
@@ -133,7 +131,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
                 }
 
                 @Override
-                public void apply(@Nonnull Editor editor, boolean value) {
+                public void apply(Editor editor, boolean value) {
                     if (editor.getSettings().isUseSoftWraps() == value) {
                         return;
                     }
@@ -152,7 +150,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
                 }
 
                 @Override
-                public void applyDefaults(@Nonnull List<? extends Editor> editors) {
+                public void applyDefaults(List<? extends Editor> editors) {
                     if (!myTextSettings.isUseSoftWraps()) {
                         for (Editor editor : editors) {
                             myForcedSoftWrap = myForcedSoftWrap || ((RealEditor)editor).shouldSoftWrapsBeForced();
@@ -165,7 +163,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         };
     }
 
-    public void setSyncScrollSupport(@Nullable SyncScrollSupport.Support syncScrollSupport) {
+    public void setSyncScrollSupport(SyncScrollSupport.@Nullable Support syncScrollSupport) {
         mySyncScrollSupport = syncScrollSupport;
     }
 
@@ -175,7 +173,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         }
     }
 
-    @Nonnull
+   
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<AnAction> result = new ArrayList<>();
@@ -186,18 +184,18 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
     }
 
     private abstract class EditorSettingToggleAction extends ToggleAction implements DumbAware, EditorSettingAction {
-        private EditorSettingToggleAction(@Nonnull String actionId) {
+        private EditorSettingToggleAction(String actionId) {
             ActionImplUtil.copyFrom(this, actionId);
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return isSelected();
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             setSelected(state);
             for (Editor editor : myEditors) {
                 apply(editor, state);
@@ -208,10 +206,10 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
 
         public abstract void setSelected(boolean value);
 
-        public abstract void apply(@Nonnull Editor editor, boolean value);
+        public abstract void apply(Editor editor, boolean value);
 
         @Override
-        public void applyDefaults(@Nonnull List<? extends Editor> editors) {
+        public void applyDefaults(List<? extends Editor> editors) {
             for (Editor editor : editors) {
                 apply(editor, isSelected());
             }
@@ -226,40 +224,40 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
             myOptions = ContainerUtil.map(HighlightingLevel.values(), OptionAction::new, AnAction.EMPTY_ARRAY);
         }
 
-        @Nonnull
+       
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myOptions;
         }
 
         @Override
-        public void applyDefaults(@Nonnull List<? extends Editor> editors) {
+        public void applyDefaults(List<? extends Editor> editors) {
             apply(myTextSettings.getHighlightingLevel());
         }
 
-        private void apply(@Nonnull HighlightingLevel layer) {
+        private void apply(HighlightingLevel layer) {
             for (Editor editor : myEditors) {
                 ((RealEditor)editor).setHighlightingFilter(layer.getCondition());
             }
         }
 
         private class OptionAction extends ToggleAction implements DumbAware {
-            @Nonnull
+           
             private final HighlightingLevel myLayer;
 
-            public OptionAction(@Nonnull HighlightingLevel layer) {
+            public OptionAction(HighlightingLevel layer) {
                 super(layer.getText(), LocalizeValue.empty(), layer.getIcon());
                 myLayer = layer;
             }
 
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return myTextSettings.getHighlightingLevel() == myLayer;
             }
 
             @Override
             @RequiredUIAccess
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 myTextSettings.setHighlightingLevel(myLayer);
                 apply(myLayer);
             }
@@ -267,6 +265,6 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
     }
 
     private interface EditorSettingAction {
-        void applyDefaults(@Nonnull List<? extends Editor> editors);
+        void applyDefaults(List<? extends Editor> editors);
     }
 }

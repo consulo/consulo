@@ -18,8 +18,7 @@ package consulo.configurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public interface Settings {
     Key<Settings> KEY = Key.create("options.editor");
 
     @Nullable
-    SearchableConfigurable findConfigurableById(@Nonnull String configurableId);
+    SearchableConfigurable findConfigurableById(String configurableId);
 
     <T extends Configurable> T findConfigurable(Class<T> configurableClass);
 
@@ -47,8 +46,8 @@ public interface Settings {
     @DeprecationInfo("Use #select(Class)")
     AsyncResult<Void> clearSearchAndSelect(Configurable configurable);
 
-    @Nonnull
-    <T extends UnnamedConfigurable> AsyncResult<T> select(@Nonnull Class<T> clazz);
+    
+    <T extends UnnamedConfigurable> AsyncResult<T> select(Class<T> clazz);
 
-    AsyncResult<Configurable> select(@Nonnull String confurableId);
+    AsyncResult<Configurable> select(String confurableId);
 }

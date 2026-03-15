@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt.speedSearch;
 
 import consulo.ui.ex.awt.util.ListUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -114,7 +113,7 @@ public class FilteringListModel<T> extends AbstractListModel<T> {
     return myData.contains(value);
   }
 
-  @Nonnull
+  
   public ListModel<T> getOriginalModel() {
     return myOriginalModel;
   }

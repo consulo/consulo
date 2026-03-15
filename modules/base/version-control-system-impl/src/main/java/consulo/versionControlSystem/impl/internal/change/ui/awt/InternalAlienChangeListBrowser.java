@@ -23,7 +23,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +48,7 @@ public class InternalAlienChangeListBrowser extends InternalChangesBrowser {
     myViewer.setChangesToDisplay(myChanges ==  null ? Collections.<Change>emptyList() : myChanges);
   }
 
-  protected void setInitialSelection(List<? extends ChangeList> changeLists, @Nonnull List<Change> changes, ChangeList initialListSelection) {
+  protected void setInitialSelection(List<? extends ChangeList> changeLists, List<Change> changes, ChangeList initialListSelection) {
     if (! changeLists.isEmpty()) {
       mySelectedChangeList = changeLists.get(0);
     }
@@ -63,13 +62,13 @@ public class InternalAlienChangeListBrowser extends InternalChangesBrowser {
   }
 
   @Override
-  @Nonnull
+  
   public Set<AbstractVcs> getAffectedVcses() {
     return Set.of(myVcs);
   }
 
   @Override
-  @Nonnull
+  
   public List<Change> getCurrentIncludedChanges() {
     return new ArrayList<>(myChanges);
   }

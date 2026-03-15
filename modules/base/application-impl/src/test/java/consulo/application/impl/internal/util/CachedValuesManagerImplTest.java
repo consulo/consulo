@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.mockito.verification.VerificationMode;
 
@@ -49,20 +48,20 @@ public class CachedValuesManagerImplTest {
 
         @Nullable
         @Override
-        public <T> T getUserData(@Nonnull Key<T> key) {
+        public <T> T getUserData(Key<T> key) {
             check(key);
             return (T) data;
         }
 
         @Override
-        public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
             check(key);
             data = (CachedValue) value;
         }
 
-        @Nonnull
+        
         @Override
-        public <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value) {
+        public <T> T putUserDataIfAbsent(Key<T> key, T value) {
             check(key);
             if (data == null) {
                 data = (CachedValue) value;
@@ -83,7 +82,7 @@ public class CachedValuesManagerImplTest {
         }
 
         @Override
-        public <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
+        public <T> boolean replace(Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
             throw new UnsupportedOperationException();
         }
     }

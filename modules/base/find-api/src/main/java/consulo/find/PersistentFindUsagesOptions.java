@@ -6,25 +6,24 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class PersistentFindUsagesOptions extends FindUsagesOptions {
   @RequiredReadAction
-  public PersistentFindUsagesOptions(@Nonnull Project project) {
+  public PersistentFindUsagesOptions(Project project) {
     super(project);
   }
 
   @RequiredReadAction
-  public PersistentFindUsagesOptions(@Nonnull Project project, @Nullable DataContext dataContext) {
+  public PersistentFindUsagesOptions(Project project, @Nullable DataContext dataContext) {
     super(project, dataContext);
   }
 
-  public PersistentFindUsagesOptions(@Nonnull SearchScope searchScope) {
+  public PersistentFindUsagesOptions(SearchScope searchScope) {
     super(searchScope);
   }
 
-  public abstract void setDefaults(@Nonnull Project project);
+  public abstract void setDefaults(Project project);
 
-  public abstract void storeDefaults(@Nonnull Project project);
+  public abstract void storeDefaults(Project project);
 }

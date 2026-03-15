@@ -16,8 +16,7 @@ import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,23 +43,23 @@ public class IndexInfrastructure {
   private IndexInfrastructure() {
   }
 
-  @Nonnull
-  public static File getVersionFile(@Nonnull ID<?, ?> indexName) {
+  
+  public static File getVersionFile(ID<?, ?> indexName) {
     return new File(getIndexDirectory(indexName, true), indexName + ".ver");
   }
 
-  @Nonnull
-  public static File getStorageFile(@Nonnull ID<?, ?> indexName) {
+  
+  public static File getStorageFile(ID<?, ?> indexName) {
     return new File(getIndexRootDir(indexName), indexName.getName());
   }
 
-  @Nonnull
-  public static File getInputIndexStorageFile(@Nonnull ID<?, ?> indexName) {
+  
+  public static File getInputIndexStorageFile(ID<?, ?> indexName) {
     return new File(getIndexRootDir(indexName), indexName + "_inputs");
   }
 
-  @Nonnull
-  public static File getIndexRootDir(@Nonnull ID<?, ?> indexName) {
+  
+  public static File getIndexRootDir(ID<?, ?> indexName) {
     return getIndexDirectory(indexName, false);
   }
 
@@ -70,18 +69,18 @@ public class IndexInfrastructure {
     return indexDir;
   }
 
-  @Nonnull
-  public static File getPersistentIndexRootDir(@Nonnull ID<?, ?> indexName) {
+  
+  public static File getPersistentIndexRootDir(ID<?, ?> indexName) {
     return getIndexDirectory(indexName, false, PERSISTENT_INDEX_DIRECTORY_NAME);
   }
 
-  @Nonnull
-  private static File getIndexDirectory(@Nonnull ID<?, ?> indexName, boolean forVersion) {
+  
+  private static File getIndexDirectory(ID<?, ?> indexName, boolean forVersion) {
     return getIndexDirectory(indexName, forVersion, "");
   }
 
-  @Nonnull
-  private static File getIndexDirectory(@Nonnull ID<?, ?> indexName, boolean forVersion, String relativePath) {
+  
+  private static File getIndexDirectory(ID<?, ?> indexName, boolean forVersion, String relativePath) {
     String dirName = StringUtil.toLowerCase(indexName.getName());
     File indexDir;
 
@@ -99,17 +98,17 @@ public class IndexInfrastructure {
   }
 
   @Nullable
-  public static VirtualFile findFileById(@Nonnull PersistentFS fs, int id) {
+  public static VirtualFile findFileById(PersistentFS fs, int id) {
     return fs.findFileById(id);
   }
 
   @Nullable
-  public static VirtualFile findFileByIdIfCached(@Nonnull PersistentFS fs, int id) {
+  public static VirtualFile findFileByIdIfCached(PersistentFS fs, int id) {
     return fs.findFileByIdIfCached(id);
   }
 
-  @Nonnull
-  public static <T> Future<T> submitGenesisTask(@Nonnull Callable<T> action) {
+  
+  public static <T> Future<T> submitGenesisTask(Callable<T> action) {
     return ourGenesisExecutor.submit(action);
   }
 
@@ -136,9 +135,9 @@ public class IndexInfrastructure {
     protected void prepare() {
     }
 
-    protected abstract void onThrowable(@Nonnull Throwable t);
+    protected abstract void onThrowable(Throwable t);
 
-    protected void addNestedInitializationTask(@Nonnull ThrowableRunnable<?> nestedInitializationTask) {
+    protected void addNestedInitializationTask(ThrowableRunnable<?> nestedInitializationTask) {
       myNestedInitializationTasks.add(nestedInitializationTask);
     }
 
@@ -167,7 +166,7 @@ public class IndexInfrastructure {
       }
     }
 
-    private void executeNestedInitializationTask(@Nonnull ThrowableRunnable<?> callable, CountDownLatch proceedLatch) {
+    private void executeNestedInitializationTask(ThrowableRunnable<?> callable, CountDownLatch proceedLatch) {
       Application app = ApplicationManager.getApplication();
       try {
         // To correctly apply file removals in indices's shutdown hook we should process all initialization tasks

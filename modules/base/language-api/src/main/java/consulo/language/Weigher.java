@@ -22,8 +22,7 @@ import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,8 +48,8 @@ public abstract class Weigher<T, Location> {
     return map;
   });
 
-  @Nonnull
-  public static  List<Weigher> forKey(@Nonnull Key key) {
+  
+  public static  List<Weigher> forKey(Key key) {
     Map<Key, List<Weigher>> map = Application.get().getExtensionPoint(Weigher.class).getOrBuildCache(KEY);
     return map.getOrDefault(key, List.of());
   }
@@ -76,8 +75,8 @@ public abstract class Weigher<T, Location> {
   }
 
   @Nullable
-  public abstract Comparable weigh(@Nonnull T element, @Nonnull Location location);
+  public abstract Comparable weigh(T element, Location location);
 
-  @Nonnull
+  
   public abstract Key<?> getKey();
 }

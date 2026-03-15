@@ -7,7 +7,6 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * This service keeps track of scopes inside quotes or brackets in editor, which user can exit (moving caret just to the right of closing
@@ -24,7 +23,7 @@ public interface TabOutScopesTracker {
    * Registers a new scope (empty at the time of call) at caret offset. Caret is supposed to be located between just inserted pair
    * of quotes/brackets.
    */
-  default void registerEmptyScopeAtCaret(@Nonnull Editor editor) {
+  default void registerEmptyScopeAtCaret(Editor editor) {
     registerEmptyScope(editor, editor.getCaretModel().getOffset());
   }
 
@@ -32,7 +31,7 @@ public interface TabOutScopesTracker {
    * Registers a new scope (empty at the time of call) at the given offset. Provided offset is supposed to point at the location between
    * just inserted pair of quotes/brackets.
    */
-  default void registerEmptyScope(@Nonnull Editor editor, int offset) {
+  default void registerEmptyScope(Editor editor, int offset) {
     registerEmptyScope(editor, offset, offset + 1);
   }
 
@@ -42,14 +41,14 @@ public interface TabOutScopesTracker {
    * @param tabOutOffset position where caret should be moved when Tab is used to exit the scope (should be larger than {@code offset})
    */
   @RequiredUIAccess
-  void registerEmptyScope(@Nonnull Editor editor, int offset, int tabOutOffset);
+  void registerEmptyScope(Editor editor, int offset, int tabOutOffset);
 
   /**
    * Checks whether given offset is at the end of tracked scope (so if caret is located at that offset, Tab key can be used to move out of
    * the scope).
    */
   @RequiredUIAccess
-  boolean hasScopeEndingAt(@Nonnull Editor editor, int offset);
+  boolean hasScopeEndingAt(Editor editor, int offset);
 
   /**
    * Removes a tracked scope (if any) ending at the given offset.
@@ -59,5 +58,5 @@ public interface TabOutScopesTracker {
    * @see #registerEmptyScope(Editor, int, int)
    */
   @RequiredUIAccess
-  int removeScopeEndingAt(@Nonnull Editor editor, int offset);
+  int removeScopeEndingAt(Editor editor, int offset);
 }

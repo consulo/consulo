@@ -15,13 +15,12 @@
  */
 package consulo.module.content.layer.orderEntry;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 17-May-22
  */
 public interface CustomOrderEntry<M extends CustomOrderEntryModel> extends OrderEntry {
-  @Nonnull
+  
   M getModel();
 }

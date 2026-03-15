@@ -35,7 +35,6 @@ import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -190,7 +189,7 @@ public class ChooseActionsDialog extends DialogWrapper {
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 myFilterComponent.reset();
                 if (myPopup == null) {
                     myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(createFilteringPanel(), null)
@@ -209,7 +208,7 @@ public class ChooseActionsDialog extends DialogWrapper {
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 myActionsTree.filter(null, myQuicklists); //clear filtering
                 TreeUtil.collapseAll(myActionsTree.getTree(), 0);
                 myTreeExpansionMonitor.restore();

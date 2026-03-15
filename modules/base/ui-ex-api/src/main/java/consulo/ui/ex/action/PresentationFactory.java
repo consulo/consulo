@@ -15,15 +15,14 @@
  */
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 27/06/2023
  */
 public interface PresentationFactory {
-    @Nonnull
-    Presentation getPresentation(@Nonnull AnAction action);
+    
+    Presentation getPresentation(AnAction action);
 
     void reset();
 }

@@ -19,8 +19,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -73,7 +72,7 @@ public interface RefElement extends RefEntity {
    *
    * @return the collection of outgoing references.
    */
-  @Nonnull
+  
   Collection<RefElement> getOutReferences();
 
   /**
@@ -81,7 +80,7 @@ public interface RefElement extends RefEntity {
    *
    * @return the collection of incoming references.
    */
-  @Nonnull
+  
   Collection<RefElement> getInReferences();
 
   /**
@@ -99,13 +98,13 @@ public interface RefElement extends RefEntity {
    */
   boolean isPermanentEntry();
 
-  @Nonnull
+  
   RefElement getContainingEntry();
 
   @Nullable
   PsiFile getContainingFile();
 
-  default boolean isSuppressed(@Nonnull String... toolId) {
+  default boolean isSuppressed(String... toolId) {
     return false;
   }
 

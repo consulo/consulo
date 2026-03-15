@@ -18,7 +18,6 @@ package consulo.language.editor.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.TargetElementUtilExtender;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -28,21 +27,21 @@ import java.util.Set;
 @ExtensionImpl(id = "default", order = "last")
 public class DefaultTargetElementUtilExtender implements TargetElementUtilExtender {
   @Override
-  public void collectAllAccepted(@Nonnull Set<String> set) {
+  public void collectAllAccepted(Set<String> set) {
     set.add(REFERENCED_ELEMENT_ACCEPTED);
     set.add(ELEMENT_NAME_ACCEPTED);
     set.add(LOOKUP_ITEM_ACCEPTED);
   }
 
   @Override
-  public void collectDefinitionSearchFlags(@Nonnull Set<String> set) {
+  public void collectDefinitionSearchFlags(Set<String> set) {
     set.add(REFERENCED_ELEMENT_ACCEPTED);
     set.add(ELEMENT_NAME_ACCEPTED);
     set.add(LOOKUP_ITEM_ACCEPTED);
   }
 
   @Override
-  public void collectReferenceSearchFlags(@Nonnull Set<String> set) {
+  public void collectReferenceSearchFlags(Set<String> set) {
     set.add(REFERENCED_ELEMENT_ACCEPTED);
     set.add(ELEMENT_NAME_ACCEPTED);
     set.add(LOOKUP_ITEM_ACCEPTED);

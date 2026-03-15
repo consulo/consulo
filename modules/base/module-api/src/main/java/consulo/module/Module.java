@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a module in an Consulo project.
@@ -68,10 +67,10 @@ public interface Module extends ComponentManager, Disposable, Named {
    *
    * @return the project instance.
    */
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   default Application getApplication() {
     return getProject().getApplication();
   }
@@ -82,7 +81,7 @@ public interface Module extends ComponentManager, Disposable, Named {
    * @return the module name.
    */
   @Override
-  @Nonnull
+  
   String getName();
 
   /**
@@ -94,8 +93,8 @@ public interface Module extends ComponentManager, Disposable, Named {
   boolean isDisposed();
 
   @Nullable
-  <T extends ModuleExtension<T>> T getExtension(@Nonnull Class<T> clazz);
+  <T extends ModuleExtension<T>> T getExtension(Class<T> clazz);
 
   @Nullable
-  <T extends ModuleExtension<T>> T getExtension(@Nonnull String key);
+  <T extends ModuleExtension<T>> T getExtension(String key);
 }

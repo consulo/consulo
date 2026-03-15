@@ -22,7 +22,6 @@ import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandle
 import consulo.execution.debug.impl.internal.action.handler.XAddToWatchesFromEditorActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -40,7 +39,7 @@ public class AddToWatchesAction extends XDebuggerActionBase {
         );
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

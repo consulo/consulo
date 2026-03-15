@@ -20,8 +20,7 @@ import consulo.codeEditor.EditorGutterAction;
 import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.VcsBundle;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents one part of a line annotation which is shown in the editor when the "Annotate"
@@ -51,7 +50,7 @@ public interface LineAnnotationAspect {
      * @return the tooltip text for the line
      */
     //TODO: rename to getTooltipText() after deprecation removal
-    @Nonnull
+    
     default LocalizeValue getTooltipValue(int line) {
         return LocalizeValue.ofNullable(getTooltipText(line));
     }

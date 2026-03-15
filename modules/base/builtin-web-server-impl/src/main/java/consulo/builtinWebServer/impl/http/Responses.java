@@ -28,8 +28,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.CharBuffer;
 import java.util.Calendar;
@@ -164,7 +163,7 @@ public final class Responses {
         return false;
     }
 
-    public static FullHttpResponse response(@Nonnull HttpResponseStatus status, String contentType, ByteBuf content) {
+    public static FullHttpResponse response(HttpResponseStatus status, String contentType, ByteBuf content) {
         FullHttpResponse response = content == null
             ? new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status)
             : new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content);

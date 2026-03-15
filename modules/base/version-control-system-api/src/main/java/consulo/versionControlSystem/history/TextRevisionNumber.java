@@ -16,19 +16,18 @@
 package consulo.versionControlSystem.history;
 
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 public class TextRevisionNumber implements ShortVcsRevisionNumber {
-  @Nonnull
+  
   private final String myFullRevisionNumber;
-  @Nonnull
+  
   private final String myShortRevisionNumber;
 
-  public TextRevisionNumber(@Nonnull String fullRevisionNumber) {
+  public TextRevisionNumber(String fullRevisionNumber) {
     this(fullRevisionNumber, fullRevisionNumber.substring(0, Math.min(7, fullRevisionNumber.length())));
   }
 
-  public TextRevisionNumber(@Nonnull String fullRevisionNumber, @Nonnull String shortRevisionNumber) {
+  public TextRevisionNumber(String fullRevisionNumber, String shortRevisionNumber) {
     myFullRevisionNumber = fullRevisionNumber;
     myShortRevisionNumber = shortRevisionNumber;
   }
@@ -39,7 +38,7 @@ public class TextRevisionNumber implements ShortVcsRevisionNumber {
   }
 
   @Override
-  public int compareTo(@Nonnull VcsRevisionNumber o) {
+  public int compareTo(VcsRevisionNumber o) {
     return Comparing.compare(myFullRevisionNumber, ((TextRevisionNumber) o).myFullRevisionNumber);
   }
 

@@ -24,7 +24,6 @@ import consulo.language.psi.path.FileReferenceSet;
 import consulo.language.util.ProcessingContext;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -33,21 +32,21 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class FileReferenceInjector extends ReferenceInjector {
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "file-reference";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("File Reference");
   }
 
-  @Nonnull
+  
   @Override
-  public PsiReference[] getReferences(@Nonnull PsiElement element, @Nonnull ProcessingContext context, @Nonnull TextRange range) {
+  public PsiReference[] getReferences(PsiElement element, ProcessingContext context, TextRange range) {
     String text = range.substring(element.getText());
     return new FileReferenceSet(text, element, range.getStartOffset(), null, true) {
       @Override

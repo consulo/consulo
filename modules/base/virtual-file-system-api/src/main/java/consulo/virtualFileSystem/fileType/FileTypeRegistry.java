@@ -6,8 +6,7 @@ import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A service for retrieving file types for files.
@@ -36,7 +35,7 @@ import jakarta.annotation.Nullable;
  * @author yole
  */
 public abstract class FileTypeRegistry {
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use constructor injection")
     public static FileTypeRegistry getInstance() {
@@ -50,9 +49,9 @@ public abstract class FileTypeRegistry {
      * @param name The name of the file to check.
      * @return {@code true} if the file is ignored, {@code false} otherwise.
      */
-    public abstract boolean isFileIgnored(@Nonnull String name);
+    public abstract boolean isFileIgnored(String name);
 
-    public abstract boolean isFileIgnored(@Nonnull VirtualFile file);
+    public abstract boolean isFileIgnored(VirtualFile file);
 
     /**
      * Checks if the given file has the given file type. This is faster than getting the file type
@@ -61,14 +60,14 @@ public abstract class FileTypeRegistry {
      * lead to inconsistent results if two file types report the same file as matching (which should
      * generally be avoided).
      */
-    public abstract boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type);
+    public abstract boolean isFileOfType(VirtualFile file, FileType type);
 
     /**
      * Returns the list of all registered file types.
      *
      * @return The list of file types.
      */
-    @Nonnull
+    
     public abstract FileType[] getRegisteredFileTypes();
 
     /**
@@ -77,8 +76,8 @@ public abstract class FileTypeRegistry {
      * @param file The file for which the type is requested.
      * @return The file type instance.
      */
-    @Nonnull
-    public abstract FileType getFileTypeByFile(@Nonnull VirtualFile file);
+    
+    public abstract FileType getFileTypeByFile(VirtualFile file);
 
     /**
      * Returns the file type for the specified file.
@@ -87,8 +86,8 @@ public abstract class FileTypeRegistry {
      * @param content Content of the file (if already available, to avoid reading from disk again)
      * @return The file type instance.
      */
-    @Nonnull
-    public FileType getFileTypeByFile(@Nonnull VirtualFile file, @Nullable byte[] content) {
+    
+    public FileType getFileTypeByFile(VirtualFile file, @Nullable byte[] content) {
         return getFileTypeByFile(file);
     }
 
@@ -98,8 +97,8 @@ public abstract class FileTypeRegistry {
      * @param fileNameSeq The file name for which the type is requested.
      * @return The file type instance, or {@link FileTypes#UNKNOWN} if not found.
      */
-    @Nonnull
-    public FileType getFileTypeByFileName(@Nonnull CharSequence fileNameSeq) {
+    
+    public FileType getFileTypeByFileName(CharSequence fileNameSeq) {
         return getFileTypeByFileName(fileNameSeq.toString());
     }
 
@@ -108,8 +107,8 @@ public abstract class FileTypeRegistry {
      * <p>
      * Consider to use the method above in case when you want to get VirtualFile's file type by file name.
      */
-    @Nonnull
-    public abstract FileType getFileTypeByFileName(@Nonnull String fileTypeId);
+    
+    public abstract FileType getFileTypeByFileName(String fileTypeId);
 
     /**
      * Returns the file type for the specified extension.
@@ -118,22 +117,22 @@ public abstract class FileTypeRegistry {
      * @param extension The extension for which the file type is requested, not including the leading '.'.
      * @return The file type instance, or {@link UnknownFileType#INSTANCE} if corresponding file type not found
      */
-    @Nonnull
-    public abstract FileType getFileTypeByExtension(@Nonnull String extension);
+    
+    public abstract FileType getFileTypeByExtension(String extension);
 
     /**
      * Finds a file type with the specified name.
      */
     @Nullable
-    public abstract FileType findFileTypeByName(@Nonnull String fileTypeName);
+    public abstract FileType findFileTypeByName(String fileTypeName);
 
     @Nullable
     @RequiredUIAccess
-    public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project);
+    public abstract FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project);
 
     @Nullable
     @RequiredUIAccess
-    public abstract FileType getKnownFileTypeOrAssociate(@Nonnull String fileName);
+    public abstract FileType getKnownFileTypeOrAssociate(String fileName);
 
     @Nullable
     public FileType getFileTypeByMimeType(@Nullable String mimeType) {

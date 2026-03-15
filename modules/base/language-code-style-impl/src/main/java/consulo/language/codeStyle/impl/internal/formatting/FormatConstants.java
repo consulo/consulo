@@ -17,7 +17,6 @@ package consulo.language.codeStyle.impl.internal.formatting;
 
 import consulo.codeEditor.Editor;
 import consulo.language.plain.PlainTextLanguage;
-import jakarta.annotation.Nonnull;
 
 import static consulo.language.editor.util.PsiUtilBase.getLanguageInEditor;
 
@@ -61,11 +60,11 @@ public class FormatConstants {
   private FormatConstants() {
   }
 
-  public static int getReservedLineWrapWidthInColumns(@Nonnull Editor editor) {
+  public static int getReservedLineWrapWidthInColumns(Editor editor) {
     return isPlainTextFile(editor) ? 0 : RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS;
   }
 
-  private static boolean isPlainTextFile(@Nonnull Editor editor) {
+  private static boolean isPlainTextFile(Editor editor) {
     return editor.getProject() != null && PlainTextLanguage.INSTANCE.is(getLanguageInEditor(editor, editor.getProject()));
   }
 }

@@ -16,16 +16,15 @@
 package consulo.project.ui.wm;
 
 import consulo.ui.ex.popup.Balloon;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public interface BalloonLayout {
-    void add(@Nonnull Balloon balloon);
+    void add(Balloon balloon);
 
-    void add(@Nonnull Balloon balloon, @Nullable Object layoutData);
+    void add(Balloon balloon, @Nullable Object layoutData);
 
     default boolean isForWelcomeFrame() {
         return false;

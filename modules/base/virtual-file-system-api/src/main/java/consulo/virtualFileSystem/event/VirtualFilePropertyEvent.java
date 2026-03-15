@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Provides data for event which is fired when the name or writable status of a virtual file is changed.
@@ -30,7 +29,7 @@ public class VirtualFilePropertyEvent extends VirtualFileEvent {
   private final Object myOldValue;
   private final Object myNewValue;
 
-  public VirtualFilePropertyEvent(Object requestor, @Nonnull VirtualFile file, @Nonnull String propertyName, Object oldValue, Object newValue){
+  public VirtualFilePropertyEvent(Object requestor, VirtualFile file, String propertyName, Object oldValue, Object newValue){
     super(requestor, file, file.getName(), file.getParent());
     myPropertyName = propertyName;
     myOldValue = oldValue;
@@ -44,7 +43,7 @@ public class VirtualFilePropertyEvent extends VirtualFileEvent {
    * @see VirtualFile#PROP_NAME
    * @see VirtualFile#PROP_WRITABLE
    */
-  @Nonnull
+  
   public String getPropertyName() {
     return myPropertyName;
   }

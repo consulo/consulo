@@ -19,8 +19,7 @@ import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
 import consulo.ui.ex.awt.valueEditor.ValueEditor;
 import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,20 +42,20 @@ public class CommaSeparatedIntegersField extends JBTextField {
     }
   }
 
-  public void setValue(@Nonnull List<Integer> newValue) {
+  public void setValue(List<Integer> newValue) {
     myValueEditor.setValue(newValue);
   }
 
-  @Nonnull
+  
   public List<Integer> getValue() {
     return myValueEditor.getValue();
   }
 
-  public void setDefaultValue(@Nonnull List<Integer> defaultValue) {
+  public void setDefaultValue(List<Integer> defaultValue) {
     myValueEditor.setDefaultValue(defaultValue);
   }
 
-  @Nonnull
+  
   public List<Integer> getDefaultValue() {
     return myValueEditor.getDefaultValue();
   }

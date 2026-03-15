@@ -22,7 +22,6 @@ import consulo.compiler.artifact.ui.DirectoryCopyPresentation;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -38,15 +37,15 @@ public class DirectoryCopyPackagingElement extends FileOrDirectoryCopyPackagingE
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(ArtifactEditorContext context) {
     return new DirectoryCopyPresentation(myFilePath);
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext,
-                                                     @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext,
+                                                     ArtifactType artifactType) {
     VirtualFile file = findFile();
     if (file != null && file.isValid() && file.isDirectory()) {
       creator.addDirectoryCopyInstructions(file);

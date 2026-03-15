@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**
@@ -31,8 +30,8 @@ import java.util.function.Predicate;
 public interface ASTCompositeFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTCompositeFactory> EP = ElementTypeEntryExtensionCollector.create(ASTCompositeFactory.class);
 
-  @Nonnull
-  CompositeElement createComposite(@Nonnull IElementType type);
+  
+  CompositeElement createComposite(IElementType type);
 
   @Override
   boolean test(IElementType elementType);

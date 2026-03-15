@@ -34,8 +34,7 @@ import consulo.versionControlSystem.log.internal.VersionControlSystemLogInternal
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
 import consulo.versionControlSystem.ui.awt.TableLinkMouseListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -49,22 +48,22 @@ import java.util.Collections;
  * Processes mouse clicks and moves on the table
  */
 public class GraphTableController {
-    @Nonnull
+   
     private final VcsLogGraphTable myTable;
-    @Nonnull
+   
     private final VcsLogUiImpl myUi;
-    @Nonnull
+   
     private final VcsLogDataImpl myLogData;
-    @Nonnull
+   
     private final GraphCellPainter myGraphCellPainter;
-    @Nonnull
+   
     private final GraphCommitCellRenderer myCommitRenderer;
 
-    public GraphTableController(@Nonnull VcsLogGraphTable table,
-                                @Nonnull VcsLogUiImpl ui,
-                                @Nonnull VcsLogDataImpl logData,
-                                @Nonnull GraphCellPainter graphCellPainter,
-                                @Nonnull GraphCommitCellRenderer commitRenderer) {
+    public GraphTableController(VcsLogGraphTable table,
+                                VcsLogUiImpl ui,
+                                VcsLogDataImpl logData,
+                                GraphCellPainter graphCellPainter,
+                                GraphCommitCellRenderer commitRenderer) {
         myTable = table;
         myUi = ui;
         myLogData = logData;
@@ -77,7 +76,7 @@ public class GraphTableController {
     }
 
     @Nullable
-    PrintElement findPrintElement(@Nonnull MouseEvent e) {
+    PrintElement findPrintElement(MouseEvent e) {
         int row = myTable.rowAtPoint(e.getPoint());
         if (row >= 0 && row < myTable.getRowCount()) {
             return findPrintElement(row, e);
@@ -86,13 +85,13 @@ public class GraphTableController {
     }
 
     @Nullable
-    private PrintElement findPrintElement(int row, @Nonnull MouseEvent e) {
+    private PrintElement findPrintElement(int row, MouseEvent e) {
         Point point = calcPoint4Graph(e.getPoint());
         Collection<? extends PrintElement> printElements = myTable.getVisibleGraph().getRowInfo(row).getPrintElements();
         return myGraphCellPainter.getElementUnderCursor(printElements, point.x, point.y);
     }
 
-    private void performGraphAction(@Nullable PrintElement printElement, @Nonnull MouseEvent e, @Nonnull GraphAction.Type actionType) {
+    private void performGraphAction(@Nullable PrintElement printElement, MouseEvent e, GraphAction.Type actionType) {
         boolean isClickOnGraphElement = actionType == GraphAction.Type.MOUSE_CLICK && printElement != null;
         if (isClickOnGraphElement) {
             triggerElementClick(printElement);
@@ -106,7 +105,7 @@ public class GraphTableController {
 
     public void handleGraphAnswer(@Nullable GraphAnswer<Integer> answer,
                                   boolean dataCouldChange,
-                                  @Nullable VcsLogGraphTable.Selection previousSelection,
+                                  VcsLogGraphTable.@Nullable Selection previousSelection,
                                   @Nullable MouseEvent e) {
         if (dataCouldChange) {
             myTable.getModel().fireTableDataChanged();
@@ -140,14 +139,14 @@ public class GraphTableController {
         }
     }
 
-    @Nonnull
-    private Point calcPoint4Graph(@Nonnull Point clickPoint) {
+   
+    private Point calcPoint4Graph(Point clickPoint) {
         TableColumn rootColumn = myTable.getColumnModel().getColumn(GraphTableModel.ROOT_COLUMN);
         return new Point(clickPoint.x - (myUi.isMultipleRoots() ? rootColumn.getWidth() : 0),
             PositionUtil.getYInsideRow(clickPoint, myTable.getRowHeight()));
     }
 
-    @Nonnull
+   
     private String getArrowTooltipText(int commit, @Nullable Integer row) {
         VcsShortCommitDetails details;
         if (row != null && row >= 0) {
@@ -177,17 +176,17 @@ public class GraphTableController {
         return balloonText;
     }
 
-    private void showToolTip(@Nonnull String text, @Nonnull MouseEvent e) {
+    private void showToolTip(String text, MouseEvent e) {
         VersionControlSystemLogInternal.getInstance().showToolTip(myTable, text, e);
     }
 
-    private void showOrHideCommitTooltip(int row, int column, @Nonnull MouseEvent e) {
+    private void showOrHideCommitTooltip(int row, int column, MouseEvent e) {
         if (!showTooltip(row, column, e.getPoint(), false)) {
             VersionControlSystemLogInternal.getInstance().hideToolTip(e);
         }
     }
 
-    private boolean showTooltip(int row, int column, @Nonnull Point point, boolean now) {
+    private boolean showTooltip(int row, int column, Point point, boolean now) {
         JComponent tipComponent = myCommitRenderer.getTooltip(myTable.getValueAt(row, column), calcPoint4Graph(point), row);
 
         if (tipComponent != null) {
@@ -213,7 +212,7 @@ public class GraphTableController {
         }
     }
 
-    private static void triggerElementClick(@Nonnull PrintElement printElement) {
+    private static void triggerElementClick(PrintElement printElement) {
         if (printElement instanceof NodePrintElement) {
             VcsLogUtil.triggerUsage("GraphNodeClick");
         }
@@ -225,7 +224,7 @@ public class GraphTableController {
     }
 
     private class MyMouseAdapter extends MouseAdapter {
-        @Nonnull
+       
         private final TableLinkMouseListener myLinkListener = new SimpleColoredComponentLinkMouseListener();
 
         @Override

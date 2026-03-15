@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement;
 
 import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -33,6 +32,6 @@ public interface RulePriorityAwareSettings extends ArrangementSettings {
    * <b>Note:</b> It's expected that rules sort is stable
    * @return list of rules sorted in order of matching
    */
-  @Nonnull
+  
   List<? extends ArrangementMatchRule> getRulesSortedByPriority();
 }

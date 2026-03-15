@@ -19,8 +19,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,11 +39,11 @@ public abstract class AbstractNavBarModelExtension implements NavBarModelExtensi
 
   @Nullable
   @Override
-  public PsiElement getParent(@Nonnull PsiElement psiElement) {
+  public PsiElement getParent(PsiElement psiElement) {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<VirtualFile> additionalRoots(Project project) {
     return List.of();

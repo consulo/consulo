@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ProgramRunner;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -39,7 +38,7 @@ public class RunnerRegistryImpl extends RunnerRegistry {
     }
 
     @Override
-    public boolean hasRunner(@Nonnull String executorId, @Nonnull RunProfile settings) {
+    public boolean hasRunner(String executorId, RunProfile settings) {
         return getRunner(executorId, settings) != null;
     }
 

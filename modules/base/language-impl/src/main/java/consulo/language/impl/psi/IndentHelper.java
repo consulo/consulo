@@ -23,7 +23,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -56,9 +55,9 @@ public abstract class IndentHelper {
         return element.getPsi().getContainingFile();
     }
 
-    public abstract int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element);
+    public abstract int getIndent(PsiFile file, ASTNode element);
 
-    public abstract int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace);
+    public abstract int getIndent(PsiFile file, ASTNode element, boolean includeNonSpace);
 
     @Deprecated
     public abstract String fillIndent(Project project, FileType fileType, int indent);
@@ -66,5 +65,5 @@ public abstract class IndentHelper {
     @Deprecated
     public abstract int getIndent(Project project, FileType fileType, String text, boolean includeNonSpace);
 
-    public abstract int getIndent(@Nonnull PsiFile file, String text, boolean includeNonSpace);
+    public abstract int getIndent(PsiFile file, String text, boolean includeNonSpace);
 }

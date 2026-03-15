@@ -22,8 +22,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Holds {@code 'fold region -> PSI element'} mappings.
@@ -31,17 +30,17 @@ import jakarta.annotation.Nullable;
  * Not thread-safe.
  */
 public interface EditorFoldingInfo {
-  @Nonnull
-  static EditorFoldingInfo get(@Nonnull Editor editor) {
+  
+  static EditorFoldingInfo get(Editor editor) {
     return EditorFoldingInfoImpl.get(editor);
   }
 
   @Nullable
-  PsiElement getPsiElement(@Nonnull FoldRegion region);
+  PsiElement getPsiElement(FoldRegion region);
 
   @Nullable
   @RequiredReadAction
-  TextRange getPsiElementRange(@Nonnull FoldRegion region);
+  TextRange getPsiElementRange(FoldRegion region);
 }
 
 

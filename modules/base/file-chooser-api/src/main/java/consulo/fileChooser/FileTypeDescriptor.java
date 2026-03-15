@@ -19,7 +19,6 @@ import consulo.fileChooser.util.FileChooserUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +30,7 @@ public class FileTypeDescriptor extends FileChooserDescriptor {
 
   private final List<String> myExtensions;
 
-  public FileTypeDescriptor(String title, @Nonnull String... extensions) {
+  public FileTypeDescriptor(String title, String... extensions) {
     super(true, false, false, true, false, false);
     assert extensions.length > 0 : "There should be at least one extension";
     myExtensions = Arrays.stream(extensions).map(ext -> {

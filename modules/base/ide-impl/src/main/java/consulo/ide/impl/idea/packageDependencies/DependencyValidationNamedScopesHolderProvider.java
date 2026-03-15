@@ -21,7 +21,7 @@ import consulo.content.scope.NamedScopesHolderProvider;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

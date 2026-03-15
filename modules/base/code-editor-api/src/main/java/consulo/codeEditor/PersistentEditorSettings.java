@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface PersistentEditorSettings {
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use injection")
     static PersistentEditorSettings getInstance() {
@@ -117,13 +116,13 @@ public interface PersistentEditorSettings {
         return isUseSoftWraps(SoftWrapAppliancePlaces.MAIN_EDITOR);
     }
 
-    boolean isUseSoftWraps(@Nonnull SoftWrapAppliancePlaces place);
+    boolean isUseSoftWraps(SoftWrapAppliancePlaces place);
 
     default void setUseSoftWraps(boolean use) {
         setUseSoftWraps(use, SoftWrapAppliancePlaces.MAIN_EDITOR);
     }
 
-    void setUseSoftWraps(boolean use, @Nonnull SoftWrapAppliancePlaces place);
+    void setUseSoftWraps(boolean use, SoftWrapAppliancePlaces place);
 
     boolean isUseCustomSoftWrapIndent();
 

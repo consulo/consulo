@@ -23,7 +23,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.ListUtil;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +46,7 @@ public class OutputFiltersDialog extends DialogWrapper {
   }
 
   @Override
-  @Nonnull
+  
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }

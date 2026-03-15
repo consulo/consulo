@@ -18,14 +18,13 @@ package consulo.ui.ex.util;
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.CancellablePromise;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 24-Feb-22
  */
 public interface Invoker extends Disposable {
-  CancellablePromise<?> runOrInvokeLater(@Nonnull Runnable task);
+  CancellablePromise<?> runOrInvokeLater(Runnable task);
 
   /**
    * Invokes the specified task immediately if the current thread is valid,
@@ -34,8 +33,8 @@ public interface Invoker extends Disposable {
    * @param task a task to execute on the valid thread
    * @return an object to control task processing
    */
-  @Nonnull
-  CancellablePromise<?> invoke(@Nonnull Runnable task);
+  
+  CancellablePromise<?> invoke(Runnable task);
 
   /**
    * Invokes the specified task asynchronously on the valid thread.
@@ -46,8 +45,8 @@ public interface Invoker extends Disposable {
    * @param task a task to execute asynchronously on the valid thread
    * @return an object to control task processing
    */
-  @Nonnull
-  CancellablePromise<?> invokeLater(@Nonnull Runnable task);
+  
+  CancellablePromise<?> invokeLater(Runnable task);
 
   /**
    * Invokes the specified task on the valid thread after the specified delay.
@@ -56,8 +55,8 @@ public interface Invoker extends Disposable {
    * @param delay milliseconds for the initial delay
    * @return an object to control task processing
    */
-  @Nonnull
-  CancellablePromise<?> invokeLater(@Nonnull Runnable task, int delay);
+  
+  CancellablePromise<?> invokeLater(Runnable task, int delay);
 
   /**
    * Returns a workload of the task queue.

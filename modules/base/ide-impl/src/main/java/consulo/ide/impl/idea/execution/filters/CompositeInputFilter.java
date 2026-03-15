@@ -23,8 +23,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,7 @@ public class CompositeInputFilter implements InputFilter {
   private final List<Pair<InputFilter, Boolean /* is dumb aware */>> myFilters = new ArrayList<>();
   private final DumbService myDumbService;
 
-  public CompositeInputFilter(@Nonnull Project project) {
+  public CompositeInputFilter(Project project) {
     myDumbService = DumbService.getInstance(project);
   }
 
@@ -60,7 +59,7 @@ public class CompositeInputFilter implements InputFilter {
     return null;
   }
 
-  public void addFilter(@Nonnull InputFilter filter) {
+  public void addFilter(InputFilter filter) {
     myFilters.add(Pair.create(filter, DumbService.isDumbAware(filter)));
   }
 }

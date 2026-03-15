@@ -29,8 +29,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
@@ -50,8 +49,8 @@ public class KeymapUtil {
     private static final Logger LOG = Logger.getInstance(KeymapUtil.class);
     private static final String TOOL_ACTION_PREFIX = "Tool_";
 
-    @Nonnull
-    public static String createTooltipText(@Nonnull String tooltipText, @Nonnull String actionId) {
+    
+    public static String createTooltipText(String tooltipText, String actionId) {
         String text = getFirstKeyboardShortcutText(actionId);
         return text.isEmpty() ? tooltipText : tooltipText + " (" + text + ")";
     }
@@ -69,8 +68,8 @@ public class KeymapUtil {
         return ArrayUtil.getFirstElement(keymapManager.getActiveKeymap().getShortcuts(actionId));
     }
 
-    @Nonnull
-    public static String createTooltipText(@Nullable String name, @Nonnull AnAction action) {
+    
+    public static String createTooltipText(@Nullable String name, AnAction action) {
         String toolTipText = name == null ? "" : name;
         while (StringUtil.endsWithChar(toolTipText, '.')) {
             toolTipText = toolTipText.substring(0, toolTipText.length() - 1);
@@ -97,31 +96,31 @@ public class KeymapUtil {
         return buffer.toString();
     }
 
-    @Nonnull
-    public static String getFirstKeyboardShortcutText(@Nonnull String actionId) {
+    
+    public static String getFirstKeyboardShortcutText(String actionId) {
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
         return shortcut == null ? "" : getShortcutText(shortcut);
     }
 
-    @Nonnull
-    public static String getFirstKeyboardShortcutText(@Nonnull AnAction action) {
+    
+    public static String getFirstKeyboardShortcutText(AnAction action) {
         Shortcut[] shortcuts = action.getShortcutSet().getShortcuts();
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
         return shortcut == null ? "" : getShortcutText(shortcut);
     }
 
-    @Nonnull
-    public static String getPreferredShortcutText(@Nonnull Shortcut[] shortcuts) {
+    
+    public static String getPreferredShortcutText(Shortcut[] shortcuts) {
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
         return shortcut != null ? getShortcutText(shortcut) : shortcuts.length > 0 ? getShortcutText(shortcuts[0]) : "";
     }
 
-    public static String getShortcutText(@Nonnull Shortcut shortcut) {
+    public static String getShortcutText(Shortcut shortcut) {
         return getShortcutText(shortcut, isUseUnicodeShortcuts());
     }
 
-    public static String getShortcutText(@Nonnull Shortcut shortcut, boolean useUnicodeCharactersForShortcuts) {
+    public static String getShortcutText(Shortcut shortcut, boolean useUnicodeCharactersForShortcuts) {
         return switch (shortcut) {
             case KeyboardShortcut keyboardShortcut -> {
                 String s = "";
@@ -149,7 +148,7 @@ public class KeymapUtil {
         };
     }
 
-    @Nonnull
+    
     public static LocalizeValue getMouseShortcutText(MouseShortcut mouseShortcut) {
         return getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount());
     }
@@ -160,7 +159,7 @@ public class KeymapUtil {
      * @param clickCount target clicks count
      * @return string representation of passed mouse shortcut.
      */
-    @Nonnull
+    
     public static LocalizeValue getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
         if (clickCount < 3) {
             return clickCount == 1
@@ -193,7 +192,7 @@ public class KeymapUtil {
         return modifiers;
     }
 
-    @Nonnull
+    
     public static ShortcutSet getActiveKeymapShortcuts(@Nullable String actionId) {
         Application application = ApplicationManager.getApplication();
         KeymapManager keymapManager = application == null ? null : application.getInstance(KeymapManager.class);
@@ -203,7 +202,7 @@ public class KeymapUtil {
         return new CustomShortcutSet(keymapManager.getActiveKeymap().getShortcuts(actionId));
     }
 
-    public static boolean isEventForAction(@Nonnull KeyEvent keyEvent, @Nonnull String actionId) {
+    public static boolean isEventForAction(KeyEvent keyEvent, String actionId) {
         for (KeyboardShortcut shortcut : ContainerUtil.findAll(getActiveKeymapShortcuts(actionId).getShortcuts(), KeyboardShortcut.class)) {
             if (AWTKeyStroke.getAWTKeyStrokeForEvent(keyEvent) == shortcut.getFirstKeyStroke()) {
                 return true;
@@ -241,7 +240,7 @@ public class KeymapUtil {
 
     public static KeymapGroup createGroup(
         ActionGroup actionGroup,
-        @Nonnull LocalizeValue groupName,
+        LocalizeValue groupName,
         Image icon,
         Image openIcon,
         boolean ignore,
@@ -252,7 +251,7 @@ public class KeymapUtil {
 
     public static KeymapGroup createGroup(
         ActionGroup actionGroup,
-        @Nonnull LocalizeValue groupName,
+        LocalizeValue groupName,
         Image icon,
         Image openIcon,
         boolean ignore,
@@ -308,7 +307,7 @@ public class KeymapUtil {
         return createGroup(actionGroup, getName(actionGroup), null, null, ignore, filtered);
     }
 
-    @Nonnull
+    
     private static LocalizeValue getName(AnAction action) {
         LocalizeValue name = action.getTemplatePresentation().getTextValue();
         if (name.isNotEmpty()) {

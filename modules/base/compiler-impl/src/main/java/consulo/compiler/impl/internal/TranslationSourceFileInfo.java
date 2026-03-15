@@ -25,8 +25,7 @@ import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.HashMap;
@@ -89,7 +88,7 @@ public class TranslationSourceFileInfo {
     TranslationSourceFileInfo() {
     }
 
-    TranslationSourceFileInfo(@Nonnull DataInput in) throws IOException {
+    TranslationSourceFileInfo(DataInput in) throws IOException {
         int projCount = DataInputOutputUtil.readINT(in);
         for (int idx = 0; idx < projCount; idx++) {
             int projectId = DataInputOutputUtil.readINT(in);
@@ -104,7 +103,7 @@ public class TranslationSourceFileInfo {
         }
     }
 
-    public void save(@Nonnull DataOutput out) throws IOException {
+    public void save(DataOutput out) throws IOException {
         Integer[] projects = getProjectIds().toArray(Integer[]::new);
         DataInputOutputUtil.writeINT(out, projects.length);
         for (int projectId : projects) {
@@ -157,7 +156,7 @@ public class TranslationSourceFileInfo {
         return result;
     }
 
-    public void addOutputPath(int projectId, @Nonnull VirtualFile outputPath) {
+    public void addOutputPath(int projectId, VirtualFile outputPath) {
         addOutputPath(projectId, FileBasedIndex.getFileId(outputPath));
     }
 

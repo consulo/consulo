@@ -1,8 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.valueEditor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ValueEditor<T> {
   /**
@@ -10,14 +9,14 @@ public interface ValueEditor<T> {
    *
    * @param newValue The value to set.
    */
-  void setValue(@Nonnull T newValue);
+  void setValue(T newValue);
 
   /**
    * Get a current value from the component if possible.
    *
    * @return The current value or the default one if component doesn't contain valid data.
    */
-  @Nonnull
+  
   T getValue();
 
   /**
@@ -25,12 +24,12 @@ public interface ValueEditor<T> {
    *
    * @param defaultValue The new default value.
    */
-  void setDefaultValue(@Nonnull T defaultValue);
+  void setDefaultValue(T defaultValue);
 
   /**
    * @return The current default value.
    */
-  @Nonnull
+  
   T getDefaultValue();
 
   /**
@@ -48,7 +47,7 @@ public interface ValueEditor<T> {
 
   String getValueText();
 
-  void setValueText(@Nonnull String text);
+  void setValueText(String text);
 
   /**
    * Try parsing the text and convert it to the object of type T. Throw InvalidDataException if parsing fails.
@@ -57,7 +56,7 @@ public interface ValueEditor<T> {
    * @return Parsed data.
    * @throws ValueValidationException if parsing fails.
    */
-  @Nonnull
+  
   T parseValue(@Nullable String text) throws ValueValidationException;
 
   /**
@@ -66,18 +65,18 @@ public interface ValueEditor<T> {
    * @param value The value convert.
    * @return The resulting string (the same value should be returned when the string is converted back with {@link #parseValue} method).
    */
-  String valueToString(@Nonnull T value);
+  String valueToString(T value);
 
   /**
    * Check the the given value is valid. For example, an integer number is within an expected range and so on.
    *
    * @param value The value to check.
    */
-  boolean isValid(@Nonnull T value);
+  boolean isValid(T value);
 
-  void addListener(@Nonnull Listener<T> editorListener);
+  void addListener(Listener<T> editorListener);
 
   interface Listener<T> {
-    void valueChanged(@Nonnull T newValue);
+    void valueChanged(T newValue);
   }
 }

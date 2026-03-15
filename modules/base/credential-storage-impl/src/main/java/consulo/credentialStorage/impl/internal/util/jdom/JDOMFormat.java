@@ -15,21 +15,20 @@
  */
 package consulo.credentialStorage.impl.internal.util.jdom;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.output.Format;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-04-02
  */
 public class JDOMFormat {
-    private static final @Nonnull Format DEFAULT_FORMAT = Format.getCompactFormat()
+    private static final Format DEFAULT_FORMAT = Format.getCompactFormat()
         .setIndent("  ")
         .setTextMode(Format.TextMode.TRIM)
         .setLineSeparator("\n");
 
-    public static @Nonnull Format createFormat(@Nullable String lineSeparator) {
+    public static Format createFormat(@Nullable String lineSeparator) {
         if (lineSeparator == null || lineSeparator.equals("\n")) {
             return DEFAULT_FORMAT;
         }

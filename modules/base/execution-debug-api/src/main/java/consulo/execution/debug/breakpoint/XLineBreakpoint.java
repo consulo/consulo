@@ -18,8 +18,7 @@ package consulo.execution.debug.breakpoint;
 
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represent a breakpoint which is set on some line in a file. This interface isn't supposed to be implemented by a plugin. In order to
@@ -40,7 +39,7 @@ public interface XLineBreakpoint<P extends XBreakpointProperties> extends XBreak
     VirtualFile getFile();
 
     @Override
-    @Nonnull
+    
     XLineBreakpointType<P> getType();
 
     String getShortFilePath();

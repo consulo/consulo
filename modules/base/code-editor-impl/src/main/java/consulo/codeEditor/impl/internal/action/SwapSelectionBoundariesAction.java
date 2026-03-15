@@ -24,7 +24,6 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * Provides functionality similar to the emacs
@@ -41,7 +40,7 @@ public class SwapSelectionBoundariesAction extends EditorAction {
         }
 
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             if (!(editor instanceof EditorEx editorEx)) {
                 return;
             }

@@ -18,7 +18,6 @@ package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.reflect.ReflectionUtil;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author ik
@@ -54,7 +53,7 @@ public class ClassFilter implements ElementFilter {
     return myAcceptableFlag ? filterMatches(element.getClass()) : !filterMatches(element.getClass());
   }
 
-  @NonNls
+  
   public String toString(){
     return "class(" + myFilter.getName() + ")";
   }

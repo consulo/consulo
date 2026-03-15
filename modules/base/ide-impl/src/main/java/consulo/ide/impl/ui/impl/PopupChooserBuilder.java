@@ -17,10 +17,7 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -148,26 +145,26 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
 
     private JScrollPane myScrollPane;
 
-    public PopupChooserBuilder(@Nonnull JList list) {
+    public PopupChooserBuilder(JList list) {
         myChooserComponent = new PopupListAdapter<>(this, list);
     }
 
-    public PopupChooserBuilder(@Nonnull JTable table) {
+    public PopupChooserBuilder(JTable table) {
         myChooserComponent = new PopupTableAdapter<>(this, table);
     }
 
-    public PopupChooserBuilder(@Nonnull JTree tree) {
+    public PopupChooserBuilder(JTree tree) {
         myChooserComponent = new PopupTreeAdapter<>(this, tree);
     }
 
     @Override
-    @Nonnull
-    public PopupChooserBuilder<T> setTitle(@Nonnull @Nls(capitalization = Nls.Capitalization.Title) String title) {
+    
+    public PopupChooserBuilder<T> setTitle(String title) {
         myTitle = title;
         return this;
     }
 
-    @Nonnull
+    
     public PopupChooserBuilder<T> addAdditionalChooseKeystroke(@Nullable KeyStroke keyStroke) {
         if (keyStroke != null) {
             myAdditionalKeystrokes.add(keyStroke);
@@ -185,43 +182,43 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return myChooserComponent.getComponent();
     }
 
-    @Nonnull
+    
     @Override
-    public IPopupChooserBuilder<T> setItemChosenCallback(@Nonnull Consumer<? super T> callback) {
+    public IPopupChooserBuilder<T> setItemChosenCallback(Consumer<? super T> callback) {
         myChooserComponent.setItemChosenCallback(callback);
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public IPopupChooserBuilder<T> setItemsChosenCallback(@Nonnull Consumer<? super Set<T>> callback) {
+    public IPopupChooserBuilder<T> setItemsChosenCallback(Consumer<? super Set<T>> callback) {
         myChooserComponent.setItemsChosenCallback(callback);
         return this;
     }
 
     @Override
-    @Nonnull
-    public PopupChooserBuilder<T> setItemChoosenCallback(@Nonnull Runnable runnable) {
+    
+    public PopupChooserBuilder<T> setItemChoosenCallback(Runnable runnable) {
         myItemChosenRunnable = runnable;
         return this;
     }
 
     @Override
-    @Nonnull
-    public PopupChooserBuilder<T> setSouthComponent(@Nonnull JComponent cmp) {
+    
+    public PopupChooserBuilder<T> setSouthComponent(JComponent cmp) {
         mySouthComponent = cmp;
         return this;
     }
 
     @Override
-    @Nonnull
+    
     public PopupChooserBuilder<T> setCouldPin(@Nullable Processor<? super JBPopup> callback) {
         myCouldPin = callback;
         return this;
     }
 
-    @Nonnull
-    public PopupChooserBuilder<T> setEastComponent(@Nonnull JComponent cmp) {
+    
+    public PopupChooserBuilder<T> setEastComponent(JComponent cmp) {
         myEastComponent = cmp;
         return this;
     }
@@ -247,7 +244,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     }
 
     @Override
-    public PopupChooserBuilder<T> setDimensionServiceKey(@NonNls String key) {
+    public PopupChooserBuilder<T> setDimensionServiceKey(String key) {
         myDimensionServiceKey = key;
         return this;
     }
@@ -313,7 +310,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     }
 
     @Override
-    @Nonnull
+    
     public JBPopup createPopup() {
         JPanel contentPane = new JPanel(new BorderLayout());
         if (!myForceMovable && myTitle != null) {
@@ -482,14 +479,14 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return this;
     }
 
-    @Nonnull
-    public PopupChooserBuilder<T> setFocusOwners(@Nonnull Component[] focusOwners) {
+    
+    public PopupChooserBuilder<T> setFocusOwners(Component[] focusOwners) {
         myFocusOwners = focusOwners;
         return this;
     }
 
     @Override
-    @Nonnull
+    
     public PopupChooserBuilder<T> setAdText(String ad) {
         setAdText(ad, SwingConstants.LEFT);
         return this;
@@ -568,9 +565,9 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return myChooserComponent.getBackgroundUpdater();
     }
 
-    @Nonnull
+    
     @Override
-    public PopupChooserBuilder<T> setHeaderLeftActions(@Nonnull List<? extends AnAction> headerLeftActions) {
+    public PopupChooserBuilder<T> setHeaderLeftActions(List<? extends AnAction> headerLeftActions) {
         if (myHeaderLeftActions.isEmpty()) {
             myHeaderLeftActions = new ArrayList<>();
         }
@@ -578,9 +575,9 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public PopupChooserBuilder<T> setHeaderRightActions(@Nonnull List<? extends AnAction> headerRightActions) {
+    public PopupChooserBuilder<T> setHeaderRightActions(List<? extends AnAction> headerRightActions) {
         if (myHeaderRightActions.isEmpty()) {
             myHeaderRightActions = new ArrayList<>();
         }

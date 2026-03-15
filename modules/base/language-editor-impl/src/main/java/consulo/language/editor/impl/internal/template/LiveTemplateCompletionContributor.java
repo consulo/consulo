@@ -21,8 +21,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -101,7 +100,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
         });
     }
 
-    public static boolean customTemplateAvailableAndHasCompletionItem(@Nullable Character shortcutChar, @Nonnull Editor editor, @Nonnull PsiFile file, int offset) {
+    public static boolean customTemplateAvailableAndHasCompletionItem(@Nullable Character shortcutChar, Editor editor, PsiFile file, int offset) {
         CustomTemplateCallback callback = new CustomTemplateCallback(editor, file);
         TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
         for (CustomLiveTemplate customLiveTemplate : TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext)) {
@@ -126,7 +125,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
 
             result.restartCompletionOnPrefixChange(StandardPatterns.string().with(new PatternCondition<>("type after non-identifier") {
                 @Override
-                public boolean accepts(@Nonnull String s, ProcessingContext context) {
+                public boolean accepts(String s, ProcessingContext context) {
                     return s.length() > 1 && !Character.isJavaIdentifierPart(s.charAt(s.length() - 2)) && templateKeys.stream().anyMatch(s::endsWith);
                 }
             }));
@@ -140,7 +139,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
         }
     }
 
-    private static void showCustomLiveTemplates(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
+    private static void showCustomLiveTemplates(CompletionParameters parameters, CompletionResultSet result) {
         TemplateActionContext templateActionContext = TemplateActionContext.expanding(parameters.getPosition().getContainingFile(), parameters.getEditor());
         for (CustomLiveTemplate customLiveTemplate : TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext)) {
             ProgressManager.checkCanceled();
@@ -151,7 +150,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
     }
 
     @Nullable
-    public static Template findFullMatchedApplicableTemplate(@Nonnull Editor editor, int offset, @Nonnull Collection<? extends Template> availableTemplates) {
+    public static Template findFullMatchedApplicableTemplate(Editor editor, int offset, Collection<? extends Template> availableTemplates) {
         Map<Template, String> templates = filterTemplatesByPrefix(availableTemplates, editor, offset, true, false);
         if (templates.size() == 1) {
             Template template = ContainerUtil.getFirstItem(templates.keySet());
@@ -162,7 +161,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
         return Language.ANY;

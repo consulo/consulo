@@ -23,15 +23,14 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 
 import consulo.language.editor.rawHighlight.HighlightInfoTypeImpl;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
 public class SeverityUtil {
   private static final Logger LOG = Logger.getInstance(SeverityUtil.class);
-  @Nonnull
-  public static Collection<SeverityRegistrarImpl.SeverityBasedTextAttributes> getRegisteredHighlightingInfoTypes(@Nonnull SeverityRegistrarImpl registrar) {
+ 
+  public static Collection<SeverityRegistrarImpl.SeverityBasedTextAttributes> getRegisteredHighlightingInfoTypes(SeverityRegistrarImpl registrar) {
     Collection<SeverityRegistrarImpl.SeverityBasedTextAttributes> collection = registrar.allRegisteredAttributes();
     for (HighlightInfoType type : registrar.standardSeverities()) {
       SeverityRegistrarImpl.SeverityBasedTextAttributes attributes = getSeverityBasedTextAttributes(registrar, type);
@@ -44,8 +43,7 @@ public class SeverityUtil {
     return collection;
   }
 
-  @Nullable
-  private static SeverityRegistrarImpl.SeverityBasedTextAttributes getSeverityBasedTextAttributes(@Nonnull SeverityRegistrarImpl registrar, @Nonnull HighlightInfoType type) {
+  private static SeverityRegistrarImpl.@Nullable SeverityBasedTextAttributes getSeverityBasedTextAttributes(SeverityRegistrarImpl registrar, HighlightInfoType type) {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     TextAttributes textAttributes = scheme.getAttributes(type.getAttributesKey());
     if (textAttributes != null) {

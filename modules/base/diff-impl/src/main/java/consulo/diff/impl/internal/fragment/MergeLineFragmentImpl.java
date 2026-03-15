@@ -19,8 +19,7 @@ import consulo.diff.fragment.MergeLineFragment;
 import consulo.diff.fragment.MergeWordFragment;
 import consulo.diff.util.MergeRange;
 import consulo.diff.util.ThreeSide;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
   private final int myStartLine3;
   private final int myEndLine3;
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private final List<MergeWordFragment> myInnerFragments;
 
   public MergeLineFragmentImpl(int startLine1,
@@ -50,7 +49,7 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
                                int endLine2,
                                int startLine3,
                                int endLine3,
-                               @jakarta.annotation.Nullable List<MergeWordFragment> innerFragments) {
+                               @Nullable List<MergeWordFragment> innerFragments) {
     myStartLine1 = startLine1;
     myEndLine1 = endLine1;
     myStartLine2 = startLine2;
@@ -60,15 +59,15 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
     myInnerFragments = innerFragments;
   }
 
-  public MergeLineFragmentImpl(@Nonnull MergeRange range) {
+  public MergeLineFragmentImpl(MergeRange range) {
     this(range, null);
   }
 
-  public MergeLineFragmentImpl(@Nonnull MergeRange range, @jakarta.annotation.Nullable List<MergeWordFragment> innerFragments) {
+  public MergeLineFragmentImpl(MergeRange range, @Nullable List<MergeWordFragment> innerFragments) {
     this(range.start1, range.end1, range.start2, range.end2, range.start3, range.end3, innerFragments);
   }
 
-  public MergeLineFragmentImpl(@Nonnull MergeLineFragment fragment, @Nullable List<MergeWordFragment> fragments) {
+  public MergeLineFragmentImpl(MergeLineFragment fragment, @Nullable List<MergeWordFragment> fragments) {
     this(fragment.getStartLine(ThreeSide.LEFT), fragment.getEndLine(ThreeSide.LEFT),
          fragment.getStartLine(ThreeSide.BASE), fragment.getEndLine(ThreeSide.BASE),
          fragment.getStartLine(ThreeSide.RIGHT), fragment.getEndLine(ThreeSide.RIGHT),
@@ -76,16 +75,16 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
   }
 
   @Override
-  public int getStartLine(@Nonnull ThreeSide side) {
+  public int getStartLine(ThreeSide side) {
     return side.select(myStartLine1, myStartLine2, myStartLine3);
   }
 
   @Override
-  public int getEndLine(@Nonnull ThreeSide side) {
+  public int getEndLine(ThreeSide side) {
     return side.select(myEndLine1, myEndLine2, myEndLine3);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public List<MergeWordFragment> getInnerFragments() {
     return myInnerFragments;

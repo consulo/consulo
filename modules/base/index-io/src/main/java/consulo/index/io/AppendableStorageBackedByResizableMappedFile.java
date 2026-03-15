@@ -21,8 +21,7 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.LimitedInputStream;
 import consulo.util.io.UnsyncByteArrayInputStream;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.function.Predicate;
@@ -34,7 +33,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
   private volatile int myBufferPosition;
   private static final int ourAppendBufferLength = 4096;
 
-  public AppendableStorageBackedByResizableMappedFile(File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned)
+  public AppendableStorageBackedByResizableMappedFile(File file, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned)
           throws IOException {
     super(file, initialSize, lockContext, pageSize, valuesAreBufferAligned);
     myReadStream = new MyDataIS(this);
@@ -78,7 +77,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     return data;
   }
 
-  public <Data> boolean processAll(@Nonnull Predicate<? super Data> processor, @Nonnull KeyDescriptor<Data> descriptor) throws IOException {
+  public <Data> boolean processAll(Predicate<? super Data> processor, KeyDescriptor<Data> descriptor) throws IOException {
     assert !isDirty();
 
     if (myFileLength == 0) return true;
@@ -153,7 +152,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     return sameValue[0];
   }
 
-  @Nonnull
+ 
   private OutputStream buildOldComparerStream(final int addr, final boolean[] sameValue) {
     OutputStream comparer;
     final PagedFileStorage storage = getPagedFileStorage();
@@ -239,7 +238,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       myFile = file;
     }
 
-    @Nonnull
+   
     @Override
     protected InputStream getChunkInputStream(File appendFile, long offset, int pageSize) {
       byte[] buf = new byte[pageSize];
@@ -282,7 +281,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       }
     }
 
-    @Nonnull
+   
     @Override
     protected File getChunksFile() {
       return myFile;

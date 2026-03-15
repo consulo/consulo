@@ -17,19 +17,18 @@ package consulo.versionControlSystem.impl.internal.change.shelf;
 
 import consulo.util.io.PathUtil;
 import consulo.versionControlSystem.change.patch.FilePatch;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ShelvedBinaryFilePatch extends FilePatch {
   private final ShelvedBinaryFileImpl myShelvedBinaryFile;
 
-  public ShelvedBinaryFilePatch(@Nonnull ShelvedBinaryFileImpl shelvedBinaryFile) {
+  public ShelvedBinaryFilePatch(ShelvedBinaryFileImpl shelvedBinaryFile) {
     myShelvedBinaryFile = shelvedBinaryFile;
     setBeforeName(myShelvedBinaryFile.BEFORE_PATH);
     setAfterName(myShelvedBinaryFile.AFTER_PATH);
   }
 
-  public static ShelvedBinaryFilePatch patchCopy(@Nonnull ShelvedBinaryFilePatch patch) {
+  public static ShelvedBinaryFilePatch patchCopy(ShelvedBinaryFilePatch patch) {
     return new ShelvedBinaryFilePatch(patch.getShelvedBinaryFile());
   }
 
@@ -60,7 +59,7 @@ public class ShelvedBinaryFilePatch extends FilePatch {
     return myShelvedBinaryFile.AFTER_PATH == null;
   }
 
-  @Nonnull
+  
   public ShelvedBinaryFileImpl getShelvedBinaryFile() {
     return myShelvedBinaryFile;
   }

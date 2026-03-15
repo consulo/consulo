@@ -18,8 +18,7 @@ package consulo.index.io.data;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.util.lang.function.ThrowableSupplier;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class DataInputOutputUtil {
   private DataInputOutputUtil() {
   }
 
-  public static int readINT(@Nonnull DataInput record) throws IOException {
+  public static int readINT(DataInput record) throws IOException {
     int val = record.readUnsignedByte();
     if (val < 192) {
       return val;
@@ -51,7 +50,7 @@ public class DataInputOutputUtil {
     }
   }
 
-  public static int readINT(@Nonnull ByteBuffer byteBuffer) {
+  public static int readINT(ByteBuffer byteBuffer) {
     int val = byteBuffer.get() & 0xFF;
     if (val < 192) {
       return val;
@@ -67,7 +66,7 @@ public class DataInputOutputUtil {
     }
   }
 
-  public static void writeINT(@Nonnull DataOutput record, int val) throws IOException {
+  public static void writeINT(DataOutput record, int val) throws IOException {
     if (0 > val || val >= 192) {
       record.writeByte(192 + (val & 0x3F));
       val >>>= 6;
@@ -79,7 +78,7 @@ public class DataInputOutputUtil {
     record.writeByte(val);
   }
 
-  public static void writeINT(@Nonnull ByteBuffer byteBuffer, int val) {
+  public static void writeINT(ByteBuffer byteBuffer, int val) {
     if (0 > val || val >= 192) {
       byteBuffer.put((byte)(192 + (val & 0x3F)));
       val >>>= 6;
@@ -95,7 +94,7 @@ public class DataInputOutputUtil {
    * Writes the given collection to the output using the given procedure to write each element.
    * Should be coupled with {@link #readSeq}
    */
-  public static <T> void writeSeq(@Nonnull DataOutput out, @Nonnull Collection<? extends T> collection, @SuppressWarnings("BoundedWildcard") @Nonnull ThrowableConsumer<T, IOException> writeElement)
+  public static <T> void writeSeq(DataOutput out, Collection<? extends T> collection, @SuppressWarnings("BoundedWildcard") ThrowableConsumer<T, IOException> writeElement)
           throws IOException {
     writeINT(out, collection.size());
     for (T t : collection) {
@@ -107,8 +106,8 @@ public class DataInputOutputUtil {
    * Reads a collection using the given function to read each element.
    * Should be coupled with {@link #writeSeq}
    */
-  @Nonnull
-  public static <T> List<T> readSeq(@Nonnull DataInput in, @SuppressWarnings("BoundedWildcard") @Nonnull ThrowableSupplier<? extends T, IOException> readElement) throws IOException {
+  
+  public static <T> List<T> readSeq(DataInput in, @SuppressWarnings("BoundedWildcard") ThrowableSupplier<? extends T, IOException> readElement) throws IOException {
     int size = readINT(in);
     List<T> result = new ArrayList<>(size);
     for (int i = 0; i < size; i++) {
@@ -121,10 +120,10 @@ public class DataInputOutputUtil {
    * Writes the given map to the output using the given procedure to write each key and value.
    * Should be coupled with {@link #readMap}
    */
-  public static <K, V> void writeMap(@Nonnull DataOutput out,
-                                     @Nonnull Map<? extends K, ? extends V> map,
-                                     @Nonnull ThrowableConsumer<K, ? extends IOException> writeKey,
-                                     @Nonnull ThrowableConsumer<V, ? extends IOException> writeValue) throws IOException {
+  public static <K, V> void writeMap(DataOutput out,
+                                     Map<? extends K, ? extends V> map,
+                                     ThrowableConsumer<K, ? extends IOException> writeKey,
+                                     ThrowableConsumer<V, ? extends IOException> writeValue) throws IOException {
     writeINT(out, map.size());
     for (Map.Entry<? extends K, ? extends V> e : map.entrySet()) {
       writeKey.consume(e.getKey());
@@ -136,10 +135,10 @@ public class DataInputOutputUtil {
    * Reads a map using the given function to read each element.
    * Should be coupled with {@link #writeMap}
    */
-  @Nonnull
-  public static <K, V> Map<K, V> readMap(@Nonnull DataInput in,
-                                         @Nonnull ThrowableSupplier<? extends K, ? extends IOException> readKey,
-                                         @Nonnull ThrowableSupplier<? extends V, ? extends IOException> readValue) throws IOException {
+  
+  public static <K, V> Map<K, V> readMap(DataInput in,
+                                         ThrowableSupplier<? extends K, ? extends IOException> readKey,
+                                         ThrowableSupplier<? extends V, ? extends IOException> readValue) throws IOException {
     int size = readINT(in);
     Map<K, V> result = new LinkedHashMap<K, V>();
     for (int i = 0; i < size; i++) {
@@ -148,7 +147,7 @@ public class DataInputOutputUtil {
     return result;
   }
 
-  public static long readLONG(@Nonnull DataInput record) throws IOException {
+  public static long readLONG(DataInput record) throws IOException {
     int val = record.readUnsignedByte();
     if (val < 192) {
       return val;
@@ -164,7 +163,7 @@ public class DataInputOutputUtil {
     }
   }
 
-  public static void writeLONG(@Nonnull DataOutput record, long val) throws IOException {
+  public static void writeLONG(DataOutput record, long val) throws IOException {
     if (0 > val || val >= 192) {
       record.writeByte(192 + (int)(val & 0x3F));
       val >>>= 6;
@@ -176,15 +175,15 @@ public class DataInputOutputUtil {
     record.writeByte((int)val);
   }
 
-  public static int readSINT(@Nonnull DataInput record) throws IOException {
+  public static int readSINT(DataInput record) throws IOException {
     return readINT(record) - 64;
   }
 
-  public static void writeSINT(@Nonnull DataOutput record, int val) throws IOException {
+  public static void writeSINT(DataOutput record, int val) throws IOException {
     writeINT(record, val + 64);
   }
 
-  public static void writeTIME(@Nonnull DataOutput record, long timestamp) throws IOException {
+  public static void writeTIME(DataOutput record, long timestamp) throws IOException {
     long relStamp = timestamp - timeBase;
     if (relStamp < 0 || relStamp >= 0xFF00000000L) {
       record.writeByte(255);
@@ -199,7 +198,7 @@ public class DataInputOutputUtil {
     }
   }
 
-  public static long readTIME(@Nonnull DataInput record) throws IOException {
+  public static long readTIME(DataInput record) throws IOException {
     int first = record.readUnsignedByte();
     if (first == 255) {
       return record.readLong();
@@ -218,7 +217,7 @@ public class DataInputOutputUtil {
    * Writes the given (possibly null) element to the output using the given procedure to write the element if it's not null.
    * Should be coupled with {@link #readNullable}
    */
-  public static <T> void writeNullable(@Nonnull DataOutput out, @Nullable T value, @Nonnull ThrowableConsumer<T, IOException> writeValue) throws IOException {
+  public static <T> void writeNullable(DataOutput out, @Nullable T value, ThrowableConsumer<T, IOException> writeValue) throws IOException {
     out.writeBoolean(value != null);
     if (value != null) writeValue.consume(value);
   }
@@ -228,7 +227,7 @@ public class DataInputOutputUtil {
    * Should be coupled with {@link #writeNullable}
    */
   @Nullable
-  public static <T> T readNullable(@Nonnull DataInput in, @Nonnull ThrowableSupplier<T, IOException> readValue) throws IOException {
+  public static <T> T readNullable(DataInput in, ThrowableSupplier<T, IOException> readValue) throws IOException {
     return in.readBoolean() ? readValue.get() : null;
   }
 }

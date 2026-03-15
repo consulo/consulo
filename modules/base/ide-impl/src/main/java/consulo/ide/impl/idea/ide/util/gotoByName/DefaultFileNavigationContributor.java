@@ -30,14 +30,13 @@ import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.project.ProjectCoreUtil;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DefaultFileNavigationContributor implements GotoFileContributor, ChooseByNameContributorEx, DumbAware {
   private static final Logger LOG = Logger.getInstance(DefaultFileNavigationContributor.class);
 
   @Override
-  public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope scope, IdFilter filter) {
+  public void processNames(Processor<String> processor, SearchScope scope, IdFilter filter) {
     long started = System.currentTimeMillis();
     FilenameIndex.processAllFileNames(processor, scope, filter);
     if (LOG.isDebugEnabled()) {
@@ -46,7 +45,7 @@ public class DefaultFileNavigationContributor implements GotoFileContributor, Ch
   }
 
   @Override
-  public void processElementsWithName(@Nonnull String name, @Nonnull Processor<NavigationItem> _processor, @Nonnull FindSymbolParameters parameters) {
+  public void processElementsWithName(String name, Processor<NavigationItem> _processor, FindSymbolParameters parameters) {
     boolean globalSearch = parameters.getSearchScope().isSearchInLibraries();
     Processor<PsiFileSystemItem> processor = item -> {
       if (!globalSearch && ProjectCoreUtil.isProjectOrWorkspaceFile(item.getVirtualFile())) {
@@ -65,7 +64,7 @@ public class DefaultFileNavigationContributor implements GotoFileContributor, Ch
     }
   }
 
-  private static boolean isDirectoryOnlyPattern(@Nonnull FindSymbolParameters parameters) {
+  private static boolean isDirectoryOnlyPattern(FindSymbolParameters parameters) {
     String completePattern = parameters.getCompletePattern();
     return completePattern.endsWith("/") || completePattern.endsWith("\\");
   }

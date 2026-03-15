@@ -23,7 +23,6 @@ import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.externalSystem.service.project.ExternalProjectRefreshCallback;
 import consulo.externalSystem.service.project.ExternalSystemProjectRefresher;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -34,18 +33,18 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ExternalSystemProjectRefresherImpl implements ExternalSystemProjectRefresher {
     @Override
-    public void refreshProject(@Nonnull Project project,
-                               @Nonnull ProjectSystemId externalSystemId,
-                               @Nonnull String externalProjectPath,
-                               @Nonnull ExternalProjectRefreshCallback callback,
+    public void refreshProject(Project project,
+                               ProjectSystemId externalSystemId,
+                               String externalProjectPath,
+                               ExternalProjectRefreshCallback callback,
                                boolean isPreviewMode,
-                               @Nonnull ProgressExecutionMode progressExecutionMode,
+                               ProgressExecutionMode progressExecutionMode,
                                boolean reportRefreshError) {
         ExternalSystemUtil.refreshProject(project, externalSystemId, externalProjectPath, callback, isPreviewMode, progressExecutionMode, reportRefreshError);
     }
 
     @Override
-    public void refreshProjects(@Nonnull ImportSpecBuilder specBuilder) {
+    public void refreshProjects(ImportSpecBuilder specBuilder) {
         ExternalSystemUtil.refreshProjects(specBuilder);
     }
 }

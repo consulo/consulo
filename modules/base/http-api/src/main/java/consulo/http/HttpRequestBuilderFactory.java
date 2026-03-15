@@ -17,7 +17,6 @@ package consulo.http;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,6 +24,6 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface HttpRequestBuilderFactory {
-    @Nonnull
-    HttpRequestBuilder newBuilder(@Nonnull String url, @Nonnull HttpMethod httpMethod);
+    
+    HttpRequestBuilder newBuilder(String url, HttpMethod httpMethod);
 }

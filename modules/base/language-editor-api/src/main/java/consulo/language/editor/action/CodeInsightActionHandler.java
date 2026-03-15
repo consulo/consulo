@@ -22,9 +22,8 @@ import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 public interface CodeInsightActionHandler extends FileModifier {
   @RequiredUIAccess
-  void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
+  void invoke(Project project, Editor editor, PsiFile file);
 }

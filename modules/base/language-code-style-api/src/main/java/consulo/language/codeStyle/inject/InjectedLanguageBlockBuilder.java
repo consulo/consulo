@@ -12,20 +12,19 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class InjectedLanguageBlockBuilder {
     private static final Logger LOG = Logger.getInstance(InjectedLanguageBlockBuilder.class);
 
-    public @Nonnull Block createInjectedBlock(@Nonnull ASTNode node,
-                                              @Nonnull Block originalBlock,
+    public Block createInjectedBlock(ASTNode node,
+                                              Block originalBlock,
                                               Indent indent,
                                               int offset,
                                               TextRange range,
-                                              @Nonnull Language language) {
+                                              Language language) {
         return new InjectedLanguageBlockWrapper(originalBlock, offset, range, indent, language);
     }
 
@@ -171,7 +170,7 @@ public abstract class InjectedLanguageBlockBuilder {
         }
     }
 
-    protected static boolean isEmptyRange(@Nonnull ASTNode injectedNode, @Nullable TextRange range) {
+    protected static boolean isEmptyRange(ASTNode injectedNode, @Nullable TextRange range) {
         return range != null && (range.getLength() == 0 || StringUtil.isEmptyOrSpaces(range.substring(injectedNode.getText())));
     }
 }

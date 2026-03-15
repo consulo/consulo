@@ -19,8 +19,7 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -35,7 +34,7 @@ public class FilenameIndex {
     @Deprecated
     public static final ID<String, Void> NAME = ID.create("FilenameIndex");
 
-    @Nonnull
+    
     public static String[] getAllFilenames(@Nullable Project project) {
         Set<String> names = new HashSet<>();
         getService().processAllFileNames(
@@ -50,24 +49,24 @@ public class FilenameIndex {
     }
 
     public static void processAllFileNames(
-        @Nonnull Predicate<? super String> processor,
-        @Nonnull SearchScope scope,
+        Predicate<? super String> processor,
+        SearchScope scope,
         @Nullable IdFilter filter
     ) {
         getService().processAllFileNames(processor, scope, filter);
     }
 
-    @Nonnull
-    public static Collection<VirtualFile> getVirtualFilesByName(Project project, @Nonnull String name, @Nonnull SearchScope scope) {
+    
+    public static Collection<VirtualFile> getVirtualFilesByName(Project project, String name, SearchScope scope) {
         return getService().getVirtualFilesByName(project, name, scope, null);
     }
 
-    @Nonnull
+    
     public static Collection<VirtualFile> getVirtualFilesByName(
         Project project,
-        @Nonnull String name,
+        String name,
         boolean caseSensitively,
-        @Nonnull GlobalSearchScope scope
+        GlobalSearchScope scope
     ) {
         if (caseSensitively) {
             return getVirtualFilesByName(project, name, scope);
@@ -75,19 +74,19 @@ public class FilenameIndex {
         return getVirtualFilesByNameIgnoringCase(name, scope, project, null);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static PsiFile[] getFilesByName(@Nonnull Project project, @Nonnull String name, @Nonnull SearchScope scope) {
+    public static PsiFile[] getFilesByName(Project project, String name, SearchScope scope) {
         return (PsiFile[])getFilesByName(project, name, scope, false);
     }
 
     @RequiredReadAction
     public static boolean processFilesByName(
-        @Nonnull String name,
+        String name,
         boolean directories,
-        @Nonnull Predicate<? super PsiFileSystemItem> processor,
-        @Nonnull SearchScope scope,
-        @Nonnull Project project,
+        Predicate<? super PsiFileSystemItem> processor,
+        SearchScope scope,
+        Project project,
         @Nullable IdFilter idFilter
     ) {
         return processFilesByName(name, directories, true, processor, scope, project, idFilter);
@@ -95,12 +94,12 @@ public class FilenameIndex {
 
     @RequiredReadAction
     public static boolean processFilesByName(
-        @Nonnull String name,
+        String name,
         boolean directories,
         boolean caseSensitively,
-        @Nonnull Predicate<? super PsiFileSystemItem> processor,
-        @Nonnull SearchScope scope,
-        @Nonnull Project project,
+        Predicate<? super PsiFileSystemItem> processor,
+        SearchScope scope,
+        Project project,
         @Nullable IdFilter idFilter
     ) {
         Collection<VirtualFile> files;
@@ -144,11 +143,11 @@ public class FilenameIndex {
         return processedFiles > 0;
     }
 
-    @Nonnull
+    
     private static Set<VirtualFile> getVirtualFilesByNameIgnoringCase(
-        @Nonnull String name,
-        @Nonnull SearchScope scope,
-        @Nonnull Project project,
+        String name,
+        SearchScope scope,
+        Project project,
         @Nullable IdFilter idFilter
     ) {
         Set<String> keys = new HashSet<>();
@@ -168,12 +167,12 @@ public class FilenameIndex {
         return files;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static PsiFileSystemItem[] getFilesByName(
-        @Nonnull Project project,
-        @Nonnull String name,
-        @Nonnull SearchScope scope,
+        Project project,
+        String name,
+        SearchScope scope,
         boolean directories
     ) {
         SmartList<PsiFileSystemItem> result = new SmartList<>();
@@ -195,16 +194,16 @@ public class FilenameIndex {
      * @return all files with provided extension
      * @author Konstantin Bulenkov
      */
-    @Nonnull
-    public static Collection<VirtualFile> getAllFilesByExt(@Nonnull Project project, @Nonnull String ext) {
+    
+    public static Collection<VirtualFile> getAllFilesByExt(Project project, String ext) {
         return getAllFilesByExt(project, ext, GlobalSearchScope.allScope(project));
     }
 
-    @Nonnull
+    
     public static Collection<VirtualFile> getAllFilesByExt(
-        @Nonnull Project project,
-        @Nonnull String ext,
-        @Nonnull GlobalSearchScope searchScope
+        Project project,
+        String ext,
+        GlobalSearchScope searchScope
     ) {
         int len = ext.length();
 

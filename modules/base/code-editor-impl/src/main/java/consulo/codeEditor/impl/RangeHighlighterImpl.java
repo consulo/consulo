@@ -18,8 +18,7 @@ import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.awt.*;
@@ -73,11 +72,11 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     private @interface Mask {
     }
 
-    RangeHighlighterImpl(@Nonnull MarkupModelImpl model,
+    RangeHighlighterImpl(MarkupModelImpl model,
                          int start,
                          int end,
                          int layer,
-                         @Nonnull HighlighterTargetArea target,
+                         HighlighterTargetArea target,
                          @Nullable TextAttributesKey textAttributesKey,
                          boolean greedyToLeft,
                          boolean greedyToRight) {
@@ -156,7 +155,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    @Nonnull
+    
     public HighlighterTargetArea getTargetArea() {
         return isFlagSet(TARGET_AREA_IS_EXACT_MASK) ? HighlighterTargetArea.EXACT_RANGE : HighlighterTargetArea.LINES_IN_RANGE;
     }
@@ -168,7 +167,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    public void setTextAttributesKey(@Nonnull TextAttributesKey textAttributesKey) {
+    public void setTextAttributesKey(TextAttributesKey textAttributesKey) {
         TextAttributesKey old = myTextAttributesKey;
         myTextAttributesKey = textAttributesKey;
         if (!textAttributesKey.equals(old)) {
@@ -320,13 +319,13 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    public void setEditorFilter(@Nonnull MarkupEditorFilter filter) {
+    public void setEditorFilter(MarkupEditorFilter filter) {
         myFilter = filter;
         fireChanged(false, false, false);
     }
 
     @Override
-    @Nonnull
+    
     public MarkupEditorFilter getEditorFilter() {
         return myFilter;
     }
@@ -400,7 +399,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
 
     // synchronized to avoid concurrent changes
     @Mask
-    synchronized byte changeAttributesNoEvents(@Nonnull Consumer<? super RangeHighlighterEx> change) {
+    synchronized byte changeAttributesNoEvents(Consumer<? super RangeHighlighterEx> change) {
         assert !isFlagSet(IN_BATCH_CHANGE_MASK);
         assert !isFlagSet(CHANGED_MASK);
         setMask(IN_BATCH_CHANGE_MASK | RENDERERS_CHANGED_MASK | FONT_STYLE_CHANGED_MASK | FOREGROUND_COLOR_CHANGED_MASK, IN_BATCH_CHANGE_MASK);
@@ -450,7 +449,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    protected void registerInTree(@Nonnull DocumentEx document, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+    protected void registerInTree(DocumentEx document, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
         // we store highlighters in MarkupModel
         myModel.addRangeHighlighter(this, start, end, greedyToLeft, greedyToRight, layer);
     }

@@ -31,8 +31,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
 import consulo.ide.setting.module.LibrariesConfigurator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,16 +89,16 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   }
 
   @Override
-  public void libraryCreated(@Nonnull Library library) {
+  public void libraryCreated(Library library) {
     myLibraryEditorListeners.getMulticaster().libraryCreated(library);
   }
 
   @Override
-  public void libraryRenamed(@Nonnull Library library, String oldName, String newName) {
+  public void libraryRenamed(Library library, String oldName, String newName) {
     myLibraryEditorListeners.getMulticaster().libraryRenamed(library, oldName, newName);
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile[] getLibraryFiles(Library library, OrderRootType type) {
     LibraryTable table = library.getTable();
@@ -115,9 +114,9 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
     return library.getFiles(type);
   }
 
-  @Nonnull
+  
   @Override
-  public LibraryTable.ModifiableModel getModifiableLibraryTable(@Nonnull LibraryTable table) {
+  public LibraryTable.ModifiableModel getModifiableLibraryTable(LibraryTable table) {
     String tableLevel = table.getTableLevel();
     if (tableLevel.equals(LibraryTableImplUtil.MODULE_LEVEL)) {
       return table.getModifiableModel();
@@ -134,12 +133,12 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   }
 
   @Override
-  public void addLibraryEditorListener(@Nonnull LibraryEditorListener listener) {
+  public void addLibraryEditorListener(LibraryEditorListener listener) {
     myLibraryEditorListeners.addListener(listener);
   }
 
   @Override
-  public void addLibraryEditorListener(@Nonnull LibraryEditorListener listener, @Nonnull Disposable parentDisposable) {
+  public void addLibraryEditorListener(LibraryEditorListener listener, Disposable parentDisposable) {
     myLibraryEditorListeners.addListener(listener, parentDisposable);
   }
 
@@ -150,7 +149,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
 
   @Override
   @Nullable
-  public Library getLibraryModel(@Nonnull Library library) {
+  public Library getLibraryModel(Library library) {
     LibraryTable libraryTable = library.getTable();
     if (libraryTable != null) {
       return findLibraryModel(library, myLevel2Providers.get(libraryTable.getTableLevel()));
@@ -159,7 +158,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   }
 
   @Nullable
-  private static Library findLibraryModel(@Nonnull String libraryName, @Nonnull LibrariesModifiableModel model) {
+  private static Library findLibraryModel(String libraryName, LibrariesModifiableModel model) {
     for (Library library : model.getLibraries()) {
       Library libraryModel = findLibraryModel(library, model);
       if (libraryModel != null && libraryName.equals(libraryModel.getName())) {

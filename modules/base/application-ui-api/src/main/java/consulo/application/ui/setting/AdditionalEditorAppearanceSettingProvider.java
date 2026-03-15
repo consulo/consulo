@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.configurable.AdditionalPropertiesProvider;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,6 +27,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AdditionalEditorAppearanceSettingProvider extends AdditionalPropertiesProvider {
-  @Nonnull
+  
   LocalizeValue getLabelName();
 }

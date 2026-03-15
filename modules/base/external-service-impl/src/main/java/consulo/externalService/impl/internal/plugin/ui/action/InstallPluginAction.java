@@ -32,8 +32,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,12 +48,12 @@ import java.util.stream.Collectors;
 public class InstallPluginAction {
     @RequiredUIAccess
     public static void install(
-        @Nonnull UIAccess uiAccess,
+        UIAccess uiAccess,
         @Nullable PluginsPanel pluginsPanel,
         @Nullable PluginTab installedTab,
         @Nullable Project project,
-        @Nonnull PluginDescriptor descr,
-        @Nonnull List<PluginDescriptor> allPlugins,
+        PluginDescriptor descr,
+        List<PluginDescriptor> allPlugins,
         boolean alwaysShowDialog,
         @Nullable Runnable onSuccess
     ) {
@@ -112,8 +111,8 @@ public class InstallPluginAction {
     @RequiredUIAccess
     public static boolean downloadAndInstallPlugins(
         @Nullable Project project,
-        @Nonnull List<PluginDescriptor> toInstall,
-        @Nonnull List<PluginDescriptor> allPlugins,
+        List<PluginDescriptor> toInstall,
+        List<PluginDescriptor> allPlugins,
         boolean alwaysShowDialog,
         @Nullable Consumer<Collection<PluginDescriptor>> afterCallback
     ) {

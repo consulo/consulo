@@ -21,7 +21,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -34,7 +33,7 @@ public class CheckSanityAction extends AnAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         PersistentFS fs = (PersistentFS) ManagingFS.getInstance();
 
         fs.checkSanity();

@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -32,7 +31,7 @@ import java.util.Set;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface PluginAdvertiserHelper {
-    @Nonnull
+    
     static PluginAdvertiserHelper getInstance() {
         return Application.get().getInstance(PluginAdvertiserHelper.class);
     }

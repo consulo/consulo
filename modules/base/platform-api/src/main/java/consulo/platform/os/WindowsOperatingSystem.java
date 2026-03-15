@@ -18,7 +18,6 @@ package consulo.platform.os;
 import consulo.platform.LineSeparator;
 import consulo.platform.PlatformOperatingSystem;
 
-import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 
 /**
@@ -27,7 +26,7 @@ import java.nio.file.Path;
  */
 public interface WindowsOperatingSystem extends PlatformOperatingSystem {
   @Override
-  @Nonnull
+  
   default LineSeparator lineSeparator() {
     return LineSeparator.CRLF;
   }
@@ -40,14 +39,14 @@ public interface WindowsOperatingSystem extends PlatformOperatingSystem {
 
   boolean isWindows11OrNewer();
 
-  @Nonnull
-  default String getWindowsFileVersion(@Nonnull Path path) {
+  
+  default String getWindowsFileVersion(Path path) {
     // 1.1 - 2
     // 1.1.1 - 3
     // 1.2.3.4 - 4
     return getWindowsFileVersion(path, 4);
   }
 
-  @Nonnull
-  String getWindowsFileVersion(@Nonnull Path path, int parts);
+  
+  String getWindowsFileVersion(Path path, int parts);
 }

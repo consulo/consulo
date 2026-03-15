@@ -18,19 +18,18 @@ package consulo.undoRedo;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
  * @since 2024-10-21
  */
 public record CommandDescriptor(
-    @Nonnull Runnable command,
-    @Nonnull LocalizeValue name,
+    Runnable command,
+    LocalizeValue name,
     Object groupId,
     Project project,
     Document document,
-    @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
+    UndoConfirmationPolicy undoConfirmationPolicy,
     boolean shouldRecordActionForActiveDocument
 ) {
 }

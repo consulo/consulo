@@ -21,8 +21,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.Contract;
 
@@ -42,7 +41,7 @@ public final class IterationState {
     private static final Comparator<RangeHighlighterEx> BY_AFFECTED_END_OFFSET_REVERSED = (r1, r2) -> r2.getAffectedAreaEndOffset() - r1.getAffectedAreaEndOffset();
 
     @Contract(pure = true)
-    public static @Nonnull Comparator<RangeHighlighterEx> createByLayerThenByAttributesComparator(@Nonnull EditorColorsScheme scheme) {
+    public static Comparator<RangeHighlighterEx> createByLayerThenByAttributesComparator(EditorColorsScheme scheme) {
         CodeEditorInternalHelper helper = CodeEditorInternalHelper.getInstance();
         return (o1, o2) -> {
             int result = LayerComparator.HIGHER_FIRST.compare(o1, o2);
@@ -112,7 +111,7 @@ public final class IterationState {
     private boolean myNextIsFoldRegion;
 
     public IterationState(
-        @Nonnull EditorEx editor,
+        EditorEx editor,
         int start,
         int end,
         @Nullable CaretData caretData,
@@ -222,17 +221,17 @@ public final class IterationState {
         reinit();
     }
 
-    public @Nonnull TextAttributes getBreakAttributes() {
+    public TextAttributes getBreakAttributes() {
         return getBreakAttributes(false);
     }
 
-    public @Nonnull TextAttributes getBreakAttributes(boolean beforeBreak) {
+    public TextAttributes getBreakAttributes(boolean beforeBreak) {
         TextAttributes attributes = new TextAttributes();
         setAttributes(attributes, true, beforeBreak);
         return attributes;
     }
 
-    public @Nonnull TextAttributes getMergedAttributes() {
+    public TextAttributes getMergedAttributes() {
         return myMergedAttributes;
     }
 
@@ -256,7 +255,7 @@ public final class IterationState {
         return myNextIsFoldRegion;
     }
 
-    public @Nonnull TextAttributes getPastLineEndBackgroundAttributes() {
+    public TextAttributes getPastLineEndBackgroundAttributes() {
         myMergedAttributes.setBackgroundColor(
             hasSoftWrap()
                 ? getBreakBackgroundColor(true)
@@ -267,13 +266,13 @@ public final class IterationState {
         return myMergedAttributes;
     }
 
-    public @Nonnull TextAttributes getBeforeLineStartBackgroundAttributes() {
+    public TextAttributes getBeforeLineStartBackgroundAttributes() {
         return myEditorRightAligned && !hasSoftWrap()
             ? getBreakAttributes()
             : new TextAttributes(null, getBreakBackgroundColor(false), null, null, Font.PLAIN);
     }
 
-    private @Nonnull HighlighterSweep createSweep(MarkupModelEx markupModel) {
+    private HighlighterSweep createSweep(MarkupModelEx markupModel) {
         return new HighlighterSweep(
             myColorsScheme,
             markupModel,
@@ -658,8 +657,8 @@ public final class IterationState {
         int i;
         private final RangeHighlighterEx[] highlighters;
 
-        private HighlighterSweep(@Nonnull EditorColorsScheme scheme,
-                                 @Nonnull MarkupModelEx markupModel,
+        private HighlighterSweep(EditorColorsScheme scheme,
+                                 MarkupModelEx markupModel,
                                  int start,
                                  int end,
                                  boolean onlyFullLine,
@@ -760,7 +759,7 @@ public final class IterationState {
                 (!myOnlyFontOrForegroundAffecting || EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes(myColorsScheme)));
         }
 
-        private boolean skipHighlighter(@Nonnull RangeHighlighterEx highlighter) {
+        private boolean skipHighlighter(RangeHighlighterEx highlighter) {
             if (!highlighter.isValid() || highlighter.isAfterEndOfLine() || highlighter.getTextAttributes(myColorsScheme) == null) {
                 return true;
             }
@@ -778,56 +777,56 @@ public final class IterationState {
 
     // region boilerplate
 
-    private static DocumentEx getDocument(@Nonnull EditorEx editor) {
+    private static DocumentEx getDocument(EditorEx editor) {
 //        if (editor instanceof EditorImpl editorImpl) {
 //            return editorImpl.getEditorModel().getDocument();
 //        }
         return (DocumentEx) editor.getDocument();
     }
 
-    private static FoldingModelEx getFoldingModel(@Nonnull EditorEx editor) {
+    private static FoldingModelEx getFoldingModel(EditorEx editor) {
 //        if (editor instanceof EditorImpl editorImpl) {
 //            return editorImpl.getEditorModel().getFoldingModel();
 //        }
         return editor.getFoldingModel();
     }
 
-    private static MarkupModelEx getEditorMarkupModel(@Nonnull EditorEx editor) {
+    private static MarkupModelEx getEditorMarkupModel(EditorEx editor) {
 //        if (editor instanceof RealEditor editorImpl) {
 //            return editorImpl.getEditorModel().getEditorMarkupModel();
 //        }
         return editor.getMarkupModel();
     }
 
-    private static MarkupModelEx getDocumentMarkupModel(@Nonnull EditorEx editor) {
+    private static MarkupModelEx getDocumentMarkupModel(EditorEx editor) {
 //        if (editor instanceof RealEditor editorImpl) {
 //            return editorImpl.getEditorModel().getDocumentMarkupModel();
 //        }
         return editor.getFilteredDocumentMarkupModel();
     }
 
-    private static CaretModel getCaretModel(@Nonnull EditorEx editor) {
+    private static CaretModel getCaretModel(EditorEx editor) {
 //        if (editor instanceof RealEditor editorImpl) {
 //            return editorImpl.getEditorModel().getCaretModel();
 //        }
         return editor.getCaretModel();
     }
 
-    private static EditorHighlighter getHighlighter(@Nonnull EditorEx editor) {
+    private static EditorHighlighter getHighlighter(EditorEx editor) {
 //        if (editor instanceof RealEditor editorImpl) {
 //            return editorImpl.getEditorModel().getHighlighter();
 //        }
         return editor.getHighlighter();
     }
 
-    private static SoftWrapModel getSoftWrapModel(@Nonnull EditorEx editor) {
+    private static SoftWrapModel getSoftWrapModel(EditorEx editor) {
 //        if (editor instanceof EditorImpl editorImpl) {
 //            return editorImpl.getEditorModel().getSoftWrapModel();
 //        }
         return editor.getSoftWrapModel();
     }
 
-    private static SelectionModel getSelectionModel(@Nonnull EditorEx editor) {
+    private static SelectionModel getSelectionModel(EditorEx editor) {
 //        if (editor instanceof EditorImpl editorImpl) {
 //            return editorImpl.getEditorModel().getSelectionModel();
 //        }

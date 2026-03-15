@@ -17,21 +17,20 @@ package consulo.language.editor.refactoring.event;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public abstract class RefactoringElementAdapter implements RefactoringElementListener, UndoRefactoringElementListener {
   @Override
-  public final void elementMoved(@Nonnull PsiElement newElement) {
+  public final void elementMoved(PsiElement newElement) {
     elementRenamedOrMoved(newElement);
   }
 
-  protected abstract void elementRenamedOrMoved(@Nonnull PsiElement newElement);
+  protected abstract void elementRenamedOrMoved(PsiElement newElement);
 
   @Override
-  public final void elementRenamed(@Nonnull PsiElement newElement) {
+  public final void elementRenamed(PsiElement newElement) {
     elementRenamedOrMoved(newElement);
   }
 }

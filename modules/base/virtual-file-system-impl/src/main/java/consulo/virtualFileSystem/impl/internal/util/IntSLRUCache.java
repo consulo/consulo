@@ -15,8 +15,7 @@
  */
 package consulo.virtualFileSystem.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -34,7 +33,7 @@ public class IntSLRUCache<T> {
     myProbationalQueue = new IntObjectLRUMap<>(probationalQueueSize);
   }
 
-  @Nonnull
+ 
   public IntObjectLRUMap.MapEntry<T> cacheEntry(int key, T value) {
     IntObjectLRUMap.MapEntry<T> cached = myProtectedQueue.getEntry(key);
     if (cached == null) {
@@ -49,13 +48,11 @@ public class IntSLRUCache<T> {
     return entry;
   }
 
-  @Nullable
-  public IntObjectLRUMap.MapEntry<T> getCachedEntry(int id) {
+  public IntObjectLRUMap.@Nullable MapEntry<T> getCachedEntry(int id) {
     return getCachedEntry(id, true);
   }
 
-  @Nullable
-  public IntObjectLRUMap.MapEntry<T> getCachedEntry(int id, boolean allowMutation) {
+  public IntObjectLRUMap.@Nullable MapEntry<T> getCachedEntry(int id, boolean allowMutation) {
     IntObjectLRUMap.MapEntry<T> entry = myProtectedQueue.getEntry(id);
     if (entry != null) {
       protectedHits++;

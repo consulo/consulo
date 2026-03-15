@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -42,7 +41,7 @@ public abstract class DeploymentSourceType<S extends DeploymentSource> {
     
     private final String myId;
 
-    protected DeploymentSourceType(@Nonnull String id) {
+    protected DeploymentSourceType(String id) {
         myId = id;
     }
 
@@ -50,16 +49,16 @@ public abstract class DeploymentSourceType<S extends DeploymentSource> {
         return myId;
     }
 
-    @Nonnull
-    public abstract S load(@Nonnull Element tag, @Nonnull Project project);
+    
+    public abstract S load(Element tag, Project project);
 
-    public abstract void save(@Nonnull S s, @Nonnull Element tag);
+    public abstract void save(S s, Element tag);
 
 
-    public void setBuildBeforeRunTask(@Nonnull RunConfiguration configuration, @Nonnull S source) {
+    public void setBuildBeforeRunTask(RunConfiguration configuration, S source) {
     }
 
-    public void updateBuildBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent, @Nonnull Project project, @Nonnull S source, boolean select) {
+    public void updateBuildBeforeRunOption(JComponent runConfigurationEditorComponent, Project project, S source, boolean select) {
     }
 
     public boolean isEditableInDumbMode() {

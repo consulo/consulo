@@ -23,8 +23,6 @@ import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.ArtifactPointerUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,8 +32,8 @@ import java.util.List;
  * @author nik
  */
 public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRunTask> extends BeforeRunTask<T> {
-  @NonNls public static final String NAME_ATTRIBUTE = "name";
-  @NonNls public static final String ARTIFACT_ELEMENT = "artifact";
+  public static final String NAME_ATTRIBUTE = "name";
+  public static final String ARTIFACT_ELEMENT = "artifact";
   private List<ArtifactPointer> myArtifactPointers = new ArrayList<ArtifactPointer>();
   private final Project myProject;
 
@@ -89,11 +87,11 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
     }
   }
 
-  public void removeArtifact(@Nonnull Artifact artifact) {
+  public void removeArtifact(Artifact artifact) {
     removeArtifact(ArtifactPointerUtil.getPointerManager(myProject).create(artifact));
   }
 
-  public void removeArtifact(@Nonnull ArtifactPointer pointer) {
+  public void removeArtifact(ArtifactPointer pointer) {
     myArtifactPointers.remove(pointer);
   }
 

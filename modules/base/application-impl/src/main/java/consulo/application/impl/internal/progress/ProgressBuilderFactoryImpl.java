@@ -24,8 +24,7 @@ import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -46,14 +45,14 @@ public class ProgressBuilderFactoryImpl implements ProgressBuilderFactory {
         myProgressManager = (ProgressManagerEx) progressManager;
     }
 
-    @Nonnull
+    
     @Override
-    public ProgressBuilder newProgressBuilder(@Nullable ComponentManager project, @Nonnull LocalizeValue title) {
+    public ProgressBuilder newProgressBuilder(@Nullable ComponentManager project, LocalizeValue title) {
         return new BaseProgressBuilderImpl(project, title) {
-            @Nonnull
+            
             @Override
-            public <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess,
-                                                    @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder) {
+            public <V> CompletableFuture<V> execute(UIAccess uiAccess,
+                                                    Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder) {
                 assertCreated();
                 return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, pipelineBuilder);
             }

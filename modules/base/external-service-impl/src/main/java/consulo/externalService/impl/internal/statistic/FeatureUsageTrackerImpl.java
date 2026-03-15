@@ -29,9 +29,7 @@ import consulo.util.xml.serializer.XmlSerializer;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -102,13 +100,13 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
         return isToBeShown(featureId, project, HOUR);
     }
 
-    @Nonnull
+    
     @Override
     public CompletionStatistics getCompletionStatistics() {
         return myCompletionStats;
     }
 
-    @Nonnull
+    
     @Override
     public CumulativeStatistics getFixesStats() {
         return myFixesStats;

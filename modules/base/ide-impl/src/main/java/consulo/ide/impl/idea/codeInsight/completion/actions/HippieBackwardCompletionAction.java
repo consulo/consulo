@@ -24,7 +24,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 @ActionImpl(id = IdeActions.ACTION_HIPPIE_BACKWARD_COMPLETION)
@@ -36,12 +35,12 @@ public class HippieBackwardCompletionAction extends BaseCodeInsightAction implem
 
     @Override
     @RequiredUIAccess
-    public void actionPerformedImpl(@Nonnull Project project, Editor editor) {
+    public void actionPerformedImpl(Project project, Editor editor) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("editing.completion.hippie");
         super.actionPerformedImpl(project, editor);
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new HippieWordCompletionHandler(false);

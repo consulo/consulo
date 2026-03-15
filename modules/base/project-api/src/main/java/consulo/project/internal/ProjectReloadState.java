@@ -18,11 +18,10 @@ package consulo.project.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectReloadState {
-  @Nonnull
+  
   static ProjectReloadState getInstance(Project project) {
     return project.getInstance(ProjectReloadState.class);
   }

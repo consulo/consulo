@@ -29,8 +29,7 @@ import consulo.util.lang.Pair;
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.impl.internal.VcsLogFilterCollectionImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,31 +37,31 @@ import java.util.List;
 public class VcsLogFiltererImpl implements VcsLogFilterer {
   private static final Logger LOG = Logger.getInstance(VcsLogFiltererImpl.class);
 
-  @Nonnull
+  
   private final SingleTaskController<Request, VisiblePack> myTaskController;
-  @Nonnull
+  
   private final VisiblePackBuilder myVisiblePackBuilder;
-  @Nonnull
+  
   private final VcsLogDataImpl myLogData;
 
-  @Nonnull
+  
   private VcsLogFilterCollection myFilters;
-  @Nonnull
+  
   private PermanentGraph.SortType mySortType;
-  @Nonnull
+  
   private CommitCountStage myCommitCount = CommitCountStage.INITIAL;
-  @Nonnull
+  
   private List<MoreCommitsRequest> myRequestsToRun = new ArrayList<>();
-  @Nonnull
+  
   private List<VisiblePackChangeListener> myVisiblePackChangeListeners = Lists.newLockFreeCopyOnWriteList();
-  @Nonnull
+  
   private volatile VisiblePack myVisiblePack = VisiblePack.EMPTY;
   private volatile boolean myIsValid = true;
 
   public VcsLogFiltererImpl(
-    @Nonnull final Project project,
-    @Nonnull VcsLogDataImpl logData,
-    @Nonnull PermanentGraph.SortType initialSortType
+    final Project project,
+    VcsLogDataImpl logData,
+    PermanentGraph.SortType initialSortType
   ) {
     myLogData = logData;
     myVisiblePackBuilder = myLogData.createVisiblePackBuilder();
@@ -87,12 +86,12 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   }
 
   @Override
-  public void addVisiblePackChangeListener(@Nonnull VisiblePackChangeListener listener) {
+  public void addVisiblePackChangeListener(VisiblePackChangeListener listener) {
     myVisiblePackChangeListeners.add(listener);
   }
 
   @Override
-  public void removeVisiblePackChangeListener(@Nonnull VisiblePackChangeListener listener) {
+  public void removeVisiblePackChangeListener(VisiblePackChangeListener listener) {
     myVisiblePackChangeListeners.remove(listener);
   }
 
@@ -107,17 +106,17 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   }
 
   @Override
-  public void onFiltersChange(@Nonnull VcsLogFilterCollection newFilters) {
+  public void onFiltersChange(VcsLogFilterCollection newFilters) {
     myTaskController.request(new FilterRequest(newFilters));
   }
 
   @Override
-  public void onSortTypeChange(@Nonnull PermanentGraph.SortType sortType) {
+  public void onSortTypeChange(PermanentGraph.SortType sortType) {
     myTaskController.request(new SortTypeRequest(sortType));
   }
 
   @Override
-  public void moreCommitsNeeded(@Nonnull Runnable onLoaded) {
+  public void moreCommitsNeeded(Runnable onLoaded) {
     myTaskController.request(new MoreCommitsRequest(onLoaded));
   }
 
@@ -128,12 +127,12 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
 
   private class MyTask extends Task.Backgroundable {
 
-    public MyTask(@Nullable Project project, @Nonnull String title) {
+    public MyTask(@Nullable Project project, String title) {
       super(project, title, false);
     }
 
     @Override
-    public void run(@Nonnull ProgressIndicator indicator) {
+    public void run(ProgressIndicator indicator) {
       VisiblePack visiblePack = null;
       List<Request> requests;
       while (!(requests = myTaskController.popRequests()).isEmpty()) {
@@ -164,7 +163,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
     }
 
     @Nullable
-    private VisiblePack getVisiblePack(@Nullable VisiblePack visiblePack, @Nonnull List<Request> requests) {
+    private VisiblePack getVisiblePack(@Nullable VisiblePack visiblePack, List<Request> requests) {
       ValidateRequest validateRequest = Lists.findLastInstance(requests, ValidateRequest.class);
       FilterRequest filterRequest = Lists.findLastInstance(requests, FilterRequest.class);
       SortTypeRequest sortTypeRequest = Lists.findLastInstance(requests, SortTypeRequest.class);
@@ -221,7 +220,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
 
     private VisiblePack refresh(@Nullable VisiblePack visiblePack,
                                 @Nullable FilterRequest filterRequest,
-                                @Nonnull List<MoreCommitsRequest> moreCommitsRequests) {
+                                List<MoreCommitsRequest> moreCommitsRequests) {
       DataPack dataPack = myLogData.getDataPack();
 
       if (dataPack == DataPack.EMPTY) { // when filter is set during initialization, just remember filters
@@ -274,10 +273,10 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   }
 
   private static final class MoreCommitsRequest implements Request {
-    @Nonnull
+    
     private final Runnable onLoaded;
 
-    MoreCommitsRequest(@Nonnull Runnable onLoaded) {
+    MoreCommitsRequest(Runnable onLoaded) {
       this.onLoaded = onLoaded;
     }
   }

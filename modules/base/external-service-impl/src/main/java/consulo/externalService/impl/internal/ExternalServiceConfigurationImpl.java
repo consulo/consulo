@@ -34,8 +34,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -132,9 +131,9 @@ public class ExternalServiceConfigurationImpl
         myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.class).configurationChanged(this);
     }
 
-    @Nonnull
+    
     @Override
-    public ThreeState getState(@Nonnull ExternalService externalService) {
+    public ThreeState getState(ExternalService externalService) {
         ThreeState state = myState.states.getOrDefault(externalService, externalService.getDefaultState());
         if (state == ThreeState.YES && !isAuthorized()) {
             return ThreeState.NO;
@@ -143,7 +142,7 @@ public class ExternalServiceConfigurationImpl
     }
 
     @Override
-    public void setState(@Nonnull ExternalService externalService, @Nonnull ThreeState state) {
+    public void setState(ExternalService externalService, ThreeState state) {
         if (externalService.getDefaultState() == state) {
             myState.states.remove(externalService);
         }
@@ -163,7 +162,7 @@ public class ExternalServiceConfigurationImpl
         return myState.oauthKey;
     }
 
-    public void authorize(@Nonnull String email, @Nonnull String token) {
+    public void authorize(String email, String token) {
         myState.email = email;
         myState.oauthKey = token;
     }

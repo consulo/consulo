@@ -14,8 +14,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -28,13 +27,13 @@ import java.util.List;
 public interface FoldingBuilder extends LanguageExtension {
   ExtensionPointCacheKey<FoldingBuilder, ByLanguageValue<List<FoldingBuilder>>> KEY = ExtensionPointCacheKey.create("FoldingBuilder", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<FoldingBuilder> forLanguage(@Nonnull Language language) {
+  
+  public static List<FoldingBuilder> forLanguage(Language language) {
     return Application.get().getExtensionPoint(FoldingBuilder.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
   @Nullable
-  public static FoldingBuilder forLanguageComposite(@Nonnull Language language) {
+  public static FoldingBuilder forLanguageComposite(Language language) {
     List<FoldingBuilder> foldingBuilders = Application.get().getExtensionPoint(FoldingBuilder.class).getOrBuildCache(KEY).requiredGet(language);
     if (foldingBuilders.isEmpty()) {
       return null;
@@ -54,9 +53,9 @@ public interface FoldingBuilder extends LanguageExtension {
    *                 numbers for folding regions.
    * @return the array of folding descriptors.
    */
-  @Nonnull
+  
   @RequiredReadAction
-  FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document);
+  FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document);
 
   /**
    * Returns the text which is displayed in the editor for the folding region related to the
@@ -67,7 +66,7 @@ public interface FoldingBuilder extends LanguageExtension {
    */
   @Nullable
   @RequiredReadAction
-  String getPlaceholderText(@Nonnull ASTNode node);
+  String getPlaceholderText(ASTNode node);
 
   /**
    * Returns the default collapsed state for the folding region related to the specified node.
@@ -76,10 +75,10 @@ public interface FoldingBuilder extends LanguageExtension {
    * @return true if the region is collapsed by default, false otherwise.
    */
   @RequiredReadAction
-  boolean isCollapsedByDefault(@Nonnull ASTNode node);
+  boolean isCollapsedByDefault(ASTNode node);
 
   @RequiredReadAction
-  default boolean isCollapsedByDefault(@Nonnull FoldingDescriptor foldingDescriptor) {
+  default boolean isCollapsedByDefault(FoldingDescriptor foldingDescriptor) {
     return isCollapsedByDefault(foldingDescriptor.getElement());
   }
 }

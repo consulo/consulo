@@ -25,46 +25,45 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
 public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFullValueEvaluationCallback {
-    @Nonnull
+    
     private final XValueNode myNode;
-    @Nonnull
+    
     private final Project myProject;
 
     private volatile boolean myEvaluated;
     private volatile boolean myCanceled;
     private final Semaphore mySemaphore;
 
-    public HeadlessValueEvaluationCallback(@Nonnull XValueNode node, @Nonnull Project project) {
+    public HeadlessValueEvaluationCallback(XValueNode node, Project project) {
         myNode = node;
         myProject = project;
         mySemaphore = new Semaphore();
         mySemaphore.down();
     }
 
-    public void startFetchingValue(@Nonnull XFullValueEvaluator fullValueEvaluator) {
+    public void startFetchingValue(XFullValueEvaluator fullValueEvaluator) {
         fullValueEvaluator.startEvaluation(this);
 
         new Alarm().addRequest(this::showProgress, 500);
     }
 
     @Override
-    public void evaluated(@Nonnull String fullValue) {
+    public void evaluated(String fullValue) {
         evaluationComplete(LocalizeValue.of(fullValue));
     }
 
     @Override
-    public void evaluated(@Nonnull String fullValue, @Nullable Font font) {
+    public void evaluated(String fullValue, @Nullable Font font) {
         evaluated(fullValue);
     }
 
     @Override
-    public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+    public void errorOccurred(LocalizeValue errorMessage) {
         try {
             NotificationService.getInstance()
                 .newError(XDebuggerUIConstants.NOTIFICATION_GROUP)
@@ -76,7 +75,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
         }
     }
 
-    private void evaluationComplete(@Nonnull LocalizeValue value) {
+    private void evaluationComplete(LocalizeValue value) {
         try {
             myEvaluated = true;
             mySemaphore.up();
@@ -86,12 +85,12 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
         }
     }
 
-    @Nonnull
+    
     public XValueNode getNode() {
         return myNode;
     }
 
-    protected void evaluationComplete(@Nonnull LocalizeValue value, @Nonnull Project project) {
+    protected void evaluationComplete(LocalizeValue value, Project project) {
     }
 
     @Override
@@ -106,7 +105,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
 
         new Task.Backgroundable(myProject, XDebuggerLocalize.loadValueTaskText()) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
                 int i = 0;
                 while (!myCanceled && !myEvaluated) {

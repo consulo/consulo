@@ -48,8 +48,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -63,23 +62,23 @@ import static consulo.diff.internal.DiffImplUtil.getDiffType;
 import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 public abstract class LineStatusMarkerPopup {
-    @Nonnull
+    
     public final LineStatusTracker myTracker;
-    @Nonnull
+    
     public final Editor myEditor;
-    @Nonnull
+    
     public final VcsRange myRange;
 
-    public LineStatusMarkerPopup(@Nonnull LineStatusTracker tracker, @Nonnull Editor editor, @Nonnull VcsRange range) {
+    public LineStatusMarkerPopup(LineStatusTracker tracker, Editor editor, VcsRange range) {
         myTracker = tracker;
         myEditor = editor;
         myRange = range;
     }
 
-    @Nonnull
-    protected abstract ActionToolbar buildToolbar(@Nullable Point mousePosition, @Nonnull Disposable parentDisposable);
+    
+    protected abstract ActionToolbar buildToolbar(@Nullable Point mousePosition, Disposable parentDisposable);
 
-    @Nonnull
+    
     protected FileType getFileType() {
         return PlainTextFileType.INSTANCE;
     }
@@ -109,7 +108,7 @@ public abstract class LineStatusMarkerPopup {
     }
 
     @RequiredUIAccess
-    public void showHint(@Nonnull MouseEvent e) {
+    public void showHint(MouseEvent e) {
         JComponent comp = (JComponent) e.getComponent(); // shall be EditorGutterComponent, cast is safe.
         JLayeredPane layeredPane = comp.getRootPane().getLayeredPane();
         Point point = SwingUtilities.convertPoint(
@@ -144,7 +143,7 @@ public abstract class LineStatusMarkerPopup {
     }
 
     @RequiredUIAccess
-    private void show(ActionToolbar toolbar, @Nullable Point mousePosition, @Nonnull Disposable disposable, JComponent editorComponent) {
+    private void show(ActionToolbar toolbar, @Nullable Point mousePosition, Disposable disposable, JComponent editorComponent) {
         PopupPanel popupPanel = new PopupPanel(myEditor, toolbar, editorComponent);
 
         LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(popupPanel);
@@ -192,7 +191,7 @@ public abstract class LineStatusMarkerPopup {
         );
     }
 
-    private void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, @Nonnull Disposable parentDisposable) {
+    private void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, Disposable parentDisposable) {
         if (wordDiff == null) {
             return;
         }
@@ -255,7 +254,7 @@ public abstract class LineStatusMarkerPopup {
         return fragmentComponent;
     }
 
-    private static String getFileName(@Nonnull Document document) {
+    private static String getFileName(Document document) {
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         if (file == null) {
             return "";
@@ -267,7 +266,7 @@ public abstract class LineStatusMarkerPopup {
         @Nullable
         private final JComponent myEditorComponent;
 
-        public PopupPanel(@Nonnull final Editor editor, @Nonnull ActionToolbar toolbar, @Nullable JComponent editorComponent) {
+        public PopupPanel(final Editor editor, ActionToolbar toolbar, @Nullable JComponent editorComponent) {
             super(new BorderLayout());
             setOpaque(false);
 

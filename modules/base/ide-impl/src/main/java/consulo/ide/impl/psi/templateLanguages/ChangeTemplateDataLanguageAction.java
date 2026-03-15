@@ -29,7 +29,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -41,7 +40,7 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setVisible(false);
 
         VirtualFile virtualFile = e.getData(VirtualFile.KEY);
@@ -71,7 +70,7 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VirtualFile virtualFile = e.getData(VirtualFile.KEY);
         TemplateDataLanguageConfigurable configurable =

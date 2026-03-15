@@ -24,8 +24,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the support for "Comment with Line Comment" and "Comment with Block Comment"
@@ -38,7 +37,7 @@ public interface Commenter extends LanguageExtension {
   ExtensionPointCacheKey<Commenter, ByLanguageValue<Commenter>> KEY = ExtensionPointCacheKey.create("Commenter", LanguageOneToOne.build());
 
   @Nullable
-  static Commenter forLanguage(@Nonnull Language language) {
+  static Commenter forLanguage(Language language) {
     return Application.get().getExtensionPoint(Commenter.class).getOrBuildCache(KEY).get(language);
   }
 

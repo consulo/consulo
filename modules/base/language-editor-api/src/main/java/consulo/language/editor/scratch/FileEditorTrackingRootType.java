@@ -17,16 +17,15 @@ package consulo.language.editor.scratch;
 
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2023-11-08
  */
 public interface FileEditorTrackingRootType {
-  default void fileOpened(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
+  default void fileOpened(VirtualFile file, FileEditorManager source) {
   }
 
-  default void fileClosed(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
+  default void fileClosed(VirtualFile file, FileEditorManager source) {
   }
 }

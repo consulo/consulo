@@ -25,8 +25,7 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.CompositeComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -73,14 +72,14 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     public void addStyle(LayoutStyle style) {
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
         if (component != null) {
@@ -92,7 +91,7 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
         if (component != null) {
@@ -104,7 +103,7 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
         if (component != null) {

@@ -3,11 +3,10 @@ package consulo.build.ui.progress;
 
 import consulo.build.ui.event.BuildEvent;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface BuildProgressListener {
-  void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event);
+  void onEvent(Object buildId, BuildEvent event);
 }

@@ -24,7 +24,6 @@ import consulo.module.content.util.OrderEntryUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -42,7 +41,7 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
     myOrderEntry = orderEntry;
   }
 
-  public PlaceInModuleClasspath(@Nonnull ModulesConfigurator configurator, @Nonnull Module module, ProjectStructureElement element, @Nonnull ProjectStructureElement elementInClasspath) {
+  public PlaceInModuleClasspath(ModulesConfigurator configurator, Module module, ProjectStructureElement element, ProjectStructureElement elementInClasspath) {
     myModulesConfigurator = configurator;
     myModule = module;
     myElement = element;
@@ -61,7 +60,7 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
     }
   }
 
-  @Nonnull
+  
   @Override
   public ProjectStructureElement getContainingElement() {
     return myElement;
@@ -72,9 +71,9 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
     return myOrderEntry != null ? myOrderEntry.getPresentableName() : null;
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> navigate(@Nonnull Project project) {
+  public AsyncResult<Void> navigate(Project project) {
     ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
     return showSettingsUtil.showProjectStructureDialog(project, projectStructureSelector -> {
       projectStructureSelector.selectOrderEntry(myModule, myOrderEntry);

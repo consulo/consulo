@@ -20,8 +20,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.ProgressStreamUtil;
 import consulo.util.io.NetUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -54,7 +53,7 @@ public class NetUtils {
     return NetUtil.getLoopbackAddress();
   }
 
-  public static boolean isLocalhost(@Nonnull String host) {
+  public static boolean isLocalhost(String host) {
     return NetUtil.isLocalhost(host);
   }
 
@@ -92,7 +91,7 @@ public class NetUtils {
    * @throws ProcessCanceledException if process was canceled.
    */
   @Deprecated(forRemoval = true)
-  public static int copyStreamContent(@Nullable ProgressIndicator indicator, @Nonnull InputStream inputStream, @Nonnull OutputStream outputStream, int expectedContentSize)
+  public static int copyStreamContent(@Nullable ProgressIndicator indicator, InputStream inputStream, OutputStream outputStream, int expectedContentSize)
           throws IOException, ProcessCanceledException {
     return copyStreamContent(indicator, null, inputStream, outputStream, expectedContentSize);
   }
@@ -110,8 +109,8 @@ public class NetUtils {
   @Deprecated(forRemoval = true)
   public static int copyStreamContent(@Nullable ProgressIndicator indicator,
                                       @Nullable MessageDigest digest,
-                                      @Nonnull InputStream inputStream,
-                                      @Nonnull OutputStream outputStream,
+                                      InputStream inputStream,
+                                      OutputStream outputStream,
                                       int expectedContentSize) throws IOException, ProcessCanceledException {
     return ProgressStreamUtil.copyStreamContent(indicator, digest, inputStream, outputStream, expectedContentSize);
   }

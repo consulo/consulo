@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 @ExtensionAPI(ComponentScope.PROJECT)
@@ -90,18 +89,18 @@ public abstract class VcsTaskHandler {
 
   public abstract boolean isEnabled();
 
-  public abstract TaskInfo startNewTask(@Nonnull String taskName);
+  public abstract TaskInfo startNewTask(String taskName);
 
   public abstract void switchToTask(TaskInfo taskInfo, @Nullable Runnable invokeAfter);
 
-  public abstract void closeTask(@Nonnull TaskInfo taskInfo, @Nonnull TaskInfo original);
+  public abstract void closeTask(TaskInfo taskInfo, TaskInfo original);
 
   public abstract boolean isSyncEnabled();
 
   /**
    * @return currently active (checked out) tasks (branches)
    */
-  @Nonnull
+  
   public abstract TaskInfo[] getCurrentTasks();
 
   /**
@@ -115,7 +114,7 @@ public abstract class VcsTaskHandler {
    * @param branchName to check
    * @return true if valid
    */
-  public boolean isBranchNameValid(@Nonnull String branchName) {
+  public boolean isBranchNameValid(String branchName) {
     return !branchName.contains(DEFAULT_PROHIBITED_SYMBOLS);
   }
 
@@ -125,8 +124,8 @@ public abstract class VcsTaskHandler {
    * @param suggestedName suggested name
    * @return new valid branchName
    */
-  @Nonnull
-  public String cleanUpBranchName(@Nonnull String suggestedName) {
+  
+  public String cleanUpBranchName(String suggestedName) {
     return suggestedName.replaceAll(DEFAULT_PROHIBITED_SYMBOLS, "-");
   }
 }

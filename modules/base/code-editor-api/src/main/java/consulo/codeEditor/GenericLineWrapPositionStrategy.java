@@ -20,8 +20,7 @@ import consulo.project.Project;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 
 /**
@@ -45,7 +44,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
   private final Storage myOffset2weight = new Storage();
 
   @Override
-  public int calculateWrapPosition(@Nonnull Document document,
+  public int calculateWrapPosition(Document document,
                                    @Nullable Project project,
                                    int startOffset,
                                    int endOffset,
@@ -142,7 +141,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
     return -1;
   }
 
-  protected boolean canUseOffset(@Nonnull Document document, int offset, boolean virtual) {
+  protected boolean canUseOffset(Document document, int offset, boolean virtual) {
     return true;
   }
 
@@ -152,7 +151,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
    * @param rule    rule to register
    * @throws IllegalArgumentException     if another rule for the same symbol is already registered within the current strategy
    */
-  public void addRule(@Nonnull Rule rule) throws IllegalArgumentException {
+  public void addRule(Rule rule) throws IllegalArgumentException {
     Rule existing = myRules.get(rule.symbol);
     if (existing != null) {
       throw new IllegalArgumentException(String.format(

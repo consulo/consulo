@@ -22,7 +22,6 @@ import consulo.http.*;
 import consulo.http.localize.HttpLocalize;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -174,8 +173,8 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
         throw new IOException(HttpLocalize.errorConnectionFailedRedirects().get());
     }
 
-    @Nonnull
-    public static String createErrorMessage(@Nonnull IOException e, @Nonnull HttpRequest request, boolean includeHeaders) {
+    
+    public static String createErrorMessage(IOException e, HttpRequest request, boolean includeHeaders) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Cannot download '").append(request.getURL()).append("': ").append(e.getMessage());
@@ -205,9 +204,9 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
-    public HttpRequestBuilder newBuilder(@Nonnull String url, @Nonnull HttpMethod httpMethod) {
+    public HttpRequestBuilder newBuilder(String url, HttpMethod httpMethod) {
         return new HttpRequestBuilderImpl(myApplication, url, httpMethod);
     }
 }

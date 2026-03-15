@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Function;
@@ -16,8 +15,8 @@ public class PersistentSearchEverywhereContributorFilter<T> {
     private final Function<? super T, ? extends Image> myIconExtractor;
 
     public PersistentSearchEverywhereContributorFilter(
-        @Nonnull List<T> elements,
-        @Nonnull ChooseByNameFilterConfiguration<? super T> configuration,
+        List<T> elements,
+        ChooseByNameFilterConfiguration<? super T> configuration,
         Function<? super T, String> textExtractor,
         Function<? super T, ? extends Image> iconExtractor
     ) {

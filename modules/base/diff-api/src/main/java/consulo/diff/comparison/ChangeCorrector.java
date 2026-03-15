@@ -22,7 +22,6 @@ import consulo.diff.util.Range;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.collection.primitive.ints.IntList;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 import static consulo.diff.comparison.TrimUtil.expand;
@@ -36,19 +35,19 @@ import static consulo.diff.comparison.iterable.DiffIterableUtil.fair;
 abstract class ChangeCorrector {
   private final int myLength1;
   private final int myLength2;
-  @Nonnull
+  
   private final FairDiffIterable myChanges;
 
-  @Nonnull
+  
   protected final ProgressIndicator myIndicator;
 
-  @Nonnull
+  
   protected final DiffIterableUtil.ChangeBuilder myBuilder;
 
   public ChangeCorrector(int length1,
                          int length2,
-                         @Nonnull FairDiffIterable changes,
-                         @Nonnull ProgressIndicator indicator) {
+                         FairDiffIterable changes,
+                         ProgressIndicator indicator) {
     myLength1 = length1;
     myLength2 = length2;
     myChanges = changes;
@@ -57,7 +56,7 @@ abstract class ChangeCorrector {
     myBuilder = new DiffIterableUtil.ChangeBuilder(length1, length2);
   }
 
-  @Nonnull
+  
   public FairDiffIterable build() {
     execute();
     return fair(myBuilder.finish());
@@ -95,21 +94,21 @@ abstract class ChangeCorrector {
   //
 
   public static class DefaultCharChangeCorrector extends ChangeCorrector {
-    @Nonnull
+    
     private final ByChar.CharOffsets myChars1;
-    @Nonnull
+    
     private final ByChar.CharOffsets myChars2;
-    @Nonnull
+    
     private final CharSequence myText1;
-    @Nonnull
+    
     private final CharSequence myText2;
 
-    public DefaultCharChangeCorrector(@Nonnull ByChar.CharOffsets chars1,
-                                      @Nonnull ByChar.CharOffsets chars2,
-                                      @Nonnull CharSequence text1,
-                                      @Nonnull CharSequence text2,
-                                      @Nonnull FairDiffIterable changes,
-                                      @Nonnull ProgressIndicator indicator) {
+    public DefaultCharChangeCorrector(ByChar.CharOffsets chars1,
+                                      ByChar.CharOffsets chars2,
+                                      CharSequence text1,
+                                      CharSequence text2,
+                                      FairDiffIterable changes,
+                                      ProgressIndicator indicator) {
       super(text1.length(), text2.length(), changes, indicator);
       myChars1 = chars1;
       myChars2 = chars2;
@@ -146,21 +145,21 @@ abstract class ChangeCorrector {
   }
 
   public static class SmartLineChangeCorrector extends ChangeCorrector {
-    @Nonnull
+    
     private final IntList myIndexes1;
-    @Nonnull
+    
     private final IntList myIndexes2;
-    @Nonnull
+    
     private final List<Line> myLines1;
-    @Nonnull
+    
     private final List<Line> myLines2;
 
-    public SmartLineChangeCorrector(@Nonnull IntList indexes1,
-                                    @Nonnull IntList indexes2,
-                                    @Nonnull List<Line> lines1,
-                                    @Nonnull List<Line> lines2,
-                                    @Nonnull FairDiffIterable changes,
-                                    @Nonnull ProgressIndicator indicator) {
+    public SmartLineChangeCorrector(IntList indexes1,
+                                    IntList indexes2,
+                                    List<Line> lines1,
+                                    List<Line> lines2,
+                                    FairDiffIterable changes,
+                                    ProgressIndicator indicator) {
       super(lines1.size(), lines2.size(), changes, indicator);
       myIndexes1 = indexes1;
       myIndexes2 = indexes2;

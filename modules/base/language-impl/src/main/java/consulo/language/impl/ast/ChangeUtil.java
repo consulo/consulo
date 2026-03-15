@@ -37,8 +37,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.CharTable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,8 +100,8 @@ public class ChangeUtil {
         return element;
     }
 
-    @Nonnull
-    public static LeafElement copyLeafWithText(@Nonnull LeafElement original, @Nonnull String text) {
+    
+    public static LeafElement copyLeafWithText(LeafElement original, String text) {
         LeafElement element = ASTFactory.leaf(original.getElementType(), text);
         original.copyCopyableDataTo(element);
         encodeInformation(element, original);
@@ -111,7 +110,7 @@ public class ChangeUtil {
         return element;
     }
 
-    public static TreeElement copyElement(@Nonnull TreeElement original, CharTable table) {
+    public static TreeElement copyElement(TreeElement original, CharTable table) {
         CompositeElement treeParent = original.getTreeParent();
         return copyElement(original, treeParent == null ? null : treeParent.getPsi(), table);
     }
@@ -154,7 +153,7 @@ public class ChangeUtil {
     }
 
     @Nullable
-    public static TreeElement generateTreeElement(@Nullable PsiElement original, @Nonnull CharTable table, @Nonnull PsiManager manager) {
+    public static TreeElement generateTreeElement(@Nullable PsiElement original, CharTable table, PsiManager manager) {
         if (original == null) {
             return null;
         }

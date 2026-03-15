@@ -6,8 +6,7 @@ import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.File;
@@ -25,27 +24,27 @@ public class SingletonDeploymentSourceType extends DeploymentSourceType<Deployme
     private final LocalizeValue myPresentableName;
     private final SingletonDeploymentSource mySourceInstance;
 
-    public SingletonDeploymentSourceType(@Nonnull String id, LocalizeValue name, @Nonnull Image icon) {
+    public SingletonDeploymentSourceType(String id, LocalizeValue name, Image icon) {
         super(id);
         myPresentableName = name;
         mySourceInstance = new SingletonDeploymentSource(icon, getClass());
     }
 
-    protected static <T extends SingletonDeploymentSourceType> T findExtension(@Nonnull Class<? extends T> clazz) {
+    protected static <T extends SingletonDeploymentSourceType> T findExtension(Class<? extends T> clazz) {
         return DeploymentSourceType.EP_NAME.findExtension(clazz);
     }
 
-    public @Nonnull DeploymentSource getSingletonSource() {
+    public DeploymentSource getSingletonSource() {
         return mySourceInstance;
     }
 
     @Override
-    public void save(@Nonnull DeploymentSource source, @Nonnull Element tag) {
+    public void save(DeploymentSource source, Element tag) {
         //
     }
 
     @Override
-    public @Nonnull DeploymentSource load(@Nonnull Element tag, @Nonnull Project project) {
+    public DeploymentSource load(Element tag, Project project) {
         return getSingletonSource();
     }
 
@@ -57,7 +56,7 @@ public class SingletonDeploymentSourceType extends DeploymentSourceType<Deployme
         private final Class<? extends SingletonDeploymentSourceType> myTypeClass;
         private final Image myIcon;
 
-        SingletonDeploymentSource(@Nonnull Image icon, @Nonnull Class<? extends SingletonDeploymentSourceType> typeClass) {
+        SingletonDeploymentSource(Image icon, Class<? extends SingletonDeploymentSourceType> typeClass) {
             myIcon = icon;
             myTypeClass = typeClass;
         }
@@ -89,13 +88,13 @@ public class SingletonDeploymentSourceType extends DeploymentSourceType<Deployme
         }
 
         @Override
-        @Nonnull
+        
         public final LocalizeValue getPresentableName() {
             return getType().getPresentableName();
         }
 
         @Override
-        public @Nonnull SingletonDeploymentSourceType getType() {
+        public SingletonDeploymentSourceType getType() {
             return findExtension(myTypeClass);
         }
     }

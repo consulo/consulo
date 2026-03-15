@@ -22,7 +22,6 @@ import consulo.ui.ex.action.*;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -39,15 +38,15 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         setPopup(popup);
     }
 
-    @Nonnull
+    
     @Override
     protected ModificationTracker getModificationTracker() {
         return WebBrowserManager.getInstance();
     }
 
-    @Nonnull
+    
     @Override
-    protected AnAction[] computeChildren(@Nonnull ActionManager manager) {
+    protected AnAction[] computeChildren(ActionManager manager) {
         List<WebBrowser> browsers = WebBrowserManager.getInstance().getBrowsers();
         boolean addDefaultBrowser = isPopup();
         int offset = addDefaultBrowser ? 1 : 0;
@@ -75,7 +74,7 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             String place = e.getPlace();
 
             if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
@@ -93,7 +92,7 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setVisible(!WebBrowserManager.getInstance().getBrowsers().isEmpty());
         }
     }

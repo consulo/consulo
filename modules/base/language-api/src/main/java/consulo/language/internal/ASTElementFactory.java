@@ -23,8 +23,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,11 +31,11 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ASTElementFactory {
-  @Nonnull
+  
   static ASTElementFactory getInstance(Project project) {
     return project.getInstance(ASTElementFactory.class);
   }
 
-  @Nonnull
-  ASTNode createSingleLeafElement(@Nonnull IElementType type, CharSequence buffer, int startOffset, int endOffset, @Nullable CharTable table, PsiManager manager);
+  
+  ASTNode createSingleLeafElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, @Nullable CharTable table, PsiManager manager);
 }

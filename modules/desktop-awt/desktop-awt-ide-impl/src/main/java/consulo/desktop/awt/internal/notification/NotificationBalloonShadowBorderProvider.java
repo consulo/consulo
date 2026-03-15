@@ -20,7 +20,6 @@ import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.popup.Balloon;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,23 +33,23 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     private final Color myFillColor;
     private final Color myBorderColor;
 
-    public NotificationBalloonShadowBorderProvider(@Nonnull Color fillColor, @Nonnull Color borderColor) {
+    public NotificationBalloonShadowBorderProvider(Color fillColor, Color borderColor) {
         myFillColor = fillColor;
         myBorderColor = borderColor;
     }
 
-    @Nonnull
+    
     @Override
     public Insets getInsets() {
         return INSETS;
     }
 
     @Override
-    public void paintShadow(@Nonnull JComponent component, @Nonnull Graphics g) {
+    public void paintShadow(JComponent component, Graphics g) {
     }
 
     @Override
-    public void paintBorder(@Nonnull Rectangle2D bounds, @Nonnull Graphics2D g) {
+    public void paintBorder(Rectangle2D bounds, Graphics2D g) {
         int arc = UIManager.getInt("Component.arc");
         if (arc > 0) {
             g.setColor(myFillColor);
@@ -77,10 +76,10 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
 
     @Override
     public void paintPointingShape(
-        @Nonnull Rectangle2D bounds,
-        @Nonnull Point2D pointTarget,
-        @Nonnull Balloon.Position position,
-        @Nonnull Graphics2D g
+        Rectangle2D bounds,
+        Point2D pointTarget,
+        Balloon.Position position,
+        Graphics2D g
     ) {
         int x, y, length;
 

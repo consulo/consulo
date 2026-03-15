@@ -17,14 +17,13 @@ package consulo.test.light.impl;
 
 import consulo.platform.Platform;
 import consulo.platform.internal.PlatformInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2023-11-06
  */
 public class LightPlatformInternal extends PlatformInternal {
-  @Nonnull
+  
   @Override
   public Platform createCurrent() {
     return new LightPlatform();

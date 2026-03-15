@@ -27,8 +27,7 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -71,7 +70,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
 
   @Override
   public void render(
-    @Nonnull PresentationData presentationData,
+    PresentationData presentationData,
     SimpleTextAttributes mainAttributes,
     SimpleTextAttributes commentAttributes
   ) {
@@ -114,7 +113,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
     return " (" + displayName + ")";
   }
 
-  public static String getLibraryItemText(@Nonnull Library library, boolean includeTableName) {
+  public static String getLibraryItemText(Library library, boolean includeTableName) {
     String name = library.getName();
     VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
     if (name != null) {

@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.tab.JBTabsPresentation;
 import consulo.ui.ex.content.Content;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -390,7 +389,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
     @Override
     @Nullable
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (ViewContext.CONTEXT_KEY == dataId) {
             return myViewContext;
         }

@@ -32,7 +32,6 @@ import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -50,7 +49,7 @@ public abstract class AutoScrollToSourceHandler {
         myAutoScrollAlarm = new Alarm();
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 if (clickCount > 1) {
                     return false;
                 }
@@ -78,7 +77,7 @@ public abstract class AutoScrollToSourceHandler {
         myAutoScrollAlarm = new Alarm();
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 if (clickCount >= 2) {
                     return false;
                 }
@@ -105,7 +104,7 @@ public abstract class AutoScrollToSourceHandler {
         myAutoScrollAlarm = new Alarm();
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 if (clickCount >= 2) {
                     return false;
                 }
@@ -217,12 +216,12 @@ public abstract class AutoScrollToSourceHandler {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return isAutoScrollMode();
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             setAutoScrollMode(flag);
         }
     }

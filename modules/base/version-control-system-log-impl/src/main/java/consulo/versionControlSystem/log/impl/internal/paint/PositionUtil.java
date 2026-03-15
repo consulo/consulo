@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.paint;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -48,11 +47,11 @@ public class PositionUtil {
     return distance(x0, y0, x, y) <= circleRadius;
   }
 
-  public static int getYInsideRow(@Nonnull Point point, int rowHeight) {
+  public static int getYInsideRow(Point point, int rowHeight) {
     return point.y - getRowIndex(point, rowHeight) * rowHeight;
   }
 
-  public static int getRowIndex(@Nonnull Point point, int rowHeight) {
+  public static int getRowIndex(Point point, int rowHeight) {
     return point.y / rowHeight;
   }
 }

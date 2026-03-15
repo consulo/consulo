@@ -52,8 +52,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -109,7 +108,7 @@ public class EventLog {
         );
     }
 
-    public static void expireNotification(@Nonnull Notification notification) {
+    public static void expireNotification(Notification notification) {
         getApplicationComponent().myModel.removeNotification(notification);
         for (Project p : ProjectManager.getInstance().getOpenProjects()) {
             NotificationProjectTracker.getInstance(p).myProjectModel.removeNotification(notification);
@@ -117,11 +116,11 @@ public class EventLog {
     }
 
     @RequiredUIAccess
-    public static void showNotification(@Nonnull Project project, @Nonnull String groupId, @Nonnull List<String> ids) {
+    public static void showNotification(Project project, String groupId, List<String> ids) {
         NotificationProjectTracker.getInstance(project).showNotification(groupId, ids);
     }
 
-    @Nonnull
+    
     public static LogModel getLogModel(@Nullable Project project) {
         return project != null ? NotificationProjectTracker.getInstance(project).myProjectModel : getApplicationComponent().myModel;
     }
@@ -140,11 +139,11 @@ public class EventLog {
         }
     }
 
-    public static void clearNMore(@Nonnull Project project, @Nonnull Collection<String> groups) {
+    public static void clearNMore(Project project, Collection<String> groups) {
         NotificationProjectTracker.getInstance(project).clearNMore(groups);
     }
 
-    public static LogEntry formatForLog(@Nonnull Notification notification, String indent) {
+    public static LogEntry formatForLog(Notification notification, String indent) {
         DocumentImpl logDoc = new DocumentImpl("", true);
         AtomicBoolean showMore = new AtomicBoolean(false);
         Map<RangeMarker, HyperlinkInfo> links = new LinkedHashMap<>();
@@ -227,12 +226,12 @@ public class EventLog {
         return new LogEntry(logDoc.getText(), status, list, titleLength);
     }
 
-    @Nonnull
-    private static String addIndents(@Nonnull String text, @Nonnull String indent) {
+    
+    private static String addIndents(String text, String indent) {
         return StringUtil.replace(text, "\n", "\n" + indent);
     }
 
-    private static boolean isLongLine(@Nonnull List<AnAction> actions) {
+    private static boolean isLongLine(List<AnAction> actions) {
         int size = actions.size();
         if (size > 3) {
             return true;
@@ -247,7 +246,7 @@ public class EventLog {
         return false;
     }
 
-    @Nonnull
+    
     private static String truncateLongString(AtomicBoolean showMore, String title) {
         if (title.length() > 1000) {
             showMore.set(true);
@@ -389,7 +388,7 @@ public class EventLog {
 
     private static final String[] SKIP_TAGS = {"html", "body", "b", "i", "font"};
 
-    private static boolean isTag(@Nonnull String[] tags, @Nonnull String tag) {
+    private static boolean isTag(String[] tags, String tag) {
         tag = tag.substring(1, tag.length() - 1); // skip <>
         tag = StringUtil.trimEnd(StringUtil.trimStart(tag, "/"), "/"); // skip /
         int index = tag.indexOf(' ');
@@ -458,18 +457,18 @@ public class EventLog {
     }
 
     public static class LogEntry {
-        @Nonnull
+        
         public final String message;
-        @Nonnull
+        
         public final String status;
-        @Nonnull
+        
         public final List<Pair<TextRange, HyperlinkInfo>> links;
         public final int titleLength;
 
         public LogEntry(
-            @Nonnull String message,
-            @Nonnull String status,
-            @Nonnull List<Pair<TextRange, HyperlinkInfo>> links,
+            String message,
+            String status,
+            List<Pair<TextRange, HyperlinkInfo>> links,
             int titleLength
         ) {
             this.message = message;
@@ -498,7 +497,7 @@ public class EventLog {
     }
 
     @RequiredUIAccess
-    protected static void activate(@Nonnull ToolWindow eventLog, @Nullable String groupId, @Nullable Runnable r) {
+    protected static void activate(ToolWindow eventLog, @Nullable String groupId, @Nullable Runnable r) {
         eventLog.activate(
             () -> {
                 if (groupId == null) {

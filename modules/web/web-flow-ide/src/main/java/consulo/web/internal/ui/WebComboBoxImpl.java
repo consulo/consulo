@@ -23,8 +23,7 @@ import consulo.ui.TextItemRenderer;
 import consulo.ui.model.ListModel;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.vaadin.WebSingleListComponentBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -47,7 +46,7 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRenderer<V> renderer) {
+    public void setRenderer(TextItemRenderer<V> renderer) {
         toVaadinComponent().setRenderer(new ComponentRenderer((c) -> {
             WebItemPresentationImpl presentation = new WebItemPresentationImpl();
             renderer.render(presentation, myModel.indexOf((V) c), (V) c);
@@ -55,7 +54,7 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
         }));
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();

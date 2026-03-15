@@ -22,7 +22,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.rollback.RollbackProgressListener;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.HashSet;
@@ -74,11 +73,11 @@ public class RollbackProgressModifier implements RollbackProgressListener {
     }
   }
 
-  public void accept(@Nonnull Change change) {
+  public void accept(Change change) {
     acceptImpl(ChangesUtil.getFilePath(change).getIOFile().getAbsolutePath());
   }
 
-  public void accept(@Nonnull FilePath filePath) {
+  public void accept(FilePath filePath) {
     acceptImpl(filePath.getIOFile().getAbsolutePath());
   }
 

@@ -15,13 +15,12 @@
  */
 package consulo.ui.ex.awt.tab;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
 public interface UiDecorator {
-  @Nonnull
+  
   UiDecoration getDecoration();
 
   class UiDecoration {

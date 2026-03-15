@@ -31,9 +31,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,13 +66,13 @@ public final class Annotation implements Segment {
     private List<QuickFixInfo> myBatchFixes;
 
     public static class QuickFixInfo {
-        @Nonnull
+        
         public final IntentionAction quickFix;
-        @Nonnull
+        
         public final TextRange textRange;
         public final HighlightDisplayKey key;
 
-        public QuickFixInfo(@Nonnull IntentionAction fix, @Nonnull TextRange range, @Nullable HighlightDisplayKey key) {
+        public QuickFixInfo(IntentionAction fix, TextRange range, @Nullable HighlightDisplayKey key) {
             this.key = key;
             quickFix = fix;
             textRange = range;
@@ -100,10 +98,10 @@ public final class Annotation implements Segment {
      */
     public Annotation(int startOffset,
                       int endOffset,
-                      @Nonnull HighlightSeverity severity,
-                      @Nonnull LocalizeValue message,
-                      @Nonnull LocalizeValue tooltip,
-                      @Nonnull Language language) {
+                      HighlightSeverity severity,
+                      LocalizeValue message,
+                      LocalizeValue tooltip,
+                      Language language) {
         assert startOffset <= endOffset : startOffset + ":" + endOffset;
         assert startOffset >= 0 : "Start offset must not be negative: " + startOffset;
         myStartOffset = startOffset;
@@ -119,18 +117,18 @@ public final class Annotation implements Segment {
      *
      * @param fix the quick fix implementation.
      */
-    public void registerFix(@Nonnull IntentionAction fix) {
+    public void registerFix(IntentionAction fix) {
         registerFix(fix, null);
     }
 
-    public void registerFix(@Nonnull IntentionAction fix, TextRange range) {
+    public void registerFix(IntentionAction fix, TextRange range) {
         registerFix(fix, range, null);
     }
 
-    public void registerFix(@Nonnull LocalQuickFix fix,
+    public void registerFix(LocalQuickFix fix,
                             @Nullable TextRange range,
                             @Nullable HighlightDisplayKey key,
-                            @Nonnull ProblemDescriptor problemDescriptor) {
+                            ProblemDescriptor problemDescriptor) {
         if (range == null) {
             range = new TextRange(myStartOffset, myEndOffset);
         }
@@ -147,7 +145,7 @@ public final class Annotation implements Segment {
      * @param fix   the quick fix implementation.
      * @param range the text range (relative to the document) where the quick fix is available.
      */
-    public void registerFix(@Nonnull IntentionAction fix, @Nullable TextRange range, @Nullable HighlightDisplayKey key) {
+    public void registerFix(IntentionAction fix, @Nullable TextRange range, @Nullable HighlightDisplayKey key) {
         if (range == null) {
             range = new TextRange(myStartOffset, myEndOffset);
         }
@@ -161,7 +159,7 @@ public final class Annotation implements Segment {
      * Registers a quickfix which would be available during batch mode only,
      * in particular during consulo.ide.impl.idea.codeInspection.DefaultHighlightVisitorBasedInspection run
      */
-    public <T extends IntentionAction & LocalQuickFix> void registerBatchFix(@Nonnull T fix, @Nullable TextRange range, @Nullable HighlightDisplayKey key) {
+    public <T extends IntentionAction & LocalQuickFix> void registerBatchFix(T fix, @Nullable TextRange range, @Nullable HighlightDisplayKey key) {
         if (range == null) {
             range = new TextRange(myStartOffset, myEndOffset);
         }
@@ -175,7 +173,7 @@ public final class Annotation implements Segment {
     /**
      * Register a quickfix which would be available onTheFly and in the batch mode. Should implement both IntentionAction and LocalQuickFix.
      */
-    public <T extends IntentionAction & LocalQuickFix> void registerUniversalFix(@Nonnull T fix,
+    public <T extends IntentionAction & LocalQuickFix> void registerUniversalFix(T fix,
                                                                                  @Nullable TextRange range,
                                                                                  @Nullable HighlightDisplayKey key) {
         registerBatchFix(fix, range, key);
@@ -234,7 +232,7 @@ public final class Annotation implements Segment {
      *
      * @return the annotation severity.
      */
-    @Nonnull
+    
     public HighlightSeverity getSeverity() {
         return mySeverity;
     }
@@ -260,7 +258,7 @@ public final class Annotation implements Segment {
      *
      * @return the text attribute key used for highlighting
      */
-    @Nonnull
+    
     public TextAttributesKey getTextAttributes() {
         if (myEnforcedAttributesKey != null) {
             return myEnforcedAttributesKey;
@@ -325,7 +323,7 @@ public final class Annotation implements Segment {
      *
      * @return the description of the annotation.
      */
-    @Nonnull
+    
     public LocalizeValue getMessage() {
         return myMessage;
     }
@@ -335,7 +333,7 @@ public final class Annotation implements Segment {
      *
      * @return the tooltip for the annotation.
      */
-    @Nonnull
+    
     public LocalizeValue getTooltip() {
         return myTooltip;
     }
@@ -345,7 +343,7 @@ public final class Annotation implements Segment {
      *
      * @param tooltip the tooltip text.
      */
-    public void setTooltip(@Nonnull LocalizeValue tooltip) {
+    public void setTooltip(LocalizeValue tooltip) {
         myTooltip = tooltip;
     }
 
@@ -445,7 +443,7 @@ public final class Annotation implements Segment {
         myProblemGroup = problemGroup;
     }
 
-    @NonNls
+    
     public String toString() {
         return "Annotation(" + "message='" + myMessage + "'" + ", severity='" + mySeverity + "'" + ", toolTip='" + myTooltip + "'" + ")";
     }

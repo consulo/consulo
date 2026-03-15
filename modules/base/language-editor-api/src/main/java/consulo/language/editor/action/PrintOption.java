@@ -21,8 +21,7 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -35,6 +34,6 @@ public abstract class PrintOption {
   @Nullable
   public abstract TreeMap<Integer, PsiReference> collectReferences(PsiFile psiFile, Map<PsiFile, PsiFile> filesMap);
 
-  @Nonnull
+  
   public abstract UnnamedConfigurable createConfigurable();
 }

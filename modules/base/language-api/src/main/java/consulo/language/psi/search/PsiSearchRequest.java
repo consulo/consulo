@@ -18,7 +18,6 @@ package consulo.language.psi.search;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -31,19 +30,19 @@ public class PsiSearchRequest {
   public final RequestResultProcessor processor;
   public final String containerName;
 
-  public PsiSearchRequest(@Nonnull SearchScope searchScope,
-                          @Nonnull String word,
+  public PsiSearchRequest(SearchScope searchScope,
+                          String word,
                           short searchContext,
                           boolean caseSensitive,
-                          @Nonnull RequestResultProcessor processor) {
+                          RequestResultProcessor processor) {
     this(searchScope, word, searchContext, caseSensitive, null, processor);
   }
-  public PsiSearchRequest(@Nonnull SearchScope searchScope,
-                          @Nonnull String word,
+  public PsiSearchRequest(SearchScope searchScope,
+                          String word,
                           short searchContext,
                           boolean caseSensitive,
                           String containerName,
-                          @Nonnull RequestResultProcessor processor) {
+                          RequestResultProcessor processor) {
     this.containerName = containerName;
     if (word.isEmpty()) {
       throw new IllegalArgumentException("Cannot search for elements with empty text");

@@ -18,8 +18,7 @@ package consulo.ide.newModule;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,12 +28,12 @@ public class NewModuleContextNode {
   private final LocalizeValue myName;
   private final Image myImage;
 
-  public NewModuleContextNode(@Nonnull LocalizeValue name, @Nullable Image image) {
+  public NewModuleContextNode(LocalizeValue name, @Nullable Image image) {
     myName = name;
     myImage = image;
   }
 
-  @Nonnull
+  
   public LocalizeValue getName() {
     return myName;
   }

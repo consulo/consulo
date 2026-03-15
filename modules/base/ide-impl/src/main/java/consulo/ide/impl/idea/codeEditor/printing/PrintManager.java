@@ -41,7 +41,6 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.print.*;
@@ -171,7 +170,7 @@ class PrintManager {
         PerformInBackgroundOption.ALWAYS_BACKGROUND
       ) {
         @Override
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
           try {
             ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
             if (painter0 instanceof MultiFilePainter multiFilePainter) {
@@ -253,7 +252,7 @@ class PrintManager {
     return new TextPainter(doc, highlighter, fileName, psiFile, psiFile.getFileType(), editor);
   }
 
-  public static TextPainter initTextPainter(@Nonnull DocumentEx doc, Project project) {
+  public static TextPainter initTextPainter(DocumentEx doc, Project project) {
     TextPainter[] res = new TextPainter[1];
     Application.get().runReadAction(() -> {
       res[0] = doInitTextPainter(doc, project);
@@ -261,7 +260,7 @@ class PrintManager {
     return res[0];
   }
 
-  private static TextPainter doInitTextPainter(@Nonnull DocumentEx doc, Project project) {
+  private static TextPainter doInitTextPainter(DocumentEx doc, Project project) {
     EditorHighlighter highlighter = HighlighterFactory.createHighlighter(project, "unknown");
     highlighter.setText(doc.getCharsSequence());
     return new TextPainter(doc, highlighter, "unknown", project, PlainTextFileType.INSTANCE, null);

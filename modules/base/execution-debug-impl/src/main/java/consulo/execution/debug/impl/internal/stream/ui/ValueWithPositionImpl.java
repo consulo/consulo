@@ -3,7 +3,6 @@ package consulo.execution.debug.impl.internal.stream.ui;
 
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.ui.ValueWithPosition;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
@@ -18,7 +17,7 @@ public class ValueWithPositionImpl implements ValueWithPosition {
   private boolean myIsVisible = DEFAULT_VISIBLE_VALUE;
   private boolean myIsHighlighted = DEFAULT_HIGHLIGHTING_VALUE;
 
-  public ValueWithPositionImpl(@Nonnull TraceElement traceElement) {
+  public ValueWithPositionImpl(TraceElement traceElement) {
     myTraceElement = traceElement;
   }
 
@@ -32,7 +31,7 @@ public class ValueWithPositionImpl implements ValueWithPosition {
     return myTraceElement.hashCode();
   }
 
-  @Nonnull
+  
   @Override
   public TraceElement getTraceElement() {
     return myTraceElement;

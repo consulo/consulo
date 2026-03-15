@@ -27,8 +27,7 @@ import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopes;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Collection;
 import java.util.List;
@@ -62,77 +61,77 @@ public class TreeClassChooserFactoryImpl implements TreeClassChooserFactory {
       myProjectAwareSearchScope = ProjectScopes.getProjectScope(project);
     }
 
-    @Nonnull
+    
     @Override
-    public Builder<T> withTitle(@Nonnull LocalizeValue title) {
+    public Builder<T> withTitle(LocalizeValue title) {
       myTitle = title;
       return this;
     }
 
-    @Nonnull
+    
     @Override
-    public Builder<T> withSearchScope(@Nonnull ProjectAwareSearchScope searchScope) {
+    public Builder<T> withSearchScope(ProjectAwareSearchScope searchScope) {
       myProjectAwareSearchScope = searchScope;
       return this;
     }
 
-    @Nonnull
+    
     @Override
-    public Builder<T> withClassFilter(@Nonnull Predicate<T> classFilter) {
+    public Builder<T> withClassFilter(Predicate<T> classFilter) {
       myClassFilter = classFilter;
       return this;
     }
 
-    @Nonnull
+    
     @Override
     public Builder<T> withBaseClass(T baseClass) {
       myBaseClass = baseClass;
       return this;
     }
 
-    @Nonnull
+    
     @Override
     public Builder<T> withInitialClass(T initialClass) {
       myInitialClass = initialClass;
       return this;
     }
 
-    @Nonnull
+    
     @Override
     public Builder<T> withShowMembers(boolean value) {
       myShowMembers = value;
       return this;
     }
 
-    @Nonnull
+    
     @Override
     public Builder<T> withShowLibraryContents(boolean value) {
       myShowLibraryContents = value;
       return this;
     }
 
-    @Nonnull
+    
     @Override
-    public Builder<T> withClassProvider(@Nonnull ClassProvider<T> classProvider) {
+    public Builder<T> withClassProvider(ClassProvider<T> classProvider) {
       myClassProvider = classProvider;
       return this;
     }
 
-    @Nonnull
+    
     @Override
-    public Builder<T> withInheritorsProvider(@Nonnull InheritorsProviderFactory<T> inheritorsProvider) {
+    public Builder<T> withInheritorsProvider(InheritorsProviderFactory<T> inheritorsProvider) {
       myInheritorsProviderSupplier = inheritorsProvider;
       return this;
     }
 
-    @Nonnull
+    
     @Override
-    public Builder<T> withTreeElementConverter(@Nonnull Function<Object, T> userObjectElementConverter) {
+    public Builder<T> withTreeElementConverter(Function<Object, T> userObjectElementConverter) {
       myUserDataElementConverter = userObjectElementConverter;
       return this;
     }
 
-    @Nonnull
+    
     @Override
     public TreeChooser<T> build() {
       return new AbstractTreeClassChooserDialog<>(myTitle.get(), myProject, myProjectAwareSearchScope, myElementClass, myClassFilter, myBaseClass, myInitialClass, myShowMembers, myShowLibraryContents) {
@@ -145,7 +144,7 @@ public class TreeClassChooserFactoryImpl implements TreeClassChooserFactory {
           return myUserDataElementConverter.apply(userObject);
         }
 
-        @Nonnull
+        
         @Override
         protected Collection<T> getClassesByName(String name, boolean checkBoxState, String pattern, ProjectAwareSearchScope searchScope) {
           return myClassProvider.getClassesByName(getProject(), name, checkBoxState, pattern, searchScope);
@@ -153,7 +152,7 @@ public class TreeClassChooserFactoryImpl implements TreeClassChooserFactory {
 
         @Nullable
         @Override
-        protected TreeClassInheritorsProvider<T> getInheritorsProvider(@Nonnull T baseClass) {
+        protected TreeClassInheritorsProvider<T> getInheritorsProvider(T baseClass) {
           return myInheritorsProviderSupplier.create(baseClass, getScope());
         }
       };
@@ -167,9 +166,9 @@ public class TreeClassChooserFactoryImpl implements TreeClassChooserFactory {
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
-  public <T extends PsiNamedElement> Builder<T> newChooser(@Nonnull Class<T> elementClazz) {
+  public <T extends PsiNamedElement> Builder<T> newChooser(Class<T> elementClazz) {
     return new BuilderImpl<>(myProject, elementClazz);
   }
 }

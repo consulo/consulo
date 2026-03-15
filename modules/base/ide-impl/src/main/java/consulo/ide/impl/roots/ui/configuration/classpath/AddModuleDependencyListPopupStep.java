@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -36,12 +35,12 @@ import java.util.Set;
 public class AddModuleDependencyListPopupStep extends BaseListPopupStep<Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext>> {
   private final ModifiableRootModel myRootModel;
 
-  public AddModuleDependencyListPopupStep(@Nonnull ModifiableRootModel rootModel, @Nonnull Set<Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext>> values) {
+  public AddModuleDependencyListPopupStep(ModifiableRootModel rootModel, Set<Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext>> values) {
     super("Add Dependency", new ArrayList<>(values));
     myRootModel = rootModel;
   }
 
-  @Nonnull
+  
   @Override
   public String getTextFor(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> value) {
     return value.getKey().getActionName(myRootModel).get();

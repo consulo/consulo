@@ -22,10 +22,8 @@ import consulo.util.xml.serializer.Converter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.util.List;
@@ -37,9 +35,9 @@ import java.util.StringTokenizer;
 @Tag("splitter-proportions")
 public class SplitterProportionsDataImpl implements SplitterProportionsData {
     private static final String DATA_VERSION = "1";
-    @NonNls
+    
     private static final String ATTRIBUTE_PROPORTIONS = "proportions";
-    @NonNls
+    
     private static final String ATTRIBUTE_VERSION = "version";
 
     private List<Float> proportions = new SmartList<Float>();
@@ -134,7 +132,7 @@ public class SplitterProportionsDataImpl implements SplitterProportionsData {
     public static final class SplitterProportionsConverter extends Converter<SplitterProportionsDataImpl> {
         @Nullable
         @Override
-        public SplitterProportionsDataImpl fromString(@Nonnull String value) {
+        public SplitterProportionsDataImpl fromString(String value) {
             SplitterProportionsDataImpl data = new SplitterProportionsDataImpl();
             StringTokenizer tokenizer = new StringTokenizer(value, ",");
             while (tokenizer.hasMoreTokens()) {
@@ -143,9 +141,9 @@ public class SplitterProportionsDataImpl implements SplitterProportionsData {
             return data;
         }
 
-        @Nonnull
+        
         @Override
-        public String toString(@Nonnull SplitterProportionsDataImpl data) {
+        public String toString(SplitterProportionsDataImpl data) {
             StringBuilder result = new StringBuilder();
             String sep = "";
             for (Float proportion : data.proportions) {

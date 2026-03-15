@@ -21,8 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
@@ -34,7 +33,7 @@ public abstract class Macro {
 
   public abstract String getName();
 
-  @Nonnull
+  
   public String getDecoratedName() {
     return "$" + getName() + "$";
   }

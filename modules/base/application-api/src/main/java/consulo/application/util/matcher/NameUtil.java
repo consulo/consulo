@@ -2,9 +2,7 @@
 package consulo.application.util.matcher;
 
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,18 +15,18 @@ public final class NameUtil {
   private NameUtil() {
   }
 
-  @Nonnull
-  public static List<String> nameToWordsLowerCase(@Nonnull String name) {
+  
+  public static List<String> nameToWordsLowerCase(String name) {
     return Arrays.stream(NameUtilCore.nameToWords(name)).map(StringUtil::toLowerCase).collect(Collectors.toList());
   }
 
-  @Nonnull
-  public static String buildRegexp(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
+  
+  public static String buildRegexp(String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
     return buildRegexp(pattern, exactPrefixLen, allowToUpper, allowToLower, false, false);
   }
 
-  @Nonnull
-  public static String buildRegexp(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower, boolean lowerCaseWords, boolean forCompletion) {
+  
+  public static String buildRegexp(String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower, boolean lowerCaseWords, boolean forCompletion) {
     int eol = pattern.indexOf('\n');
     if (eol != -1) {
       pattern = pattern.substring(0, eol);
@@ -37,7 +35,7 @@ public final class NameUtil {
       pattern = pattern.substring(0, MAX_LENGTH);
     }
 
-    @NonNls StringBuilder buffer = new StringBuilder();
+    StringBuilder buffer = new StringBuilder();
     boolean endsWithSpace = !forCompletion && StringUtil.endsWithChar(pattern, ' ');
     if (!forCompletion) {
       pattern = pattern.trim();
@@ -164,8 +162,8 @@ public final class NameUtil {
     return buffer.toString();
   }
 
-  @Nonnull
-  public static List<String> getSuggestionsByName(@Nonnull String name, @Nonnull String prefix, @Nonnull String suffix, boolean upperCaseStyle, boolean preferLongerNames, boolean isArray) {
+  
+  public static List<String> getSuggestionsByName(String name, String prefix, String suffix, boolean upperCaseStyle, boolean preferLongerNames, boolean isArray) {
     ArrayList<String> answer = new ArrayList<>();
     String[] words = NameUtilCore.nameToWords(name);
 
@@ -184,8 +182,8 @@ public final class NameUtil {
     return answer;
   }
 
-  @Nonnull
-  private static String compoundSuggestion(@Nonnull String prefix, boolean upperCaseStyle, @Nonnull String[] words, int wordCount, @Nonnull String startWord, char c, boolean isArray, boolean skip_) {
+  
+  private static String compoundSuggestion(String prefix, boolean upperCaseStyle, String[] words, int wordCount, String startWord, char c, boolean isArray, boolean skip_) {
     StringBuilder buffer = new StringBuilder();
 
     buffer.append(prefix);
@@ -237,17 +235,17 @@ public final class NameUtil {
     return suggestion;
   }
 
-  @Nonnull
-  public static String[] splitNameIntoWords(@Nonnull String name) {
+  
+  public static String[] splitNameIntoWords(String name) {
     return NameUtilCore.splitNameIntoWords(name);
   }
 
-  @Nonnull
-  public static String[] nameToWords(@Nonnull String name) {
+  
+  public static String[] nameToWords(String name) {
     return NameUtilCore.nameToWords(name);
   }
 
-  public static Matcher buildMatcher(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
+  public static Matcher buildMatcher(String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
     MatchingCaseSensitivity options = !allowToLower && !allowToUpper ? MatchingCaseSensitivity.ALL : exactPrefixLen > 0 ? MatchingCaseSensitivity.FIRST_LETTER : MatchingCaseSensitivity.NONE;
     return buildMatcher(pattern, options);
   }
@@ -256,8 +254,8 @@ public final class NameUtil {
    * @deprecated Parameter {@code lowerCaseWords} is ignored, same as {@link #buildMatcher(String, int, boolean, boolean)} )}
    */
   @Deprecated
-  @Nonnull
-  public static Matcher buildMatcher(@Nonnull String pattern,
+  
+  public static Matcher buildMatcher(String pattern,
                                                                       int exactPrefixLen,
                                                                       boolean allowToUpper,
                                                                       boolean allowToLower,
@@ -302,27 +300,27 @@ public final class NameUtil {
     }
   }
 
-  @Nonnull
-  public static MatcherBuilder buildMatcher(@Nonnull String pattern) {
+  
+  public static MatcherBuilder buildMatcher(String pattern) {
     return new MatcherBuilder(pattern);
   }
 
-  @Nonnull
-  public static MinusculeMatcher buildMatcher(@Nonnull String pattern, @Nonnull MatchingCaseSensitivity options) {
+  
+  public static MinusculeMatcher buildMatcher(String pattern, MatchingCaseSensitivity options) {
     return buildMatcher(pattern).withCaseSensitivity(options).build();
   }
 
-  public static MinusculeMatcher buildMatcherWithFallback(@Nonnull String pattern, @Nonnull String fallbackPattern, @Nonnull MatchingCaseSensitivity options) {
+  public static MinusculeMatcher buildMatcherWithFallback(String pattern, String fallbackPattern, MatchingCaseSensitivity options) {
     return pattern.equals(fallbackPattern) ? buildMatcher(pattern, options) : new MatcherWithFallback(buildMatcher(pattern, options), buildMatcher(fallbackPattern, options));
   }
 
-  @Nonnull
-  public static String capitalizeAndUnderscore(@Nonnull String name) {
+  
+  public static String capitalizeAndUnderscore(String name) {
     return splitWords(name, '_', StringUtil::toUpperCase);
   }
 
-  @Nonnull
-  public static String splitWords(@Nonnull String text, char separator, @Nonnull Function<? super String, String> transformWord) {
+  
+  public static String splitWords(String text, char separator, Function<? super String, String> transformWord) {
     String[] words = NameUtilCore.nameToWords(text);
     boolean insertSeparator = false;
     StringBuilder buf = new StringBuilder();

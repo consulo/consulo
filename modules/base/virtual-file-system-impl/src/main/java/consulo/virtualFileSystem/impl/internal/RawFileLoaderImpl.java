@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.util.io.FileTooBigException;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.RawFileLoader;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -59,9 +58,9 @@ public class RawFileLoaderImpl implements RawFileLoader {
         return parseKilobyteProperty("idea.max.content.load.large.preview.size", DEFAULT_INTELLISENSE_LIMIT);
     }
 
-    @Nonnull
+    
     @Override
-    public byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException {
+    public byte[] loadFileBytes(File file) throws IOException, FileTooBigException {
         byte[] bytes;
         try (InputStream stream = new FileInputStream(file)) {
             long len = file.length();

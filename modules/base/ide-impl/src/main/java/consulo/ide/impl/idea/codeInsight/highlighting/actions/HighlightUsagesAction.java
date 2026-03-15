@@ -31,7 +31,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_HIGHLIGHT_USAGES_IN_FILE)
 public class HighlightUsagesAction extends AnAction implements DumbAware {
@@ -41,7 +40,7 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(
             e.hasData(Project.KEY)
                 && e.hasData(Editor.KEY)
@@ -51,7 +50,7 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Editor editor = e.getRequiredData(Editor.KEY);
         Project project = e.getRequiredData(Project.KEY);
 

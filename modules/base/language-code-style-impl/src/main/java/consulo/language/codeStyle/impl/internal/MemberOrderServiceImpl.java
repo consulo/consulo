@@ -26,8 +26,7 @@ import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -42,7 +41,7 @@ public class MemberOrderServiceImpl implements MemberOrderService {
   @RequiredReadAction
   @Override
   @Nullable
-  public PsiElement getAnchor(@Nonnull PsiElement member, @Nonnull CommonCodeStyleSettings settings, @Nonnull PsiElement context) {
+  public PsiElement getAnchor(PsiElement member, CommonCodeStyleSettings settings, PsiElement context) {
     Language language = context.getLanguage();
     Rearranger<?> rearranger = Rearranger.forLanguage(language);
     if (rearranger == null) {

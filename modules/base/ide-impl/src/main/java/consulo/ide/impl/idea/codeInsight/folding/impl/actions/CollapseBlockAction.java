@@ -21,7 +21,6 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class CollapseBlockAction extends BaseCodeInsightAction {
         super(ActionLocalize.actionCollapseblockText(), ActionLocalize.actionCollapseblockDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return (project, editor, file) -> executor(project, editor, file, true);
@@ -41,12 +40,12 @@ public class CollapseBlockAction extends BaseCodeInsightAction {
 
     @Override
     @RequiredReadAction
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return executor(project, editor, file, false);
     }
 
     @RequiredReadAction
-    private static boolean executor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, boolean executeAction) {
+    private static boolean executor(Project project, Editor editor, PsiFile file, boolean executeAction) {
         InjectedLanguageManager instance = InjectedLanguageManager.getInstance(project);
         while (true) {
             List<CollapseBlockHandler> handlers = CollapseBlockHandler.forLanguage(file.getLanguage());
@@ -70,7 +69,7 @@ public class CollapseBlockAction extends BaseCodeInsightAction {
         }
     }
 
-    private static void invoke(@Nonnull CollapseBlockHandler collapseBlockHandler, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    private static void invoke(CollapseBlockHandler collapseBlockHandler, Editor editor, PsiFile file) {
         int[] targetCaretOffset = {-1};
         editor.getFoldingModel().runBatchFoldingOperation(() -> {
             EditorFoldingInfoImpl info = (EditorFoldingInfoImpl) EditorFoldingInfo.get(editor);

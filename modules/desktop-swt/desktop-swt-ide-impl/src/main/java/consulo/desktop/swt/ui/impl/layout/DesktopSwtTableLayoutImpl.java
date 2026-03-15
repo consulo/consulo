@@ -19,8 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Layout;
@@ -43,9 +42,9 @@ public class DesktopSwtTableLayoutImpl extends DesktopSwtLayoutComponent<TableLa
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public TableLayout add(@Nonnull Component component, @Nonnull TableCell tableCell) {
+  public TableLayout add(Component component, TableCell tableCell) {
     GridData gridData = new GridData();
     addImpl(component, gridData);
     return this;

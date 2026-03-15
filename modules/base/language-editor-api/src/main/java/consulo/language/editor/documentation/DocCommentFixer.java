@@ -27,8 +27,7 @@ import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiComment;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -39,9 +38,9 @@ public interface DocCommentFixer extends LanguageExtension {
   ExtensionPointCacheKey<DocCommentFixer, ByLanguageValue<DocCommentFixer>> KEY = ExtensionPointCacheKey.create("DocCommentFixer", LanguageOneToOne.build());
 
   @Nullable
-  static DocCommentFixer forLanguage(@Nonnull Language language) {
+  static DocCommentFixer forLanguage(Language language) {
     return Application.get().getExtensionPoint(DocCommentFixer.class).getOrBuildCache(KEY).get(language);
   }
 
-  void fixComment(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiComment comment);
+  void fixComment(Project project, Editor editor, PsiComment comment);
 }

@@ -40,8 +40,7 @@ import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awt.internal.ComboBoxStyle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,17 +51,17 @@ import java.io.File;
 import java.util.List;
 
 public class FindPopupDirectoryChooser {
-    @Nonnull
+    
     private final FindUIHelper myHelper;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final FindPopupPanel myFindPopupPanel;
-    @Nonnull
+    
     private final ComboBox<String> myDirectoryComboBox;
 
     @RequiredUIAccess
-    public FindPopupDirectoryChooser(@Nonnull FindPopupPanel panel) {
+    public FindPopupDirectoryChooser(FindPopupPanel panel) {
         myHelper = panel.getHelper();
         myProject = panel.getProject();
         myFindPopupPanel = panel;
@@ -139,7 +138,7 @@ public class FindPopupDirectoryChooser {
         AWTHasSuffixComponent.setSuffixComponent(myDirectoryComboBox, toolbar.getComponent());
     }
 
-    public void initByModel(@Nonnull FindModel findModel) {
+    public void initByModel(FindModel findModel) {
         String directoryName = findModel.getDirectoryName();
         java.util.List<String> strings = FindInProjectSettings.getInstance(myProject).getRecentDirectories();
 
@@ -160,18 +159,18 @@ public class FindPopupDirectoryChooser {
         }
     }
 
-    @Nonnull
+    
     public ComboBox getComboBox() {
         return myDirectoryComboBox;
     }
 
-    @Nonnull
+    
     public String getDirectory() {
         return (String) myDirectoryComboBox.getSelectedItem();
     }
 
     @Nullable
-    public ValidationInfo validate(@Nonnull FindModel model) {
+    public ValidationInfo validate(FindModel model) {
         VirtualFile directory = FindInProjectUtil.getDirectory(model);
         if (directory == null) {
             return new ValidationInfo(FindBundle.message("find.directory.not.found.error", getDirectory()), myDirectoryComboBox);
@@ -185,12 +184,12 @@ public class FindPopupDirectoryChooser {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myHelper.getModel().isWithSubdirectories();
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myHelper.getModel().setWithSubdirectories(state);
             myFindPopupPanel.scheduleResultsUpdate();
         }

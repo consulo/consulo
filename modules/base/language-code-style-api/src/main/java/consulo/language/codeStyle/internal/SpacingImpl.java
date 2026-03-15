@@ -17,7 +17,6 @@
 package consulo.language.codeStyle.internal;
 
 import consulo.language.codeStyle.Spacing;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * Extends {@link Spacing} in order to keep number of additional settings like {@code 'minSpaces'}, {@code 'minLineFeeds'},
@@ -132,7 +131,7 @@ public class SpacingImpl extends Spacing {
     return myMinSpaces + myMaxSpaces * 29 + myMinLineFeeds * 11 + myFlags + myKeepBlankLines + myPrefLineFeeds;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return "<Spacing: minSpaces=" + myMinSpaces + " maxSpaces=" + myMaxSpaces + " minLineFeeds=" + myMinLineFeeds + ">";

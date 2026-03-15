@@ -18,7 +18,6 @@ package consulo.language.psi.util;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiRecursiveElementVisitor;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class PsiFilter<T extends PsiElement> {
   private final Class<T> filter;
   public static final PsiFilter<?>[] EMPTY = {}; 
 
-  public PsiFilter(@Nonnull Class<T> filter) {
+  public PsiFilter(Class<T> filter) {
     this.filter = filter;
   }
 

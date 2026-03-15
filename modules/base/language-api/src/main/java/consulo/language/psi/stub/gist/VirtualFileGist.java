@@ -19,8 +19,7 @@ import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Calculates some data based on {@link VirtualFile} content, persists it between IDE restarts,
@@ -48,5 +47,5 @@ public interface VirtualFileGist<Data> {
   /**
    * Calculate or get the cached data by the current virtual file content in the given project (or null, if the data is project-independent).
    */
-  Data getFileData(@Nullable Project project, @Nonnull VirtualFile file);
+  Data getFileData(@Nullable Project project, VirtualFile file);
 }

@@ -15,8 +15,7 @@
  */
 package consulo.execution.test.sm.runner.event;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessage;
 
 public abstract class TreeNodeEvent {
@@ -30,7 +29,7 @@ public abstract class TreeNodeEvent {
         myId = id;
     }
 
-    protected void fail(@Nonnull String message) {
+    protected void fail(String message) {
         throw new IllegalStateException(message + ", " + toString());
     }
 
@@ -59,11 +58,11 @@ public abstract class TreeNodeEvent {
         return buf.toString();
     }
 
-    protected abstract void appendToStringInfo(@Nonnull StringBuilder buf);
+    protected abstract void appendToStringInfo(StringBuilder buf);
 
     protected static void append(
-        @Nonnull StringBuilder buffer,
-        @Nonnull String key, @Nullable Object value
+        StringBuilder buffer,
+        String key, @Nullable Object value
     ) {
         if (value != null) {
             buffer.append(key).append("=");
@@ -78,12 +77,12 @@ public abstract class TreeNodeEvent {
     }
 
     @Nullable
-    public static String getNodeId(@Nonnull ServiceMessage message) {
+    public static String getNodeId(ServiceMessage message) {
         return getNodeId(message, "nodeId");
     }
 
     @Nullable
-    public static String getNodeId(@Nonnull ServiceMessage message, String key) {
+    public static String getNodeId(ServiceMessage message, String key) {
         return message.getAttributes().get(key);
     }
 }

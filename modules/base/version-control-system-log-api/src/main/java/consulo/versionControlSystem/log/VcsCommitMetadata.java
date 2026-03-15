@@ -2,7 +2,6 @@ package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -18,6 +17,6 @@ import java.util.List;
  * hash codes. The VCS Log framework heavily relies on this fact.
  */
 public interface VcsCommitMetadata extends VcsShortCommitDetails {
-  @Nonnull
+  
   String getFullMessage();
 }

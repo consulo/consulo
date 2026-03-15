@@ -30,8 +30,7 @@ import consulo.util.jdom.JDOMUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -132,7 +131,7 @@ public class ExternalStorage {
         }
     }
 
-    @Nonnull
+    
     public File getInitializedFile() {
         return myProxyDirectory.resolve(INITIALIZED_FILE_NAME).toFile();
     }
@@ -161,7 +160,7 @@ public class ExternalStorage {
         );
     }
 
-    @Nonnull
+    
     public OutputStream openFile(String fileName) throws IOException {
         Path filePath = myProxyDirectory.resolve(fileName);
         if (!Files.exists(filePath)) {
@@ -176,7 +175,7 @@ public class ExternalStorage {
     }
 
     @Nullable
-    public InputStream loadContent(@Nonnull String fullFileSpec) throws IOException {
+    public InputStream loadContent(String fullFileSpec) throws IOException {
         Path file = myProxyDirectory.resolve(fullFileSpec);
         if (Files.exists(file)) {
             return Files.newInputStream(file);
@@ -185,14 +184,14 @@ public class ExternalStorage {
         return null;
     }
 
-    public void saveContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType, byte[] content) throws IOException {
+    public void saveContent(String fileSpec, RoamingType roamingType, byte[] content) throws IOException {
         // write data without compress
         writeLocalFile(fileSpec, roamingType, content, -1);
 
         saveContentOnServer(fileSpec, roamingType, content);
     }
 
-    private void saveContentOnServer(@Nonnull String fileSpec, RoamingType roamingType, byte[] content) {
+    private void saveContentOnServer(String fileSpec, RoamingType roamingType, byte[] content) {
         myExecutorService.execute(() -> {
             try {
                 // compress data with -1 mod count - for local, server will update it after pushing data
@@ -218,13 +217,13 @@ public class ExternalStorage {
         });
     }
 
-    public void writeLocalFile(@Nonnull String fileSpec, RoamingType roamingType, byte[] data, long modCount) throws IOException {
+    public void writeLocalFile(String fileSpec, RoamingType roamingType, byte[] data, long modCount) throws IOException {
         String fullFileSpec = ExternalStorage.buildFileSpec(roamingType, fileSpec);
 
         writeLocalFile(fullFileSpec, data, modCount);
     }
 
-    public void writeLocalFile(@Nonnull String fullFileSpec, byte[] data, long modCount) throws IOException {
+    public void writeLocalFile(String fullFileSpec, byte[] data, long modCount) throws IOException {
         Path file = myProxyDirectory.resolve(fullFileSpec);
 
         if (!Files.exists(file)) {
@@ -238,8 +237,8 @@ public class ExternalStorage {
         }
     }
 
-    @Nonnull
-    public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+    
+    public Collection<String> listSubFiles(String fileSpec, RoamingType roamingType) {
         fileSpec = buildFileSpec(roamingType, fileSpec);
 
         File proxy = new File(myProxyDirectory.toFile(), fileSpec);
@@ -249,7 +248,7 @@ public class ExternalStorage {
         return Collections.emptyList();
     }
 
-    public boolean delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+    public boolean delete(String fileSpec, RoamingType roamingType) {
         boolean deleted = deleteWithoutServer(fileSpec, roamingType);
 
         deleteFromServer(fileSpec, roamingType);
@@ -274,13 +273,13 @@ public class ExternalStorage {
         });
     }
 
-    public boolean deleteWithoutServer(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+    public boolean deleteWithoutServer(String fileSpec, RoamingType roamingType) {
         String fullFileSpec = buildFileSpec(roamingType, fileSpec);
 
         return deleteWithoutServer(fullFileSpec);
     }
 
-    public boolean deleteWithoutServer(@Nonnull String fullFileSpec) {
+    public boolean deleteWithoutServer(String fullFileSpec) {
         LOG.info("Removing local file: " + fullFileSpec);
 
         Path file = myProxyDirectory.resolve(fullFileSpec);
@@ -301,8 +300,8 @@ public class ExternalStorage {
         return false;
     }
 
-    @Nonnull
-    public static String buildFileSpec(@Nonnull RoamingType roamingType, @Nonnull String fileSpec) {
+    
+    public static String buildFileSpec(RoamingType roamingType, String fileSpec) {
         return switch (roamingType) {
             case PER_OS -> "$OS$/" + getOsPrefix() + "/" + fileSpec;
             case DEFAULT -> "$GLOBAL$/" + fileSpec;
@@ -310,8 +309,8 @@ public class ExternalStorage {
         };
     }
 
-    @Nonnull
-    public static Set<String> readComponentNames(@Nonnull InputStream stream) throws IOException, JDOMException {
+    
+    public static Set<String> readComponentNames(InputStream stream) throws IOException, JDOMException {
         Set<String> names = new TreeSet<>();
         Element rootElement = JDOMUtil.load(stream);
 
@@ -326,7 +325,7 @@ public class ExternalStorage {
         return names;
     }
 
-    @Nonnull
+    
     private static String getOsPrefix() {
         if (Platform.current().os().isWindows()) {
             return "win";

@@ -94,8 +94,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.TripleFunction;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.File;
@@ -120,23 +119,23 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     private InspectionResultsView myView;
     private Content myContent;
 
-    @Nonnull
+    
     private AnalysisUIOptions myUIOptions;
 
-    public GlobalInspectionContextImpl(@Nonnull Project project, @Nonnull NotNullLazyValue<ContentManager> contentManager) {
+    public GlobalInspectionContextImpl(Project project, NotNullLazyValue<ContentManager> contentManager) {
         super(project);
 
         myUIOptions = AnalysisUIOptions.getInstance(project).copy();
         myContentManager = contentManager;
     }
 
-    @Nonnull
+    
     private ContentManager getContentManager() {
         return myContentManager.getValue();
     }
 
     @RequiredUIAccess
-    public synchronized void addView(@Nonnull InspectionResultsView view, @Nonnull String title) {
+    public synchronized void addView(InspectionResultsView view, String title) {
         if (myContent != null) {
             return;
         }
@@ -165,7 +164,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
 
     @RequiredUIAccess
-    public void addView(@Nonnull InspectionResultsView view) {
+    public void addView(InspectionResultsView view) {
         addView(
             view,
             view.getCurrentProfileName() == null
@@ -175,7 +174,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
 
     @Override
-    public void doInspections(@Nonnull AnalysisScope scope) {
+    public void doInspections(AnalysisScope scope) {
         if (myContent != null) {
             getContentManager().removeContent(myContent, true);
         }
@@ -183,20 +182,20 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
 
     public void launchInspectionsOffline(
-        @Nonnull AnalysisScope scope,
+        AnalysisScope scope,
         @Nullable String outputPath,
         boolean runGlobalToolsOnly,
-        @Nonnull List<File> inspectionsResults
+        List<File> inspectionsResults
     ) {
         performInspectionsWithProgressAndExportResults(scope, runGlobalToolsOnly, true, outputPath, inspectionsResults);
     }
 
     public void performInspectionsWithProgressAndExportResults(
-        @Nonnull AnalysisScope scope,
+        AnalysisScope scope,
         boolean runGlobalToolsOnly,
         boolean isOfflineInspections,
         @Nullable String outputPath,
-        @Nonnull List<File> inspectionsResults
+        List<File> inspectionsResults
     ) {
         cleanupTools();
         setCurrentScope(scope);
@@ -219,7 +218,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         }
     }
 
-    private void exportResults(@Nonnull List<File> inspectionsResults, @Nullable String outputPath) {
+    private void exportResults(List<File> inspectionsResults, @Nullable String outputPath) {
         String ext = ".xml";
         final Map<Element, Tools> globalTools = new HashMap<>();
         for (Map.Entry<String, Tools> entry : myTools.entrySet()) {
@@ -263,7 +262,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
         getRefManager().iterate(new RefVisitor() {
             @Override
-            public void visitElement(@Nonnull RefEntity refEntity) {
+            public void visitElement(RefEntity refEntity) {
                 for (Map.Entry<Element, Tools> entry : globalTools.entrySet()) {
                     Tools tools = entry.getValue();
                     Element element = entry.getKey();
@@ -302,7 +301,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         }
     }
 
-    public void ignoreElement(@Nonnull InspectionTool tool, @Nonnull PsiElement element) {
+    public void ignoreElement(InspectionTool tool, PsiElement element) {
         RefElement refElement = getRefManager().getReference(element);
         Tools tools = myTools.get(tool.getShortName());
         if (tools != null) {
@@ -317,7 +316,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         return myView;
     }
 
-    private void ignoreElementRecursively(@Nonnull InspectionToolWrapper toolWrapper, RefEntity refElement) {
+    private void ignoreElementRecursively(InspectionToolWrapper toolWrapper, RefEntity refElement) {
         if (refElement != null) {
             InspectionToolPresentation presentation = getPresentation(toolWrapper);
             presentation.ignoreCurrentElement(refElement);
@@ -330,7 +329,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         }
     }
 
-    @Nonnull
+    
     public AnalysisUIOptions getUIOptions() {
         return myUIOptions;
     }
@@ -339,21 +338,21 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         myUIOptions.SPLITTER_PROPORTION = proportion;
     }
 
-    @Nonnull
+    
     public ToggleAction createToggleAutoscrollAction() {
         return myUIOptions.getAutoScrollToSourceHandler().createToggleAction();
     }
 
     @Override
     @RequiredUIAccess
-    protected void launchInspections(@Nonnull AnalysisScope scope) {
+    protected void launchInspections(AnalysisScope scope) {
         myUIOptions = AnalysisUIOptions.getInstance(getProject()).copy();
         myView =
             new InspectionResultsView(getProject(), getCurrentProfile(), scope, this, new InspectionRVContentProviderImpl(getProject()));
         super.launchInspections(scope);
     }
 
-    @Nonnull
+    
     @Override
     protected PerformInBackgroundOption createOption() {
         return new PerformAnalysisInBackgroundOption(getProject());
@@ -384,7 +383,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
 
     @Override
-    protected void runTools(@Nonnull AnalysisScope scope, boolean runGlobalToolsOnly, boolean isOfflineInspections) {
+    protected void runTools(AnalysisScope scope, boolean runGlobalToolsOnly, boolean isOfflineInspections) {
         ProgressIndicator progressIndicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
         if (progressIndicator == null) {
             throw new IncorrectOperationException("Must be run under progress");
@@ -485,11 +484,11 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
     @RequiredReadAction
     private boolean inspectFile(
-        @Nonnull final PsiFile file,
-        @Nonnull final InspectionManager inspectionManager,
-        @Nonnull List<Tools> localTools,
-        @Nonnull List<Tools> globalSimpleTools,
-        @Nonnull final Map<String, InspectionToolWrapper> wrappersMap,
+        final PsiFile file,
+        final InspectionManager inspectionManager,
+        List<Tools> localTools,
+        List<Tools> globalSimpleTools,
+        final Map<String, InspectionToolWrapper> wrappersMap,
         boolean inspectInjectedPsi
     ) {
         Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
@@ -576,11 +575,11 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     private static final PsiFile TOMBSTONE = PsiUtilCore.NULL_PSI_FILE;
 
     private void startIterateScope(
-        @Nonnull AnalysisScope scope,
+        AnalysisScope scope,
         @Nullable Collection<VirtualFile> localScopeFiles,
         boolean headlessEnvironment,
-        @Nonnull BlockingQueue<PsiFile> outFilesToInspect,
-        @Nonnull ProgressIndicator progressIndicator
+        BlockingQueue<PsiFile> outFilesToInspect,
+        ProgressIndicator progressIndicator
     ) {
         Application.get().executeOnPooledThread((Runnable)() -> {
             try {
@@ -630,7 +629,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         });
     }
 
-    private Document shouldProcess(@Nonnull PsiFile file, boolean headlessEnvironment, @Nullable Collection<VirtualFile> localScopeFiles) {
+    private Document shouldProcess(PsiFile file, boolean headlessEnvironment, @Nullable Collection<VirtualFile> localScopeFiles) {
         VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile == null) {
             return null;
@@ -658,9 +657,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
 
     private void runGlobalTools(
-        @Nonnull AnalysisScope scope,
-        @Nonnull InspectionManager inspectionManager,
-        @Nonnull List<Tools> globalTools,
+        AnalysisScope scope,
+        InspectionManager inspectionManager,
+        List<Tools> globalTools,
         boolean isOfflineInspections
     ) {
         LOG.assertTrue(
@@ -733,9 +732,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
 
     private void appendPairedInspectionsForUnfairTools(
-        @Nonnull List<Tools> globalTools,
-        @Nonnull List<Tools> globalSimpleTools,
-        @Nonnull List<Tools> localTools
+        List<Tools> globalTools,
+        List<Tools> globalSimpleTools,
+        List<Tools> localTools
     ) {
         Tools[] larray = localTools.toArray(new Tools[localTools.size()]);
         for (Tools tool : larray) {
@@ -775,8 +774,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         }
     }
 
-    @Nonnull
-    private static <T extends InspectionToolWrapper> List<T> getWrappersFromTools(@Nonnull List<Tools> localTools, @Nonnull PsiFile file) {
+    
+    private static <T extends InspectionToolWrapper> List<T> getWrappersFromTools(List<Tools> localTools, PsiFile file) {
         List<T> lTools = new ArrayList<>();
         for (Tools tool : localTools) {
             //noinspection unchecked
@@ -788,24 +787,24 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         return lTools;
     }
 
-    @Nonnull
+    
     private ProblemDescriptionsProcessor getProblemDescriptionProcessor(
-        @Nonnull final GlobalInspectionToolWrapper toolWrapper,
-        @Nonnull final Map<String, InspectionToolWrapper> wrappersMap
+        final GlobalInspectionToolWrapper toolWrapper,
+        final Map<String, InspectionToolWrapper> wrappersMap
     ) {
         return new ProblemDescriptionsProcessor() {
             @Nullable
             @Override
-            public CommonProblemDescriptor[] getDescriptions(@Nonnull RefEntity refEntity) {
+            public CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
                 return new CommonProblemDescriptor[0];
             }
 
             @Override
-            public void ignoreElement(@Nonnull RefEntity refEntity) {
+            public void ignoreElement(RefEntity refEntity) {
             }
 
             @Override
-            public void addProblemElement(@Nullable RefEntity refEntity, @Nonnull CommonProblemDescriptor... commonProblemDescriptors) {
+            public void addProblemElement(@Nullable RefEntity refEntity, CommonProblemDescriptor... commonProblemDescriptors) {
                 for (CommonProblemDescriptor commonProblemDescriptor : commonProblemDescriptors) {
                     if (!(commonProblemDescriptor instanceof ProblemDescriptor problemDescriptor)) {
                         continue;
@@ -822,14 +821,14 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             }
 
             @Override
-            public RefEntity getElement(@Nonnull CommonProblemDescriptor descriptor) {
+            public RefEntity getElement(CommonProblemDescriptor descriptor) {
                 return null;
             }
         };
     }
 
-    @Nonnull
-    private static Map<String, InspectionToolWrapper> getInspectionWrappersMap(@Nonnull List<Tools> tools) {
+    
+    private static Map<String, InspectionToolWrapper> getInspectionWrappersMap(List<Tools> tools) {
         Map<String, InspectionToolWrapper> name2Inspection = new HashMap<>(tools.size());
         for (Tools tool : tools) {
             InspectionToolWrapper toolWrapper = tool.getTool();
@@ -885,8 +884,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
     private final ConcurrentMap<InspectionToolWrapper, InspectionToolPresentation> myPresentationMap = ContainerUtil.newConcurrentMap();
 
-    @Nonnull
-    public InspectionToolPresentation getPresentation(@Nonnull InspectionToolWrapper toolWrapper) {
+    
+    public InspectionToolPresentation getPresentation(InspectionToolWrapper toolWrapper) {
         InspectionToolPresentation presentation = myPresentationMap.get(toolWrapper);
         if (presentation == null) {
             Class<?> presentationClass = DefaultInspectionToolPresentation.class;
@@ -908,9 +907,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
     @Override
     public void codeCleanup(
-        @Nonnull final Project project,
-        @Nonnull final AnalysisScope scope,
-        @Nonnull final InspectionProfile profile,
+        final Project project,
+        final AnalysisScope scope,
+        final InspectionProfile profile,
         @Nullable final String commandName,
         @Nullable final Runnable postRunnable,
         boolean modal
@@ -918,13 +917,13 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         Task task = modal
             ? new Task.Modal(project, ActionLocalize.actionInspectcodeText().map(Presentation.NO_MNEMONIC), true) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     cleanup(scope, profile, project, postRunnable, commandName);
                 }
             }
             : new Task.Backgroundable(project, ActionLocalize.actionInspectcodeText().map(Presentation.NO_MNEMONIC), true) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     cleanup(scope, profile, project, postRunnable, commandName);
                 }
             };
@@ -932,9 +931,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
 
     private void cleanup(
-        @Nonnull AnalysisScope scope,
-        @Nonnull InspectionProfile profile,
-        @Nonnull final Project project,
+        AnalysisScope scope,
+        InspectionProfile profile,
+        final Project project,
         @Nullable Runnable postRunnable,
         @Nullable String commandName
     ) {
@@ -1049,7 +1048,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         getProject().getUIAccess().give(runnable);
     }
 
-    private static boolean isBinary(@Nonnull PsiFile file) {
+    private static boolean isBinary(PsiFile file) {
         return file instanceof PsiBinaryFile || file.getFileType().isBinary();
     }
 }

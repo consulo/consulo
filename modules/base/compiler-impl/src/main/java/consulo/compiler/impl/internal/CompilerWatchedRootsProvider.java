@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompilerConfiguration;
 import consulo.project.content.WatchedRootsProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -38,7 +37,7 @@ public class CompilerWatchedRootsProvider implements WatchedRootsProvider {
         myCompilerConfigurationProvider = compilerConfigurationProvider;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Set<String> getRootsToWatch() {

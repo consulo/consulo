@@ -28,8 +28,7 @@ import consulo.document.util.TextRange;
 import consulo.application.util.LineTokenizer;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -48,7 +47,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
 
   @Override
   @RequiredUIAccess
-  public void copySelectionToClipboard(@Nonnull Editor editor) {
+  public void copySelectionToClipboard(Editor editor) {
     UIAccess.assertIsUIThread();
     List<TextBlockTransferableData> extraData = new ArrayList<TextBlockTransferableData>();
     String s = editor.getCaretModel().supportsMultipleCarets() ? getSelectedTextForClipboard(editor, extraData)
@@ -60,7 +59,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
     CopyPasteManager.getInstance().setContents(contents);
   }
 
-  public static String getSelectedTextForClipboard(@Nonnull Editor editor, @Nonnull Collection<TextBlockTransferableData> extraDataCollector) {
+  public static String getSelectedTextForClipboard(Editor editor, Collection<TextBlockTransferableData> extraDataCollector) {
     StringBuilder buf = new StringBuilder();
     String separator = "";
     List<Caret> carets = editor.getCaretModel().getAllCarets();
@@ -82,7 +81,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
 
   @Nullable
   @Override
-  public TextRange[] pasteFromClipboard(@Nonnull Editor editor) {
+  public TextRange[] pasteFromClipboard(Editor editor) {
     CopyPasteManager manager = CopyPasteManager.getInstance();
     if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
       Transferable clipboardContents = manager.getContents();
@@ -95,7 +94,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
 
   @Nullable
   @Override
-  public TextRange[] pasteTransferable(final @Nonnull Editor editor, @Nonnull Transferable content) {
+  public TextRange[] pasteTransferable(final Editor editor, Transferable content) {
     String text = getStringContent(content);
     if (text == null) return null;
 
@@ -143,7 +142,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   }
 
   @Nullable
-  private static String getStringContent(@Nonnull Transferable content) {
+  private static String getStringContent(Transferable content) {
     RawText raw = RawText.fromTransferable(content);
     if (raw != null) return raw.rawText;
 

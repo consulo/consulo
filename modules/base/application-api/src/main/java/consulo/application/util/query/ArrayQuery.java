@@ -5,7 +5,6 @@ package consulo.application.util.query;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,12 +17,12 @@ import java.util.function.Predicate;
 public class ArrayQuery<T> implements Query<T> {
     private final T[] myArray;
 
-    public ArrayQuery(@Nonnull T... array) {
+    public ArrayQuery(T... array) {
         myArray = array;
     }
 
     @Override
-    @Nonnull
+    
     public Collection<T> findAll() {
         return Arrays.asList(myArray);
     }
@@ -34,24 +33,24 @@ public class ArrayQuery<T> implements Query<T> {
     }
 
     @Override
-    public boolean forEach(@Nonnull Predicate<? super T> consumer) {
+    public boolean forEach(Predicate<? super T> consumer) {
         return ContainerUtil.process(myArray, consumer);
     }
 
-    @Nonnull
+    
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(Predicate<? super T> consumer) {
         return AsyncUtil.wrapBoolean(forEach(consumer));
     }
 
 
-    @Nonnull
+    
     @Override
-    public T[] toArray(@Nonnull T[] a) {
+    public T[] toArray(T[] a) {
         return myArray;
     }
 
-    @Nonnull
+    
     @Override
     public Iterator<T> iterator() {
         return Arrays.asList(myArray).iterator();

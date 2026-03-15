@@ -19,8 +19,7 @@ import consulo.util.lang.CharSequenceBackedByChars;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
@@ -37,7 +36,7 @@ public abstract class MessageDecoder extends Decoder {
   }
 
   @Nullable
-  protected final CharSequence readChars(@Nonnull ByteBuf input) throws IOException {
+  protected final CharSequence readChars(ByteBuf input) throws IOException {
     int readableBytes = input.readableBytes();
     if (readableBytes == 0) {
       input.release();
@@ -83,7 +82,7 @@ public abstract class MessageDecoder extends Decoder {
     }
   }
 
-  public static boolean readUntil(char what, @Nonnull ByteBuf buffer, @Nonnull StringBuilder builder) {
+  public static boolean readUntil(char what, ByteBuf buffer, StringBuilder builder) {
     int i = buffer.readerIndex();
     //noinspection ForLoopThatDoesntUseLoopVariable
     for (int n = buffer.writerIndex(); i < n; i++) {
@@ -100,7 +99,7 @@ public abstract class MessageDecoder extends Decoder {
     return false;
   }
 
-  public static void skipWhitespace(@Nonnull ByteBuf buffer) {
+  public static void skipWhitespace(ByteBuf buffer) {
     int i = buffer.readerIndex();
     int n = buffer.writerIndex();
     for (; i < n; i++) {
@@ -121,7 +120,7 @@ public abstract class MessageDecoder extends Decoder {
    * Permission to use, copy, modify, and distribute this software is
    * freely granted, provided that this notice is preserved.
    */
-  public static int parseInt(@Nonnull CharSequence value, int start, boolean isNegative, int radix) {
+  public static int parseInt(CharSequence value, int start, boolean isNegative, int radix) {
     int end = value.length();
     int result = 0; // Accumulates negatively (avoid MIN_VALUE overflow).
     int i = start;

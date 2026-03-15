@@ -11,7 +11,6 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -26,20 +25,20 @@ public class SearchRequestCollector {
     private final List<Predicate<Predicate<? super PsiReference>>> myCustomSearchActions = new ArrayList<>();
     private final SearchSession mySession;
 
-    public SearchRequestCollector(@Nonnull SearchSession session) {
+    public SearchRequestCollector(SearchSession session) {
         mySession = session;
     }
 
-    @Nonnull
+    
     public SearchSession getSearchSession() {
         return mySession;
     }
 
     public void searchWord(
-        @Nonnull String word,
-        @Nonnull SearchScope searchScope,
+        String word,
+        SearchScope searchScope,
         boolean caseSensitive,
-        @Nonnull PsiElement searchTarget
+        PsiElement searchTarget
     ) {
         short searchContext = (short)(UsageSearchContext.IN_CODE | UsageSearchContext.IN_FOREIGN_LANGUAGES | UsageSearchContext.IN_COMMENTS
             | (searchTarget instanceof PsiFileSystemItem ? UsageSearchContext.IN_STRINGS : 0));
@@ -47,11 +46,11 @@ public class SearchRequestCollector {
     }
 
     public void searchWord(
-        @Nonnull String word,
-        @Nonnull SearchScope searchScope,
+        String word,
+        SearchScope searchScope,
         short searchContext,
         boolean caseSensitive,
-        @Nonnull PsiElement searchTarget
+        PsiElement searchTarget
     ) {
         searchWord(
             word,
@@ -65,13 +64,13 @@ public class SearchRequestCollector {
     }
 
     private void searchWord(
-        @Nonnull String word,
-        @Nonnull SearchScope searchScope,
+        String word,
+        SearchScope searchScope,
         short searchContext,
         boolean caseSensitive,
         String containerName,
         PsiElement searchTarget,
-        @Nonnull RequestResultProcessor processor
+        RequestResultProcessor processor
     ) {
         if (!makesSenseToSearch(word, searchScope)) {
             return;
@@ -114,24 +113,24 @@ public class SearchRequestCollector {
     }
 
     public void searchWord(
-        @Nonnull String word,
-        @Nonnull SearchScope searchScope,
+        String word,
+        SearchScope searchScope,
         short searchContext,
         boolean caseSensitive,
-        @Nonnull PsiElement searchTarget,
-        @Nonnull RequestResultProcessor processor
+        PsiElement searchTarget,
+        RequestResultProcessor processor
     ) {
         searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), searchTarget, processor);
     }
 
-    private static String getContainerName(@Nonnull PsiElement target) {
+    private static String getContainerName(PsiElement target) {
         return AccessRule.read(() -> {
             PsiElement container = getContainer(target);
             return container instanceof PsiNamedElement namedElement ? namedElement.getName() : null;
         });
     }
 
-    private static PsiElement getContainer(@Nonnull PsiElement refElement) {
+    private static PsiElement getContainer(PsiElement refElement) {
         for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensionList()) {
             PsiElement container = provider.getContainer(refElement);
             if (container != null) {
@@ -149,21 +148,21 @@ public class SearchRequestCollector {
      */
     @Deprecated
     public void searchWord(
-        @Nonnull String word,
-        @Nonnull SearchScope searchScope,
+        String word,
+        SearchScope searchScope,
         short searchContext,
         boolean caseSensitive,
-        @Nonnull RequestResultProcessor processor
+        RequestResultProcessor processor
     ) {
         searchWord(word, searchScope, searchContext, caseSensitive, null, null, processor);
     }
 
-    private static boolean makesSenseToSearch(@Nonnull String word, @Nonnull SearchScope searchScope) {
+    private static boolean makesSenseToSearch(String word, SearchScope searchScope) {
         return !(searchScope instanceof LocalSearchScope localSearchScope && localSearchScope.getScope().length == 0)
             && searchScope != GlobalSearchScope.EMPTY_SCOPE && !StringUtil.isEmpty(word);
     }
 
-    public void searchQuery(@Nonnull QuerySearchRequest request) {
+    public void searchQuery(QuerySearchRequest request) {
         assert request.collector != this;
         assert request.collector.getSearchSession() == mySession;
         synchronized (lock) {
@@ -171,19 +170,19 @@ public class SearchRequestCollector {
         }
     }
 
-    public void searchCustom(@Nonnull Predicate<Predicate<? super PsiReference>> searchAction) {
+    public void searchCustom(Predicate<Predicate<? super PsiReference>> searchAction) {
         synchronized (lock) {
             myCustomSearchActions.add(searchAction);
         }
     }
 
-    @Nonnull
+    
     public List<QuerySearchRequest> takeQueryRequests() {
         return takeRequests(myQueryRequests);
     }
 
-    @Nonnull
-    private <T> List<T> takeRequests(@Nonnull List<? extends T> list) {
+    
+    private <T> List<T> takeRequests(List<? extends T> list) {
         synchronized (lock) {
             List<T> requests = new ArrayList<>(list);
             list.clear();
@@ -191,12 +190,12 @@ public class SearchRequestCollector {
         }
     }
 
-    @Nonnull
+    
     public List<PsiSearchRequest> takeSearchRequests() {
         return takeRequests(myWordRequests);
     }
 
-    @Nonnull
+    
     public List<Predicate<Predicate<? super PsiReference>>> takeCustomSearchActions() {
         return takeRequests(myCustomSearchActions);
     }

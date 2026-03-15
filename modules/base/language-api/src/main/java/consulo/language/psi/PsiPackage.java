@@ -19,10 +19,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.navigation.NavigationItem;
 import consulo.util.collection.ArrayFactory;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -41,7 +39,7 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
      *
      * @return the array of subpackages.
      */
-    @Nonnull
+    
     PsiPackage[] getSubPackages();
 
     /**
@@ -50,8 +48,8 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
      * @param scope the scope in which packages are searched.
      * @return the array of subpackages.
      */
-    @Nonnull
-    PsiPackage[] getSubPackages(@Nonnull GlobalSearchScope scope);
+    
+    PsiPackage[] getSubPackages(GlobalSearchScope scope);
 
     /**
      * @return null means default package
@@ -67,5 +65,5 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
      *
      * @param newQualifiedName the new qualified name of the package.
      */
-    void handleQualifiedNameChange(@Nonnull String newQualifiedName);
+    void handleQualifiedNameChange(String newQualifiedName);
 }

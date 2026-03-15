@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.popup;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**

@@ -18,8 +18,7 @@ package consulo.application.dumb;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Thrown on accessing indices when they're not ready, in so-called dumb mode. Possible fixes:
@@ -64,18 +63,18 @@ public class IndexNotReadyException extends RuntimeException implements Exceptio
     myStartTrace = startTrace;
   }
 
-  @Nonnull
+  
   @Override
   public Attachment[] getAttachments() {
     return myStartTrace == null ? Attachment.EMPTY_ARRAY : new Attachment[]{AttachmentFactory.get().create("indexingStart", myStartTrace)};
   }
 
-  @Nonnull
+  
   public static IndexNotReadyException create() {
     return create(null);
   }
 
-  @Nonnull
+  
   public static IndexNotReadyException create(@Nullable Throwable startTrace) {
     return new IndexNotReadyException(startTrace);
   }

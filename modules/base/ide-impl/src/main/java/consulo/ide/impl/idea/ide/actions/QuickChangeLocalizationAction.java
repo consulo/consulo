@@ -20,7 +20,6 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.action.NewQuickSwitchSchemeAction;
-import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
 import java.util.function.BiConsumer;
@@ -36,7 +35,7 @@ public class QuickChangeLocalizationAction extends NewQuickSwitchSchemeAction<Lo
     }
 
     @Override
-    public void fill(@Nonnull BiConsumer<LocalizeValue, Locale> itemsAcceptor) {
+    public void fill(BiConsumer<LocalizeValue, Locale> itemsAcceptor) {
         itemsAcceptor.accept(LocalizeValue.localizeTODO("<default>"), Locale.ROOT);
         LocalizeManager localizeManager = LocalizeManager.get();
 
@@ -45,7 +44,7 @@ public class QuickChangeLocalizationAction extends NewQuickSwitchSchemeAction<Lo
         }
     }
 
-    @Nonnull
+    
     @Override
     public Locale getCurrentValue() {
         LocalizeManager localizeManager = LocalizeManager.get();
@@ -53,7 +52,7 @@ public class QuickChangeLocalizationAction extends NewQuickSwitchSchemeAction<Lo
     }
 
     @Override
-    public void changeSchemeTo(@Nonnull Locale value) {
+    public void changeSchemeTo(Locale value) {
         LocalizeManager.get().setLocale(value == Locale.ROOT ? null : value);
     }
 }

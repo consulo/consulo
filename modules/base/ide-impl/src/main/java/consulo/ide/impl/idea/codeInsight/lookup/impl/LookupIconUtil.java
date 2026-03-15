@@ -20,15 +20,14 @@ import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 26/06/2023
  */
 public class LookupIconUtil {
-  public static Image augmentIcon(@Nullable Editor editor, @Nullable Image icon, @Nonnull Image standard) {
+  public static Image augmentIcon(@Nullable Editor editor, @Nullable Image icon, Image standard) {
     if (Registry.is("editor.scale.completion.icons")) {
       standard = EditorUtil.scaleIconAccordingEditorFont(standard, editor);
 

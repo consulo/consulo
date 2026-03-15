@@ -21,20 +21,19 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2021-12-13
  */
 public class DialogOkAction extends DumbAwareAction {
-    public DialogOkAction(@Nonnull LocalizeValue actionText) {
+    public DialogOkAction(LocalizeValue actionText) {
         super(actionText, LocalizeValue.empty(), null);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Dialog data = e.getRequiredData(Dialog.KEY);
 
         DialogDescriptor descriptor = data.getDescriptor();
@@ -46,7 +45,7 @@ public class DialogOkAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Dialog dialog = e.getData(Dialog.KEY);
         // dialog will be null on action init
         e.getPresentation().setEnabled(dialog == null || dialog.getDescriptor().doUpdateOkButtonState());

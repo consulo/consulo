@@ -29,8 +29,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 
@@ -76,7 +75,7 @@ public class CommonCodeStyleSettings {
         this(language, language == null ? null : language.getAssociatedFileType());
     }
 
-    void setRootSettings(@Nonnull CodeStyleSettings rootSettings) {
+    void setRootSettings(CodeStyleSettings rootSettings) {
         myRootSettings = rootSettings;
     }
 
@@ -84,7 +83,7 @@ public class CommonCodeStyleSettings {
         return myLanguage;
     }
 
-    @Nonnull
+    
     public IndentOptions initIndentOptions() {
         myIndentOptions = new IndentOptions();
         return myIndentOptions;
@@ -95,7 +94,7 @@ public class CommonCodeStyleSettings {
         return myFileType;
     }
 
-    @Nonnull
+    
     public CodeStyleSettings getRootSettings() {
         return myRootSettings;
     }
@@ -110,7 +109,7 @@ public class CommonCodeStyleSettings {
         return myArrangementSettings;
     }
 
-    public void setArrangementSettings(@Nonnull ArrangementSettings settings) {
+    public void setArrangementSettings(ArrangementSettings settings) {
         myArrangementSettings = settings;
     }
 
@@ -123,7 +122,7 @@ public class CommonCodeStyleSettings {
     }
 
     @SuppressWarnings("unchecked")
-    public CommonCodeStyleSettings clone(@Nonnull CodeStyleSettings rootSettings) {
+    public CommonCodeStyleSettings clone(CodeStyleSettings rootSettings) {
         CommonCodeStyleSettings commonSettings = new CommonCodeStyleSettings(myLanguage, getFileType());
         copyPublicFields(this, commonSettings);
         commonSettings.setRootSettings(rootSettings);
@@ -144,7 +143,7 @@ public class CommonCodeStyleSettings {
         ReflectionUtil.copyFields(to.getClass().getFields(), from, to);
     }
 
-    public void copyFrom(@Nonnull CommonCodeStyleSettings source) {
+    public void copyFrom(CommonCodeStyleSettings source) {
         copyPublicFields(source, this);
         if (myIndentOptions != null) {
             CommonCodeStyleSettings.IndentOptions sourceIndentOptions = source.getIndentOptions();
@@ -223,7 +222,7 @@ public class CommonCodeStyleSettings {
         }
 
         @Override
-        public boolean test(@Nonnull Field field) {
+        public boolean test(Field field) {
             //noinspection SimplifiableIfStatement
             if (mySupportedFieldNames != null && mySupportedFieldNames.contains(field.getName())) {
                 return super.test(field);
@@ -958,7 +957,7 @@ public class CommonCodeStyleSettings {
                 indentOptionsElement,
                 new SkipDefaultValuesSerializationFilters() {
                     @Override
-                    protected void configure(@Nonnull Object o) {
+                    protected void configure(Object o) {
                         if (o instanceof IndentOptions indentOptions && defaultOptions != null) {
                             indentOptions.copyFrom(defaultOptions);
                         }
@@ -1024,16 +1023,16 @@ public class CommonCodeStyleSettings {
             return myFileIndentOptionsProvider;
         }
 
-        void setFileIndentOptionsProvider(@Nonnull FileIndentOptionsProvider provider) {
+        void setFileIndentOptionsProvider(FileIndentOptionsProvider provider) {
             myFileIndentOptionsProvider = provider;
         }
 
-        public void associateWithDocument(@Nonnull Document document) {
+        public void associateWithDocument(Document document) {
             document.putUserData(INDENT_OPTIONS_KEY, this);
         }
 
         @Nullable
-        public static IndentOptions retrieveFromAssociatedDocument(@Nonnull PsiFile file) {
+        public static IndentOptions retrieveFromAssociatedDocument(PsiFile file) {
             Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
             return document != null ? document.getUserData(INDENT_OPTIONS_KEY) : null;
         }
@@ -1082,7 +1081,7 @@ public class CommonCodeStyleSettings {
         return Comparing.equal(theseSettings, obj.getArrangementSettings());
     }
 
-    @Nonnull
+    
     public List<Integer> getSoftMargins() {
         return mySoftMargins.getValues();
     }

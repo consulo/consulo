@@ -25,14 +25,13 @@ import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.StandardTargetWeights;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget implements DumbAware {
   public ProjectPaneSelectInTarget(Project project) {
     super(project);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getActionText() {
     return ProjectUIViewLocalize.selectInProject();

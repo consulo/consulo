@@ -5,7 +5,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -26,7 +25,7 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
     myApplication = app;
     app.addApplicationListener(new ApplicationListener() {
       @Override
-      public void writeActionStarted(@Nonnull Object action) {
+      public void writeActionStarted(Object action) {
         //noinspection AssignmentToStaticFieldFromInstanceMethod
         ourWriteActionCounter++;
       }
@@ -39,21 +38,21 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   //  return new ExpirableExecutorImpl(executor);
   //}
   //
-  @Nonnull
+  
   @Override
-  protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
+  protected AppUIExecutor createUIExecutor(ModalityState modalityState) {
     return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
   }
 
-  @Nonnull
+  
   @Override
-  protected AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState) {
+  protected AppUIExecutor createWriteThreadExecutor(ModalityState modalityState) {
     return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
   }
 
-  @Nonnull
+  
   @Override
-  public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation) {
+  public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(Callable<T> computation) {
     return new NonBlockingReadActionImpl<>(myApplication, computation);
   }
 

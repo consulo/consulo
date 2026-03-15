@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.wrapper.impl;
 
 import consulo.execution.debug.stream.wrapper.*;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,10 +19,10 @@ public class StreamChainImpl implements StreamChain {
     private final TerminatorStreamCall myTerminator;
     private final PsiElement myContext;
 
-    public StreamChainImpl(@Nonnull QualifierExpression qualifierExpression,
-                           @Nonnull List<? extends IntermediateStreamCall> intermediateCalls,
-                           @Nonnull TerminatorStreamCall terminator,
-                           @Nonnull PsiElement context) {
+    public StreamChainImpl(QualifierExpression qualifierExpression,
+                           List<? extends IntermediateStreamCall> intermediateCalls,
+                           TerminatorStreamCall terminator,
+                           PsiElement context) {
         myQualifierExpression = qualifierExpression;
         myIntermediateCalls = intermediateCalls;
         myTerminator = terminator;
@@ -31,17 +30,17 @@ public class StreamChainImpl implements StreamChain {
     }
 
     @Override
-    public @Nonnull QualifierExpression getQualifierExpression() {
+    public QualifierExpression getQualifierExpression() {
         return myQualifierExpression;
     }
 
     @Override
-    public @Nonnull List<IntermediateStreamCall> getIntermediateCalls() {
+    public List<IntermediateStreamCall> getIntermediateCalls() {
         return Collections.unmodifiableList(myIntermediateCalls);
     }
 
     @Override
-    public @Nonnull StreamCall getCall(int index) {
+    public StreamCall getCall(int index) {
         if (0 <= index && index < length()) {
             return doGetCall(index);
         }
@@ -50,12 +49,12 @@ public class StreamChainImpl implements StreamChain {
     }
 
     @Override
-    public @Nonnull TerminatorStreamCall getTerminationCall() {
+    public TerminatorStreamCall getTerminationCall() {
         return myTerminator;
     }
 
     @Override
-    public @Nonnull String getText() {
+    public String getText() {
         List<StreamCall> list = new ArrayList<>(myIntermediateCalls);
         list.add(myTerminator);
 
@@ -77,7 +76,7 @@ public class StreamChainImpl implements StreamChain {
 
 
     @Override
-    public @Nonnull String getCompactText() {
+    public String getCompactText() {
         StringBuilder builder = new StringBuilder();
         builder.append(myQualifierExpression.getText().replaceAll("\\s+", ""));
 
@@ -97,7 +96,7 @@ public class StreamChainImpl implements StreamChain {
     }
 
     @Override
-    public @Nonnull PsiElement getContext() {
+    public PsiElement getContext() {
         return myContext;
     }
 
@@ -109,7 +108,7 @@ public class StreamChainImpl implements StreamChain {
         return myTerminator;
     }
 
-    private static @Nonnull String args2Text(@Nonnull List<CallArgument> args) {
+    private static String args2Text(List<CallArgument> args) {
         return "(" + args.stream().map(CallArgument::getText).collect(Collectors.joining(", ")) + ")";
     }
 }

@@ -32,13 +32,12 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class RunContextAction extends BaseRunConfigurationAction {
   private final Executor myExecutor;
 
-  public RunContextAction(@Nonnull Executor executor) {
+  public RunContextAction(Executor executor) {
     super(ExecutionLocalize.performActionWithContextConfigurationActionName(executor.getActionName()), LocalizeValue.empty(), executor.getIcon());
     myExecutor = executor;
   }
@@ -70,7 +69,7 @@ public class RunContextAction extends BaseRunConfigurationAction {
   }
 
   @Override
-  protected void updatePresentation(Presentation presentation, @Nonnull String actionText, ConfigurationContext context) {
+  protected void updatePresentation(Presentation presentation, String actionText, ConfigurationContext context) {
     presentation.setTextValue(ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, actionText));
 
     Pair<Boolean, Boolean> b = isEnabledAndVisible(context);

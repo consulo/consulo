@@ -26,9 +26,7 @@ import consulo.virtualFileSystem.impl.internal.FSRecords;
 import consulo.virtualFileSystem.internal.FakeVirtualFile;
 import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -41,9 +39,9 @@ import java.util.List;
 public class TempFileSystemImpl extends TempFileSystem implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem{
   private final FSItem myRoot = new FSDir(null, "/");
 
-  @Nonnull
+  
   @Override
-  public String extractRootPath(@Nonnull String path) {
+  public String extractRootPath(String path) {
     //return path.startsWith("/") ? "/" : "";
     return "/";
   }
@@ -66,14 +64,14 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName)
+  public VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile newParent, String copyName)
       throws IOException {
     return VirtualFileUtil.copyFile(requestor, file, newParent, copyName);
   }
 
   @Override
-  @Nonnull
-  public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile parent, @Nonnull String dir) throws IOException {
+  
+  public VirtualFile createChildDirectory(Object requestor, VirtualFile parent, String dir) throws IOException {
     FSItem fsItem = convert(parent);
     assert fsItem != null && fsItem.isDirectory();
 
@@ -91,7 +89,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException {
+  public VirtualFile createChildFile(Object requestor, VirtualFile parent, String file) throws IOException {
     FSItem fsItem = convert(parent);
     if (fsItem == null) {
       FSRecords.invalidateCaches();
@@ -108,7 +106,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public void deleteFile(Object requestor, @Nonnull VirtualFile file) throws IOException {
+  public void deleteFile(Object requestor, VirtualFile file) throws IOException {
     FSItem fsItem = convert(file);
     if (fsItem == null) {
       FSRecords.invalidateCaches();
@@ -118,7 +116,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public void moveFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException {
+  public void moveFile(Object requestor, VirtualFile file, VirtualFile newParent) throws IOException {
     FSItem fsItem = convert(file);
     assert fsItem != null: "failed to move file " + file.getPath();
     FSItem newParentItem = convert(newParent);
@@ -133,7 +131,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public void renameFile(Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException {
+  public void renameFile(Object requestor, VirtualFile file, String newName) throws IOException {
     FSItem fsItem = convert(file);
     assert fsItem != null;
 
@@ -141,19 +139,19 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  @Nonnull
+  
   public String getProtocol() {
     return PROTOCOL;
   }
 
   @Override
-  public boolean exists(@Nonnull VirtualFile fileOrDirectory) {
+  public boolean exists(VirtualFile fileOrDirectory) {
     return convert(fileOrDirectory) != null;
   }
 
   @Override
-  @Nonnull
-  public String[] list(@Nonnull VirtualFile file) {
+  
+  public String[] list(VirtualFile file) {
     FSItem fsItem = convert(file);
     assert fsItem != null;
 
@@ -161,12 +159,12 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public boolean isDirectory(@Nonnull VirtualFile file) {
+  public boolean isDirectory(VirtualFile file) {
     return convert(file) instanceof FSDir;
   }
 
   @Override
-  public long getTimeStamp(@Nonnull VirtualFile file) {
+  public long getTimeStamp(VirtualFile file) {
     FSItem fsItem = convert(file);
     assert fsItem != null: "cannot find item for path " + file.getPath();
 
@@ -174,7 +172,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public void setTimeStamp(@Nonnull VirtualFile file, long timeStamp) throws IOException {
+  public void setTimeStamp(VirtualFile file, long timeStamp) throws IOException {
     FSItem fsItem = convert(file);
     assert fsItem != null;
 
@@ -182,7 +180,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public boolean isWritable(@Nonnull VirtualFile file) {
+  public boolean isWritable(VirtualFile file) {
     FSItem fsItem = convert(file);
     assert fsItem != null;
 
@@ -190,7 +188,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public void setWritable(@Nonnull VirtualFile file, boolean writableFlag) throws IOException {
+  public void setWritable(VirtualFile file, boolean writableFlag) throws IOException {
     FSItem fsItem = convert(file);
     assert fsItem != null;
 
@@ -198,8 +196,8 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  @Nonnull
-  public byte[] contentsToByteArray(@Nonnull VirtualFile file) throws IOException {
+  
+  public byte[] contentsToByteArray(VirtualFile file) throws IOException {
     FSItem fsItem = convert(file);
     if (fsItem == null) throw new FileNotFoundException("Cannot find temp for " + file.getPath());
     
@@ -209,14 +207,14 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  @Nonnull
-  public InputStream getInputStream(@Nonnull VirtualFile file) throws IOException {
+  
+  public InputStream getInputStream(VirtualFile file) throws IOException {
     return new BufferExposingByteArrayInputStream(contentsToByteArray(file));
   }
 
   @Override
-  @Nonnull
-  public OutputStream getOutputStream(@Nonnull final VirtualFile file, Object requestor, final long modStamp, long timeStamp)
+  
+  public OutputStream getOutputStream(final VirtualFile file, Object requestor, final long modStamp, long timeStamp)
       throws IOException {
     return new ByteArrayOutputStream() {
       @Override
@@ -237,22 +235,22 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public VirtualFile findFileByPath(@Nonnull @NonNls String path) {
+  public VirtualFile findFileByPath(String path) {
     return VfsImplUtil.findFileByPath(this, path);
   }
 
   @Override
-  public VirtualFile findFileByPathIfCached(@Nonnull @NonNls String path) {
+  public VirtualFile findFileByPathIfCached(String path) {
     return VfsImplUtil.findFileByPathIfCached(this, path);
   }
 
   @Override
-  public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
+  public VirtualFile refreshAndFindFileByPath(String path) {
     return VfsImplUtil.refreshAndFindFileByPath(this, path);
   }
 
   @Override
-  public long getLength(@Nonnull VirtualFile file) {
+  public long getLength(VirtualFile file) {
     try {
       return contentsToByteArray(file).length;
     }
@@ -358,7 +356,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public FileAttributes getAttributes(@Nonnull VirtualFile file) {
+  public FileAttributes getAttributes(VirtualFile file) {
     FSItem item = convert(file);
     if (item == null) return null;
     long length = item instanceof FSFile ? ((FSFile)item).myContent.length : 0;

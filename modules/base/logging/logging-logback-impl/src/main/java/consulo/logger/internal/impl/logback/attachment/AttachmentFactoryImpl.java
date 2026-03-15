@@ -17,28 +17,27 @@ package consulo.logger.internal.impl.logback.attachment;
 
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-08-10
  */
 public class AttachmentFactoryImpl implements AttachmentFactory {
-  @Nonnull
+  
   @Override
   public Attachment create(String path, String content) {
     return new AttachmentImpl(path, content);
   }
 
-  @Nonnull
+  
   @Override
   public Attachment create(String path, byte[] bytes, String displayText) {
     return new AttachmentImpl(path, bytes, displayText);
   }
 
-  @Nonnull
+  
   @Override
-  public Attachment create(@Nonnull String name, @Nonnull Throwable throwable) {
+  public Attachment create(String name, Throwable throwable) {
     return new AttachmentImpl(name, throwable);
   }
 }

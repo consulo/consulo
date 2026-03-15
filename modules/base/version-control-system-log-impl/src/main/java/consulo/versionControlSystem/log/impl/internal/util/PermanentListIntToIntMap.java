@@ -15,18 +15,17 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 public class PermanentListIntToIntMap extends AbstractIntToIntMap implements IntToIntMap {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
-  @Nonnull
-  public static IntToIntMap newInstance(@Nonnull Flags visibleIndexes, int shortSize) {
+  
+  public static IntToIntMap newInstance(Flags visibleIndexes, int shortSize) {
     return newInstance(visibleIndexes, shortSize, DEFAULT_BLOCK_SIZE);
   }
 
-  @Nonnull
-  public static IntToIntMap newInstance(@Nonnull Flags visibleIndexes, int shortSize, int blockSize) {
+  
+  public static IntToIntMap newInstance(Flags visibleIndexes, int shortSize, int blockSize) {
     if (shortSize < 0) throw new NegativeArraySizeException("shortSize < 0: " + shortSize);
     if (shortSize == 0) return createEmptyIntToIntMap(visibleIndexes);
 
@@ -44,8 +43,8 @@ public class PermanentListIntToIntMap extends AbstractIntToIntMap implements Int
     return new PermanentListIntToIntMap(visibleIndexes, shortSize, blockSize, strongShortIndexes);
   }
 
-  @Nonnull
-  private static IntToIntMap createEmptyIntToIntMap(@Nonnull final Flags visibleIndexes) {
+  
+  private static IntToIntMap createEmptyIntToIntMap(final Flags visibleIndexes) {
     return new IntToIntMap() {
       @Override
       public int shortSize() {
@@ -69,17 +68,17 @@ public class PermanentListIntToIntMap extends AbstractIntToIntMap implements Int
     };
   }
 
-  @Nonnull
+  
   private final Flags myVisibleIndexes;
 
   private final int myLongSize;
   private final int myShortSize;
 
   private final int myBlockSize;
-  @Nonnull
+  
   private final int[] myStrongShortIndexes;
 
-  private PermanentListIntToIntMap(@Nonnull Flags visibleIndexes, int shortSize, int blockSize, @Nonnull int[] strongShortIndexes) {
+  private PermanentListIntToIntMap(Flags visibleIndexes, int shortSize, int blockSize, int[] strongShortIndexes) {
     myVisibleIndexes = visibleIndexes;
     myLongSize = visibleIndexes.size();
     myShortSize = shortSize;

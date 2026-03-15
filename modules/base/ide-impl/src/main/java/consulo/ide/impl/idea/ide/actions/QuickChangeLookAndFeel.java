@@ -21,7 +21,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.action.NewQuickSwitchSchemeAction;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BiConsumer;
 
@@ -35,20 +34,20 @@ public class QuickChangeLookAndFeel extends NewQuickSwitchSchemeAction<Style> {
     }
 
     @Override
-    public void fill(@Nonnull BiConsumer<LocalizeValue, Style> itemsAcceptor) {
+    public void fill(BiConsumer<LocalizeValue, Style> itemsAcceptor) {
         for (Style style : StyleManager.get().getStyles()) {
             itemsAcceptor.accept(LocalizeValue.of(style.getName()), style);
         }
     }
 
-    @Nonnull
+    
     @Override
     public Style getCurrentValue() {
         return StyleManager.get().getCurrentStyle();
     }
 
     @Override
-    public void changeSchemeTo(@Nonnull Style value) {
+    public void changeSchemeTo(Style value) {
         StyleManager.get().setCurrentStyle(value);
     }
 

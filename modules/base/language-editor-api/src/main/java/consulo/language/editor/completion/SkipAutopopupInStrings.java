@@ -25,15 +25,14 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.version.LanguageVersion;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public abstract class SkipAutopopupInStrings extends CompletionConfidence {
-  @Nonnull
+  
   @Override
-  public ThreeState shouldSkipAutopopup(@Nonnull PsiElement contextElement, @Nonnull PsiFile psiFile, int offset) {
+  public ThreeState shouldSkipAutopopup(PsiElement contextElement, PsiFile psiFile, int offset) {
     if (isInStringLiteral(contextElement)) {
       return ThreeState.YES;
     }

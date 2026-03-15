@@ -20,7 +20,6 @@ import consulo.language.Language;
 import consulo.language.editor.action.EmacsProcessingHandler;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -28,13 +27,13 @@ import jakarta.annotation.Nonnull;
  */
 public class DefaultEmacsProcessingHandler implements EmacsProcessingHandler {
 
-  @Nonnull
+  
   @Override
-  public Result changeIndent(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public Result changeIndent(Project project, Editor editor, PsiFile file) {
     return Result.CONTINUE;
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

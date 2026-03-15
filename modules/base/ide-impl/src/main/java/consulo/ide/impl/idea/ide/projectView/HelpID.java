@@ -16,8 +16,7 @@
 
 package consulo.ide.impl.idea.ide.projectView;
 
-import org.jetbrains.annotations.NonNls;
 
 public interface HelpID {
-  @NonNls String PROJECT_VIEWS = "viewingStructure.projectViews";
+  String PROJECT_VIEWS = "viewingStructure.projectViews";
 }

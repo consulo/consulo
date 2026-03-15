@@ -21,7 +21,6 @@ import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.GridBag;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,17 +35,17 @@ import java.awt.event.MouseEvent;
  */
 public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiComponent {
 
-  @Nonnull
+  
   private final JPanel myComponent = new JPanel(new GridBagLayout());
 
-  @Nonnull
+  
   private final ArrangementAtomMatchCondition myCondition;
-  @Nonnull
+  
   private final JBCheckBox                    myCheckBox;
-  @Nonnull
+  
   private final JLabel                        myTextLabel;
 
-  public ArrangementCheckBoxUiComponent(@Nonnull ArrangementSettingsToken token) {
+  public ArrangementCheckBoxUiComponent(ArrangementSettingsToken token) {
     super(token);
     myComponent.setOpaque(false);
     myCondition = new ArrangementAtomMatchCondition(token);
@@ -72,14 +71,14 @@ public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiCompone
     myComponent.add(myTextLabel, new GridBag().anchor(GridBagConstraints.WEST).insets(0, 0, 0, ArrangementConstants.HORIZONTAL_GAP));
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementSettingsToken getToken() {
     return myCondition.getType();
   }
 
   @Override
-  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws UnsupportedOperationException {
+  public void chooseToken(ArrangementSettingsToken data) throws UnsupportedOperationException {
     if (!getToken().equals(data)) {
       throw new UnsupportedOperationException(String.format(
               "Can't choose '%s' data at the check box token with data '%s'", data, getToken()
@@ -87,7 +86,7 @@ public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiCompone
     }
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     return myCondition;

@@ -8,7 +8,6 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.internal.EditorInternalUtil;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
 
 final class MoveCaretUpOrDownHandler extends EditorActionHandler.ForEachCaret {
     enum Direction {
@@ -16,14 +15,14 @@ final class MoveCaretUpOrDownHandler extends EditorActionHandler.ForEachCaret {
         DOWN
     }
 
-    private final @Nonnull Direction myDirection;
+    private final Direction myDirection;
 
-    MoveCaretUpOrDownHandler(@Nonnull Direction direction) {
+    MoveCaretUpOrDownHandler(Direction direction) {
         myDirection = direction;
     }
 
     @Override
-    public void doExecute(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
         Runnable runnable = () -> {
             if (caret.hasSelection() && !(editor instanceof EditorEx editorEx && editorEx.isStickySelection())
                 && !Registry.is("editor.action.caretMovement.UpDownIgnoreSelectionBoundaries", false)) {
@@ -41,7 +40,7 @@ final class MoveCaretUpOrDownHandler extends EditorActionHandler.ForEachCaret {
     }
 
     @Override
-    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
         return !editor.isOneLineMode();
     }
 }

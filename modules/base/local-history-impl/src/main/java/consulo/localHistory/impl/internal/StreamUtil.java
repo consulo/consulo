@@ -20,8 +20,7 @@ import consulo.localHistory.impl.internal.change.*;
 import consulo.localHistory.impl.internal.tree.DirectoryEntry;
 import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.localHistory.impl.internal.tree.FileEntry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -97,12 +96,12 @@ public class StreamUtil {
     change.write(out);
   }
 
-  @Nonnull
+  
   public static String readString(DataInput in) throws IOException {
     return in.readUTF();
   }
 
-  public static void writeString(DataOutput out, @Nonnull String s) throws IOException {
+  public static void writeString(DataOutput out, String s) throws IOException {
     out.writeUTF(s);
   }
 

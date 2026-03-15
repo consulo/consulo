@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.undoRedo.UndoManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -40,21 +39,21 @@ import java.nio.charset.Charset;
 public class DocumentFragmentContent extends DiffContentBase implements DocumentContent {
   // TODO: reuse DocumentWindow ?
 
-  @Nonnull
+  
   private final DocumentContent myOriginal;
-  @Nonnull
+  
   private final RangeMarker myRangeMarker;
 
-  @Nonnull
+  
   private final MyDocumentsSynchronizer mySynchronizer;
 
   private int myAssignments = 0;
 
-  public DocumentFragmentContent(@Nullable Project project, @Nonnull DocumentContent original, @Nonnull TextRange range) {
+  public DocumentFragmentContent(@Nullable Project project, DocumentContent original, TextRange range) {
     this(project, original, createRangeMarker(original.getDocument(), range));
   }
 
-  public DocumentFragmentContent(@Nullable Project project, @Nonnull DocumentContent original, @Nonnull RangeMarker rangeMarker) {
+  public DocumentFragmentContent(@Nullable Project project, DocumentContent original, RangeMarker rangeMarker) {
     myOriginal = original;
     myRangeMarker = rangeMarker;
 
@@ -66,15 +65,15 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     mySynchronizer = new MyDocumentsSynchronizer(project, myRangeMarker, document1, document2);
   }
 
-  @Nonnull
-  private static RangeMarker createRangeMarker(@Nonnull Document document, @Nonnull TextRange range) {
+  
+  private static RangeMarker createRangeMarker(Document document, TextRange range) {
     RangeMarker rangeMarker = document.createRangeMarker(range.getStartOffset(), range.getEndOffset(), true);
     rangeMarker.setGreedyToLeft(true);
     rangeMarker.setGreedyToRight(true);
     return rangeMarker;
   }
 
-  @Nonnull
+  
   @Override
   public Document getDocument() {
     return mySynchronizer.getDocument2();
@@ -88,7 +87,7 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
 
   @Nullable
   @Override
-  public Navigatable getNavigatable(@Nonnull LineCol position) {
+  public Navigatable getNavigatable(LineCol position) {
     if (!myRangeMarker.isValid()) return null;
     int offset = position.toOffset(getDocument());
     int originalOffset = offset + myRangeMarker.getStartOffset();
@@ -134,19 +133,19 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
   }
 
   private static class MyDocumentsSynchronizer extends DocumentsSynchronizer {
-    @Nonnull
+    
     private final RangeMarker myRangeMarker;
 
     public MyDocumentsSynchronizer(@Nullable Project project,
-                                   @Nonnull RangeMarker range,
-                                   @Nonnull Document document1,
-                                   @Nonnull Document document2) {
+                                   RangeMarker range,
+                                   Document document1,
+                                   Document document2) {
       super(project, document1, document2);
       myRangeMarker = range;
     }
 
     @Override
-    protected void onDocumentChanged1(@Nonnull DocumentEvent event) {
+    protected void onDocumentChanged1(DocumentEvent event) {
       if (!myRangeMarker.isValid()) {
         myDocument2.setReadOnly(false);
         replaceString(myDocument2, 0, myDocument2.getTextLength(), "Invalid selection range");
@@ -158,7 +157,7 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     }
 
     @Override
-    protected void onDocumentChanged2(@Nonnull DocumentEvent event) {
+    protected void onDocumentChanged2(DocumentEvent event) {
       if (!myRangeMarker.isValid()) return;
       if (!myDocument1.isWritable()) return;
 

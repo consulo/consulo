@@ -21,7 +21,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
@@ -38,7 +37,7 @@ public class DeleteLayerAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
 
         String currentLayerName = modifiableRootModelProxy.getCurrentLayerName();
@@ -47,7 +46,7 @@ public class DeleteLayerAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
         e.getPresentation().setEnabled(modifiableRootModelProxy != null && modifiableRootModelProxy.getLayers().size() > 1);
     }

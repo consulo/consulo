@@ -20,7 +20,6 @@ import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.internal.inject.InjectingKey;
 import consulo.component.internal.inject.InjectingPoint;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,10 +35,10 @@ class DefaultInjectingContainerBuilder implements InjectingContainerBuilder {
     myParent = parent;
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
-  public <T> InjectingPoint<T> bind(@Nonnull InjectingKey<T> key) {
+  public <T> InjectingPoint<T> bind(InjectingKey<T> key) {
     // null points mean free builder
     if (myPoints == null) {
       throw new IllegalArgumentException("Already build container");
@@ -55,7 +54,7 @@ class DefaultInjectingContainerBuilder implements InjectingContainerBuilder {
     return point;
   }
 
-  @Nonnull
+  
   @Override
   public InjectingContainer build() {
     Map<InjectingKey, DefaultInjectingPoint> points = myPoints;

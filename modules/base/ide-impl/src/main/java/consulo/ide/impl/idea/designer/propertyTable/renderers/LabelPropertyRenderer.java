@@ -19,8 +19,7 @@ import consulo.ide.impl.idea.designer.model.PropertiesContainer;
 import consulo.ide.impl.idea.designer.model.PropertyContext;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyRenderer;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyTable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -41,7 +40,7 @@ public class LabelPropertyRenderer extends JLabel implements PropertyRenderer {
     setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
   }
 
-  @Nonnull
+  
   public JComponent getComponent(@Nullable PropertiesContainer container,
                                  PropertyContext context,
                                  @Nullable Object value,
@@ -66,7 +65,7 @@ public class LabelPropertyRenderer extends JLabel implements PropertyRenderer {
    * attributes. Note, that background and foreground colors are already
    * set.
    */
-  protected void customize(@Nonnull Object value) {
+  protected void customize(Object value) {
     setText(myStaticText != null ? myStaticText : value.toString());
   }
 }

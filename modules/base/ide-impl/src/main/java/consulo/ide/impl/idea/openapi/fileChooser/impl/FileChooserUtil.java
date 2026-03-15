@@ -25,8 +25,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,7 +52,7 @@ public final class FileChooserUtil {
 
     @Nullable
     public static VirtualFile getFileToSelect(
-        @Nonnull FileChooserDescriptor descriptor,
+        FileChooserDescriptor descriptor,
         @Nullable Project project,
         @Nullable VirtualFile toSelect,
         @Nullable VirtualFile lastPath
@@ -91,10 +90,10 @@ public final class FileChooserUtil {
         return result;
     }
 
-    @Nonnull
+    
     public static List<VirtualFile> getChosenFiles(
-        @Nonnull FileChooserDescriptor descriptor,
-        @Nonnull Collection<VirtualFile> selectedFiles
+        FileChooserDescriptor descriptor,
+        Collection<VirtualFile> selectedFiles
     ) {
         return ContainerUtil.mapNotNull(selectedFiles, file -> file != null && file.isValid() ? descriptor.getFileToSelect(file) : null);
     }

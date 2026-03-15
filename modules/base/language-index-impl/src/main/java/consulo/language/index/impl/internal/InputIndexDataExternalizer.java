@@ -19,7 +19,6 @@ import consulo.index.io.IndexId;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.KeyDescriptor;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -38,7 +37,7 @@ public class InputIndexDataExternalizer<K> implements DataExternalizer<Collectio
   }
 
   @Override
-  public void save(@Nonnull DataOutput out, @Nonnull Collection<K> value) throws IOException {
+  public void save(DataOutput out, Collection<K> value) throws IOException {
     try {
       DataInputOutputUtil.writeINT(out, value.size());
       for (K key : value) {
@@ -50,9 +49,9 @@ public class InputIndexDataExternalizer<K> implements DataExternalizer<Collectio
     }
   }
 
-  @Nonnull
+  
   @Override
-  public Collection<K> read(@Nonnull DataInput in) throws IOException {
+  public Collection<K> read(DataInput in) throws IOException {
     try {
       int size = DataInputOutputUtil.readINT(in);
       List<K> list = new ArrayList<>(size);

@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,15 +31,15 @@ import java.util.List;
 
 @Deprecated
 public class RefactoringMessageDialog extends DialogWrapper {
-    @Nonnull
+    
     private final LocalizeValue myMessage;
     private final String myHelpTopic;
     private final Icon myIcon;
     private final boolean myIsCancelButtonVisible;
 
     public RefactoringMessageDialog(
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue message,
+        LocalizeValue title,
+        LocalizeValue message,
         String helpTopic,
         Image icon,
         boolean showCancelButton,
@@ -50,8 +49,8 @@ public class RefactoringMessageDialog extends DialogWrapper {
     }
 
     public RefactoringMessageDialog(
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue message,
+        LocalizeValue title,
+        LocalizeValue message,
         String helpTopic,
         Icon icon,
         boolean showCancelButton,
@@ -86,7 +85,7 @@ public class RefactoringMessageDialog extends DialogWrapper {
         );
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>();

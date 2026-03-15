@@ -15,8 +15,6 @@
  */
 package consulo.language.statistician;
 
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +31,7 @@ public class StatisticsInfo {
   private final String myValue;
   private final List<StatisticsInfo> myConjuncts;
 
-  public StatisticsInfo(@NonNls @Nonnull String context, @NonNls @Nonnull String value) {
+  public StatisticsInfo(String context, String value) {
     myContext = context;
     myValue = value;
     myConjuncts = Collections.singletonList(this);
@@ -57,12 +55,12 @@ public class StatisticsInfo {
     return new StatisticsInfo(conjuncts.get(0).getContext(), conjuncts.get(0).getValue(), flattened);
   }
 
-  @Nonnull
+  
   public String getContext() {
     return myContext;
   }
 
-  @Nonnull
+  
   public String getValue() {
     return myValue;
   }

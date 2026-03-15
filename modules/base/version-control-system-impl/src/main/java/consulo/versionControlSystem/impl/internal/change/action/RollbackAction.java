@@ -49,8 +49,7 @@ import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -69,7 +68,7 @@ public class RollbackAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         boolean visible = project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss();
         e.getPresentation().setEnabledAndVisible(visible);
@@ -93,7 +92,7 @@ public class RollbackAction extends AnAction implements DumbAware {
     }
 
     @RequiredReadAction
-    private static boolean hasReversibleFiles(@Nonnull AnActionEvent e) {
+    private static boolean hasReversibleFiles(AnActionEvent e) {
         ChangeListManager manager = ChangeListManager.getInstance(e.getRequiredData(Project.KEY));
         Set<VirtualFile> modifiedWithoutEditing = new HashSet<>(manager.getModifiedWithoutEditing());
 
@@ -112,7 +111,7 @@ public class RollbackAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         String title = ActionPlaces.CHANGES_VIEW_TOOLBAR.equals(e.getPlace())
             ? null : "Can not " + RollbackUtil.getRollbackOperationName(project) + " now";
@@ -149,7 +148,7 @@ public class RollbackAction extends AnAction implements DumbAware {
         }
     }
 
-    @Nonnull
+    
     private static List<Change> getChanges(Project project, AnActionEvent e) {
         Change[] changes = e.getData(VcsDataKeys.CHANGES);
         if (changes == null) {

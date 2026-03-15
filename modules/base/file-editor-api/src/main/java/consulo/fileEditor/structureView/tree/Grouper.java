@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -34,6 +33,6 @@ public interface Grouper extends TreeAction {
    * @param children the children of the parent node.
    * @return the collection of groups
    */
-  @Nonnull
+  
   Collection<Group> group(Object parent, Collection<TreeElement> children);
 }

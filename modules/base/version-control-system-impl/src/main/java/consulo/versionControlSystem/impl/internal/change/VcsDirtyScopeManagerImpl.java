@@ -32,8 +32,7 @@ import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -46,7 +45,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
 
     private final Project myProject;
 
-    @Nonnull
+    
     private DirtBuilder myDirtBuilder = new DirtBuilder();
     @Nullable
     private DirtBuilder myDirtInProgress;
@@ -56,19 +55,19 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
     private boolean myReady;
     private final Object LOCK = new Object();
 
-    @Nonnull
-    public static VcsDirtyScopeManagerImpl getInstanceImpl(@Nonnull Project project) {
+    
+    public static VcsDirtyScopeManagerImpl getInstanceImpl(Project project) {
         return ((VcsDirtyScopeManagerImpl) getInstance(project));
     }
 
     @Inject
-    public VcsDirtyScopeManagerImpl(@Nonnull Project project) {
+    public VcsDirtyScopeManagerImpl(Project project) {
         myProject = project;
 
         MessageBusConnection busConnection = myProject.getMessageBus().connect();
         busConnection.subscribe(FileTypeListener.class, new FileTypeListener() {
             @Override
-            public void fileTypesChanged(@Nonnull FileTypeEvent event) {
+            public void fileTypesChanged(FileTypeEvent event) {
                 // Listen changes in 'FileTypeManager.getIgnoredFilesList':
                 //   'ProjectLevelVcsManager.getVcsFor' depends on it via 'ProjectLevelVcsManager.isIgnored',
                 //   which might impact which files are visible in ChangeListManager.
@@ -84,7 +83,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
         if (Registry.is("ide.hide.excluded.files")) {
             busConnection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
                 @Override
-                public void rootsChanged(@Nonnull ModuleRootEvent event) {
+                public void rootsChanged(ModuleRootEvent event) {
                     // 'ProjectLevelVcsManager.getVcsFor' depends on excluded roots via 'ProjectLevelVcsManager.isIgnored'
                     ApplicationManager.getApplication().invokeLater(() -> markEverythingDirty(), ModalityState.nonModal(), myProject.getDisposed());
                 }
@@ -95,7 +94,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
         }
     }
 
-    private static ProjectLevelVcsManager getVcsManager(@Nonnull Project project) {
+    private static ProjectLevelVcsManager getVcsManager(Project project) {
         return ProjectLevelVcsManager.getInstance(project);
     }
 
@@ -150,7 +149,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
         }
     }
 
-    private @Nonnull Map<VcsRoot, Set<FilePath>> groupByVcs(@Nullable Iterable<? extends FilePath> from) {
+    private Map<VcsRoot, Set<FilePath>> groupByVcs(@Nullable Iterable<? extends FilePath> from) {
         if (from == null) {
             return Collections.emptyMap();
         }
@@ -170,7 +169,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
         return map;
     }
 
-    @Nonnull
+    
     private Map<VcsRoot, Set<FilePath>> groupFilesByVcs(@Nullable Collection<? extends VirtualFile> from) {
       if (from == null) {
         return Collections.emptyMap();
@@ -178,8 +177,8 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
         return groupByVcs(() -> ContainerUtil.mapIterator(from.iterator(), file -> VcsUtil.getFilePath(file)));
     }
 
-    void fileVcsPathsDirty(@Nonnull Map<VcsRoot, Set<FilePath>> filesConverted,
-                           @Nonnull Map<VcsRoot, Set<FilePath>> dirsConverted) {
+    void fileVcsPathsDirty(Map<VcsRoot, Set<FilePath>> filesConverted,
+                           Map<VcsRoot, Set<FilePath>> dirsConverted) {
       if (filesConverted.isEmpty() && dirsConverted.isEmpty()) {
         return;
       }
@@ -227,22 +226,22 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
     }
 
     @Override
-    public void fileDirty(@Nonnull VirtualFile file) {
+    public void fileDirty(VirtualFile file) {
         fileDirty(VcsUtil.getFilePath(file));
     }
 
     @Override
-    public void fileDirty(@Nonnull FilePath file) {
+    public void fileDirty(FilePath file) {
         filePathsDirty(Collections.singleton(file), null);
     }
 
     @Override
-    public void dirDirtyRecursively(@Nonnull VirtualFile dir) {
+    public void dirDirtyRecursively(VirtualFile dir) {
         dirDirtyRecursively(VcsUtil.getFilePath(dir));
     }
 
     @Override
-    public void dirDirtyRecursively(@Nonnull FilePath path) {
+    public void dirDirtyRecursively(FilePath path) {
         filePathsDirty(null, Collections.singleton(path));
     }
 
@@ -286,16 +285,16 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
         }
     }
 
-    @Nonnull
-    private VcsInvalidated calculateInvalidated(@Nonnull DirtBuilder dirt, @Nonnull ActionCallback callback) {
+    
+    private VcsInvalidated calculateInvalidated(DirtBuilder dirt, ActionCallback callback) {
         boolean isEverythingDirty = dirt.isEverythingDirty();
         List<VcsModifiableDirtyScope> scopes = dirt.buildScopes(myProject);
         return new VcsInvalidated(scopes, isEverythingDirty, callback);
     }
 
-    @Nonnull
+    
     @Override
-    public Collection<FilePath> whatFilesDirty(@Nonnull Collection<? extends FilePath> files) {
+    public Collection<FilePath> whatFilesDirty(Collection<? extends FilePath> files) {
         return ReadAction.compute(() -> {
             Collection<FilePath> result = new ArrayList<>();
             synchronized (LOCK) {
@@ -314,8 +313,8 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
         });
     }
 
-    @Nonnull
-    private static String toString(@Nonnull Map<VcsRoot, Set<FilePath>> filesByVcs) {
+    
+    private static String toString(Map<VcsRoot, Set<FilePath>> filesByVcs) {
         return StringUtil.join(filesByVcs.keySet(), vcs
             -> vcs.getVcs() + ": " + StringUtil.join(filesByVcs.get(vcs), path -> path.getPath(), "\n"), "\n");
     }
@@ -331,7 +330,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
         return null;
     }
 
-    public static @Nullable HashingStrategy<FilePath> getDirtyScopeHashingStrategy(@Nonnull AbstractVcs vcs) {
+    public static @Nullable HashingStrategy<FilePath> getDirtyScopeHashingStrategy(AbstractVcs vcs) {
         return vcs.needsCaseSensitiveDirtyScope() ? ChangesUtil.CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY : null;
     }
 }

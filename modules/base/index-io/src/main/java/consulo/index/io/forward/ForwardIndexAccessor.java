@@ -3,8 +3,7 @@ package consulo.index.io.forward;
 
 import consulo.index.io.InputData;
 import consulo.util.io.ByteArraySequence;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -12,12 +11,12 @@ public interface ForwardIndexAccessor<Key, Value> {
   /**
    * creates a diff builder for given inputId.
    */
-  @Nonnull
+  
   InputDataDiffBuilder<Key, Value> getDiffBuilder(int inputId, @Nullable ByteArraySequence sequence) throws IOException;
 
   /**
    * serialize indexed data to forward index format.
    */
   @Nullable
-  ByteArraySequence serializeIndexedData(@Nonnull InputData<Key, Value> data) throws IOException;
+  ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException;
 }

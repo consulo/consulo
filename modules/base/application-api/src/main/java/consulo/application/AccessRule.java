@@ -20,8 +20,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -33,25 +32,25 @@ import java.util.concurrent.CompletableFuture;
 public final class AccessRule {
     private static final Logger LOG = Logger.getInstance(AccessRule.class);
 
-    public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
+    public static <E extends Throwable> void read(@RequiredReadAction ThrowableRunnable<E> action) throws E {
         ReadAction.run(action);
     }
 
     @Nullable
-    public static <T, E extends Throwable> T read(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> action) throws E {
+    public static <T, E extends Throwable> T read(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         return ReadAction.compute(action);
     }
 
-    @Nonnull
-    public static CompletableFuture<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
+    
+    public static CompletableFuture<Void> writeAsync(@RequiredWriteAction ThrowableRunnable<Throwable> action) {
         return writeAsync(() -> {
             action.run();
             return null;
         });
     }
 
-    @Nonnull
-    public static <T> CompletableFuture<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableSupplier<T, Throwable> action) {
+    
+    public static <T> CompletableFuture<T> writeAsync(@RequiredWriteAction ThrowableSupplier<T, Throwable> action) {
         CompletableFuture<T> result = new CompletableFuture<>();
         AppUIExecutor.onWriteThread().later().execute(() -> {
             try {

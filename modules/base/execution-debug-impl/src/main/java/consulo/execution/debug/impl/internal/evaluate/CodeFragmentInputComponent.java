@@ -26,8 +26,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBSplitter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,8 +39,8 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
   private final JPanel myMainPanel;
   private final String mySplitterProportionKey;
 
-  public CodeFragmentInputComponent(@Nonnull Project project,
-                                    @Nonnull XDebuggerEditorsProvider editorsProvider,
+  public CodeFragmentInputComponent(Project project,
+                                    XDebuggerEditorsProvider editorsProvider,
                                     @Nullable XSourcePosition sourcePosition,
                                     @Nullable XExpression statements,
                                     String splitterProportionKey,
@@ -65,7 +64,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
   }
 
   @Override
-  @Nonnull
+  
   public XDebuggerEditorBase getInputEditor() {
     return myMultilineEditor;
   }
@@ -94,13 +93,13 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myForward ? myMultilineEditor.canGoForward() : myMultilineEditor.canGoBackward());
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       if (myForward) {
         myMultilineEditor.goForward();
       }

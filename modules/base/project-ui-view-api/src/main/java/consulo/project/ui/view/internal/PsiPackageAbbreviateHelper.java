@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiPackage;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,5 +26,5 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PsiPackageAbbreviateHelper {
-  boolean shouldAbbreviateName(@Nonnull PsiPackage aPackage);
+  boolean shouldAbbreviateName(PsiPackage aPackage);
 }

@@ -17,7 +17,6 @@ package consulo.compiler.impl.internal.artifact;
 
 import consulo.compiler.generic.BuildTarget;
 import consulo.compiler.artifact.Artifact;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -33,7 +32,7 @@ public class ArtifactBuildTarget extends BuildTarget {
         return myArtifact;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myArtifact.getName();

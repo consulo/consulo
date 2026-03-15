@@ -27,7 +27,6 @@ import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.project.Project;
 import consulo.util.collection.Maps;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -62,13 +61,13 @@ public class LibraryScopeCache {
         mySdkScopes.clear();
     }
 
-    @Nonnull
+    
     public GlobalSearchScope getLibrariesOnlyScope() {
         return myLibrariesOnlyScope;
     }
 
-    @Nonnull
-    public GlobalSearchScope getScopeForLibraryUsedIn(@Nonnull List<Module> modulesLibraryIsUsedIn) {
+    
+    public GlobalSearchScope getScopeForLibraryUsedIn(List<Module> modulesLibraryIsUsedIn) {
         GlobalSearchScope scope = myLibraryScopes.get(modulesLibraryIsUsedIn);
         if (scope != null) {
             return scope;
@@ -79,8 +78,8 @@ public class LibraryScopeCache {
         return Maps.cacheOrGet(myLibraryScopes, modulesLibraryIsUsedIn, newScope);
     }
 
-    @Nonnull
-    public GlobalSearchScope getScopeForSdk(@Nonnull ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+    
+    public GlobalSearchScope getScopeForSdk(ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
         String jdkName = sdkOrderEntry.getSdkName();
         if (jdkName == null) {
             return GlobalSearchScope.allScope(myProject);
@@ -97,24 +96,24 @@ public class LibraryScopeCache {
         private final GlobalSearchScope myOriginal;
         private final ProjectFileIndex myIndex;
 
-        private LibrariesOnlyScope(@Nonnull GlobalSearchScope original, @Nonnull Project project) {
+        private LibrariesOnlyScope(GlobalSearchScope original, Project project) {
             super(project);
             myIndex = ProjectRootManager.getInstance(project).getFileIndex();
             myOriginal = original;
         }
 
         @Override
-        public boolean contains(@Nonnull VirtualFile file) {
+        public boolean contains(VirtualFile file) {
             return myOriginal.contains(file) && (myIndex.isInLibraryClasses(file) || myIndex.isInLibrarySource(file));
         }
 
         @Override
-        public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+        public int compare(VirtualFile file1, VirtualFile file2) {
             return myOriginal.compare(file1, file2);
         }
 
         @Override
-        public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+        public boolean isSearchInModuleContent(Module aModule) {
             return false;
         }
 

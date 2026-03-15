@@ -30,8 +30,7 @@ import consulo.virtualFileSystem.internal.CachedFileType;
 import consulo.virtualFileSystem.internal.FlushingDaemon;
 import consulo.virtualFileSystem.internal.NameId;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
@@ -131,7 +130,7 @@ public class FSRecords {
         w = lock.writeLock();
     }
 
-    static void writeAttributesToRecord(int id, int parentId, @Nonnull FileAttributes attributes, @Nonnull String name) {
+    static void writeAttributesToRecord(int id, int parentId, FileAttributes attributes, String name) {
         writeAndHandleErrors(() -> {
             setName(id, name);
 
@@ -148,11 +147,11 @@ public class FSRecords {
     }
 
     @Contract("_->fail")
-    public static void requestVfsRebuild(@Nonnull Throwable e) {
+    public static void requestVfsRebuild(Throwable e) {
         DbConnection.handleError(e);
     }
 
-    @Nonnull
+    
     public static File basePath() {
         return new File(DbConnection.getCachesDir());
     }
@@ -279,7 +278,7 @@ public class FSRecords {
                 };
 
                 myContents = new RefCountingStorage(contentsFile.getPath(), CapacityAllocationPolicy.FIVE_PERCENT_FOR_GROWTH, useCompressionUtil) {
-                    @Nonnull
+                    
                     @Override
                     protected ExecutorService createExecutor() {
                         return SequentialTaskExecutor.createSequentialApplicationPoolExecutor("FSRecords Pool");
@@ -370,7 +369,7 @@ public class FSRecords {
             }
         }
 
-        private static void invalidateIndex(@Nonnull String reason) {
+        private static void invalidateIndex(String reason) {
             LOG.info("Marking VFS as corrupted: " + reason);
             File indexRoot = ContainerPathManager.get().getIndexRoot();
             if (indexRoot.exists()) {
@@ -383,7 +382,7 @@ public class FSRecords {
             }
         }
 
-        @Nonnull
+        
         private static String getCachesDir() {
             String dir = System.getProperty("caches_dir");
             return dir == null ? ContainerPathManager.get().getSystemPath() + "/caches/" : dir;
@@ -520,13 +519,13 @@ public class FSRecords {
         private static final int RESERVED_ATTR_ID = bulkAttrReadSupport ? 1 : 0;
         private static final int FIRST_ATTR_ID_OFFSET = bulkAttrReadSupport ? RESERVED_ATTR_ID : 0;
 
-        private static int getAttributeId(@Nonnull String attId) throws IOException {
+        private static int getAttributeId(String attId) throws IOException {
             // do not invoke FSRecords.requestVfsRebuild under read lock to avoid deadlock
             return myAttributesList.getIdRaw(attId, false) + FIRST_ATTR_ID_OFFSET;
         }
 
         @Contract("_->fail")
-        private static void handleError(@Nonnull Throwable e) throws RuntimeException, Error {
+        private static void handleError(Throwable e) throws RuntimeException, Error {
             assert lock.getReadHoldCount() == 0;
             if (!ourIsDisposed) { // No need to forcibly mark VFS corrupted if it is already shut down
                 w.lock(); // lock manually to avoid handleError() recursive calls
@@ -708,7 +707,7 @@ public class FSRecords {
 
     private static final int ROOT_RECORD_ID = 1;
 
-    @Nonnull
+    
     @TestOnly
     static int[] listRoots() {
         return readAndHandleErrors(() -> {
@@ -767,7 +766,7 @@ public class FSRecords {
         }
     }
 
-    static int findRootRecord(@Nonnull String rootUrl) {
+    static int findRootRecord(String rootUrl) {
         return writeAndHandleErrors(() -> {
             if (ourStoreRootsSeparately) {
                 try (@SuppressWarnings("ImplicitDefaultCharsetUsage") LineNumberReader stream = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(DbConnection.myRootsFile))))) {
@@ -891,7 +890,7 @@ public class FSRecords {
         });
     }
 
-    @Nonnull
+    
     static int[] list(int id) {
         return readAndHandleErrors(() -> {
             try (final DataInputStream input = readAttribute(id, ourChildrenAttr)) {
@@ -922,7 +921,7 @@ public class FSRecords {
     }
 
     // returns NameId[] sorted by NameId.id
-    @Nonnull
+    
     public static NameId[] listAll(int parentId) {
         assert parentId > 0 : parentId;
         return readAndHandleErrors(() -> {
@@ -949,7 +948,7 @@ public class FSRecords {
         return readAndHandleErrors(() -> findAttributePage(id, ourChildrenAttr, false) != 0);
     }
 
-    private static <T> T readAndHandleErrors(@Nonnull ThrowableComputable<T, ?> action) {
+    private static <T> T readAndHandleErrors(ThrowableComputable<T, ?> action) {
         assert lock.getReadHoldCount() == 0; // otherwise DbConnection.handleError(e) (requires write lock) could fail
         try {
             r.lock();
@@ -966,7 +965,7 @@ public class FSRecords {
         }
     }
 
-    private static <T> T writeAndHandleErrors(@Nonnull ThrowableComputable<T, ?> action) {
+    private static <T> T writeAndHandleErrors(ThrowableComputable<T, ?> action) {
         try {
             w.lock();
             return action.compute();
@@ -980,7 +979,7 @@ public class FSRecords {
         }
     }
 
-    private static void writeAndHandleErrors(@Nonnull ThrowableRunnable<?> action) {
+    private static void writeAndHandleErrors(ThrowableRunnable<?> action) {
         try {
             w.lock();
             action.run();
@@ -994,7 +993,7 @@ public class FSRecords {
         }
     }
 
-    static void updateList(int id, @Nonnull int[] childIds) {
+    static void updateList(int id, int[] childIds) {
         assert id > 0 : id;
         Arrays.sort(childIds);
         writeAndHandleErrors(() -> {
@@ -1085,7 +1084,7 @@ public class FSRecords {
     }
 
     @Nullable
-    static VirtualFileSystemEntry findFileById(int id, @Nonnull ConcurrentIntObjectMap<VirtualFileSystemEntry> idToDirCache) {
+    static VirtualFileSystemEntry findFileById(int id, ConcurrentIntObjectMap<VirtualFileSystemEntry> idToDirCache) {
         class ParentFinder implements ThrowableComputable<Void, Throwable> {
             @Nullable
             private IntList path;
@@ -1168,7 +1167,7 @@ public class FSRecords {
         return getRecordInt(id, NAME_OFFSET);
     }
 
-    public static int getNameId(@Nonnull String name) {
+    public static int getNameId(String name) {
         return readAndHandleErrors(() -> getNames().enumerate(name));
     }
 
@@ -1176,12 +1175,12 @@ public class FSRecords {
         return getNameSequence(id).toString();
     }
 
-    @Nonnull
+    
     static CharSequence getNameSequence(int id) {
         return readAndHandleErrors(() -> doGetNameSequence(id));
     }
 
-    @Nonnull
+    
     private static CharSequence doGetNameSequence(int id) throws IOException {
         int nameId = getRecordInt(id, NAME_OFFSET);
         return nameId == 0 ? "" : FileNameCache.getVFileName(nameId, FSRecords::doGetNameByNameId);
@@ -1195,7 +1194,7 @@ public class FSRecords {
         return nameId == 0 ? "" : getNames().valueOf(nameId);
     }
 
-    static void setName(int id, @Nonnull String name) {
+    static void setName(int id, String name) {
         writeAndHandleErrors(() -> {
             incModCount(id);
             int nameId = getNames().enumerate(name);
@@ -1307,7 +1306,7 @@ public class FSRecords {
         return null;
     }
 
-    @Nonnull
+    
     static DataInputStream readContentById(int contentId) {
         try {
             return doReadContentById(contentId);
@@ -1318,7 +1317,7 @@ public class FSRecords {
         return null;
     }
 
-    @Nonnull
+    
     private static DataInputStream doReadContentById(int contentId) throws IOException {
         DataInputStream stream = getContentStorage().readStream(contentId);
         if (useCompressionUtil) {
@@ -1330,7 +1329,7 @@ public class FSRecords {
     }
 
     @Nullable
-    public static DataInputStream readAttributeWithLock(int fileId, @Nonnull FileAttribute att) {
+    public static DataInputStream readAttributeWithLock(int fileId, FileAttribute att) {
         return readAndHandleErrors(() -> {
             try (DataInputStream stream = readAttribute(fileId, att)) {
                 if (stream != null && att.isVersioned()) {
@@ -1351,7 +1350,7 @@ public class FSRecords {
 
     // must be called under r or w lock
     @Nullable
-    private static DataInputStream readAttribute(int fileId, @Nonnull FileAttribute attribute) throws IOException {
+    private static DataInputStream readAttribute(int fileId, FileAttribute attribute) throws IOException {
         checkFileIsValid(fileId);
 
         int recordId = getAttributeRecordId(fileId);
@@ -1405,7 +1404,7 @@ public class FSRecords {
     // other attr record: (AttrId, fileId) ? attrData
     private static final int MAX_SMALL_ATTR_SIZE = 64;
 
-    private static int findAttributePage(int fileId, @Nonnull FileAttribute attr, boolean toWrite) throws IOException {
+    private static int findAttributePage(int fileId, FileAttribute attr, boolean toWrite) throws IOException {
         checkFileIsValid(fileId);
 
         int recordId = getAttributeRecordId(fileId);
@@ -1480,7 +1479,7 @@ public class FSRecords {
         assert expectedFileId == fileId || expectedFileId == 0;
     }
 
-    private static void writeRecordHeader(int recordTag, int fileId, @Nonnull DataOutputStream appender) throws IOException {
+    private static void writeRecordHeader(int recordTag, int fileId, DataOutputStream appender) throws IOException {
         DataInputOutputUtil.writeINT(appender, recordTag);
         DataInputOutputUtil.writeINT(appender, fileId);
     }
@@ -1511,7 +1510,7 @@ public class FSRecords {
         return readAndHandleErrors(() -> getContentRecordId(fileId));
     }
 
-    @Nonnull
+    
     static DataOutputStream writeContent(int fileId, boolean readOnly) {
         return new ContentOutputStream(fileId, readOnly);
     }
@@ -1543,8 +1542,8 @@ public class FSRecords {
         });
     }
 
-    @Nonnull
-    public static DataOutputStream writeAttribute(int fileId, @Nonnull FileAttribute att) {
+    
+    public static DataOutputStream writeAttribute(int fileId, FileAttribute att) {
         DataOutputStream stream = new AttributeOutputStream(fileId, att);
         if (att.isVersioned()) {
             try {
@@ -1669,11 +1668,11 @@ public class FSRecords {
     }
 
     private static class AttributeOutputStream extends DataOutputStream {
-        @Nonnull
+        
         private final FileAttribute myAttribute;
         private final int myFileId;
 
-        private AttributeOutputStream(int fileId, @Nonnull FileAttribute attribute) {
+        private AttributeOutputStream(int fileId, FileAttribute attribute) {
             super(new BufferExposingByteArrayOutputStream());
             myFileId = fileId;
             myAttribute = attribute;
@@ -1711,7 +1710,7 @@ public class FSRecords {
             });
         }
 
-        void rewriteDirectoryRecordWithAttrContent(@Nonnull BufferExposingByteArrayOutputStream _out) throws IOException {
+        void rewriteDirectoryRecordWithAttrContent(BufferExposingByteArrayOutputStream _out) throws IOException {
             int recordId = getAttributeRecordId(myFileId);
             assert inlineAttributes;
             int encodedAttrId = DbConnection.getAttributeId(myAttribute.getId());

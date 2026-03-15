@@ -12,8 +12,7 @@ import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +35,7 @@ public class ImportSchemeChooserDialog extends DialogWrapper {
 
     @RequiredUIAccess
     public ImportSchemeChooserDialog(
-        @Nonnull Component parent,
+        Component parent,
         String[] schemeNames,
         @Nullable String currScheme
     ) {

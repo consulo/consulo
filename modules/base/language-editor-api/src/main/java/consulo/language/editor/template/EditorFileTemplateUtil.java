@@ -21,7 +21,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,12 +33,12 @@ import java.util.Set;
  */
 public class EditorFileTemplateUtil {
     @RequiredUIAccess
-    public static void startLiveTemplate(@Nonnull PsiFile file) {
+    public static void startLiveTemplate(PsiFile file) {
         startLiveTemplate(file, Collections.emptyMap());
     }
 
     @RequiredUIAccess
-    public static void startLiveTemplate(@Nonnull PsiFile file, @Nonnull Map<String, String> defaultValues) {
+    public static void startLiveTemplate(PsiFile file, Map<String, String> defaultValues) {
         Editor editor = EditorHelper.openInEditor(file);
         if (editor == null) {
             return;

@@ -5,7 +5,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 public class StringLiteralLexer extends LexerBase {
     private static final Logger LOG = Logger.getInstance(StringLiteralLexer.class);
@@ -58,7 +57,7 @@ public class StringLiteralLexer extends LexerBase {
     }
 
     @Override
-    public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         myBuffer = buffer;
         myStart = startOffset;
         myState = myQuoteChar == NO_QUOTE_CHAR ? AFTER_FIRST_QUOTE : initialState;
@@ -138,7 +137,7 @@ public class StringLiteralLexer extends LexerBase {
         return false;
     }
 
-    protected @Nonnull IElementType handleSingleSlashEscapeSequence() {
+    protected IElementType handleSingleSlashEscapeSequence() {
         return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN;
     }
 
@@ -147,12 +146,12 @@ public class StringLiteralLexer extends LexerBase {
         return getStandardLimitedHexCodedEscapeSeq(4);
     }
 
-    protected @Nonnull IElementType getUnicodeEscapeSequenceType() {
+    protected IElementType getUnicodeEscapeSequenceType() {
         // \uFFFF
         return getStandardLimitedHexCodedEscapeSeq(6);
     }
 
-    protected @Nonnull IElementType getStandardLimitedHexCodedEscapeSeq(int offsetLimit) {
+    protected IElementType getStandardLimitedHexCodedEscapeSeq(int offsetLimit) {
         for (int i = myStart + 2; i < myStart + offsetLimit; i++) {
             if (i >= myEnd || !StringUtil.isHexDigit(myBuffer.charAt(i))) {
                 return StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN;
@@ -293,7 +292,7 @@ public class StringLiteralLexer extends LexerBase {
     }
 
     @Override
-    public @Nonnull CharSequence getBufferSequence() {
+    public CharSequence getBufferSequence() {
         return myBuffer;
     }
 

@@ -16,8 +16,7 @@
 package consulo.language.codeStyle;
 
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -29,7 +28,7 @@ public class PackageEntry {
     private final boolean myWithSubpackages;
     private final boolean isStatic;
 
-    public PackageEntry(boolean isStatic, @Nonnull String packageName, boolean withSubpackages) {
+    public PackageEntry(boolean isStatic, String packageName, boolean withSubpackages) {
         this.isStatic = isStatic;
         myPackageName = packageName;
         myWithSubpackages = withSubpackages;
@@ -100,7 +99,7 @@ public class PackageEntry {
 
     public boolean isBetterMatchForPackageThan(
         @Nullable PackageEntry entry,
-        @Nonnull String packageName,
+        String packageName,
         boolean isStatic
     ) {
         if (isStatic() != isStatic || !matchesPackageName(packageName)) {

@@ -21,9 +21,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -59,14 +57,14 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
     registerProperty(property, Externalizer.STORAGE);
   }
 
-  public <T> void  registerProperty(ListProperty<T> property,@NonNls String itemTagName, Externalizer<T> itemExternalizer) {
+  public <T> void  registerProperty(ListProperty<T> property,String itemTagName, Externalizer<T> itemExternalizer) {
     registerProperty(property, createListExternalizer(itemExternalizer, itemTagName));
   }
 
   /**
    * @deprecated
    */
-  public <T extends JDOMExternalizable> void  registerProperty(ListProperty<T> property, @NonNls String itemTagName, Supplier<T> factory) {
+  public <T extends JDOMExternalizable> void  registerProperty(ListProperty<T> property, String itemTagName, Supplier<T> factory) {
     registerProperty(property, itemTagName, Externalizer.FactoryBased.create(factory));
   }
 
@@ -74,7 +72,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
     return new ListExternalizer(itemExternalizer, itemTagName);
   }
 
-  public void readExternal(@Nonnull Element element) {
+  public void readExternal(Element element) {
     Map<String, AbstractProperty> propertyByName = new HashMap<String, AbstractProperty>();
     for (AbstractProperty abstractProperty : myExternalizers.keySet()) {
       propertyByName.put(abstractProperty.getName(), abstractProperty);
@@ -97,7 +95,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
     }
   }
 
-  public void writeExternal(@Nonnull Element element) {
+  public void writeExternal(Element element) {
     if (myExternalizers.isEmpty()) {
       return;
     }
@@ -138,7 +136,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
   }
 
   private static class ListExternalizer<T> implements Externalizer<List<T>> {
-    @NonNls private static final String NULL_ELEMENT = "NULL_VALUE_ELEMENT";
+    private static final String NULL_ELEMENT = "NULL_VALUE_ELEMENT";
     private final Externalizer<T> myItemExternalizer;
     private final String myItemTagName;
 

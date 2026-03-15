@@ -11,7 +11,6 @@ import consulo.execution.debug.stream.wrapper.StreamChainBuilder;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.debug.XDebugSession;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -22,28 +21,28 @@ import java.util.List;
 public interface LibrarySupportProvider {
   ExtensionPointName<LibrarySupportProvider> EP_NAME = ExtensionPointName.create(LibrarySupportProvider.class);
 
-  static @Nonnull List<LibrarySupportProvider> getList() {
+  static List<LibrarySupportProvider> getList() {
     return EP_NAME.getExtensionList();
   }
 
-  @Nonnull
+  
   String getLanguageId();
 
-  @Nonnull
+  
   StreamChainBuilder getChainBuilder();
 
-  @Nonnull
-  TraceExpressionBuilder getExpressionBuilder(@Nonnull Project project);
+  
+  TraceExpressionBuilder getExpressionBuilder(Project project);
 
-  @Nonnull
-  XValueInterpreter getXValueInterpreter(@Nonnull Project project);
+  
+  XValueInterpreter getXValueInterpreter(Project project);
 
-  @Nonnull
-  CollectionTreeBuilder getCollectionTreeBuilder(@Nonnull Project project);
+  
+  CollectionTreeBuilder getCollectionTreeBuilder(Project project);
 
-  @Nonnull
+  
   LibrarySupport getLibrarySupport();
 
-  @Nonnull
-  DebuggerCommandLauncher getDebuggerCommandLauncher(@Nonnull XDebugSession session);
+  
+  DebuggerCommandLauncher getDebuggerCommandLauncher(XDebugSession session);
 }

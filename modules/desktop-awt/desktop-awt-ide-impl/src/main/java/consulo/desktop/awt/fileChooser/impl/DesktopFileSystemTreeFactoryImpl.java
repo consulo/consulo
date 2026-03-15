@@ -25,8 +25,7 @@ import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.Tree;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.tree.TreeCellRenderer;
@@ -37,19 +36,19 @@ import java.util.function.Function;
 @ServiceImpl
 public class DesktopFileSystemTreeFactoryImpl implements FileSystemTreeFactory {
     @Override
-    @Nonnull
+    
     public FileSystemTree createFileSystemTree(ComponentManager project, FileChooserDescriptor fileChooserDescriptor) {
         return new FileSystemTreeImpl((Project) project, fileChooserDescriptor);
     }
 
-    @Nonnull
+    
     @Override
     public FileSystemTree createFileSystemTree(@Nullable ComponentManager project, FileChooserDescriptor descriptor, Object tree, @Nullable TreeCellRenderer renderer, @Nullable Function<? super TreePath, String> speedSearchConverter) {
         return new FileSystemTreeImpl((Project) project, descriptor, (Tree) tree, renderer, speedSearchConverter);
     }
 
     @Override
-    @Nonnull
+    
     public ActionGroup createDefaultFileSystemActions(FileSystemTree fileSystemTree) {
         DefaultActionGroup group = new DefaultActionGroup();
         ActionManager actionManager = ActionManager.getInstance();

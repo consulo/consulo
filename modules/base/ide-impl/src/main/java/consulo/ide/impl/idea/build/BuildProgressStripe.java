@@ -5,18 +5,17 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ui.components.ProgressBarLoadingDecorator;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 
 class BuildProgressStripe extends JBPanel {
-  @Nonnull
+  
   private final JBPanel myPanel;
   private final LazyValue<ProgressBarLoadingDecorator> myCreateLoadingDecorator;
   private ProgressBarLoadingDecorator myDecorator;
 
-  BuildProgressStripe(@Nonnull JComponent targetComponent, @Nonnull Disposable parent, int startDelayMs) {
+  BuildProgressStripe(JComponent targetComponent, Disposable parent, int startDelayMs) {
     super(new BorderLayout());
     myPanel = new JBPanel(new BorderLayout());
     myPanel.setOpaque(false);

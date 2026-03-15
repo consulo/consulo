@@ -22,8 +22,7 @@ import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -33,8 +32,8 @@ import java.util.Locale;
  */
 @ServiceAPI(ComponentScope.MODULE)
 public abstract class ModuleCompilerPathsManager {
-    @Nonnull
-    public static ModuleCompilerPathsManager getInstance(@Nonnull Module module) {
+    
+    public static ModuleCompilerPathsManager getInstance(Module module) {
         return module.getInstance(ModuleCompilerPathsManager.class);
     }
 
@@ -46,24 +45,24 @@ public abstract class ModuleCompilerPathsManager {
 
     public abstract void setExcludeOutput(boolean val);
 
-    public abstract void setCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl);
+    public abstract void setCompilerOutputUrl(ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl);
 
     @Nullable
-    public abstract String getCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType);
+    public abstract String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType);
 
     @Nullable
-    public abstract VirtualFile getCompilerOutput(@Nonnull ContentFolderTypeProvider contentFolderType);
+    public abstract VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType);
 
-    @Nonnull
-    public abstract VirtualFilePointer getCompilerOutputPointer(@Nonnull ContentFolderTypeProvider contentFolderType);
+    
+    public abstract VirtualFilePointer getCompilerOutputPointer(ContentFolderTypeProvider contentFolderType);
 
-    @Nonnull
-    public static String getRelativePathForProvider(@Nonnull ContentFolderTypeProvider contentFolderType, @Nonnull Module module) {
+    
+    public static String getRelativePathForProvider(ContentFolderTypeProvider contentFolderType, Module module) {
         return getRelativePathForProvider(contentFolderType, module.getName());
     }
 
-    @Nonnull
-    public static String getRelativePathForProvider(@Nonnull ContentFolderTypeProvider contentFolderType, @Nonnull String moduleName) {
+    
+    public static String getRelativePathForProvider(ContentFolderTypeProvider contentFolderType, String moduleName) {
         return contentFolderType.getId().toLowerCase(Locale.ROOT) + "/" + moduleName;
     }
 }

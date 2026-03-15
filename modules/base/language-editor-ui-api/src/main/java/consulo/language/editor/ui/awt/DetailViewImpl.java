@@ -35,8 +35,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -154,7 +153,7 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
         }
     }
 
-    @Nonnull
+    
     protected Editor createEditor(@Nullable Project project, Document document, VirtualFile file) {
         EditorEx editor = (EditorEx) EditorFactory.getInstance().createViewer(document, project);
 
@@ -220,12 +219,12 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
     }
 
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return myDataHolderBase.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         myDataHolderBase.putUserData(key, value);
     }
 }

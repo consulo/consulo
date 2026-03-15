@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement.std;
 
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,30 +31,30 @@ public class StdArrangementRuleAliasToken extends StdArrangementSettingsToken im
    */
   private List<StdArrangementMatchRule> myDefinitionRules;
 
-  public StdArrangementRuleAliasToken(@Nonnull String name) {
+  public StdArrangementRuleAliasToken(String name) {
     this(name, List.of());
   }
 
-  public StdArrangementRuleAliasToken(@Nonnull String name,
-                                      @Nonnull List<StdArrangementMatchRule> definitionRules) {
+  public StdArrangementRuleAliasToken(String name,
+                                      List<StdArrangementMatchRule> definitionRules) {
     this(createIdByName(name), name, definitionRules);
     myDefinitionRules = definitionRules;
   }
 
 
-  public StdArrangementRuleAliasToken(@Nonnull String id, @Nonnull String name,
-                                      @Nonnull List<StdArrangementMatchRule> definitionRules) {
+  public StdArrangementRuleAliasToken(String id, String name,
+                                      List<StdArrangementMatchRule> definitionRules) {
     super(id, createRepresentationValue(name), StdArrangementTokenType.ALIAS);
     myName = name;
     myDefinitionRules = definitionRules;
   }
 
-  @Nonnull
-  private static String createRepresentationValue(@Nonnull String name) {
+  
+  private static String createRepresentationValue(String name) {
     return "by " + name;
   }
 
-  private static String createIdByName(@Nonnull String name) {
+  private static String createIdByName(String name) {
     return name.replaceAll("\\s+", "_");
   }
 
@@ -72,7 +71,7 @@ public class StdArrangementRuleAliasToken extends StdArrangementSettingsToken im
     myDefinitionRules = definitionRules;
   }
 
-  public void setTokenName(@Nonnull String name) {
+  public void setTokenName(String name) {
     myId = name.replaceAll("\\s+", "_");
     myRepresentationName = createRepresentationValue(name);
     myName = name;

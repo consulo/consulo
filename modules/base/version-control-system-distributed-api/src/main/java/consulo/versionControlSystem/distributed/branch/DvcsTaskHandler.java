@@ -27,23 +27,22 @@ import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandler {
-    @Nonnull
+    
     private final AbstractRepositoryManager<R> myRepositoryManager;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final String myBranchType;
 
     protected DvcsTaskHandler(
-        @Nonnull AbstractRepositoryManager<R> repositoryManager,
-        @Nonnull Project project,
-        @Nonnull String branchType
+        AbstractRepositoryManager<R> repositoryManager,
+        Project project,
+        String branchType
     ) {
         myRepositoryManager = repositoryManager;
         myProject = project;
@@ -56,7 +55,7 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
     }
 
     @Override
-    public TaskInfo startNewTask(@Nonnull String taskName) {
+    public TaskInfo startNewTask(String taskName) {
         List<R> repositories = myRepositoryManager.getRepositories();
         List<R> problems = ContainerUtil.filter(
             repositories,
@@ -86,7 +85,7 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
     }
 
     @Override
-    public void switchToTask(@Nonnull TaskInfo taskInfo, @Nullable Runnable invokeAfter) {
+    public void switchToTask(TaskInfo taskInfo, @Nullable Runnable invokeAfter) {
         String branchName = taskInfo.getName();
         List<R> repositories = new ArrayList<>(getRepositories(taskInfo.getRepositories()));
         List<R> notFound = ContainerUtil.filter(repositories, repository -> !hasBranch(repository, taskInfo));
@@ -100,7 +99,7 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
     }
 
     @Override
-    public void closeTask(@Nonnull TaskInfo taskInfo, @Nonnull TaskInfo original) {
+    public void closeTask(TaskInfo taskInfo, TaskInfo original) {
         checkout(
             original.getName(),
             getRepositories(original.getRepositories()),
@@ -113,7 +112,7 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
         return myRepositoryManager.isSyncEnabled();
     }
 
-    @Nonnull
+    
     @Override
     public TaskInfo[] getCurrentTasks() {
         List<R> repositories = myRepositoryManager.getRepositories();
@@ -155,8 +154,8 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
         });
     }
 
-    @Nonnull
-    private List<R> getRepositories(@Nonnull Collection<String> urls) {
+    
+    private List<R> getRepositories(Collection<String> urls) {
         List<R> repositories = myRepositoryManager.getRepositories();
         return ContainerUtil.mapNotNull(
             urls,
@@ -164,17 +163,17 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
         );
     }
 
-    protected abstract void checkout(@Nonnull String taskName, @Nonnull List<R> repos, @Nullable Runnable callInAwtLater);
+    protected abstract void checkout(String taskName, List<R> repos, @Nullable Runnable callInAwtLater);
 
-    protected abstract void checkoutAsNewBranch(@Nonnull String name, @Nonnull List<R> repositories);
+    protected abstract void checkoutAsNewBranch(String name, List<R> repositories);
 
     @Nullable
     protected abstract String getActiveBranch(R repository);
 
-    @Nonnull
-    protected abstract Iterable<TaskInfo> getAllBranches(@Nonnull R repository);
+    
+    protected abstract Iterable<TaskInfo> getAllBranches(R repository);
 
-    protected abstract void mergeAndClose(@Nonnull String branch, @Nonnull List<R> repositories);
+    protected abstract void mergeAndClose(String branch, List<R> repositories);
 
-    protected abstract boolean hasBranch(@Nonnull R repository, @Nonnull TaskInfo name);
+    protected abstract boolean hasBranch(R repository, TaskInfo name);
 }

@@ -20,7 +20,6 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.pom.PomModelAspect;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -29,27 +28,27 @@ import java.util.function.Supplier;
  * @since 2022-03-23
  */
 public interface PostprocessReformattingAspect extends PomModelAspect {
-    @Nonnull
+    
     static PostprocessReformattingAspect getInstance(Project project) {
         ExtensionPoint<PomModelAspect> point = project.getExtensionPoint(PomModelAspect.class);
         return point.findExtensionOrFail(PostprocessReformattingAspect.class);
     }
 
-    void assertDocumentChangeIsAllowed(@Nonnull PsiFile file);
+    void assertDocumentChangeIsAllowed(PsiFile file);
 
-    void assertDocumentChangeIsAllowed(@Nonnull FileViewProvider viewProvider);
+    void assertDocumentChangeIsAllowed(FileViewProvider viewProvider);
 
     void doPostponedFormatting();
 
-    void doPostponedFormatting(@Nonnull FileViewProvider viewProvider);
+    void doPostponedFormatting(FileViewProvider viewProvider);
 
-    void disablePostprocessFormattingInside(@Nonnull Runnable runnable);
+    void disablePostprocessFormattingInside(Runnable runnable);
 
-    <T> T disablePostprocessFormattingInside(@Nonnull Supplier<T> computable);
+    <T> T disablePostprocessFormattingInside(Supplier<T> computable);
 
-    void postponeFormattingInside(@Nonnull Runnable runnable);
+    void postponeFormattingInside(Runnable runnable);
 
-    <T> T postponeFormattingInside(@Nonnull Supplier<T> computable);
+    <T> T postponeFormattingInside(Supplier<T> computable);
 
-    boolean isViewProviderLocked(@Nonnull FileViewProvider fileViewProvider);
+    boolean isViewProviderLocked(FileViewProvider fileViewProvider);
 }

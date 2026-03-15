@@ -18,7 +18,6 @@ package consulo.language.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PsiAnchorFactory {
-    @Nonnull
+    
     @RequiredReadAction
-    PsiAnchor create(@Nonnull PsiElement element);
+    PsiAnchor create(PsiElement element);
 }

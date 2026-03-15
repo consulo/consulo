@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.AbstractCollection;
 import java.util.Iterator;
@@ -43,12 +42,12 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   }
 
   private static class QueueEntry<T> {
-    @Nonnull
+    
     private final T t;
     private QueueEntry<T> next;
     private QueueEntry<T> prev;
 
-    public QueueEntry(@Nonnull T t) {
+    public QueueEntry(T t) {
       this.t = t;
     }
 
@@ -64,12 +63,12 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   }
 
   @Override
-  public boolean offer(@Nonnull T t) {
+  public boolean offer(T t) {
     return add(t);
   }
 
   @Override
-  public boolean add(@Nonnull T t) {
+  public boolean add(T t) {
     QueueEntry<T> newLast = new QueueEntry<T>(t);
     boolean added = set.add(newLast);
     if (!added) return false;
@@ -84,7 +83,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   }
 
   @Override
-  @Nonnull
+  
   public T remove() {
     T poll = poll();
     if (poll == null) throw new NoSuchElementException();
@@ -101,7 +100,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   }
 
   @Override
-  @Nonnull
+  
   public T element() {
     T peek = peek();
     if (peek == null) throw new NoSuchElementException();
@@ -113,12 +112,12 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
     return TOMB.next == TOMB ? null : TOMB.next.t;
   }
 
-  public T find(@Nonnull T t) {
+  public T find(T t) {
     QueueEntry<T> existing = findEntry(t);
     return existing == null ? null : existing.t;
   }
 
-  private QueueEntry<T> findEntry(@Nonnull T t) {
+  private QueueEntry<T> findEntry(T t) {
     return set.get(new QueueEntry<T>(t));
   }
 
@@ -152,7 +151,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
     return (T)o;
   }
 
-  @Nonnull
+  
   @Override
   public PositionalIterator<T> iterator() {
     return new PositionalIterator<T>() {
@@ -176,7 +175,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
         HashSetQueue.this.remove(cursor.t);
       }
 
-      @Nonnull
+      
       @Override
       public IteratorPosition<T> position() {
         return new MyIteratorPosition<T>(cursor, count, TOMB);
@@ -189,7 +188,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
     private final long count;
     private final QueueEntry<T> TOMB;
 
-    private MyIteratorPosition(@Nonnull QueueEntry<T> cursor, long count, QueueEntry<T> TOMB) {
+    private MyIteratorPosition(QueueEntry<T> cursor, long count, QueueEntry<T> TOMB) {
       this.cursor = cursor;
       this.count = count;
       this.TOMB = TOMB;
@@ -209,7 +208,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
     }
 
     @Override
-    public int compareTo(@Nonnull PositionalIterator.IteratorPosition<T> o) {
+    public int compareTo(PositionalIterator.IteratorPosition<T> o) {
       return compare(count, ((MyIteratorPosition)o).count);
     }
 
@@ -223,7 +222,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
      * @return the current position of this iterator.
      * The position of the newly created iterator is before the first element of the queue (so the {@link IteratorPosition#peek()} value is undefined)
      */
-    @Nonnull
+    
     IteratorPosition<T> position();
 
     interface IteratorPosition<T> extends Comparable<IteratorPosition<T>>  {

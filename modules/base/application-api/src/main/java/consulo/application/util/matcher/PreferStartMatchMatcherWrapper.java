@@ -3,31 +3,30 @@ package consulo.application.util.matcher;
 
 import consulo.util.collection.FList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PreferStartMatchMatcherWrapper extends MinusculeMatcher {
   public static final int START_MATCH_WEIGHT = 10000;
-  @Nonnull
+  
   private final MinusculeMatcher myDelegateMatcher;
 
-  public PreferStartMatchMatcherWrapper(@Nonnull MinusculeMatcher matcher) {
+  public PreferStartMatchMatcherWrapper(MinusculeMatcher matcher) {
     myDelegateMatcher = matcher;
   }
 
   @Override
-  @Nonnull
+  
   public String getPattern() {
     return myDelegateMatcher.getPattern();
   }
 
   @Override
-  public FList<MatcherTextRange> matchingFragments(@Nonnull String name) {
+  public FList<MatcherTextRange> matchingFragments(String name) {
     return myDelegateMatcher.matchingFragments(name);
   }
 
   @Override
-  public int matchingDegree(@Nonnull String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
+  public int matchingDegree(String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
     int degree = myDelegateMatcher.matchingDegree(name, valueStartCaseMatch, fragments);
     if (fragments == null || fragments.isEmpty()) return degree;
 

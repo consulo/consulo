@@ -27,7 +27,6 @@ import consulo.ide.impl.idea.packageDependencies.ui.DependenciesPanel;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
@@ -56,7 +55,7 @@ public abstract class DependenciesHandlerBase {
     if (canStartInBackground()) {
       task = new Task.Backgroundable(myProject, getProgressTitle(), true, new PerformAnalysisInBackgroundOption(myProject)) {
         @Override
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
           perform(builders);
         }
 
@@ -69,7 +68,7 @@ public abstract class DependenciesHandlerBase {
     } else {
       task = new Task.Modal(myProject, getProgressTitle(), true) {
         @Override
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
           perform(builders);
         }
 

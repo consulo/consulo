@@ -7,8 +7,7 @@ import consulo.index.io.forward.IntForwardIndex;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class SharedIntMapForwardIndex implements IntForwardIndex {
 
   private volatile PersistentHashMap<Integer, Integer> myPersistentMap;
 
-  public SharedIntMapForwardIndex(@Nonnull IndexExtension<?, ?, ?> extension, @Nullable File verificationIndexStorageFile, boolean verificationIndexHasChunks) throws IOException {
+  public SharedIntMapForwardIndex(IndexExtension<?, ?, ?> extension, @Nullable File verificationIndexStorageFile, boolean verificationIndexHasChunks) throws IOException {
     myIndexId = (ID<?, ?>)extension.getName();
     myVerificationIndexStorageFile = verificationIndexStorageFile;
     myVerificationIndexHasChunks = verificationIndexHasChunks;
@@ -52,7 +51,7 @@ public class SharedIntMapForwardIndex implements IntForwardIndex {
 
 
   @Override
-  public int getInt(@Nonnull Integer key) throws IOException {
+  public int getInt(Integer key) throws IOException {
     if (!SharedIndicesData.ourFileSharedIndicesEnabled) {
       assert myPersistentMap != null;
       return myPersistentMap.get(key);
@@ -74,7 +73,7 @@ public class SharedIntMapForwardIndex implements IntForwardIndex {
   }
 
   @Override
-  public void putInt(@Nonnull Integer key, int value) throws IOException {
+  public void putInt(Integer key, int value) throws IOException {
     if (SharedIndicesData.ourFileSharedIndicesEnabled) {
       SharedIndicesData.associateFileData(key, myIndexId, value, EnumeratorIntegerDescriptor.INSTANCE);
     }

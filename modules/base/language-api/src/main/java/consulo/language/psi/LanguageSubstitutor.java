@@ -26,8 +26,7 @@ import consulo.language.extension.LanguageOneToMany;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -38,11 +37,11 @@ public abstract class LanguageSubstitutor implements LanguageExtension {
   private static final ExtensionPointCacheKey<LanguageSubstitutor, ByLanguageValue<List<LanguageSubstitutor>>> KEY =
           ExtensionPointCacheKey.create("LanguageSubstitutor", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<LanguageSubstitutor> forLanguage(@Nonnull Language language) {
+  
+  public static List<LanguageSubstitutor> forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageSubstitutor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
   @Nullable
-  public abstract Language getLanguage(@Nonnull VirtualFile file, @Nonnull Project project);
+  public abstract Language getLanguage(VirtualFile file, Project project);
 }

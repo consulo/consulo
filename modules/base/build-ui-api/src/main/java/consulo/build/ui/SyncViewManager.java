@@ -23,7 +23,6 @@ import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,10 +30,10 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface SyncViewManager extends ViewManager, BuildProgressListener, BuildProgressObservable, Disposable {
-  static SyncViewManager getInstance(@Nonnull Project project) {
+  static SyncViewManager getInstance(Project project) {
     return project.getInstance(SyncViewManager.class);
   }
 
-  @Nonnull
+  
   BuildProgress<BuildProgressDescriptor> createBuildProgress();
 }

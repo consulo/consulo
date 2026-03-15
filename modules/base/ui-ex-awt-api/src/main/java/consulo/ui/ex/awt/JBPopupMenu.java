@@ -8,7 +8,6 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -211,7 +210,7 @@ public class JBPopupMenu extends JPopupMenu {
       return screenRectangle.height;
     }
 
-    @Nonnull
+    
     @Override
     public Dimension preferredLayoutSize(Container target) {
       Dimension dimension = super.preferredLayoutSize(target);

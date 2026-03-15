@@ -34,8 +34,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SoftReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -61,7 +60,7 @@ final class FileTrees {
   @Nullable
   private final Reference<SubstrateRefOwner>[] myRefToPsi;
 
-  private FileTrees(@Nonnull PsiFileImpl file, @Nullable Reference<StubTree> stub, @Nullable Supplier<FileElement> ast, @Nullable Reference<SubstrateRefOwner>[] refToPsi) {
+  private FileTrees(PsiFileImpl file, @Nullable Reference<StubTree> stub, @Nullable Supplier<FileElement> ast, @Nullable Reference<SubstrateRefOwner>[] refToPsi) {
     myFile = file;
     myStub = stub;
     myTreeElementPointer = ast;
@@ -109,7 +108,7 @@ final class FileTrees {
     return myRefToPsi != null;
   }
 
-  FileTrees switchToSpineRefs(@Nonnull List<PsiElement> spine) {
+  FileTrees switchToSpineRefs(List<PsiElement> spine) {
     Reference<SubstrateRefOwner>[] refToPsi = myRefToPsi;
     if (refToPsi == null) {
       //noinspection unchecked
@@ -137,7 +136,7 @@ final class FileTrees {
     }
   }
 
-  FileTrees clearStub(@Nonnull String reason) {
+  FileTrees clearStub(String reason) {
     StubTree stubHolder = derefStub();
     if (stubHolder != null) {
       ((PsiFileStubImpl<?>)stubHolder.getRoot()).clearPsi(reason);
@@ -153,16 +152,16 @@ final class FileTrees {
     return new FileTrees(myFile, null, myTreeElementPointer, null);
   }
 
-  FileTrees withAst(@Nonnull Supplier<FileElement> ast) {
+  FileTrees withAst(Supplier<FileElement> ast) {
     return new FileTrees(myFile, myStub, ast, myRefToPsi).reconcilePsi(derefStub(), ast.get(), true);
   }
 
-  FileTrees withStub(@Nonnull StubTree stub, @Nullable FileElement ast) {
+  FileTrees withStub(StubTree stub, @Nullable FileElement ast) {
     assert derefTreeElement() == ast;
     return new FileTrees(myFile, new SoftReference<>(stub), myTreeElementPointer, myRefToPsi).reconcilePsi(stub, ast, false);
   }
 
-  static FileTrees noStub(@Nullable FileElement ast, @Nonnull PsiFileImpl file) {
+  static FileTrees noStub(@Nullable FileElement ast, PsiFileImpl file) {
     return new FileTrees(file, null, ast, null);
   }
 
@@ -212,7 +211,7 @@ final class FileTrees {
    * so shouldn't be invoked in the middle of a mutating operation to avoid leaving inconsistent state.
    * So we obtain PSI all at once in advance.
    */
-  static List<PsiElement> getAllSpinePsi(@Nonnull StubbedSpine spine) {
+  static List<PsiElement> getAllSpinePsi(StubbedSpine spine) {
     return IntStream.range(0, spine.getStubCount()).mapToObj(spine::getStubPsi).collect(Collectors.toList());
   }
 
@@ -232,7 +231,7 @@ final class FileTrees {
     }
   }
 
-  private static void bindStubsWithAst(@Nonnull List<PsiElement> srcSpine, List<StubElement<?>> stubList, List<CompositeElement> nodeList, boolean takePsiFromStubs) {
+  private static void bindStubsWithAst(List<PsiElement> srcSpine, List<StubElement<?>> stubList, List<CompositeElement> nodeList, boolean takePsiFromStubs) {
     for (int i = firstNonFilePsiIndex; i < stubList.size(); i++) {
       StubElement<?> stub = stubList.get(i);
       CompositeElement node = nodeList.get(i);

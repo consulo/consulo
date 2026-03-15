@@ -16,8 +16,7 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +38,16 @@ public abstract class SingleTaskController<Request, Result> {
 
   private static final Logger LOG = Logger.getInstance(SingleTaskController.class);
 
-  @Nonnull
+  
   private final Consumer<Result> myResultHandler;
-  @Nonnull
+  
   private final Object LOCK = new Object();
 
-  @Nonnull
+  
   private List<Request> myAwaitingRequests;
   private boolean myActive;
 
-  public SingleTaskController(@Nonnull Consumer<Result> handler) {
+  public SingleTaskController(Consumer<Result> handler) {
     myResultHandler = handler;
     myAwaitingRequests = new ArrayList<>();
   }
@@ -58,7 +57,7 @@ public abstract class SingleTaskController<Request, Result> {
    * If there is no active task, starts a new one. <br/>
    * Otherwise just remembers the request in the queue. Later it can be achieved by {@link #popRequests()}.
    */
-  public final void request(@Nonnull Request requests) {
+  public final void request(Request requests) {
     synchronized (LOCK) {
       myAwaitingRequests.add(requests);
       LOG.debug("Added requests: " + requests);
@@ -80,7 +79,7 @@ public abstract class SingleTaskController<Request, Result> {
    * Returns all awaiting requests and clears the queue. <br/>
    * I.e. the second call to this method will return an empty list (unless new requests came via {@link #request(Object)}.
    */
-  @Nonnull
+  
   protected final List<Request> popRequests() {
     synchronized (LOCK) {
       List<Request> requests = myAwaitingRequests;

@@ -21,8 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.diagram.GraphBuilder;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,23 +29,23 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageGraphProvider<V> {
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
-    String getName(@Nonnull V element);
+    
+    String getName(V element);
 
-    @Nonnull
+    
     @RequiredReadAction
-    String getURL(@Nonnull V element);
+    String getURL(V element);
 
     @Nullable
     @RequiredReadAction
-    PsiElement restoreFromURL(@Nonnull Project project, @Nonnull String url);
+    PsiElement restoreFromURL(Project project, String url);
 
-    boolean isSupported(@Nonnull PsiElement element);
+    boolean isSupported(PsiElement element);
 
-    @Nonnull
+    
     @RequiredReadAction
-    GraphBuilder createBuilder(@Nonnull V element);
+    GraphBuilder createBuilder(V element);
 }

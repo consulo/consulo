@@ -16,7 +16,6 @@
 package consulo.test.light.impl;
 
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ public class LightModalityState implements ModalityState {
   public static final LightModalityState INSTANCE = new LightModalityState();
   
   @Override
-  public boolean dominates(@Nonnull ModalityState anotherState) {
+  public boolean dominates(ModalityState anotherState) {
     return false;
   }
 }

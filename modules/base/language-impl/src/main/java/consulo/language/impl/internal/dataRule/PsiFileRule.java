@@ -26,11 +26,10 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class PsiFileRule implements GetDataRule<PsiFile> {
-  @Nonnull
+  
   @Override
   public Key<PsiFile> getKey() {
     return PsiFile.KEY;
@@ -38,7 +37,7 @@ public class PsiFileRule implements GetDataRule<PsiFile> {
 
   @Override
   @RequiredReadAction
-  public PsiFile getData(@Nonnull DataProvider dataProvider) {
+  public PsiFile getData(DataProvider dataProvider) {
     PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
     if (element != null) {
       return element.getContainingFile();

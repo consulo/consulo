@@ -18,7 +18,6 @@ package consulo.language.index.impl.internal;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.language.file.light.LightVirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko on 11/18/2015.
@@ -68,7 +67,7 @@ class DeletedVirtualFileStub extends LightVirtualFile implements VirtualFileWith
     return "invalid:" + getOriginalFile().toString() + ", resurrected:" + myResurrected;
   }
 
-  @Nonnull
+  
   @Override
   public String getUrl() {
     return "invalid:" + super.getUrl();

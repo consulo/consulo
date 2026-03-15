@@ -15,8 +15,7 @@ import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
     
     private static final TextAttributesKey STICKY_LINE_ATTRIBUTE = TextAttributesKey.of(STICKY_LINE_MARKER);
 
-    public static boolean isStickyLine(@Nonnull RangeHighlighter highlighter) {
+    public static boolean isStickyLine(RangeHighlighter highlighter) {
         TextAttributesKey key = highlighter.getTextAttributesKey();
         if (key != null && STICKY_LINE_MARKER.equals(key.getExternalName())) {
             return true;
@@ -48,11 +47,11 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
      * {@code highlighter.getTextAttributes(editor.getColorsScheme())} may return non-null attributes.
      * Which means incorrect text color.
      */
-    public static void skipInAllEditors(@Nonnull RangeHighlighter highlighter) {
+    public static void skipInAllEditors(RangeHighlighter highlighter) {
         highlighter.setEditorFilter(StickyLinesModelImpl::alwaysFalsePredicate);
     }
 
-    public static @Nullable StickyLinesModelImpl getModel(@Nonnull Project project, @Nonnull Document document) {
+    public static @Nullable StickyLinesModelImpl getModel(Project project, Document document) {
         if (project.isDisposed()) {
             String editors = editorsAsString(document);
             LOG.error(
@@ -89,7 +88,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
         return getModel(markupModel);
     }
 
-    public static @Nonnull StickyLinesModelImpl getModel(@Nonnull MarkupModel markupModel) {
+    public static StickyLinesModelImpl getModel(MarkupModel markupModel) {
         StickyLinesModelImpl stickyModel = markupModel.getUserData(STICKY_LINES_MODEL_KEY);
         if (stickyModel == null) {
             stickyModel = new StickyLinesModelImpl((MarkupModelEx) markupModel);
@@ -109,7 +108,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
     }
 
     @Override
-    public @Nonnull StickyLine addStickyLine(@Nonnull SourceID source, int startOffset, int endOffset, @Nullable String debugText) {
+    public StickyLine addStickyLine(SourceID source, int startOffset, int endOffset, @Nullable String debugText) {
         if (startOffset >= endOffset) {
             throw new IllegalArgumentException(String.format(
                 "sticky line endOffset %s should be less than startOffset %s", startOffset, endOffset
@@ -131,23 +130,23 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
     }
 
     @Override
-    public void removeStickyLine(@Nonnull StickyLine stickyLine) {
+    public void removeStickyLine(StickyLine stickyLine) {
         RangeMarker rangeMarker = ((StickyLineImpl) stickyLine).rangeMarker();
         myMarkupModel.removeHighlighter((RangeHighlighter) rangeMarker);
     }
 
     @Override
-    public void processStickyLines(int startOffset, int endOffset, @Nonnull Predicate<? super StickyLine> processor) {
+    public void processStickyLines(int startOffset, int endOffset, Predicate<? super StickyLine> processor) {
         processStickyLines(null, startOffset, endOffset, processor);
     }
 
     @Override
-    public void processStickyLines(@Nonnull SourceID source, @Nonnull Predicate<? super StickyLine> processor) {
+    public void processStickyLines(SourceID source, Predicate<? super StickyLine> processor) {
         processStickyLines(source, 0, myMarkupModel.getDocument().getTextLength(), processor);
     }
 
     @Override
-    public @Nonnull List<StickyLine> getAllStickyLines() {
+    public List<StickyLine> getAllStickyLines() {
         ArrayList<StickyLine> stickyLines = new ArrayList<>();
         processStickyLines(
             0,
@@ -161,12 +160,12 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
     }
 
     @Override
-    public void addListener(@Nonnull Listener listener) {
+    public void addListener(Listener listener) {
         myListeners.add(listener);
     }
 
     @Override
-    public void removeListener(@Nonnull Listener listener) {
+    public void removeListener(Listener listener) {
         myListeners.remove(listener);
     }
 
@@ -198,7 +197,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
         @Nullable SourceID source,
         int startOffset,
         int endOffset,
-        @Nonnull Predicate<? super StickyLine> processor
+        Predicate<? super StickyLine> processor
     ) {
         myMarkupModel.processRangeHighlightersOverlappingWith(
             startOffset,
@@ -223,23 +222,23 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
         return source == null || source.equals(highlighter.getUserData(STICKY_LINE_SOURCE));
     }
 
-    private static boolean alwaysFalsePredicate(@Nonnull Editor editor) {
+    private static boolean alwaysFalsePredicate(Editor editor) {
         return false;
     }
 
-    private void restartStickyLinesPass(@Nonnull Project project) {
+    private void restartStickyLinesPass(Project project) {
         CodeEditorInternalHelper.getInstance().restartStickyPass(project, myMarkupModel.getDocument());
     }
 
-    private static @Nonnull String editorsAsString(@Nonnull Document document) {
+    private static String editorsAsString(Document document) {
         return Arrays.stream(EditorFactory.getInstance().getEditors(document))
             .map(editor -> editor.toString() + "\n" + editor.getProject())
             .collect(Collectors.joining("\n"));
     }
 
     private record StickyLineImpl(
-        @Nonnull Document document,
-        @Nonnull RangeMarker rangeMarker,
+        Document document,
+        RangeMarker rangeMarker,
         @Nullable String debugText
     ) implements StickyLine {
 
@@ -259,7 +258,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
         }
 
         @Override
-        public @Nonnull TextRange textRange() {
+        public TextRange textRange() {
             return rangeMarker.getTextRange();
         }
 
@@ -285,7 +284,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
         }
 
         @Override
-        public int compareTo(@Nonnull StickyLine other) {
+        public int compareTo(StickyLine other) {
             TextRange range = textRange();
             TextRange otherRange = other.textRange();
             int compare = Integer.compare(range.getStartOffset(), otherRange.getStartOffset());
@@ -297,7 +296,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
         }
 
         @Override
-        public @Nonnull String toString() {
+        public String toString() {
             String prefix = debugText == null ? "" : debugText;
             return prefix + "(" + primaryLine() + ", " + scopeLine() + ")";
         }

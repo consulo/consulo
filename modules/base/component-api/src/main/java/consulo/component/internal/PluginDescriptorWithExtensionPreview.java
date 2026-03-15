@@ -17,7 +17,6 @@ package consulo.component.internal;
 
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ import java.util.List;
  * @since 2024-08-17
  */
 public interface PluginDescriptorWithExtensionPreview extends PluginDescriptor {
-    @Nonnull
+    
     default List<ExtensionPreview> getExtensionPreviews() {
         return List.of();
     }

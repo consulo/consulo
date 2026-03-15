@@ -17,8 +17,7 @@ package consulo.test.light.impl;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -30,14 +29,14 @@ import java.util.List;
  * @since 2023-11-06
  */
 public abstract class LightEncodingManager implements EncodingManager {
-  @Nonnull
+  
   @Override
   public Collection<Charset> getFavorites() {
     return List.of(StandardCharsets.UTF_8);
   }
 
   @Override
-  public boolean isNative2Ascii(@Nonnull VirtualFile virtualFile) {
+  public boolean isNative2Ascii(VirtualFile virtualFile) {
     return false;
   }
 
@@ -46,7 +45,7 @@ public abstract class LightEncodingManager implements EncodingManager {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public Charset getDefaultCharset() {
     return StandardCharsets.UTF_8;
@@ -68,14 +67,14 @@ public abstract class LightEncodingManager implements EncodingManager {
 
   }
 
-  @Nonnull
+  
   @Override
   public String getDefaultCharsetName() {
     return StandardCharsets.UTF_8.name();
   }
 
   @Override
-  public void setDefaultCharsetName(@Nonnull String name) {
+  public void setDefaultCharsetName(String name) {
 
   }
 
@@ -90,7 +89,7 @@ public abstract class LightEncodingManager implements EncodingManager {
 
   }
 
-  @Nonnull
+  
   @Override
   public Charset getDefaultConsoleEncoding() {
     return StandardCharsets.UTF_8;

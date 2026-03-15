@@ -17,12 +17,11 @@ package consulo.virtualFileSystem.http;
 
 import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.http.event.FileDownloadingListener;
-import jakarta.annotation.Nonnull;
 
 public interface RemoteFileInfo extends RemoteContentProvider.DownloadingCallback {
-    void addDownloadingListener(@Nonnull FileDownloadingListener listener);
+    void addDownloadingListener(FileDownloadingListener listener);
 
-    void removeDownloadingListener(@Nonnull FileDownloadingListener listener);
+    void removeDownloadingListener(FileDownloadingListener listener);
 
     String getUrl();
 
@@ -34,6 +33,6 @@ public interface RemoteFileInfo extends RemoteContentProvider.DownloadingCallbac
 
     void restartDownloading();
 
-    @Nonnull
+    
     LocalizeValue getErrorMessage();
 }

@@ -17,7 +17,6 @@ package consulo.execution.debug.impl.internal.frame;
 
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.event.XDebugSessionListener;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,12 +25,12 @@ public class XDebugViewSessionListener implements XDebugSessionListener {
   private final XDebugView myDebugView;
   private final XDebugSession mySession;
 
-  public XDebugViewSessionListener(@Nonnull XDebugView debugView, @Nonnull XDebugSession session) {
+  public XDebugViewSessionListener(XDebugView debugView, XDebugSession session) {
     myDebugView = debugView;
     mySession = session;
   }
 
-  private void onSessionEvent(@Nonnull XDebugView.SessionEvent event) {
+  private void onSessionEvent(XDebugView.SessionEvent event) {
     myDebugView.processSessionEvent(event, mySession);
   }
 

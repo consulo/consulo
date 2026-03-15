@@ -25,7 +25,6 @@ import consulo.fileEditor.structureView.tree.Grouper;
 import consulo.fileEditor.structureView.tree.Sorter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -65,7 +64,7 @@ public class StructureViewModelWrapper implements StructureViewModel {
   }
 
   @Override
-  @Nonnull
+  
   public StructureViewTreeElement getRoot() {
     return new StructureViewElementWrapper<PsiElement>(myStructureViewModel.getRoot(), myMainFile);
   }
@@ -81,19 +80,19 @@ public class StructureViewModelWrapper implements StructureViewModel {
   }
 
   @Override
-  @Nonnull
+  
   public Grouper[] getGroupers() {
     return myStructureViewModel.getGroupers();
   }
 
   @Override
-  @Nonnull
+  
   public Sorter[] getSorters() {
     return myStructureViewModel.getSorters();
   }
 
   @Override
-  @Nonnull
+  
   public Filter[] getFilters() {
     return myStructureViewModel.getFilters();
   }

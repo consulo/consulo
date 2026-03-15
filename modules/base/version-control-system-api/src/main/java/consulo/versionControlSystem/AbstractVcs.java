@@ -46,8 +46,7 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,7 +65,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
     protected static final String ourIntegerPattern = "\\d+";
 
-    @Nonnull
+    
     protected final Project myProject;
     private final String myName;
     private final VcsKey myKey;
@@ -77,7 +76,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     private UpdateEnvironment myUpdateEnvironment;
     private RollbackEnvironment myRollbackEnvironment;
 
-    public AbstractVcs(@Nonnull Project project, String name) {
+    public AbstractVcs(Project project, String name) {
         super(project);
 
         myProject = project;
@@ -85,7 +84,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         myKey = new VcsKey(myName);
     }
 
-    @Nonnull
+    
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowchanges();
     }
@@ -107,7 +106,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     protected void deactivate() {
     }
 
-    @Nonnull
+    
     public final String getId() {
         return myName;
     }
@@ -118,7 +117,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return getId();
     }
 
-    @Nonnull
+    
     public abstract LocalizeValue getDisplayName();
 
     /**
@@ -126,7 +125,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * (e.g. it can be "SVN" for Subversion or "Hg" for Mercurial).<br/><br/>
      * By default returns the same as {@link #getDisplayName()}.
      */
-    @Nonnull
+    
     public LocalizeValue getShortName() {
         return getDisplayName();
     }
@@ -136,7 +135,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * (e.g. it can be "_SVN" for Subversion or "_Hg" for Mercurial).<br/><br/>
      * Returns generic "VC_S" by default.
      */
-    @Nonnull
+    
     public LocalizeValue getShortNameWithMnemonic() {
         return VcsLocalize.vcsGenericNameWithMnemonic();
     }
@@ -244,7 +243,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return null;
     }
 
-    @Nonnull
+    
     public LocalizeValue getMenuItemText() {
         return getDisplayName();
     }
@@ -319,8 +318,8 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * (in particular, the VCS can show a confirmation to the user by itself)
      */
     @RequiredUIAccess
-    @Nonnull
-    public ThreeState mayRemoveChangeList(@Nonnull LocalChangeList list, boolean explicitly) {
+    
+    public ThreeState mayRemoveChangeList(LocalChangeList list, boolean explicitly) {
         return ThreeState.UNSURE;
     }
 
@@ -328,13 +327,13 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return false;
     }
 
-    public static boolean fileInVcsByFileStatus(@Nonnull Project project, @Nonnull FilePath path) {
+    public static boolean fileInVcsByFileStatus(Project project, FilePath path) {
         VirtualFile file = path.getVirtualFile();
 
         return file == null || fileInVcsByFileStatus(project, file);
     }
 
-    public static boolean fileInVcsByFileStatus(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public static boolean fileInVcsByFileStatus(Project project, VirtualFile file) {
         FileStatus status = FileStatusManager.getInstance(project).getStatus(file);
 
         return status != FileStatus.UNKNOWN && status != FileStatus.ADDED && status != FileStatus.IGNORED;
@@ -489,8 +488,8 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
     public interface RootsConvertor {
 
-        @Nonnull
-        List<VirtualFile> convertRoots(@Nonnull List<VirtualFile> result);
+        
+        List<VirtualFile> convertRoots(List<VirtualFile> result);
     }
 
     /**
@@ -508,14 +507,14 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return false;
     }
 
-    @Nonnull
-    public <S> List<S> filterUniqueRoots(@Nonnull List<S> in, @Nonnull Function<S, VirtualFile> convertor) {
+    
+    public <S> List<S> filterUniqueRoots(List<S> in, Function<S, VirtualFile> convertor) {
         new FilterDescendantVirtualFileConvertible<>(convertor, FilePathComparator.getInstance()).doFilter(in);
         return in;
     }
 
-    @Nonnull
-    public static <S> List<S> filterUniqueRootsDefault(@Nonnull List<S> in, @Nonnull Function<S, VirtualFile> convertor) {
+    
+    public static <S> List<S> filterUniqueRootsDefault(List<S> in, Function<S, VirtualFile> convertor) {
         new FilterDescendantVirtualFileConvertible<>(convertor, FilePathComparator.getInstance()).doFilter(in);
         return in;
     }
@@ -525,7 +524,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return null;
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
@@ -534,7 +533,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return new VcsKey(name);
     }
 
-    @Nonnull
+    
     public final VcsKey getKeyInstanceMethod() {
         return myKey;
     }
@@ -584,7 +583,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return true;
     }
 
-    public boolean allowsRemoteCalls(@Nonnull VirtualFile file) {
+    public boolean allowsRemoteCalls(VirtualFile file) {
         return true;
     }
 

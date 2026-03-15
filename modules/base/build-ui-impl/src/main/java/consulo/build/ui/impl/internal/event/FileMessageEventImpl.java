@@ -8,8 +8,7 @@ import consulo.build.ui.event.FileMessageEventResult;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -20,12 +19,12 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
 
   private final FilePosition myFilePosition;
 
-  public FileMessageEventImpl(@Nonnull Object parentId,
-                              @Nonnull Kind kind,
-                              @Nonnull NotificationGroup group,
-                              @Nonnull @BuildEventsNls.Message String message,
+  public FileMessageEventImpl(Object parentId,
+                              Kind kind,
+                              NotificationGroup group,
+                              @BuildEventsNls.Message String message,
                               @Nullable @BuildEventsNls.Description String detailedMessage,
-                              @Nonnull FilePosition filePosition) {
+                              FilePosition filePosition) {
     super(parentId, kind, group, message, detailedMessage);
     myFilePosition = filePosition;
   }
@@ -69,7 +68,7 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
 
   @Nullable
   @Override
-  public Navigatable getNavigatable(@Nonnull Project project) {
+  public Navigatable getNavigatable(Project project) {
     return new FileNavigatable(project, myFilePosition);
   }
 

@@ -25,8 +25,7 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.SimpleComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +39,15 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
     private LocalizeValue myText = LocalizeValue.empty();
     private List<Component> myMenuItems = new ArrayList<>();
 
-    public void add(@Nonnull MenuItem menuItem) {
+    public void add(MenuItem menuItem) {
       Component vaadinComponent = TargetVaddin.to(menuItem);
 
       myMenuItems.add(vaadinComponent);
     }
 
 
-    @Nullable
     @Override
-    public consulo.ui.Component toUIComponent() {
+    public consulo.ui.@Nullable Component toUIComponent() {
       return WebMenuImpl.this;
     }
   }
@@ -59,7 +57,7 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
   }
 
   @Override
-  @Nonnull
+  
   public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
@@ -72,14 +70,14 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public Menu add(@Nonnull MenuItem menuItem) {
+  public Menu add(MenuItem menuItem) {
     getVaadinComponent().add(menuItem);
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return getVaadinComponent().myText;

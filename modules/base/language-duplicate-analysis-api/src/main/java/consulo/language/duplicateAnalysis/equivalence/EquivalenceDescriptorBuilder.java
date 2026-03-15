@@ -1,8 +1,7 @@
 package consulo.language.duplicateAnalysis.equivalence;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class EquivalenceDescriptorBuilder implements EquivalenceDescriptor {
   }
 
   @Override
-  @Nonnull
+  
   public List<PsiElement[]> getCodeBlocks() {
     return myCodeBlocks;
   }
@@ -57,47 +56,47 @@ public class EquivalenceDescriptorBuilder implements EquivalenceDescriptor {
     return add(SingleChildDescriptor.MyType.CHILDREN, element);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder optionally(@Nullable PsiElement element) {
     return add(SingleChildDescriptor.MyType.OPTIONALLY, element);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder optionallyInPattern(@Nullable PsiElement element) {
     return add(SingleChildDescriptor.MyType.OPTIONALLY_IN_PATTERN, element);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder optionally(@Nullable PsiElement[] elements) {
     return add(MultiChildDescriptor.MyType.OPTIONALLY, elements);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder optionallyInPattern(@Nullable PsiElement[] elements) {
     return add(MultiChildDescriptor.MyType.OPTIONALLY_IN_PATTERN, elements);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder childrenOptionally(@Nullable PsiElement element) {
     return add(SingleChildDescriptor.MyType.CHILDREN_OPTIONALLY, element);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder childrenOptionallyInPattern(@Nullable PsiElement element) {
     return add(SingleChildDescriptor.MyType.CHILDREN_OPTIONALLY_IN_PATTERN, element);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder inAnyOrder(PsiElement[] elements) {
     return add(MultiChildDescriptor.MyType.IN_ANY_ORDER, elements);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder childrenInAnyOrder(@Nullable PsiElement element) {
     return add(SingleChildDescriptor.MyType.CHILDREN_IN_ANY_ORDER, element);
   }
 
-  @Nonnull
+  
   public EquivalenceDescriptorBuilder constant(@Nullable Object constant) {
     myConstants.add(constant);
     return this;

@@ -18,14 +18,13 @@ package consulo.ui.ex.toolWindow;
 
 import consulo.ui.Rectangle2D;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface WindowInfo {
-  @Nonnull
+  
   String getId();
 
-  @Nonnull
+  
   ToolWindowAnchor getAnchor();
 
   @Nullable

@@ -22,8 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -37,7 +36,7 @@ public interface GotoTargetRendererProvider {
     }
 
     @Nullable
-    default PsiElementListCellRenderer getRenderer(PsiElement element, @Nonnull Options options) {
+    default PsiElementListCellRenderer getRenderer(PsiElement element, Options options) {
         return getRenderer(element);
     }
 

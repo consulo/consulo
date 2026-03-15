@@ -18,8 +18,7 @@ package consulo.desktop.progress;
 import com.sun.jna.Pointer;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -56,7 +55,7 @@ public class MacActivityUtil {
     private static final Pointer retainSel = Foundation.createSelector("retain");
     private static final Pointer releaseSel = Foundation.createSelector("release");
 
-    private ActivityImpl(@Nonnull Object reason) {
+    private ActivityImpl(Object reason) {
       super(begin(reason));
     }
 
@@ -69,7 +68,7 @@ public class MacActivityUtil {
       return Foundation.invoke(processInfoCls, processInfoSel);
     }
 
-    private static ID begin(@Nonnull Object reason) {
+    private static ID begin(Object reason) {
       // http://lists.apple.com/archives/java-dev/2014/Feb/msg00053.html
       // https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSProcessInfo_Class/index.html#//apple_ref/c/tdef/NSActivityOptions
       return Foundation.invoke(Foundation.invoke(getProcessInfo(),
@@ -86,7 +85,7 @@ public class MacActivityUtil {
     }
   }
 
-  public static Activity wakeUpNeo(@Nonnull Object reason) {
+  public static Activity wakeUpNeo(Object reason) {
     return new ActivityImpl(reason);
   }
 }

@@ -24,8 +24,7 @@ import consulo.usage.*;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.SingleParentUsageGroupingRule;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -33,7 +32,7 @@ import jakarta.annotation.Nullable;
 public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     @Nullable
     @Override
-    protected UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+    protected UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
         if (usage instanceof PsiElementUsage elementUsage) {
             PsiElement element = elementUsage.getElement();
             UsageType usageType = getUsageType(element, targets);
@@ -62,7 +61,7 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     }
 
     @Nullable
-    private static UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets) {
+    private static UsageType getUsageType(PsiElement element, UsageTarget[] targets) {
         if (element == null) {
             return null;
         }
@@ -85,7 +84,7 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     private static class UsageTypeGroup implements UsageGroup {
         private final UsageType myUsageType;
 
-        private UsageTypeGroup(@Nonnull UsageType usageType) {
+        private UsageTypeGroup(UsageType usageType) {
             myUsageType = usageType;
         }
 
@@ -99,7 +98,7 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
         }
 
         @Override
-        @Nonnull
+        
         public String getText(@Nullable UsageView view) {
             return view == null ? myUsageType.toString() : myUsageType.toString(view.getPresentation());
         }
@@ -129,7 +128,7 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
         }
 
         @Override
-        public int compareTo(@Nonnull UsageGroup usageGroup) {
+        public int compareTo(UsageGroup usageGroup) {
             return getText(null).compareTo(usageGroup.getText(null));
         }
 

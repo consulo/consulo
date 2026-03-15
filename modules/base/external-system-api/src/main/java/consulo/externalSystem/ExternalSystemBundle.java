@@ -21,7 +21,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 @MigratedExtensionsTo(ExternalSystemLocalize.class)
 public class ExternalSystemBundle extends AbstractBundle {
 
-  public static String message(@Nonnull @PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, @Nonnull Object... params) {
+  public static String message(@PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, Object... params) {
     return BUNDLE.getMessage(key, params);
   }
 

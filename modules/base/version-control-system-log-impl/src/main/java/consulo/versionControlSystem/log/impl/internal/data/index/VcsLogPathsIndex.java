@@ -34,7 +34,6 @@ import consulo.versionControlSystem.log.base.VcsChangesLazilyParsedDetails;
 import consulo.versionControlSystem.log.impl.internal.FatalErrorHandler;
 import consulo.versionControlSystem.log.impl.internal.util.PersistentUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -48,13 +47,13 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   public static final String PATHS = "paths";
   public static final String INDEX_PATHS_IDS = "paths-ids";
 
-  @Nonnull
+  
   private final PathsIndexer myPathsIndexer;
 
-  public VcsLogPathsIndex(@Nonnull String logId,
-                          @Nonnull Set<VirtualFile> roots,
-                          @Nonnull FatalErrorHandler fatalErrorHandler,
-                          @Nonnull Disposable disposableParent) throws IOException {
+  public VcsLogPathsIndex(String logId,
+                          Set<VirtualFile> roots,
+                          FatalErrorHandler fatalErrorHandler,
+                          Disposable disposableParent) throws IOException {
     super(logId, PATHS, VcsLogPersistentIndex.getVersion(), new PathsIndexer(createPathsEnumerator(logId), roots),
           new NullableIntKeyDescriptor(), fatalErrorHandler, disposableParent);
 
@@ -62,8 +61,8 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     myPathsIndexer.setFatalErrorConsumer(e -> fatalErrorHandler.consume(this, e));
   }
 
-  @Nonnull
-  private static PersistentEnumeratorBase<String> createPathsEnumerator(@Nonnull String logId) throws IOException {
+  
+  private static PersistentEnumeratorBase<String> createPathsEnumerator(String logId) throws IOException {
     File storageFile = PersistentUtil.getStorageFile(INDEX, INDEX_PATHS_IDS, logId, VcsLogPersistentIndex.getVersion(), true);
     return new PersistentBTreeEnumerator<>(
       storageFile,
@@ -80,7 +79,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     myPathsIndexer.getPathsEnumerator().force();
   }
 
-  public IntSet getCommitsForPaths(@Nonnull Collection<FilePath> paths) throws IOException, StorageException {
+  public IntSet getCommitsForPaths(Collection<FilePath> paths) throws IOException, StorageException {
     Set<Integer> allPathIds = new HashSet<>();
     for (FilePath path : paths) {
       allPathIds.add(myPathsIndexer.myPathsEnumerator.enumerate(path.getPath()));
@@ -96,11 +95,11 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     return result;
   }
 
-  @Nonnull
+  
   public Set<Integer> addCommitsAndGetRenames(
-    @Nonnull Set<Integer> newPathIds,
-    @Nonnull Set<Integer> allPathIds,
-    @Nonnull IntSet commits
+    Set<Integer> newPathIds,
+    Set<Integer> allPathIds,
+    IntSet commits
   ) throws StorageException {
     Set<Integer> renames = new HashSet<>();
     for (Integer key : newPathIds) {
@@ -126,14 +125,14 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   }
 
   private static class PathsIndexer implements DataIndexer<Integer, Integer, VcsFullCommitDetails> {
-    @Nonnull
+    
     private final PersistentEnumeratorBase<String> myPathsEnumerator;
-    @Nonnull
+    
     private final Set<String> myRoots;
-    @Nonnull
+    
     private Consumer<Exception> myFatalErrorConsumer = LOG::error;
 
-    private PathsIndexer(@Nonnull PersistentEnumeratorBase<String> enumerator, @Nonnull Set<VirtualFile> roots) {
+    private PathsIndexer(PersistentEnumeratorBase<String> enumerator, Set<VirtualFile> roots) {
       myPathsEnumerator = enumerator;
       myRoots = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
       for (VirtualFile root : roots) {
@@ -141,13 +140,13 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
       }
     }
 
-    public void setFatalErrorConsumer(@Nonnull Consumer<Exception> fatalErrorConsumer) {
+    public void setFatalErrorConsumer(Consumer<Exception> fatalErrorConsumer) {
       myFatalErrorConsumer = fatalErrorConsumer;
     }
 
-    @Nonnull
+    
     @Override
-    public Map<Integer, Integer> map(@Nonnull VcsFullCommitDetails inputData) {
+    public Map<Integer, Integer> map(VcsFullCommitDetails inputData) {
       Map<Integer, Integer> result = new HashMap<>();
 
 
@@ -193,8 +192,8 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
       return result;
     }
 
-    @Nonnull
-    private Collection<String> getParentPaths(@Nonnull Collection<String> paths) {
+    
+    private Collection<String> getParentPaths(Collection<String> paths) {
       Set<String> result = new HashSet<>();
       for (String path : paths) {
         while (!path.isEmpty() && !result.contains(path)) {
@@ -207,7 +206,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
       return result;
     }
 
-    @Nonnull
+    
     public PersistentEnumeratorBase<String> getPathsEnumerator() {
       return myPathsEnumerator;
     }
@@ -215,7 +214,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
 
   private static class NullableIntKeyDescriptor implements DataExternalizer<Integer> {
     @Override
-    public void save(@Nonnull DataOutput out, Integer value) throws IOException {
+    public void save(DataOutput out, Integer value) throws IOException {
       if (value == null) {
         out.writeBoolean(false);
       }
@@ -226,7 +225,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     }
 
     @Override
-    public Integer read(@Nonnull DataInput in) throws IOException {
+    public Integer read(DataInput in) throws IOException {
       if (in.readBoolean()) {
         return in.readInt();
       }
@@ -246,12 +245,12 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     }
 
     @Override
-    public void save(@Nonnull DataOutput out, String value) throws IOException {
+    public void save(DataOutput out, String value) throws IOException {
       IOUtil.writeUTF(out, value.toLowerCase());
     }
 
     @Override
-    public String read(@Nonnull DataInput in) throws IOException {
+    public String read(DataInput in) throws IOException {
       return IOUtil.readUTF(in);
     }
   }

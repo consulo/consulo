@@ -26,8 +26,7 @@ import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -58,12 +57,12 @@ public abstract class LanguageConsoleBuilder {
 
   protected String processInputStateKey;
 
-  public LanguageConsoleBuilder processHandler(@Nonnull ProcessHandler processHandler) {
+  public LanguageConsoleBuilder processHandler(ProcessHandler processHandler) {
     executionEnabled = console -> !processHandler.isProcessTerminated();
     return this;
   }
 
-  public LanguageConsoleBuilder executionEnabled(@Nonnull Predicate<LanguageConsoleView> condition) {
+  public LanguageConsoleBuilder executionEnabled(Predicate<LanguageConsoleView> condition) {
     executionEnabled = condition;
     return this;
   }
@@ -71,13 +70,13 @@ public abstract class LanguageConsoleBuilder {
   /**
    * @see {@link PsiCodeFragment}
    */
-  public LanguageConsoleBuilder psiFileFactory(@Nonnull BiFunction<VirtualFile, Project, PsiFile> value) {
+  public LanguageConsoleBuilder psiFileFactory(BiFunction<VirtualFile, Project, PsiFile> value) {
     psiFileFactory = value;
     return this;
   }
 
-  @Nonnull
-  public LanguageConsoleBuilder initActions(@Nonnull BaseConsoleExecuteActionHandler executeActionHandler, @Nonnull String historyType) {
+  
+  public LanguageConsoleBuilder initActions(BaseConsoleExecuteActionHandler executeActionHandler, String historyType) {
     this.executeActionHandler = executeActionHandler;
     this.historyType = historyType;
     return this;
@@ -87,14 +86,14 @@ public abstract class LanguageConsoleBuilder {
   /**
    * todo This API doesn't look good, but it is much better than force client to know low-level details
    */
-  public static AnAction registerExecuteAction(@Nonnull LanguageConsoleView console,
-                                               @Nonnull final Consumer<String> executeActionHandler,
-                                               @Nonnull String historyType,
+  public static AnAction registerExecuteAction(LanguageConsoleView console,
+                                               final Consumer<String> executeActionHandler,
+                                               String historyType,
                                                @Nullable String historyPersistenceId,
                                                @Nullable Predicate<LanguageConsoleView> enabledCondition) {
     ConsoleExecuteActionHandler handler = new ConsoleExecuteActionHandler(true) {
       @Override
-      public void doExecute(@Nonnull String text, @Nonnull LanguageConsoleView consoleView) {
+      public void doExecute(String text, LanguageConsoleView consoleView) {
         executeActionHandler.accept(text);
       }
     };
@@ -127,12 +126,12 @@ public abstract class LanguageConsoleBuilder {
     return this;
   }
 
-  @Nonnull
+  
   public LanguageConsoleBuilder processInputStateKey(@Nullable String value) {
     processInputStateKey = value;
     return this;
   }
 
-  @Nonnull
+  
   public abstract LanguageConsoleView build();
 }

@@ -19,13 +19,12 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class Tokenizer<T extends PsiElement> {
     @RequiredReadAction
-    public abstract void tokenize(@Nonnull T element, TokenConsumer consumer);
+    public abstract void tokenize(T element, TokenConsumer consumer);
 
-    @Nonnull
+    
     public TextRange getHighlightingRange(PsiElement element, int offset, TextRange textRange) {
         return TextRange.from(offset + textRange.getStartOffset(), textRange.getLength());
     }

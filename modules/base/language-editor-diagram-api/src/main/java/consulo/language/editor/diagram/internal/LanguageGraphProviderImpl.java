@@ -23,8 +23,7 @@ import consulo.diagram.GraphProvider;
 import consulo.language.editor.diagram.LanguageGraphProvider;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,42 +37,42 @@ public class LanguageGraphProviderImpl implements GraphProvider<PsiElement> {
         myLanguageGraphProvider = languageGraphProvider;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myLanguageGraphProvider.getId();
     }
 
-    @Nonnull
+    
     @Override
-    public String getName(@Nonnull PsiElement element) {
+    public String getName(PsiElement element) {
         return myLanguageGraphProvider.getName(element);
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public GraphBuilder createBuilder(@Nonnull PsiElement element) {
+    public GraphBuilder createBuilder(PsiElement element) {
         return myLanguageGraphProvider.createBuilder(element);
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public String getURL(@Nonnull PsiElement value) {
+    public String getURL(PsiElement value) {
         return myLanguageGraphProvider.getURL(value);
     }
 
     @RequiredReadAction
     @Nullable
     @Override
-    public PsiElement restoreFromURL(@Nonnull ComponentManager project, @Nonnull String path) {
+    public PsiElement restoreFromURL(ComponentManager project, String path) {
         return myLanguageGraphProvider.restoreFromURL((Project) project, path);
     }
 
     @Nullable
     @Override
-    public PsiElement findSupportedElement(@Nonnull DataContext context) {
+    public PsiElement findSupportedElement(DataContext context) {
         PsiElement element = context.getData(PsiElement.KEY);
         if (element == null) {
             return null;

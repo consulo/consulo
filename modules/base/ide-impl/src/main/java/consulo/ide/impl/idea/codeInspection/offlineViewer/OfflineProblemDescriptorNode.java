@@ -33,8 +33,7 @@ import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -47,9 +46,9 @@ import java.util.Set;
  */
 public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
     public OfflineProblemDescriptorNode(
-        @Nonnull OfflineProblemDescriptor descriptor,
-        @Nonnull LocalInspectionToolWrapper toolWrapper,
-        @Nonnull InspectionToolPresentation presentation
+        OfflineProblemDescriptor descriptor,
+        LocalInspectionToolWrapper toolWrapper,
+        InspectionToolPresentation presentation
     ) {
         super(descriptor, toolWrapper, presentation);
     }
@@ -167,7 +166,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
     }
 
     @Nullable
-    private LocalQuickFix[] getFixes(@Nonnull CommonProblemDescriptor descriptor, List<String> hints) {
+    private LocalQuickFix[] getFixes(CommonProblemDescriptor descriptor, List<String> hints) {
         List<LocalQuickFix> fixes = new ArrayList<LocalQuickFix>(hints == null ? 1 : hints.size());
         if (hints == null) {
             addFix(descriptor, fixes, null);
@@ -180,7 +179,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
         return fixes.isEmpty() ? null : fixes.toArray(new LocalQuickFix[fixes.size()]);
     }
 
-    private void addFix(@Nonnull CommonProblemDescriptor descriptor, List<LocalQuickFix> fixes, String hint) {
+    private void addFix(CommonProblemDescriptor descriptor, List<LocalQuickFix> fixes, String hint) {
         IntentionAction intentionAction = myPresentation.findQuickFixes(descriptor, hint);
         if (intentionAction instanceof QuickFixWrapper fixWrapper) {
             fixes.add(fixWrapper.getFix());

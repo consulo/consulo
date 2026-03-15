@@ -23,8 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -47,14 +46,14 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
         component.setItems("1", "2");
     }
 
-    @Nonnull
+    
     @Override
     public ListModel<E> getListModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
     }
 
     @Override

@@ -8,7 +8,6 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 public class ModuleLinkFilter implements Filter {
     private final Project myProject;
@@ -19,7 +18,7 @@ public class ModuleLinkFilter implements Filter {
     }
 
     @Override
-    public Result applyFilter(@Nonnull String line, int entireLength) {
+    public Result applyFilter(String line, int entireLength) {
         int start = line.indexOf("[");
         if (start == -1) {
             return null;
@@ -39,7 +38,7 @@ public class ModuleLinkFilter implements Filter {
             new HyperlinkInfo() {
                 @Override
                 @RequiredUIAccess
-                public void navigate(@Nonnull Project project) {
+                public void navigate(Project project) {
                     if (project.isDisposed()) {
                         return;
                     }

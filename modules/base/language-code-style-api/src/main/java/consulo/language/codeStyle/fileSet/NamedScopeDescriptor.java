@@ -7,8 +7,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class NamedScopeDescriptor implements FileSetDescriptor {
   public final static String NAMED_SCOPE_TYPE = "namedScope";
@@ -18,12 +17,12 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
   @Nullable
   PackageSet myFileSet;
 
-  public NamedScopeDescriptor(@Nonnull NamedScope scope) {
+  public NamedScopeDescriptor(NamedScope scope) {
     myScopeId = scope.getScopeId();
     myFileSet = scope.getValue();
   }
 
-  public NamedScopeDescriptor(@Nonnull String scopeId) {
+  public NamedScopeDescriptor(String scopeId) {
     myScopeId = scopeId;
   }
 
@@ -38,7 +37,7 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
   }
 
   @Override
-  public boolean matches(@Nonnull PsiFile psiFile) {
+  public boolean matches(PsiFile psiFile) {
     Pair<NamedScopesHolder, NamedScope> resolved = resolveScope(psiFile.getProject());
     if (resolved == null) {
       resolved = resolveScope(ProjectManager.getInstance().getDefaultProject());
@@ -52,17 +51,17 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
     return false;
   }
 
-  private Pair<NamedScopesHolder, NamedScope> resolveScope(@Nonnull Project project) {
+  private Pair<NamedScopesHolder, NamedScope> resolveScope(Project project) {
     return NamedScopesHolder.getScopeWithHolder(project, myScopeId);
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myScopeId;
   }
 
-  @Nonnull
+  
   @Override
   public String getType() {
     return NAMED_SCOPE_TYPE;

@@ -10,20 +10,18 @@ import consulo.execution.dashboard.RunDashboardRunConfigurationNode;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author konstantin.aleev
  */
 @ExtensionImpl
 public final class ConfigurationTypeDashboardGroupingRule implements RunDashboardGroupingRule {
-  @NonNls
+  
   public static final String NAME = "ConfigurationTypeDashboardGroupingRule";
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return NAME;
   }

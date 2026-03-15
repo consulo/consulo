@@ -15,10 +15,9 @@
  */
 package consulo.codeEditor.action;
 
-import jakarta.annotation.Nonnull;
 
 public class SmartBackspaceDisabler implements BackspaceModeOverride {
-  @Nonnull
+  
   @Override
   public SmartBackspaceMode getBackspaceMode(SmartBackspaceMode modeFromSettings) {
     return modeFromSettings == SmartBackspaceMode.AUTOINDENT ? SmartBackspaceMode.INDENT : modeFromSettings;

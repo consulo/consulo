@@ -30,8 +30,7 @@ import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -215,7 +214,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
   public void handleSelection(SimpleTree tree) {
   }
 
-  @Nonnull
+  
   @Override
   public LeafState getLeafState() {
     if (isAlwaysShowPlus()) return LeafState.NEVER;
@@ -251,7 +250,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
   }
 
   @Override
-  @Nonnull
+  
   public Object[] getEqualityObjects() {
     return NONE;
   }

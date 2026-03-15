@@ -28,7 +28,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
     public ProblemsViewPanel(Project project) {

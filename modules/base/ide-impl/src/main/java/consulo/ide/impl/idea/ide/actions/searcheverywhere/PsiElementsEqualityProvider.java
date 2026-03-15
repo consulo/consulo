@@ -6,18 +6,17 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementNavigationItem;
 import consulo.searchEverywhere.SEResultsEqualityProvider;
 import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 @ExtensionImpl(order = "first")
 public class PsiElementsEqualityProvider implements SEResultsEqualityProvider {
-    @Nonnull
+    
     @Override
     public SEEqualElementsActionType compareItems(
-        @Nonnull SearchEverywhereFoundElementInfo newItemInfo,
-        @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItemInfo
+        SearchEverywhereFoundElementInfo newItemInfo,
+        SearchEverywhereFoundElementInfo alreadyFoundItemInfo
     ) {
         PsiElement newElementPsi = toPsi(newItemInfo.getElement());
         PsiElement alreadyFoundPsi = toPsi(alreadyFoundItemInfo.getElement());

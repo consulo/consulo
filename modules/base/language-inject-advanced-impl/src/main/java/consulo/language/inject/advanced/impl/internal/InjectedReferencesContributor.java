@@ -28,8 +28,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,9 +56,9 @@ public class InjectedReferencesContributor extends PsiReferenceContributor {
   @Override
   public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
     registrar.registerReferenceProvider(PlatformPatterns.psiElement(), new PsiReferenceProvider() {
-      @Nonnull
+      
       @Override
-      public PsiReference[] getReferencesByElement(@Nonnull final PsiElement element, @Nonnull final ProcessingContext context) {
+      public PsiReference[] getReferencesByElement(final PsiElement element, final ProcessingContext context) {
         List<ReferenceInjector> extensions = ReferenceInjector.EXTENSION_POINT_NAME.getExtensionList();
         final List<PsiReference> references = new SmartList<PsiReference>();
         Configuration configuration = Configuration.getProjectInstance(element.getProject());
@@ -93,7 +92,7 @@ public class InjectedReferencesContributor extends PsiReferenceContributor {
           else {
             InjectedLanguageManager.getInstance(element.getProject()).enumerateEx(element, element.getContainingFile(), false, new InjectedReferenceVisitor() {
               @Override
-              public void visitInjectedReference(@Nonnull ReferenceInjector injector, @Nonnull List<? extends PsiLanguageInjectionHost.Shred> places) {
+              public void visitInjectedReference(ReferenceInjector injector, List<? extends PsiLanguageInjectionHost.Shred> places) {
                 injected.set(Boolean.TRUE);
                 element.putUserData(LanguageInjectionSupport.INJECTOR_SUPPORT, registry.getLanguageInjectionSupport());
                 for (PsiLanguageInjectionHost.Shred place : places) {
@@ -110,7 +109,7 @@ public class InjectedReferencesContributor extends PsiReferenceContributor {
     });
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

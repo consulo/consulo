@@ -23,7 +23,6 @@ import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsLog;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +32,13 @@ public abstract class VcsCherryPicker {
   /**
    * @return - return vcs for current cherryPicker
    */
-  @Nonnull
+  
   public abstract VcsKey getSupportedVcs();
 
   /**
    * @return CherryPick Action name for supported vcs
    */
-  @Nonnull
+  
   public abstract String getActionTitle();
 
   /**
@@ -47,12 +46,12 @@ public abstract class VcsCherryPicker {
    *
    * @param commits to cherry-pick
    */
-  public abstract void cherryPick(@Nonnull List<VcsFullCommitDetails> commits);
+  public abstract void cherryPick(List<VcsFullCommitDetails> commits);
 
   /**
    * Return true if cherry picker can manage all commits from roots
    */
-  public abstract boolean canHandleForRoots(@Nonnull Collection<VirtualFile> roots);
+  public abstract boolean canHandleForRoots(Collection<VirtualFile> roots);
 
   /**
    * Return null if all selected commits can be cherry-picked without problems by this cherry-picker or error description otherwise.
@@ -61,7 +60,7 @@ public abstract class VcsCherryPicker {
    * @param commits commits to cherry-pick, grouped by version control root
    * @return
    */
-  public String getInfo(@Nonnull VcsLog log, @Nonnull Map<VirtualFile, List<Hash>> commits) {
+  public String getInfo(VcsLog log, Map<VirtualFile, List<Hash>> commits) {
     return null;
   }
 }

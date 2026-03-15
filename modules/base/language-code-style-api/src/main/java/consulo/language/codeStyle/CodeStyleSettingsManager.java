@@ -33,8 +33,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -70,12 +69,12 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     public CodeStyleSettingsManager() {
     }
 
-    @Nonnull
+    
     public static CodeStyleSettings getSettings(@Nullable Project project) {
         return getInstance(project).getCurrentSettings();
     }
 
-    @Nonnull
+    
     public CodeStyleSettings getCurrentSettings() {
         CodeStyleSettings temporarySettings = myTemporarySettings;
         if (temporarySettings != null) {
@@ -123,7 +122,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
         return myTemporarySettings;
     }
 
-    public void setTemporarySettings(@Nonnull CodeStyleSettings settings) {
+    public void setTemporarySettings(CodeStyleSettings settings) {
         myTemporarySettings = settings;
     }
 
@@ -136,11 +135,11 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     }
 
     @Deprecated
-    public void addListener(@Nonnull CodeStyleSettingsListener listener) {
+    public void addListener(CodeStyleSettingsListener listener) {
         myEventDispatcher.addListener(listener);
     }
 
-    public void addListener(@Nonnull CodeStyleSettingsListener listener, @Nonnull Disposable disposable) {
+    public void addListener(CodeStyleSettingsListener listener, Disposable disposable) {
         myEventDispatcher.addListener(listener, disposable);
     }
 
@@ -170,7 +169,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
         }
     }
 
-    @Nonnull
+    
     public final ModificationTracker getModificationTracker() {
         return myTracker;
     }

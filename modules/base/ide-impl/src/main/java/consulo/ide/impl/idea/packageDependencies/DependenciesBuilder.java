@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -41,7 +40,7 @@ public abstract class DependenciesBuilder {
   protected int myFileCount = 0;
   protected int myTransitive = 0;
 
-  protected DependenciesBuilder(@Nonnull Project project, @Nonnull AnalysisScope scope) {
+  protected DependenciesBuilder(Project project, AnalysisScope scope) {
     this(project, scope, null);
   }
 

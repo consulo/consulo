@@ -38,8 +38,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -54,15 +53,15 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     @Nullable
     private final LibraryType myType;
     private final BaseLibrariesConfigurable myLibrariesConfigurable;
-    @Nonnull
+    
     private final Project myProject;
 
     private CreateNewLibraryAction(
-        @Nonnull LocalizeValue text,
+        LocalizeValue text,
         @Nullable Image icon,
         @Nullable LibraryType type,
-        @Nonnull BaseLibrariesConfigurable librariesConfigurable,
-        @Nonnull Project project
+        BaseLibrariesConfigurable librariesConfigurable,
+        Project project
     ) {
         super(text, LocalizeValue.empty(), icon);
         myType = type;
@@ -72,7 +71,7 @@ public class CreateNewLibraryAction extends DumbAwareAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Library library = createLibrary(
             myType,
             myLibrariesConfigurable.getTree(),
@@ -94,9 +93,9 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     @Nullable
     public static Library createLibrary(
         @Nullable LibraryType type,
-        @Nonnull JComponent parentComponent,
-        @Nonnull Project project,
-        @Nonnull LibrariesModifiableModel modifiableModel
+        JComponent parentComponent,
+        Project project,
+        LibrariesModifiableModel modifiableModel
     ) {
         NewLibraryConfiguration configuration = createNewLibraryConfiguration(type, parentComponent, project);
         if (configuration == null) {
@@ -119,8 +118,8 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     @Nullable
     public static NewLibraryConfiguration createNewLibraryConfiguration(
         @Nullable LibraryType type,
-        @Nonnull JComponent parentComponent,
-        @Nonnull Project project
+        JComponent parentComponent,
+        Project project
     ) {
         NewLibraryConfiguration configuration;
         VirtualFile baseDir = project.getBaseDir();
@@ -138,9 +137,9 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     }
 
     public static AnAction[] createActionOrGroup(
-        @Nonnull String text,
-        @Nonnull BaseLibrariesConfigurable librariesConfigurable,
-        @Nonnull Project project
+        String text,
+        BaseLibrariesConfigurable librariesConfigurable,
+        Project project
     ) {
         ExtensionPoint<LibraryType> extensionPoint = project.getApplication().getExtensionPoint(LibraryType.class);
 

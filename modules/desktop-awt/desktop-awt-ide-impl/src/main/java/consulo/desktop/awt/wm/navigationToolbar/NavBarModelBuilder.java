@@ -5,8 +5,7 @@ import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -18,17 +17,17 @@ import java.util.Set;
 public abstract class NavBarModelBuilder {
   private static final NavBarModelBuilder INSTANCE = new NavBarModelBuilderImpl();
 
-  @Nonnull
+  
   public static NavBarModelBuilder getInstance() {
     return INSTANCE;
   }
 
-  public List<Object> createModel(@Nonnull PsiElement psiElement, @Nonnull Set<VirtualFile> roots, @Nullable NavBarModelExtension ownerExtension) {
+  public List<Object> createModel(PsiElement psiElement, Set<VirtualFile> roots, @Nullable NavBarModelExtension ownerExtension) {
     List<Object> model = new ArrayList<>();
     traverseToRoot(psiElement, roots, model, ownerExtension);
     return model;
   }
 
-  abstract void traverseToRoot(@Nonnull PsiElement psiElement, @Nonnull Set<VirtualFile> roots, @Nonnull List<Object> model, @Nullable NavBarModelExtension ownerExtension);
+  abstract void traverseToRoot(PsiElement psiElement, Set<VirtualFile> roots, List<Object> model, @Nullable NavBarModelExtension ownerExtension);
 }
 

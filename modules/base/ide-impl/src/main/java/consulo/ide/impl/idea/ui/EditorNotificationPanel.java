@@ -41,9 +41,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -96,12 +94,12 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
         myLabel.setText(text);
     }
 
-    public EditorNotificationPanel text(@Nonnull String text) {
+    public EditorNotificationPanel text(String text) {
         myLabel.setText(text);
         return this;
     }
 
-    public EditorNotificationPanel icon(@Nonnull Icon icon) {
+    public EditorNotificationPanel icon(Icon icon) {
         myLabel.setIcon(icon);
         return this;
     }
@@ -167,14 +165,14 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
             }
         }
 
-        @Nonnull
+        
         @Override
         public List<IntentionAction> getOptions() {
             return myOptions;
         }
 
-        @Nls
-        @Nonnull
+        
+        
         @Override
         public LocalizeValue getText() {
             String text = myLabel.getText();
@@ -184,7 +182,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
         }
 
         @Override
-        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        public boolean isAvailable(Project project, Editor editor, PsiFile file) {
             return true;
         }
 
@@ -201,19 +199,19 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
             myLabel = label;
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getText() {
             return LocalizeValue.of(myLabel.getText());
         }
 
         @Override
-        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        public boolean isAvailable(Project project, Editor editor, PsiFile file) {
             return true;
         }
 
         @Override
-        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             myLabel.doClick();
         }
 
@@ -230,20 +228,20 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
             myButton = button;
         }
 
-        @Nls
-        @Nonnull
+        
+        
         @Override
         public LocalizeValue getText() {
             return CodeEditorLocalize.editorNotificationSettingsOptionName();
         }
 
         @Override
-        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        public boolean isAvailable(Project project, Editor editor, PsiFile file) {
             return true;
         }
 
         @Override
-        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             JComponent component = (JComponent) TargetAWT.to(myButton);
 
             component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, 0, 0, 1, false));

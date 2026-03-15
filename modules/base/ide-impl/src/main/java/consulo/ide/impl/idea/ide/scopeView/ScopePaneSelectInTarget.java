@@ -30,7 +30,6 @@ import consulo.project.ui.view.StandardTargetWeights;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -40,7 +39,7 @@ public class ScopePaneSelectInTarget extends ProjectViewSelectInTarget {
         super(project);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return ProjectUIViewLocalize.selectInScope();

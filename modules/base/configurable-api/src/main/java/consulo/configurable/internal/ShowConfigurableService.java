@@ -22,8 +22,7 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
@@ -36,21 +35,21 @@ import java.util.function.Consumer;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ShowConfigurableService {
     @RequiredUIAccess
-    CompletableFuture<?> showAndSelect(@Nullable Project project, @Nonnull String toSelectId);
+    CompletableFuture<?> showAndSelect(@Nullable Project project, String toSelectId);
     
     @RequiredUIAccess
-    default <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
+    default <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project, Class<T> toSelect) {
         return showAndSelect(project, toSelect, o -> {
         });
     }
 
     @RequiredUIAccess
     <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project,
-                                                       @Nonnull Class<T> toSelect,
-                                                       @Nonnull Consumer<T> afterSelect);
+                                                       Class<T> toSelect,
+                                                       Consumer<T> afterSelect);
 
     @RequiredUIAccess
-    CompletableFuture<?> show(@Nullable Project project, @Nonnull Class<? extends UnnamedConfigurable> toSelect);
+    CompletableFuture<?> show(@Nullable Project project, Class<? extends UnnamedConfigurable> toSelect);
 
     @RequiredUIAccess
     @Deprecated

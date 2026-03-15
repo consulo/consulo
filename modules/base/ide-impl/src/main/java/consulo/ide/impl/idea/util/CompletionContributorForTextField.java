@@ -12,7 +12,6 @@ import consulo.language.plain.PlainTextLanguage;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author sergey.evdokimov
@@ -52,7 +51,7 @@ public class CompletionContributorForTextField extends CompletionContributor imp
     field.addCompletionVariants(text, offset, prefix, activeResult);
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return PlainTextLanguage.INSTANCE;

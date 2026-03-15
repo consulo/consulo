@@ -13,8 +13,7 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -252,7 +251,7 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
         return !extraButtons.isEmpty();
     }
 
-    @Nonnull
+    
     protected static JComponent createButtonsSeparator() {
         SeparatorComponent separator = new SeparatorComponent(JBCurrentTheme.Popup.separatorTextColor(), SeparatorOrientation.VERTICAL);
         return separator;

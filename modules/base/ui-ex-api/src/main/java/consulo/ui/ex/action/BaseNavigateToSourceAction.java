@@ -26,8 +26,7 @@ import consulo.navigation.internal.NavigateWithDelegate;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware {
     private final boolean myFocusEditor;
@@ -36,14 +35,14 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
         myFocusEditor = focusEditor;
     }
 
-    protected BaseNavigateToSourceAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, boolean focusEditor) {
+    protected BaseNavigateToSourceAction(LocalizeValue text, LocalizeValue description, boolean focusEditor) {
         super(text, description);
         myFocusEditor = focusEditor;
     }
 
     protected BaseNavigateToSourceAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon,
         boolean focusEditor
     ) {
@@ -53,13 +52,13 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         OpenSourceUtil.navigate(myFocusEditor, getNavigatables(dataContext));
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean inPopup = ActionPlaces.isPopupPlace(e.getPlace());
         Navigatable target = ReadAction.compute(() -> findTargetForUpdate(e.getDataContext()));
         boolean enabled = target != null;
@@ -80,7 +79,7 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
 
     @Nullable
     @RequiredReadAction
-    private Navigatable findTargetForUpdate(@Nonnull DataContext dataContext) {
+    private Navigatable findTargetForUpdate(DataContext dataContext) {
         Navigatable[] navigatables = getNavigatables(dataContext);
         if (navigatables == null) {
             return null;

@@ -23,12 +23,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
 public final class WriteAction {
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use AccessRule.writeAsync()")
     public static AccessToken start() {
@@ -37,10 +36,10 @@ public final class WriteAction {
         return start(aClass);
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use AccessRule.writeAsync()")
-    public static AccessToken start(@Nonnull Class clazz) {
+    public static AccessToken start(Class clazz) {
         return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
     }
 
@@ -66,14 +65,14 @@ public final class WriteAction {
         }
     }
 
-    public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
+    public static <E extends Throwable> void run(ThrowableRunnable<E> action) throws E {
         compute(() -> {
             action.run();
             return null;
         });
     }
 
-    public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
+    public static <T, E extends Throwable> T compute(ThrowableComputable<T, E> action) throws E {
         Application application = Application.get();
         return application.runWriteAction(action);
     }

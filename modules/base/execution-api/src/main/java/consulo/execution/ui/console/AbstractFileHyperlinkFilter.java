@@ -13,8 +13,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,11 +26,11 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
   private ProjectFileIndex myFileIndex;
   private final VirtualFile myBaseDir;
 
-  public AbstractFileHyperlinkFilter(@Nonnull Project project, @Nullable String baseDir) {
+  public AbstractFileHyperlinkFilter(Project project, @Nullable String baseDir) {
     this(project, findDir(baseDir));
   }
 
-  public AbstractFileHyperlinkFilter(@Nonnull Project project, @Nullable VirtualFile baseDir) {
+  public AbstractFileHyperlinkFilter(Project project, @Nullable VirtualFile baseDir) {
     myProject = project;
     myBaseDir = baseDir;
   }
@@ -53,7 +52,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
 
   @Nullable
   @Override
-  public final Result applyFilter(@Nonnull String line, int entireLength) {
+  public final Result applyFilter(String line, int entireLength) {
     List<FileHyperlinkRawData> links;
     try {
       links = parse(line);
@@ -88,7 +87,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
   }
 
   @Nullable
-  private File findIoFile(@Nonnull String filePath) {
+  private File findIoFile(String filePath) {
     File ioFile = new File(filePath);
     if (ioFile.isAbsolute() && ioFile.isFile()) {
       return ioFile;
@@ -102,14 +101,14 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
     return null;
   }
 
-  private boolean isGrayedHyperlink(@Nonnull VirtualFile file) {
+  private boolean isGrayedHyperlink(VirtualFile file) {
     if (myProject.isDefault()) return true;
 
     ProjectFileIndex fileIndex = getFileIndex();
     return !fileIndex.isInContent(file) || fileIndex.isInLibrary(file);
   }
 
-  @Nonnull
+  
   private ProjectFileIndex getFileIndex() {
     ProjectFileIndex fileIndex = myFileIndex;
     if (fileIndex == null) {
@@ -119,11 +118,11 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
     return fileIndex;
   }
 
-  @Nonnull
-  public abstract List<FileHyperlinkRawData> parse(@Nonnull String line);
+  
+  public abstract List<FileHyperlinkRawData> parse(String line);
 
   @Nullable
-  public VirtualFile findFile(@Nonnull String filePath) {
+  public VirtualFile findFile(String filePath) {
     VirtualFile file = LocalFileFinder.findFile(filePath);
     if (file == null && myBaseDir != null && myBaseDir.isValid()) {
       file = myBaseDir.findFileByRelativePath(filePath);
@@ -138,7 +137,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
     private final int myDocumentColumn;
     private Ref<VirtualFile> myFileRef;
 
-    MyFileHyperlinkInfo(@Nonnull File ioFile, int documentLine, int documentColumn) {
+    MyFileHyperlinkInfo(File ioFile, int documentLine, int documentColumn) {
       myIoFile = ioFile;
       myDocumentLine = documentLine;
       myDocumentColumn = documentColumn;
@@ -146,7 +145,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
 
     @RequiredUIAccess
     @Override
-    public void navigate(@Nonnull Project project) {
+    public void navigate(Project project) {
       Ref<VirtualFile> fileRef = myFileRef;
       if (fileRef == null) {
         VirtualFile file = WriteAction.compute(() -> VirtualFileUtil.findFileByIoFile(myIoFile, true));

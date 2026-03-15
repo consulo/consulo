@@ -19,7 +19,6 @@ import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.navigation.Navigatable;
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public class ModuleNavigatable implements Navigatable {
   private final Module module;
 
-  public ModuleNavigatable(@Nonnull Module module) {
+  public ModuleNavigatable(Module module) {
     this.module = module;
   }
 

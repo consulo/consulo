@@ -27,7 +27,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,15 +43,15 @@ public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopy
     super("dir-copy", LocalizeValue.localizeTODO("Directory Content"));
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.CopyOfFolder;
   }
 
-  @Nonnull
-  public List<? extends DirectoryCopyPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
-                                                                       @Nonnull CompositePackagingElement<?> parent) {
+  
+  public List<? extends DirectoryCopyPackagingElement> chooseAndCreate(ArtifactEditorContext context, Artifact artifact,
+                                                                       CompositePackagingElement<?> parent) {
     FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor();
     VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
     List<DirectoryCopyPackagingElement> list = new ArrayList<DirectoryCopyPackagingElement>();
@@ -62,8 +61,8 @@ public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopy
     return list;
   }
 
-  @Nonnull
-  public DirectoryCopyPackagingElement createEmpty(@Nonnull Project project) {
+  
+  public DirectoryCopyPackagingElement createEmpty(Project project) {
     return new DirectoryCopyPackagingElement();
   }
 }

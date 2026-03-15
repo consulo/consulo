@@ -57,9 +57,7 @@ import consulo.usage.UsageViewPresentation;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,18 +76,18 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   private Pattern myCachedSearchPattern = null;
   private Pattern myCachedReplacePattern = null;
 
-  public UsagePreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
+  public UsagePreviewPanel(Project project, UsageViewPresentation presentation) {
     this(project, presentation, false);
   }
 
-  public UsagePreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation, boolean isEditor) {
+  public UsagePreviewPanel(Project project, UsageViewPresentation presentation, boolean isEditor) {
     super(project, presentation);
     myIsEditor = isEditor;
   }
 
   @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key dataId) {
+  public Object getData(Key dataId) {
     if (Editor.KEY == dataId && myEditor != null) {
       return myEditor;
     }
@@ -104,7 +102,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   }
 
   @RequiredUIAccess
-  private void resetEditor(@Nonnull List<? extends UsageInfo> infos) {
+  private void resetEditor(List<? extends UsageInfo> infos) {
     UIAccess.assertIsUIThread();
     PsiElement psiElement = infos.get(0).getElement();
     if (psiElement == null) return;
@@ -149,7 +147,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
   private static final Key<Boolean> IN_PREVIEW_USAGE_FLAG = Key.create("IN_PREVIEW_USAGE_FLAG");
 
-  public static void highlight(@Nonnull List<? extends UsageInfo> infos, @Nonnull Editor editor, @Nonnull Project project, boolean highlightOnlyNameElements, int highlightLayer) {
+  public static void highlight(List<? extends UsageInfo> infos, Editor editor, Project project, boolean highlightOnlyNameElements, int highlightLayer) {
     LOG.assertTrue(!PsiDocumentManager.getInstance(project).hasUncommitedDocuments());
 
     MarkupModel markupModel = editor.getMarkupModel();
@@ -210,7 +208,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
   private static final Key<Balloon> REPLACEMENT_BALLOON_KEY = Key.create("REPLACEMENT_BALLOON_KEY");
 
-  private static void showBalloon(Project project, Editor editor, TextRange range, @Nonnull FindModel findModel) {
+  private static void showBalloon(Project project, Editor editor, TextRange range, FindModel findModel) {
     try {
       String replacementPreviewText = FindManager.getInstance(project).getStringToReplace(editor.getDocument().getText(range), findModel, range.getStartOffset(), editor.getDocument().getText());
       if (!Registry.is("ide.find.show.replacement.hint.for.simple.regexp") && (Comparing.equal(replacementPreviewText, findModel.getStringToReplace()))) {
@@ -239,7 +237,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   }
 
   @Nullable
-  private static FindModel getReplacementModel(@Nonnull Editor editor) {
+  private static FindModel getReplacementModel(Editor editor) {
     UsagePreviewPanel panel = editor.getUserData(PREVIEW_EDITOR_FLAG);
     Pattern searchPattern = null;
     Pattern replacePattern = null;
@@ -273,7 +271,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     return editor;
   }
 
-  @Nonnull
+  
   protected EditorKind getEditorKind() {
     return EditorKind.PREVIEW;
   }
@@ -359,7 +357,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     private static final String MALFORMED_REPLACEMENT_STRING = "Malformed replacement string";
 
     @Override
-    protected void paintComponent(@Nonnull Graphics graphics) {
+    protected void paintComponent(Graphics graphics) {
     }
 
     ReplacementView(@Nullable String replacement) {
@@ -399,7 +397,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
         VisibleAreaListener visibleAreaListener = new VisibleAreaListener() {
           @Override
-          public void visibleAreaChanged(@Nonnull VisibleAreaEvent e) {
+          public void visibleAreaChanged(VisibleAreaEvent e) {
             if (insideVisibleArea(myEditor, myRange)) {
               showBalloon(myProject, myEditor, myRange, myFindModel);
               VisibleAreaListener visibleAreaListener = this;

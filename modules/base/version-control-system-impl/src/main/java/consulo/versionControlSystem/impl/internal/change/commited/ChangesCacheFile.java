@@ -34,8 +34,7 @@ import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -68,7 +67,7 @@ public class ChangesCacheFile {
   private int myIncomingCount;
   private boolean myHaveCompleteHistory;
   private boolean myHeaderLoaded;
-  @NonNls
+  
   private static final String INDEX_EXTENSION = ".index";
   private static final int INDEX_ENTRY_SIZE = 3 * 8 + 2;
   private static final int HEADER_SIZE = 46;
@@ -193,7 +192,7 @@ public class ChangesCacheFile {
     return result;
   }
 
-  private static void debug(@NonNls String message) {
+  private static void debug(String message) {
     LOG.debug(message);
   }
 
@@ -764,7 +763,7 @@ public class ChangesCacheFile {
     data.accountedChanges = result;
   }
 
-  @NonNls
+  
   private File getPartialPath(long offset) {
     return new File(myPath + "." + offset + ".partial");
   }

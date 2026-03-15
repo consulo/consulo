@@ -29,8 +29,7 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -228,7 +227,7 @@ public class TreeUtil {
     return Couple.of(one, two);
   }
 
-  public static void clearCaches(@Nonnull TreeElement tree) {
+  public static void clearCaches(TreeElement tree) {
     tree.acceptTree(new RecursiveTreeElementWalkingVisitor(false) {
       @Override
       protected void visitNode(TreeElement element) {
@@ -239,12 +238,12 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static LeafElement nextLeaf(@Nonnull LeafElement node) {
+  public static LeafElement nextLeaf(LeafElement node) {
     return nextLeaf(node, null);
   }
 
   @Nullable
-  public static ASTNode nextLeaf(@Nonnull ASTNode node) {
+  public static ASTNode nextLeaf(ASTNode node) {
     return nextLeaf((TreeElement)node, null);
   }
 
@@ -275,12 +274,12 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static LeafElement nextLeaf(@Nonnull TreeElement start, CommonParentState commonParent) {
+  public static LeafElement nextLeaf(TreeElement start, CommonParentState commonParent) {
     return (LeafElement)nextLeaf(start, commonParent, null, true);
   }
 
   @Nullable
-  public static TreeElement nextLeaf(@Nonnull TreeElement start, CommonParentState commonParent, IElementType searchedType, boolean expandChameleons) {
+  public static TreeElement nextLeaf(TreeElement start, CommonParentState commonParent, IElementType searchedType, boolean expandChameleons) {
     TreeElement element = start;
     while (element != null) {
       if (commonParent != null) {
@@ -312,7 +311,7 @@ public class TreeUtil {
   }
 
   @Nullable
-  private static TreeElement findFirstLeafOrType(@Nonnull TreeElement element, final IElementType searchedType, final CommonParentState commonParent, final boolean expandChameleons) {
+  private static TreeElement findFirstLeafOrType(TreeElement element, final IElementType searchedType, final CommonParentState commonParent, final boolean expandChameleons) {
     class MyVisitor extends RecursiveTreeElementWalkingVisitor {
       private TreeElement result;
 
@@ -405,7 +404,7 @@ public class TreeUtil {
     boolean isStrongElementOnRisingSlope = true;
   }
 
-  public static boolean containsOuterLanguageElements(@Nonnull ASTNode node) {
+  public static boolean containsOuterLanguageElements(ASTNode node) {
     AtomicBoolean result = new AtomicBoolean(false);
     ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
@@ -427,7 +426,7 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static ASTNode skipWhitespaceCommentsAndTokens(ASTNode node, @Nonnull TokenSet alsoSkip, boolean forward) {
+  public static ASTNode skipWhitespaceCommentsAndTokens(ASTNode node, TokenSet alsoSkip, boolean forward) {
     ASTNode element = node;
     while (true) {
       if (element == null) return null;

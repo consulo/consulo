@@ -20,7 +20,6 @@ import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -36,7 +35,7 @@ public abstract class ConfigurationFromContext {
    *
    * @return the created run configuration settings.
    */
-  @Nonnull
+  
   public abstract RunnerAndConfigurationSettings getConfigurationSettings();
 
   public abstract void setConfigurationSettings(RunnerAndConfigurationSettings configurationSettings);
@@ -46,7 +45,7 @@ public abstract class ConfigurationFromContext {
    *
    * @return the run configuration object.
    */
-  @Nonnull
+  
   public RunConfiguration getConfiguration() {
     return getConfigurationSettings().getConfiguration();
   }
@@ -56,7 +55,7 @@ public abstract class ConfigurationFromContext {
    *
    * @return the configuration type.
    */
-  @Nonnull
+  
   public ConfigurationType getConfigurationType() {
     return getConfiguration().getType();
   }
@@ -67,7 +66,7 @@ public abstract class ConfigurationFromContext {
    *
    * @return the PSI element from which the configuration was created.
    */
-  @Nonnull
+  
   public abstract PsiElement getSourceElement();
 
   /**

@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.util.io.Url;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -33,18 +32,18 @@ public interface WebBrowserService {
         return Application.get().getInstance(WebBrowserService.class);
     }
 
-    @Nonnull
-    public abstract Collection<Url> getUrlsToOpen(@Nonnull OpenInBrowserRequest request, boolean preferLocalUrl)
+    
+    public abstract Collection<Url> getUrlsToOpen(OpenInBrowserRequest request, boolean preferLocalUrl)
         throws WebBrowserUrlProvider.BrowserException;
 
     @Nullable
-    public abstract WebBrowserUrlProvider getProvider(@Nonnull OpenInBrowserRequest request);
+    public abstract WebBrowserUrlProvider getProvider(OpenInBrowserRequest request);
 
     @Nullable
-    public abstract Url getUrlForContext(@Nonnull PsiElement sourceElement);
+    public abstract Url getUrlForContext(PsiElement sourceElement);
 
-    @Nonnull
-    default Collection<Url> getUrlsToOpen(@Nonnull PsiElement element, boolean preferLocalUrl)
+    
+    default Collection<Url> getUrlsToOpen(PsiElement element, boolean preferLocalUrl)
         throws WebBrowserUrlProvider.BrowserException {
         OpenInBrowserRequest request = OpenInBrowserRequest.create(element);
         return request == null ? Collections.<Url>emptyList() : getUrlsToOpen(request, preferLocalUrl);

@@ -20,8 +20,7 @@ import consulo.document.Document;
 import consulo.language.ast.IElementType;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link LineWrapPositionStrategy} implementation that uses
@@ -33,12 +32,12 @@ import jakarta.annotation.Nullable;
  */
 public abstract class PsiAwareDefaultLineWrapPositionStrategy extends PsiAwareLineWrapPositionStrategy {
 
-  public PsiAwareDefaultLineWrapPositionStrategy(boolean nonVirtualOnly, @Nonnull IElementType ... enabledTypes) {
+  public PsiAwareDefaultLineWrapPositionStrategy(boolean nonVirtualOnly, IElementType ... enabledTypes) {
     super(nonVirtualOnly, enabledTypes);
   }
 
   @Override
-  protected int doCalculateWrapPosition(@Nonnull Document document,
+  protected int doCalculateWrapPosition(Document document,
                                         @Nullable Project project,
                                         int startOffset,
                                         int endOffset,

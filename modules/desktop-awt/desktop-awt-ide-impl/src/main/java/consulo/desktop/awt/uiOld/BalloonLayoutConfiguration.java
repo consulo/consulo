@@ -21,8 +21,7 @@ import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -51,7 +50,7 @@ public class BalloonLayoutConfiguration {
     return JBUI.scale(350);
   }
 
-  @Nonnull
+  
   public static String MaxFullContentWidthStyle() {
     return "width:" + MaxFullContentWidth() + "px;";
   }
@@ -97,9 +96,9 @@ public class BalloonLayoutConfiguration {
     return "width:" + JBUI.scale(RawStyleWidth) + "px;";
   }
 
-  @Nonnull
-  public static BalloonLayoutConfiguration create(@Nonnull Notification notification,
-                                                  @Nonnull BalloonLayoutData layoutData,
+  
+  public static BalloonLayoutConfiguration create(Notification notification,
+                                                  BalloonLayoutData layoutData,
                                                   boolean actions) {
     boolean hasTitle = notification.hasTitle();
     boolean hasContent = notification.hasContent();
@@ -112,25 +111,25 @@ public class BalloonLayoutConfiguration {
     return twoLines();
   }
 
-  @Nonnull
+  
   public BalloonLayoutConfiguration replace(int topSpaceHeight, int bottomSpaceHeight) {
     return new BalloonLayoutConfiguration(iconPanelWidth, iconOffset, topSpaceHeight, titleContentSpaceHeight, contentActionsSpaceHeight,
                                           titleActionsSpaceHeight, bottomSpaceHeight, actionGap, null, 0, 0, 0);
   }
 
-  @Nonnull
+  
   private static BalloonLayoutConfiguration twoLines() {
     return new BalloonLayoutConfiguration(new JBDimension(10, 11),
                                           JBUI.scale(11), JBUI.scale(5), JBUI.scale(5), JBUI.scale(5), JBUI.scale(14));
   }
 
-  @Nonnull
+  
   private static BalloonLayoutConfiguration treeLines() {
     return new BalloonLayoutConfiguration(new JBDimension(10, 7),
                                           JBUI.scale(7), JBUI.scale(3), JBUI.scale(7), 0, JBUI.scale(8));
   }
 
-  private BalloonLayoutConfiguration(@Nonnull Dimension iconOffset,
+  private BalloonLayoutConfiguration(Dimension iconOffset,
                                      int topSpaceHeight,
                                      int titleContentSpaceHeight,
                                      int contentActionsSpaceHeight,
@@ -143,7 +142,7 @@ public class BalloonLayoutConfiguration {
   }
 
   private BalloonLayoutConfiguration(int iconPanelWidth,
-                                     @Nonnull Dimension iconOffset,
+                                     Dimension iconOffset,
                                      int topSpaceHeight,
                                      int titleContentSpaceHeight,
                                      int contentActionsSpaceHeight,

@@ -38,8 +38,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -325,7 +324,7 @@ public class ModuleDependenciesAnalyzer {
      * @param isSelected true if the element is selected
      * @return the appearance to use for rendering
      */
-    @Nonnull
+    
     public abstract Consumer<ColoredTextContainer> getRender(boolean isSelected);
   }
 
@@ -385,7 +384,7 @@ public class ModuleDependenciesAnalyzer {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
+    
     @Override
     public Consumer<ColoredTextContainer> getRender(boolean isSelected) {
       return OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(myEntry);

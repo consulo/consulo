@@ -17,8 +17,7 @@ package consulo.usage;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,18 +42,18 @@ public class FindUsagesProcessPresentation {
     private Runnable mySearchWithProjectFiles;
     private boolean myCanceled;
 
-    public FindUsagesProcessPresentation(@Nonnull UsageViewPresentation presentation) {
+    public FindUsagesProcessPresentation(UsageViewPresentation presentation) {
         myUsageViewPresentation = presentation;
     }
 
-    public void addNotFoundAction(@Nonnull Action action) {
+    public void addNotFoundAction(Action action) {
         if (myNotFoundActions == null) {
             myNotFoundActions = new ArrayList<>();
         }
         myNotFoundActions.add(action);
     }
 
-    @Nonnull
+    
     public List<Action> getNotFoundActions() {
         return myNotFoundActions == null ? Collections.<Action>emptyList() : myNotFoundActions;
     }
@@ -79,7 +78,7 @@ public class FindUsagesProcessPresentation {
         return myProgressIndicatorFactory;
     }
 
-    public void setProgressIndicatorFactory(@Nonnull Supplier<ProgressIndicator> progressIndicatorFactory) {
+    public void setProgressIndicatorFactory(Supplier<ProgressIndicator> progressIndicatorFactory) {
         myProgressIndicatorFactory = progressIndicatorFactory;
     }
 
@@ -88,15 +87,15 @@ public class FindUsagesProcessPresentation {
         return mySearchWithProjectFiles;
     }
 
-    public void projectFileUsagesFound(@Nonnull Runnable searchWithProjectFiles) {
+    public void projectFileUsagesFound(Runnable searchWithProjectFiles) {
         mySearchWithProjectFiles = searchWithProjectFiles;
     }
 
-    public void setLargeFilesWereNotScanned(@Nonnull Collection<VirtualFile> largeFiles) {
+    public void setLargeFilesWereNotScanned(Collection<VirtualFile> largeFiles) {
         myLargeFiles = largeFiles;
     }
 
-    @Nonnull
+    
     public Collection<VirtualFile> getLargeFiles() {
         return myLargeFiles == null ? Collections.<VirtualFile>emptyList() : myLargeFiles;
     }
@@ -105,7 +104,7 @@ public class FindUsagesProcessPresentation {
         return myShowFindOptionsPrompt;
     }
 
-    @Nonnull
+    
     public UsageViewPresentation getUsageViewPresentation() {
         return myUsageViewPresentation;
     }

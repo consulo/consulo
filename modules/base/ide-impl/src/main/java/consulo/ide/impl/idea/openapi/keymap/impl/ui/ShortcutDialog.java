@@ -16,8 +16,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -55,7 +54,7 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
         return myConflictsPanel.isVisible();
     }
 
-    abstract @Nonnull Collection<String> getConflicts(T shortcut, String actionId, Keymap keymap);
+    abstract Collection<String> getConflicts(T shortcut, String actionId, Keymap keymap);
 
     abstract T toShortcut(Object value);
 

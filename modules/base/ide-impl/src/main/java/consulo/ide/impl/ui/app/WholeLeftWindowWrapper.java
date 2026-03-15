@@ -24,19 +24,18 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2018-06-29
  */
 public abstract class WholeLeftWindowWrapper extends WindowWrapper {
-  public WholeLeftWindowWrapper(@Nonnull String title) {
+  public WholeLeftWindowWrapper(String title) {
     super(title);
   }
 
   @Override
-  @Nonnull
+  
   @RequiredUIAccess
   protected Layout buildRootLayout(Disposable uiDisposable) {
     TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
@@ -54,12 +53,12 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
     return layout;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   protected abstract Couple<Component> createComponents(Disposable uiDisposable);
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   protected final Component createCenterComponent(Disposable uiDisposable) {
     throw new UnsupportedOperationException();

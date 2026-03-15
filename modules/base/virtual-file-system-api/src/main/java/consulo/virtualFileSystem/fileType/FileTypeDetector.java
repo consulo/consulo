@@ -21,8 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.util.io.ByteSequence;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -42,7 +41,7 @@ public interface FileTypeDetector {
      * @return detected file type, or null if was unable to detect
      */
     @Nullable
-    FileType detect(@Nonnull VirtualFile file, @Nonnull ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
+    FileType detect(VirtualFile file, ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
 
     /**
      * Returns the file type that this detector is capable of detecting, or null if it can detect

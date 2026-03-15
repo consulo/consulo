@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.ActionManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -29,11 +28,11 @@ import jakarta.inject.Inject;
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class WindowDressing implements ProjectManagerListener {
-  @Nonnull
+  
   private final ActionManager myActionManager;
 
   @Inject
-  public WindowDressing(@Nonnull ActionManager actionManager) {
+  public WindowDressing(ActionManager actionManager) {
     myActionManager = actionManager;
   }
 
@@ -42,12 +41,12 @@ public class WindowDressing implements ProjectManagerListener {
   }
 
   @Override
-  public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void projectOpened(Project project, UIAccess uiAccess) {
     getWindowActionGroup(myActionManager).addProject(project);
   }
 
   @Override
-  public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void projectClosed(Project project, UIAccess uiAccess) {
     getWindowActionGroup(myActionManager).removeProject(project);
   }
 }

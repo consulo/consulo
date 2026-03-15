@@ -18,7 +18,7 @@ package consulo.sandboxPlugin.ide.coverage;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.Configurable;
 import consulo.execution.coverage.CoverageOptions;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

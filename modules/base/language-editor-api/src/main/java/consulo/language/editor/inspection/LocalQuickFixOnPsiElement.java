@@ -23,14 +23,13 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
   protected static final Logger LOG = Logger.getInstance(LocalQuickFixOnPsiElement.class);
   protected final SmartPsiElementPointer<PsiElement> myStartElement;
   protected final SmartPsiElementPointer<PsiElement> myEndElement;
 
-  protected LocalQuickFixOnPsiElement(@Nonnull PsiElement element) {
+  protected LocalQuickFixOnPsiElement(PsiElement element) {
     this(element, element);
   }
 
@@ -51,16 +50,16 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
     myEndElement = endElement == startElement ? null : SmartPointerManager.getInstance(project).createSmartPsiElementPointer(endElement, endContainingFile);
   }
 
-  @Nonnull
+  
   @Override
   public final LocalizeValue getName() {
     return getText();
   }
 
-  public boolean isAvailable(@Nonnull Project project,
-                             @Nonnull PsiFile file,
-                             @Nonnull PsiElement startElement,
-                             @Nonnull PsiElement endElement) {
+  public boolean isAvailable(Project project,
+                             PsiFile file,
+                             PsiElement startElement,
+                             PsiElement endElement) {
     return true;
   }
 
@@ -87,11 +86,11 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
     return myEndElement == null ? null : myEndElement.getElement();
   }
 
-  @Nonnull
+  
   public abstract LocalizeValue getText();
 
   @Override
-  public final void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+  public final void applyFix(Project project, ProblemDescriptor descriptor) {
     applyFix();
   }
 
@@ -105,9 +104,9 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
     invoke(file.getProject(), file, startElement, endElement);
   }
 
-  public abstract void invoke(@Nonnull Project project,
-                              @Nonnull PsiFile file,
-                              @Nonnull PsiElement startElement,
-                              @Nonnull PsiElement endElement);
+  public abstract void invoke(Project project,
+                              PsiFile file,
+                              PsiElement startElement,
+                              PsiElement endElement);
 
 }

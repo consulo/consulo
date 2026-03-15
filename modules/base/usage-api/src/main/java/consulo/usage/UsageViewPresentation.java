@@ -18,8 +18,7 @@ package consulo.usage;
 import consulo.localize.LocalizeValue;
 import consulo.usage.localize.UsageLocalize;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -58,7 +57,7 @@ public class UsageViewPresentation {
         return myTabText;
     }
 
-    public void setTabText(@Nonnull LocalizeValue tabText) {
+    public void setTabText(LocalizeValue tabText) {
         myTabText = tabText.get();
     }
 
@@ -67,31 +66,31 @@ public class UsageViewPresentation {
         myTabText = tabText;
     }
 
-    @Nonnull
+    
     public String getScopeText() {
         return myScopeText;
     }
 
-    public void setScopeText(@Nonnull LocalizeValue scopeText) {
+    public void setScopeText(LocalizeValue scopeText) {
         myScopeText = scopeText.get();
     }
 
     @Deprecated
-    public void setScopeText(@Nonnull String scopeText) {
+    public void setScopeText(String scopeText) {
         myScopeText = scopeText;
     }
 
-    @Nonnull
+    
     public String getContextText() {
         return myContextText;
     }
 
-    public void setContextText(@Nonnull LocalizeValue contextText) {
+    public void setContextText(LocalizeValue contextText) {
         myContextText = contextText.get();
     }
 
     @Deprecated
-    public void setContextText(@Nonnull String contextText) {
+    public void setContextText(String contextText) {
         myContextText = contextText;
     }
 
@@ -107,7 +106,7 @@ public class UsageViewPresentation {
         return myUsagesString;
     }
 
-    public void setUsagesString(@Nonnull LocalizeValue usagesString) {
+    public void setUsagesString(LocalizeValue usagesString) {
         myUsagesString = usagesString.get();
     }
 
@@ -122,7 +121,7 @@ public class UsageViewPresentation {
         return myTargetsNodeText;
     }
 
-    public void setTargetsNodeText(@Nonnull LocalizeValue targetsNodeText) {
+    public void setTargetsNodeText(LocalizeValue targetsNodeText) {
         myTargetsNodeText = targetsNodeText.get();
     }
 
@@ -139,31 +138,31 @@ public class UsageViewPresentation {
         myShowCancelButton = showCancelButton;
     }
 
-    @Nonnull
+    
     public String getNonCodeUsagesString() {
         return myNonCodeUsagesString;
     }
 
-    public void setNonCodeUsagesString(@Nonnull LocalizeValue nonCodeUsagesString) {
+    public void setNonCodeUsagesString(LocalizeValue nonCodeUsagesString) {
         myNonCodeUsagesString = nonCodeUsagesString.get();
     }
 
     @Deprecated
-    public void setNonCodeUsagesString(@Nonnull String nonCodeUsagesString) {
+    public void setNonCodeUsagesString(String nonCodeUsagesString) {
         myNonCodeUsagesString = nonCodeUsagesString;
     }
 
-    @Nonnull
+    
     public String getCodeUsagesString() {
         return myCodeUsagesString;
     }
 
-    public void setCodeUsagesString(@Nonnull LocalizeValue codeUsagesString) {
+    public void setCodeUsagesString(LocalizeValue codeUsagesString) {
         myCodeUsagesString = codeUsagesString.get();
     }
 
     @Deprecated
-    public void setCodeUsagesString(@Nonnull String codeUsagesString) {
+    public void setCodeUsagesString(String codeUsagesString) {
         myCodeUsagesString = codeUsagesString;
     }
 
@@ -183,17 +182,17 @@ public class UsageViewPresentation {
         myCodeUsages = codeUsages;
     }
 
-    @Nonnull
+    
     public String getUsagesWord() {
         return myUsagesWord;
     }
 
-    public void setUsagesWord(@Nonnull LocalizeValue usagesWord) {
+    public void setUsagesWord(LocalizeValue usagesWord) {
         myUsagesWord = usagesWord.get();
     }
 
     @Deprecated
-    public void setUsagesWord(@Nonnull String usagesWord) {
+    public void setUsagesWord(String usagesWord) {
         myUsagesWord = usagesWord;
     }
 
@@ -201,7 +200,7 @@ public class UsageViewPresentation {
         return myTabName;
     }
 
-    public void setTabName(@Nonnull LocalizeValue tabName) {
+    public void setTabName(LocalizeValue tabName) {
         myTabName = tabName.get();
     }
 
@@ -214,7 +213,7 @@ public class UsageViewPresentation {
         return myToolwindowTitle;
     }
 
-    public void setToolwindowTitle(@Nonnull LocalizeValue toolwindowTitle) {
+    public void setToolwindowTitle(LocalizeValue toolwindowTitle) {
         myToolwindowTitle = toolwindowTitle.get();
     }
 
@@ -239,17 +238,17 @@ public class UsageViewPresentation {
         return myDynamicCodeUsagesString;
     }
 
-    @Nonnull
+    
     public String getUsagesInGeneratedCodeString() {
         return myUsagesInGeneratedCodeString;
     }
 
-    public void setUsagesInGeneratedCodeString(@Nonnull LocalizeValue usagesInGeneratedCodeString) {
+    public void setUsagesInGeneratedCodeString(LocalizeValue usagesInGeneratedCodeString) {
         myUsagesInGeneratedCodeString = usagesInGeneratedCodeString.get();
     }
 
     @Deprecated
-    public void setUsagesInGeneratedCodeString(@Nonnull String usagesInGeneratedCodeString) {
+    public void setUsagesInGeneratedCodeString(String usagesInGeneratedCodeString) {
         myUsagesInGeneratedCodeString = usagesInGeneratedCodeString;
     }
 

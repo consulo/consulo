@@ -18,8 +18,7 @@ package consulo.diff.impl.internal.fragment;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class LineFragmentImpl implements LineFragment {
          null);
   }
 
-  public LineFragmentImpl(@Nonnull LineFragment fragment, @Nullable List<DiffFragment> fragments) {
+  public LineFragmentImpl(LineFragment fragment, @Nullable List<DiffFragment> fragments) {
     this(fragment.getStartLine1(), fragment.getEndLine1(), fragment.getStartLine2(), fragment.getEndLine2(),
          fragment.getStartOffset1(), fragment.getEndOffset1(), fragment.getStartOffset2(), fragment.getEndOffset2(),
          fragments);
@@ -104,12 +103,12 @@ public class LineFragmentImpl implements LineFragment {
     return myEndOffset2;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public List<DiffFragment> getInnerFragments() {
     return myInnerFragments;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static List<DiffFragment> dropWholeChangedFragments(@Nullable List<DiffFragment> fragments, int length1, int length2) {
     if (fragments != null && fragments.size() == 1) {
       DiffFragment diffFragment = fragments.get(0);

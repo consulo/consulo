@@ -25,8 +25,7 @@ import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
@@ -52,7 +51,7 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
 
     @RequiredUIAccess
     @Override
-    public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value, @Nonnull Window window) {
+    public boolean canHandle(AnAction action, @Nullable DialogValue value, Window window) {
         if (value instanceof NewMasterPasswordResult newMasterPasswordResult) {
             LocalizeValue error = myOkHandler.apply(newMasterPasswordResult.password());
             if (error.isNotEmpty())  {
@@ -64,16 +63,16 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
         return super.canHandle(action, value);
     }
 
-    @Nonnull
+    
     @Override
     public DialogValue getOkValue() {
         return new NewMasterPasswordResult(myPasswordBox.getValueOrError().getBytes(StandardCharsets.UTF_8));
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
+    public Component createCenterComponent(Disposable uiDisposable) {
         myPasswordBox = PasswordBox.create();
         VerticalLayout layout = VerticalLayout.create();
         if (myTopNote.isNotEmpty()) {

@@ -17,19 +17,18 @@ package consulo.usage.rule;
 
 import consulo.usage.Usage;
 import consulo.usage.UsageTarget;
-import jakarta.annotation.Nonnull;
 
 public interface UsageFilteringRule {
     UsageFilteringRule[] EMPTY_ARRAY = new UsageFilteringRule[0];
 
-    default boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+    default boolean isVisible(Usage usage, UsageTarget[] targets) {
         return isVisible(usage);
     }
 
     /**
      * @deprecated implement {@link #isVisible(Usage, UsageTarget[])} instead
      */
-    default boolean isVisible(@Nonnull Usage usage) {
+    default boolean isVisible(Usage usage) {
         throw new UnsupportedOperationException();
     }
 }

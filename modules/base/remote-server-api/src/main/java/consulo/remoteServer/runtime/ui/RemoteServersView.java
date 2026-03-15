@@ -5,22 +5,21 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.remoteServer.runtime.ServerConnection;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class RemoteServersView {
-    public static RemoteServersView getInstance(@Nonnull Project project) {
+    public static RemoteServersView getInstance(Project project) {
         return project.getInstance(RemoteServersView.class);
     }
 
-    public abstract void showServerConnection(@Nonnull ServerConnection<?> connection);
+    public abstract void showServerConnection(ServerConnection<?> connection);
 
-    public abstract void showDeployment(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName);
+    public abstract void showDeployment(ServerConnection<?> connection, String deploymentName);
 
     public abstract void registerTreeNodeSelector(
-        @Nonnull ServersTreeNodeSelector selector,
-        @Nonnull Predicate<ServerConnection<?>> condition
+        ServersTreeNodeSelector selector,
+        Predicate<ServerConnection<?>> condition
     );
 }

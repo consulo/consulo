@@ -17,24 +17,23 @@ package consulo.codeEditor.event;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventObject;
 
 public class EditorFactoryEvent extends EventObject {
   private final Editor myEditor;
 
-  public EditorFactoryEvent(@Nonnull EditorFactory editorFactory, @Nonnull Editor editor) {
+  public EditorFactoryEvent(EditorFactory editorFactory, Editor editor) {
     super(editorFactory);
     myEditor = editor;
   }
 
-  @Nonnull
+  
   public EditorFactory getFactory(){
     return (EditorFactory) getSource();
   }
 
-  @Nonnull
+  
   public Editor getEditor() {
     return myEditor;
   }

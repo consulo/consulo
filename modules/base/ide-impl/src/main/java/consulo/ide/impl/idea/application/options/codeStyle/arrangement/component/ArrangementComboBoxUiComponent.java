@@ -20,7 +20,6 @@ import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.JBList;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,11 +35,11 @@ import java.util.List;
  */
 public class ArrangementComboBoxUiComponent extends AbstractArrangementUiComponent {
 
-  @Nonnull
+  
   private final JComboBox myComboBox;
 
   @SuppressWarnings("unchecked")
-  public ArrangementComboBoxUiComponent(@Nonnull List<ArrangementSettingsToken> tokens) {
+  public ArrangementComboBoxUiComponent(List<ArrangementSettingsToken> tokens) {
     super(tokens);
     ArrangementSettingsToken[] tokensArray = tokens.toArray(new ArrangementSettingsToken[tokens.size()]);
     Arrays.sort(tokensArray, new Comparator<ArrangementSettingsToken>() {
@@ -74,18 +73,18 @@ public class ArrangementComboBoxUiComponent extends AbstractArrangementUiCompone
     myComboBox.setPreferredSize(new Dimension(minWidth * 5 / 3, myComboBox.getPreferredSize().height));
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementSettingsToken getToken() {
     return (ArrangementSettingsToken)myComboBox.getSelectedItem();
   }
 
   @Override
-  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException {
+  public void chooseToken(ArrangementSettingsToken data) throws IllegalArgumentException {
     myComboBox.setSelectedItem(data);
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     ArrangementSettingsToken token = getToken();

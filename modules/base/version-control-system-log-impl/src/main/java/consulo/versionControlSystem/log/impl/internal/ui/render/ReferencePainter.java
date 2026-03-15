@@ -17,21 +17,20 @@ package consulo.versionControlSystem.log.impl.internal.ui.render;
 
 import consulo.versionControlSystem.log.VcsLogRefManager;
 import consulo.versionControlSystem.log.VcsRef;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
 public interface ReferencePainter {
-  void customizePainter(@Nonnull JComponent component,
-                        @Nonnull Collection<VcsRef> references,
+  void customizePainter(JComponent component,
+                        Collection<VcsRef> references,
                         @Nullable VcsLogRefManager manager,
-                        @Nonnull Color background,
-                        @Nonnull Color foreground);
+                        Color background,
+                        Color foreground);
 
-  void paint(@Nonnull Graphics2D g2, int x, int y, int height);
+  void paint(Graphics2D g2, int x, int y, int height);
 
   Dimension getSize();
 

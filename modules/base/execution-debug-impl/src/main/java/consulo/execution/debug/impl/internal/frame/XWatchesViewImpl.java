@@ -55,8 +55,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -79,7 +78,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     private final boolean myWatchesInVariables;
     private XDebuggerExpressionComboBox myEvaluateComboBox;
 
-    public XWatchesViewImpl(@Nonnull XDebugSessionImpl session, boolean watchesInVariables) {
+    public XWatchesViewImpl(XDebugSessionImpl session, boolean watchesInVariables) {
         super(session);
         myWatchesInVariables = watchesInVariables;
 
@@ -107,7 +106,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         new AnAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Object contents = CopyPasteManager.getInstance().getContents(XWatchTransferable.EXPRESSIONS_FLAVOR);
                 if (contents instanceof List) {
                     for (Object item : ((List) contents)) {
@@ -128,7 +127,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         final Alarm editAlarm = new Alarm();
         ClickListener mouseListener = new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
+            public boolean onClick(MouseEvent event, int clickCount) {
                 if (!SwingUtilities.isLeftMouseButton(event)
                     || ((event.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK)) != 0)) {
                     return false;
@@ -168,12 +167,12 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
 
         FocusListener focusListener = new FocusListener() {
             @Override
-            public void focusGained(@Nonnull FocusEvent e) {
+            public void focusGained(FocusEvent e) {
                 quitePeriod.addRequest(EmptyRunnable.getInstance(), UIUtil.getMultiClickInterval());
             }
 
             @Override
-            public void focusLost(@Nonnull FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 editAlarm.cancelAllRequests();
             }
         };
@@ -208,19 +207,19 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
                     new DumbAwareAction(ActionsBundle.actionText(XDebuggerActions.ADD_TO_WATCH), null, ExecutionDebugIconGroup.actionAddtowatch()) {
                         @Override
                         @RequiredUIAccess
-                        public void actionPerformed(@Nonnull AnActionEvent e) {
+                        public void actionPerformed(AnActionEvent e) {
                             myEvaluateComboBox.saveTextInHistory();
                             addWatchExpression(getExpression(), -1, false);
                         }
 
                         @Override
-                        public void update(@Nonnull AnActionEvent e) {
+                        public void update(AnActionEvent e) {
                             XExpression expression = getExpression();
                             e.getPresentation().setEnabled(expression != null && !StringUtil.isEmptyOrSpaces(expression.getExpression()));
                         }
 
                         @Override
-                        @Nonnull
+                        
                         public ActionUpdateThread getActionUpdateThread() {
                             return ActionUpdateThread.BGT;
                         }
@@ -286,7 +285,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    protected void buildTreeAndRestoreState(@Nonnull XStackFrame stackFrame) {
+    protected void buildTreeAndRestoreState(XStackFrame stackFrame) {
         super.buildTreeAndRestoreState(stackFrame);
         if (myEvaluateComboBox != null) {
             myEvaluateComboBox.setSourcePosition(stackFrame.getSourcePosition());
@@ -312,7 +311,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    public void addWatchExpression(@Nonnull XExpression expression, int index, boolean navigateToWatchNode) {
+    public void addWatchExpression(XExpression expression, int index, boolean navigateToWatchNode) {
         XDebugSession session = XDebugView.getSession(getTree());
         myRootNode.addWatchExpression(session != null ? session.getCurrentStackFrame() : null, expression, index, navigateToWatchNode);
         updateSessionData();
@@ -340,7 +339,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         }
     }
 
-    @Nonnull
+    
     private XExpression[] getExpressions() {
         XDebuggerTree tree = getTree();
         XDebugSession session = XDebugView.getSession(tree);
@@ -363,7 +362,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (XWatchesView.DATA_KEY == dataId) {
             return this;
         }
@@ -371,7 +370,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    protected void beforeTreeBuild(@Nonnull SessionEvent event) {
+    protected void beforeTreeBuild(SessionEvent event) {
         if (event != SessionEvent.SETTINGS_CHANGED) {
             myRootNode.removeResultNode();
         }

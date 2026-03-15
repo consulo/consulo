@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,8 +26,8 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface HighlightVisitorFactory {
-    boolean suitableForFile(@Nonnull PsiFile file);
+    boolean suitableForFile(PsiFile file);
 
-    @Nonnull
+    
     HighlightVisitor createVisitor();
 }

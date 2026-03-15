@@ -18,7 +18,6 @@ package consulo.codeEditor.impl;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.RealEditor;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +30,8 @@ public class FoldingAnchorsOverlayStrategy {
     myEditor = editor;
   }
 
-  @Nonnull
-  public Collection<DisplayedFoldingAnchor> getAnchorsToDisplay(int firstVisibleOffset, int lastVisibleOffset, @Nonnull List<FoldRegion> activeFoldRegions) {
+  
+  public Collection<DisplayedFoldingAnchor> getAnchorsToDisplay(int firstVisibleOffset, int lastVisibleOffset, List<FoldRegion> activeFoldRegions) {
     Map<Integer, DisplayedFoldingAnchor> result = new HashMap<>();
     FoldRegion[] visibleFoldRegions = myEditor.getFoldingModel().fetchVisible();
     if (visibleFoldRegions != null) {
@@ -76,12 +75,12 @@ public class FoldingAnchorsOverlayStrategy {
     return result.values();
   }
 
-  private static void tryAdding(@Nonnull Map<Integer, DisplayedFoldingAnchor> resultsMap,
-                                @Nonnull FoldRegion region,
+  private static void tryAdding(Map<Integer, DisplayedFoldingAnchor> resultsMap,
+                                FoldRegion region,
                                 int visualLine,
                                 int visualHeight,
-                                @Nonnull DisplayedFoldingAnchor.Type type,
-                                @Nonnull List<FoldRegion> activeRegions) {
+                                DisplayedFoldingAnchor.Type type,
+                                List<FoldRegion> activeRegions) {
     DisplayedFoldingAnchor prev = resultsMap.get(visualLine);
     if (prev != null && !prev.type.singleLine) {
       if (type.singleLine) {

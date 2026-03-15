@@ -16,7 +16,7 @@
 package consulo.project.internal;
 
 import consulo.project.DumbService;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

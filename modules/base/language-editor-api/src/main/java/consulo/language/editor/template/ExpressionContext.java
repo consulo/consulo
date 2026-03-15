@@ -21,7 +21,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ExpressionContext {
   Key<String> SELECTION = Key.create("SELECTION");

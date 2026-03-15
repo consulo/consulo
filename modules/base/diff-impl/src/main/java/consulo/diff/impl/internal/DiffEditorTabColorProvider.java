@@ -10,8 +10,7 @@ import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -26,7 +25,7 @@ public class DiffEditorTabColorProvider implements EditorTabColorProvider, DumbA
 
     @Nullable
     @Override
-    public ColorValue getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public ColorValue getEditorTabColor(Project project, VirtualFile file) {
         if (file instanceof DiffVirtualFile) {
             FileColorManager fileColorManager = myFileColorManager.get();
             if (file.getName().equals("Shelf")) {

@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,8 +33,8 @@ public interface RuntimeRootProvider {
     }
 
     @Nullable
-    String getCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType);
+    String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType);
 
     @Nullable
-    VirtualFile getCompilerOutput(@Nonnull ContentFolderTypeProvider contentFolderType);
+    VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType);
 }

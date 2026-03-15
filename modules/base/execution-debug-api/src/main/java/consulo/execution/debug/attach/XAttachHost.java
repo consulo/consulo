@@ -17,7 +17,6 @@ package consulo.execution.debug.attach;
 
 import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -28,6 +27,6 @@ public interface XAttachHost {
   /**
    * @return a list of running processes on this host
    */
-  @Nonnull
+  
   Collection<ProcessInfo> getProcessList() throws ExecutionException;
 }

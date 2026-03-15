@@ -11,8 +11,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.UIAccessScheduler;
 import consulo.util.lang.MathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,7 +64,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class JBAnimator implements Disposable {
 
   private int myPeriod = 16;
-  private @Nonnull
+  private 
   Type myType = Type.IN_TIME;
   private boolean myCyclic = false;
   private boolean myIgnorePowerSaveMode = false;
@@ -73,11 +72,11 @@ public final class JBAnimator implements Disposable {
   @Nullable
   String myName = null;
 
-  private final @Nonnull
+  private final 
   ScheduledExecutorService myService;
-  private final @Nonnull
+  private final 
   AtomicLong myRunning = new AtomicLong();
-  private final @Nonnull
+  private final 
   AtomicBoolean myDisposed = new AtomicBoolean();
 
   private static final Logger LOG = Logger.getInstance(JBAnimator.class);
@@ -90,11 +89,11 @@ public final class JBAnimator implements Disposable {
   }
 
   @SuppressWarnings("unused")
-  public JBAnimator(@Nonnull Disposable parentDisposable) {
+  public JBAnimator(Disposable parentDisposable) {
     this(Thread.SWING_THREAD, parentDisposable);
   }
 
-  public JBAnimator(@Nonnull Thread threadToUse, @Nullable Disposable parentDisposable) {
+  public JBAnimator(Thread threadToUse, @Nullable Disposable parentDisposable) {
     myService = threadToUse == Thread.SWING_THREAD ?
       Application.get().getLastUIAccess().getScheduler() :
       AppExecutorUtil.createBoundedScheduledExecutorService("Animator Pool", 1);
@@ -112,7 +111,7 @@ public final class JBAnimator implements Disposable {
   /**
    * @see #animate(Collection)
    */
-  public long animate(@Nonnull  Animation... animations) {
+  public long animate(Animation... animations) {
     return animate(Arrays.asList(animations));
   }
 
@@ -125,7 +124,7 @@ public final class JBAnimator implements Disposable {
    * @param animations Collection of animations to be scheduled for running.
    * @return task ID or {@link Long#MAX_VALUE} if animator is disposed
    */
-  public long animate(@Nonnull Collection< Animation> animations) {
+  public long animate(Collection< Animation> animations) {
     if (myDisposed.get()) {
       LOG.warn("Animator is already disposed");
       return Long.MAX_VALUE;
@@ -183,7 +182,7 @@ public final class JBAnimator implements Disposable {
       final boolean cycle = myCyclic;
       @Nullable
       FrameCounter frameCounter;
-      @Nonnull
+      
       LinkedHashSet<Animation> scheduledAnimations = new LinkedHashSet<>();
       //private final long animationStarted = System.nanoTime();
       private long nextScheduleTime = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(delay); // ns
@@ -305,7 +304,7 @@ public final class JBAnimator implements Disposable {
     return myPeriod;
   }
 
-  public @Nonnull
+  public 
   JBAnimator setPeriod(int period) {
     myPeriod = Math.max(period, 1);
     return this;
@@ -322,24 +321,24 @@ public final class JBAnimator implements Disposable {
    * so a cyclic animation can be start, e.g. icon animation. For 8 icons
    * there are 8 values will be submitted: 0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875.
    */
-  public @Nonnull
+  public 
   JBAnimator setCyclic(boolean cyclic) {
     myCyclic = cyclic;
     return this;
   }
 
-  public @Nonnull
+  public 
   JBAnimator ignorePowerSaveMode() {
     myIgnorePowerSaveMode = true;
     return this;
   }
 
-  public @Nonnull
+  public 
   Type getType() {
     return myType;
   }
 
-  public @Nonnull
+  public 
   JBAnimator setType(Type type) {
     myType = type;
     return this;
@@ -354,7 +353,7 @@ public final class JBAnimator implements Disposable {
   /**
    * Set an optional name to identify the animator.
    */
-  public @Nonnull
+  public 
   JBAnimator setName(@Nullable String name) {
     myName = name;
     return this;
@@ -425,7 +424,7 @@ public final class JBAnimator implements Disposable {
     long getDelay(long currentFrame);
   }
 
-  private static FrameCounter create(@Nonnull Type type, int period, int duration) {
+  private static FrameCounter create(Type type, int period, int duration) {
     return switch(type){
       case EACH_FRAME -> new FrameCounter() {
 

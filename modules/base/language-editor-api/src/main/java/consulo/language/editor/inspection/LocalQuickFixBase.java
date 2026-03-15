@@ -17,7 +17,6 @@ package consulo.language.editor.inspection;
 
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -28,16 +27,16 @@ public abstract class LocalQuickFixBase implements LocalQuickFix {
     /**
      * @param name the name of the quick fix
      */
-    protected LocalQuickFixBase(@Nonnull LocalizeValue name) {
+    protected LocalQuickFixBase(LocalizeValue name) {
         myName = name;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return myName;
     }
 
     @Override
-    public abstract void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor);
+    public abstract void applyFix(Project project, ProblemDescriptor descriptor);
 }

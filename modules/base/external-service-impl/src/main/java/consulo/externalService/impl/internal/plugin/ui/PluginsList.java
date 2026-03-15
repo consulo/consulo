@@ -24,8 +24,7 @@ import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -53,7 +52,7 @@ public class PluginsList {
         new ListSpeedSearch(myPluginList, o -> ((PluginDescriptor) o).getName());
     }
 
-    @Nonnull
+    
     protected PluginsListRender createRender(PluginsPanel pluginsPanel) {
         return new PluginsListRender(pluginsPanel);
     }

@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -34,7 +33,7 @@ import jakarta.inject.Inject;
 @ActionImpl(id = "WelcomeScreen.DevelopPlugins")
 public class DevelopPluginsAction extends AnAction implements DumbAware {
     @Inject
-    public DevelopPluginsAction(@Nonnull Application application) {
+    public DevelopPluginsAction(Application application) {
         super(
             ActionLocalize.actionWelcomescreenDeveloppluginsText(),
             ActionLocalize.actionWelcomescreenDeveloppluginsDescription(application.getName()),
@@ -44,7 +43,7 @@ public class DevelopPluginsAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         BrowserUtil.browse("https://consulo.dev");
     }
 }

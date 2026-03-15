@@ -18,7 +18,6 @@ package consulo.application.plugin;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.container.plugin.PluginId;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface PluginActionListener {
-    void pluginsInstalled(@Nonnull PluginId[] pluginIds);
+    void pluginsInstalled(PluginId[] pluginIds);
 
-    void pluginsUninstalled(@Nonnull PluginId[] pluginIds);
+    void pluginsUninstalled(PluginId[] pluginIds);
 }

@@ -8,8 +8,7 @@ import consulo.project.Project;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.table.TreeTable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -32,7 +31,7 @@ public final class EditSourceOnDoubleClickHandler {
   public static void install(final TreeTable treeTable) {
     new DoubleClickListener() {
       @Override
-      protected boolean onDoubleClick(@Nonnull MouseEvent e) {
+      protected boolean onDoubleClick(MouseEvent e) {
         if (Application.get().getCurrentModalityState().dominates(Application.get().getNoneModalityState())) return false;
         if (treeTable.getTree().getPathForLocation(e.getX(), e.getY()) == null) return false;
         DataContext dataContext = DataManager.getInstance().getDataContext(treeTable);
@@ -47,7 +46,7 @@ public final class EditSourceOnDoubleClickHandler {
   public static void install(final JTable table) {
     new DoubleClickListener() {
       @Override
-      protected boolean onDoubleClick(@Nonnull MouseEvent e) {
+      protected boolean onDoubleClick(MouseEvent e) {
         if (Application.get().getCurrentModalityState().dominates(Application.get().getNoneModalityState())) return false;
         if (table.columnAtPoint(e.getPoint()) < 0) return false;
         if (table.rowAtPoint(e.getPoint()) < 0) return false;
@@ -63,7 +62,7 @@ public final class EditSourceOnDoubleClickHandler {
   public static void install(final JList list, final Runnable whenPerformed) {
     new DoubleClickListener() {
       @Override
-      protected boolean onDoubleClick(@Nonnull MouseEvent e) {
+      protected boolean onDoubleClick(MouseEvent e) {
         Point point = e.getPoint();
         int index = list.locationToIndex(point);
         if (index == -1) return false;
@@ -76,7 +75,7 @@ public final class EditSourceOnDoubleClickHandler {
     }.installOn(list);
   }
 
-  public static boolean isToggleEvent(@Nonnull JTree tree, @Nonnull MouseEvent e) {
+  public static boolean isToggleEvent(JTree tree, MouseEvent e) {
     if (!SwingUtilities.isLeftMouseButton(e)) return false;
     int count = tree.getToggleClickCount();
     if (count <= 0 || e.getClickCount() % count != 0) return false;
@@ -86,7 +85,7 @@ public final class EditSourceOnDoubleClickHandler {
   /**
    * @return {@code true} to expand/collapse the node, {@code false} to navigate to source if possible
    */
-  public static boolean isExpandPreferable(@Nonnull JTree tree, @Nullable TreePath path) {
+  public static boolean isExpandPreferable(JTree tree, @Nullable TreePath path) {
     return EditSourceOnDoubleClickHandlerBase.isExpandPreferable(tree, path);
   }
 
@@ -105,7 +104,7 @@ public final class EditSourceOnDoubleClickHandler {
     }
 
     @Override
-    public void installOn(@Nonnull Component c, boolean allowDragWhileClicking) {
+    public void installOn(Component c, boolean allowDragWhileClicking) {
       super.installOn(c, allowDragWhileClicking);
       myTree.putClientProperty(EditSourceOnDoubleClickHandlerBase.INSTALLED, true);
     }
@@ -117,7 +116,7 @@ public final class EditSourceOnDoubleClickHandler {
     }
 
     @Override
-    public boolean onDoubleClick(@Nonnull MouseEvent e) {
+    public boolean onDoubleClick(MouseEvent e) {
       TreePath clickPath = myTree.getClosestPathForLocation(e.getX(), e.getY());
       if (clickPath == null) return false;
 
@@ -136,7 +135,7 @@ public final class EditSourceOnDoubleClickHandler {
     }
 
     @SuppressWarnings("UnusedParameters")
-    protected void processDoubleClick(@Nonnull MouseEvent e, @Nonnull DataContext dataContext, @Nonnull TreePath treePath) {
+    protected void processDoubleClick(MouseEvent e, DataContext dataContext, TreePath treePath) {
       OpenSourceUtil.openSourcesFrom(dataContext, true);
       if (myWhenPerformed != null) myWhenPerformed.run();
     }

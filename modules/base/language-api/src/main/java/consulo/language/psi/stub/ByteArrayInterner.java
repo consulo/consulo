@@ -6,7 +6,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 
 class ByteArrayInterner {
@@ -24,7 +23,7 @@ class ByteArrayInterner {
   private final ObjectIntMap<byte[]> arrayToStart = ObjectMaps.newObjectIntHashMap(BYTE_ARRAY_STRATEGY);
   final BufferExposingByteArrayOutputStream joinedBuffer = new BufferExposingByteArrayOutputStream();
 
-  int internBytes(@Nonnull byte[] bytes) {
+  int internBytes(byte[] bytes) {
     if (bytes.length == 0) return 0;
 
     int start = arrayToStart.getInt(bytes);

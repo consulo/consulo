@@ -36,8 +36,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledComponents;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -132,7 +131,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
       return false;
     }
 
-    @Nonnull
+    
     @Override
     public Component get() {
       return myWholeLayout;
@@ -142,13 +141,13 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
   public EditorSmartKeysConfigurable() {
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Smart Keys");
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "editor.preferences.smartKeys";
@@ -161,15 +160,15 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  protected Panel createPanel(@Nonnull Disposable uiDisposable) {
+  protected Panel createPanel(Disposable uiDisposable) {
     return new Panel();
   }
 
   @RequiredUIAccess
   @Override
-  protected boolean isModified(@Nonnull Panel panel) {
+  protected boolean isModified(Panel panel) {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 
@@ -196,7 +195,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
   @RequiredUIAccess
   @Override
-  protected void apply(@Nonnull Panel panel) throws ConfigurationException {
+  protected void apply(Panel panel) throws ConfigurationException {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 
@@ -217,7 +216,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
   @RequiredUIAccess
   @Override
-  protected void reset(@Nonnull Panel panel) {
+  protected void reset(Panel panel) {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 

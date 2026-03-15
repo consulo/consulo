@@ -34,8 +34,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.function.Function;
@@ -104,7 +103,6 @@ public final class MacroManagerImpl implements MacroManager {
   }
 
   @Override
-  @Nonnull
   public Collection<Macro> getMacros() {
     return ContainerUtil.concat(myPredefinedMacroes, Application.get().getExtensionPoint(Macro.class).getExtensionList());
   }
@@ -138,13 +136,11 @@ public final class MacroManagerImpl implements MacroManager {
    * Expands all macros that are found in the <code>str</code>.
    */
   @Override
-  @Nullable
-  public String expandMacrosInString(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.ExecutionCancelledException {
+  public String expandMacrosInString(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.@Nullable ExecutionCancelledException {
     return expandMacroSet(str, firstQueueExpand, dataContext, getMacros().iterator());
   }
 
-  @Nullable
-  private String expandMacroSet(String str, boolean firstQueueExpand, DataContext dataContext, Iterator<Macro> macros) throws Macro.ExecutionCancelledException {
+  private String expandMacroSet(String str, boolean firstQueueExpand, DataContext dataContext, Iterator<Macro> macros) throws Macro.@Nullable ExecutionCancelledException {
     if (str == null) return null;
     while (macros.hasNext()) {
       Macro macro = macros.next();

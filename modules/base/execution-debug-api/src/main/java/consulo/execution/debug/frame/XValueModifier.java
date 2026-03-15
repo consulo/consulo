@@ -15,8 +15,7 @@
  */
 package consulo.execution.debug.frame;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -28,7 +27,7 @@ public abstract class XValueModifier {
    * @param expression new value
    * @param callback used to notify that value has been successfully modified or an error occurs
    */
-  public abstract void setValue(@Nonnull String expression, @Nonnull XModificationCallback callback);
+  public abstract void setValue(String expression, XModificationCallback callback);
 
   /**
    * @return return text to show in expression editor when "Set Value" action is invoked

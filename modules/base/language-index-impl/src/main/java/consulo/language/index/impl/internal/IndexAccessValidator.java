@@ -19,14 +19,13 @@ import consulo.application.ApplicationManager;
 import consulo.index.io.ID;
 import consulo.logging.Logger;
 import consulo.application.util.function.ThrowableComputable;
-import jakarta.annotation.Nonnull;
 
 import java.text.MessageFormat;
 
 public class IndexAccessValidator {
   private final ThreadLocal<ID<?, ?>> ourAlreadyProcessingIndices = new ThreadLocal<>();
 
-  private void checkAccessingIndexDuringOtherIndexProcessing(@Nonnull ID<?, ?> indexKey) {
+  private void checkAccessingIndexDuringOtherIndexProcessing(ID<?, ?> indexKey) {
     ID<?, ?> alreadyProcessingIndex = ourAlreadyProcessingIndices.get();
     if (alreadyProcessingIndex != null && alreadyProcessingIndex != indexKey) {
       String message = MessageFormat.format("Accessing ''{0}'' during processing ''{1}''. Nested different indices processing may cause deadlock", indexKey.getName(), alreadyProcessingIndex.getName());
@@ -35,7 +34,7 @@ public class IndexAccessValidator {
     }
   }
 
-  public <T, E extends Throwable> T validate(@Nonnull ID<?, ?> indexKey, @Nonnull ThrowableComputable<T, E> runnable) throws E {
+  public <T, E extends Throwable> T validate(ID<?, ?> indexKey, ThrowableComputable<T, E> runnable) throws E {
     checkAccessingIndexDuringOtherIndexProcessing(indexKey);
     ourAlreadyProcessingIndices.set(indexKey);
     try {

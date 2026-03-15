@@ -18,8 +18,7 @@ package consulo.process.util;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -49,37 +48,37 @@ public class ProcessOutput {
     myStderrBuilder.append(text);
   }
 
-  @Nonnull
+  
   public String getStdout() {
     return myStdoutBuilder.toString();
   }
 
-  @Nonnull
+  
   public String getStderr() {
     return myStderrBuilder.toString();
   }
 
-  @Nonnull
+  
   public List<String> getStdoutLines() {
     return getStdoutLines(true);
   }
 
-  @Nonnull
+  
   public List<String> getStdoutLines(boolean excludeEmptyLines) {
     return splitLines(getStdout(), excludeEmptyLines);
   }
 
-  @Nonnull
+  
   public List<String> getStderrLines() {
     return getStderrLines(true);
   }
 
-  @Nonnull
+  
   public List<String> getStderrLines(boolean excludeEmptyLines) {
     return splitLines(getStderr(), excludeEmptyLines);
   }
 
-  @Nonnull
+  
   private static List<String> splitLines(String s, boolean excludeEmptyLines) {
     String converted = StringUtil.convertLineSeparators(s);
     return StringUtil.split(converted, "\n", true, excludeEmptyLines);
@@ -92,7 +91,7 @@ public class ProcessOutput {
    * @param logger where to put error information
    * @return true iff exit code is zero
    */
-  public boolean checkSuccess(@Nonnull Logger logger) {
+  public boolean checkSuccess(Logger logger) {
     if (getExitCode() != 0 || isTimeout()) {
       logger.info(getStderr() + (isTimeout() ? "\nTimed out" : "\nExit code " + getExitCode()));
       return false;

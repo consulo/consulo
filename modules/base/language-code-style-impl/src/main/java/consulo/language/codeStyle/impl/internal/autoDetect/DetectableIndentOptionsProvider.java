@@ -27,8 +27,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Maps;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     @Nullable
     @Override
     @RequiredReadAction
-    public IndentOptions getIndentOptions(@Nonnull CodeStyleSettings settings, @Nonnull PsiFile file) {
+    public IndentOptions getIndentOptions(CodeStyleSettings settings, PsiFile file) {
         if (!isEnabled(settings, file)) {
             return null;
         }
@@ -86,9 +85,9 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     }
 
     protected void scheduleDetectionInBackground(
-        @Nonnull Project project,
-        @Nonnull Document document,
-        @Nonnull TimeStampedIndentOptions options
+        Project project,
+        Document document,
+        TimeStampedIndentOptions options
     ) {
         new DetectAndAdjustIndentOptionsTask(project, document, options).scheduleInBackgroundForCommittedDocument();
     }
@@ -104,7 +103,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     }
 
     @RequiredReadAction
-    private boolean isEnabled(@Nonnull CodeStyleSettings settings, @Nonnull PsiFile file) {
+    private boolean isEnabled(CodeStyleSettings settings, PsiFile file) {
         if (!file.isValid() || !file.isWritable() || file instanceof PsiBinaryFile
             || file instanceof PsiCompiledFile || ScratchUtil.isScratch(file.getVirtualFile())) {
             return false;
@@ -123,7 +122,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         return FileIndentOptionsProvider.EP_NAME.findExtension(DetectableIndentOptionsProvider.class);
     }
 
-    private void disableForFile(@Nonnull VirtualFile file, @Nonnull IndentOptions indentOptions) {
+    private void disableForFile(VirtualFile file, IndentOptions indentOptions) {
         myDiscardedOptions.put(file, indentOptions);
     }
 
@@ -137,7 +136,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         return null;
     }
 
-    private static void showDisabledDetectionNotification(@Nonnull Project project) {
+    private static void showDisabledDetectionNotification(Project project) {
         NotificationService.getInstance()
             .newInfo(NOTIFICATION_GROUP)
             .title(ApplicationLocalize.codeStyleIndentDetectorNotificationContent())
@@ -155,13 +154,13 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
             .notify(project);
     }
 
-    private static boolean areDetected(@Nonnull IndentOptions indentOptions) {
+    private static boolean areDetected(IndentOptions indentOptions) {
         return indentOptions instanceof TimeStampedIndentOptions timeStampedIndentOptions && timeStampedIndentOptions.isDetected();
     }
 
     @Nullable
     @Override
-    public IndentStatusBarUIContributor getIndentStatusBarUiContributor(@Nonnull IndentOptions indentOptions) {
+    public IndentStatusBarUIContributor getIndentStatusBarUiContributor(IndentOptions indentOptions) {
         return new MyUIContributor(indentOptions);
     }
 
@@ -171,7 +170,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         }
 
         @Override
-        public AnAction[] getActions(@Nonnull PsiFile file) {
+        public AnAction[] getActions(PsiFile file) {
             IndentOptions indentOptions = getIndentOptions();
             List<AnAction> actions = new ArrayList<>();
             VirtualFile virtualFile = file.getVirtualFile();
@@ -227,8 +226,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
 
         @Override
         public
-        @Nonnull
-        AnAction createDisableAction(@Nonnull Project project) {
+        
+        AnAction createDisableAction(Project project) {
             return DumbAwareAction.create(
                 ApplicationLocalize.codeStyleIndentDetectorDisable().get(),
                 e -> {
@@ -249,7 +248,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         }
 
         @Override
-        public boolean areActionsAvailable(@Nonnull VirtualFile file) {
+        public boolean areActionsAvailable(VirtualFile file) {
             return areDetected(getIndentOptions()) || myDiscardedOptions.containsKey(file);
         }
     }

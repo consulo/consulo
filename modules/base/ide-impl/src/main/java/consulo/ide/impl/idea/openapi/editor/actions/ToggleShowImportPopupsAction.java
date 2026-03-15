@@ -22,22 +22,21 @@ import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
 public class ToggleShowImportPopupsAction extends ToggleAction {
   @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
+  public boolean isSelected(AnActionEvent e) {
     PsiFile file = e.getData(PsiFile.KEY);
     return file != null && DaemonCodeAnalyzer.getInstance(file.getProject()).isImportHintsEnabled(file);
   }
 
   @Override
   @RequiredUIAccess
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+  public void setSelected(AnActionEvent e, boolean state) {
     PsiFile file = e.getData(PsiFile.KEY);
     if (file != null) {
       DaemonCodeAnalyzer.getInstance(file.getProject()).setImportHintsEnabled(file, state);
@@ -45,7 +44,7 @@ public class ToggleShowImportPopupsAction extends ToggleAction {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(e.hasData(Editor.KEY) && e.hasData(PsiFile.KEY));
     super.update(e);
   }

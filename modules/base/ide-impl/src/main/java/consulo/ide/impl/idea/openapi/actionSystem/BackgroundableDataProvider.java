@@ -3,8 +3,7 @@ package consulo.ide.impl.idea.openapi.actionSystem;
 
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface BackgroundableDataProvider extends DataProvider {
 
@@ -18,7 +17,7 @@ public interface BackgroundableDataProvider extends DataProvider {
 
   @Nullable
   @Override
-  default Object getData(@Nonnull Key<?> dataId) {
+  default Object getData(Key<?> dataId) {
     DataProvider async = createBackgroundDataProvider();
     return async == null ? null : async.getData(dataId);
   }

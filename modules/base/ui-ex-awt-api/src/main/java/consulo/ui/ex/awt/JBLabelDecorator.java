@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -34,11 +33,11 @@ public class JBLabelDecorator extends JBLabel {
     super(image);
   }
 
-  private JBLabelDecorator(@Nonnull String text) {
+  private JBLabelDecorator(String text) {
     super(text);
   }
 
-  private JBLabelDecorator(@Nonnull String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, horizontalAlignment);
   }
 
@@ -46,7 +45,7 @@ public class JBLabelDecorator extends JBLabel {
     super(image, horizontalAlignment);
   }
 
-  private JBLabelDecorator(@Nonnull String text, @Nullable Image icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(String text, @Nullable Image icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, icon, horizontalAlignment);
   }
 
@@ -67,12 +66,12 @@ public class JBLabelDecorator extends JBLabel {
     return this;
   }
 
-  public JBLabelDecorator setComponentStyleDecorative(@Nonnull UIUtil.ComponentStyle componentStyle) {
+  public JBLabelDecorator setComponentStyleDecorative(UIUtil.ComponentStyle componentStyle) {
     super.setComponentStyle(componentStyle);
     return this;
   }
 
-  public JBLabelDecorator setFontColorDecorative(@Nonnull UIUtil.FontColor fontColor) {
+  public JBLabelDecorator setFontColorDecorative(UIUtil.FontColor fontColor) {
     super.setFontColor(fontColor);
     return this;
   }

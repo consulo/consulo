@@ -52,8 +52,7 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -70,8 +69,8 @@ import java.util.List;
  * @since 2024-07-04
  */
 public class AWTDiffUtil {
-    @Nonnull
-    public static List<JComponent> createSyncHeightComponents(@Nonnull List<JComponent> components) {
+    
+    public static List<JComponent> createSyncHeightComponents(List<JComponent> components) {
         if (!ContainerUtil.exists(components, Predicates.notNull())) {
             return components;
         }
@@ -82,8 +81,8 @@ public class AWTDiffUtil {
         return result;
     }
 
-    @Nonnull
-    public static JComponent createStackedComponents(@Nonnull List<JComponent> components, int gap) {
+    
+    public static JComponent createStackedComponents(List<JComponent> components, int gap) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -97,8 +96,8 @@ public class AWTDiffUtil {
         return panel;
     }
 
-    @Nonnull
-    static JComponent createSeparatorPanel(@Nonnull LineSeparator separator) {
+    
+    static JComponent createSeparatorPanel(LineSeparator separator) {
         JLabel label = new JLabel(separator.name());
         Color color;
         if (separator == LineSeparator.CRLF) {
@@ -132,8 +131,8 @@ public class AWTDiffUtil {
         ProjectIdeFocusManager.getInstance(project).requestFocus(component, true);
     }
 
-    @Nonnull
-    public static List<JComponent> createSimpleTitles(@Nonnull ContentDiffRequest request) {
+    
+    public static List<JComponent> createSimpleTitles(ContentDiffRequest request) {
         List<DiffContent> contents = request.getContents();
         List<String> titles = request.getContentTitles();
 
@@ -151,8 +150,8 @@ public class AWTDiffUtil {
         return components;
     }
 
-    @Nonnull
-    public static List<JComponent> createTextTitles(@Nonnull ContentDiffRequest request, @Nonnull List<? extends Editor> editors) {
+    
+    public static List<JComponent> createTextTitles(ContentDiffRequest request, List<? extends Editor> editors) {
         List<DiffContent> contents = request.getContents();
         List<String> titles = request.getContentTitles();
 
@@ -178,7 +177,7 @@ public class AWTDiffUtil {
     @Nullable
     private static JComponent createTitleWithNotifications(
         @Nullable JComponent title,
-        @Nonnull DiffContent content
+        DiffContent content
     ) {
         List<JComponent> notifications = getCustomNotifications(content);
         if (notifications.isEmpty()) {
@@ -195,8 +194,8 @@ public class AWTDiffUtil {
 
     @Nullable
     private static JComponent createTitle(
-        @Nonnull String title,
-        @Nonnull DiffContent content,
+        String title,
+        DiffContent content,
         boolean equalCharsets,
         boolean equalSeparators,
         @Nullable Editor editor
@@ -212,14 +211,14 @@ public class AWTDiffUtil {
         return createTitle(title, charset, separator, isReadOnly);
     }
 
-    @Nonnull
-    public static JComponent createTitle(@Nonnull String title) {
+    
+    public static JComponent createTitle(String title) {
         return createTitle(title, null, null, false);
     }
 
-    @Nonnull
+    
     public static JComponent createTitle(
-        @Nonnull String title,
+        String title,
         @Nullable Charset charset,
         @Nullable LineSeparator separator,
         boolean readOnly
@@ -248,8 +247,8 @@ public class AWTDiffUtil {
         return panel;
     }
 
-    @Nonnull
-    private static JComponent createCharsetPanel(@Nonnull Charset charset) {
+    
+    private static JComponent createCharsetPanel(Charset charset) {
         JLabel label = new JLabel(charset.displayName());
         // TODO: specific colors for other charsets
         if (charset.equals(Charset.forName("UTF-8"))) {
@@ -265,9 +264,9 @@ public class AWTDiffUtil {
     }
 
     public static void showSuccessPopup(
-        @Nonnull String message,
-        @Nonnull RelativePoint point,
-        @Nonnull Disposable disposable,
+        String message,
+        RelativePoint point,
+        Disposable disposable,
         @Nullable Runnable hyperlinkHandler
     ) {
         HyperlinkListener listener = null;
@@ -290,8 +289,8 @@ public class AWTDiffUtil {
         Disposer.register(disposable, balloon);
     }
 
-    @Nonnull
-    public static JPanel createMessagePanel(@Nonnull String message) {
+    
+    public static JPanel createMessagePanel(String message) {
         String text = StringUtil.replace(message, "\n", "<br>");
         JLabel label = new JBLabel(text) {
             @Override
@@ -307,12 +306,12 @@ public class AWTDiffUtil {
         return new CenteredPanel(label, JBUI.Borders.empty(5));
     }
 
-    @Nonnull
+    
     public static Dimension getDefaultDiffPanelSize() {
         return new Dimension(400, 200);
     }
 
-    @Nonnull
+    
     public static Dimension getDefaultDiffWindowSize() {
         Rectangle screenBounds = ScreenUtil.getMainScreenBounds();
         int width = (int)(screenBounds.width * 0.8);
@@ -335,7 +334,7 @@ public class AWTDiffUtil {
         }
     }
 
-    public static void closeWindow(@Nonnull Window window, boolean modalOnly) {
+    public static void closeWindow(Window window, boolean modalOnly) {
         consulo.ui.Window uiWindow = TargetAWT.from(window);
         if (uiWindow != null) {
             IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
@@ -357,9 +356,9 @@ public class AWTDiffUtil {
         window.dispose();
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public static WindowWrapper.Mode getWindowMode(@Nonnull DiffDialogHints hints) {
+    public static WindowWrapper.Mode getWindowMode(DiffDialogHints hints) {
         WindowWrapper.Mode mode = hints.getMode();
         if (mode == null) {
             boolean isUnderDialog = UIAccess.current().isInModalContext();
@@ -368,7 +367,7 @@ public class AWTDiffUtil {
         return mode;
     }
 
-    public static void addNotification(@Nullable JComponent component, @Nonnull UserDataHolder holder) {
+    public static void addNotification(@Nullable JComponent component, UserDataHolder holder) {
         if (component == null) {
             return;
         }
@@ -376,19 +375,19 @@ public class AWTDiffUtil {
         holder.putUserData(DiffUserDataKeys.NOTIFICATIONS, Lists.append(oldComponents, component));
     }
 
-    @Nonnull
-    public static List<JComponent> getCustomNotifications(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    
+    public static List<JComponent> getCustomNotifications(DiffContext context, DiffRequest request) {
         List<JComponent> requestComponents = request.getUserData(DiffUserDataKeys.NOTIFICATIONS);
         List<JComponent> contextComponents = context.getUserData(DiffUserDataKeys.NOTIFICATIONS);
         return ContainerUtil.concat(Lists.notNullize(contextComponents), Lists.notNullize(requestComponents));
     }
 
-    @Nonnull
-    public static List<JComponent> getCustomNotifications(@Nonnull DiffContent content) {
+    
+    public static List<JComponent> getCustomNotifications(DiffContent content) {
         return Lists.notNullize(content.getUserData(DiffUserDataKeys.NOTIFICATIONS));
     }
 
-    public static void scrollToPoint(@Nullable Editor editor, @Nonnull Point point, boolean animated) {
+    public static void scrollToPoint(@Nullable Editor editor, Point point, boolean animated) {
         if (editor == null) {
             return;
         }
@@ -402,7 +401,7 @@ public class AWTDiffUtil {
         }
     }
 
-    @Nonnull
+    
     public static Point getScrollingPosition(@Nullable Editor editor) {
         if (editor == null) {
             return new Point(0, 0);
@@ -411,21 +410,21 @@ public class AWTDiffUtil {
         return new Point(model.getHorizontalScrollOffset(), model.getVerticalScrollOffset());
     }
 
-    public static void disableBlitting(@Nonnull EditorEx editor) {
+    public static void disableBlitting(EditorEx editor) {
         if (Registry.is("diff.divider.repainting.disable.blitting")) {
             editor.getScrollPane().getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
         }
     }
 
-    public static void registerAction(@Nonnull AnAction action, @Nonnull JComponent component) {
+    public static void registerAction(AnAction action, JComponent component) {
         action.registerCustomShortcutSet(action.getShortcutSet(), component);
     }
 
     private static class SyncHeightComponent extends JPanel {
-        @Nonnull
+        
         private final List<JComponent> myComponents;
 
-        public SyncHeightComponent(@Nonnull List<JComponent> components, int index) {
+        public SyncHeightComponent(List<JComponent> components, int index) {
             super(new BorderLayout());
             myComponents = components;
             JComponent delegate = components.get(index);
@@ -456,12 +455,12 @@ public class AWTDiffUtil {
     public static class CenteredPanel extends JPanel {
         private final JComponent myComponent;
 
-        public CenteredPanel(@Nonnull JComponent component) {
+        public CenteredPanel(JComponent component) {
             myComponent = component;
             add(component);
         }
 
-        public CenteredPanel(@Nonnull JComponent component, @Nonnull Border border) {
+        public CenteredPanel(JComponent component, Border border) {
             this(component);
             setBorder(border);
         }

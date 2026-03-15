@@ -15,7 +15,8 @@
  */
 package consulo.language.cacheBuilder;
 
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
+
 
 /**
  * A single word instance extracted by {@link WordsScanner}.
@@ -37,7 +38,7 @@ public class WordOccurrence {
    * @param kind The type of text where the word was encountered (code, comments or literals).
    */
 
-  public WordOccurrence(CharSequence text, int start, int end, @jakarta.annotation.Nullable Kind kind) {
+  public WordOccurrence(CharSequence text, int start, int end, @Nullable Kind kind) {
     myKind = kind;
     myText = text;
     myStart = start;
@@ -51,7 +52,7 @@ public class WordOccurrence {
    * @param end end offset in initial char sequence.
    * @param kind The type of text where the word was encountered (code, comments or literals).
    */
-  public final void init(CharSequence text, int start, int end, @jakarta.annotation.Nullable Kind kind) {
+  public final void init(CharSequence text, int start, int end, @Nullable Kind kind) {
     myKind = kind;
     myText = text;
     myStart = start;
@@ -63,7 +64,7 @@ public class WordOccurrence {
    * @return the kind of the occurrence.
    */
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public Kind getKind() {
     return myKind;
   }
@@ -99,11 +100,11 @@ public class WordOccurrence {
 
     private final String myName;
 
-    private Kind(@NonNls String name) {
+    private Kind(String name) {
       myName = name;
     }
 
-    @NonNls public String toString() {
+    public String toString() {
       return "WordOccurrence.Kind(" + myName + ")";
     }
   }

@@ -2,7 +2,6 @@
 package consulo.desktop.awt.uiOld.components.fields;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collection;
@@ -24,9 +23,9 @@ public interface ExtendableTextComponent {
 
   void setExtensions(Collection<? extends Extension> extensions);
 
-  void addExtension(@Nonnull Extension extension);
+  void addExtension(Extension extension);
 
-  void removeExtension(@Nonnull Extension extension);
+  void removeExtension(Extension extension);
 
   interface Extension {
     Image getIcon(boolean hovered);
@@ -60,11 +59,11 @@ public interface ExtendableTextComponent {
       return null;
     }
 
-    static Extension create(@Nonnull Image icon, String tooltip, Runnable action) {
+    static Extension create(Image icon, String tooltip, Runnable action) {
       return create(icon, icon, tooltip, action);
     }
 
-    static Extension create(@Nonnull Image defaultIcon, @Nonnull Image hoveredIcon, String tooltip, Runnable action) {
+    static Extension create(Image defaultIcon, Image hoveredIcon, String tooltip, Runnable action) {
       return new Extension() {
         @Override
         public Image getIcon(boolean hovered) {

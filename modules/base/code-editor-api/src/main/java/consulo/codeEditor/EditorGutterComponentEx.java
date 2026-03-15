@@ -6,8 +6,7 @@ import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +32,7 @@ public interface EditorGutterComponentEx extends EditorGutter {
     @Nullable
     FoldRegion findFoldingAnchorAt(int x, int y);
 
-    @Nonnull
+    
     List<GutterMark> getGutterRenderers(int line);
 
     int getWhitespaceSeparatorOffset();
@@ -74,13 +73,13 @@ public interface EditorGutterComponentEx extends EditorGutter {
         return new LineNumberConverter() {
             @Nullable
             @Override
-            public Integer convert(@Nonnull Editor editor, int lineNumber) {
+            public Integer convert(Editor editor, int lineNumber) {
                 return operator.applyAsInt(lineNumber);
             }
 
             @Nullable
             @Override
-            public Integer getMaxLineNumber(@Nonnull Editor editor) {
+            public Integer getMaxLineNumber(Editor editor) {
                 return editor.getDocument().getLineCount();
             }
         };
@@ -91,7 +90,7 @@ public interface EditorGutterComponentEx extends EditorGutter {
      *
      * @see #setLineNumberConverter(LineNumberConverter, LineNumberConverter)
      */
-    default void setLineNumberConverter(@Nonnull LineNumberConverter converter) {
+    default void setLineNumberConverter(LineNumberConverter converter) {
         setLineNumberConverter(converter, null);
     }
 
@@ -101,7 +100,7 @@ public interface EditorGutterComponentEx extends EditorGutter {
      * @param primaryConverter    converter for primary line number shown in gutter
      * @param additionalConverter if not {@code null}, defines an additional column of numbers to be displayed in the gutter
      */
-    void setLineNumberConverter(@Nonnull LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter);
+    void setLineNumberConverter(LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter);
 
     void setShowDefaultGutterPopup(boolean show);
 
@@ -120,11 +119,11 @@ public interface EditorGutterComponentEx extends EditorGutter {
 
     void setInitialIconAreaWidth(int width);
 
-    default boolean canImpactSize(@Nonnull RangeHighlighterEx highlighter) {
+    default boolean canImpactSize(RangeHighlighterEx highlighter) {
         return false;
     }
 
-    default boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
+    default boolean isInsideMarkerArea(MouseEvent e) {
         throw new AbstractMethodError("unsupported platform");
     }
 

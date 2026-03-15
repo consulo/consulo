@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEd
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingNodeSource;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -61,7 +60,7 @@ public class HideContentAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
     PackagingElementNode<?> node = selection.getNodeIfSingle();
     if (node == null) return;

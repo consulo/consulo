@@ -26,7 +26,6 @@ import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
 
 public class ProblemDescriptorUtil {
@@ -40,7 +39,7 @@ public class ProblemDescriptorUtil {
     }
 
     @RequiredReadAction
-    public static String extractHighlightedText(@Nonnull CommonProblemDescriptor descriptor, PsiElement psiElement) {
+    public static String extractHighlightedText(CommonProblemDescriptor descriptor, PsiElement psiElement) {
         if (psiElement == null || !psiElement.isValid()) {
             return "";
         }
@@ -60,44 +59,44 @@ public class ProblemDescriptorUtil {
         return ref;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static LocalizeValue renderDescriptionMessage(@Nonnull ProblemDescriptor descriptor) {
+    public static LocalizeValue renderDescriptionMessage(ProblemDescriptor descriptor) {
         return renderDescriptionMessage(descriptor, descriptor.getPsiElement());
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static LocalizeValue renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element) {
+    public static LocalizeValue renderDescriptionMessage(CommonProblemDescriptor descriptor, PsiElement element) {
         return renderDescriptionMessage(descriptor, element, false);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static LocalizeValue renderDescriptionMessage(
-        @Nonnull CommonProblemDescriptor descriptor,
+        CommonProblemDescriptor descriptor,
         PsiElement element,
         boolean appendLineNumber
     ) {
         return renderDescriptionMessage(descriptor, element, appendLineNumber ? APPEND_LINE_NUMBER : NONE);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static LocalizeValue renderDescriptionMessage(
-        @Nonnull CommonProblemDescriptor descriptor,
+        CommonProblemDescriptor descriptor,
         PsiElement element,
         @FlagConstant int flags
     ) {
         return descriptor.getDescriptionTemplate().map(new ProblemDescriptionTextRenderer(descriptor, element, flags));
     }
 
-    @Nonnull
+    
     @SuppressWarnings("deprecation")
     public static HighlightInfoType highlightTypeFromDescriptor(
-        @Nonnull ProblemDescriptor problemDescriptor,
-        @Nonnull HighlightSeverity severity,
-        @Nonnull SeverityRegistrar severityRegistrar
+        ProblemDescriptor problemDescriptor,
+        HighlightSeverity severity,
+        SeverityRegistrar severityRegistrar
     ) {
         ProblemHighlightType highlightType = problemDescriptor.getHighlightType();
         switch (highlightType) {

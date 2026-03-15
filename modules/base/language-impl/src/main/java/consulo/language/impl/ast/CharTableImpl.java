@@ -22,8 +22,7 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -36,9 +35,9 @@ public class CharTableImpl implements CharTable {
   private static final StringHashToCharSequencesMap STATIC_ENTRIES = newStaticSet();
   private final StringHashToCharSequencesMap entries = new StringHashToCharSequencesMap();
 
-  @Nonnull
+  
   @Override
-  public CharSequence intern(@Nonnull CharSequence text) {
+  public CharSequence intern(CharSequence text) {
     CharSequence result;
     if (text.length() > INTERN_THRESHOLD) {
       result = createSequence(text);
@@ -50,8 +49,8 @@ public class CharTableImpl implements CharTable {
     return result;
   }
 
-  @Nonnull
-  private CharSequence doIntern(@Nonnull CharSequence text, int startOffset, int endOffset) {
+  
+  private CharSequence doIntern(CharSequence text, int startOffset, int endOffset) {
     int hashCode = subSequenceHashCode(text, startOffset, endOffset);
     CharSequence interned = STATIC_ENTRIES.getSubSequenceWithHashCode(hashCode, text, startOffset, endOffset);
     if (interned != null) {
@@ -64,14 +63,14 @@ public class CharTableImpl implements CharTable {
     }
   }
 
-  @Nonnull
-  public CharSequence doIntern(@Nonnull CharSequence text) {
+  
+  public CharSequence doIntern(CharSequence text) {
     return doIntern(text, 0, text.length());
   }
 
-  @Nonnull
+  
   @Override
-  public CharSequence intern(@Nonnull CharSequence baseText, int startOffset, int endOffset) {
+  public CharSequence intern(CharSequence baseText, int startOffset, int endOffset) {
     CharSequence result;
     if (endOffset - startOffset == baseText.length()) {
       result = intern(baseText);
@@ -86,13 +85,13 @@ public class CharTableImpl implements CharTable {
     return result;
   }
 
-  @Nonnull
-  private static String createSequence(@Nonnull CharSequence text) {
+  
+  private static String createSequence(CharSequence text) {
     return createSequence(text, 0, text.length());
   }
 
-  @Nonnull
-  private static String createSequence(@Nonnull CharSequence text, int startOffset, int endOffset) {
+  
+  private static String createSequence(CharSequence text, int startOffset, int endOffset) {
     if (text instanceof String) {
       return ((String)text).substring(startOffset, endOffset);
     }
@@ -102,11 +101,11 @@ public class CharTableImpl implements CharTable {
   }
 
   @Nullable
-  public static CharSequence getStaticInterned(@Nonnull CharSequence text) {
+  public static CharSequence getStaticInterned(CharSequence text) {
     return STATIC_ENTRIES.get(text);
   }
 
-  public static void staticIntern(@Nonnull String text) {
+  public static void staticIntern(String text) {
     synchronized (STATIC_ENTRIES) {
       STATIC_ENTRIES.add(text);
     }
@@ -212,7 +211,7 @@ public class CharTableImpl implements CharTable {
     return r;
   }
 
-  public static void addStringsFromClassToStatics(@Nonnull Class aClass) {
+  public static void addStringsFromClassToStatics(Class aClass) {
     for (Field field : aClass.getDeclaredFields()) {
       if ((field.getModifiers() & Modifier.STATIC) == 0) continue;
       if ((field.getModifiers() & Modifier.PUBLIC) == 0) continue;

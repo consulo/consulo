@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.List;
@@ -41,7 +40,7 @@ public class RevealRecentProjectDirectoryAction extends RecentProjectsWelcomeScr
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setTextValue(RevealFileAction.getActionName(e.getPlace()));
 
@@ -52,7 +51,7 @@ public class RevealRecentProjectDirectoryAction extends RecentProjectsWelcomeScr
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         List<AnAction> elements = getSelectedElements(e);
         if (elements.size() != 1) {
             return;

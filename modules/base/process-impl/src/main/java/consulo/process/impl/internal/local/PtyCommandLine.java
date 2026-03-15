@@ -22,7 +22,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,15 +47,15 @@ public class PtyCommandLine extends GeneralCommandLine {
   public PtyCommandLine() {
   }
 
-  public PtyCommandLine(@Nonnull String... command) {
+  public PtyCommandLine(String... command) {
     super(command);
   }
 
-  public PtyCommandLine(@Nonnull List<String> command) {
+  public PtyCommandLine(List<String> command) {
     super(command);
   }
 
-  public PtyCommandLine(@Nonnull GeneralCommandLine original) {
+  public PtyCommandLine(GeneralCommandLine original) {
     super(original);
     if (original instanceof PtyCommandLine) {
       myUseCygwinLaunch = ((PtyCommandLine)original).myUseCygwinLaunch;
@@ -66,9 +65,9 @@ public class PtyCommandLine extends GeneralCommandLine {
     }
   }
 
-  @Nonnull
+  
   @Override
-  protected Process startProcess(@Nonnull List<String> commands) throws IOException {
+  protected Process startProcess(List<String> commands) throws IOException {
     try {
       return startProcessWithPty(commands, myConsoleMode);
     }
@@ -105,8 +104,8 @@ public class PtyCommandLine extends GeneralCommandLine {
     return ApplicationProperties.isInSandbox() ? new File(ContainerPathManager.get().getLogPath(), "pty.log") : null;
   }
 
-  @Nonnull
-  public Process startProcessWithPty(@Nonnull List<String> commands, boolean console) throws IOException {
+  
+  public Process startProcessWithPty(List<String> commands, boolean console) throws IOException {
     Map<String, String> env = new HashMap<>();
     setupEnvironment(env);
 

@@ -28,7 +28,6 @@ import consulo.module.content.layer.ModulesProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -47,24 +46,24 @@ public class SandArtifactType extends ArtifactType {
     }
 
     @Override
-    public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
+    public boolean isAvailableForAdd(ModulesProvider modulesProvider) {
         return ModuleUtilCore.hasModuleExtension(modulesProvider, SandModuleExtension.class);
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.nodesArtifact();
     }
 
     @Override
-    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+    public String getDefaultPathFor(PackagingElementOutputKind kind) {
         return "/";
     }
 
     @Override
-    @Nonnull
-    public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory project, @Nonnull String artifactName) {
+    
+    public CompositePackagingElement<?> createRootElement(PackagingElementFactory project, String artifactName) {
         return new ArtifactRootElementImpl();
     }
 }

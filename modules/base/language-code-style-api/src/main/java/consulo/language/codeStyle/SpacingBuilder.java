@@ -6,9 +6,8 @@ import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class SpacingBuilder {
         protected final boolean myKeepLineBreaks;
         protected final int myKeepBlankLines;
 
-        private SpacingRule(@Nonnull RuleCondition condition,
+        private SpacingRule(RuleCondition condition,
                             int minSpaces,
                             int maxSpaces,
                             int minLF,
@@ -51,14 +50,14 @@ public class SpacingBuilder {
         /**
          * @param parentRange the range that includes both children blocks (usually the range of the parent block).
          */
-        @Nonnull
-        Spacing createSpacing(@Nonnull TextRange parentRange) {
+        
+        Spacing createSpacing(TextRange parentRange) {
             return Spacing.createSpacing(myMinSpaces, myMaxSpaces, myMinLF, myKeepLineBreaks, myKeepBlankLines);
         }
     }
 
     private static class DependentLFSpacingRule extends SpacingRule {
-        DependentLFSpacingRule(@Nonnull RuleCondition condition,
+        DependentLFSpacingRule(RuleCondition condition,
                                int minSpaces,
                                int maxSpaces,
                                boolean keepLineBreaks,
@@ -66,9 +65,9 @@ public class SpacingBuilder {
             super(condition, minSpaces, maxSpaces, 1, keepLineBreaks, keepBlankLines);
         }
 
-        @Nonnull
+        
         @Override
-        Spacing createSpacing(@Nonnull TextRange parentRange) {
+        Spacing createSpacing(TextRange parentRange) {
             return Spacing.createDependentLFSpacing(myMinSpaces, myMaxSpaces, parentRange, myKeepLineBreaks, myKeepBlankLines);
         }
     }
@@ -84,7 +83,7 @@ public class SpacingBuilder {
             myChild2Type = child2Type;
         }
 
-        private boolean matches(@Nonnull IElementType parentType, @Nonnull IElementType firstChildType, @Nonnull IElementType secondChildType) {
+        private boolean matches(IElementType parentType, IElementType firstChildType, IElementType secondChildType) {
             return ((myParentType == null || myParentType.contains(parentType)) &&
                 (myChild1Type == null || myChild1Type.contains(firstChildType)) &&
                 (myChild2Type == null || myChild2Type.contains(secondChildType)));
@@ -194,7 +193,7 @@ public class SpacingBuilder {
      * @param codeStyleSettings The root code style settings.
      * @param language          The language to obtain settings for.
      */
-    public SpacingBuilder(@Nonnull CodeStyleSettings codeStyleSettings, @Nonnull Language language) {
+    public SpacingBuilder(CodeStyleSettings codeStyleSettings, Language language) {
         myCodeStyleSettings = codeStyleSettings.getCommonSettings(language);
     }
 
@@ -204,7 +203,7 @@ public class SpacingBuilder {
      * @param languageCodeStyleSettings The language code style settings. Note that {@code getLanguage()} method must not
      *                                  return null!
      */
-    public SpacingBuilder(@Nonnull CommonCodeStyleSettings languageCodeStyleSettings) {
+    public SpacingBuilder(CommonCodeStyleSettings languageCodeStyleSettings) {
         assert !Language.ANY.equals(languageCodeStyleSettings.getLanguage()) : "Only language code style settings are accepted (getLanguage() != null)";
         myCodeStyleSettings = languageCodeStyleSettings;
     }
@@ -335,7 +334,7 @@ public class SpacingBuilder {
      * @see #getSpacing(Block, Block, Block)
      */
     @Contract("_,null,_,_->null; _,_,null,_->null; _,_,_,null->null")
-    public @Nullable Spacing getSpacing(@Nonnull Block parentBlock,
+    public @Nullable Spacing getSpacing(Block parentBlock,
                                                            @Nullable IElementType parentType,
                                                            @Nullable IElementType child1Type,
                                                            @Nullable IElementType child2Type) {

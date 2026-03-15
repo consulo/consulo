@@ -6,7 +6,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Subscribes to VFS events and processes them further on a dedicated pooled thread to {@link AsyncVfsEventsListener}s. <br/><br/>
@@ -28,9 +27,9 @@ public interface AsyncVfsEventsPostProcessor {
    * <p>
    * The caller should properly synchronize the call to {@code addListener()} with the {@code dispose()} of the given Disposable.
    */
-  void addListener(@Nonnull AsyncVfsEventsListener listener, @Nonnull Disposable disposable);
+  void addListener(AsyncVfsEventsListener listener, Disposable disposable);
 
-  @Nonnull
+  
   static AsyncVfsEventsPostProcessor getInstance() {
     return Application.get().getInstance(AsyncVfsEventsPostProcessor.class);
   }

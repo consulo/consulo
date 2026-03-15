@@ -4,7 +4,6 @@ package consulo.application.internal;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Map;
@@ -18,33 +17,33 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FrequentErrorLogger {
 
   private static final int REPORT_EVERY_NUM = 1000;
-  @Nonnull
+  
   private final Map<Integer, Integer> ourReportedIssues = new ConcurrentHashMap<>(); // stacktrace hash -> number of reports
-  @Nonnull
+  
   private final Logger myLogger;
 
-  @Nonnull
-  public static FrequentErrorLogger newInstance(@Nonnull Logger logger) {
+  
+  public static FrequentErrorLogger newInstance(Logger logger) {
     return new FrequentErrorLogger(logger);
   }
 
-  private FrequentErrorLogger(@Nonnull Logger logger) {
+  private FrequentErrorLogger(Logger logger) {
     myLogger = logger;
   }
 
-  public void error(@Nonnull String message, @Nonnull Throwable t) {
+  public void error(String message, Throwable t) {
     report(t, () -> myLogger.error(message, t));
   }
 
-  public void error(@Nonnull String message, @Nonnull Throwable t, Attachment... attachments) {
+  public void error(String message, Throwable t, Attachment... attachments) {
     report(t, () -> myLogger.error(message, t, attachments));
   }
 
-  public void info(@Nonnull String message, @Nonnull Throwable t) {
+  public void info(String message, Throwable t) {
     report(t, () -> myLogger.info(message, t));
   }
 
-  private void report(@Nonnull Throwable t, @Nonnull Runnable writeToLog) {
+  private void report(Throwable t, Runnable writeToLog) {
     int hash = ExceptionUtil.getThrowableText(t).hashCode();
     Integer reportedTimes = ourReportedIssues.get(hash);
     if (reportedTimes == null || reportedTimes > REPORT_EVERY_NUM) {

@@ -21,7 +21,6 @@ import com.pty4j.util.PtyUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -78,7 +77,7 @@ public class LocalTerminalDirectRunner extends AbstractTerminalRunner<PtyProcess
   }
 
   @Override
-  protected PtyProcess createProcess(@Nonnull String directory) throws ExecutionException {
+  protected PtyProcess createProcess(String directory) throws ExecutionException {
     Map<String, String> envs = new HashMap<>(Platform.current().os().environmentVariables());
     envs.put("TERM", "xterm-256color");
     //EncodingEnvironmentUtil.setLocaleEnvironmentIfMac(envs, myDefaultCharset);

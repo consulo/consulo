@@ -23,7 +23,6 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.io.FileUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +39,8 @@ import java.io.IOException;
 public abstract class AbstractStorage implements Closeable, Forceable {
   protected static final Logger LOG = LoggerFactory.getLogger(AbstractStorage.class);
 
-  @NonNls public static final String INDEX_EXTENSION = ".storageRecordIndex";
-  @NonNls public static final String DATA_EXTENSION = ".storageData";
+  public static final String INDEX_EXTENSION = ".storageRecordIndex";
+  public static final String DATA_EXTENSION = ".storageData";
 
   private static final int MAX_PAGES_TO_FLUSH_AT_A_TIME = 50;
 

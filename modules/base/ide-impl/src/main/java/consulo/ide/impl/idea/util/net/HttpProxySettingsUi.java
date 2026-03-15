@@ -37,8 +37,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -78,7 +77,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
   private volatile boolean myConnectionCheckInProgress;
 
   @Override
-  public boolean isModified(@Nonnull HttpProxyManagerImpl settings) {
+  public boolean isModified(HttpProxyManagerImpl settings) {
     if (!isValid()) {
       return false;
     }
@@ -98,7 +97,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
            !Comparing.strEqual(state.PROXY_HOST, myProxyHostTextField.getText());
   }
 
-  public HttpProxySettingsUi(@Nonnull final HttpProxyManagerImpl settings) {
+  public HttpProxySettingsUi(final HttpProxyManagerImpl settings) {
     ButtonGroup group = new ButtonGroup();
     group.add(myUseHTTPProxyRb);
     group.add(myAutoDetectProxyRb);
@@ -119,20 +118,20 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
     myProxyAuthCheckBox.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         enableProxyAuthentication(myProxyAuthCheckBox.isSelected());
       }
     });
     myPacUrlCheckBox.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         myPacUrlTextField.setEnabled(myPacUrlCheckBox.isSelected());
       }
     });
 
     ActionListener listener = new ActionListener() {
       @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         enableProxy(myUseHTTPProxyRb.isSelected());
       }
     };
@@ -142,7 +141,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
     myClearPasswordsButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         settings.clearGenericPasswords();
         //noinspection DialogTitleCapitalization
         Messages.showMessageDialog(myMainPanel, "Proxy passwords were cleared.", "Auto-detected Proxy", Messages.getInformationIcon());
@@ -160,7 +159,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
     myCheckButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         String title = "Check Proxy Settings";
         String answer = Messages.showInputDialog(myMainPanel, "Warning: your settings will be saved.\n\nEnter any URL to check connection to:",
                                                        title, Messages.getQuestionIcon(), "http://", null);
@@ -226,7 +225,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
   }
 
   @Override
-  public void reset(@Nonnull HttpProxyManagerImpl settings) {
+  public void reset(HttpProxyManagerImpl settings) {
     HttpProxyManagerState state = settings.getState();
 
     myNoProxyRb.setSelected(true);  // default
@@ -261,8 +260,8 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
     }
   }
 
-  @Nonnull
-  private static String errorText(@Nonnull String s) {
+  
+  private static String errorText(String s) {
     return "Problem with connection: " + s;
   }
 
@@ -302,7 +301,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
   }
 
   @Override
-  public void apply(@Nonnull HttpProxyManagerImpl settings) {
+  public void apply(HttpProxyManagerImpl settings) {
     if (!isValid()) {
       return;
     }
@@ -329,7 +328,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
   }
 
   @Nullable
-  private static String getText(@Nonnull JTextField field) {
+  private static String getText(JTextField field) {
     return StringUtil.nullize(field.getText(), true);
   }
 
@@ -365,7 +364,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
   }
 
   @Override
-  @Nonnull
+  
   public JComponent getComponent(Disposable disposable) {
     return myMainPanel;
   }

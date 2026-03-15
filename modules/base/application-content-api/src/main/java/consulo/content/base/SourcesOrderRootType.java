@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.OrderRootType;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -30,7 +29,7 @@ import java.util.function.Supplier;
 public class SourcesOrderRootType extends OrderRootType {
   private static final Supplier<SourcesOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
 
-  @Nonnull
+  
   public static SourcesOrderRootType getInstance() {
     return INSTANCE.get();
   }

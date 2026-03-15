@@ -22,7 +22,6 @@ import consulo.application.ui.event.FrameStateListener;
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Manager of listeners for notifications about activation and deactivation of the IDE window.
@@ -43,16 +42,16 @@ public abstract class FrameStateManager {
    *
    * @param listener the listener instance.
    */
-  public abstract void addListener(@Nonnull FrameStateListener listener);
+  public abstract void addListener(FrameStateListener listener);
 
-  public abstract void addListener(@Nonnull FrameStateListener listener, @Nonnull Disposable disposable);
+  public abstract void addListener(FrameStateListener listener, Disposable disposable);
 
   /**
    * Removes a listener which is called when the IDEA window is activated or deactivated.
    *
    * @param listener the listener instance.
    */
-  public abstract void removeListener(@Nonnull FrameStateListener listener);
+  public abstract void removeListener(FrameStateListener listener);
 
 
   /**

@@ -8,7 +8,6 @@ import consulo.application.util.query.Queries;
 import consulo.application.util.query.Query;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -17,16 +16,16 @@ import java.util.function.Function;
 @Singleton
 @ServiceImpl
 public final class QueriesImpl extends Queries {
-  @Nonnull
+  
   @Override
-  protected <I, O> Query<O> transforming(@Nonnull Query<? extends I> base, @Nonnull Function<? super I, ? extends Collection<? extends O>> transformation) {
+  protected <I, O> Query<O> transforming(Query<? extends I> base, Function<? super I, ? extends Collection<? extends O>> transformation) {
     return new XQuery<I, O>(base, TransformationKt.<I, O>xValueTransform(transformation::apply));
   }
 
 
-  @Nonnull
+  
   @Override
-  protected <I, O> Query<O> flatMapping(@Nonnull Query<? extends I> base, @Nonnull Function<? super I, ? extends Query<? extends O>> mapper) {
+  protected <I, O> Query<O> flatMapping(Query<? extends I> base, Function<? super I, ? extends Query<? extends O>> mapper) {
     return new XQuery<I, O>(base, TransformationKt.<I, O>xQueryTransform((baseValue) -> List.of(mapper.apply(baseValue))));
   }
 }

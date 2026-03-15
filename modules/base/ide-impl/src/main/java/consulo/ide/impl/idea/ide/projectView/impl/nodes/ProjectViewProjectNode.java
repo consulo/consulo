@@ -26,7 +26,6 @@ import consulo.module.content.util.ModuleContentUtil;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.*;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -35,7 +34,7 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
         super(project, project, viewSettings);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {

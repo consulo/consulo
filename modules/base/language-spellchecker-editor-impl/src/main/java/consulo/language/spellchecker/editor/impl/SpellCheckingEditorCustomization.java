@@ -27,7 +27,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.collection.Maps;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -51,7 +50,7 @@ public class SpellCheckingEditorCustomization implements Consumer<EditorEx> {
     }
 
     @Override
-    public void accept(@Nonnull EditorEx editor) {
+    public void accept(EditorEx editor) {
         boolean apply = myEnabled;
 
         Project project = editor.getProject();

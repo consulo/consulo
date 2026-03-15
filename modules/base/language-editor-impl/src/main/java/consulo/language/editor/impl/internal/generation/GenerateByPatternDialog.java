@@ -15,7 +15,7 @@ import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;

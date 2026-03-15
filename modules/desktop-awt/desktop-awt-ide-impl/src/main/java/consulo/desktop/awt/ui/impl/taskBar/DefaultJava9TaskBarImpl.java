@@ -20,8 +20,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -45,7 +44,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
   }
 
   @Override
-  public boolean setProgress(@Nonnull Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
+  public boolean setProgress(Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
     myCurrentProcessId = processId;
 
     if (Math.abs(myLastValue - value) < 0.02d) {
@@ -65,7 +64,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
   }
 
   @Override
-  public boolean hideProgress(@Nonnull Window window, Object processId) {
+  public boolean hideProgress(Window window, Object processId) {
     if (myCurrentProcessId != null && !myCurrentProcessId.equals(processId)) {
       return false;
     }
@@ -83,21 +82,21 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
   }
 
   @Override
-  public final void requestAttention(@Nonnull Window window, boolean critical) {
+  public final void requestAttention(Window window, boolean critical) {
     if (myTaskbar.isSupported(Taskbar.Feature.USER_ATTENTION)) {
       myTaskbar.requestUserAttention(true, critical);
     }
   }
 
   @Override
-  public final void requestFocus(@Nonnull Window window) {
+  public final void requestFocus(Window window) {
     if (myTaskbar.isSupported(Taskbar.Feature.USER_ATTENTION_WINDOW)) {
       myTaskbar.requestWindowUserAttention(TargetAWT.to(window));
     }
   }
 
   @Override
-  public final void setTextBadge(@Nonnull Window window, String text) {
+  public final void setTextBadge(Window window, String text) {
     if (!isValid(window)) {
       return;
     }
@@ -110,11 +109,11 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
     }
   }
 
-  protected void setTextBadgeUnsupported(@Nonnull Window window, @Nullable String text) {
+  protected void setTextBadgeUnsupported(Window window, @Nullable String text) {
   }
 
   @Override
-  public void setOkBadge(@Nonnull Window window, boolean visible) {
+  public void setOkBadge(Window window, boolean visible) {
     if (!isValid(window)) {
       return;
     }
@@ -129,7 +128,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
     }
   }
 
-  protected void setOkBadgeUnsupported(@Nonnull Window window, boolean visible) {
+  protected void setOkBadgeUnsupported(Window window, boolean visible) {
   }
 
   private static boolean isValid(@Nullable Window window) {

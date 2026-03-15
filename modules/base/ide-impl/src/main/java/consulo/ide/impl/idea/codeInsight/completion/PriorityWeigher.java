@@ -23,7 +23,6 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupItem;
 import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "priority", order = "first")
 public class PriorityWeigher extends CompletionWeigher {
   @Override
-  public Double weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
+  public Double weigh(LookupElement element, CompletionLocation location) {
     PrioritizedLookupElement prioritized = element.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
     if (prioritized != null) {
       return prioritized.getPriority();

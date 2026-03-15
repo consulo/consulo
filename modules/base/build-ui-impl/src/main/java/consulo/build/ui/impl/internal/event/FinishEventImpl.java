@@ -20,8 +20,7 @@ import consulo.build.ui.event.EventResult;
 import consulo.build.ui.event.FinishEvent;
 import consulo.build.ui.event.SuccessResult;
 import consulo.language.LangBundle;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -30,11 +29,11 @@ public class FinishEventImpl extends AbstractBuildEvent implements FinishEvent {
 
   private final EventResult myResult;
 
-  public FinishEventImpl(@Nonnull Object eventId,
+  public FinishEventImpl(Object eventId,
                          @Nullable Object parentId,
                          long eventTime,
-                         @Nonnull @BuildEventsNls.Message String message,
-                         @Nonnull EventResult result) {
+                         @BuildEventsNls.Message String message,
+                         EventResult result) {
     super(eventId, parentId, eventTime, message);
     myResult = result;
     if(myResult instanceof SuccessResult && ((SuccessResult)myResult).isUpToDate()) {

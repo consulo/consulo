@@ -18,8 +18,7 @@ package consulo.component.impl.internal;
 import consulo.component.PropertiesComponent;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
@@ -70,7 +69,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     }
 
     @Override
-    public void setValue(@Nonnull String name, @Nullable String value) {
+    public void setValue(String name, @Nullable String value) {
         if (value == null) {
             myMap.remove(name);
         }
@@ -80,7 +79,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     }
 
     @Override
-    public void setValue(@Nonnull String name, @Nullable String value, @Nullable String defaultValue) {
+    public void setValue(String name, @Nullable String value, @Nullable String defaultValue) {
         if (value == null || value.equals(defaultValue)) {
             myMap.remove(name);
         }
@@ -90,7 +89,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     }
 
     @Override
-    public void setValue(@Nonnull String name, float value, float defaultValue) {
+    public void setValue(String name, float value, float defaultValue) {
         if (value == defaultValue) {
             myMap.remove(name);
         }
@@ -100,7 +99,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     }
 
     @Override
-    public void setValue(@Nonnull String name, long value, long defaultValue) {
+    public void setValue(String name, long value, long defaultValue) {
         if (value == defaultValue) {
             myMap.remove(name);
         }
@@ -110,7 +109,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     }
 
     @Override
-    public void setValue(@Nonnull String name, int value, int defaultValue) {
+    public void setValue(String name, int value, int defaultValue) {
         if (value == defaultValue) {
             myMap.remove(name);
         }
@@ -120,7 +119,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     }
 
     @Override
-    public void setValue(@Nonnull String name, boolean value, boolean defaultValue) {
+    public void setValue(String name, boolean value, boolean defaultValue) {
         if (value == defaultValue) {
             myMap.remove(name);
         }

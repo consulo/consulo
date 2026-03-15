@@ -15,7 +15,6 @@
  */
 package consulo.application.util.matcher;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -23,7 +22,7 @@ import java.util.Set;
  * @since 04-Apr-22
  */
 public interface CompositeStringHolder {
-  @Nonnull
+  
   Set<String> getAllStrings();
 
   default boolean isCaseSensitive() {

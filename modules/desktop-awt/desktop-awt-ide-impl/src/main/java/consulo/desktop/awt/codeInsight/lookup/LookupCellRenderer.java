@@ -44,8 +44,7 @@ import consulo.util.collection.FList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -234,7 +233,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     return myPanel;
   }
 
-  private static int calcSpacing(@Nonnull SimpleColoredComponent component, @Nullable Image icon) {
+  private static int calcSpacing(SimpleColoredComponent component, @Nullable Image icon) {
     Insets iPad = component.getIpad();
     int width = iPad.left + iPad.right;
     Insets insets = component.getInsets();
@@ -511,7 +510,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     return null;
   }
 
-  void updateItemPresentation(@Nonnull LookupElement element) {
+  void updateItemPresentation(LookupElement element) {
     LookupElementRenderer<? extends LookupElement> renderer = element.getExpensiveRenderer();
     if (renderer != null) {
       myAsyncRendering.scheduleRendering(element, renderer);
@@ -547,7 +546,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     }
   }
 
-  void itemAdded(@Nonnull LookupElement element, @Nonnull LookupElementPresentation fastPresentation) {
+  void itemAdded(LookupElement element, LookupElementPresentation fastPresentation) {
     updateIconWidth(fastPresentation.getIcon());
     scheduleUpdateLookupWidthFromVisibleItems();
     AsyncRendering.rememberPresentation(element, fastPresentation);
@@ -570,7 +569,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     }
   }
 
-  private static void setIconInsets(@Nonnull SimpleColoredComponent component) {
+  private static void setIconInsets(SimpleColoredComponent component) {
     component.setIpad(JBUI.insetsLeft(6));
   }
 
@@ -580,7 +579,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     }
 
     @Override
-    protected void applyAdditionalHints(@Nonnull Graphics2D g) {
+    protected void applyAdditionalHints(Graphics2D g) {
         DesktopAntialiasingTypeUtil.setupAntialiasing(g);
     }
   }

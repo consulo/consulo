@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.ide.errorTreeView.NavigatableMessageElement;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.ExporterToTextFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -57,7 +56,7 @@ public class ErrorViewTextExporter implements ExporterToTextFile {
         myChangeListener = null;
     }
 
-    @Nonnull
+    
     @Override
     public String getReportText() {
         StringBuffer buffer = new StringBuffer();
@@ -65,14 +64,14 @@ public class ErrorViewTextExporter implements ExporterToTextFile {
         return buffer.toString();
     }
 
-    @Nonnull
+    
     @Override
     public String getDefaultFilePath() {
         return "";
     }
 
     @Override
-    public void exportedTo(@Nonnull String filePath) {
+    public void exportedTo(String filePath) {
     }
 
     @Override

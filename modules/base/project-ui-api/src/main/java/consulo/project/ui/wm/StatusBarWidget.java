@@ -20,8 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -30,19 +29,19 @@ import java.util.function.Consumer;
  * @author spLeaner
  */
 public interface StatusBarWidget extends Disposable {
-    @Nonnull
+    
     @Deprecated(forRemoval = true)
     default String ID() {
         return getId();
     }
 
-    @Nonnull
+    
     String getId();
 
     @Nullable
     WidgetPresentation getPresentation();
 
-    void install(@Nonnull StatusBar statusBar);
+    void install(StatusBar statusBar);
 
     @RequiredUIAccess
     default void beforeUpdate() {
@@ -53,7 +52,7 @@ public interface StatusBarWidget extends Disposable {
     }
 
     interface WidgetPresentation {
-        @Nonnull
+        
         LocalizeValue getTooltipText();
 
         @Nullable
@@ -71,7 +70,7 @@ public interface StatusBarWidget extends Disposable {
     }
 
     interface TextPresentation extends WidgetPresentation {
-        @Nonnull
+        
         String getText();
 
         float getAlignment();
@@ -88,7 +87,7 @@ public interface StatusBarWidget extends Disposable {
         @RequiredUIAccess
         String getSelectedValue();
 
-        @Nonnull
+        
         @Deprecated
         default String getMaxValue() {
             return "";

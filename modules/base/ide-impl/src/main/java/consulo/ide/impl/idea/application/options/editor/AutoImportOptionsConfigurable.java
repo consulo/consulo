@@ -22,16 +22,14 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurableAdapter;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
 @ExtensionImpl
 public class AutoImportOptionsConfigurable extends ConfigurableAdapter implements ApplicationConfigurable {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "editor.preferences.import";
@@ -43,8 +41,8 @@ public class AutoImportOptionsConfigurable extends ConfigurableAdapter implement
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
-  @Nonnull
-  @Nls
+  
+  
   @Override
   public LocalizeValue getDisplayName() {
     return ApplicationLocalize.autoImport();

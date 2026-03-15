@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -36,7 +35,7 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
         String listName = e.getRequiredData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
@@ -47,7 +46,7 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);

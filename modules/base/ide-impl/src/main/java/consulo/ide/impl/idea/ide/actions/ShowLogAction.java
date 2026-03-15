@@ -27,7 +27,6 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -42,14 +41,14 @@ public class ShowLogAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         File logFile = new File(ContainerPathManager.get().getLogPath(), "consulo.log");
         Platform platform = Platform.current();
         platform.openFileInFileManager(logFile, UIAccess.current());
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Platform platform = Platform.current();
 
         Presentation presentation = e.getPresentation();

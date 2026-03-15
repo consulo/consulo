@@ -25,8 +25,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ven
@@ -40,7 +39,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
 
   @Override
   @RequiredUIAccess
-  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     if (!ParameterInfoController.existsForEditor(editor)) return false;
 
     Project project = dataContext.getData(Project.KEY);
@@ -56,7 +55,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
 
   @Override
   @RequiredUIAccess
-  protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+  protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     int offset = caret != null ? caret.getOffset() : editor.getCaretModel().getOffset();
     PsiElement exprList = getExpressionList(editor, offset, dataContext);
     if (exprList != null) {
@@ -66,13 +65,13 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   }
 
   @Nullable
-  private static PsiElement getExpressionList(@Nonnull Editor editor, int offset, DataContext dataContext) {
+  private static PsiElement getExpressionList(Editor editor, int offset, DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
     return project != null ? getExpressionList(editor, offset, project) : null;
   }
 
   @Nullable
-  private static PsiElement getExpressionList(@Nonnull Editor editor, int offset, @Nonnull Project project) {
+  private static PsiElement getExpressionList(Editor editor, int offset, Project project) {
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     return file != null ? ParameterInfoController.findArgumentList(file, offset, -1) : null;
   }

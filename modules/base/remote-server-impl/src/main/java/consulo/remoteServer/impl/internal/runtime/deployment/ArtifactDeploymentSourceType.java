@@ -24,7 +24,6 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -40,19 +39,19 @@ public class ArtifactDeploymentSourceType extends DeploymentSourceType<ArtifactD
     super("artifact");
   }
 
-  @Nonnull
+  
   @Override
-  public ArtifactDeploymentSource load(@Nonnull Element tag, @Nonnull Project project) {
+  public ArtifactDeploymentSource load(Element tag, Project project) {
     return new ArtifactDeploymentSourceImpl(ArtifactPointerManager.getInstance(project).create(tag.getAttributeValue(NAME_ATTRIBUTE)));
   }
 
   @Override
-  public void save(@Nonnull ArtifactDeploymentSource source, @Nonnull Element tag) {
+  public void save(ArtifactDeploymentSource source, Element tag) {
     tag.setAttribute(NAME_ATTRIBUTE, source.getArtifactPointer().getName());
   }
 
   @Override
-  public void setBuildBeforeRunTask(@Nonnull RunConfiguration configuration, @Nonnull ArtifactDeploymentSource source) {
+  public void setBuildBeforeRunTask(RunConfiguration configuration, ArtifactDeploymentSource source) {
     Artifact artifact = source.getArtifact();
     if (artifact != null) {
       BuildArtifactsBeforeRunTaskHelper helper = configuration.getProject().getInstance(BuildArtifactsBeforeRunTaskHelper.class);
@@ -61,7 +60,7 @@ public class ArtifactDeploymentSourceType extends DeploymentSourceType<ArtifactD
   }
 
   @Override
-  public void updateBuildBeforeRunOption(@Nonnull JComponent component, @Nonnull Project project, @Nonnull ArtifactDeploymentSource source, boolean select) {
+  public void updateBuildBeforeRunOption(JComponent component, Project project, ArtifactDeploymentSource source, boolean select) {
     Artifact artifact = source.getArtifact();
     if (artifact != null) {
       BuildArtifactsBeforeRunTaskHelper helper = project.getInstance(BuildArtifactsBeforeRunTaskHelper.class);

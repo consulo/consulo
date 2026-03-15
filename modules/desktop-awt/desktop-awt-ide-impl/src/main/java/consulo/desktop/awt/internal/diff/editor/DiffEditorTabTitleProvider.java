@@ -25,13 +25,12 @@ import consulo.diff.internal.DiffSettingsHolder;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 // from kotlin
 @ExtensionImpl
 public class DiffEditorTabTitleProvider implements EditorTabTitleProvider, DumbAware {
   @Override
-  public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public String getEditorTabTitle(Project project, VirtualFile file) {
     String title = getTitle(project, file);
 
     if (title != null) {

@@ -17,8 +17,7 @@ package consulo.versionControlSystem.change.commited;
 
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.util.List;
@@ -38,12 +37,11 @@ public interface ChangeListFilteringStrategy {
 
   CommittedChangesFilterKey getKey();
 
-  @Nullable
   void resetFilterBase();
 
   void appendFilterBase(List<CommittedChangeList> changeLists);
 
-  @Nonnull
+  
   List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists);
 
   ChangeListFilteringStrategy NONE = new ChangeListFilteringStrategy() {
@@ -73,7 +71,6 @@ public interface ChangeListFilteringStrategy {
     }
 
     @Override
-    @Nullable
     public void resetFilterBase() {
     }
 
@@ -82,7 +79,7 @@ public interface ChangeListFilteringStrategy {
     }
 
     @Override
-    @Nonnull
+    
     public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
       return changeLists;
     }

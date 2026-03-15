@@ -8,8 +8,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -20,7 +19,7 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
   private static volatile Set<String> ourLazyExternalIds = Collections.emptySet();
   private static final Logger LOG = Logger.getInstance(IStubElementType.class);
 
-  public IStubElementType(@Nonnull String debugName, @Nullable Language language) {
+  public IStubElementType(String debugName, @Nullable Language language) {
     super(debugName, language);
     if (!isLazilyRegistered()) {
       checkNotInstantiatedTooLate(this);
@@ -51,7 +50,7 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
     }
   }
 
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
   public static List<ObjectStubSerializerProvider> loadRegisteredStubElementTypes() {
     List<ObjectStubSerializerProvider> result = new ArrayList<>();
@@ -75,10 +74,10 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
     return result;
   }
 
-  public abstract PsiT createPsi(@Nonnull StubT stub);
+  public abstract PsiT createPsi(StubT stub);
 
-  @Nonnull
-  public abstract StubT createStub(@Nonnull PsiT psi, StubElement parentStub);
+  
+  public abstract StubT createStub(PsiT psi, StubElement parentStub);
 
   public boolean shouldCreateStub(ASTNode node) {
     return true;

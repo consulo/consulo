@@ -20,7 +20,6 @@ import consulo.language.editor.completion.CompletionType;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ClassNameCompletion")
 public class ClassNameCompletionAction extends BaseCodeCompletionAction {
@@ -30,7 +29,7 @@ public class ClassNameCompletionAction extends BaseCodeCompletionAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         invokeCompletion(e, CompletionType.BASIC, 2);
     }
 }

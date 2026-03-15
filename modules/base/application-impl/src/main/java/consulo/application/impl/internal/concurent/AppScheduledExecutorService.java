@@ -11,7 +11,6 @@ import consulo.util.concurrent.CountingThreadFactory;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +25,7 @@ import java.util.function.Consumer;
  */
 public final class AppScheduledExecutorService extends SchedulingWrapper {
   static final String POOLED_THREAD_PREFIX = "ApplicationImpl pooled thread ";
-  @Nonnull
+  
   private final String myName;
   private final LowMemoryWatcherManager myLowMemoryWatcherManager;
   private final MyThreadFactory myCountingThreadFactory;
@@ -34,9 +33,9 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
   private static class MyThreadFactory extends CountingThreadFactory {
     private Consumer<? super Thread> newThreadListener;
 
-    @Nonnull
+    
     @Override
-    public Thread newThread(@Nonnull Runnable r) {
+    public Thread newThread(Runnable r) {
       Thread thread = new Thread(r, POOLED_THREAD_PREFIX + counter.incrementAndGet());
 
       thread.setPriority(Thread.NORM_PRIORITY - 1);
@@ -48,24 +47,24 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
       return thread;
     }
 
-    void setNewThreadListener(@Nonnull Consumer<? super Thread> threadListener) {
+    void setNewThreadListener(Consumer<? super Thread> threadListener) {
       if (newThreadListener != null) throw new IllegalStateException("Listener was already set: " + newThreadListener);
       newThreadListener = threadListener;
     }
   }
 
-  AppScheduledExecutorService(@Nonnull String name, ApplicationConcurrency applicationConcurrency) {
+  AppScheduledExecutorService(String name, ApplicationConcurrency applicationConcurrency) {
     super(new BackendThreadPoolExecutor(new MyThreadFactory()), new AppDelayQueue());
     myName = name;
     myCountingThreadFactory = (MyThreadFactory)((BackendThreadPoolExecutor)backendExecutorService).getThreadFactory();
     myLowMemoryWatcherManager = new LowMemoryWatcherManager(this, applicationConcurrency);
   }
 
-  public void setNewThreadListener(@Nonnull Consumer<? super Thread> threadListener) {
+  public void setNewThreadListener(Consumer<? super Thread> threadListener) {
     myCountingThreadFactory.setNewThreadListener(threadListener);
   }
 
-  @Nonnull
+  
   @Override
   public List<Runnable> shutdownNow() {
     return error();
@@ -86,7 +85,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
     ((BackendThreadPoolExecutor)backendExecutorService).superShutdown();
   }
 
-  @Nonnull
+  
   @Override
   protected List<Runnable> doShutdownNow() {
     return ContainerUtil.concat(super.doShutdownNow(), ((BackendThreadPoolExecutor)backendExecutorService).superShutdownNow());
@@ -99,7 +98,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
     doShutdown();
   }
 
-  @Nonnull
+  
   @TestOnly
   public String statistics() {
     return myName + " threads created counter = " + myCountingThreadFactory.getCount();
@@ -120,7 +119,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
   }
 
   static class BackendThreadPoolExecutor extends ThreadPoolExecutor {
-    BackendThreadPoolExecutor(@Nonnull ThreadFactory factory) {
+    BackendThreadPoolExecutor(ThreadFactory factory) {
       super(1, Integer.MAX_VALUE, 1, TimeUnit.MINUTES, new SynchronousQueue<>(), factory);
     }
 
@@ -135,7 +134,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
       super.shutdown();
     }
 
-    @Nonnull
+    
     private List<Runnable> superShutdownNow() {
       return super.shutdownNow();
     }
@@ -146,7 +145,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
       error();
     }
 
-    @Nonnull
+    
     @Override
     public List<Runnable> shutdownNow() {
       return error();
@@ -186,13 +185,13 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
     }
   }
 
-  @Nonnull
+  
   public Thread getPeriodicTasksThread() {
     return delayQueue.getThread();
   }
 
   @TestOnly
-  void awaitQuiescence(long timeout, @Nonnull TimeUnit unit) {
+  void awaitQuiescence(long timeout, TimeUnit unit) {
     BackendThreadPoolExecutor executor = (BackendThreadPoolExecutor)backendExecutorService;
     executor.getKeepAliveTime(TimeUnit.NANOSECONDS);
     executor.superSetKeepAliveTime(1, TimeUnit.NANOSECONDS); // no need for zombies in tests

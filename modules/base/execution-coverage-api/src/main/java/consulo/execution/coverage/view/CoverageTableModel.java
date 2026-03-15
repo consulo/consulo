@@ -9,7 +9,6 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.SortableColumnModel;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -25,7 +24,7 @@ class CoverageTableModel extends AbstractTableModel implements AbstractListBuild
 
     final List myElements = new ArrayList();
 
-    public CoverageTableModel(@Nonnull CoverageSuitesBundle suitesBundle, CoverageViewManager.StateBean stateBean, Project project) {
+    public CoverageTableModel(CoverageSuitesBundle suitesBundle, CoverageViewManager.StateBean stateBean, Project project) {
         CoverageEngine coverageEngine = suitesBundle.getCoverageEngine();
         COLUMN_INFOS = coverageEngine.createCoverageViewExtension(project, suitesBundle, stateBean).createColumnInfos();
     }

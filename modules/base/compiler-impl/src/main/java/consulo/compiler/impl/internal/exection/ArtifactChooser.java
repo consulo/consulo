@@ -22,7 +22,6 @@ import consulo.compiler.artifact.ArtifactPointer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
@@ -55,12 +54,12 @@ public class ArtifactChooser extends ElementsChooser<ArtifactPointer> {
   }
 
   @Override
-  protected String getItemText(@Nonnull ArtifactPointer value) {
+  protected String getItemText(ArtifactPointer value) {
     return value.getName();
   }
 
   @Override
-  protected Image getItemIcon(@Nonnull ArtifactPointer value) {
+  protected Image getItemIcon(ArtifactPointer value) {
     Artifact artifact = value.get();
     return artifact != null ? artifact.getArtifactType().getIcon() : null;
   }

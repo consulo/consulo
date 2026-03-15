@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,13 +34,13 @@ public class TogglePresentationAssistantAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return PresentationAssistant.getInstance().getConfiguration().myShowActionDescriptions;
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         PresentationAssistant.getInstance().setShowActionsDescriptions(state, e.getData(Project.KEY));
     }
 }

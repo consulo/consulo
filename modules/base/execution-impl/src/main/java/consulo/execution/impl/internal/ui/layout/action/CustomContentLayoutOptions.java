@@ -1,16 +1,14 @@
 package consulo.execution.impl.internal.ui.layout.action;
 
-import org.jetbrains.annotations.Nls;
-import jakarta.annotation.Nonnull;
 
 public interface CustomContentLayoutOptions {
 
-    @Nonnull
+    
     CustomContentLayoutOption[] getAvailableOptions();
 
-    void select(@Nonnull CustomContentLayoutOption option);
+    void select(CustomContentLayoutOption option);
 
-    boolean isSelected(@Nonnull CustomContentLayoutOption option);
+    boolean isSelected(CustomContentLayoutOption option);
 
     boolean isHidden();
 
@@ -18,8 +16,8 @@ public interface CustomContentLayoutOptions {
 
     void onHide();
 
-    @Nonnull
-    @Nls
+    
+    
     String getDisplayName();
 
     boolean isHideOptionVisible();

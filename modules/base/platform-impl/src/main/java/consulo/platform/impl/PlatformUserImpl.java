@@ -17,7 +17,6 @@ package consulo.platform.impl;
 
 import consulo.platform.PlatformUser;
 
-import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -39,13 +38,13 @@ public class PlatformUserImpl implements PlatformUser {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public String name() {
     return myUserName;
   }
 
-  @Nonnull
+  
   @Override
   public Path homePath() {
     return myUserPath;

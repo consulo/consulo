@@ -39,7 +39,6 @@ import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +53,7 @@ public class FormatChangedTextUtil {
   protected FormatChangedTextUtil() {
   }
 
-  @Nonnull
+  
   public static FormatChangedTextUtil getInstance() {
     return Application.get().getInstance(FormatChangedTextUtil.class);
   }
@@ -65,7 +64,7 @@ public class FormatChangedTextUtil {
    * @param file target file
    * @return <code>true</code> if given file has changes; <code>false</code> otherwise
    */
-  public static boolean hasChanges(@Nonnull PsiFile file) {
+  public static boolean hasChanges(PsiFile file) {
     Project project = file.getProject();
     VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile != null) {
@@ -82,7 +81,7 @@ public class FormatChangedTextUtil {
    * @return <code>true</code> if any file below the given directory has changes in comparison with VCS;
    * <code>false</code> otherwise
    */
-  public static boolean hasChanges(@Nonnull PsiDirectory directory) {
+  public static boolean hasChanges(PsiDirectory directory) {
     return hasChanges(directory.getVirtualFile(), directory.getProject());
   }
 
@@ -94,7 +93,7 @@ public class FormatChangedTextUtil {
    * @return <code>true</code> if given file or any file below the given directory has changes in comparison with VCS;
    * <code>false</code> otherwise
    */
-  public static boolean hasChanges(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public static boolean hasChanges(VirtualFile file, Project project) {
     Collection<Change> changes = ChangeListManager.getInstance(project).getChangesIn(file);
     for (Change change : changes) {
       if (change.getType() == Change.Type.NEW || change.getType() == Change.Type.MODIFICATION) {
@@ -104,7 +103,7 @@ public class FormatChangedTextUtil {
     return false;
   }
 
-  public static boolean hasChanges(@Nonnull VirtualFile[] files, @Nonnull Project project) {
+  public static boolean hasChanges(VirtualFile[] files, Project project) {
     for (VirtualFile file : files) {
       if (hasChanges(file, project)) return true;
     }
@@ -118,7 +117,7 @@ public class FormatChangedTextUtil {
    * @return <code>true</code> if any file that belongs to the given module has changes in comparison with VCS
    * <code>false</code> otherwise
    */
-  public static boolean hasChanges(@Nonnull Module module) {
+  public static boolean hasChanges(Module module) {
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
     for (VirtualFile root : rootManager.getSourceRoots()) {
       if (hasChanges(root, module.getProject())) {
@@ -136,7 +135,7 @@ public class FormatChangedTextUtil {
    * <code>false</code> otherwise
    */
   @RequiredWriteAction
-  public static boolean hasChanges(@Nonnull Project project) {
+  public static boolean hasChanges(Project project) {
     ThrowableComputable<ModifiableModuleModel,RuntimeException> action = () -> ModuleManager.getInstance(project).getModifiableModel();
     ModifiableModuleModel moduleModel = AccessRule.read(action);
 
@@ -153,8 +152,8 @@ public class FormatChangedTextUtil {
     }
   }
 
-  @Nonnull
-  public static List<PsiFile> getChangedFilesFromDirs(@Nonnull Project project, @Nonnull List<PsiDirectory> dirs) {
+  
+  public static List<PsiFile> getChangedFilesFromDirs(Project project, List<PsiDirectory> dirs) {
     ChangeListManager changeListManager = ChangeListManager.getInstance(project);
     Collection<Change> changes = new ArrayList<>();
 
@@ -165,8 +164,8 @@ public class FormatChangedTextUtil {
     return getChangedFiles(project, changes);
   }
 
-  @Nonnull
-  public static List<PsiFile> getChangedFiles(@Nonnull final Project project, @Nonnull Collection<Change> changes) {
+  
+  public static List<PsiFile> getChangedFiles(final Project project, Collection<Change> changes) {
     Function<Change, PsiFile> changeToPsiFileMapper = new Function<>() {
       private PsiManager myPsiManager = PsiManager.getInstance(project);
 
@@ -181,16 +180,16 @@ public class FormatChangedTextUtil {
     return ContainerUtil.mapNotNull(changes, changeToPsiFileMapper);
   }
 
-  @Nonnull
-  public List<TextRange> getChangedTextRanges(@Nonnull Project project, @Nonnull PsiFile file) throws FilesTooBigForDiffException {
+  
+  public List<TextRange> getChangedTextRanges(Project project, PsiFile file) throws FilesTooBigForDiffException {
     return List.of();
   }
 
-  public int calculateChangedLinesNumber(@Nonnull Document document, @Nonnull CharSequence contentFromVcs) {
+  public int calculateChangedLinesNumber(Document document, CharSequence contentFromVcs) {
     return -1;
   }
 
-  public boolean isChangeNotTrackedForFile(@Nonnull Project project, @Nonnull PsiFile file) {
+  public boolean isChangeNotTrackedForFile(Project project, PsiFile file) {
     return false;
   }
 }

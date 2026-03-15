@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.document.Document;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated Use {@link DocumentListener} instead
@@ -29,9 +28,9 @@ import jakarta.annotation.Nonnull;
 @Deprecated
 @TopicAPI(ComponentScope.APPLICATION)
 public interface DocumentBulkUpdateListener {
-  void updateStarted(@Nonnull Document doc);
+  void updateStarted(Document doc);
 
-  void updateFinished(@Nonnull Document doc);
+  void updateFinished(Document doc);
 
   /**
    * @deprecated Use {@link DocumentListener} instead
@@ -39,11 +38,11 @@ public interface DocumentBulkUpdateListener {
   @Deprecated
   abstract class Adapter implements DocumentBulkUpdateListener {
     @Override
-    public void updateFinished(@Nonnull Document doc) {
+    public void updateFinished(Document doc) {
     }
 
     @Override
-    public void updateStarted(@Nonnull Document doc) {
+    public void updateStarted(Document doc) {
     }
   }
 }

@@ -27,9 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,15 +35,15 @@ import java.util.List;
  * @author max
  */
 public interface ProblemsHolder {
-    @Nonnull
+    
     ProblemBuilder newProblem(LocalizeValue descriptionTemplate);
 
     @Deprecated
     @DeprecationInfo("Use #newProblem()...create()")
     @RequiredReadAction
     default void registerProblem(
-        @Nonnull PsiElement psiElement,
-        @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         @Nullable LocalQuickFix... fixes
     ) {
         newProblem(LocalizeValue.of(descriptionTemplate))
@@ -58,9 +56,9 @@ public interface ProblemsHolder {
     @DeprecationInfo("Use #newProblem()...create()")
     @RequiredReadAction
     default void registerProblem(
-        @Nonnull PsiElement psiElement,
-        @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
+        PsiElement psiElement,
+        String descriptionTemplate,
+        ProblemHighlightType highlightType,
         @Nullable LocalQuickFix... fixes
     ) {
         newProblem(LocalizeValue.of(descriptionTemplate))
@@ -71,18 +69,18 @@ public interface ProblemsHolder {
     }
 
     @RequiredReadAction
-    void registerProblem(@Nonnull ProblemDescriptor problemDescriptor);
+    void registerProblem(ProblemDescriptor problemDescriptor);
 
     @RequiredReadAction
-    void registerProblem(@Nonnull PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType);
+    void registerProblem(PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType);
 
     @Deprecated
     @DeprecationInfo("Use #newProblem()...create()")
     @RequiredReadAction
     default void registerProblemForReference(
-        @Nonnull PsiReference reference,
-        @Nonnull ProblemHighlightType highlightType,
-        @Nonnull String descriptionTemplate,
+        PsiReference reference,
+        ProblemHighlightType highlightType,
+        String descriptionTemplate,
         @Nullable LocalQuickFix... fixes
     ) {
         newProblem(LocalizeValue.of(descriptionTemplate))
@@ -93,7 +91,7 @@ public interface ProblemsHolder {
     }
 
     @RequiredReadAction
-    void registerProblem(@Nonnull PsiReference reference);
+    void registerProblem(PsiReference reference);
 
     /**
      * Creates highlighter for the specified place in the file.
@@ -110,9 +108,9 @@ public interface ProblemsHolder {
     @DeprecationInfo("Use #newProblem()...create()")
     @RequiredReadAction
     default void registerProblem(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
+        PsiElement psiElement,
+        String descriptionTemplate,
+        ProblemHighlightType highlightType,
         @Nullable TextRange rangeInElement,
         @Nullable LocalQuickFix... fixes
     ) {
@@ -126,9 +124,9 @@ public interface ProblemsHolder {
     @Deprecated
     @RequiredReadAction
     default void registerProblem(
-        @Nonnull PsiElement psiElement,
+        PsiElement psiElement,
         @Nullable TextRange rangeInElement,
-        @Nonnull String descriptionTemplate,
+        String descriptionTemplate,
         @Nullable LocalQuickFix... fixes
     ) {
         newProblem(LocalizeValue.of(descriptionTemplate))
@@ -137,16 +135,16 @@ public interface ProblemsHolder {
             .create();
     }
 
-    @Nonnull
+    
     List<ProblemDescriptor> getResults();
 
-    @Nonnull
+    
     default ProblemDescriptor[] getResultsArray() {
         List<ProblemDescriptor> problems = getResults();
         return problems.toArray(new ProblemDescriptor[problems.size()]);
     }
 
-    @Nonnull
+    
     InspectionManager getManager();
 
     boolean hasResults();
@@ -155,15 +153,15 @@ public interface ProblemsHolder {
 
     boolean isOnTheFly();
 
-    @Nonnull
+    
     PsiFile getFile();
 
-    @Nonnull
+    
     Project getProject();
 
-    @Nonnull
+    
     @RequiredReadAction
-    static LocalizeValue unresolvedReferenceMessage(@Nonnull PsiReference reference) {
+    static LocalizeValue unresolvedReferenceMessage(PsiReference reference) {
         if (reference instanceof EmptyResolveMessageProvider resolveMessageProvider) {
             return resolveMessageProvider.buildUnresolvedMessage(reference.getCanonicalText());
         }

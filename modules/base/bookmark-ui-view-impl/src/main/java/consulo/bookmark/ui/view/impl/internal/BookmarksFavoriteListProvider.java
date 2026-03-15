@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -61,17 +60,17 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
     }
 
     @Override
-    public void bookmarkAdded(@Nonnull Bookmark b) {
+    public void bookmarkAdded(Bookmark b) {
         updateChildren();
     }
 
     @Override
-    public void bookmarkRemoved(@Nonnull Bookmark b) {
+    public void bookmarkRemoved(Bookmark b) {
         updateChildren();
     }
 
     @Override
-    public void bookmarkChanged(@Nonnull Bookmark b) {
+    public void bookmarkChanged(Bookmark b) {
         updateChildren();
     }
 
@@ -88,7 +87,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         List<Bookmark> bookmarks = myBookmarkManager.getValidBookmarks();
         for (final Bookmark bookmark : bookmarks) {
             AbstractTreeNode<Bookmark> child = new AbstractTreeNode<>(myProject, bookmark) {
-                @Nonnull
+                
                 @Override
                 @RequiredReadAction
                 public Collection<? extends AbstractTreeNode> getChildren() {
@@ -122,9 +121,9 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         myFavoritesManager.fireListeners(getListName(myProject));
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
+    public LocalizeValue getCustomName(CommonActionsPanel.Buttons type) {
         return switch (type) {
             case EDIT -> BookmarkLocalize.actionBookmarkEditDescription();
             case REMOVE -> BookmarkLocalize.actionBookmarkDelete();
@@ -133,7 +132,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
     }
 
     @Override
-    public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
+    public boolean willHandle(CommonActionsPanel.Buttons type, Project project, Set<Object> selectedObjects) {
         return switch (type) {
             case EDIT -> selectedObjects.size() == 1
                 && selectedObjects.iterator().next() instanceof AbstractTreeNode toEdit
@@ -152,9 +151,9 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
 
     @Override
     public void handle(
-        @Nonnull CommonActionsPanel.Buttons type,
+        CommonActionsPanel.Buttons type,
         Project project,
-        @Nonnull Set<Object> selectedObjects,
+        Set<Object> selectedObjects,
         JComponent component
     ) {
         switch (type) {
@@ -184,7 +183,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
     public void customizeRenderer(
         ColoredTreeCellRenderer renderer,
         JTree tree,
-        @Nonnull Object value,
+        Object value,
         boolean selected,
         boolean expanded,
         boolean leaf,

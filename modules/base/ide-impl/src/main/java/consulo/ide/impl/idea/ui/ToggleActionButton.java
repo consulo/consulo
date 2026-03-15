@@ -23,14 +23,13 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
  */
 public abstract class ToggleActionButton extends AnActionButton implements Toggleable {
-    public ToggleActionButton(@Nonnull LocalizeValue text, Image icon) {
+    public ToggleActionButton(LocalizeValue text, Image icon) {
         super(text, LocalizeValue.empty(), icon);
     }
 
@@ -40,15 +39,15 @@ public abstract class ToggleActionButton extends AnActionButton implements Toggl
         super(text, null, icon);
     }
 
-    protected ToggleActionButton(@Nonnull LocalizeValue text) {
+    protected ToggleActionButton(LocalizeValue text) {
         super(text);
     }
 
-    protected ToggleActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected ToggleActionButton(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected ToggleActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected ToggleActionButton(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 

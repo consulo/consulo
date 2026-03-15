@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -34,8 +33,8 @@ import jakarta.annotation.Nonnull;
 public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     @Override
     protected void fillActions(Project project,
-                               @Nonnull ActionGroup.Builder group,
-                               @Nonnull DataContext dataContext) {
+                               ActionGroup.Builder group,
+                               DataContext dataContext) {
         CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
         if (manager.PER_PROJECT_SETTINGS != null) {
             //noinspection HardCodedStringLiteral
@@ -46,7 +45,7 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
             ) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     manager.USE_PER_PROJECT_SETTINGS = true;
                 }
             });
@@ -72,7 +71,7 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 if (addScheme) {
                     CodeStyleSchemes.getInstance().addScheme(scheme);
                 }

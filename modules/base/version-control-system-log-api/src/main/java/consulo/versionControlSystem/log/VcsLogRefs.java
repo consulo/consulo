@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.stream.Stream;
 
@@ -27,9 +26,9 @@ public interface VcsLogRefs {
   /**
    * Returns all branches.
    */
-  @Nonnull
+  
   Collection<VcsRef> getBranches();
 
-  @Nonnull
+  
   Stream<VcsRef> stream();
 }

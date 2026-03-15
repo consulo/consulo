@@ -17,8 +17,7 @@ package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.TestSuiteStarted;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TestSuiteStartedEvent extends BaseStartedNodeEvent {
     public TestSuiteStartedEvent(
@@ -34,11 +33,11 @@ public class TestSuiteStartedEvent extends BaseStartedNodeEvent {
         super(name, id, parentId, locationUrl, metainfo, nodeType, nodeArgs, running);
     }
 
-    public TestSuiteStartedEvent(@Nonnull TestSuiteStarted suiteStarted, @Nullable String locationUrl) {
+    public TestSuiteStartedEvent(TestSuiteStarted suiteStarted, @Nullable String locationUrl) {
         this(suiteStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(suiteStarted));
     }
 
-    public TestSuiteStartedEvent(@Nonnull TestSuiteStarted suiteStarted, @Nullable String locationUrl, @Nullable String metainfo) {
+    public TestSuiteStartedEvent(TestSuiteStarted suiteStarted, @Nullable String locationUrl, @Nullable String metainfo) {
         super(
             suiteStarted.getSuiteName(),
             TreeNodeEvent.getNodeId(suiteStarted),
@@ -51,11 +50,11 @@ public class TestSuiteStartedEvent extends BaseStartedNodeEvent {
         );
     }
 
-    public TestSuiteStartedEvent(@Nonnull String name, @Nullable String locationUrl) {
+    public TestSuiteStartedEvent(String name, @Nullable String locationUrl) {
         this(name, locationUrl, null);
     }
 
-    public TestSuiteStartedEvent(@Nonnull String name, @Nullable String locationUrl, @Nullable String metainfo) {
+    public TestSuiteStartedEvent(String name, @Nullable String locationUrl, @Nullable String metainfo) {
         super(name, null, null, locationUrl, metainfo, null, null, true);
     }
 }

@@ -20,9 +20,7 @@ import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,11 +36,11 @@ public class BinaryLightVirtualFile extends LightVirtualFileBase {
     this("");
   }
 
-  public BinaryLightVirtualFile(@NonNls String name) {
+  public BinaryLightVirtualFile(String name) {
     this(name, ArrayUtil.EMPTY_BYTE_ARRAY);
   }
 
-  public BinaryLightVirtualFile(@NonNls String name, byte[] content) {
+  public BinaryLightVirtualFile(String name, byte[] content) {
     this(name, null, content, LocalTimeCounter.currentTime());
   }
 
@@ -68,7 +66,7 @@ public class BinaryLightVirtualFile extends LightVirtualFileBase {
   }
 
   @Override
-  @Nonnull
+  
   public OutputStream getOutputStream(Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
     return VirtualFileUtil.outputStreamAddingBOM(new ByteArrayOutputStream() {
       @Override
@@ -82,7 +80,7 @@ public class BinaryLightVirtualFile extends LightVirtualFileBase {
   }
 
   @Override
-  @Nonnull
+  
   public byte[] contentsToByteArray() throws IOException {
     return myContent;
   }

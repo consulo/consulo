@@ -29,7 +29,6 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -40,20 +39,20 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class SandModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("sand");
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.Static;
   }
 
   @Override
-  public boolean canImport(@Nonnull File fileOrDirectory) {
+  public boolean canImport(File fileOrDirectory) {
     return new File(fileOrDirectory, "sand.txt").exists();
   }
 
@@ -64,7 +63,7 @@ public class SandModuleImportProvider implements ModuleImportProvider<ModuleImpo
 
   @RequiredReadAction
   @Override
-  public void process(@Nonnull ModuleImportContext context, @Nonnull Project project, @Nonnull ModifiableModuleModel model, @Nonnull Consumer<Module> newModuleConsumer) {
+  public void process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
     String path = context.getPath();
 
     Module module = model.newModule(context.getName(), path);

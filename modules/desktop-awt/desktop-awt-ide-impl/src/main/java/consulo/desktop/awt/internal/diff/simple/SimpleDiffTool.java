@@ -21,14 +21,13 @@ import consulo.diff.FrameDiffTool;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "simple")
 public class SimpleDiffTool implements FrameDiffTool {
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public DiffViewer createComponent(DiffContext context, DiffRequest request) {
         if (SimpleOnesideDiffViewer.canShowRequest(context, request)) {
             return new SimpleOnesideDiffViewer(context, request);
         }
@@ -42,13 +41,13 @@ public class SimpleDiffTool implements FrameDiffTool {
     }
 
     @Override
-    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public boolean canShow(DiffContext context, DiffRequest request) {
         return SimpleOnesideDiffViewer.canShowRequest(context, request) ||
             SimpleDiffViewer.canShowRequest(context, request) ||
             SimpleThreesideDiffViewer.canShowRequest(context, request);
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return DiffLocalize.sideBySideViewer().get();

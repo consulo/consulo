@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -65,7 +64,7 @@ public class FixedSizeButton extends JButton {
    * <code>component.getPreferredSize().height</code>. It is very convenient
    * way to create "browse" like button near the text fields.
    */
-  public FixedSizeButton(@Nonnull JComponent component) {
+  public FixedSizeButton(JComponent component) {
     this(-1, component);
   }
 

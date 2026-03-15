@@ -1,6 +1,5 @@
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collection;
@@ -21,18 +20,18 @@ public interface RefGroup {
     /**
      * Returns the name of the reference group. This reference will be displayed on the branches panel.
      */
-    @Nonnull
+    
     String getName();
 
     /**
      * Returns references inside this group.
      */
-    @Nonnull
+    
     List<VcsRef> getRefs();
 
     /**
      * Returns the colors of this ref group, which will be used to paint it in the table.
      */
-    @Nonnull
+    
     List<Color> getColors();
 }

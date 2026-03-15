@@ -23,26 +23,25 @@ import consulo.language.psi.PsiReference;
 import consulo.language.util.ProcessingContext;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 @ExtensionImpl
 public class EncodingReferenceInjector extends ReferenceInjector {
-  @Nonnull
+  
   @Override
-  public PsiReference[] getReferences(@Nonnull PsiElement element, @Nonnull ProcessingContext context, @Nonnull TextRange range) {
+  public PsiReference[] getReferences(PsiElement element, ProcessingContext context, TextRange range) {
     return new PsiReference[]{new EncodingReference(element, range.substring(element.getText()), range)};
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "encoding-reference";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Encoding Name");

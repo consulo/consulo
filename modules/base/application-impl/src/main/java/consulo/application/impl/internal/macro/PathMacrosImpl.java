@@ -34,7 +34,6 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -104,13 +103,13 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
   }
 
   @Override
-  public void setIgnoredMacroNames(@Nonnull Collection<String> names) {
+  public void setIgnoredMacroNames(Collection<String> names) {
     myIgnoredMacros.clear();
     myIgnoredMacros.addAll(names);
   }
 
   @Override
-  public void addIgnoredMacro(@Nonnull String name) {
+  public void addIgnoredMacro(String name) {
     if (!myIgnoredMacros.contains(name)) myIgnoredMacros.add(name);
   }
 
@@ -125,7 +124,7 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
   }
 
   @Override
-  public boolean isIgnoredMacroName(@Nonnull String macro) {
+  public boolean isIgnoredMacroName(String macro) {
     return myIgnoredMacros.contains(macro);
   }
 
@@ -174,7 +173,7 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
   }
 
   @Override
-  public void setMacro(@Nonnull String name, @Nonnull String value) {
+  public void setMacro(String name, String value) {
     if (value.trim().isEmpty()) return;
     try {
       myLock.writeLock().lock();
@@ -187,7 +186,7 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
   }
 
   @Override
-  public void addLegacyMacro(@Nonnull String name, @Nonnull String value) {
+  public void addLegacyMacro(String name, String value) {
     try {
       myLock.writeLock().lock();
       myLegacyMacros.put(name, value);

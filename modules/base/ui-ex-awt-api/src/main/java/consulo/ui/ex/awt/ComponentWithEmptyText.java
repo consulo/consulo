@@ -15,9 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 
 public interface ComponentWithEmptyText {
-  @Nonnull
+  
   StatusText getEmptyText();
 }

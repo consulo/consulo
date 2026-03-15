@@ -12,7 +12,6 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 final class ServiceViewDeleteProvider implements DeleteProvider {
   private final ServiceView myServiceView;
 
-  ServiceViewDeleteProvider(@Nonnull ServiceView serviceView) {
+  ServiceViewDeleteProvider(ServiceView serviceView) {
     myServiceView = serviceView;
   }
 
@@ -31,7 +30,7 @@ final class ServiceViewDeleteProvider implements DeleteProvider {
 
   @Override
   @RequiredUIAccess
-  public void deleteElement(@Nonnull DataContext dataContext) {
+  public void deleteElement(DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
 
@@ -58,7 +57,7 @@ final class ServiceViewDeleteProvider implements DeleteProvider {
   }
 
   @Override
-  public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+  public boolean canDeleteElement(DataContext dataContext) {
     List<ServiceViewItem> selectedItems = ServiceViewActionProvider.getSelectedItems(dataContext);
     if (!ContainerUtil.exists(selectedItems, item -> item.getViewDescriptor().getRemover() != null)) {
       return false;
@@ -67,7 +66,7 @@ final class ServiceViewDeleteProvider implements DeleteProvider {
     return detailsComponent == null || !UIUtil.isAncestor(detailsComponent, dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
   }
 
-  @Nonnull
+  
   private static List<Pair<ServiceViewItem, Runnable>> filterChildren(List<? extends Pair<ServiceViewItem, Runnable>> items) {
     return ContainerUtil.filter(items, item -> {
       ServiceViewItem parent = item.first.getParent();

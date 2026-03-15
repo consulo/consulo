@@ -67,8 +67,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -420,7 +419,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key dataId) {
+    public Object getData(Key dataId) {
         if (PsiElement.KEY == dataId) {
             PackageDependenciesNode selectedNode = myRightTree.getSelectedNode();
             if (selectedNode != null) {
@@ -437,7 +436,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     private static class MyTreeCellRenderer extends ColoredTreeCellRenderer {
         @Override
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,
@@ -471,7 +470,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Disposer.dispose(myUsagesPanel);
             DependenciesToolWindow.getInstance(myProject).closeContent(myContent);
             mySettings.copyToApplicationDependencySettings();
@@ -488,12 +487,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return mySettings.UI_FLATTEN_PACKAGES;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES = flag;
             mySettings.UI_FLATTEN_PACKAGES = flag;
             rebuild();
@@ -510,12 +509,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return mySettings.UI_SHOW_FILES;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_SHOW_FILES = flag;
             mySettings.UI_SHOW_FILES = flag;
             if (!flag && myLeftTree.getSelectionPath() != null
@@ -556,12 +555,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return mySettings.UI_SHOW_MODULES;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_SHOW_MODULES = flag;
             mySettings.UI_SHOW_MODULES = flag;
             rebuild();
@@ -578,19 +577,19 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return mySettings.UI_SHOW_MODULE_GROUPS;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_SHOW_MODULE_GROUPS = flag;
             mySettings.UI_SHOW_MODULE_GROUPS = flag;
             rebuild();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(mySettings.UI_SHOW_MODULES);
         }
@@ -606,12 +605,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return mySettings.UI_GROUP_BY_SCOPE_TYPE;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_GROUP_BY_SCOPE_TYPE = flag;
             mySettings.UI_GROUP_BY_SCOPE_TYPE = flag;
             rebuild();
@@ -629,12 +628,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return mySettings.UI_FILTER_LEGALS;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_FILTER_LEGALS = flag;
             mySettings.UI_FILTER_LEGALS = flag;
             rebuild();
@@ -652,7 +651,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             ShowSettingsUtil.getInstance()
                 .editConfigurable(DependenciesPanel.this, new DependencyConfigurable(myProject))
                 .doWhenDone(DependenciesPanel.this::rebuild);
@@ -675,7 +674,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         public void removeSettingsChangedListener(ChangeListener listener) {
         }
 
-        @Nonnull
+        
         @Override
         public String getReportText() {
             Element rootElement = new Element("root");
@@ -703,14 +702,14 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             return JDOMUtil.writeDocument(new Document(rootElement), SystemProperties.getLineSeparator());
         }
 
-        @Nonnull
+        
         @Override
         public String getDefaultFilePath() {
             return "";
         }
 
         @Override
-        public void exportedTo(@Nonnull String filePath) {
+        public void exportedTo(String filePath) {
         }
 
         @Override
@@ -727,7 +726,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             boolean enabled = true;
             for (DependenciesBuilder builder : myBuilders) {
                 enabled &= builder.getScope().isValid();
@@ -737,7 +736,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             DependenciesToolWindow.getInstance(myProject).closeContent(myContent);
             mySettings.copyToApplicationDependencySettings();
             SwingUtilities.invokeLater(() -> {
@@ -759,7 +758,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
     private static class MyTree extends Tree implements DataProvider {
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
+        public Object getData(Key<?> dataId) {
             PackageDependenciesNode node = getSelectedNode();
             if (Navigatable.KEY == dataId) {
                 return node;
@@ -819,7 +818,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             boolean[] direct = new boolean[]{true};
             processDependencies(
                 getSelectedScope(myLeftTree),
@@ -839,14 +838,14 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(!getSelectedScope(myLeftTree).isEmpty());
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Set<PsiFile> selectedScope = getSelectedScope(myLeftTree);
             exclude(selectedScope);
             myExcluded.addAll(selectedScope);
@@ -863,14 +862,14 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(getScope() != null);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             AnalysisScope scope = getScope();
             LOG.assertTrue(scope != null);
             DependenciesBuilder builder;
@@ -931,14 +930,14 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             PackageDependenciesNode node = myRightTree.getSelectedNode();
             e.getPresentation().setEnabled(node != null && node.canSelectInLeftTree(myDependencies));
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             PackageDependenciesNode node = myRightTree.getSelectedNode();
             if (node != null) {
                 PsiElement elt = node.getPsiElement();
@@ -977,7 +976,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             PackageDependenciesNode leftNode = myLeftTree.getSelectedNode();
             PackageDependenciesNode rightNode = myRightTree.getSelectedNode();
             if (leftNode != null && rightNode != null) {
@@ -1040,7 +1039,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(false);
             PackageDependenciesNode leftNode = myLeftTree.getSelectedNode();
@@ -1056,7 +1055,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     private final class ChooseScopeTypeAction extends ComboBoxAction {
-        @Nonnull
+        
         @Override
         public DefaultActionGroup createPopupActionGroup(JComponent component) {
             DefaultActionGroup group = new DefaultActionGroup();
@@ -1064,7 +1063,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
                 group.add(new AnAction(provider.getDisplayName()) {
                     @Override
                     @RequiredUIAccess
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         mySettings.SCOPE_TYPE = provider.getId();
                         DependencyUISettings.getInstance().setScopeType(provider.getId());
                         rebuild();
@@ -1075,7 +1074,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             PatternDialectProvider provider = PatternDialectProvider.findById(mySettings.SCOPE_TYPE);
             e.getPresentation().setText(provider.getDisplayName());

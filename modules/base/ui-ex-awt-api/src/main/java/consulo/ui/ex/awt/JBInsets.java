@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -26,7 +25,7 @@ import static consulo.ui.ex.awt.JBUI.scale;
  * @author Konstantin Bulenkov
  */
 public class JBInsets extends Insets {
-    @Nonnull
+    
     public static JBInsets emptyInsets() {
         return JBUI.emptyInsets();
     }
@@ -52,12 +51,12 @@ public class JBInsets extends Insets {
         return top + bottom;
     }
 
-    @Nonnull
+    
     public static JBInsets create(int topBottom, int leftRight) {
         return new JBInsets(topBottom, leftRight, topBottom, leftRight);
     }
 
-    public static JBInsets create(@Nonnull Insets insets) {
+    public static JBInsets create(Insets insets) {
         if (insets instanceof JBInsets) {
             JBInsets copy = new JBInsets(0, 0, 0, 0);
             copy.top = insets.top;
@@ -87,7 +86,7 @@ public class JBInsets extends Insets {
      * @param dimension the size to increase
      * @param insets    the insets to add
      */
-    public static void addTo(@Nonnull Dimension dimension, Insets insets) {
+    public static void addTo(Dimension dimension, Insets insets) {
         if (insets != null) {
             dimension.width += insets.left + insets.right;
             dimension.height += insets.top + insets.bottom;
@@ -98,7 +97,7 @@ public class JBInsets extends Insets {
      * @param dimension the size to decrease
      * @param insets    the insets to remove
      */
-    public static void removeFrom(@Nonnull Dimension dimension, Insets insets) {
+    public static void removeFrom(Dimension dimension, Insets insets) {
         if (insets != null) {
             dimension.width -= insets.left + insets.right;
             dimension.height -= insets.top + insets.bottom;
@@ -109,7 +108,7 @@ public class JBInsets extends Insets {
      * @param rectangle the size to increase and the location to move
      * @param insets    the insets to add
      */
-    public static void addTo(@Nonnull Rectangle rectangle, Insets insets) {
+    public static void addTo(Rectangle rectangle, Insets insets) {
         if (insets != null) {
             rectangle.x -= insets.left;
             rectangle.y -= insets.top;
@@ -122,7 +121,7 @@ public class JBInsets extends Insets {
      * @param rectangle the size to decrease and the location to move
      * @param insets    the insets to remove
      */
-    public static void removeFrom(@Nonnull Rectangle rectangle, Insets insets) {
+    public static void removeFrom(Rectangle rectangle, Insets insets) {
         if (insets != null) {
             rectangle.x += insets.left;
             rectangle.y += insets.top;

@@ -15,8 +15,7 @@
  */
 package consulo.execution.debug.frame;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +46,6 @@ public abstract class XSuspendContext {
   }
 
   public interface XExecutionStackContainer extends XValueCallback {
-    void addExecutionStack(@Nonnull List<? extends XExecutionStack> executionStacks, boolean last);
+    void addExecutionStack(List<? extends XExecutionStack> executionStacks, boolean last);
   }
 }

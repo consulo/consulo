@@ -3,25 +3,23 @@ package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.event.BuildEvent;
 import consulo.build.ui.event.BuildEventsNls;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  */
 public abstract class AbstractBuildEvent implements BuildEvent {
 
-  private final @Nonnull
+  private final 
   Object myEventId;
   private @Nullable Object myParentId;
   private final long myEventTime;
-  private final @Nonnull
+  private final 
   @BuildEventsNls.Message String myMessage;
   private @Nullable @BuildEventsNls.Hint String myHint;
   private @Nullable @BuildEventsNls.Description String myDescription;
 
-  public AbstractBuildEvent(@Nonnull Object eventId, @Nullable Object parentId, long eventTime, @Nonnull @BuildEventsNls.Message String message) {
+  public AbstractBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
     myEventId = eventId;
     myParentId = parentId;
     myEventTime = eventTime;
@@ -29,7 +27,7 @@ public abstract class AbstractBuildEvent implements BuildEvent {
   }
 
   @Override
-  public @Nonnull
+  public 
   Object getId() {
     return myEventId;
   }
@@ -49,7 +47,7 @@ public abstract class AbstractBuildEvent implements BuildEvent {
   }
 
   @Override
-  public @Nonnull
+  public 
   @BuildEventsNls.Message String getMessage() {
     return myMessage;
   }
@@ -72,7 +70,7 @@ public abstract class AbstractBuildEvent implements BuildEvent {
     myDescription = description;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return getClass().getSimpleName() + "{" +

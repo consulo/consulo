@@ -19,7 +19,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.language.psi.search.PsiSearchHelper;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,9 +29,9 @@ import java.util.function.Predicate;
  * @since 2023-11-08
  */
 public interface PsiSearchHelperEx extends PsiSearchHelper {
-  boolean processFilesConcurrentlyDespiteWriteActions(@Nonnull Project project,
-                                                      @Nonnull List<? extends VirtualFile> files,
-                                                      @Nonnull ProgressIndicator progress,
-                                                      @Nonnull AtomicBoolean stopped,
-                                                      @Nonnull Predicate<? super VirtualFile> localProcessor);
+  boolean processFilesConcurrentlyDespiteWriteActions(Project project,
+                                                      List<? extends VirtualFile> files,
+                                                      ProgressIndicator progress,
+                                                      AtomicBoolean stopped,
+                                                      Predicate<? super VirtualFile> localProcessor);
 }

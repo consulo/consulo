@@ -25,8 +25,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.usage.UsageInfo;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public abstract class MoveFileHandler {
 
   public abstract void updateMovedFile(PsiFile file) throws IncorrectOperationException;
 
-  @Nonnull
+  
   public static MoveFileHandler forElement(PsiFile element) {
     for (MoveFileHandler processor : Application.get().getExtensionList(MoveFileHandler.class)) {
       if (processor.canProcessElement(element)) {

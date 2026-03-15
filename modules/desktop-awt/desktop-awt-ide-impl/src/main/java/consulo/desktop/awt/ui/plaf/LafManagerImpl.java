@@ -60,7 +60,6 @@ import consulo.ui.style.Style;
 import consulo.util.collection.impl.map.LinkedHashMap;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -125,7 +124,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Override
-    public void addLafManagerListener(@Nonnull LafManagerListener l) {
+    public void addLafManagerListener(LafManagerListener l) {
         myListenerList.addListener(l);
     }
 
@@ -135,7 +134,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Override
-    public void removeLafManagerListener(@Nonnull LafManagerListener l) {
+    public void removeLafManagerListener(LafManagerListener l) {
         myListenerList.removeListener(l);
     }
 
@@ -244,19 +243,19 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         return element;
     }
 
-    @Nonnull
+    
     @Override
     public List<Style> getStyles() {
         return new ArrayList<>(myStyles.values());
     }
 
-    @Nonnull
+    
     @Override
     public Style getCurrentStyle() {
         return myCurrentStyle;
     }
 
-    @Nonnull
+    
     private DesktopStyleImpl getDefaultStyle() {
         boolean darked = Platform.current().user().darkTheme();
         DesktopStyleImpl style = myStyles.get(darked ? Style.DARK_ID : Style.LIGHT_ID);
@@ -268,7 +267,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     @Override
     @RequiredUIAccess
-    public void setCurrentStyle(@Nonnull Style currentStyle) {
+    public void setCurrentStyle(Style currentStyle) {
         DesktopStyleImpl style = (DesktopStyleImpl) currentStyle;
         setCurrentStyle(style, true, true, null);
     }
@@ -345,7 +344,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         }
     }
 
-    @Nonnull
+    
     private LookAndFeel newInstance(LookAndFeelInfoWithClassLoader lookAndFeel) throws Exception {
         ClassLoader classLoader = lookAndFeel.getClassLoader();
 

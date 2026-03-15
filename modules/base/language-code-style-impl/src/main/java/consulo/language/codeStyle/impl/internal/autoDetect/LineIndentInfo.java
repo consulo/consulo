@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.impl.internal.autoDetect;
 
-import jakarta.annotation.Nonnull;
 
 public class LineIndentInfo {
   public static final LineIndentInfo EMPTY_LINE = new LineIndentInfo(LineType.EMPTY_LINE, -1);
@@ -27,12 +26,12 @@ public class LineIndentInfo {
   private final int myIndentSize;
   private final LineType myType;
 
-  private LineIndentInfo(@Nonnull LineType type, int indentSize) {
+  private LineIndentInfo(LineType type, int indentSize) {
     myType = type;
     myIndentSize = indentSize;
   }
 
-  @Nonnull
+  
   public static LineIndentInfo newNormalIndent(int indentSize) {
     return new LineIndentInfo(LineType.LINE_WITH_NORMAL_WHITESPACE_INDENT, indentSize);
   }

@@ -27,7 +27,6 @@ import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteHandler;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteProcessor;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "SafeDelete")
 public class SafeDeleteAction extends BaseRefactoringAction {
@@ -48,7 +47,7 @@ public class SafeDeleteAction extends BaseRefactoringAction {
 
     @Override
     @RequiredReadAction
-    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    public boolean isEnabledOnElements(PsiElement[] elements) {
         for (PsiElement element : elements) {
             if (!SafeDeleteProcessor.validElement(element)) {
                 return false;
@@ -60,16 +59,16 @@ public class SafeDeleteAction extends BaseRefactoringAction {
     @Override
     @RequiredReadAction
     protected boolean isAvailableOnElementInEditorAndFile(
-        @Nonnull PsiElement element,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull DataContext context
+        PsiElement element,
+        Editor editor,
+        PsiFile file,
+        DataContext context
     ) {
         return SafeDeleteProcessor.validElement(element);
     }
 
     @Override
-    public RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
+    public RefactoringActionHandler getHandler(DataContext dataContext) {
         return new SafeDeleteHandler();
     }
 }

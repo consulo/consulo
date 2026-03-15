@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.*;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -56,13 +55,13 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         LOG.assertTrue(false);
     }
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         Library library = dataContext.getData(Library.KEY);
         LOG.assertTrue(library != null);
         Messages.showInputDialog(
@@ -75,7 +74,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
         );
     }
 
-    @Nonnull
+   
     @Override
     public LocalizeValue getActionTitleValue() {
         return IdeLocalize.titleRenameLibrary();
@@ -132,8 +131,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
             return success.get();
         }
 
-        @Nullable
-        private Library.ModifiableModel renameLibrary(String inputString) {
+        private Library.@Nullable ModifiableModel renameLibrary(String inputString) {
             Library.ModifiableModel modifiableModel = myLibrary.getModifiableModel();
             modifiableModel.setName(inputString);
             return modifiableModel;

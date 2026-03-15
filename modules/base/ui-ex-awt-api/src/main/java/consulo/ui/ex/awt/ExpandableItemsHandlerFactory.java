@@ -23,8 +23,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.TableCell;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +67,7 @@ public abstract class ExpandableItemsHandlerFactory {
       return false;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<Object> getExpandedItems() {
       return Collections.emptyList();

@@ -20,7 +20,6 @@ import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -35,7 +34,7 @@ public class WebImageImpl implements Image, WebImageWithURL {
 
   private URL myImageUrl;
 
-  public WebImageImpl(@Nonnull URL url) {
+  public WebImageImpl(URL url) {
     myImageUrl = url;
 
     URL scaledImageUrl = url;
@@ -93,7 +92,7 @@ public class WebImageImpl implements Image, WebImageWithURL {
     return myWidth;
   }
 
-  @Nonnull
+  
   @Override
   public String getImageURL() {
     return myImageUrl.toExternalForm();

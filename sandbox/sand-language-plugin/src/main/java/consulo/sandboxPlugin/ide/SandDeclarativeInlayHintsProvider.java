@@ -27,7 +27,6 @@ import consulo.sandboxPlugin.lang.psi.SandTokens;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -53,37 +52,37 @@ public class SandDeclarativeInlayHintsProvider implements DeclarativeInlayHintsP
         };
     }
 
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
         return SandLanguage.INSTANCE;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "sand.inlay";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Sand Test");
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("Sand Test ");
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getPreviewFileText() {
         return LocalizeValue.empty();
     }
 
-    @Nonnull
+    
     @Override
     public InlayGroup getGroup() {
         return InlayGroup.OTHER_GROUP;

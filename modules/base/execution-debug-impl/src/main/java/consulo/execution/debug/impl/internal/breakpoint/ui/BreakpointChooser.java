@@ -27,8 +27,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -219,12 +218,12 @@ public class BreakpointChooser {
     UserDataHolderBase myDataHolderBase = new UserDataHolderBase();
 
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
       return myDataHolderBase.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
       myDataHolderBase.putUserData(key, value);
     }
   }

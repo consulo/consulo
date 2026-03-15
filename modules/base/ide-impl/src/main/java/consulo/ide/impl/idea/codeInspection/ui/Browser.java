@@ -46,8 +46,7 @@ import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -126,7 +125,7 @@ class Browser extends JPanel {
     }
 
     @RequiredReadAction
-    private void showPageFromHistory(@Nonnull RefEntity newEntity) {
+    private void showPageFromHistory(RefEntity newEntity) {
         InspectionToolWrapper toolWrapper = getToolWrapper(newEntity);
         try {
             String html = generateHTML(newEntity, toolWrapper);
@@ -170,7 +169,7 @@ class Browser extends JPanel {
         showPageFromHistory(newEntity.getRefManager().getRefinedElement(newEntity));
     }
 
-    public Browser(@Nonnull InspectionResultsView view) {
+    public Browser(InspectionResultsView view) {
         super(new BorderLayout());
         myView = view;
 
@@ -307,7 +306,7 @@ class Browser extends JPanel {
     }
 
     @RequiredReadAction
-    private String generateHTML(RefEntity refEntity, @Nonnull InspectionToolWrapper toolWrapper) {
+    private String generateHTML(RefEntity refEntity, InspectionToolWrapper toolWrapper) {
         StringBuffer buf = new StringBuffer();
         HTMLComposerBase htmlComposer = getPresentation(toolWrapper).getComposer();
         if (refEntity instanceof RefElement) {
@@ -328,7 +327,7 @@ class Browser extends JPanel {
         return buf.toString();
     }
 
-    private InspectionToolPresentation getPresentation(@Nonnull InspectionToolWrapper toolWrapper) {
+    private InspectionToolPresentation getPresentation(InspectionToolWrapper toolWrapper) {
         return myView.getGlobalInspectionContext().getPresentation(toolWrapper);
     }
 
@@ -427,7 +426,7 @@ class Browser extends JPanel {
         }
     }
 
-    public void showDescription(@Nonnull InspectionToolWrapper toolWrapper) {
+    public void showDescription(InspectionToolWrapper toolWrapper) {
         if (toolWrapper.getShortName().isEmpty()) {
             showEmpty();
             return;

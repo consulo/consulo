@@ -24,44 +24,43 @@ import consulo.ui.ModalityState;
 import consulo.util.lang.EmptyRunnable;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 class CallbackData {
   private final static Logger LOG = Logger.getInstance(CallbackData.class);
 
-  @Nonnull
+  
   private final Runnable myCallback;
-  @Nonnull
+  
   private final Runnable myWrapperStarter;
 
-  CallbackData(@Nonnull Runnable callback, @Nonnull Runnable wrapperStarter) {
+  CallbackData(Runnable callback, Runnable wrapperStarter) {
     myCallback = callback;
     myWrapperStarter = wrapperStarter;
   }
 
-  @Nonnull
+  
   public Runnable getCallback() {
     return myCallback;
   }
 
-  @Nonnull
+  
   public Runnable getWrapperStarter() {
     return myWrapperStarter;
   }
 
-  @Nonnull
-  public static CallbackData create(@Nonnull Project project,
-                                    @Nonnull InvokeAfterUpdateMode mode,
-                                    @Nonnull Runnable afterUpdate,
+  
+  public static CallbackData create(Project project,
+                                    InvokeAfterUpdateMode mode,
+                                    Runnable afterUpdate,
                                     @Nullable String title,
                                     @Nullable ModalityState state) {
     return mode.isSilent() ? createSilent(project, mode, afterUpdate) : createInteractive(project, mode, afterUpdate, title, state);
   }
 
-  @Nonnull
-  private static CallbackData createSilent(@Nonnull Project project, @Nonnull InvokeAfterUpdateMode mode, @Nonnull Runnable afterUpdate) {
+  
+  private static CallbackData createSilent(Project project, InvokeAfterUpdateMode mode, Runnable afterUpdate) {
     Consumer<Runnable> callbackCaller = mode.isCallbackOnAwt()
                                         ? ApplicationManager.getApplication()::invokeLater
                                         : ApplicationManager.getApplication()::executeOnPooledThread;
@@ -72,10 +71,10 @@ class CallbackData {
     return new CallbackData(() -> callbackCaller.accept(callback), EmptyRunnable.INSTANCE);
   }
 
-  @Nonnull
-  private static CallbackData createInteractive(@Nonnull Project project,
-                                                @Nonnull InvokeAfterUpdateMode mode,
-                                                @Nonnull Runnable afterUpdate,
+  
+  private static CallbackData createInteractive(Project project,
+                                                InvokeAfterUpdateMode mode,
+                                                Runnable afterUpdate,
                                                 String title,
                                                 @Nullable ModalityState state) {
     Task task = mode.isSynchronous()
@@ -88,7 +87,7 @@ class CallbackData {
     return new CallbackData(callback, () -> ProgressManager.getInstance().run(task));
   }
 
-  private static void setDone(@Nonnull Task task) {
+  private static void setDone(Task task) {
     if (task instanceof Waiter) {
       ((Waiter)task).done();
     }
@@ -100,7 +99,7 @@ class CallbackData {
     }
   }
 
-  private static void logUpdateFinished(@Nonnull Project project, @Nonnull InvokeAfterUpdateMode mode) {
+  private static void logUpdateFinished(Project project, InvokeAfterUpdateMode mode) {
     LOG.debug(mode + " changes update finished for project " + project.getName());
   }
 }

@@ -19,8 +19,7 @@ import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +74,7 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
   }
 
   @Nullable
-  public static VirtualFile getAnyRoot(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
+  public static VirtualFile getAnyRoot(VirtualFile virtualFile, Project project) {
     ProjectFileIndex index = ProjectFileIndex.SERVICE.getInstance(project);
     VirtualFile root = index.getContentRootForFile(virtualFile);
     if (root == null) root = index.getClassRootForFile(virtualFile);
@@ -83,8 +82,8 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
     return root;
   }
 
-  @Nonnull
-  static String getRelativePathFromRoot(@Nonnull VirtualFile file, @Nonnull VirtualFile root) {
+  
+  static String getRelativePathFromRoot(VirtualFile file, VirtualFile root) {
     return root.getName() + File.separatorChar + VirtualFileUtil.getRelativePath(file, root, File.separatorChar);
   }
 

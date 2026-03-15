@@ -21,8 +21,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 
@@ -36,14 +35,14 @@ import java.util.List;
  */
 public class PathMappingSettings extends AbstractPathMapper implements Cloneable {
 
-  @Nonnull
+  
   private List<PathMapping> myPathMappings;
 
   public PathMappingSettings(@Nullable List<PathMapping> pathMappings) {
     myPathMappings = create(pathMappings);
   }
 
-  @Nonnull
+  
   private static List<PathMapping> create(@Nullable List<PathMapping> mappings) {
     List<PathMapping> result = new ArrayList<>();
     if (mappings != null) {
@@ -60,13 +59,13 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     myPathMappings = new ArrayList<>();
   }
 
-  @Nonnull
-  static String norm(@Nonnull String path) {
+  
+  static String norm(String path) {
     return FileUtil.toSystemIndependentName(path);
   }
 
-  @Nonnull
-  private static String normLocal(@Nonnull String path) {
+  
+  private static String normLocal(String path) {
     if (Platform.current().os().isWindows()) {
       path = path.toLowerCase();
     }
@@ -105,21 +104,21 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     }
   }
 
-  @Nonnull
+  
   @Override
-  public String convertToLocal(@Nonnull String remotePath) {
+  public String convertToLocal(String remotePath) {
     String localPath = convertToLocal(remotePath, myPathMappings);
     return localPath != null ? localPath : remotePath;
   }
 
-  @Nonnull
+  
   @Override
-  public String convertToRemote(@Nonnull String localPath) {
+  public String convertToRemote(String localPath) {
     String remotePath = convertToRemote(localPath, myPathMappings);
     return remotePath != null ? remotePath : localPath;
   }
 
-  public void add(@Nonnull PathMapping mapping) {
+  public void add(PathMapping mapping) {
     if (isAnyEmpty(mapping.getLocalRoot(), mapping.getRemoteRoot())) {
       return;
     }
@@ -131,7 +130,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     add(mapping);
   }
 
-  public void addMappingCheckUnique(@Nonnull String local, @Nonnull String remote) {
+  public void addMappingCheckUnique(String local, String remote) {
     for (PathMapping mapping : myPathMappings) {
       if (pathEquals(local, mapping.getLocalRoot()) && pathEquals(remote, mapping.getRemoteRoot())) {
         return;
@@ -140,17 +139,17 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     addMapping(local, remote);
   }
 
-  private static boolean pathEquals(@Nonnull String path1, @Nonnull String path2) {
+  private static boolean pathEquals(String path1, String path2) {
     return norm(path1).equals(norm(path2));
   }
 
   @Override
-  @Nonnull
+  
   protected final Collection<PathMapping> getAvailablePathMappings() {
     return Collections.unmodifiableCollection(myPathMappings);
   }
 
-  @Nonnull
+  
   public List<PathMapping> getPathMappings() {
     return myPathMappings;
   }
@@ -159,8 +158,8 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     myPathMappings = create(pathMappings);
   }
 
-  @Nonnull
-  public static String mapToLocal(@Nonnull String path, @Nullable String remoteRoot, @Nullable String localRoot) {
+  
+  public static String mapToLocal(String path, @Nullable String remoteRoot, @Nullable String localRoot) {
     if (isAnyEmpty(localRoot, remoteRoot)) {
       return path;
     }
@@ -198,11 +197,11 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     element.addContent(XmlSerializer.serialize(mappings));
   }
 
-  public void addAll(@Nonnull PathMappingSettings settings) {
+  public void addAll(PathMappingSettings settings) {
     myPathMappings.addAll(settings.getPathMappings());
   }
 
-  public void addAll(@Nonnull List<PathMapping> mappings) {
+  public void addAll(List<PathMapping> mappings) {
     myPathMappings.addAll(mappings);
   }
 
@@ -272,12 +271,12 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
       myRemoteRoot = normalize(remoteRoot);
     }
 
-    @Nonnull
-    public String mapToLocal(@Nonnull String path) {
+    
+    public String mapToLocal(String path) {
       return PathMappingSettings.mapToLocal(path, myRemoteRoot, myLocalRoot);
     }
 
-    public boolean canReplaceLocal(@Nonnull String path) {
+    public boolean canReplaceLocal(String path) {
       if (isEmpty()) {
         return false;
       }
@@ -286,7 +285,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
       return !localPrefix.isEmpty() && normLocal(path).startsWith(localPrefix);
     }
 
-    public String mapToRemote(@Nonnull String path) {
+    public String mapToRemote(String path) {
       if (isEmpty()) {
         return path;
       }
@@ -301,14 +300,14 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
       return isAnyEmpty(myLocalRoot, myRemoteRoot);
     }
 
-    private static String trimSlash(@Nonnull String s) {
+    private static String trimSlash(String s) {
       if (s.equals("/")) {
         return s;
       }
       return StringUtil.trimEnd(s, "/");
     }
 
-    public boolean canReplaceRemote(@Nonnull String path) {
+    public boolean canReplaceRemote(String path) {
       if (isEmpty()) {
         return false;
       }
@@ -342,7 +341,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     }
   }
 
-  private static boolean canReplaceRemote(@Nonnull String path, @Nonnull String remotePrefix) {
+  private static boolean canReplaceRemote(String path, String remotePrefix) {
     path = norm(path);
     remotePrefix = norm(remotePrefix);
     return path.startsWith(remotePrefix) &&

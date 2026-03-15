@@ -30,8 +30,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +57,7 @@ public final class FileChooserTextBoxBuilder {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor) myController.myFileChooserDescriptor.clone();
             fileChooserDescriptor.withTitleValue(myController.myDialogTitle);
             fileChooserDescriptor.withDescriptionValue(myController.myDialogDescription);
@@ -112,30 +111,30 @@ public final class FileChooserTextBoxBuilder {
         }
 
         @RequiredUIAccess
-        public void setValue(@Nonnull String text, boolean fireListeners) {
+        public void setValue(String text, boolean fireListeners) {
             myAccessor.setValue(myTextBox, text, fireListeners);
         }
 
         @RequiredUIAccess
-        public void setValue(@Nonnull VirtualFile value) {
+        public void setValue(VirtualFile value) {
             setValue(value.getPresentableUrl());
         }
 
         @RequiredUIAccess
-        @Nonnull
+        
         public String getValue() {
             return StringUtil.notNullize(myAccessor.getValue(myTextBox));
         }
 
         @RequiredUIAccess
-        @Nonnull
+        
         @Override
         public TextBox getComponent() {
             return myTextBox;
         }
     }
 
-    @Nonnull
+    
     public static FileChooserTextBoxBuilder create(@Nullable ComponentManager project) {
         return new FileChooserTextBoxBuilder(project);
     }
@@ -179,73 +178,73 @@ public final class FileChooserTextBoxBuilder {
         return path;
     };
 
-    @Nonnull
-    public FileChooserTextBoxBuilder dialogTitle(@Nonnull LocalizeValue dialogTitle) {
+    
+    public FileChooserTextBoxBuilder dialogTitle(LocalizeValue dialogTitle) {
         myDialogTitle = dialogTitle;
         return this;
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #dialogTitle(LocalizeValue)")
-    public FileChooserTextBoxBuilder dialogTitle(@Nonnull String dialogTitle) {
+    public FileChooserTextBoxBuilder dialogTitle(String dialogTitle) {
         return dialogTitle(LocalizeValue.of(dialogTitle));
     }
 
-    @Nonnull
-    public FileChooserTextBoxBuilder dialogDescription(@Nonnull LocalizeValue dialogDescription) {
+    
+    public FileChooserTextBoxBuilder dialogDescription(LocalizeValue dialogDescription) {
         myDialogDescription = dialogDescription;
         return this;
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #dialogDescription(LocalizeValue)")
-    public FileChooserTextBoxBuilder dialogDescription(@Nonnull String dialogDescription) {
+    public FileChooserTextBoxBuilder dialogDescription(String dialogDescription) {
         return dialogTitle(LocalizeValue.of(dialogDescription));
     }
 
-    @Nonnull
-    public FileChooserTextBoxBuilder fileChooserDescriptor(@Nonnull FileChooserDescriptor chooserDescriptor) {
+    
+    public FileChooserTextBoxBuilder fileChooserDescriptor(FileChooserDescriptor chooserDescriptor) {
         myFileChooserDescriptor = chooserDescriptor;
         return this;
     }
 
-    public FileChooserTextBoxBuilder textBoxAccessor(@Nonnull TextComponentAccessor<TextBox> componentAccessor) {
+    public FileChooserTextBoxBuilder textBoxAccessor(TextComponentAccessor<TextBox> componentAccessor) {
         myTextBoxAccessor = componentAccessor;
         return this;
     }
 
-    @Nonnull
-    public FileChooserTextBoxBuilder firstActions(@Nonnull AnAction... actions) {
+    
+    public FileChooserTextBoxBuilder firstActions(AnAction... actions) {
         for (AnAction action : actions) {
             myActions.addFirst(action);
         }
         return this;
     }
 
-    @Nonnull
-    public FileChooserTextBoxBuilder lastActions(@Nonnull AnAction... actions) {
+    
+    public FileChooserTextBoxBuilder lastActions(AnAction... actions) {
         for (AnAction action : actions) {
             myActions.addLast(action);
         }
         return this;
     }
 
-    @Nonnull
+    
     public FileChooserTextBoxBuilder disableCompletion() {
         myDisableCompletion = true;
         return this;
     }
 
-    @Nonnull
-    public FileChooserTextBoxBuilder uiDisposable(@Nonnull Disposable disposable) {
+    
+    public FileChooserTextBoxBuilder uiDisposable(Disposable disposable) {
         myDisposable = disposable;
         return this;
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     public Controller build() {
         return new Controller(this);
     }

@@ -19,8 +19,7 @@ import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.local.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class Modifier implements ChangeListsWriteOperations {
   }
 
   @Override
-  public LocalChangeList addChangeList(@Nonnull String name, @jakarta.annotation.Nullable String comment, @Nullable Object data) {
+  public LocalChangeList addChangeList(String name, @Nullable String comment, @Nullable Object data) {
     AddList command = new AddList(name, comment, data);
     impl(command);
     return command.getNewListCopy();
@@ -56,7 +55,7 @@ public class Modifier implements ChangeListsWriteOperations {
   }
 
   @Override
-  public boolean removeChangeList(@Nonnull String name) {
+  public boolean removeChangeList(String name) {
     RemoveList command = new RemoveList(name);
     impl(command);
     return command.isRemoved();
@@ -88,14 +87,14 @@ public class Modifier implements ChangeListsWriteOperations {
   }
 
   @Override
-  public boolean editName(@Nonnull String fromName, @Nonnull String toName) {
+  public boolean editName(String fromName, String toName) {
     EditName command = new EditName(fromName, toName);
     impl(command);
     return command.isResult();
   }
 
   @Override
-  public String editComment(@Nonnull String fromName, String newComment) {
+  public String editComment(String fromName, String newComment) {
     EditComment command = new EditComment(fromName, newComment);
     impl(command);
     return command.getOldComment();

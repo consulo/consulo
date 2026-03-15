@@ -15,9 +15,8 @@
  */
 package consulo.language.editor.internal.intention;
 
-import jakarta.annotation.Nonnull;
 
 public interface ActionClassHolder {
-  @Nonnull
+  
   Class getActionClass();
 }

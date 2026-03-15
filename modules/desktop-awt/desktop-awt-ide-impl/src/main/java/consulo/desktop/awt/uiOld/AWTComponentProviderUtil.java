@@ -19,8 +19,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.AWTComponentProvider;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -47,7 +46,7 @@ public class AWTComponentProviderUtil {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends AWTComponentProvider> T findChild(@Nullable Component child, @Nonnull Class<T> cls) {
+  public static <T extends AWTComponentProvider> T findChild(@Nullable Component child, Class<T> cls) {
     if (child == null) {
       return null;
     }
@@ -71,7 +70,7 @@ public class AWTComponentProviderUtil {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends AWTComponentProvider> T findParent(@Nullable Component parent, @Nonnull Class<T> cls) {
+  public static <T extends AWTComponentProvider> T findParent(@Nullable Component parent, Class<T> cls) {
     if (parent == null) {
       return null;
     }

@@ -15,8 +15,7 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -44,7 +43,7 @@ public class WSLDistributionService implements PersistentStateComponent<WSLDistr
   private int myVersion = 0;
 
   @Tag("descriptors")
-  @Nonnull
+  
   private final Set<WslDistributionDescriptor> myDescriptors = new LinkedHashSet<>();
 
   private static final List<WslDistributionDescriptor> DEFAULT_DESCRIPTORS =
@@ -72,7 +71,7 @@ public class WSLDistributionService implements PersistentStateComponent<WSLDistr
   });
 
 
-  @Nonnull
+  
   public Collection<WslDistributionDescriptor> getDescriptors() {
     myDefaultsApplier.getValue();
     return myDescriptors;
@@ -88,12 +87,12 @@ public class WSLDistributionService implements PersistentStateComponent<WSLDistr
    * @implSpec migrations if any, should be done here, depending on {@link #myVersion} of {@code state} and {@link #CURRENT_VERSION}
    */
   @Override
-  public void loadState(@Nonnull WSLDistributionService state) {
+  public void loadState(WSLDistributionService state) {
     XmlSerializerUtil.copyBean(state, this);
     myDescriptors.removeIf(it -> !it.isValid());
   }
 
-  @Nonnull
+  
   public static WSLDistributionService getInstance() {
     return ServiceManager.getService(WSLDistributionService.class);
   }

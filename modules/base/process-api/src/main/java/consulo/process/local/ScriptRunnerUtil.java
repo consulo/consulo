@@ -30,8 +30,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.function.Predicate;
@@ -57,21 +56,21 @@ public final class ScriptRunnerUtil {
     private ScriptRunnerUtil() {
     }
 
-    public static String getProcessOutput(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+    public static String getProcessOutput(GeneralCommandLine commandLine) throws ExecutionException {
         return getProcessOutput(commandLine, STDOUT_OUTPUT_KEY_FILTER, DEFAULT_TIMEOUT);
     }
 
     public static String getProcessOutput(
-        @Nonnull GeneralCommandLine commandLine,
-        @Nonnull Predicate<Key> outputTypeFilter,
+        GeneralCommandLine commandLine,
+        Predicate<Key> outputTypeFilter,
         long timeout
     ) throws ExecutionException {
         return getProcessOutput(ProcessHandlerFactory.getInstance().createProcessHandler(commandLine), outputTypeFilter, timeout);
     }
 
     public static String getProcessOutput(
-        @Nonnull ProcessHandler processHandler,
-        @Nonnull Predicate<Key> outputTypeFilter,
+        ProcessHandler processHandler,
+        Predicate<Key> outputTypeFilter,
         long timeout
     ) throws ExecutionException {
         LOG.assertTrue(!processHandler.isStartNotified());
@@ -107,9 +106,9 @@ public final class ScriptRunnerUtil {
         return null;
     }
 
-    @Nonnull
+    
     public static ProcessHandler execute(
-        @Nonnull String exePath,
+        String exePath,
         @Nullable String workingDirectory,
         @Nullable VirtualFile scriptFile,
         String[] parameters
@@ -213,7 +212,7 @@ public final class ScriptRunnerUtil {
      * @param millisTimeout  timeout in milliseconds between 'soft kill' and 'force quite'
      * @param commandLine    command line
      */
-    public static void terminateProcessHandler(@Nonnull ProcessHandler processHandler, long millisTimeout, @Nullable String commandLine) {
+    public static void terminateProcessHandler(ProcessHandler processHandler, long millisTimeout, @Nullable String commandLine) {
         if (processHandler.isProcessTerminated()) {
             LOG.warn("Process '" + commandLine + "' is already terminated!");
             return;

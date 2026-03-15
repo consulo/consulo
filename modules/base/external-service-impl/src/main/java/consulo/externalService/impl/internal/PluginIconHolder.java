@@ -24,7 +24,6 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -42,8 +41,8 @@ public class PluginIconHolder {
 
     private static final Supplier<Image> ourDecoratedDefaultImage = LazyValue.notNull(() -> decorateIcon(PlatformIconGroup.nodesPlugin()));
 
-    @Nonnull
-    public static Image get(@Nonnull PluginDescriptor pluginDescriptor) {
+    
+    public static Image get(PluginDescriptor pluginDescriptor) {
         return deferImage(
             pluginDescriptor,
             it -> ImageEffects.canvas(
@@ -59,7 +58,7 @@ public class PluginIconHolder {
         );
     }
 
-    public static void put(@Nonnull PluginDescriptor descriptor, @Nonnull Image image) {
+    public static void put(PluginDescriptor descriptor, Image image) {
         deferImage(descriptor, it -> decorateIcon(image));
     }
 
@@ -72,17 +71,17 @@ public class PluginIconHolder {
         );
     }
 
-    @Nonnull
-    public static Image decorateIcon(@Nonnull Image image) {
+    
+    public static Image decorateIcon(Image image) {
         return ImageEffects.resize(image, ICON_SIZE, ICON_SIZE);
     }
 
-    @Nonnull
-    public static Image initializeImage(@Nonnull PluginDescriptor pluginDescriptor) {
+    
+    public static Image initializeImage(PluginDescriptor pluginDescriptor) {
         return initializeImage(pluginDescriptor, StyleManager.get().getCurrentStyle().isDark());
     }
 
-    public static Image initializeImage(@Nonnull PluginDescriptor pluginDescriptor, boolean isDark) {
+    public static Image initializeImage(PluginDescriptor pluginDescriptor, boolean isDark) {
         byte[] iconBytes = pluginDescriptor.getIconBytes(isDark);
         if (iconBytes.length == 0) {
             return decorateIcon(PlatformIconGroup.nodesPlugin());

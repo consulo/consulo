@@ -28,7 +28,6 @@ import consulo.versionControlSystem.log.impl.internal.graph.GraphColorManagerImp
 import consulo.versionControlSystem.log.impl.internal.graph.VisibleGraphImpl;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,16 +35,16 @@ import java.util.Map;
 import java.util.Set;
 
 public class FakeVisiblePackBuilder {
-  @Nonnull
+  
   private final VcsLogStorage myHashMap;
 
-  public FakeVisiblePackBuilder(@Nonnull VcsLogStorage hashMap) {
+  public FakeVisiblePackBuilder(VcsLogStorage hashMap) {
     myHashMap = hashMap;
   }
 
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
-  public VisiblePack build(@Nonnull VisiblePack visiblePack) {
+  public VisiblePack build(VisiblePack visiblePack) {
     if (visiblePack.getVisibleGraph() instanceof VisibleGraphImpl visibleGraph && visibleGraph.getVisibleCommitCount() > 0) {
       return build(visiblePack.getDataPack(), (VisibleGraphImpl<Integer>)visibleGraph, visiblePack.getFilters());
     }
@@ -56,11 +55,11 @@ public class FakeVisiblePackBuilder {
     }
   }
 
-  @Nonnull
+  
   private VisiblePack build(
-    @Nonnull DataPackBase oldPack,
-    @Nonnull VisibleGraphImpl<Integer> oldGraph,
-    @Nonnull VcsLogFilterCollection filters
+    DataPackBase oldPack,
+    VisibleGraphImpl<Integer> oldGraph,
+    VcsLogFilterCollection filters
   ) {
     PermanentGraphInfo<Integer> info = oldGraph.buildSimpleGraphInfo();
     Set<Integer> heads = ContainerUtil.map2Set(
@@ -80,16 +79,16 @@ public class FakeVisiblePackBuilder {
     return new VisiblePack(newPack, newGraph, true, filters);
   }
 
-  @Nonnull
+  
   private RefsModel createEmptyRefsModel() {
     return new RefsModel(new HashMap<>(), new HashSet<>(), myHashMap, new HashMap<>());
   }
 
   private RefsModel createRefsModel(
-    @Nonnull RefsModel refsModel,
-    @Nonnull Set<Integer> heads,
-    @Nonnull VisibleGraph<Integer> visibleGraph,
-    @Nonnull Map<VirtualFile, VcsLogProvider> providers
+    RefsModel refsModel,
+    Set<Integer> heads,
+    VisibleGraph<Integer> visibleGraph,
+    Map<VirtualFile, VcsLogProvider> providers
   ) {
     Set<VcsRef> branchesAndHeads = new HashSet<>();
     refsModel.getBranches().stream().filter(ref -> {

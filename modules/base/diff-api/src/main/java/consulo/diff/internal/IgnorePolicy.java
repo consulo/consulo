@@ -18,7 +18,6 @@ package consulo.diff.internal;
 import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.localize.DiffLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 public enum IgnorePolicy {
     DEFAULT(ComparisonPolicy.DEFAULT, DiffLocalize.optionIgnorePolicyNone()),
@@ -26,22 +25,22 @@ public enum IgnorePolicy {
     IGNORE_WHITESPACES(ComparisonPolicy.IGNORE_WHITESPACES, DiffLocalize.optionIgnorePolicyWhitespaces()),
     IGNORE_WHITESPACES_CHUNKS(ComparisonPolicy.IGNORE_WHITESPACES, DiffLocalize.optionIgnorePolicyWhitespacesEmptyLines());
 
-    @Nonnull
+    
     private final ComparisonPolicy myComparisonPolicy;
-    @Nonnull
+    
     private final LocalizeValue myText;
 
-    IgnorePolicy(@Nonnull ComparisonPolicy comparisonPolicy, @Nonnull LocalizeValue text) {
+    IgnorePolicy(ComparisonPolicy comparisonPolicy, LocalizeValue text) {
         myComparisonPolicy = comparisonPolicy;
         myText = text;
     }
 
-    @Nonnull
+    
     public LocalizeValue getText() {
         return myText;
     }
 
-    @Nonnull
+    
     public ComparisonPolicy getComparisonPolicy() {
         return myComparisonPolicy;
     }

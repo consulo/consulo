@@ -31,7 +31,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
 import consulo.virtualFileSystem.*;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeEvent;
@@ -65,10 +64,10 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
     private Future<?> myRefreshDelayAlarm = CompletableFuture.completedFuture(null);
 
     @Inject
-    public DesktopSaveAndSyncHandlerImpl(@Nonnull Application application,
-                                         @Nonnull GeneralSettings generalSettings,
-                                         @Nonnull ProgressManager progressManager,
-                                         @Nonnull FileDocumentManager fileDocumentManager) {
+    public DesktopSaveAndSyncHandlerImpl(Application application,
+                                         GeneralSettings generalSettings,
+                                         ProgressManager progressManager,
+                                         FileDocumentManager fileDocumentManager) {
         mySettings = generalSettings;
         myApplication = application;
         myProgressManager = progressManager;
@@ -82,7 +81,7 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
 
         myGeneralSettingsListener = new PropertyChangeListener() {
             @Override
-            public void propertyChange(@Nonnull PropertyChangeEvent e) {
+            public void propertyChange(PropertyChangeEvent e) {
                 if (GeneralSettings.PROP_INACTIVE_TIMEOUT.equals(e.getPropertyName())) {
                     IdeEventQueue eventQueue = IdeEventQueue.getInstance();
                     eventQueue.removeIdleListener(myIdleListener);
@@ -139,7 +138,7 @@ public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Dispos
         maybeRefresh(myApplication.getNoneModalityState());
     }
 
-    public void maybeRefresh(@Nonnull ModalityState modalityState) {
+    public void maybeRefresh(ModalityState modalityState) {
         if (myBlockSyncOnFrameActivationCount.get() == 0 && mySettings.isSyncOnFrameActivation()) {
             RefreshQueue queue = RefreshQueue.getInstance();
             queue.cancelSession(myRefreshSessionId);

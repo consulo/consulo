@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +35,7 @@ public abstract class SearchableOptionsRegistrar {
         return Application.get().getInstance(SearchableOptionsRegistrar.class);
     }
 
-    @Nonnull
+    
     public abstract ConfigurableHit getConfigurables(Configurable[] allConfigurables,
                                                      boolean changed,
                                                      Set<Configurable> configurables,
@@ -50,15 +49,15 @@ public abstract class SearchableOptionsRegistrar {
 
     public abstract boolean isStopWord(String word);
 
-    public abstract Set<String> getSynonym(String option, @Nonnull SearchableConfigurable configurable);
+    public abstract Set<String> getSynonym(String option, SearchableConfigurable configurable);
 
     public abstract Set<String> replaceSynonyms(Set<String> options, SearchableConfigurable configurable);
 
-    public abstract Map<String, Set<String>> findPossibleExtension(@Nonnull String prefix, Project project);
+    public abstract Map<String, Set<String>> findPossibleExtension(String prefix, Project project);
 
 
-    public abstract Set<String> getProcessedWordsWithoutStemming(@Nonnull String text);
+    public abstract Set<String> getProcessedWordsWithoutStemming(String text);
 
-    public abstract Set<String> getProcessedWords(@Nonnull String text);
+    public abstract Set<String> getProcessedWords(String text);
 
 }

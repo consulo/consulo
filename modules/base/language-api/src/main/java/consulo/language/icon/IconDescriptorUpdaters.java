@@ -26,7 +26,6 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -94,9 +93,9 @@ public final class IconDescriptorUpdaters {
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static Image getIcon(@Nonnull PsiElement element, @Iconable.IconFlags int flags) {
+    public static Image getIcon(PsiElement element, @Iconable.IconFlags int flags) {
         if (!element.isValid()) {
             return PlatformIconGroup.nodesNodeplaceholder();
         }
@@ -108,8 +107,8 @@ public final class IconDescriptorUpdaters {
         return IconDeferrer.getInstance().defer(baseIcon, new ElementIconRequest(element, flags), ourIconCompute);
     }
 
-    @Nonnull
-    private static Image computeBaseIcon(@Nonnull PsiElement element, int flags) {
+    
+    private static Image computeBaseIcon(PsiElement element, int flags) {
         Image icon = computeBaseIcon(element);
         if ((flags & Iconable.ICON_FLAG_VISIBILITY) > 0) {
             return ImageEffects.appendRight(icon, ourVisibilityIconPlaceholder.get());
@@ -117,8 +116,8 @@ public final class IconDescriptorUpdaters {
         return icon;
     }
 
-    @Nonnull
-    private static Image computeBaseIcon(@Nonnull PsiElement element) {
+    
+    private static Image computeBaseIcon(PsiElement element) {
         if (element instanceof PsiFileSystemItem) {
             VirtualFile file = ((PsiFileSystemItem) element).getVirtualFile();
             if (file != null) {
@@ -137,9 +136,9 @@ public final class IconDescriptorUpdaters {
         return PlatformIconGroup.nodesNodeplaceholder();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static Image getIconWithoutCache(@Nonnull PsiElement element, int flags) {
+    public static Image getIconWithoutCache(PsiElement element, int flags) {
         IconDescriptor iconDescriptor = new IconDescriptor(null);
         element
             .getProject()
@@ -148,7 +147,7 @@ public final class IconDescriptorUpdaters {
     }
 
     @RequiredReadAction
-    public static void processExistingDescriptor(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+    public static void processExistingDescriptor(IconDescriptor iconDescriptor, PsiElement element, int flags) {
         element
             .getProject()
             .getExtensionPoint(IconDescriptorUpdater.class).forEachExtensionSafe(it -> it.updateIcon(iconDescriptor, element, flags));

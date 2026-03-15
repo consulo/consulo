@@ -18,7 +18,6 @@ package consulo.execution.test.action;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.execution.test.TestConsoleProperties;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ToggleModelActionProvider {
-    @Nonnull
+    
     ToggleModelAction createToggleModelAction(TestConsoleProperties properties);
 }

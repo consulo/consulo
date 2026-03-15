@@ -17,7 +17,6 @@ package consulo.virtualFileSystem;
 
 import consulo.virtualFileSystem.event.*;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -26,7 +25,7 @@ public class VirtualFileFilteringListener implements VirtualFileListener {
   private final VirtualFileListener myDelegate;
   private final VirtualFileSystem myFilter;
 
-  public VirtualFileFilteringListener(@Nonnull VirtualFileListener delegate, @Nonnull VirtualFileSystem filter) {
+  public VirtualFileFilteringListener(VirtualFileListener delegate, VirtualFileSystem filter) {
     myDelegate = delegate;
     myFilter = filter;
   }
@@ -36,70 +35,70 @@ public class VirtualFileFilteringListener implements VirtualFileListener {
   }
 
   @Override
-  public void beforeContentsChange(@Nonnull VirtualFileEvent event) {
+  public void beforeContentsChange(VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.beforeContentsChange(event);
     }
   }
 
   @Override
-  public void beforeFileDeletion(@Nonnull VirtualFileEvent event) {
+  public void beforeFileDeletion(VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.beforeFileDeletion(event);
     }
   }
 
   @Override
-  public void beforeFileMovement(@Nonnull VirtualFileMoveEvent event) {
+  public void beforeFileMovement(VirtualFileMoveEvent event) {
     if (isGood(event)) {
       myDelegate.beforeFileMovement(event);
     }
   }
 
   @Override
-  public void beforePropertyChange(@Nonnull VirtualFilePropertyEvent event) {
+  public void beforePropertyChange(VirtualFilePropertyEvent event) {
     if (isGood(event)) {
       myDelegate.beforePropertyChange(event);
     }
   }
 
   @Override
-  public void contentsChanged(@Nonnull VirtualFileEvent event) {
+  public void contentsChanged(VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.contentsChanged(event);
     }
   }
 
   @Override
-  public void fileCopied(@Nonnull VirtualFileCopyEvent event) {
+  public void fileCopied(VirtualFileCopyEvent event) {
     if (isGood(event)) {
       myDelegate.fileCopied(event);
     }
   }
 
   @Override
-  public void fileCreated(@Nonnull VirtualFileEvent event) {
+  public void fileCreated(VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.fileCreated(event);
     }
   }
 
   @Override
-  public void fileDeleted(@Nonnull VirtualFileEvent event) {
+  public void fileDeleted(VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.fileDeleted(event);
     }
   }
 
   @Override
-  public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
+  public void fileMoved(VirtualFileMoveEvent event) {
     if (isGood(event)) {
       myDelegate.fileMoved(event);
     }
   }
 
   @Override
-  public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+  public void propertyChanged(VirtualFilePropertyEvent event) {
     if (isGood(event)) {
       myDelegate.propertyChanged(event);
     }

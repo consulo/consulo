@@ -26,7 +26,6 @@ import consulo.ui.ex.action.event.AnActionListener;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,13 +41,13 @@ public class EditorPopupAnActionListener implements AnActionListener {
   }
 
   @Override
-  public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+  public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
     if (action instanceof HintManagerImpl.ActionToIgnore) return;
     myEditorMouseHoverPopupManager.get().cancelProcessingAndCloseHint();
   }
 
   @Override
-  public void beforeEditorTyping(char c, @Nonnull DataContext dataContext) {
+  public void beforeEditorTyping(char c, DataContext dataContext) {
     myEditorMouseHoverPopupManager.get().cancelProcessingAndCloseHint();
   }
 }

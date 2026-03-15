@@ -19,25 +19,24 @@ import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class OpenFileHyperlinkInfo extends FileHyperlinkInfoBase {
   private final VirtualFile myVirtualFile;
 
-  public OpenFileHyperlinkInfo(@Nonnull OpenFileDescriptor descriptor) {
+  public OpenFileHyperlinkInfo(OpenFileDescriptor descriptor) {
     this((Project)descriptor.getProject(), descriptor.getFile(), descriptor.getLine(), descriptor.getColumn());
   }
 
-  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
+  public OpenFileHyperlinkInfo(Project project, VirtualFile file, int line) {
     this(project, file, line, 0);
   }
 
-  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, int line, int column) {
+  public OpenFileHyperlinkInfo(Project project, VirtualFile file, int line, int column) {
     this(project, file, true, line, column);
   }
 
-  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, boolean includeInOccurrenceNavigation, int documentLine, int documentColumn) {
+  public OpenFileHyperlinkInfo(Project project, VirtualFile file, boolean includeInOccurrenceNavigation, int documentLine, int documentColumn) {
     super(project, includeInOccurrenceNavigation, documentLine, documentColumn);
     myVirtualFile = file;
   }

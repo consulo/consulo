@@ -16,12 +16,11 @@
 package consulo.language.editor.refactoring.postfixTemplate;
 
 import consulo.language.editor.postfixTemplate.PostfixTemplatePsiInfo;
-import jakarta.annotation.Nonnull;
 
 public abstract class IfPostfixTemplateBase extends SurroundPostfixTemplateBase {
 
-  protected IfPostfixTemplateBase(@Nonnull PostfixTemplatePsiInfo psiInfo,
-                                  @Nonnull PostfixTemplateExpressionSelector selector) {
+  protected IfPostfixTemplateBase(PostfixTemplatePsiInfo psiInfo,
+                                  PostfixTemplateExpressionSelector selector) {
     super("if", "if (expr)", psiInfo, selector);
   }
 }

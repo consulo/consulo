@@ -28,7 +28,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsParametersImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,13 +38,13 @@ public class BackgroundTaskByVfsChangeLayout extends CommonProgramParametersLayo
   private FileChooserTextBoxBuilder.Controller myExePathController;
   private FileChooserTextBoxBuilder.Controller myOutputPathController;
 
-  public BackgroundTaskByVfsChangeLayout(@Nonnull DialogService dialogService) {
+  public BackgroundTaskByVfsChangeLayout(DialogService dialogService) {
     super(dialogService);
   }
 
   @RequiredUIAccess
   @Override
-  protected void addBefore(@Nonnull FormBuilder builder) {
+  protected void addBefore(FormBuilder builder) {
     FileChooserTextBoxBuilder exePathBuilder = FileChooserTextBoxBuilder.create(getProject());
     exePathBuilder.fileChooserDescriptor(new FileChooserDescriptor(false, true, false, false, false, false));
     exePathBuilder.dialogTitle(LocalizeValue.localizeTODO("Select Executable"));
@@ -58,7 +57,7 @@ public class BackgroundTaskByVfsChangeLayout extends CommonProgramParametersLayo
 
   @RequiredUIAccess
   @Override
-  protected void addAfter(@Nonnull FormBuilder builder) {
+  protected void addAfter(FormBuilder builder) {
     FileChooserTextBoxBuilder outputPathBuilder = FileChooserTextBoxBuilder.create(getProject());
     outputPathBuilder.fileChooserDescriptor(new FileChooserDescriptor(false, true, false, false, false, false));
     outputPathBuilder.dialogTitle(LocalizeValue.localizeTODO("Select Output Path"));

@@ -25,8 +25,7 @@ import consulo.ui.MenuSeparator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -40,7 +39,7 @@ class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
       super(s);
     }
 
-    @Nonnull
+    
     @Override
     public Component toUIComponent() {
       return DesktopMenuImpl.this;
@@ -64,9 +63,9 @@ class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public Menu add(@Nonnull MenuItem menuItem) {
+  public Menu add(MenuItem menuItem) {
     if (menuItem instanceof MenuSeparator) {
       toAWTComponent().addSeparator();
       return this;
@@ -75,7 +74,7 @@ class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return myLabelText;

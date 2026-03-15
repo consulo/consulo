@@ -22,18 +22,17 @@ import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiBundle;
-import jakarta.annotation.Nonnull;
 
 public class ProjectScopeImpl extends GlobalSearchScope {
   private final FileIndexFacade myFileIndex;
 
-  public ProjectScopeImpl(@Nonnull Project project, @Nonnull FileIndexFacade fileIndex) {
+  public ProjectScopeImpl(Project project, FileIndexFacade fileIndex) {
     super(project);
     myFileIndex = fileIndex;
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     if (file instanceof VirtualFileWindow) return true;
 
     if (myFileIndex.isInLibraryClasses(file) && !myFileIndex.isInSourceContent(file)) return false;
@@ -42,12 +41,12 @@ public class ProjectScopeImpl extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return true;
   }
 
@@ -56,7 +55,7 @@ public class ProjectScopeImpl extends GlobalSearchScope {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public String getDisplayName() {
     return PsiBundle.message("psi.search.scope.project");
@@ -67,16 +66,16 @@ public class ProjectScopeImpl extends GlobalSearchScope {
     return getDisplayName();
   }
 
-  @Nonnull
+  
   @Override
-  public GlobalSearchScope uniteWith(@Nonnull GlobalSearchScope scope) {
+  public GlobalSearchScope uniteWith(GlobalSearchScope scope) {
     if (scope == this || !scope.isSearchInLibraries() || !scope.isSearchOutsideRootModel()) return this;
     return super.uniteWith(scope);
   }
 
-  @Nonnull
+  
   @Override
-  public GlobalSearchScope intersectWith(@Nonnull GlobalSearchScope scope) {
+  public GlobalSearchScope intersectWith(GlobalSearchScope scope) {
     if (scope == this) return this;
     if (!scope.isSearchInLibraries()) return scope;
     return super.intersectWith(scope);

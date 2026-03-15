@@ -4,8 +4,7 @@ import consulo.component.util.Iconable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -15,16 +14,16 @@ public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer 
   public static final IconTableCellRenderer<Iconable> ICONABLE = new IconTableCellRenderer<Iconable>() {
     @Nullable
     @Override
-    protected Image getIcon(@Nonnull Iconable value, JTable table, int row) {
+    protected Image getIcon(Iconable value, JTable table, int row) {
       return value.getIcon(Iconable.ICON_FLAG_VISIBILITY);
     }
   };
 
-  public static TableCellRenderer create(@Nonnull final Image icon) {
+  public static TableCellRenderer create(final Image icon) {
     return new IconTableCellRenderer() {
       @Nullable
       @Override
-      protected Image getIcon(@Nonnull Object value, JTable table, int row) {
+      protected Image getIcon(Object value, JTable table, int row) {
         return icon;
       }
     };
@@ -47,5 +46,5 @@ public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer 
   }
 
   @Nullable
-  protected abstract Image getIcon(@Nonnull T value, JTable table, int row);
+  protected abstract Image getIcon(T value, JTable table, int row);
 }

@@ -21,7 +21,6 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Function;
 
@@ -143,19 +142,19 @@ public class OffsetMap implements Disposable {
     }
   }
 
-  @Nonnull
+  
   public Document getDocument() {
     return myDocument;
   }
 
-  @Nonnull
-  public OffsetMap copyOffsets(@Nonnull Document anotherDocument) {
+  
+  public OffsetMap copyOffsets(Document anotherDocument) {
     assert anotherDocument.getTextLength() == myDocument.getTextLength();
     return mapOffsets(anotherDocument, Function.identity());
   }
 
-  @Nonnull
-  public OffsetMap mapOffsets(@Nonnull Document anotherDocument, @Nonnull Function<Integer, Integer> mapping) {
+  
+  public OffsetMap mapOffsets(Document anotherDocument, Function<Integer, Integer> mapping) {
     OffsetMap result = new OffsetMap(anotherDocument);
     for (OffsetKey key : getAllOffsets()) {
       result.addOffset(key, mapping.apply(getOffset(key)));

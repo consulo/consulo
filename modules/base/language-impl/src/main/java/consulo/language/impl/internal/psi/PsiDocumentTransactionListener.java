@@ -21,15 +21,14 @@ import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface PsiDocumentTransactionListener {
-    void transactionStarted(@Nonnull Document document, @Nonnull PsiFile file);
+    void transactionStarted(Document document, PsiFile file);
 
-    default void transactionCompleted(@Nonnull Document document, @Nonnull PsiFile file) {
+    default void transactionCompleted(Document document, PsiFile file) {
     }
 }

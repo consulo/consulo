@@ -41,7 +41,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ThreeState;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public class CodeCompletionPanel implements Supplier<Layout> {
@@ -241,7 +240,7 @@ public class CodeCompletionPanel implements Supplier<Layout> {
     return isModified;
   }
 
-  @Nonnull
+  
   @Override
   public Layout get() {
     return myLayout;

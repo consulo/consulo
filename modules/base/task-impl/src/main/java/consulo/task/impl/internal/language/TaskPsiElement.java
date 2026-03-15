@@ -22,7 +22,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import consulo.task.Task;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
@@ -51,7 +50,7 @@ public class TaskPsiElement extends FakePsiElement {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public PsiManager getManager() {
         return myPsiManager;
@@ -62,7 +61,7 @@ public class TaskPsiElement extends FakePsiElement {
         return PsiFileFactory.getInstance(getProject()).createFileFromText("foo.txt", "");
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public String getName() {

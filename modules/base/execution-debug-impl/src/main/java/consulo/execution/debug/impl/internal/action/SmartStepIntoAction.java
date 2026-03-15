@@ -20,8 +20,7 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -39,7 +38,7 @@ public class SmartStepIntoAction extends XDebuggerActionBase {
     }
 
     @Override
-    @Nonnull
+    
     protected DebuggerActionHandler getHandler() {
         return myHandler;
     }

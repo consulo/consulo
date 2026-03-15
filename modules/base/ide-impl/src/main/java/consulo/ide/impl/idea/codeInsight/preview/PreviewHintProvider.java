@@ -21,9 +21,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -52,5 +51,5 @@ public interface PreviewHintProvider {
      * @return the component or null if no preview is available for the specified element.
      */
     @Nullable
-    JComponent getPreviewComponent(@Nonnull PsiElement element);
+    JComponent getPreviewComponent(PsiElement element);
 }

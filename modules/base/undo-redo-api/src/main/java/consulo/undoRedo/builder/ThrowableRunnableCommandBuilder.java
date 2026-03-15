@@ -18,7 +18,6 @@ package consulo.undoRedo.builder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -31,14 +30,14 @@ public interface ThrowableRunnableCommandBuilder<R, E extends Throwable, THIS ex
 
     Class<E> getExceptionClass();
 
-    default void run(@RequiredUIAccess @Nonnull ThrowableRunnable<E> runnable) throws E {
+    default void run(@RequiredUIAccess ThrowableRunnable<E> runnable) throws E {
         execute(() -> {
             runnable.run();
             return null;
         });
     }
 
-    default R compute(@RequiredUIAccess @Nonnull ThrowableSupplier<R, E> supplier) throws E {
+    default R compute(@RequiredUIAccess ThrowableSupplier<R, E> supplier) throws E {
         return execute(supplier).get(getExceptionClass());
     }
 }

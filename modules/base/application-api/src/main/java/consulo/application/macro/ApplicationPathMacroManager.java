@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.macro.PathMacroManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationPathMacroManager extends PathMacroManager {
-  public static PathMacroManager getInstance(@Nonnull Application application) {
+  public static PathMacroManager getInstance(Application application) {
     return application.getInstance(ApplicationPathMacroManager.class);
   }
 }

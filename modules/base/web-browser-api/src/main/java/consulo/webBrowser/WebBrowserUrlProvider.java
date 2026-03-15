@@ -23,8 +23,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.io.Url;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -41,7 +40,7 @@ public abstract class WebBrowserUrlProvider {
         }
     }
 
-    public boolean canHandleElement(@Nonnull OpenInBrowserRequest request) {
+    public boolean canHandleElement(OpenInBrowserRequest request) {
         try {
             Collection<Url> urls = getUrls(request);
             if (!urls.isEmpty()) {
@@ -56,17 +55,17 @@ public abstract class WebBrowserUrlProvider {
     }
 
     @Nullable
-    protected Url getUrl(@Nonnull OpenInBrowserRequest request, @Nonnull VirtualFile virtualFile) throws BrowserException {
+    protected Url getUrl(OpenInBrowserRequest request, VirtualFile virtualFile) throws BrowserException {
         return null;
     }
 
-    @Nonnull
-    public Collection<Url> getUrls(@Nonnull OpenInBrowserRequest request) throws BrowserException {
+    
+    public Collection<Url> getUrls(OpenInBrowserRequest request) throws BrowserException {
         return ContainerUtil.createMaybeSingletonList(getUrl(request, request.getVirtualFile()));
     }
 
     @Nullable
-    public String getOpenInBrowserActionDescription(@Nonnull PsiFile file) {
+    public String getOpenInBrowserActionDescription(PsiFile file) {
         return null;
     }
 }

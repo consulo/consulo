@@ -20,8 +20,7 @@ import consulo.index.io.forward.EmptyInputDataDiffBuilder;
 import consulo.index.io.forward.InputDataDiffBuilder;
 import consulo.index.io.forward.KeyValueUpdateProcessor;
 import consulo.index.io.forward.RemovedKeyProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -36,10 +35,10 @@ public class CollectionInputDataDiffBuilder<Key, Value> extends InputDataDiffBui
   }
 
   @Override
-  public boolean differentiate(@Nonnull Map<Key, Value> newData,
-                               @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
-                               @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
-                               @Nonnull RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
+  public boolean differentiate(Map<Key, Value> newData,
+                               KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
+                               KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
+                               RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
     return differentiateWithKeySeq(mySeq, newData, myInputId, addProcessor, removeProcessor);
   }
 
@@ -47,11 +46,11 @@ public class CollectionInputDataDiffBuilder<Key, Value> extends InputDataDiffBui
     return mySeq;
   }
 
-  static <Key, Value> boolean differentiateWithKeySeq(@Nonnull Collection<? extends Key> currentData,
-                                                      @Nonnull Map<Key, Value> newData,
+  static <Key, Value> boolean differentiateWithKeySeq(Collection<? extends Key> currentData,
+                                                      Map<Key, Value> newData,
                                                       int inputId,
-                                                      @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
-                                                      @Nonnull RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
+                                                      KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
+                                                      RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
     for (Key key : currentData) {
       removeProcessor.process(key, inputId);
     }

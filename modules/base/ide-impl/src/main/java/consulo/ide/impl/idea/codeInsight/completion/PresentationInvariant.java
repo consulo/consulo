@@ -16,8 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ public class PresentationInvariant implements Comparable<PresentationInvariant> 
   }
 
   @Override
-  public int compareTo(@Nonnull PresentationInvariant other) {
+  public int compareTo(PresentationInvariant other) {
     int result = StringUtil.naturalCompare(itemText, other.itemText);
     if (result != 0) return result;
 

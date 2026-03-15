@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import jakarta.annotation.Nonnull;
 
 class SelectionRequest {
   final Object[] myElements;
@@ -27,7 +26,7 @@ class SelectionRequest {
   final boolean myDeferred;
   final boolean myCanSmartExpand;
 
-  SelectionRequest(@Nonnull Object[] elements,
+  SelectionRequest(Object[] elements,
                    Runnable onDone,
                    boolean addToSelection,
                    boolean checkCurrentSelection,

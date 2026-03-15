@@ -9,8 +9,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -26,14 +25,14 @@ import java.util.Set;
  */
 public class ExternalToolWindowManager {
     @SuppressWarnings("unchecked")
-    public static void handle(@Nonnull Project project) {
+    public static void handle(Project project) {
         project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
             AbstractExternalSystemSettings<?, ?, ?> settings =
                 ((ExternalSystemManager<?, ?, ?, ?, ?>)manager).getSettingsProvider().apply(project);
             settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
                 @Override
                 @RequiredUIAccess
-                public void onProjectsLinked(@Nonnull Collection linked) {
+                public void onProjectsLinked(Collection linked) {
                     if (settings.getLinkedProjectsSettings().size() != 1) {
                         return;
                     }
@@ -44,7 +43,7 @@ public class ExternalToolWindowManager {
                 }
 
                 @Override
-                public void onProjectsUnlinked(@Nonnull Set linkedProjectPaths) {
+                public void onProjectsUnlinked(Set linkedProjectPaths) {
                     if (!settings.getLinkedProjectsSettings().isEmpty()) {
                         return;
                     }
@@ -58,7 +57,7 @@ public class ExternalToolWindowManager {
     }
 
     @Nullable
-    private static ToolWindow getToolWindow(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
+    private static ToolWindow getToolWindow(Project project, ProjectSystemId externalSystemId) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         if (toolWindowManager == null) {
             return null;

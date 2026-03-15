@@ -18,7 +18,7 @@ package consulo.navigation;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface NavigationItem extends Navigatable {
   NavigationItem[] EMPTY_ARRAY = new NavigationItem[0];

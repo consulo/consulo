@@ -31,7 +31,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +53,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
 
         @Override
         @RequiredUIAccess
-        public void setText(EditorComboBox component, @Nonnull String text) {
+        public void setText(EditorComboBox component, String text) {
             component.setText(text);
         }
     };

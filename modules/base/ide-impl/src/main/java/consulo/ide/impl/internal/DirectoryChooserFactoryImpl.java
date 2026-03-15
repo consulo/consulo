@@ -21,7 +21,6 @@ import consulo.ide.internal.DirectoryChooserDialog;
 import consulo.ide.internal.DirectoryChooserFactory;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,9 +28,9 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceImpl
 public class DirectoryChooserFactoryImpl implements DirectoryChooserFactory {
-  @Nonnull
+  
   @Override
-  public DirectoryChooserDialog create(@Nonnull Project project) {
+  public DirectoryChooserDialog create(Project project) {
     return new DirectoryChooser(project);
   }
 }

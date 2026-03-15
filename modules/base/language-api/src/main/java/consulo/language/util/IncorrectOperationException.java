@@ -16,14 +16,13 @@
 package consulo.language.util;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 public class IncorrectOperationException extends RuntimeException {
     public IncorrectOperationException() {
         super();
     }
 
-    public IncorrectOperationException(@Nonnull LocalizeValue message) {
+    public IncorrectOperationException(LocalizeValue message) {
         super(message.get());
     }
 
@@ -35,7 +34,7 @@ public class IncorrectOperationException extends RuntimeException {
         super(t);
     }
 
-    public IncorrectOperationException(@Nonnull LocalizeValue message, Throwable t) {
+    public IncorrectOperationException(LocalizeValue message, Throwable t) {
         super(message.get(), t);
     }
 

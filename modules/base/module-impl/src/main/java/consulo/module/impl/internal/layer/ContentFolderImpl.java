@@ -26,8 +26,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.*;
@@ -42,7 +41,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     public static final String TYPE_ATTRIBUTE = "type";
     public static final String ELEMENT_NAME = "content-folder";
 
-    @Nonnull
+    
     private final VirtualFilePointer myFilePointer;
     protected final ContentEntryImpl myContentEntry;
     private final ContentFolderTypeProvider myContentFolderType;
@@ -52,9 +51,9 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     private Map<Key, Object> myPropertiesByKeyCache;
 
     ContentFolderImpl(
-        @Nonnull VirtualFile file,
-        @Nonnull ContentFolderTypeProvider contentFolderType,
-        @Nonnull ContentEntryImpl contentEntry
+        VirtualFile file,
+        ContentFolderTypeProvider contentFolderType,
+        ContentEntryImpl contentEntry
     ) {
         super(contentEntry.getModuleRootLayer());
         myContentEntry = contentEntry;
@@ -63,10 +62,10 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     }
 
     ContentFolderImpl(
-        @Nonnull String url,
-        @Nonnull ContentFolderTypeProvider contentFolderType,
+        String url,
+        ContentFolderTypeProvider contentFolderType,
         @Nullable Map<String, Object> map,
-        @Nonnull ContentEntryImpl contentEntry
+        ContentEntryImpl contentEntry
     ) {
         super(contentEntry.getModuleRootLayer());
         myContentEntry = contentEntry;
@@ -75,19 +74,19 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
         myFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
     }
 
-    protected ContentFolderImpl(@Nonnull ContentFolderImpl that, @Nonnull ContentEntryImpl contentEntry) {
+    protected ContentFolderImpl(ContentFolderImpl that, ContentEntryImpl contentEntry) {
         this(that.myFilePointer, that.myProperties, that.getType(), contentEntry);
     }
 
-    ContentFolderImpl(@Nonnull Element element, @Nonnull ContentEntryImpl contentEntry) throws InvalidDataException {
+    ContentFolderImpl(Element element, ContentEntryImpl contentEntry) throws InvalidDataException {
         this(getUrlFrom(element), getType(element), readProperties(element), contentEntry);
     }
 
     protected ContentFolderImpl(
-        @Nonnull VirtualFilePointer filePointer,
+        VirtualFilePointer filePointer,
         @Nullable Map<String, Object> properties,
-        @Nonnull ContentFolderTypeProvider contentFolderType,
-        @Nonnull ContentEntryImpl contentEntry
+        ContentFolderTypeProvider contentFolderType,
+        ContentEntryImpl contentEntry
     ) {
         super(contentEntry.getModuleRootLayer());
         myContentEntry = contentEntry;
@@ -148,7 +147,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     }
 
     @Override
-    @Nonnull
+    
     public ContentEntry getContentEntry() {
         return myContentEntry;
     }
@@ -180,12 +179,12 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     }
 
     @Override
-    @Nonnull
+    
     public String getUrl() {
         return myFilePointer.getUrl();
     }
 
-    @Nonnull
+    
     @Override
     public Map<Key, Object> getProperties() {
         initPropertiesByKeyCache();
@@ -215,7 +214,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getPropertyValue(@Nonnull Key<T> key) {
+    public <T> T getPropertyValue(Key<T> key) {
         if (myProperties == null) {
             return null;
         }
@@ -223,7 +222,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     }
 
     @Override
-    public <T> void setPropertyValue(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void setPropertyValue(Key<T> key, @Nullable T value) {
         myPropertiesByKeyCache = null;
 
         if (value == null && myProperties == null) {
@@ -247,14 +246,14 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public ContentFolderTypeProvider getType() {
         return myContentFolderType;
     }
 
     @Override
-    public int compareTo(@Nonnull ContentFolderImpl folder) {
+    public int compareTo(ContentFolderImpl folder) {
         int typeCompare = getType().getId().compareToIgnoreCase(folder.getType().getId());
         if (typeCompare != 0) {
             return typeCompare;

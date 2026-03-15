@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt.hint;
 
 import consulo.ui.ex.RelativePoint;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,7 +31,7 @@ public interface Hint {
    * @param focusBackComponent component which should get focus when the hint will
    * @param hintInfo
    */
-  void show(@Nonnull JComponent parentComponent, int x, int y, JComponent focusBackComponent, @Nonnull HintHint hintInfo);
+  void show(JComponent parentComponent, int x, int y, JComponent focusBackComponent, HintHint hintInfo);
 
   /**
    * @return whether the hint is showing or not
@@ -48,11 +47,11 @@ public interface Hint {
    */
   void hide();
 
-  void addHintListener(@Nonnull HintListener listener);
+  void addHintListener(HintListener listener);
 
-  void removeHintListener(@Nonnull HintListener listener);
+  void removeHintListener(HintListener listener);
 
   void pack();
 
-  void setLocation(@Nonnull RelativePoint point);
+  void setLocation(RelativePoint point);
 }

@@ -22,7 +22,6 @@ import consulo.language.Language;
 import consulo.language.editor.localize.LanguageEditorLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -65,7 +64,7 @@ public abstract sealed class HintInfo permits HintInfo.MethodInfo, HintInfo.Opti
             return fullyQualifiedName.substring(start);
         }
 
-        @Nonnull
+        
         public LocalizeValue getDisableHintText() {
             return LanguageEditorLocalize.inlayHintsShowSettings(getMethodName());
         }
@@ -94,7 +93,7 @@ public abstract sealed class HintInfo permits HintInfo.MethodInfo, HintInfo.Opti
             option.set(!current);
         }
 
-        @Nonnull
+        
         public LocalizeValue getOptionName() {
             return option.getName();
         }

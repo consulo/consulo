@@ -20,7 +20,6 @@ import consulo.disposer.Disposable;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,9 +28,9 @@ import java.awt.*;
  * @author peter
  */
 public class DumbUnawareHider extends JPanel {
-    public static DumbUnawareHider wrapGently(@Nonnull Project project,
-                                              @Nonnull JComponent dumbUnawareContent,
-                                              @Nonnull Disposable parentDisposable) {
+    public static DumbUnawareHider wrapGently(Project project,
+                                              JComponent dumbUnawareContent,
+                                              Disposable parentDisposable) {
         DumbService dumbService = DumbService.getInstance(project);
 
         final DumbUnawareHider wrapper = new DumbUnawareHider(dumbUnawareContent);

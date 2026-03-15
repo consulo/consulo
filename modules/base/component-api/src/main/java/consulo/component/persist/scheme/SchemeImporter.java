@@ -4,8 +4,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.internal.RootComponentHolder;
 import consulo.component.util.pointer.Named;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -25,7 +24,7 @@ public interface SchemeImporter<T extends Named> {
      * @return A collection of importers capable of importing schemes of the given class. An empty collection is returned if there are
      * no matching importers.
      */
-    @Nonnull
+    
     @SuppressWarnings({"unchecked", "GetExtensionPoint"})
     public static <S extends Named> Collection<SchemeImporter<S>> getExtensions(Class<S> schemeClass) {
         List<SchemeImporter> importers = RootComponentHolder.getRootComponent().getExtensionPoint(SchemeImporter.class)
@@ -41,7 +40,7 @@ public interface SchemeImporter<T extends Named> {
      * @return The found importer or null if there are no importers for the given name and scheme class.
      */
     @Nullable
-    public static <S extends Named> SchemeImporter<S> getImporter(@Nonnull String name, Class<S> schemeClass) {
+    public static <S extends Named> SchemeImporter<S> getImporter(String name, Class<S> schemeClass) {
         for (SchemeImporter<S> importer : getExtensions(schemeClass)) {
             if (name.equals(importer.getName())) {
                 return importer;
@@ -53,10 +52,10 @@ public interface SchemeImporter<T extends Named> {
     /**
      * Class of scheme impl
      */
-    @Nonnull
+    
     Class<T> getSchemeClass();
 
-    @Nonnull
+    
     String getName();
 
     /**
@@ -72,8 +71,8 @@ public interface SchemeImporter<T extends Named> {
      * @return Either scheme name or null if the scheme doesn't have a name.
      * @throws SchemeImportException
      */
-    @Nonnull
-    String[] readSchemeNames(@Nonnull InputStream inputStream) throws SchemeImportException;
+    
+    String[] readSchemeNames(InputStream inputStream) throws SchemeImportException;
 
     /**
      * Import a scheme from the given stream and source scheme name.
@@ -82,5 +81,5 @@ public interface SchemeImporter<T extends Named> {
      * @param sourceScheme The source scheme name (one of returned by <code>readSchemeNames</code> method).
      * @param scheme       The target scheme receiving data.
      */
-    void importScheme(@Nonnull InputStream inputStream, @Nullable String sourceScheme, T scheme) throws SchemeImportException;
+    void importScheme(InputStream inputStream, @Nullable String sourceScheme, T scheme) throws SchemeImportException;
 }

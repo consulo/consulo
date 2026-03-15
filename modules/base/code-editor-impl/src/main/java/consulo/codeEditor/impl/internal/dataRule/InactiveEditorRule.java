@@ -21,15 +21,14 @@ import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 @ExtensionImpl
 public class InactiveEditorRule implements GetDataRule<Editor> {
-    @Nonnull
+    
     @Override
     public Key<Editor> getKey() {
         return EditorKeys.EDITOR_EVEN_IF_INACTIVE;
@@ -37,7 +36,7 @@ public class InactiveEditorRule implements GetDataRule<Editor> {
 
     @Override
     @Nullable
-    public Editor getData(@Nonnull DataProvider dataProvider) {
+    public Editor getData(DataProvider dataProvider) {
         return dataProvider.getDataUnchecked(Editor.KEY);
     }
 }

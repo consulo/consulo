@@ -21,8 +21,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class CustomizingReferenceProvider extends PsiReferenceProvider implement
   private @Nullable
   Map<CustomizationKey, Object> myOptions;
 
-  public CustomizingReferenceProvider(@Nonnull CustomizableReferenceProvider provider) {
+  public CustomizingReferenceProvider(CustomizableReferenceProvider provider) {
     myProvider = provider;
   }
   
@@ -46,8 +45,8 @@ public class CustomizingReferenceProvider extends PsiReferenceProvider implement
   }
   
   @Override
-  @Nonnull
-  public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
+  
+  public PsiReference[] getReferencesByElement(PsiElement element, ProcessingContext context) {
     myProvider.setOptions(myOptions);
     PsiReference[] referencesByElement = myProvider.getReferencesByElement(element, context);
     myProvider.setOptions(null);

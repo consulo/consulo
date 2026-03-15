@@ -26,20 +26,19 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(order = "first")
 public class PsiVFSListenerStartUpActivity implements PostStartupActivity, DumbAware {
 
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     PsiVFSListener psiVFSListener = project.getInstance(PsiVFSListener.class);
 
     MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(ModuleRootListener.class, psiVFSListener.new MyModuleRootListener());
     connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
-      public void fileTypesChanged(@Nonnull FileTypeEvent e) {
+      public void fileTypesChanged(FileTypeEvent e) {
         psiVFSListener.myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
       }
     });

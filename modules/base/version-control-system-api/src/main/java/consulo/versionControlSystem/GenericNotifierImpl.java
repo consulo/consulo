@@ -23,8 +23,7 @@ import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -32,22 +31,22 @@ import java.util.*;
 public abstract class GenericNotifierImpl<T, Key> {
     private final static Logger LOG = Logger.getInstance(GenericNotifierImpl.class);
     protected final Project myProject;
-    @Nonnull
+    
     private final NotificationGroup myGroup;
-    @Nonnull
+    
     private final String myTitle;
-    @Nonnull
+    
     private final NotificationType myType;
-    @Nonnull
+    
     private final Map<Key, MyNotification> myState;
     private final MyListener myListener;
     private final Object myLock;
 
     protected GenericNotifierImpl(
         Project project,
-        @Nonnull NotificationGroup group,
-        @Nonnull String title,
-        @Nonnull NotificationType type
+        NotificationGroup group,
+        String title,
+        NotificationType type
     ) {
         myGroup = group;
         myTitle = title;
@@ -60,10 +59,10 @@ public abstract class GenericNotifierImpl<T, Key> {
 
     protected abstract boolean ask(T obj, String description);
 
-    @Nonnull
+    
     protected abstract Key getKey(T obj);
 
-    @Nonnull
+    
     protected abstract String getNotificationContent(T obj);
 
     protected Collection<Key> getAllCurrentKeys() {
@@ -161,7 +160,7 @@ public abstract class GenericNotifierImpl<T, Key> {
 
     private class MyListener implements NotificationListener {
         @Override
-        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+        public void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
             MyNotification concreteNotification = (MyNotification) notification;
             T obj = concreteNotification.getObj();
             boolean state = ask(obj, event.getDescription());
@@ -186,7 +185,7 @@ public abstract class GenericNotifierImpl<T, Key> {
     protected class MyNotification extends Notification {
         private final T myObj;
 
-        protected MyNotification(@Nonnull Notification.Builder notificationBuilder, @Nonnull T obj) {
+        protected MyNotification(Notification.Builder notificationBuilder, T obj) {
             super(notificationBuilder);
             myObj = obj;
         }

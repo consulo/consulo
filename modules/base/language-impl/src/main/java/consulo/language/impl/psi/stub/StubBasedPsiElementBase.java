@@ -46,8 +46,7 @@ import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,12 +87,12 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     private volatile SubstrateRef mySubstrateRef;
     private final IElementType myElementType;
 
-    public StubBasedPsiElementBase(@Nonnull T stub, @Nonnull IStubElementType nodeType) {
+    public StubBasedPsiElementBase(T stub, IStubElementType nodeType) {
         mySubstrateRef = new SubstrateRef.StubRef(stub);
         myElementType = nodeType;
     }
 
-    public StubBasedPsiElementBase(@Nonnull ASTNode node) {
+    public StubBasedPsiElementBase(ASTNode node) {
         mySubstrateRef = SubstrateRef.createAstStrongRef(node);
         myElementType = node.getElementType();
     }
@@ -135,7 +134,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      * this causes AST to be loaded for the whole file and all stub-based PSI elements in this file (including the current one)
      * to be switched from stub to AST. So, after this call {@link #getStub()} will return null.
      */
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public ASTNode getNode() {
@@ -161,7 +160,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     }
 
     @RequiredReadAction
-    private ASTNode failedToBindStubToAst(@Nonnull PsiFileImpl file, @Nonnull FileElement fileElement) {
+    private ASTNode failedToBindStubToAst(PsiFileImpl file, FileElement fileElement) {
         VirtualFile vFile = file.getVirtualFile();
         StubTree stubTree = file.getStubTree();
         String stubString = stubTree != null ? ((PsiFileStubImpl) stubTree.getRoot()).printTree() : null;
@@ -187,8 +186,8 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         throw new RuntimeExceptionWithAttachments(message, attachments.toArray(Attachment.EMPTY_ARRAY));
     }
 
-    @Nonnull
-    private String dumpCreationTraces(@Nonnull FileElement fileElement) {
+    
+    private String dumpCreationTraces(FileElement fileElement) {
         final StringBuilder traces = new StringBuilder("\nNow " + Thread.currentThread() + "\n");
         traces.append("My creation trace:\n").append(getUserData(CREATION_TRACE));
         traces.append("AST creation traces:\n");
@@ -211,7 +210,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
 
     @RequiredReadAction
     @SuppressWarnings({"NonConstantStringShouldBeStringBuffer", "StringConcatenationInLoop"})
-    private ASTNode notBoundInExistingAst(@Nonnull PsiFileImpl file, @Nonnull FileElement treeElement) {
+    private ASTNode notBoundInExistingAst(PsiFileImpl file, FileElement treeElement) {
         String message = "file=" + file + "; tree=" + treeElement;
         PsiElement each = this;
         while (each != null) {
@@ -246,7 +245,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * Don't invoke this method, it's public for implementation reasons.
      */
-    public final void setNode(@Nonnull ASTNode node) {
+    public final void setNode(ASTNode node) {
         setSubstrateRef(SubstrateRef.createAstStrongRef(node));
     }
 
@@ -254,11 +253,11 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      * Don't invoke this method, it's public for implementation reasons.
      */
     @Override
-    public final void setSubstrateRef(@Nonnull SubstrateRef substrateRef) {
+    public final void setSubstrateRef(SubstrateRef substrateRef) {
         mySubstrateRef = substrateRef;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
@@ -266,7 +265,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     }
 
     @Override
-    @Nonnull
+    
     public PsiFile getContainingFile() {
         try {
             return mySubstrateRef.getContainingFile();
@@ -293,7 +292,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         return mySubstrateRef.isValid();
     }
 
-    @Nonnull
+    
     @Override
     public PsiManager getManager() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
@@ -304,7 +303,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
         if (project != null) {
@@ -368,7 +367,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         return SourceTreeToPsiMap.treeElementToPsi(getNode().getTreeParent());
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public IStubElementType getElementType() {
@@ -412,7 +411,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      */
     @Nullable
     @RequiredReadAction
-    public <Psi extends PsiElement> Psi getStubOrPsiChild(@Nonnull IStubElementType<? extends StubElement, Psi> elementType) {
+    public <Psi extends PsiElement> Psi getStubOrPsiChild(IStubElementType<? extends StubElement, Psi> elementType) {
         T stub = getGreenStub();
         if (stub != null) {
             //noinspection unchecked
@@ -434,9 +433,9 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return a not-null child of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    @Nonnull
+    
     @RequiredReadAction
-    public <S extends StubElement, Psi extends PsiElement> Psi getRequiredStubOrPsiChild(@Nonnull IStubElementType<S, Psi> elementType) {
+    public <S extends StubElement, Psi extends PsiElement> Psi getRequiredStubOrPsiChild(IStubElementType<S, Psi> elementType) {
         Psi result = getStubOrPsiChild(elementType);
         if (result == null) {
             throw new AssertionError("Missing required child of type " + elementType + "; tree: " + DebugUtil.psiToString(this, false));
@@ -447,11 +446,11 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    @Nonnull
+    
     @RequiredReadAction
     public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(
-        @Nonnull IStubElementType<S, ? extends Psi> elementType,
-        @Nonnull Psi[] array
+        IStubElementType<S, ? extends Psi> elementType,
+        Psi[] array
     ) {
         T stub = getGreenStub();
         if (stub != null) {
@@ -472,11 +471,11 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    @Nonnull
+    
     @RequiredReadAction
     public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(
-        @Nonnull IStubElementType<S, ? extends Psi> elementType,
-        @Nonnull ArrayFactory<? extends Psi> f
+        IStubElementType<S, ? extends Psi> elementType,
+        ArrayFactory<? extends Psi> f
     ) {
         T stub = getGreenStub();
         if (stub != null) {
@@ -497,9 +496,9 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    @Nonnull
+    
     @RequiredReadAction
-    public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(@Nonnull TokenSet filter, @Nonnull Psi[] array) {
+    public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(TokenSet filter, Psi[] array) {
         T stub = getGreenStub();
         if (stub != null) {
             //noinspection unchecked
@@ -519,9 +518,9 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    @Nonnull
+    
     @RequiredReadAction
-    public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(@Nonnull TokenSet filter, @Nonnull ArrayFactory<? extends Psi> f) {
+    public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(TokenSet filter, ArrayFactory<? extends Psi> f) {
         T stub = getGreenStub();
         if (stub != null) {
             //noinspection unchecked
@@ -542,7 +541,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      * @return a first ancestor of specified type, in stub hierarchy (if this element is currently stub-based) or AST hierarchy (otherwise).
      */
     @Nullable
-    protected <E extends PsiElement> E getStubOrPsiParentOfType(@Nonnull Class<E> parentClass) {
+    protected <E extends PsiElement> E getStubOrPsiParentOfType(Class<E> parentClass) {
         T stub = getStub();
         if (stub != null) {
             //noinspection unchecked

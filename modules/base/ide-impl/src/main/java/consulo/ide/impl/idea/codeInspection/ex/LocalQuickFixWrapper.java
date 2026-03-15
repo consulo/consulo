@@ -35,8 +35,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +48,14 @@ public class LocalQuickFixWrapper extends QuickFixAction {
     private final QuickFix myFix;
     private LocalizeValue myText = LocalizeValue.empty();
 
-    public LocalQuickFixWrapper(@Nonnull QuickFix fix, @Nonnull InspectionToolWrapper toolWrapper) {
+    public LocalQuickFixWrapper(QuickFix fix, InspectionToolWrapper toolWrapper) {
         super(fix.getName(), toolWrapper);
         myFix = fix;
         myText = myFix.getName();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         getTemplatePresentation().setTextValue(myText);
         e.getPresentation().setTextValue(myText);
@@ -67,7 +66,7 @@ public class LocalQuickFixWrapper extends QuickFixAction {
         return myText;
     }
 
-    public void setText(@Nonnull LocalizeValue text) {
+    public void setText(LocalizeValue text) {
         myText = text;
     }
 
@@ -76,13 +75,13 @@ public class LocalQuickFixWrapper extends QuickFixAction {
         return true;
     }
 
-    @Nonnull
+    
     public QuickFix getFix() {
         return myFix;
     }
 
     @Nullable
-    protected QuickFix getWorkingQuickFix(@Nonnull QuickFix[] fixes) {
+    protected QuickFix getWorkingQuickFix(QuickFix[] fixes) {
         for (QuickFix fix : fixes) {
             if (!myFix.getClass().isInstance(fix)) {
                 continue;
@@ -97,15 +96,15 @@ public class LocalQuickFixWrapper extends QuickFixAction {
     }
 
     @Override
-    protected boolean applyFix(@Nonnull RefEntity[] refElements) {
+    protected boolean applyFix(RefEntity[] refElements) {
         return true;
     }
 
     @Override
-    protected void applyFix(@Nonnull final Project project,
-                            @Nonnull final GlobalInspectionContextImpl context,
-                            @Nonnull final CommonProblemDescriptor[] descriptors,
-                            @Nonnull final Set<PsiElement> ignoredElements) {
+    protected void applyFix(final Project project,
+                            final GlobalInspectionContextImpl context,
+                            final CommonProblemDescriptor[] descriptors,
+                            final Set<PsiElement> ignoredElements) {
         PsiModificationTracker tracker = PsiManager.getInstance(project).getModificationTracker();
         if (myFix instanceof BatchQuickFix) {
             final List<PsiElement> collectedElementsToIgnore = new ArrayList<PsiElement>();
@@ -156,10 +155,10 @@ public class LocalQuickFixWrapper extends QuickFixAction {
     }
 
     @RequiredReadAction
-    private void ignore(@Nonnull Set<PsiElement> ignoredElements,
-                        @Nonnull CommonProblemDescriptor descriptor,
+    private void ignore(Set<PsiElement> ignoredElements,
+                        CommonProblemDescriptor descriptor,
                         @Nullable QuickFix fix,
-                        @Nonnull GlobalInspectionContextImpl context) {
+                        GlobalInspectionContextImpl context) {
         if (fix != null) {
             InspectionToolPresentation presentation = context.getPresentation(myToolWrapper);
             presentation.ignoreProblem(descriptor, fix);

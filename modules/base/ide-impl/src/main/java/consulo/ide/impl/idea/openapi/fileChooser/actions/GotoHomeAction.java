@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
@@ -39,7 +38,7 @@ public final class GotoHomeAction extends FileChooserAction {
     }
 
     @Override
-    protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+    protected void actionPerformed(FileSystemTree fileSystemTree, AnActionEvent e) {
         VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
         if (userHomeDir != null) {
             fileSystemTree.select(userHomeDir, () -> fileSystemTree.expand(userHomeDir, null));
@@ -47,7 +46,7 @@ public final class GotoHomeAction extends FileChooserAction {
     }
 
     @Override
-    protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+    protected void update(FileSystemTree fileSystemTree, AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         if (!presentation.isEnabled()) {
             return;

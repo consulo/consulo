@@ -32,8 +32,7 @@ import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -58,7 +57,7 @@ public class UnifiedDockManagerImpl extends BaseDockManager implements FileEdito
   }
 
   @Override
-  public DragSession createDragSession(MouseEvent mouseEvent, @Nonnull DockableContent content) {
+  public DragSession createDragSession(MouseEvent mouseEvent, DockableContent content) {
     return null;
   }
 
@@ -68,14 +67,14 @@ public class UnifiedDockManagerImpl extends BaseDockManager implements FileEdito
   }
 
   @Override
-  public String getDimensionKeyForFocus(@Nonnull String key) {
+  public String getDimensionKeyForFocus(String key) {
     return null;
   }
 
-  @Nonnull
+  
   @Override
-  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file,
-                                                                            @Nonnull FileEditorManager fileEditorManager) {
+  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(VirtualFile file,
+                                                                            FileEditorManager fileEditorManager) {
     throw new UnsupportedOperationException();
   }
 }

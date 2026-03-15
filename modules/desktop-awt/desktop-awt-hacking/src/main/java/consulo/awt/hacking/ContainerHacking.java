@@ -15,7 +15,7 @@
  */
 package consulo.awt.hacking;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.lang.reflect.Field;
 

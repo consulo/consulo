@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Provides generic contract for object encapsulating information about single unit of text change.
@@ -42,7 +41,7 @@ public interface TextChange {
      *
      * @return text related to the change encapsulated by the current object
      */
-    @Nonnull
+    
     CharSequence getText();
 
     /**
@@ -55,7 +54,7 @@ public interface TextChange {
      *
      * @return stored change text as a char array
      */
-    @Nonnull
+    
     char[] getChars();
 
     /**

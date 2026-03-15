@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +29,7 @@ public class SelectIndex implements SelectionPolicy {
     mySelectIndex = selectIndex;
   }
 
-  @Nonnull
+  
   @Override
   public List<Integer> performSelection(ChooseByNameBase popup, SmartPointerListModel<?> model) {
     return Collections.singletonList(mySelectIndex);

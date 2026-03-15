@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Specifies the log filter by text.
@@ -25,7 +24,7 @@ public interface VcsLogTextFilter extends VcsLogDetailsFilter {
   /**
    * Only commits containing the returned text it their commit messages should match the filter.
    */
-  @Nonnull
+  
   String getText();
 
   /**

@@ -27,9 +27,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -39,7 +37,7 @@ import java.util.Set;
  */
 @ExtensionImpl(id = "package", order = "before file")
 public class PackagePatternProvider extends PatternDialectProvider {
-    @NonNls
+    
     public static final String PACKAGES = "package";
     private static final Logger LOG = Logger.getInstance(PackagePatternProvider.class);
 
@@ -73,7 +71,7 @@ public class PackagePatternProvider extends PatternDialectProvider {
         String scope = scope1;
         if (node instanceof ModuleGroupNode groupNode) {
             if (!recursively) return null;
-            @NonNls String modulePattern = "group:" + groupNode.getModuleGroup().toString();
+            String modulePattern = "group:" + groupNode.getModuleGroup().toString();
             return new PatternPackageSet("*..*", scope, modulePattern);
         }
         else if (node instanceof ModuleNode moduleNode) {
@@ -140,7 +138,7 @@ public class PackagePatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return PACKAGES;
     }

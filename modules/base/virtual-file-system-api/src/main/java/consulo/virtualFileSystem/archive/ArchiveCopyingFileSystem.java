@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.archive;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -28,7 +27,7 @@ public interface ArchiveCopyingFileSystem {
   @DeprecationInfo(value = "Use #addNoCopyArchiveForPath(String)")
   void setNoCopyJarForPath(String pathInJar);
 
-  default void addNoCopyArchiveForPath(@Nonnull String path) {
+  default void addNoCopyArchiveForPath(String path) {
     setNoCopyJarForPath(path);
   }
 
@@ -36,7 +35,7 @@ public interface ArchiveCopyingFileSystem {
   @DeprecationInfo(value = "Use #isMakeCopyForArchive(File)")
   boolean isMakeCopyOfJar(File originalFile);
 
-  default boolean isMakeCopyForArchive(@Nonnull File originalFile) {
+  default boolean isMakeCopyForArchive(File originalFile) {
     return isMakeCopyOfJar(originalFile);
   }
 }

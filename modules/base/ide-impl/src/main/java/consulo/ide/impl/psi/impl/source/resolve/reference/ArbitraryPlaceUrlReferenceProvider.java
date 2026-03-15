@@ -27,7 +27,6 @@ import consulo.language.psi.path.PathReferenceManager;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -58,13 +57,13 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByTy
     }
   };
 
-  @Nonnull
+  
   @Override
-  public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
+  public PsiReference[] getReferencesByElement(PsiElement element, ProcessingContext context) {
     return ourRefsCache.get(element, null).getValue();
   }
 
-  @Nonnull
+  
   @Override
   public ReferenceProviderType getReferenceProviderType() {
     return CommentsReferenceContributor.COMMENTS_REFERENCE_PROVIDER_TYPE;

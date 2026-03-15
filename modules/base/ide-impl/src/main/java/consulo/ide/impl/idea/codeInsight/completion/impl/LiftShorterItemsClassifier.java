@@ -24,8 +24,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.util.collection.*;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -48,7 +47,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
     }
 
     @Override
-    public void addElement(@Nonnull LookupElement added, @Nonnull ProcessingContext context) {
+    public void addElement(LookupElement added, ProcessingContext context) {
         myCount++;
 
         for (String string : CompletionUtil.iterateLookupStrings(added)) {
@@ -94,9 +93,9 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
         }
     }
 
-    @Nonnull
+    
     @Override
-    public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull ProcessingContext context) {
+    public Iterable<LookupElement> classify(Iterable<LookupElement> source, ProcessingContext context) {
         return liftShorterElements(source, null, context);
     }
 
@@ -115,16 +114,16 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
         return new LiftingIterable(srcSet, context, source, lifted);
     }
 
-    @Nonnull
+    
     @Override
-    public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
+    public List<Pair<LookupElement, Object>> getSortingWeights(Iterable<LookupElement> items, ProcessingContext context) {
         Set<LookupElement> lifted = Sets.newIdentityHashSet();
         Iterable<LookupElement> iterable = liftShorterElements(ContainerUtil.newArrayList(items), lifted, context);
         return ContainerUtil.map(iterable, element -> new Pair<LookupElement, Object>(element, lifted.contains(element)));
     }
 
     @Override
-    public void removeElement(@Nonnull LookupElement element, @Nonnull ProcessingContext context) {
+    public void removeElement(LookupElement element, ProcessingContext context) {
         for (String s : CompletionUtil.iterateLookupStrings(element)) {
             myElements.remove(s, element);
             if (myElements.get(s).isEmpty()) {
@@ -227,7 +226,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
         }
     }
 
-    @Nonnull
+    
     private static <K, V> MultiMap<K, V> createMultiMap(final boolean identityKeys) {
         return new MultiMap<K, V>(identityKeys ? Maps.newIdentityHashMap() : new HashMap<>()) {
 

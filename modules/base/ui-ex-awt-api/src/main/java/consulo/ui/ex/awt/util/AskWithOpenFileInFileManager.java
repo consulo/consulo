@@ -26,8 +26,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -62,7 +61,7 @@ public class AskWithOpenFileInFileManager {
                 return true;
             }
 
-            @Nonnull
+            
             @Override
             public LocalizeValue getDoNotShowMessage() {
                 return CommonLocalize.dialogOptionsDoNotAsk();
@@ -87,7 +86,7 @@ public class AskWithOpenFileInFileManager {
         }
     }
 
-    @Nonnull
+    
     public static LocalizeValue getActionName(@Nullable String place) {
         if (ActionPlaces.EDITOR_TAB_POPUP.equals(place)
             || ActionPlaces.EDITOR_POPUP.equals(place)

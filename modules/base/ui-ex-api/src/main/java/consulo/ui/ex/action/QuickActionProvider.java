@@ -17,7 +17,7 @@ package consulo.ui.ex.action;
 
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.List;
 

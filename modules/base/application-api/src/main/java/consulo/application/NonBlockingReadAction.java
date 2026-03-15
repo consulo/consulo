@@ -9,7 +9,6 @@ import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.Executor;
@@ -33,7 +32,7 @@ public interface NonBlockingReadAction<T> {
    * @see consulo.ide.impl.idea.openapi.project.DumbService
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> inSmartMode(@Nonnull ComponentManager project);
+  NonBlockingReadAction<T> inSmartMode(ComponentManager project);
 
   /**
    * @return a copy of this builder that runs read actions only when all documents are committed.
@@ -42,7 +41,7 @@ public interface NonBlockingReadAction<T> {
    * @see com.intellij.psi.PsiDocumentManager
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> withDocumentsCommitted(@Nonnull ComponentManager project);
+  NonBlockingReadAction<T> withDocumentsCommitted(ComponentManager project);
 
   /**
    * @return a copy of this builder that cancels submitted read actions after they become obsolete.
@@ -50,13 +49,13 @@ public interface NonBlockingReadAction<T> {
    * The conditions are checked inside a read action, either on a background or on the UI thread.
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> expireWhen(@Nonnull BooleanSupplier expireCondition);
+  NonBlockingReadAction<T> expireWhen(BooleanSupplier expireCondition);
 
   /**
    * @return a copy of this builder that cancels submitted read actions once the specified disposable is disposed.
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> expireWith(@Nonnull Disposable parentDisposable);
+  NonBlockingReadAction<T> expireWith(Disposable parentDisposable);
 
   /**
    * @return a copy of this builder that synchronizes the specified progress indicator with the inner one created by {@link NonBlockingReadAction}.
@@ -64,8 +63,8 @@ public interface NonBlockingReadAction<T> {
    * and the visual changes (e.g. {@link ProgressIndicator#setText}) are propagated from the inner to the outer indicator.
    */
   @Contract(pure = true)
-  @Nonnull
-  NonBlockingReadAction<T> wrapProgress(@Nonnull ProgressIndicator progressIndicator);
+  
+  NonBlockingReadAction<T> wrapProgress(ProgressIndicator progressIndicator);
 
   /**
    * @return a copy of this builder that completes submitted read actions on UI thread with the given modality state.
@@ -73,7 +72,7 @@ public interface NonBlockingReadAction<T> {
    * are invoked on UI thread, and no write action is allowed to interfere before that and possibly invalidate the result.
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> finishOnUiThread(@Nonnull Function<Application, ModalityState> modalityGetter, @Nonnull Consumer<? super T> uiThreadAction);
+  NonBlockingReadAction<T> finishOnUiThread(Function<Application, ModalityState> modalityGetter, Consumer<? super T> uiThreadAction);
 
   /**
    * Merges together similar computations by cancelling the previous ones when a new one is submitted.
@@ -86,7 +85,7 @@ public interface NonBlockingReadAction<T> {
    * @return a copy of this builder which, when submitted, cancels previously submitted running computations with equal equality objects
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> coalesceBy(@Nonnull Object... equality);
+  NonBlockingReadAction<T> coalesceBy(Object... equality);
 
   /**
    * Submit this computation to be performed in a non-blocking read action on background thread. The returned promise
@@ -97,9 +96,9 @@ public interface NonBlockingReadAction<T> {
    *                                 {@link AppExecutorUtil#getAppExecutorService()} or
    *                                 {@link BoundedTaskExecutor} on top of that.
    */
-  CancellablePromise<T> submit(@Nonnull Executor backgroundThreadExecutor);
+  CancellablePromise<T> submit(Executor backgroundThreadExecutor);
 
-  @Nonnull
+  
   default CancellablePromise<T> submitDefault() {
       return submit(NonUrgentExecutor.getInstance());
   }

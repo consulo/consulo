@@ -24,8 +24,7 @@ import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -175,7 +174,7 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
   }
 
   @Override
-  public void removeAllAbbreviations(@Nonnull String actionId) {
+  public void removeAllAbbreviations(String actionId) {
     Set<String> abbreviations = getAbbreviations(actionId);
     for (String abbreviation : abbreviations) {
       myAbbreviation2ActionId.get(abbreviation).remove(actionId);

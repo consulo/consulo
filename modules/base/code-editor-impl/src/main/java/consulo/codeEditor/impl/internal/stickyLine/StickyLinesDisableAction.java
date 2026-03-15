@@ -20,7 +20,6 @@ import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -43,7 +42,7 @@ public class StickyLinesDisableAction extends StickyLinesAbstractAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         PersistentEditorSettings settings = myEditorSettingsExternalizableProvider.get();
 
         if (settings.isStickyLineShown()) {
@@ -52,7 +51,7 @@ public class StickyLinesDisableAction extends StickyLinesAbstractAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(myEditorSettingsExternalizableProvider.get().isStickyLineShown());
     }
 }

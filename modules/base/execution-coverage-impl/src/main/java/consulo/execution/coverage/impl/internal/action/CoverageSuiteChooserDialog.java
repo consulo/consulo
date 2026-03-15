@@ -23,8 +23,7 @@ import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -113,7 +112,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         super.doOKAction();
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), new NoCoverageAction(), getCancelAction()};
@@ -281,7 +280,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             VirtualFile file = IdeaFileChooser.chooseFile(
                 new FileChooserDescriptor(true, false, false, false, false, false) {
                     @Override
@@ -353,7 +352,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             CheckedTreeNode[] selectedNodes = mySuitesTree.getSelectedNodes(CheckedTreeNode.class, null);
             for (CheckedTreeNode selectedNode : selectedNodes) {
                 if (selectedNode.getUserObject() instanceof CoverageSuite selectedSuite
@@ -366,7 +365,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             CheckedTreeNode[] selectedSuites = mySuitesTree.getSelectedNodes(CheckedTreeNode.class, null);
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(false);
@@ -381,7 +380,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
     }
 
     private class SwitchEngineAction extends ComboBoxAction {
-        @Nonnull
+        
         @Override
         public DefaultActionGroup createPopupActionGroup(JComponent component) {
             DefaultActionGroup engChooser = new DefaultActionGroup();
@@ -389,7 +388,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
                 engChooser.add(new AnAction(engine.getPresentableText()) {
                     @Override
                     @RequiredUIAccess
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         myEngine = engine;
                         initTree();
                         updateTree();
@@ -400,7 +399,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setVisible(collectEngines().size() > 1);
         }

@@ -17,10 +17,8 @@ package consulo.language.pattern;
 
 import consulo.language.util.ProcessingContext;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,7 +31,7 @@ import java.util.function.BiPredicate;
 public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> implements Cloneable, ElementPattern<T> {
   private ElementPatternCondition<T> myCondition;
 
-  protected ObjectPattern(@Nonnull InitialPatternCondition<T> condition) {
+  protected ObjectPattern(InitialPatternCondition<T> condition) {
     myCondition = new ElementPatternCondition<T>(condition);
   }
 
@@ -75,9 +73,9 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
     });
   }
 
-  public Self equalTo(@Nonnull final T o) {
+  public Self equalTo(final T o) {
     return with(new ValuePatternCondition<T>("equalTo") {
-      public boolean accepts(@Nonnull T t, ProcessingContext context) {
+      public boolean accepts(T t, ProcessingContext context) {
         return t.equals(o);
       }
 
@@ -88,7 +86,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
     });
   }
 
-  @Nonnull
+  
   public Self oneOf(T... values) {
     final Collection<T> list;
 
@@ -107,13 +105,13 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
       }
 
       @Override
-      public boolean accepts(@Nonnull T t, ProcessingContext context) {
+      public boolean accepts(T t, ProcessingContext context) {
         return list.contains(t);
       }
     });
   }
 
-  @Nonnull
+  
   public Self oneOf(final Collection<T> set) {
     return with(new ValuePatternCondition<T>("oneOf") {
 
@@ -123,7 +121,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
       }
 
       @Override
-      public boolean accepts(@Nonnull T t, ProcessingContext context) {
+      public boolean accepts(T t, ProcessingContext context) {
         return set.contains(t);
       }
     });
@@ -147,16 +145,16 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self save(final Key<? super T> key) {
     return with(new PatternCondition<T>("save") {
-      public boolean accepts(@Nonnull T t, ProcessingContext context) {
+      public boolean accepts(T t, ProcessingContext context) {
         context.put((Key)key, t);
         return true;
       }
     });
   }
 
-  public Self save(@NonNls final String key) {
+  public Self save(final String key) {
     return with(new PatternCondition<T>("save") {
-      public boolean accepts(@Nonnull T t, ProcessingContext context) {
+      public boolean accepts(T t, ProcessingContext context) {
         context.put(key, t);
         return true;
       }
@@ -181,7 +179,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self without(final PatternCondition<? super T> pattern) {
     return with(new PatternCondition<T>("without") {
-      public boolean accepts(@Nonnull T o, ProcessingContext context) {
+      public boolean accepts(T o, ProcessingContext context) {
         return !pattern.accepts(o, context);
       }
     });
@@ -197,7 +195,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
       super(aClass);
     }
 
-    public Capture(@Nonnull InitialPatternCondition<T> condition) {
+    public Capture(InitialPatternCondition<T> condition) {
       super(condition);
     }
   }

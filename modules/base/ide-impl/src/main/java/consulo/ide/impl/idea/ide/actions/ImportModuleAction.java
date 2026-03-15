@@ -32,8 +32,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -47,13 +46,13 @@ public class ImportModuleAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         executeImportAction(project, null);
     }
 
     @RequiredUIAccess
-    public static void executeImportAction(@Nonnull Project project, @Nullable FileChooserDescriptor descriptor) {
+    public static void executeImportAction(Project project, @Nullable FileChooserDescriptor descriptor) {
         AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
             ModuleImportProcessor.showFileChooser(project, descriptor);
 
@@ -75,7 +74,7 @@ public class ImportModuleAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && !ModuleImportProviders.getExtensions(true).isEmpty());
     }
 

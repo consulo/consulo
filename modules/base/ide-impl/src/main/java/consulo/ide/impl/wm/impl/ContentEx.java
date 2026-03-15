@@ -17,7 +17,7 @@ package consulo.ide.impl.wm.impl;
 
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

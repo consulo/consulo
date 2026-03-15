@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import jakarta.annotation.Nonnull;
 
 public class MatchResult {
-  @Nonnull
+  
   public final String elementName;
   public final int matchingDegree;
   private final boolean startMatch;
 
-  public MatchResult(@Nonnull String elementName, int matchingDegree, boolean startMatch) {
+  public MatchResult(String elementName, int matchingDegree, boolean startMatch) {
     this.elementName = elementName;
     this.matchingDegree = matchingDegree;
     this.startMatch = startMatch;
   }
 
-  public int compareDegrees(@Nonnull MatchResult that, boolean preferStartMatches) {
+  public int compareDegrees(MatchResult that, boolean preferStartMatches) {
     boolean start1 = startMatch;
     boolean start2 = that.startMatch;
     int startMatchResult = start1 == start2 ? 0 : start1 ? -1 : 1;
@@ -43,7 +42,7 @@ public class MatchResult {
     return -startMatchResult;
   }
 
-  int compareWith(@Nonnull MatchResult that, boolean preferStartMatches) {
+  int compareWith(MatchResult that, boolean preferStartMatches) {
     int result = compareDegrees(that, preferStartMatches);
     return result != 0 ? result : elementName.compareToIgnoreCase(that.elementName);
   }

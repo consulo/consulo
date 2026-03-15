@@ -20,8 +20,7 @@ import consulo.ui.ModalityState;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.*;
@@ -42,11 +41,11 @@ import java.util.function.Supplier;
 public class ProgressIndicatorUtils {
     private static final Logger LOG = Logger.getInstance(ProgressIndicatorUtils.class);
 
-    @Nonnull
-    public static ProgressIndicator forceWriteActionPriority(@Nonnull ProgressIndicator progress, @Nonnull Disposable parentDisposable) {
+    
+    public static ProgressIndicator forceWriteActionPriority(ProgressIndicator progress, Disposable parentDisposable) {
         ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
             @Override
-            public void beforeWriteActionStart(@Nonnull Object action) {
+            public void beforeWriteActionStart(Object action) {
                 if (progress.isRunning()) {
                     progress.cancel();
                 }
@@ -55,12 +54,12 @@ public class ProgressIndicatorUtils {
         return progress;
     }
 
-    public static void scheduleWithWriteActionPriority(@Nonnull ReadTask task) {
+    public static void scheduleWithWriteActionPriority(ReadTask task) {
         scheduleWithWriteActionPriority(new ProgressIndicatorBase(false, false), task);
     }
 
-    @Nonnull
-    public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull ProgressIndicator progressIndicator, @Nonnull ReadTask readTask) {
+    
+    public static CompletableFuture<?> scheduleWithWriteActionPriority(ProgressIndicator progressIndicator, ReadTask readTask) {
         return scheduleWithWriteActionPriority(progressIndicator, PooledThreadExecutor.getInstance(), readTask);
     }
 
@@ -68,7 +67,7 @@ public class ProgressIndicatorUtils {
      * Same as {@link #runInReadActionWithWriteActionPriority(Runnable)}, optionally allowing to pass a {@link ProgressIndicator}
      * instance, which can be used to cancel action externally.
      */
-    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator progressIndicator) {
+    public static boolean runInReadActionWithWriteActionPriority(Runnable action, @Nullable ProgressIndicator progressIndicator) {
         SimpleReference<Boolean> result = new SimpleReference<>(Boolean.FALSE);
         runWithWriteActionPriority(() -> result.set(ApplicationManagerEx.getApplicationEx().tryRunReadAction(action)),
             progressIndicator == null ? new ProgressIndicatorBase(false, false) : progressIndicator);
@@ -90,11 +89,11 @@ public class ProgressIndicatorUtils {
      * If caller needs to retry the invocation of this method in a loop, it should consider pausing between attempts, to avoid potential
      * 100% CPU usage. There is also alternative that implements the re-trying logic {@link NonBlockingReadAction}
      */
-    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action) {
+    public static boolean runInReadActionWithWriteActionPriority(Runnable action) {
         return runInReadActionWithWriteActionPriority(action, null);
     }
 
-    public static boolean runWithWriteActionPriority(@Nonnull Runnable action, @Nonnull ProgressIndicator progressIndicator) {
+    public static boolean runWithWriteActionPriority(Runnable action, ProgressIndicator progressIndicator) {
         ApplicationEx application = (ApplicationEx) ApplicationManager.getApplication();
         if (application.isDispatchThread()) {
             throw new IllegalStateException("Must not call from EDT");
@@ -121,7 +120,7 @@ public class ProgressIndicatorUtils {
         Application app = ApplicationManager.getApplication();
         app.addApplicationListener(new ApplicationListener() {
             @Override
-            public void beforeWriteActionStart(@Nonnull Object action) {
+            public void beforeWriteActionStart(Object action) {
                 cancelActionsToBeCancelledBeforeWrite();
             }
         }, app);
@@ -133,7 +132,7 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static boolean runActionAndCancelBeforeWrite(@Nonnull ApplicationEx application, @Nonnull Runnable cancellation, @Nonnull Runnable action) {
+    public static boolean runActionAndCancelBeforeWrite(ApplicationEx application, Runnable cancellation, Runnable action) {
         if (isWriting(application)) {
             cancellation.run();
             return false;
@@ -156,8 +155,8 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    @Nonnull
-    private static Runnable indicatorCancellation(@Nonnull ProgressIndicator progressIndicator) {
+    
+    private static Runnable indicatorCancellation(ProgressIndicator progressIndicator) {
         return () -> {
             if (!progressIndicator.isCanceled()) {
                 progressIndicator.cancel();
@@ -169,8 +168,8 @@ public class ProgressIndicatorUtils {
         return application.isWriteActionPending() || application.isWriteActionInProgress();
     }
 
-    @Nonnull
-    public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull final ProgressIndicator progressIndicator, @Nonnull Executor executor, @Nonnull final ReadTask readTask) {
+    
+    public static CompletableFuture<?> scheduleWithWriteActionPriority(final ProgressIndicator progressIndicator, Executor executor, final ReadTask readTask) {
         // invoke later even if on EDT
         // to avoid tasks eagerly restarting immediately, allocating many pooled threads
         // which get cancelled too soon when a next write action arrives in the same EDT batch
@@ -186,7 +185,7 @@ public class ProgressIndicatorUtils {
             Disposable listenerDisposable = Disposable.newDisposable();
             ApplicationListener listener = new ApplicationListener() {
                 @Override
-                public void beforeWriteActionStart(@Nonnull Object action) {
+                public void beforeWriteActionStart(Object action) {
                     if (!progressIndicator.isCanceled()) {
                         progressIndicator.cancel();
                         readTask.onCanceled(progressIndicator);
@@ -252,7 +251,7 @@ public class ProgressIndicatorUtils {
         return future;
     }
 
-    private static ReadTask.Continuation runUnderProgress(@Nonnull ProgressIndicator progressIndicator, @Nonnull ReadTask task) {
+    private static ReadTask.Continuation runUnderProgress(ProgressIndicator progressIndicator, ReadTask task) {
         return ProgressManager.getInstance().runProcess(() -> {
             try {
                 return task.runBackgroundProcess(progressIndicator);
@@ -293,7 +292,7 @@ public class ProgressIndicatorUtils {
      * @return the computation result or {@code null} if timeout has been exceeded.
      */
     @Nullable
-    public static <T> T withTimeout(long timeoutMs, @Nonnull Supplier<T> computation) {
+    public static <T> T withTimeout(long timeoutMs, Supplier<T> computation) {
         ProgressManager.checkCanceled();
         ProgressIndicator outer = ProgressIndicatorProvider.getGlobalProgressIndicator();
         ProgressIndicator inner = outer != null ? new SensitiveProgressWrapper(outer) : new ProgressIndicatorBase(false, false);
@@ -316,7 +315,7 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static <T, E extends Throwable> T computeWithLockAndCheckingCanceled(@Nonnull Lock lock, int timeout, @Nonnull TimeUnit timeUnit, @Nonnull ThrowableComputable<T, E> computable)
+    public static <T, E extends Throwable> T computeWithLockAndCheckingCanceled(Lock lock, int timeout, TimeUnit timeUnit, ThrowableComputable<T, E> computable)
         throws E, ProcessCanceledException {
         awaitWithCheckCanceled(lock, timeout, timeUnit);
 
@@ -328,16 +327,16 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static void awaitWithCheckCanceled(@Nonnull CountDownLatch waiter) {
+    public static void awaitWithCheckCanceled(CountDownLatch waiter) {
         awaitWithCheckCanceled(() -> waiter.await(10, TimeUnit.MILLISECONDS));
     }
 
-    public static <T> T awaitWithCheckCanceled(@Nonnull Future<T> future) {
+    public static <T> T awaitWithCheckCanceled(Future<T> future) {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         return awaitWithCheckCanceled(future, indicator);
     }
 
-    public static <T> T awaitWithCheckCanceled(@Nonnull Future<T> future, @Nullable ProgressIndicator indicator) {
+    public static <T> T awaitWithCheckCanceled(Future<T> future, @Nullable ProgressIndicator indicator) {
         while (true) {
             checkCancelledEvenWithPCEDisabled(indicator);
             try {
@@ -361,11 +360,11 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static void awaitWithCheckCanceled(@Nonnull Lock lock, int timeout, @Nonnull TimeUnit timeUnit) {
+    public static void awaitWithCheckCanceled(Lock lock, int timeout, TimeUnit timeUnit) {
         awaitWithCheckCanceled(() -> lock.tryLock(timeout, timeUnit));
     }
 
-    public static void awaitWithCheckCanceled(@Nonnull ThrowableComputable<Boolean, ? extends Exception> waiter) {
+    public static void awaitWithCheckCanceled(ThrowableComputable<Boolean, ? extends Exception> waiter) {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         boolean success = false;
         while (!success) {
@@ -393,7 +392,7 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static void awaitWithCheckCanceled(@Nonnull Semaphore semaphore, @Nullable ProgressIndicator indicator) {
+    public static void awaitWithCheckCanceled(Semaphore semaphore, @Nullable ProgressIndicator indicator) {
         while (!semaphore.waitFor(10)) {
             checkCancelledEvenWithPCEDisabled(indicator);
         }

@@ -22,8 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -34,28 +33,28 @@ import java.util.function.Function;
  * @since 03/06/2023
  */
 public interface ProgressManagerEx {
-    boolean runProcessWithProgressSynchronously(@Nonnull Task task);
+    boolean runProcessWithProgressSynchronously(Task task);
 
-    void runProcessWithProgressInCurrentThread(@Nonnull Task task,
-                                               @Nonnull ProgressIndicator progressIndicator,
-                                               @Nonnull ModalityState modalityState);
+    void runProcessWithProgressInCurrentThread(Task task,
+                                               ProgressIndicator progressIndicator,
+                                               ModalityState modalityState);
 
     Future<?> runProcessWithProgressAsynchronously(Task.Backgroundable task,
                                                    ProgressIndicator indicator,
                                                    Runnable continuation,
                                                    ModalityState modalityState);
 
-    Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task,
-                                                   @Nonnull ProgressIndicator progressIndicator,
+    Future<?> runProcessWithProgressAsynchronously(Task.Backgroundable task,
+                                                   ProgressIndicator progressIndicator,
                                                    @Nullable Runnable continuation);
 
     ProgressIndicator newBackgroundableProcessIndicator(Task.Backgroundable backgroundable);
 
-    @Nonnull
-    <V> CompletableFuture<V> executeTask(@Nonnull UIAccess uiAccess,
+    
+    <V> CompletableFuture<V> executeTask(UIAccess uiAccess,
                                          @Nullable ComponentManager project,
-                                         @Nonnull LocalizeValue titleText,
+                                         LocalizeValue titleText,
                                          boolean modal,
                                          boolean cancelable,
-                                         @Nonnull Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
+                                         Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
 }

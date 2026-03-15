@@ -35,8 +35,7 @@ import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -68,7 +67,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
     private Future<?> myFuture = CompletableFuture.completedFuture(null);
 
-    @Nonnull
+    
     @Override
     public Key<ModuleData> getTargetDataKey() {
         return ProjectKeys.MODULE;
@@ -77,8 +76,8 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     @Override
     @RequiredUIAccess
     public void importData(
-        @Nonnull Collection<DataNode<ModuleData>> toImport,
-        @Nonnull Project project,
+        Collection<DataNode<ModuleData>> toImport,
+        Project project,
         boolean synchronous
     ) {
         if (toImport.isEmpty()) {
@@ -108,7 +107,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
 
     @RequiredUIAccess
-    private void createModules(@Nonnull Collection<DataNode<ModuleData>> toCreate, @Nonnull Project project) {
+    private void createModules(Collection<DataNode<ModuleData>> toCreate, Project project) {
         Map<DataNode<ModuleData>, Module> moduleMappings = new HashMap<>();
         project.getApplication().runWriteAction(new Runnable() {
             @Override
@@ -120,7 +119,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
             }
 
             @RequiredWriteAction
-            private void importModule(@Nonnull ModuleManager moduleManager, @Nonnull DataNode<ModuleData> module) {
+            private void importModule(ModuleManager moduleManager, DataNode<ModuleData> module) {
                 ModuleData moduleData = module.getData();
                 Module created = moduleManager.newModule(moduleData.getExternalName(), moduleData.getModuleDirPath());
 
@@ -156,11 +155,11 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
         });
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private Collection<DataNode<ModuleData>> filterExistingModules(
-        @Nonnull Collection<DataNode<ModuleData>> modules,
-        @Nonnull Project project
+        Collection<DataNode<ModuleData>> modules,
+        Project project
     ) {
         Collection<DataNode<ModuleData>> result = new ArrayList<>();
         for (DataNode<ModuleData> node : modules) {
@@ -176,7 +175,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
         return result;
     }
 
-    private static void syncPaths(@Nonnull Module module, @Nonnull ModuleData data) {
+    private static void syncPaths(Module module, ModuleData data) {
         ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
         compilerPathsManager.setInheritedCompilerOutput(data.isInheritProjectCompileOutputPath());
         if (!data.isInheritProjectCompileOutputPath()) {
@@ -200,7 +199,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
     @Override
     @RequiredUIAccess
-    public void removeData(@Nonnull Collection<? extends Module> modules, @Nonnull Project project, boolean synchronous) {
+    public void removeData(Collection<? extends Module> modules, Project project, boolean synchronous) {
         if (modules.isEmpty()) {
             return;
         }
@@ -222,7 +221,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
 
     @RequiredUIAccess
-    public static void unlinkModuleFromExternalSystem(@Nonnull Module module) {
+    public static void unlinkModuleFromExternalSystem(Module module) {
         ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
         ExternalSystemMutableModuleExtension<?> extension = modifiableModel.getExtension(ExternalSystemMutableModuleExtension.class);
@@ -240,7 +239,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
         private final Collection<DataNode<ModuleData>> myModules;
         private final boolean mySynchronous;
 
-        ImportModulesTask(@Nonnull Project project, @Nonnull Collection<DataNode<ModuleData>> modules, boolean synchronous) {
+        ImportModulesTask(Project project, Collection<DataNode<ModuleData>> modules, boolean synchronous) {
             myProject = project;
             myModules = modules;
             mySynchronous = synchronous;
@@ -265,9 +264,9 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
     @RequiredUIAccess
     private static void setModuleOptions(
-        @Nonnull Module module,
+        Module module,
         @Nullable ModifiableRootModel originalModel,
-        @Nonnull DataNode<ModuleData> moduleDataNode
+        DataNode<ModuleData> moduleDataNode
     ) {
         ModuleData moduleData = moduleDataNode.getData();
         module.putUserData(MODULE_DATA_KEY, moduleData);

@@ -29,7 +29,6 @@ import consulo.language.psi.PsiFileEx;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +50,7 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
     private final Project myProject;
     private boolean myCompiled;
 
-    public TextEditorBackgroundHighlighter(@Nonnull Project project, @Nonnull Editor editor) {
+    public TextEditorBackgroundHighlighter(Project project, Editor editor) {
         myProject = project;
         myEditor = editor;
         myDocument = myEditor.getDocument();
@@ -75,8 +74,8 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
         }
     }
 
-    @Nonnull
-    public List<TextEditorHighlightingPass> getPasses(@Nonnull int[] passesToIgnore) {
+    
+    public List<TextEditorHighlightingPass> getPasses(int[] passesToIgnore) {
         if (myProject.isDisposed()) {
             return Collections.emptyList();
         }
@@ -98,7 +97,7 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
     }
 
     @Override
-    @Nonnull
+    
     public TextEditorHighlightingPass[] createPassesForEditor() {
         List<TextEditorHighlightingPass> passes = getPasses(ArrayUtil.EMPTY_INT_ARRAY);
         return passes.isEmpty() ? TextEditorHighlightingPass.EMPTY_ARRAY : passes.toArray(new TextEditorHighlightingPass[passes.size()]);

@@ -42,7 +42,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -55,7 +54,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
         //noinspection SimplifiableIfStatement
         if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
@@ -66,7 +65,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public Collection<? extends AbstractTreeNode> getChildren() {

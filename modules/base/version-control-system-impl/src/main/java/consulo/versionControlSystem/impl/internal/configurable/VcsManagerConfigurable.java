@@ -29,7 +29,6 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfigurableProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -50,7 +49,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     myMappings = new VcsDirectoryConfigurationPanel(myProject, uiDisposable);
     if (myGeneralPanel != null) {
       addListenerToGeneralPanel();
@@ -96,14 +95,14 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     myMappings = null;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return VcsLocalize.versionControlMainConfigurableName();
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return StandardConfigurableIds.VCS_GROUP;
   }
@@ -164,7 +163,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     return new SearchableConfigurable(){
 
       @Override
-      @Nonnull
+      
       public LocalizeValue getDisplayName() {
         return vcs.getDisplayName();
       }
@@ -182,7 +181,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
       @RequiredUIAccess
       @Override
-      public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+      public JComponent createComponent(Disposable uiDisposable) {
         return delegate.createComponent(uiDisposable);
       }
 
@@ -194,7 +193,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
       @RequiredUIAccess
       @Override
-      public Component createUIComponent(@Nonnull Disposable uiDisposable) {
+      public Component createUIComponent(Disposable uiDisposable) {
         return delegate.createUIComponent(uiDisposable);
       }
 
@@ -223,7 +222,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
       }
 
       @Override
-      @Nonnull
+      
       public String getId() {
         return "vcs." + vcs.getId();
       }

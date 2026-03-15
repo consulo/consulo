@@ -23,10 +23,8 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import org.jetbrains.annotations.Nls;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 
@@ -38,7 +36,7 @@ public class CannotUndoReportDialog extends DialogWrapper {
   private JPanel myPanel;
   private JLabel myProblemMessageLabel;
 
-  public CannotUndoReportDialog(Project project, @Nls String problemText, Collection<DocumentReference> files) {
+  public CannotUndoReportDialog(Project project, String problemText, Collection<DocumentReference> files) {
     super(project, false);
 
     DefaultListModel model = new DefaultListModel();
@@ -61,7 +59,7 @@ public class CannotUndoReportDialog extends DialogWrapper {
     init();
   }
 
-  @Nonnull
+  
   protected Action[] createActions() {
     return new Action[]{getOKAction()};
   }

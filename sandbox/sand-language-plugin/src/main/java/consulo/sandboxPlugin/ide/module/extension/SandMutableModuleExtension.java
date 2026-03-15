@@ -25,19 +25,18 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 public class SandMutableModuleExtension extends SandModuleExtension implements MutableModuleExtensionWithSdk<SandModuleExtension> {
-  public SandMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel) {
+  public SandMutableModuleExtension(String id, ModuleRootLayer rootModel) {
     super(id, rootModel);
   }
 
-  @Nonnull
+  
   @Override
   public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
     return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
@@ -46,7 +45,7 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
+  public Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
     VerticalLayout panel = VerticalLayout.create();
     panel.add(ModuleExtensionBundleBoxBuilder.createAndDefine(this, uiDisposable, updateOnCheck).uiDisposable(uiDisposable).build());
     return panel;
@@ -58,7 +57,7 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
   }
 
   @Override
-  public boolean isModified(@Nonnull SandModuleExtension originalExtension) {
+  public boolean isModified(SandModuleExtension originalExtension) {
     return myIsEnabled != originalExtension.isEnabled();
   }
 }

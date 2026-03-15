@@ -17,8 +17,7 @@ package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.util.collection.SLRUMap;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -33,23 +32,23 @@ class VcsCommitCache<CommitId, T extends VcsShortCommitDetails> {
 
   private final SLRUMap<CommitId, T> myCache = new SLRUMap<>(5000, 5000);
 
-  public void put(@Nonnull CommitId hash, @Nonnull T commit) {
+  public void put(CommitId hash, T commit) {
     assert EventQueue.isDispatchThread();
     myCache.put(hash, commit);
   }
 
-  public boolean isKeyCached(@Nonnull CommitId hash) {
+  public boolean isKeyCached(CommitId hash) {
     assert EventQueue.isDispatchThread();
     return myCache.get(hash) != null;
   }
 
   @Nullable
-  public T get(@Nonnull CommitId hash) {
+  public T get(CommitId hash) {
     assert EventQueue.isDispatchThread();
     return myCache.get(hash);
   }
 
-  public void remove(@Nonnull CommitId hash) {
+  public void remove(CommitId hash) {
     assert EventQueue.isDispatchThread();
     myCache.remove(hash);
   }

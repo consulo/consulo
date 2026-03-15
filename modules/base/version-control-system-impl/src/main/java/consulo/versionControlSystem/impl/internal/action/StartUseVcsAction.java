@@ -25,8 +25,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "Start.Use.Vcs")
 public class StartUseVcsAction extends AnAction implements DumbAware {
@@ -35,14 +34,14 @@ public class StartUseVcsAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabledAndVisible(isEnabled(project));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         StartUseVcsDialog dialog = new StartUseVcsDialog(e.getRequiredData(Project.KEY));
         if (dialog.showAndGet()) {
             AbstractVcs vcs = dialog.getSelectedVcs();

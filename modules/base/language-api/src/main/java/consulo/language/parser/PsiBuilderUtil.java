@@ -20,8 +20,7 @@ import consulo.language.ast.TokenSet;
 import consulo.language.lexer.Lexer;
 import consulo.application.progress.ProgressIndicatorProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PsiBuilderUtil {
     private PsiBuilderUtil() {
@@ -88,13 +87,13 @@ public class PsiBuilderUtil {
      *
      * @param marker marker to roll back to.
      */
-    public static void rollbackTo(@Nullable PsiBuilder.Marker marker) {
+    public static void rollbackTo(PsiBuilder.@Nullable Marker marker) {
         if (marker != null) {
             marker.rollbackTo();
         }
     }
 
-    @Nonnull
+   
     public static CharSequence rawTokenText(PsiBuilder builder, int index) {
         return builder.getOriginalText().subSequence(builder.rawTokenTypeStart(index), builder.rawTokenTypeStart(index + 1));
     }
@@ -112,10 +111,10 @@ public class PsiBuilderUtil {
      * @return true if `text` passes the checks
      */
     public static boolean hasProperBraceBalance(
-        @Nonnull CharSequence text,
-        @Nonnull Lexer lexer,
-        @Nonnull IElementType leftBrace,
-        @Nonnull IElementType rightBrace
+        CharSequence text,
+        Lexer lexer,
+        IElementType leftBrace,
+        IElementType rightBrace
     ) {
         lexer.start(text);
 

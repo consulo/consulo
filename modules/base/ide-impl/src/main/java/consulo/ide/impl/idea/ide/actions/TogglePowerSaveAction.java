@@ -22,7 +22,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -35,13 +34,13 @@ public class TogglePowerSaveAction extends ToggleAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return PowerSaveMode.isEnabled();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         PowerSaveMode.setEnabled(state);
     }
 }

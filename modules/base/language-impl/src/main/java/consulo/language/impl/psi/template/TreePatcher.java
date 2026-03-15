@@ -31,15 +31,14 @@ import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.OuterLanguageElement;
 import consulo.language.util.CharTable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TreePatcher extends LanguageExtension {
   ExtensionPointCacheKey<TreePatcher, ByLanguageValue<TreePatcher>> KEY = ExtensionPointCacheKey.create("TreePatcher", LanguageOneToOne.build(new SimpleTreePatcher()));
 
-  @Nonnull
-  static TreePatcher forLanguage(@Nonnull Language language) {
+  
+  static TreePatcher forLanguage(Language language) {
     return Application.get().getExtensionPoint(TreePatcher.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -48,15 +47,15 @@ public interface TreePatcher extends LanguageExtension {
    *
    * @apiNote Inserting must not change the position (offset) of the new node in the tree (otherwise we will receive broken tree)
    */
-  void insert(@Nonnull CompositeElement parent, @Nullable TreeElement anchorBefore, @Nonnull OuterLanguageElement toInsert);
+  void insert(CompositeElement parent, @Nullable TreeElement anchorBefore, OuterLanguageElement toInsert);
 
   /**
    * Splits the leaf into two leaves with the same type as the original leaf
    *
    * @return first part of the split
    */
-  @Nonnull
-  default LeafElement split(@Nonnull LeafElement leaf, int offset, @Nonnull CharTable table) {
+  
+  default LeafElement split(LeafElement leaf, int offset, CharTable table) {
     CharSequence chars = leaf.getChars();
     LeafElement leftPart = ASTFactory.leaf(leaf.getElementType(), table.intern(chars, 0, offset));
     LeafElement rightPart = ASTFactory.leaf(leaf.getElementType(), table.intern(chars, offset, chars.length()));
@@ -70,8 +69,8 @@ public interface TreePatcher extends LanguageExtension {
    * Removes "middle" part of the leaf and returns the new leaf with content of the right and left parts
    * e.g. if we process whitespace leaf " \n " and range "1, 2" the result will be new leaf with content "  "
    */
-  @Nonnull
-  default LeafElement removeRange(@Nonnull LeafElement leaf, @Nonnull TextRange rangeToRemove, @Nonnull CharTable table) {
+  
+  default LeafElement removeRange(LeafElement leaf, TextRange rangeToRemove, CharTable table) {
     CharSequence chars = leaf.getChars();
     String res = rangeToRemove.replace(chars.toString(), "");
     LeafElement newLeaf = ASTFactory.leaf(leaf.getElementType(), table.intern(res));

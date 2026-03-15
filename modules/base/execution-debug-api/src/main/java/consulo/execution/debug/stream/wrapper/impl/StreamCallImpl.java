@@ -6,7 +6,6 @@ import consulo.execution.debug.stream.wrapper.StreamCall;
 import consulo.execution.debug.stream.wrapper.StreamCallType;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -20,11 +19,11 @@ public abstract class StreamCallImpl implements StreamCall {
   private final StreamCallType myType;
   private final TextRange myTextRange;
 
-  StreamCallImpl(@Nonnull String name,
-                 @Nonnull String genericArgs,
-                 @Nonnull List<CallArgument> args,
-                 @Nonnull StreamCallType type,
-                 @Nonnull TextRange range) {
+  StreamCallImpl(String name,
+                 String genericArgs,
+                 List<CallArgument> args,
+                 StreamCallType type,
+                 TextRange range) {
     myName = name;
     myGenericArgs = genericArgs;
     myArgs = args;
@@ -33,27 +32,27 @@ public abstract class StreamCallImpl implements StreamCall {
   }
 
   @Override
-  public @Nonnull TextRange getTextRange() {
+  public TextRange getTextRange() {
     return myTextRange;
   }
 
   @Override
-  public @Nonnull String getName() {
+  public String getName() {
     return myName;
   }
 
   @Override
-  public @Nonnull String getGenericArguments() {
+  public String getGenericArguments() {
     return myGenericArgs;
   }
 
   @Override
-  public @Nonnull List<CallArgument> getArguments() {
+  public List<CallArgument> getArguments() {
     return myArgs;
   }
 
   @Override
-  public @Nonnull StreamCallType getType() {
+  public StreamCallType getType() {
     return myType;
   }
 }

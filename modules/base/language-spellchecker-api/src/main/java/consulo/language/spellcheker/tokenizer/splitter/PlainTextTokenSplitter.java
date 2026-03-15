@@ -16,7 +16,6 @@
 package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 import org.jdom.Verifier;
 
 import java.util.Collections;
@@ -36,7 +35,7 @@ public class PlainTextTokenSplitter extends BaseTokenSplitter {
     private static final Pattern URL = Pattern.compile("((?>file|ftp|https?)://([^/]+)(/\\w*)?(/\\w*))");
 
     @Override
-    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+    public void split(SplitContext context, TextRange range) {
         if (context.isEmpty()) {
             return;
         }

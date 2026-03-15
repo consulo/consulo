@@ -21,7 +21,6 @@ import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TabbedLayout;
-import jakarta.annotation.Nonnull;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
@@ -66,16 +65,16 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
         }
     }
 
-    @Nonnull
+    
     @Override
     public Tab createTab() {
         return new DesktopSwtTabImpl();
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
+    public Tab addTab(Tab tab, Component component) {
         DesktopSwtTabImpl swtTab = (DesktopSwtTabImpl) tab;
 
         myTabs.add(swtTab);
@@ -85,10 +84,10 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
         return tab;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
+    public Tab addTab(String tabName, Component component) {
         DesktopSwtTabImpl tab = new DesktopSwtTabImpl();
         tab.setRenderer((t, p) -> p.append(tabName));
 
@@ -101,6 +100,6 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
     }
 
     @Override
-    public void removeTab(@Nonnull Tab tab) {
+    public void removeTab(Tab tab) {
     }
 }

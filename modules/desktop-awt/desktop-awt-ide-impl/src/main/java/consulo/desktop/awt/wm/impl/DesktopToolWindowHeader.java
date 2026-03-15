@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -53,7 +52,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             InputEvent inputEvent = e.getInputEvent();
             ActionPopupMenu popupMenu = ((ActionManagerEx) ActionManager.getInstance()).createActionPopupMenu(
                 DesktopToolWindowContentUi.POPUP_PLACE,
@@ -79,12 +78,12 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             hideToolWindow();
         }
 
         @Override
-        public final void update(@Nonnull AnActionEvent event) {
+        public final void update(AnActionEvent event) {
             event.getPresentation().setEnabled(myToolWindow.isVisible());
         }
     }
@@ -99,7 +98,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     private final JPanel myWestPanel;
 
     @RequiredUIAccess
-    public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull Supplier<ActionGroup> gearProducer) {
+    public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, Supplier<ActionGroup> gearProducer) {
         super(new BorderLayout());
 
         myToolWindow = toolWindow;
@@ -188,7 +187,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         }
     }
 
-    @Nonnull
+    
     public static JPanel wrapAndFillVertical(JComponent owner) {
         JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, JBUI.scale(5), false, true));
         panel.add(owner);
@@ -215,7 +214,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         westPanel.add(wrapAndFillVertical(component));
     }
 
-    public void setTabActions(@Nonnull AnAction[] actions) {
+    public void setTabActions(AnAction[] actions) {
         if (myToolbarWest == null) {
             initWestToolBar(myWestPanel);
         }
@@ -229,7 +228,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         }
     }
 
-    public void setAdditionalTitleActions(@Nonnull AnAction[] actions) {
+    public void setAdditionalTitleActions(AnAction[] actions) {
         myActionGroup.removeAll();
         myActionGroup.addAll(actions);
 

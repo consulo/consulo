@@ -6,21 +6,20 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CheckboxAction;
-import jakarta.annotation.Nonnull;
 
 public abstract class CheckBoxSearchEverywhereToggleAction extends CheckboxAction implements DumbAware, SearchEverywhereToggleAction {
-    public CheckBoxSearchEverywhereToggleAction(@Nonnull LocalizeValue text) {
+    public CheckBoxSearchEverywhereToggleAction(LocalizeValue text) {
         super(text);
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return isEverywhere();
     }
 
     @RequiredUIAccess
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         setEverywhere(state);
     }
 

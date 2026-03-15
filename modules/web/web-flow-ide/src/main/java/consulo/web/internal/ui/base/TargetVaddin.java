@@ -16,7 +16,7 @@
 package consulo.web.internal.ui.base;
 
 import consulo.ui.Component;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -38,7 +38,7 @@ public class TargetVaddin {
   }
 
   @Contract("null -> null")
-  public static Component from(@Nullable com.vaadin.flow.component.Component component) {
+  public static Component from(com.vaadin.flow.component.@Nullable Component component) {
     if (component == null) {
       return null;
     }

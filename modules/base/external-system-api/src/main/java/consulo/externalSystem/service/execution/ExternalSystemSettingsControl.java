@@ -20,7 +20,6 @@ import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.externalSystem.ui.awt.PaintAwarePanel;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -42,7 +41,7 @@ public interface ExternalSystemSettingsControl<S> {
    * @param canvas      container to use as a holder for UI components specific to the current control
    * @param indentLevel a hint on how much UI components added by the current control should be indented
    */
-  default void fillUi(@Nonnull Disposable uiDisposable, @Nonnull PaintAwarePanel canvas, int indentLevel) {
+  default void fillUi(Disposable uiDisposable, PaintAwarePanel canvas, int indentLevel) {
     fillUi(canvas, indentLevel);
   }
 
@@ -58,7 +57,7 @@ public interface ExternalSystemSettingsControl<S> {
    */
   @Deprecated
   @DeprecationInfo("use #fillUi() with disposable")
-  default void fillUi(@Nonnull PaintAwarePanel canvas, int indentLevel) {
+  default void fillUi(PaintAwarePanel canvas, int indentLevel) {
     throw new AbstractMethodError();
   }
 
@@ -77,14 +76,14 @@ public interface ExternalSystemSettingsControl<S> {
    * 
    * @param settings  settings holder
    */
-  void apply(@Nonnull S settings);
+  void apply(S settings);
 
   /**
    * Asks current control to validate given settings with the current user-defined values.
    *
    * @param settings  settings holder
    */
-  boolean validate(@Nonnull S settings) throws ConfigurationException;
+  boolean validate(S settings) throws ConfigurationException;
 
   void disposeUIResources();
 

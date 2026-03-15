@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.popup.AWTPopupSubFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.*;
 import consulo.util.collection.Maps;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -65,15 +64,15 @@ public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl implements AWTP
         return new PopupChooserBuilder<T>(table);
     }
 
-    @Nonnull
+    
     @Override
-    public BalloonBuilder createBalloonBuilder(@Nonnull JComponent content) {
+    public BalloonBuilder createBalloonBuilder(JComponent content) {
         return new BalloonPopupBuilderImpl(myStorage, content);
     }
 
-    @Nonnull
+    
     @Override
-    public BalloonBuilder createDialogBalloonBuilder(@Nonnull JComponent content, String title) {
+    public BalloonBuilder createDialogBalloonBuilder(JComponent content, String title) {
         BalloonPopupBuilderImpl builder = new BalloonPopupBuilderImpl(myStorage, content);
         Color bg = UIManager.getColor("Panel.background");
         Color borderOriginal = Color.darkGray;
@@ -93,9 +92,9 @@ public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl implements AWTP
 
     @Override
     public AWTListPopup createListPopup(
-        @Nonnull Project project,
-        @Nonnull ListPopupStep step,
-        @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory
+        Project project,
+        ListPopupStep step,
+        Function<AWTListPopup, ListCellRenderer> rendererFactory
     ) {
         return new ListPopupImpl(step) {
             @Override
@@ -107,11 +106,11 @@ public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl implements AWTP
 
     @Override
     public AWTListPopup createListPopup(
-        @Nonnull Project project,
-        @Nonnull ListPopupStep step,
+        Project project,
+        ListPopupStep step,
         @Nullable AWTListPopup parentPopup,
-        @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory,
-        @Nonnull AWTPopupSubFactory factory
+        Function<AWTListPopup, ListCellRenderer> rendererFactory,
+        AWTPopupSubFactory factory
     ) {
         return new ListPopupImpl(project, (WizardPopup) parentPopup, step, null) {
             @Override
@@ -129,13 +128,13 @@ public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl implements AWTP
     }
 
     @Override
-    public <T> AWTPopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list) {
+    public <T> AWTPopupChooserBuilder<T> createListPopupBuilder(JList<T> list) {
         return new PopupChooserBuilder<>(list);
     }
 
-    @Nonnull
+    
     @Override
-    public <T> IPopupChooserBuilder<T> createPopupChooserBuilder(@Nonnull List<? extends T> list) {
+    public <T> IPopupChooserBuilder<T> createPopupChooserBuilder(List<? extends T> list) {
         return new PopupChooserBuilder<>(new JBList<>(new CollectionListModel<>(list)));
     }
 }

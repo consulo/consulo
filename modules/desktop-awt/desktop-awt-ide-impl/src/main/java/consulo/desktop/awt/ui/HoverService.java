@@ -5,7 +5,6 @@ import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.awt.event.HoverListener;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,13 +18,13 @@ final class HoverService {
   private static final Logger LOG = Logger.getInstance(HoverService.class);
   private final List<ComponentPoint> hierarchy = new ArrayList<>();
 
-  void process(@Nonnull AWTEvent event) {
+  void process(AWTEvent event) {
     if (event instanceof MouseEvent) {
       process((MouseEvent)event);
     }
   }
 
-  private void process(@Nonnull MouseEvent event) {
+  private void process(MouseEvent event) {
     SmartList<Component> components = new SmartList<>();
     if (MouseEvent.MOUSE_EXITED != event.getID()) {
       Component parent = event.getComponent();
@@ -64,7 +63,7 @@ final class HoverService {
    * if it does not contain the specified location
    * @see SwingUtilities#getDeepestComponentAt
    */
-  private static Component getDeepestComponentAt(@Nonnull Component parent, int x, int y) {
+  private static Component getDeepestComponentAt(Component parent, int x, int y) {
     if (!parent.contains(x, y)) return null; // parent does not contain the specified location
     if (parent instanceof Container) {
       for (Component child : ((Container)parent).getComponents()) {
@@ -85,11 +84,11 @@ final class HoverService {
     private final WeakReference<Component> reference;
     private final Point point = new Point();
 
-    private ComponentPoint(@Nonnull Component component) {
+    private ComponentPoint(Component component) {
       reference = new WeakReference<>(component);
     }
 
-    private void mouseEntered(@Nonnull MouseEvent event) {
+    private void mouseEntered(MouseEvent event) {
       Component component = reference.get();
       if (component == null) return; // component is already collected
       point.setLocation(event.getXOnScreen(), event.getYOnScreen());
@@ -98,7 +97,7 @@ final class HoverService {
       notifySafely(component, listener -> listener.mouseEntered(component, point.x, point.y));
     }
 
-    private void mouseMoved(@Nonnull MouseEvent event) {
+    private void mouseMoved(MouseEvent event) {
       Component component = reference.get();
       if (component == null) return; // component is already collected
       int x = point.x;
@@ -117,7 +116,7 @@ final class HoverService {
       notifySafely(component, listener -> listener.mouseExited(component));
     }
 
-    private static void notifySafely(@Nonnull Component component, @Nonnull Consumer<? super HoverListener> notify) {
+    private static void notifySafely(Component component, Consumer<? super HoverListener> notify) {
       for (HoverListener listener : HoverListener.getAll(component)) {
         try {
           notify.accept(listener);

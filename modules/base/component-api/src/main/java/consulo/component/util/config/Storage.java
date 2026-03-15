@@ -18,7 +18,6 @@ package consulo.component.util.config;
 import consulo.component.PropertiesComponent;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,7 +32,7 @@ public interface Storage {
     private final PropertiesComponent myPropertiesComponent;
     private final String myPrefix;
 
-    public PropertiesComponentStorage(String prefix, @Nonnull PropertiesComponent propertiesComponent) {
+    public PropertiesComponentStorage(String prefix, PropertiesComponent propertiesComponent) {
       myPropertiesComponent = propertiesComponent;
       myPrefix = prefix;
     }

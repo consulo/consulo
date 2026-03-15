@@ -19,20 +19,19 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 public class ShowUiDebuggerAction extends AnAction {
 
   private UiDebugger myDebugger;
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     e.getPresentation().setTextValue(LocalizeValue.localizeTODO("UI Debugger"));
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     if (myDebugger == null) {
       myDebugger = new UiDebugger() {
         @Override

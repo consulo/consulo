@@ -41,9 +41,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,25 +57,25 @@ import static consulo.externalSystem.util.ExternalSystemConstants.*;
  */
 public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements DataProvider {
 
-  @Nonnull
+  
   private final ExternalSystemRecentTasksList myRecentTasksList;
-  @Nonnull
+  
   private final ExternalSystemTasksTreeModel myAllTasksModel;
-  @Nonnull
+  
   private final ExternalSystemTasksTree myAllTasksTree;
-  @Nonnull
+  
   private final ProjectSystemId               myExternalSystemId;
-  @Nonnull
+  
   private final NotificationGroup             myNotificationGroup;
-  @Nonnull
+  
   private final Project                       myProject;
 
   @Nullable
   private Supplier<ExternalTaskExecutionInfo> mySelectedTaskProvider;
 
-  public ExternalSystemTasksPanel(@Nonnull Project project,
-                                  @Nonnull ProjectSystemId externalSystemId,
-                                  @Nonnull NotificationGroup notificationGroup)
+  public ExternalSystemTasksPanel(Project project,
+                                  ProjectSystemId externalSystemId,
+                                  NotificationGroup notificationGroup)
   {
     super(true);
     myExternalSystemId = externalSystemId;
@@ -142,7 +140,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     setContent(content);
   }
 
-  private static JComponent wrap(@Nonnull JComponent content, @Nonnull String title) {
+  private static JComponent wrap(JComponent content, String title) {
     JPanel result = new JPanel(new BorderLayout());
     result.setOpaque(false);
     result.setBorder(IdeBorderFactory.createTitledBorder(title, false));
@@ -152,7 +150,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
 
   @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     if (ExternalSystemDataKeys.RECENT_TASKS_LIST == dataId) {
       return myRecentTasksList;
     }

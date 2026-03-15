@@ -4,13 +4,12 @@ package consulo.execution.debug.stream.lib.impl;
 import consulo.execution.debug.stream.resolve.ValuesOrderResolver;
 import consulo.execution.debug.stream.trace.impl.handler.unified.PeekTraceHandler;
 import consulo.execution.debug.stream.trace.impl.interpret.SimplePeekCallTraceInterpreter;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public class OrderBasedOperation extends IntermediateOperationBase {
-  public OrderBasedOperation(@Nonnull String name, @Nonnull ValuesOrderResolver orderResolver) {
+  public OrderBasedOperation(String name, ValuesOrderResolver orderResolver) {
     super(name,
           (num, call, dsl) -> new PeekTraceHandler(num, call.getName(), call.getTypeBefore(), call.getTypeAfter(), dsl),
           new SimplePeekCallTraceInterpreter(),

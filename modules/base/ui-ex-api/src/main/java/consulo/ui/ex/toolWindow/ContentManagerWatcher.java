@@ -21,23 +21,22 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 
-import jakarta.annotation.Nonnull;
 
 public class ContentManagerWatcher {
   @RequiredUIAccess
-  public static void watchContentManager(@Nonnull ToolWindow toolWindow, @Nonnull ContentManager contentManager) {
+  public static void watchContentManager(ToolWindow toolWindow, ContentManager contentManager) {
     toolWindow.setAvailable(contentManager.getContentCount() > 0);
 
     contentManager.addContentManagerListener(new ContentManagerListener() {
       @RequiredUIAccess
       @Override
-      public void contentAdded(@Nonnull ContentManagerEvent e) {
+      public void contentAdded(ContentManagerEvent e) {
         toolWindow.setAvailable(true);
       }
 
       @RequiredUIAccess
       @Override
-      public void contentRemoved(@Nonnull ContentManagerEvent e) {
+      public void contentRemoved(ContentManagerEvent e) {
         toolWindow.setAvailable(contentManager.getContentCount() > 0);
       }
     });

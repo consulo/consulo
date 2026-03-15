@@ -27,7 +27,6 @@ import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.impl.internal.ui.RunDialog;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class CreateAction extends BaseRunConfigurationAction {
     @Override
     protected void updatePresentation(
         Presentation presentation,
-        @Nonnull String actionText,
+        String actionText,
         ConfigurationContext context
     ) {
         choosePolicy(context).update(presentation, context, actionText);
@@ -79,7 +78,7 @@ public class CreateAction extends BaseRunConfigurationAction {
             myType = type;
         }
 
-        public void update(Presentation presentation, ConfigurationContext context, @Nonnull String actionText) {
+        public void update(Presentation presentation, ConfigurationContext context, String actionText) {
             updateText(presentation, actionText);
             updateIcon(presentation, context);
         }
@@ -221,7 +220,7 @@ public class CreateAction extends BaseRunConfigurationAction {
         }
 
         @Override
-        public void update(Presentation presentation, ConfigurationContext context, @Nonnull String actionText) {
+        public void update(Presentation presentation, ConfigurationContext context, String actionText) {
             super.update(presentation, context, actionText);
             presentation.setVisible(false);
         }

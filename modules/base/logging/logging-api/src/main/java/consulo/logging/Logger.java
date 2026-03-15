@@ -17,8 +17,7 @@ package consulo.logging;
 
 import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.LoggerFactoryInitializer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -27,13 +26,13 @@ import jakarta.annotation.Nullable;
 public interface Logger {
     static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-    @Nonnull
-    public static Logger getInstance(@Nonnull String category) {
+    
+    public static Logger getInstance(String category) {
         return LoggerFactoryInitializer.getFactory().getLoggerInstance(category);
     }
 
-    @Nonnull
-    public static Logger getInstance(@Nonnull Class clazz) {
+    
+    public static Logger getInstance(Class clazz) {
         return LoggerFactoryInitializer.getFactory().getLoggerInstance(clazz);
     }
 
@@ -61,7 +60,7 @@ public interface Logger {
 
     public abstract void debug(String message, @Nullable Throwable t);
 
-    default void debug(@Nonnull String message, Object... details) {
+    default void debug(String message, Object... details) {
         if (isDebugEnabled()) {
             StringBuilder sb = new StringBuilder();
             sb.append(message);
@@ -72,7 +71,7 @@ public interface Logger {
         }
     }
 
-    default void info(@Nonnull Throwable t) {
+    default void info(Throwable t) {
         info(t.getMessage(), t);
     }
 
@@ -84,7 +83,7 @@ public interface Logger {
         warn(message, null);
     }
 
-    default void warn(@Nonnull Throwable t) {
+    default void warn(Throwable t) {
         warn(t.getMessage(), t);
     }
 
@@ -118,11 +117,11 @@ public interface Logger {
         error(message, e, EMPTY_STRING_ARRAY);
     }
 
-    default void error(@Nonnull Throwable t) {
+    default void error(Throwable t) {
         error(t.getMessage(), t, EMPTY_STRING_ARRAY);
     }
 
-    public abstract void error(String message, @Nullable Throwable t, @Nonnull String... details);
+    public abstract void error(String message, @Nullable Throwable t, String... details);
 
     default boolean assertTrue(boolean value, @Nullable Object message) {
         if (!value) {
@@ -145,7 +144,7 @@ public interface Logger {
      * <p>
      * WARNING: Can be called only from platform - or will throw error
      */
-    default void setLevel(@Nonnull LoggerLevel level) throws IllegalAccessException {
+    default void setLevel(LoggerLevel level) throws IllegalAccessException {
         // nothing by default
     }
 }

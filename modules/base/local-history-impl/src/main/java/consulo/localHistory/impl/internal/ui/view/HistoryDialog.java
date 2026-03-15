@@ -57,8 +57,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.impl.internal.ui.awt.CreatePatchConfigurationPanel;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -86,7 +85,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     private MergingUpdateQueue myUpdateQueue;
     private boolean isUpdating;
 
-    protected HistoryDialog(@Nonnull Project project, IdeaGateway gw, VirtualFile f, boolean doInit) {
+    protected HistoryDialog(Project project, IdeaGateway gw, VirtualFile f, boolean doInit) {
         super(project);
         myProject = project;
         myGateway = gw;
@@ -332,7 +331,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
         new Task.Modal(myProject, LocalHistoryBundle.message("message.processing.revisions"), false) {
             @Override
-            public void run(@Nonnull ProgressIndicator i) {
+            public void run(ProgressIndicator i) {
                 Application.get().runReadAction(() -> {
                     RevisionProcessingProgressAdapter p = new RevisionProcessingProgressAdapter(i);
                     p.processingLeftRevision();
@@ -514,20 +513,20 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     }
 
     protected abstract class MyAction extends AnAction {
-        protected MyAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, Image icon) {
+        protected MyAction(LocalizeValue text, LocalizeValue description, Image icon) {
             super(text, description, icon);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             doPerform(myModel);
         }
 
         protected abstract void doPerform(T model);
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(isEnabled());
         }
 
@@ -661,10 +660,10 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     }
 
     private static class MyDialogWrapper extends DialogWrapper {
-        @Nonnull
+        
         private final CreatePatchConfigurationPanel myPanel;
 
-        protected MyDialogWrapper(@Nullable Project project, @Nonnull CreatePatchConfigurationPanel centralPanel) {
+        protected MyDialogWrapper(@Nullable Project project, CreatePatchConfigurationPanel centralPanel) {
             super(project, true);
             myPanel = centralPanel;
             init();

@@ -24,8 +24,7 @@ import consulo.component.persist.Storage;
 import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,12 +37,12 @@ import jakarta.annotation.Nullable;
 public class WebSearchOptions implements PersistentStateComponent<WebSearchOptions> {
     private WebSearchEngine myEngine = WebSearchEngine.GOOGLE;
 
-    @Nonnull
+    
     public WebSearchEngine getEngine() {
         return myEngine;
     }
 
-    public void setEngine(@Nonnull WebSearchEngine engine) {
+    public void setEngine(WebSearchEngine engine) {
         myEngine = engine;
     }
 

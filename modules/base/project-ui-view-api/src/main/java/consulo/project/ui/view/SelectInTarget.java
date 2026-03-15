@@ -20,14 +20,13 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionList;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface SelectInTarget {
     ExtensionList<SelectInTarget, Project> EP_NAME = ExtensionList.of(SelectInTarget.class);
 
-    @Nonnull
+    
     LocalizeValue getActionText();
 
     /**

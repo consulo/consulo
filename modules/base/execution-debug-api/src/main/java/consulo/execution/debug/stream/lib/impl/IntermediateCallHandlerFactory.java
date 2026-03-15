@@ -18,10 +18,9 @@ package consulo.execution.debug.stream.lib.impl;
 import consulo.execution.debug.stream.trace.IntermediateCallHandler;
 import consulo.execution.debug.stream.trace.dsl.Dsl;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
-import jakarta.annotation.Nonnull;
 
 @FunctionalInterface
 public interface IntermediateCallHandlerFactory {
-    @Nonnull
-    IntermediateCallHandler create(int callOrder, @Nonnull IntermediateStreamCall call, @Nonnull Dsl dsl);
+    
+    IntermediateCallHandler create(int callOrder, IntermediateStreamCall call, Dsl dsl);
 }

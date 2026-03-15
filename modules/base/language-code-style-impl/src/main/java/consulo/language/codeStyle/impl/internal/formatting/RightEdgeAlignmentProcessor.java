@@ -19,7 +19,6 @@ import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.CoreFormatterUtil;
 import consulo.language.codeStyle.internal.*;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * {@link BlockAlignmentProcessor} implementation for {@link Alignment} that
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
 public class RightEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor {
 
   @Override
-  protected IndentData calculateAlignmentAnchorIndent(@Nonnull Context context) {
+  protected IndentData calculateAlignmentAnchorIndent(Context context) {
     LeafBlockWrapper offsetResponsibleBlock = context.alignment.getOffsetRespBlockBefore(context.targetBlock);
     if (offsetResponsibleBlock == null) {
       return null;
@@ -56,7 +55,7 @@ public class RightEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor
   }
 
   @Override
-  protected boolean applyIndentToTheFirstBlockOnLine(@Nonnull IndentData alignmentAnchorIndent, @Nonnull Context context) {
+  protected boolean applyIndentToTheFirstBlockOnLine(IndentData alignmentAnchorIndent, Context context) {
     WhiteSpace whiteSpace = context.targetBlock.getWhiteSpace();
     int indentSpaces = alignmentAnchorIndent.getIndentSpaces();
     int spaces = alignmentAnchorIndent.getSpaces() - context.targetBlock.getSymbolsAtTheLastLine();
@@ -103,7 +102,7 @@ public class RightEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor
   }
 
   @Override
-  protected int getAlignmentIndentDiff(@Nonnull IndentData alignmentAnchorIndent, @Nonnull Context context) {
+  protected int getAlignmentIndentDiff(IndentData alignmentAnchorIndent, Context context) {
     IndentData indentBeforeBlock = context.targetBlock.getNumberOfSymbolsBeforeBlock();
     int numberOfSymbolsBeforeBlock = indentBeforeBlock.getTotalSpaces() + context.targetBlock.getSymbolsAtTheLastLine();
     return alignmentAnchorIndent.getTotalSpaces() - numberOfSymbolsBeforeBlock;

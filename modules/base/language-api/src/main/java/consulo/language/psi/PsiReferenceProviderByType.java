@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -34,10 +33,10 @@ public abstract class PsiReferenceProviderByType extends PsiReferenceProvider {
           ExtensionPointCacheKey.groupBy("PsiReferenceProviderByType", PsiReferenceProviderByType::getReferenceProviderType);
 
   @Nullable
-  public static PsiReferenceProviderByType forType(@Nonnull ReferenceProviderType type) {
+  public static PsiReferenceProviderByType forType(ReferenceProviderType type) {
     return Application.get().getExtensionPoint(PsiReferenceProviderByType.class).getOrBuildCache(KEY).get(type);
   }
 
-  @Nonnull
+  
   public abstract ReferenceProviderType getReferenceProviderType();
 }

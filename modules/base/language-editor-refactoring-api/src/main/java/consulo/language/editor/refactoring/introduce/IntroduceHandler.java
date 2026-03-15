@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.usage.UsageInfo;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -38,7 +37,7 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         if (editor == null || file == null) {
             return;
         }
@@ -83,16 +82,16 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         //not supported
     }
 
     @RequiredUIAccess
     private void invokeOnTarget(
-        @Nonnull Target target,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project
+        Target target,
+        PsiFile file,
+        Editor editor,
+        Project project
     ) {
         LocalizeValue message = checkSelectedTarget(target, file, editor, project);
         if (message.isNotEmpty()) {
@@ -107,9 +106,9 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
     private void invokeOnSelection(
         int start,
         int end,
-        @Nonnull Project project,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file
+        Project project,
+        Editor editor,
+        PsiFile file
     ) {
         Target target = findSelectionTarget(start, end, file, editor, project);
         if (target != null) {
@@ -123,10 +122,10 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     private void invokeScopeStep(
-        @Nonnull Target target,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project
+        Target target,
+        PsiFile file,
+        Editor editor,
+        Project project
     ) {
         List<Scope> scopes = collectTargetScopes(target, editor, file, project);
 
@@ -157,11 +156,11 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
 
     @RequiredUIAccess
     private void invokeFindUsageStep(
-        @Nonnull Target target,
-        @Nonnull Scope scope,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project
+        Target target,
+        Scope scope,
+        PsiFile file,
+        Editor editor,
+        Project project
     ) {
         List<UsageInfo> usages = collectUsages(target, scope);
         LocalizeValue message = checkUsages(usages);
@@ -173,12 +172,12 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
     }
 
     private void invokeDialogStep(
-        @Nonnull Target target,
-        @Nonnull Scope scope,
-        @Nonnull List<UsageInfo> usages,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project
+        Target target,
+        Scope scope,
+        List<UsageInfo> usages,
+        PsiFile file,
+        Editor editor,
+        Project project
     ) {
         Map<OccurrencesChooser.ReplaceChoice, List<Object>> occurrencesMap = getOccurrenceOptions(target, usages);
         OccurrencesChooser<Object> chooser = new OccurrencesChooser<>(editor) {
@@ -193,21 +192,21 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
 
     @RequiredUIAccess
     public void startInplaceIntroduce(
-        @Nonnull Target target,
-        @Nonnull Scope scope,
-        @Nonnull List<UsageInfo> usages,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project,
+        Target target,
+        Scope scope,
+        List<UsageInfo> usages,
+        PsiFile file,
+        Editor editor,
+        Project project,
         OccurrencesChooser.ReplaceChoice choice
     ) {
         AbstractInplaceIntroducer<?, ?> introducer = getIntroducer(target, scope, usages, choice, file, editor, project);
         introducer.startInplaceIntroduceTemplate();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private TextRange getOccurrenceRange(@Nonnull Object occurrence) {
+    private TextRange getOccurrenceRange(Object occurrence) {
         if (occurrence instanceof PsiElement element) {
             return element.getTextRange();
         }
@@ -223,9 +222,9 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
         }
     }
 
-    private @Nonnull Map<OccurrencesChooser.ReplaceChoice, List<Object>> getOccurrenceOptions(
-        @Nonnull Target target,
-        @Nonnull List<UsageInfo> usages
+    private Map<OccurrencesChooser.ReplaceChoice, List<Object>> getOccurrenceOptions(
+        Target target,
+        List<UsageInfo> usages
     ) {
         HashMap<OccurrencesChooser.ReplaceChoice, List<Object>> map = new LinkedHashMap<>();
 
@@ -237,34 +236,34 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
     }
 
 
-    protected abstract @Nonnull List<UsageInfo> collectUsages(
-        @Nonnull Target target,
-        @Nonnull Scope scope
+    protected abstract List<UsageInfo> collectUsages(
+        Target target,
+        Scope scope
     );
 
     /**
      * @return LocalizeValue.empty() if everything is ok, or a short message describing why it's impossible to perform the refactoring.
      * It will be shown in a balloon popup.
      */
-    protected abstract @Nonnull LocalizeValue checkUsages(@Nonnull List<UsageInfo> usages);
+    protected abstract LocalizeValue checkUsages(List<UsageInfo> usages);
 
     /**
      * @return find all possible scopes for the target to introduce
      */
-    protected abstract @Nonnull List<Scope> collectTargetScopes(
-        @Nonnull Target target,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull Project project
+    protected abstract List<Scope> collectTargetScopes(
+        Target target,
+        Editor editor,
+        PsiFile file,
+        Project project
     );
 
     /**
      * @return candidates for refactoring (e.g. all expressions which are under caret)
      */
-    protected abstract @Nonnull Pair<List<Target>, Integer> collectTargets(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project
+    protected abstract Pair<List<Target>, Integer> collectTargets(
+        PsiFile file,
+        Editor editor,
+        Project project
     );
 
     /**
@@ -275,23 +274,23 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
     protected abstract @Nullable Target findSelectionTarget(
         int start,
         int end,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project
+        PsiFile file,
+        Editor editor,
+        Project project
     );
 
     /**
      * @param target to check
      * @return LocalizeValue.empty() if everything is ok, or a short message describing why the refactoring cannot be performed
      */
-    protected abstract @Nonnull LocalizeValue checkSelectedTarget(
-        @Nonnull Target target,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project
+    protected abstract LocalizeValue checkSelectedTarget(
+        Target target,
+        PsiFile file,
+        Editor editor,
+        Project project
     );
 
-    protected abstract @Nonnull LocalizeValue getRefactoringName();
+    protected abstract LocalizeValue getRefactoringName();
 
     protected abstract @Nullable String getHelpID();
 
@@ -299,38 +298,38 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
      * If {@link IntroduceHandler#collectTargetScopes}() returns several possible scopes, the Choose Scope Popup will be shown.
      * It will have this title.
      */
-    protected abstract @Nonnull String getChooseScopeTitle();
+    protected abstract String getChooseScopeTitle();
 
     /**
      * If {@link IntroduceHandler#collectTargetScopes}() returns several possible scopes, the Choose Scope Popup will be shown.
      * It will use the provided renderer to paint scopes
      */
-    protected abstract @Nonnull PsiElementListCellRenderer<Scope> getScopeRenderer();
+    protected abstract PsiElementListCellRenderer<Scope> getScopeRenderer();
 
     /**
      * @return in-place introducer for the refactoring
      */
-    protected abstract @Nonnull AbstractInplaceIntroducer<?, ?> getIntroducer(
-        @Nonnull Target target,
-        @Nonnull Scope scope,
-        @Nonnull List<UsageInfo> usages,
-        @Nonnull OccurrencesChooser.ReplaceChoice replaceChoice,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Project project
+    protected abstract AbstractInplaceIntroducer<?, ?> getIntroducer(
+        Target target,
+        Scope scope,
+        List<UsageInfo> usages,
+        OccurrencesChooser.ReplaceChoice replaceChoice,
+        PsiFile file,
+        Editor editor,
+        Project project
     );
 
-    protected @Nonnull LocalizeValue getEmptyScopeErrorMessage() {
+    protected LocalizeValue getEmptyScopeErrorMessage() {
         return RefactoringLocalize.dialogMessageRefactoringNotAvailableInCurrentScope(getRefactoringName());
     }
 
     @RequiredUIAccess
-    protected void showErrorHint(@Nonnull LocalizeValue errorMessage, @Nonnull Editor editor, @Nonnull Project project) {
+    protected void showErrorHint(LocalizeValue errorMessage, Editor editor, Project project) {
         CommonRefactoringUtil.showErrorHint(project, editor, errorMessage, getRefactoringName(), getHelpID());
     }
 
     @RequiredUIAccess
-    private void cannotPerformRefactoring(@Nonnull Project project, @Nonnull Editor editor) {
+    private void cannotPerformRefactoring(Project project, Editor editor) {
         showErrorHint(RefactoringLocalize.cannotPerformRefactoring(), editor, project);
     }
 }

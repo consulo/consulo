@@ -17,7 +17,6 @@ package consulo.logging.sfl4j.spi;
 
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
 import java.io.Serializable;
@@ -185,8 +184,8 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
   }
 
 
-  @Nonnull
-  private static String format(@Nonnull String value, @Nonnull Object... params) {
+  
+  private static String format(String value, Object... params) {
     if (params.length > 0 && value.indexOf('{') >= 0) {
       return MessageFormat.format(value, params);
     }

@@ -30,7 +30,6 @@ import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,10 +53,10 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
         ((FavoritesRootNode) getRootElement()).rootsChanged();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public Object[] getChildElements(@Nonnull Object element) {
+    public Object[] getChildElements(Object element) {
         if (!(element instanceof AbstractTreeNode favTreeElement)) {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
@@ -114,7 +113,7 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
         return new AbstractTreeNode<>(myProject, IdeLocalize.favoritesEmptyScreen().get()) {
             @RequiredReadAction
             @Override
-            @Nonnull
+            
             public Collection<AbstractTreeNode> getChildren() {
                 return Collections.emptyList();
             }
@@ -127,7 +126,7 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
     }
 
     @Override
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         AbstractTreeNode parent = null;
         if (element == getRootElement()) {
             return null;
@@ -141,9 +140,9 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
         return parent;
     }
 
-    @Nonnull
+    
     @Override
-    public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         return new FavoritesTreeNodeDescriptor(myProject, parentDescriptor, (AbstractTreeNode) element);
     }
 }

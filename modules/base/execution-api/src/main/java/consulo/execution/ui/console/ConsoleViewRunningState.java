@@ -21,7 +21,6 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.encoding.EncodingManager;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -83,7 +82,7 @@ public class ConsoleViewRunningState extends ConsoleState {
   }
 
   @Override
-  @Nonnull
+  
   public ConsoleState dispose() {
     if (myProcessHandler != null) {
       myProcessHandler.removeProcessListener(myProcessListener);
@@ -97,7 +96,7 @@ public class ConsoleViewRunningState extends ConsoleState {
   }
 
   @Override
-  public boolean isCommandLine(@Nonnull String line) {
+  public boolean isCommandLine(String line) {
     return line.equals((myProcessHandler).getCommandLine());
   }
 
@@ -115,7 +114,7 @@ public class ConsoleViewRunningState extends ConsoleState {
     myUserInputWriter.flush();
   }
 
-  @Nonnull
+  
   @Override
   public ConsoleState attachTo(ConsoleView console, ProcessHandler processHandler) {
     return dispose().attachTo(console, processHandler);

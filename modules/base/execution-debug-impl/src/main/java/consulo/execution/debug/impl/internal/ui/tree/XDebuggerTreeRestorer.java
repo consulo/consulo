@@ -23,7 +23,6 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.ui.XNamedTreeNode;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -115,7 +114,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   // comparing only named nodes
-  private static boolean pathsEqual(@Nonnull TreePath path1, @Nonnull TreePath path2) {
+  private static boolean pathsEqual(TreePath path1, TreePath path2) {
     if (path1.getPathCount() != path2.getPathCount()) {
       return false;
     }
@@ -147,7 +146,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   @Override
-  public void nodeLoaded(@Nonnull RestorableStateNode node, String name) {
+  public void nodeLoaded(RestorableStateNode node, String name) {
     XDebuggerTreeState.NodeInfo parentInfo = myNode2ParentState.remove(node);
     if (parentInfo != null) {
       doRestoreNode(node, parentInfo.getChild(node));
@@ -166,7 +165,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   @Override
-  public void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, boolean last) {
+  public void childrenLoaded(XDebuggerTreeNode node, List<XValueContainerNode<?>> children, boolean last) {
     XDebuggerTreeState.NodeInfo nodeInfo = myNode2State.get(node);
     if (nodeInfo != null) {
       for (XDebuggerTreeNode child : children) {

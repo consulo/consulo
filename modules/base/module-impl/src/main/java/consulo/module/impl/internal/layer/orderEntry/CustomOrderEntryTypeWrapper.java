@@ -23,7 +23,6 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class CustomOrderEntryTypeWrapper<M extends CustomOrderEntryModel> implements OrderEntryType<CustomOrderEntryImpl<M>> {
   private CustomOrderEntryTypeProvider<M> myCustomOrderEntryTypeProvider;
 
-  public CustomOrderEntryTypeWrapper(@Nonnull CustomOrderEntryTypeProvider<M> customOrderEntryTypeProvider) {
+  public CustomOrderEntryTypeWrapper(CustomOrderEntryTypeProvider<M> customOrderEntryTypeProvider) {
     myCustomOrderEntryTypeProvider = customOrderEntryTypeProvider;
   }
 
@@ -40,22 +39,22 @@ public class CustomOrderEntryTypeWrapper<M extends CustomOrderEntryModel> implem
     return myCustomOrderEntryTypeProvider;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return myCustomOrderEntryTypeProvider.getId();
   }
 
-  @Nonnull
+  
   @Override
-  public CustomOrderEntryImpl<M> loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
+  public CustomOrderEntryImpl<M> loadOrderEntry(Element element, ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     M data = myCustomOrderEntryTypeProvider.loadOrderEntry(element, moduleRootLayer);
     data.bind(moduleRootLayer);
     return new CustomOrderEntryImpl<>(this, (ModuleRootLayerImpl) moduleRootLayer, data, false);
   }
 
   @Override
-  public void storeOrderEntry(@Nonnull Element element, @Nonnull CustomOrderEntryImpl<M> orderEntry) {
+  public void storeOrderEntry(Element element, CustomOrderEntryImpl<M> orderEntry) {
     M data = orderEntry.getModel();
 
     myCustomOrderEntryTypeProvider.storeOrderEntry(element, data);

@@ -29,7 +29,6 @@ import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -50,10 +49,10 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
         myProjectManager = projectManager;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public String getProjectTitle(@Nonnull Project project) {
+    public String getProjectTitle(Project project) {
         String basePath = project.getBasePath();
         if (basePath == null) {
             return project.getName();
@@ -74,10 +73,10 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public String getFileTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public String getFileTitle(Project project, VirtualFile file) {
         String fileTitle = VfsPresentationUtil.getPresentableNameForUI(project, file);
         if (!fileTitle.endsWith(file.getPresentableName()) || file.getParent() == null) {
             return fileTitle;

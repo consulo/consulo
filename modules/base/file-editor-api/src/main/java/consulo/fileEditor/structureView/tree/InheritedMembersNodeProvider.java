@@ -19,7 +19,6 @@ import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorBundle;
 import consulo.ui.ex.action.Shortcut;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -27,32 +26,32 @@ import jakarta.annotation.Nonnull;
 public abstract class InheritedMembersNodeProvider<T extends TreeElement> implements FileStructureNodeProvider<T>, ActionShortcutProvider {
   public static final String ID = "SHOW_INHERITED";
 
-  @Nonnull
+  
   @Override
   public String getCheckBoxText() {
     return FileEditorBundle.message("file.structure.toggle.show.inherited");
   }
 
-  @Nonnull
+  
   @Override
   public Shortcut[] getShortcut() {
     throw new UnsupportedOperationException("see getActionIdForShortcut()");
   }
 
-  @Nonnull
+  
   @Override
   public String getActionIdForShortcut() {
     return "FileStructurePopup";
   }
 
   @Override
-  @Nonnull
+  
   public ActionPresentation getPresentation() {
     return new ActionPresentationData(FileEditorBundle.message("action.structureview.show.inherited"), null, AllIcons.Hierarchy.Supertypes);
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return ID;
   }

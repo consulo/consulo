@@ -27,7 +27,6 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -57,7 +56,7 @@ public class InsertPathAction extends AnAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     String selectedText = myTextField.getSelectedText();
     VirtualFile virtualFile;
     if (selectedText != null ) {

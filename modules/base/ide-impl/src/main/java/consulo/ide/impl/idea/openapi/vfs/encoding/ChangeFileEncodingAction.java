@@ -37,8 +37,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -50,22 +49,22 @@ import java.nio.charset.Charset;
  */
 @ActionImpl(id = "ChangeFileEncodingAction")
 public class ChangeFileEncodingAction extends AnAction implements DumbAware {
-    @Nonnull
+    
     private final Application myApplication;
     private final boolean myAllowDirectories;
 
     @Inject
-    public ChangeFileEncodingAction(@Nonnull Application application) {
+    public ChangeFileEncodingAction(Application application) {
         this(application, false);
     }
 
-    public ChangeFileEncodingAction(@Nonnull Application application, boolean allowDirectories) {
+    public ChangeFileEncodingAction(Application application, boolean allowDirectories) {
         super(ActionLocalize.actionChangefileencodingactionText(), ActionLocalize.actionChangefileencodingactionDescription());
         myApplication = application;
         myAllowDirectories = allowDirectories;
     }
 
-    private boolean checkEnabled(@Nonnull VirtualFile virtualFile) {
+    private boolean checkEnabled(VirtualFile virtualFile) {
         if (myAllowDirectories && virtualFile.isDirectory()) {
             return true;
         }
@@ -76,7 +75,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VirtualFile myFile = e.getData(VirtualFile.KEY);
         boolean enabled = myFile != null && checkEnabled(myFile);
         e.getPresentation().setEnabled(enabled);
@@ -85,7 +84,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
 
         ListPopup popup = createPopup(dataContext);
@@ -95,7 +94,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     }
 
     @Nullable
-    public ListPopup createPopup(@Nonnull DataContext dataContext) {
+    public ListPopup createPopup(DataContext dataContext) {
         VirtualFile virtualFile = dataContext.getData(VirtualFile.KEY);
         if (virtualFile == null) {
             return null;
@@ -138,10 +137,10 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     ) {
         return new ChooseFileEncodingAction(myFile) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
             }
 
-            @Nonnull
+            
             @Override
             protected DefaultActionGroup createPopupActionGroup(JComponent button) {
                 return createCharsetsActionGroup(
@@ -154,7 +153,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
             @Override
             @RequiredUIAccess
-            protected void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset) {
+            protected void chosen(@Nullable VirtualFile virtualFile, Charset charset) {
                 ChangeFileEncodingAction.this.chosen(document, editor, virtualFile, bytes, charset);
             }
         }.createPopupActionGroup(null);
@@ -167,7 +166,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         Editor editor,
         @Nullable VirtualFile virtualFile,
         byte[] bytes,
-        @Nonnull Charset charset
+        Charset charset
     ) {
         if (virtualFile == null) {
             return false;
@@ -182,14 +181,14 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     public static boolean changeTo(
-        @Nonnull Application application,
+        Application application,
         @Nullable Project project,
-        @Nonnull Document document,
+        Document document,
         Editor editor,
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull Charset charset,
-        @Nonnull EncodingUtil.Magic8 isSafeToConvert,
-        @Nonnull EncodingUtil.Magic8 isSafeToReload
+        VirtualFile virtualFile,
+        Charset charset,
+        EncodingUtil.Magic8 isSafeToConvert,
+        EncodingUtil.Magic8 isSafeToReload
     ) {
         Charset oldCharset = virtualFile.getCharset();
         @RequiredUIAccess

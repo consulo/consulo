@@ -31,8 +31,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
@@ -54,7 +53,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   protected TestStatusLine myStatusLine;
   private JBSplitter mySplitter;
 
-  protected TestResultsPanel(@Nonnull JComponent console, AnAction[] consoleActions, TestConsoleProperties properties, @Nonnull String splitterProportionProperty, float splitterDefaultProportion) {
+  protected TestResultsPanel(JComponent console, AnAction[] consoleActions, TestConsoleProperties properties, String splitterProportionProperty, float splitterDefaultProportion) {
     super(new BorderLayout(0, 1));
     myConsole = console;
     myConsoleActions = consoleActions;
@@ -145,7 +144,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
 
   @Nullable
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     TestTreeView view = getTreeView();
     if (view != null) {
       return view.getData(dataId);
@@ -170,8 +169,8 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   public void dispose() {
   }
 
-  @Nonnull
-  protected static JBSplitter createSplitter(@Nonnull String proportionProperty, float defaultProportion, boolean splitVertically) {
+  
+  protected static JBSplitter createSplitter(String proportionProperty, float defaultProportion, boolean splitVertically) {
     JBSplitter splitter = new OnePixelSplitter(splitVertically, proportionProperty, defaultProportion);
     splitter.setHonorComponentsMinimumSize(true);
     return splitter;

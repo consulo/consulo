@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public class QuickListPanel {
     private JPanel myListPanel;
     private final QuickList[] myAllQuickLists;
 
-    public QuickListPanel(@Nonnull QuickList origin, @Nonnull QuickList[] allQuickLists) {
+    public QuickListPanel(QuickList origin, QuickList[] allQuickLists) {
         myAllQuickLists = allQuickLists;
 
         myActionsList = new JBList(new DefaultListModel());
@@ -159,10 +158,10 @@ public class QuickListPanel {
     }
 
     private static class MyListCellRenderer extends DefaultListCellRenderer {
-        @Nonnull
+        
         @Override
         public Component getListCellRendererComponent(
-            @Nonnull JList list,
+            JList list,
             Object value,
             int index,
             boolean isSelected,

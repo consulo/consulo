@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -15,13 +14,13 @@ public final class ValueResult<X> extends XResult<X> {
     }
 
     @Override
-    public boolean process(@Nonnull Predicate<? super X> processor) {
+    public boolean process(Predicate<? super X> processor) {
         return processor.test(getValue());
     }
 
     @Override
-    @Nonnull
-    public <R> Collection<? extends XResult<? extends R>> transform(@Nonnull XTransformation<? super X, ? extends R> transformation) {
+    
+    public <R> Collection<? extends XResult<? extends R>> transform(XTransformation<? super X, ? extends R> transformation) {
         return transformation.apply(getValue());
     }
 

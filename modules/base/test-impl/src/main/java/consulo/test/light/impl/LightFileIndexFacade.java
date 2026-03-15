@@ -23,7 +23,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -44,29 +43,29 @@ public class LightFileIndexFacade extends FileIndexFacade {
     super(project);
   }
 
-  @Nonnull
+  
   @Override
   public ModificationTracker getRootModificationTracker() {
     return ModificationTracker.NEVER_CHANGED;
   }
 
   @Override
-  public boolean isInContent(@Nonnull VirtualFile file) {
+  public boolean isInContent(VirtualFile file) {
     return true;
   }
 
   @Override
-  public boolean isInSource(@Nonnull VirtualFile file) {
+  public boolean isInSource(VirtualFile file) {
     return true;
   }
 
   @Override
-  public boolean isInSourceContent(@Nonnull VirtualFile file) {
+  public boolean isInSourceContent(VirtualFile file) {
     return true;
   }
 
   @Override
-  public boolean isInLibraryClasses(@Nonnull VirtualFile file) {
+  public boolean isInLibraryClasses(VirtualFile file) {
     for (VirtualFile libraryRoot : myLibraryRoots) {
       if (VirtualFileUtil.isAncestor(libraryRoot, file, false)) {
         return true;
@@ -76,27 +75,27 @@ public class LightFileIndexFacade extends FileIndexFacade {
   }
 
   @Override
-  public boolean isInLibrarySource(@Nonnull VirtualFile file) {
+  public boolean isInLibrarySource(VirtualFile file) {
     return false;
   }
 
   @Override
-  public boolean isExcludedFile(@Nonnull VirtualFile file) {
+  public boolean isExcludedFile(VirtualFile file) {
     return false;
   }
 
   @Override
-  public boolean isUnderIgnored(@Nonnull VirtualFile file) {
+  public boolean isUnderIgnored(VirtualFile file) {
     return false;
   }
 
   @Override
-  public Module getModuleForFile(@Nonnull VirtualFile file) {
+  public Module getModuleForFile(VirtualFile file) {
     return null;
   }
 
   @Override
-  public boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile child) {
+  public boolean isValidAncestor(VirtualFile baseDir, VirtualFile child) {
     return VirtualFileUtil.isAncestor(baseDir, child, false);
   }
 

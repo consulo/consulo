@@ -23,8 +23,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,13 +39,13 @@ public interface RunConfigurationEditor {
     void editAll();
 
     @RequiredUIAccess
-    void editOne(@Nonnull RunnerAndConfigurationSettings configuration);
+    void editOne(RunnerAndConfigurationSettings configuration);
 
     default boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, LocalizeValue title) {
         return editConfiguration(project, configuration, title, null);
     }
 
-    default boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull LocalizeValue title) {
+    default boolean editConfiguration(ExecutionEnvironment environment, LocalizeValue title) {
         return editConfiguration(
             environment.getProject(),
             environment.getRunnerAndConfigurationSettings(),
@@ -60,7 +59,7 @@ public interface RunConfigurationEditor {
     default boolean editConfiguration(
         Project project,
         RunnerAndConfigurationSettings configuration,
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable Executor executor
     ) {
         return editConfiguration(project, configuration, title.get(), executor);
@@ -74,7 +73,7 @@ public interface RunConfigurationEditor {
 
     @Deprecated
     @DeprecationInfo("Use consulo.execution.RunConfigurationEditor#editConfiguration(RunnerAndConfigurationSettings)")
-    default boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
+    default boolean editConfiguration(ExecutionEnvironment environment, String title) {
         return editConfiguration(
             environment.getProject(),
             environment.getRunnerAndConfigurationSettings(),

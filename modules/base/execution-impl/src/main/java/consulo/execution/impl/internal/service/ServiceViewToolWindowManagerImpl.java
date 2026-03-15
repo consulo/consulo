@@ -20,7 +20,6 @@ import consulo.execution.service.ServiceViewManager;
 import consulo.execution.service.ServiceViewToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -44,7 +43,7 @@ public class ServiceViewToolWindowManagerImpl implements ServiceViewToolWindowMa
 
   @RequiredUIAccess
   @Override
-  public void initToolWindow(@Nonnull ToolWindow toolWindow) {
+  public void initToolWindow(ToolWindow toolWindow) {
     if (myLoadedGroup.compareAndSet(false, true)) {
       myServiceViewManager.loadGroups();
     }
@@ -54,7 +53,7 @@ public class ServiceViewToolWindowManagerImpl implements ServiceViewToolWindowMa
 
   @RequiredUIAccess
   @Override
-  public void createToolWindowContent(@Nonnull ToolWindow toolWindow) {
+  public void createToolWindowContent(ToolWindow toolWindow) {
     myServiceViewManager.createToolWindowContent(toolWindow);
   }
 }

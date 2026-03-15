@@ -20,10 +20,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +54,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
+      public void append(StringBuilder builder, String indent) {
         builder.append("save(").append(key).append(")");
       }
     });
@@ -66,7 +64,7 @@ public class StandardPatterns {
     return instanceOf(Object.class);
   }
 
-  public static <T> ObjectPattern.Capture<T> object(@Nonnull T value) {
+  public static <T> ObjectPattern.Capture<T> object(T value) {
     return instanceOf((Class<T>)value.getClass()).equalTo(value);
   }
 
@@ -75,7 +73,7 @@ public class StandardPatterns {
     return new CollectionPattern<T>();
   }
 
-  public static ElementPattern get(@Nonnull @NonNls final String key) {
+  public static ElementPattern get(final String key) {
     return new ObjectPattern.Capture(new InitialPatternCondition(Object.class) {
       @Override
       public boolean accepts(@Nullable Object o, ProcessingContext context) {
@@ -83,7 +81,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
+      public void append(StringBuilder builder, String indent) {
         builder.append("get(").append(key).append(")");
       }
     });
@@ -104,7 +102,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
+      public void append(StringBuilder builder, String indent) {
         boolean first = true;
         for (ElementPattern pattern : patterns) {
           if (!first) {
@@ -133,7 +131,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
+      public void append(StringBuilder builder, String indent) {
         boolean first = true;
         for (ElementPattern pattern : patterns) {
           if (!first) {
@@ -159,7 +157,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
+      public void append(StringBuilder builder, String indent) {
         pattern.getCondition().append(builder.append("not("), indent + "  ");
         builder.append(")");
       }
@@ -206,7 +204,7 @@ public class StandardPatterns {
     });
   }
 
-  @Nonnull
+  
   public static <E> ElementPattern<E> alwaysFalse() {
     return FALSE_PATTERN;
   }

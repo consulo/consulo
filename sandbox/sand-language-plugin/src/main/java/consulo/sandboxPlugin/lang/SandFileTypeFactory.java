@@ -21,7 +21,6 @@ import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class SandFileTypeFactory extends FileTypeFactory {
   @Override
-  public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+  public void createFileTypes(FileTypeConsumer consumer) {
     for (LanguageVersion languageVersion : SandLanguage.INSTANCE.getVersions()) {
       BaseSandLanguageVersion sandLanguageVersion = (BaseSandLanguageVersion) languageVersion;
       consumer.consume(sandLanguageVersion.getFileType());

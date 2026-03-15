@@ -19,13 +19,12 @@ import consulo.util.lang.StringUtil;
 import consulo.language.pom.PomRenameableTarget;
 import consulo.language.psi.PsiNamedElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class RenameableDelegatePsiTarget extends DelegatePsiTarget implements PomRenameableTarget<RenameableDelegatePsiTarget>{
-  public RenameableDelegatePsiTarget(@Nonnull PsiNamedElement element) {
+  public RenameableDelegatePsiTarget(PsiNamedElement element) {
     super(element);
   }
 
@@ -35,13 +34,13 @@ public class RenameableDelegatePsiTarget extends DelegatePsiTarget implements Po
   }
 
   @Override
-  public RenameableDelegatePsiTarget setName(@Nonnull String newName) {
+  public RenameableDelegatePsiTarget setName(String newName) {
     ((PsiNamedElement)getNavigationElement()).setName(newName);
     return this;
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return StringUtil.notNullize(((PsiNamedElement)getNavigationElement()).getName());
   }

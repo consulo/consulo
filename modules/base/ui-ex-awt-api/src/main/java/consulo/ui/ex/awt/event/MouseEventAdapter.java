@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.event;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.MenuDragMouseEvent;
@@ -84,56 +83,56 @@ public class MouseEventAdapter<T> extends MouseAdapter implements MouseInputList
     return adapter instanceof MouseWheelListener ? (MouseWheelListener)adapter : null;
   }
 
-  @Nonnull
-  protected MouseEvent convert(@Nonnull MouseEvent event) {
+  
+  protected MouseEvent convert(MouseEvent event) {
     return event;
   }
 
-  @Nonnull
-  protected MouseWheelEvent convert(@Nonnull MouseWheelEvent event) {
+  
+  protected MouseWheelEvent convert(MouseWheelEvent event) {
     return event;
   }
 
-  @Nonnull
-  public static MouseEvent convert(@Nonnull MouseEvent event, Component source) {
+  
+  public static MouseEvent convert(MouseEvent event, Component source) {
     Point point = event.getLocationOnScreen();
     SwingUtilities.convertPointFromScreen(point, source);
     return convert(event, source, point.x, point.y);
   }
 
-  @Nonnull
-  public static MouseEvent convert(@Nonnull MouseEvent event, Component source, int x, int y) {
+  
+  public static MouseEvent convert(MouseEvent event, Component source, int x, int y) {
     return convert(event, source, event.getID(), event.getWhen(), event.getModifiers() | event.getModifiersEx(), x, y);
   }
 
-  @Nonnull
-  public static MouseEvent convert(@Nonnull MouseEvent event, Component source, int id, long when, int modifiers, int x, int y) {
+  
+  public static MouseEvent convert(MouseEvent event, Component source, int id, long when, int modifiers, int x, int y) {
     if (event instanceof MouseWheelEvent) return convert((MouseWheelEvent)event, source, id, when, modifiers, x, y);
     if (event instanceof MenuDragMouseEvent) return convert((MenuDragMouseEvent)event, source, id, when, modifiers, x, y);
     return new MouseEvent(source, id, when, modifiers, x, y, event.getClickCount(), event.isPopupTrigger(), event.getButton());
   }
 
-  @Nonnull
-  public static MouseWheelEvent convert(@Nonnull MouseWheelEvent event, Component source, int id, long when, int modifiers, int x, int y) {
+  
+  public static MouseWheelEvent convert(MouseWheelEvent event, Component source, int id, long when, int modifiers, int x, int y) {
     return new MouseWheelEvent(source, id, when, modifiers, x, y, event.getXOnScreen(), event.getYOnScreen(), event.getClickCount(), event.isPopupTrigger(), event.getScrollType(),
                                event.getScrollAmount(), event.getWheelRotation(), event.getPreciseWheelRotation());
   }
 
-  @Nonnull
+  
   public static MenuDragMouseEvent convert(MenuDragMouseEvent event, Component source, int id, long when, int modifiers, int x, int y) {
     return new MenuDragMouseEvent(source, id, when, modifiers, x, y, event.getClickCount(), event.isPopupTrigger(), event.getPath(), event.getMenuSelectionManager());
   }
 
-  private static boolean dispatch(Component component, @Nonnull MouseEvent event) {
+  private static boolean dispatch(Component component, MouseEvent event) {
     component.dispatchEvent(event);
     return event.isConsumed();
   }
 
-  public static void redispatch(@Nonnull MouseEvent event, Component source) {
+  public static void redispatch(MouseEvent event, Component source) {
     if (source != null && dispatch(source, convert(event, source))) event.consume();
   }
 
-  public static void redispatch(@Nonnull MouseEvent event, Component source, int x, int y) {
+  public static void redispatch(MouseEvent event, Component source, int x, int y) {
     if (source != null && dispatch(source, convert(event, source, x, y))) event.consume();
   }
 }

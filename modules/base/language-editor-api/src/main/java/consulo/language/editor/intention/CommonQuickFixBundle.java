@@ -7,7 +7,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.language.editor.localize.CommonQuickFixLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 @Deprecated
@@ -21,13 +20,13 @@ public final class CommonQuickFixBundle extends AbstractBundle {
     super(BUNDLE);
   }
 
-  @Nonnull
-  public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
+  
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return INSTANCE.getMessage(key, params);
   }
 
-  @Nonnull
-  public static Supplier<String> messagePointer(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
+  
+  public static Supplier<String> messagePointer(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return () -> INSTANCE.getMessage(key, params);
   }
 }

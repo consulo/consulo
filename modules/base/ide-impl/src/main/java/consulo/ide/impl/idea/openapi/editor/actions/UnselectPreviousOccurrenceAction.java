@@ -23,7 +23,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorAction;
 
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "UnselectPreviousOccurrence")
 public class UnselectPreviousOccurrenceAction extends EditorAction {

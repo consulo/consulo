@@ -22,7 +22,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id ="ViewToolButtons")
 public class ViewToolWindowButtonsAction extends ToggleAction implements DumbAware {
@@ -31,13 +30,13 @@ public class ViewToolWindowButtonsAction extends ToggleAction implements DumbAwa
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent event) {
+    public boolean isSelected(AnActionEvent event) {
         return !UISettings.getInstance().HIDE_TOOL_STRIPES;
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent event, boolean state) {
+    public void setSelected(AnActionEvent event, boolean state) {
         UISettings uiSettings = UISettings.getInstance();
         uiSettings.HIDE_TOOL_STRIPES = !state;
         uiSettings.fireUISettingsChanged();

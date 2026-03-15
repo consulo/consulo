@@ -20,8 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,13 +32,13 @@ import java.util.Collection;
  */
 @ExtensionImpl(order = "last")
 public class NoneTouchBarFacade implements TouchBarFacade {
-    @Nonnull
+    
     @Override
     public String getId() {
         return "none";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("<none>");
@@ -61,28 +60,28 @@ public class NoneTouchBarFacade implements TouchBarFacade {
     }
 
     @Override
-    public void setButtonActions(@Nonnull JComponent component, Collection<? extends JButton> buttons, Collection<? extends JButton> principal, JButton defaultButton, @Nullable ActionGroup extraActions) {
+    public void setButtonActions(JComponent component, Collection<? extends JButton> buttons, Collection<? extends JButton> principal, JButton defaultButton, @Nullable ActionGroup extraActions) {
 
     }
 
     @Nullable
     @Override
-    public Disposable showWindowActions(@Nonnull Component contentPane) {
+    public Disposable showWindowActions(Component contentPane) {
         return null;
     }
 
     @Override
-    public void onUpdateEditorHeader(@Nonnull Object editor, JComponent header) {
+    public void onUpdateEditorHeader(Object editor, JComponent header) {
 
     }
 
     @Override
-    public void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent) {
+    public void showPopupItems(JBPopup popup, JComponent popupComponent) {
 
     }
 
     @Override
-    public void setActions(@Nonnull JComponent component, @Nullable ActionGroup group) {
+    public void setActions(JComponent component, @Nullable ActionGroup group) {
 
     }
 }

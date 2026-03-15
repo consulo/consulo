@@ -3,8 +3,7 @@ package consulo.repository.ui;
 
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +55,7 @@ public abstract class PackageManagementService {
    * zero, if the versions are equals,
    * a positive integer, if the first version is newer than the second.
    */
-  public int compareVersions(@Nonnull String version1, @Nonnull String version2) {
+  public int compareVersions(String version1, String version2) {
     return PackageVersionComparator.VERSION_COMPARATOR.compare(version1, version2);
   }
 
@@ -67,7 +66,7 @@ public abstract class PackageManagementService {
    * @return the list of all packages in all repositories
    * @throws IOException
    */
-  @Nonnull
+  
   public abstract List<RepoPackage> getAllPackages() throws IOException;
 
   /**
@@ -77,7 +76,7 @@ public abstract class PackageManagementService {
    * @return the list of all packages in all repositories
    * @throws IOException
    */
-  @Nonnull
+  
   public List<RepoPackage> reloadAllPackages() throws IOException {
     return getAllPackages();
   }
@@ -87,7 +86,7 @@ public abstract class PackageManagementService {
    *
    * @return the list of all packages or an empty list.
    */
-  @Nonnull
+  
   public List<RepoPackage> getAllPackagesCached() {
     return List.of();
   }
@@ -126,7 +125,7 @@ public abstract class PackageManagementService {
    *
    * @return the collection of currently installed packages.
    */
-  @Nonnull
+  
   public List<? extends InstalledPackage> getInstalledPackagesList() throws IOException {
     return new ArrayList<>(getInstalledPackages());
   }
@@ -154,10 +153,10 @@ public abstract class PackageManagementService {
 
   public abstract void uninstallPackages(List<InstalledPackage> installedPackages, Listener listener);
 
-  @Nonnull
+  
   public abstract AsyncResult<List<String>> fetchPackageVersions(String packageName);
 
-  @Nonnull
+  
   public abstract AsyncResult<String> fetchPackageDetails(String packageName);
 
   /**
@@ -189,7 +188,7 @@ public abstract class PackageManagementService {
   }
 
   public static class ErrorDescription {
-    @Nonnull
+    
     private final String myMessage;
     @Nullable
     private final String myCommand;
@@ -203,7 +202,7 @@ public abstract class PackageManagementService {
       return message != null ? new ErrorDescription(message, null, null, null) : null;
     }
 
-    public ErrorDescription(@Nonnull String message, @Nullable String command, @Nullable String output, @Nullable String solution) {
+    public ErrorDescription(String message, @Nullable String command, @Nullable String output, @Nullable String solution) {
       myMessage = message;
       myCommand = command;
       myOutput = output;
@@ -213,7 +212,7 @@ public abstract class PackageManagementService {
     /**
      * The reason message that explains why the error has occurred.
      */
-    @Nonnull
+    
     public String getMessage() {
       return myMessage;
     }

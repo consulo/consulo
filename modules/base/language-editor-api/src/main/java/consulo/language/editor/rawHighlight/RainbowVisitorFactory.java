@@ -15,14 +15,13 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2023-03-25
  */
 public interface RainbowVisitorFactory extends HighlightVisitorFactory {
-    @Nonnull
+    
     @Override
     RainbowVisitor createVisitor();
 }

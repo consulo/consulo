@@ -26,8 +26,7 @@ import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +48,7 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
     }
 
     @RequiredUIAccess
-    public JComponent getPanel(@Nonnull Disposable uiDisposable) {
+    public JComponent getPanel(Disposable uiDisposable) {
         if (myPanel.getComponentCount() == 0) {
             JComponent component = myTab.createComponent(uiDisposable);
             myPanel.add(component, BorderLayout.CENTER);
@@ -97,7 +96,7 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
         updatePreview();
     }
 
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         return myTab.getDisplayName();
     }
@@ -130,7 +129,7 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
     }
 
     @Override
-    public void tabChanged(@Nonnull TabbedLanguageCodeStylePanel source, @Nonnull String tabTitle) {
+    public void tabChanged(TabbedLanguageCodeStylePanel source, String tabTitle) {
         CodeStyleAbstractPanel panel = getSelectedPanel();
         if (panel instanceof TabbedLanguageCodeStylePanel tabbedLanguageCodeStylePanel && panel != source) {
             tabbedLanguageCodeStylePanel.changeTab(tabTitle);

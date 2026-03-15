@@ -22,7 +22,6 @@ import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -33,25 +32,25 @@ public abstract class GenericCompiler<Key, SourceState, OutputState> implements 
     private final int myVersion;
     private final CompileOrderPlace myOrderPlace;
 
-    protected GenericCompiler(@Nonnull String id, int version, @Nonnull CompileOrderPlace orderPlace) {
+    protected GenericCompiler(String id, int version, CompileOrderPlace orderPlace) {
         myId = id;
         myVersion = version;
         myOrderPlace = orderPlace;
     }
 
-    @Nonnull
+    
     public abstract KeyDescriptor<Key> getItemKeyDescriptor();
 
-    @Nonnull
+    
     public abstract DataExternalizer<SourceState> getSourceStateExternalizer();
 
-    @Nonnull
+    
     public abstract DataExternalizer<OutputState> getOutputStateExternalizer();
 
-    @Nonnull
+    
     public abstract GenericCompilerInstance<?, ? extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState>
     createInstance(
-        @Nonnull CompileContext context
+        CompileContext context
     );
 
     public final String getId() {

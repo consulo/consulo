@@ -19,8 +19,7 @@ import consulo.ui.ex.awt.IntegerField;
 import consulo.ui.ex.awt.valueEditor.ValueEditor;
 import consulo.language.codeStyle.setting.IndentOptionsEditor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.BiConsumer;
@@ -49,7 +48,7 @@ public class ContinuationOption implements CodeStyleConstraints {
         myDefaultValue = defaultValue;
     }
 
-    public void addToEditor(@Nonnull IndentOptionsEditor editor) {
+    public void addToEditor(IndentOptionsEditor editor) {
         if (mySupported) {
             myLabel = new JLabel(myName);
             myField = editor.createIndentTextField(
@@ -74,24 +73,24 @@ public class ContinuationOption implements CodeStyleConstraints {
         }
     }
 
-    public boolean isModified(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
+    public boolean isModified(CommonCodeStyleSettings.IndentOptions options) {
         return mySupported && myField != null && !myField.getValue().equals(myGetter.apply(options));
     }
 
-    public void reset(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
+    public void reset(CommonCodeStyleSettings.IndentOptions options) {
         if (mySupported && myField != null) {
             myField.setValue(myGetter.apply(options));
             setDefaultValueToDisplay(options.CONTINUATION_INDENT_SIZE);
         }
     }
 
-    public void apply(@Nonnull CommonCodeStyleSettings.IndentOptions options) {
+    public void apply(CommonCodeStyleSettings.IndentOptions options) {
         if (mySupported && myField != null) {
             mySetter.accept(options, myField.getValue());
         }
     }
 
-    public void addListener(@Nonnull ValueEditor.Listener<Integer> listener) {
+    public void addListener(ValueEditor.Listener<Integer> listener) {
         assert myField != null;
         myField.getValueEditor().addListener(listener);
     }

@@ -16,8 +16,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -37,7 +36,7 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         RelativePoint relativePoint = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
         myAction.actionPerformed(new AnActionEvent(
             relativePoint.toMouseEvent(),
@@ -50,22 +49,22 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         return myTextValue.isNotEmpty() || isAvailable(editor.getDataContext());
     }
 
-    @Nonnull
+    
     @Override
     public Priority getPriority() {
         return myAction instanceof PriorityAction priorityAction ? priorityAction.getPriority() : Priority.NORMAL;
     }
 
-    @Nonnull
-    static AnActionEvent createActionEvent(@Nonnull DataContext dataContext) {
+    
+    static AnActionEvent createActionEvent(DataContext dataContext) {
         return AnActionEvent.createFromDataContext(ActionPlaces.INTENTION_MENU, null, dataContext);
     }
 
-    public boolean isAvailable(@Nonnull DataContext dataContext) {
+    public boolean isAvailable(DataContext dataContext) {
         if (myTextValue == null) {
             AnActionEvent event = createActionEvent(dataContext);
             myAction.update(event);
@@ -81,13 +80,13 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getText() {
         return myTextValue;
     }
 
     @Override
-    public int compareTo(@Nonnull IntentionAction o) {
+    public int compareTo(IntentionAction o) {
         if (o instanceof GutterIntentionAction gutterIntentionAction) {
             return myOrder - gutterIntentionAction.myOrder;
         }

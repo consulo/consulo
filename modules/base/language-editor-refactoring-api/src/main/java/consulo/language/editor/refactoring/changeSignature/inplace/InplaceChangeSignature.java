@@ -53,8 +53,7 @@ import consulo.undoRedo.internal.FinishMarkAction;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +77,7 @@ public class InplaceChangeSignature implements DocumentListener {
     private EditorEx myPreview;
 
     @RequiredUIAccess
-    public InplaceChangeSignature(Project project, Editor editor, @Nonnull PsiElement element) {
+    public InplaceChangeSignature(Project project, Editor editor, PsiElement element) {
         myDocumentManager = PsiDocumentManager.getInstance(project);
         myProject = project;
         try {
@@ -130,7 +129,7 @@ public class InplaceChangeSignature implements DocumentListener {
     }
 
     @Nullable
-    public static InplaceChangeSignature getCurrentRefactoring(@Nonnull Editor editor) {
+    public static InplaceChangeSignature getCurrentRefactoring(Editor editor) {
         return editor.getUserData(INPLACE_CHANGE_SIGNATURE);
     }
 
@@ -146,7 +145,7 @@ public class InplaceChangeSignature implements DocumentListener {
         return myInitialSignature;
     }
 
-    @Nonnull
+    
     public ChangeInfo getStableChange() {
         return myStableChange;
     }

@@ -19,15 +19,14 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class UsagesCollector {
-  @Nonnull
+  
   public abstract Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException;
 
-  @Nonnull
+  
   public abstract String getGroupId();
 }

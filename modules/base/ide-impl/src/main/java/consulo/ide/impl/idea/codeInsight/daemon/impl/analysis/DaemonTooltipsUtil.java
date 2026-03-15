@@ -5,10 +5,9 @@ import consulo.language.editor.localize.DaemonLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 public class DaemonTooltipsUtil {
-    @Nonnull
+    
     public static String getWrappedTooltip(String message, String shortName, String shortcutText, boolean showToolDescription) {
         String link = "";
         if (showToolDescription) {

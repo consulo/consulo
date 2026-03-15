@@ -15,16 +15,15 @@
  */
 package consulo.execution.debug.breakpoint;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2024-12-10
  */
 public interface XDependentBreakpointManager {
-    void setMasterBreakpoint(@Nonnull XBreakpoint<?> slave, @Nonnull XBreakpoint<?> master, boolean leaveEnabled);
+    void setMasterBreakpoint(XBreakpoint<?> slave, XBreakpoint<?> master, boolean leaveEnabled);
 
     @Nullable
-    XBreakpoint<?> getMasterBreakpoint(@Nonnull XBreakpoint<?> slave);
+    XBreakpoint<?> getMasterBreakpoint(XBreakpoint<?> slave);
 }

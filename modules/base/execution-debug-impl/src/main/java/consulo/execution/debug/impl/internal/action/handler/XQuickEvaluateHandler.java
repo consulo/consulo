@@ -35,8 +35,7 @@ import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
@@ -55,13 +54,13 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
     }
 
     @Override
-    public boolean isEnabled(@Nonnull Project project) {
+    public boolean isEnabled(Project project) {
         XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
         return session != null && session.getDebugProcess().getEvaluator() != null;
     }
 
     @Override
-    public AbstractValueHint createValueHint(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final Point point, final ValueHintType type) {
+    public AbstractValueHint createValueHint(final Project project, final Editor editor, final Point point, final ValueHintType type) {
         final XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
         if (session == null) {
             return null;
@@ -113,7 +112,7 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
     }
 
     @Override
-    public boolean canShowHint(@Nonnull Project project) {
+    public boolean canShowHint(Project project) {
         return isEnabled(project);
     }
 

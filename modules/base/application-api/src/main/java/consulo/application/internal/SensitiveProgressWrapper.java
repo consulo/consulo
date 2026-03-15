@@ -16,13 +16,12 @@
 package consulo.application.internal;
 
 import consulo.application.progress.ProgressIndicator;
-import jakarta.annotation.Nonnull;
 
 /**
  * Progress indicator wrapper which reacts to its own cancellation in addition to the cancellation of its wrappee.
  */
 public class SensitiveProgressWrapper extends ProgressWrapper {
-  public SensitiveProgressWrapper(@Nonnull ProgressIndicator indicator) {
+  public SensitiveProgressWrapper(ProgressIndicator indicator) {
     super(indicator, true);
   }
 }

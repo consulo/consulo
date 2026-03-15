@@ -15,11 +15,10 @@
  */
 package consulo.project.ui.wm.dock;
 
-import jakarta.annotation.Nonnull;
 import java.awt.event.MouseEvent;
 
 public interface DragSession {
-  @Nonnull
+  
   DockContainer.ContentResponse getResponse(MouseEvent e);
 
   void process(MouseEvent e);

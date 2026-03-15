@@ -35,8 +35,7 @@ import consulo.undoRedo.internal.FinishMarkAction;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -272,7 +271,7 @@ class UndoableGroup {
     return myActions;
   }
 
-  @Nonnull
+  
   public Collection<DocumentReference> getAffectedDocuments() {
     Set<DocumentReference> result = new HashSet<>();
     for (UndoableAction action : myActions) {

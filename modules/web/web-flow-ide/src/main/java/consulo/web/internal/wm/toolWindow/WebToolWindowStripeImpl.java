@@ -21,8 +21,7 @@ import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -49,7 +48,7 @@ public class WebToolWindowStripeImpl extends VaadinComponentDelegate<WebToolWind
     vaadin.addClassName(getClassNamePrefix() + "-" + constraint.name().toLowerCase(Locale.ROOT));
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();

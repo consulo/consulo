@@ -18,13 +18,12 @@ package consulo.find;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 public class FindUsagesUtil {
   private FindUsagesUtil() {
   }
 
-  public static boolean isSearchForTextOccurrencesAvailable(@Nonnull PsiElement element, boolean isSingleFile, FindUsagesHandler handler) {
+  public static boolean isSearchForTextOccurrencesAvailable(PsiElement element, boolean isSingleFile, FindUsagesHandler handler) {
     return !isSingleFile && handler != null && handler.isSearchForTextOccurrencesAvailable(element, isSingleFile);
   }
 }

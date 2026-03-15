@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -42,7 +41,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
         LOG.assertTrue(scopeName != null);
@@ -53,7 +52,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(false);
         Project project = e.getData(Project.KEY);

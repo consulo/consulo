@@ -18,8 +18,7 @@ package consulo.application.util;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,7 +38,7 @@ public class ProgressStreamUtil {
    * @throws IOException              if IO error occur
    * @throws ProcessCanceledException if process was canceled.
    */
-  public static int copyStreamContent(@Nullable ProgressIndicator indicator, @Nonnull InputStream inputStream, @Nonnull OutputStream outputStream, int expectedContentSize)
+  public static int copyStreamContent(@Nullable ProgressIndicator indicator, InputStream inputStream, OutputStream outputStream, int expectedContentSize)
           throws IOException, ProcessCanceledException {
     return copyStreamContent(indicator, null, inputStream, outputStream, expectedContentSize);
   }
@@ -56,8 +55,8 @@ public class ProgressStreamUtil {
    */
   public static int copyStreamContent(@Nullable ProgressIndicator indicator,
                                       @Nullable MessageDigest digest,
-                                      @Nonnull InputStream inputStream,
-                                      @Nonnull OutputStream outputStream,
+                                      InputStream inputStream,
+                                      OutputStream outputStream,
                                       int expectedContentSize) throws IOException, ProcessCanceledException {
     if (indicator != null) {
       indicator.checkCanceled();

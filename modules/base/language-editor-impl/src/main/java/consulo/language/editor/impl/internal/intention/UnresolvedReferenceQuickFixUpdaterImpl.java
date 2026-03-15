@@ -24,7 +24,6 @@ import consulo.language.psi.PsiReference;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -48,7 +47,7 @@ public class UnresolvedReferenceQuickFixUpdaterImpl implements UnresolvedReferen
 
   @Override
   @SuppressWarnings("unchecked")
-  public void registerQuickFixesLater(@Nonnull PsiReference ref, @Nonnull HighlightInfo.Builder info) {
+  public void registerQuickFixesLater(PsiReference ref, HighlightInfo.Builder info) {
     boolean dumb = myDumbService.isDumb();
     Class<? extends PsiReference> referenceClass = ref.getClass();
     QuickFixActionRegistrar registrar = QuickFixActionRegistrar.create(info);

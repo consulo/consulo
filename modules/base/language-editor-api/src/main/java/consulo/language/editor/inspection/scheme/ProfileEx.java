@@ -24,7 +24,6 @@ import consulo.util.xml.serializer.annotation.Transient;
 import consulo.logging.Logger;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -39,7 +38,7 @@ public abstract class ProfileEx implements Profile {
 
   private final SmartSerializer mySerializer;
 
-  @Nonnull
+  
   protected String myName;
 
   @SuppressWarnings("unused")
@@ -51,17 +50,17 @@ public abstract class ProfileEx implements Profile {
 
   private boolean myIsProjectLevel;
 
-  public ProfileEx(@Nonnull String name) {
+  public ProfileEx(String name) {
     this(name, SmartSerializer.skipEmptySerializer());
   }
 
-  protected ProfileEx(@Nonnull String name, @Nonnull SmartSerializer serializer) {
+  protected ProfileEx(String name, SmartSerializer serializer) {
     myName = name;
     mySerializer = serializer;
   }
 
   @Override
-  @Nonnull
+  
   // ugly name to preserve compatibility
   @OptionTag("myName")
   public String getName() {
@@ -69,7 +68,7 @@ public abstract class ProfileEx implements Profile {
   }
 
   @Override
-  public void copyFrom(@Nonnull Profile profile) {
+  public void copyFrom(Profile profile) {
     try {
       Element config = new Element("config");
       profile.writeExternal(config);
@@ -106,19 +105,19 @@ public abstract class ProfileEx implements Profile {
   }
 
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
   @Override
-  @Nonnull
+  
   @Transient
   public ProfileManager getProfileManager() {
     return myProfileManager;
   }
 
   @Override
-  public void setProfileManager(@Nonnull ProfileManager profileManager) {
+  public void setProfileManager(ProfileManager profileManager) {
     myProfileManager = profileManager;
   }
 
@@ -127,7 +126,7 @@ public abstract class ProfileEx implements Profile {
     mySerializer.readExternal(this, element);
   }
 
-  public void serializeInto(@Nonnull Element element, boolean preserveCompatibility) {
+  public void serializeInto(Element element, boolean preserveCompatibility) {
     mySerializer.writeExternal(this, element, preserveCompatibility);
   }
 
@@ -148,10 +147,10 @@ public abstract class ProfileEx implements Profile {
   }
 
   @Override
-  public int compareTo(@Nonnull Profile o) {
+  public int compareTo(Profile o) {
     return getName().compareToIgnoreCase(o.getName());
   }
 
-  public void convert(@Nonnull Element element, @Nonnull Project project) {
+  public void convert(Element element, Project project) {
   }
 }

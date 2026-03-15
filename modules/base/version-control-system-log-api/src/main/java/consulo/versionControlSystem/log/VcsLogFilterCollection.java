@@ -15,8 +15,7 @@
  */
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -53,6 +52,6 @@ public interface VcsLogFilterCollection {
    */
   boolean isEmpty();
 
-  @Nonnull
+  
   List<VcsLogDetailsFilter> getDetailsFilters();
 }

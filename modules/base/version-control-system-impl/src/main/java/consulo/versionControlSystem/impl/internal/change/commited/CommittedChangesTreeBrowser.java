@@ -25,9 +25,7 @@ import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.change.commited.*;
 import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -63,7 +61,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
   private final List<CommittedChangeListDecorator> myDecorators;
 
-  @NonNls public static final String ourHelpId = "reference.changesToolWindow.incoming";
+  public static final String ourHelpId = "reference.changesToolWindow.incoming";
 
   private WiseSplitter myInnerSplitter;
   private final MessageBusConnection myConnection;
@@ -197,7 +195,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     myDetailsView.dispose();
   }
 
-  public void setItems(@Nonnull List<CommittedChangeList> items, CommittedChangesBrowserUseCase useCase) {
+  public void setItems(List<CommittedChangeList> items, CommittedChangesBrowserUseCase useCase) {
     myDetailsView.setUseCase(useCase);
     myChangeLists = items;
     myFilteringStrategy.setFilterBase(items);

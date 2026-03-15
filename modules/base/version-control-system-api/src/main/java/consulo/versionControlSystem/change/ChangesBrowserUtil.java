@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.change;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +24,8 @@ public class ChangesBrowserUtil {
      * Zips changes by removing duplicates (changes in the same file) and compounding the diff.
      * <b>NB:</b> changes must be given in the time-ascending order, i.e the first change in the list should be the oldest one.
      */
-    @Nonnull
-    public static List<Change> zipChanges(@Nonnull List<Change> changes) {
+    
+    public static List<Change> zipChanges(List<Change> changes) {
         List<Change> result = new ArrayList<>();
         for (Change change : changes) {
             addOrReplaceChange(result, change);

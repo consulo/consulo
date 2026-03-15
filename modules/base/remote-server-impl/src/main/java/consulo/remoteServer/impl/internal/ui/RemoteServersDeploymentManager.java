@@ -25,8 +25,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,7 +51,7 @@ public final class RemoteServersDeploymentManager {
     private final Map<RemoteServer<?>, MessagePanel> myServerToContent = new HashMap<>();
 
     @Inject
-    public RemoteServersDeploymentManager(@Nonnull Project project) {
+    public RemoteServersDeploymentManager(Project project) {
         myProject = project;
         myNodeManipulator = new ServersTreeNodeManipulator(project);
         initListeners();
@@ -66,7 +65,7 @@ public final class RemoteServersDeploymentManager {
             private final Set<ServerConnection<?>> myConnectionsToExpand = new HashSet<>();
 
             @Override
-            public void onConnectionCreated(@Nonnull ServerConnection<?> connection) {
+            public void onConnectionCreated(ServerConnection<?> connection) {
                 RemoteServersServiceViewContributor contributor = findContributor(connection.getServer());
                 if (contributor != null) {
                     myProject.getMessageBus().syncPublisher(ServiceEventListener.TOPIC)
@@ -75,7 +74,7 @@ public final class RemoteServersDeploymentManager {
             }
 
             @Override
-            public void onConnectionStatusChanged(@Nonnull ServerConnection<?> connection) {
+            public void onConnectionStatusChanged(ServerConnection<?> connection) {
                 RemoteServer<?> server = connection.getServer();
                 RemoteServersServiceViewContributor contributor = findContributor(server);
                 if (contributor != null) {
@@ -96,7 +95,7 @@ public final class RemoteServersDeploymentManager {
             }
 
             @Override
-            public void onDeploymentsChanged(@Nonnull ServerConnection<?> connection) {
+            public void onDeploymentsChanged(ServerConnection<?> connection) {
                 RemoteServer<?> server = connection.getServer();
                 RemoteServersServiceViewContributor contributor = findContributor(server);
                 if (contributor != null) {
@@ -119,7 +118,7 @@ public final class RemoteServersDeploymentManager {
 
         myProject.getMessageBus().connect().subscribe(RemoteServerListener.class, new RemoteServerListener() {
             @Override
-            public void serverAdded(@Nonnull RemoteServer<?> server) {
+            public void serverAdded(RemoteServer<?> server) {
                 RemoteServersServiceViewContributor contributor = findContributor(server);
                 if (contributor != null) {
                     myServerToContent.put(server, createMessagePanel());
@@ -129,7 +128,7 @@ public final class RemoteServersDeploymentManager {
             }
 
             @Override
-            public void serverRemoved(@Nonnull RemoteServer<?> server) {
+            public void serverRemoved(RemoteServer<?> server) {
                 RemoteServersServiceViewContributor contributor = findContributor(server);
                 if (contributor != null) {
                     myProject.getMessageBus().syncPublisher(ServiceEventListener.TOPIC)
@@ -140,7 +139,7 @@ public final class RemoteServersDeploymentManager {
         });
     }
 
-    public void registerContributor(@Nonnull RemoteServersServiceViewContributor contributor) {
+    public void registerContributor(RemoteServersServiceViewContributor contributor) {
         if (myContributors.put(contributor, Boolean.TRUE) == null) {
             AppUIExecutor.onUiThread().expireWith(myProject).submit(() -> {
                 for (RemoteServer<?> server : RemoteServersManager.getInstance().getServers()) {
@@ -152,11 +151,11 @@ public final class RemoteServersDeploymentManager {
         }
     }
 
-    public @Nonnull ServerTreeNodeExpander getNodeExpander() {
+    public ServerTreeNodeExpander getNodeExpander() {
         return myNodeManipulator;
     }
 
-    public @Nonnull ServersTreeNodeSelector getNodeSelector() {
+    public ServersTreeNodeSelector getNodeSelector() {
         return myNodeManipulator;
     }
 
@@ -187,7 +186,7 @@ public final class RemoteServersDeploymentManager {
         }
     }
 
-    public @Nullable RemoteServersServiceViewContributor findContributor(@Nonnull RemoteServer<?> server) {
+    public @Nullable RemoteServersServiceViewContributor findContributor(RemoteServer<?> server) {
         for (RemoteServersServiceViewContributor contributor : myContributors.keySet()) {
             if (contributor.accept(server)) {
                 return contributor;
@@ -196,7 +195,7 @@ public final class RemoteServersDeploymentManager {
         return null;
     }
 
-    private static void pollDeployments(@Nonnull ServerConnection<?> connection) {
+    private static void pollDeployments(ServerConnection<?> connection) {
         connection.computeDeployments(() -> new Alarm().addRequest(() -> {
             if (connection == ServerConnectionManager.getInstance().getConnection(connection.getServer())) {
                 pollDeployments(connection);
@@ -205,7 +204,7 @@ public final class RemoteServersDeploymentManager {
     }
 
     @Nullable
-    public static ServersTreeNodeSelector getNodeSelector(@Nonnull AnActionEvent e) {
+    public static ServersTreeNodeSelector getNodeSelector(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return null;
@@ -219,9 +218,9 @@ public final class RemoteServersDeploymentManager {
     }
 
     public interface MessagePanel {
-        void setEmptyText(@Nonnull String text);
+        void setEmptyText(String text);
 
-        @Nonnull
+        
         JComponent getComponent();
     }
 
@@ -233,7 +232,7 @@ public final class RemoteServersDeploymentManager {
         }
 
         @Override
-        public void select(@Nonnull ServerConnection<?> connection) {
+        public void select(ServerConnection<?> connection) {
             RemoteServersServiceViewContributor contributor = getInstance(myProject).findContributor(connection.getServer());
             if (contributor == null) {
                 return;
@@ -244,7 +243,7 @@ public final class RemoteServersDeploymentManager {
         }
 
         @Override
-        public void select(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName) {
+        public void select(ServerConnection<?> connection, String deploymentName) {
             RemoteServersServiceViewContributor contributor = getInstance(myProject).findContributor(connection.getServer());
             if (contributor == null) {
                 return;
@@ -257,7 +256,7 @@ public final class RemoteServersDeploymentManager {
         }
 
         @Override
-        public void select(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName, @Nonnull String logName) {
+        public void select(ServerConnection<?> connection, String deploymentName, String logName) {
             RemoteServersServiceViewContributor contributor = getInstance(myProject).findContributor(connection.getServer());
             if (contributor == null) {
                 return;
@@ -270,7 +269,7 @@ public final class RemoteServersDeploymentManager {
         }
 
         @Override
-        public void expand(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName) {
+        public void expand(ServerConnection<?> connection, String deploymentName) {
             RemoteServersServiceViewContributor contributor = getInstance(myProject).findContributor(connection.getServer());
             if (contributor == null) {
                 return;

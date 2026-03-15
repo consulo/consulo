@@ -20,7 +20,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsInitObject;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
 
     public abstract ContentManager getContentManager();
 
-    @Nonnull
+    
     public abstract VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option);
 
     public abstract List<VcsShowOptionsSettingImpl> getAllOptions();
@@ -46,13 +45,13 @@ public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
 
     public abstract void addInitializationRequest(VcsInitObject vcsInitObject, Runnable runnable);
 
-    public boolean isBackgroundTaskRunning(@Nonnull Object... keys) {
+    public boolean isBackgroundTaskRunning(Object... keys) {
         return false;
     }
 
-    public void startBackgroundTask(@Nonnull Object... keys) {
+    public void startBackgroundTask(Object... keys) {
     }
 
-    public void stopBackgroundTask(@Nonnull Object... keys) {
+    public void stopBackgroundTask(Object... keys) {
     }
 }

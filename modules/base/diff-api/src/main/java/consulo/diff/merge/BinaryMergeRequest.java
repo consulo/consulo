@@ -16,15 +16,14 @@
 package consulo.diff.merge;
 
 import consulo.diff.content.FileContent;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class BinaryMergeRequest extends ThreesideMergeRequest {
-  @Nonnull
+  
   public abstract List<byte[]> getByteContents();
 
   @Override
-  @Nonnull
+  
   public abstract FileContent getOutputContent();
 }

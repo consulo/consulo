@@ -31,8 +31,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -63,7 +62,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         myBuildContentManager = buildContentManager;
         myBuildsViewValue = new AtomicClearableLazyValue<>() {
             @Override
-            @Nonnull
+            
             protected MultipleBuildsView compute() {
                 MultipleBuildsView buildsView = new MultipleBuildsView(myProject, myBuildContentManager, AbstractViewManager.this);
                 Disposer.register(AbstractViewManager.this, buildsView);
@@ -75,10 +74,10 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         BuildProgressObservableListener.listen(myProject, this);
     }
 
-    @Nonnull
+    
     public abstract String getViewId();
 
-    @Nonnull
+    
     protected abstract LocalizeValue getViewName();
 
     @Override
@@ -92,7 +91,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     }
 
     @Override
-    public void addListener(@Nonnull BuildProgressListener listener, @Nonnull Disposable disposable) {
+    public void addListener(BuildProgressListener listener, Disposable disposable) {
         myListeners.add(listener, disposable);
     }
 
@@ -101,7 +100,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     }
 
     @Override
-    public void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
+    public void onEvent(Object buildId, BuildEvent event) {
         if (isDisposed.get()) {
             return;
         }
@@ -130,7 +129,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
 
     private
     @Nullable
-    MultipleBuildsView getMultipleBuildsView(@Nonnull Object buildId) {
+    MultipleBuildsView getMultipleBuildsView(Object buildId) {
         MultipleBuildsView buildsView = myBuildsViewValue.getValue();
         if (!buildsView.shouldConsume(buildId)) {
             buildsView = ContainerUtil.find(myPinnedViews, pinnedView -> pinnedView.shouldConsume(buildId));
@@ -140,7 +139,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
 
     //@ApiStatus.Internal
     @Nullable
-    public BuildView getBuildView(@Nonnull Object buildId) {
+    public BuildView getBuildView(Object buildId) {
         MultipleBuildsView buildsView = getMultipleBuildsView(buildId);
         if (buildsView == null) {
             return null;
@@ -149,7 +148,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         return buildsView.getBuildView(buildId);
     }
 
-    void configureToolbar(@Nonnull DefaultActionGroup toolbarActions, @Nonnull MultipleBuildsView buildsView, @Nonnull BuildView view) {
+    void configureToolbar(DefaultActionGroup toolbarActions, MultipleBuildsView buildsView, BuildView view) {
         toolbarActions.removeAll();
         toolbarActions.addAll(view.createConsoleActions());
         toolbarActions.add(new PinBuildViewAction(buildsView));
@@ -190,7 +189,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         myBuildsViewValue.drop();
     }
 
-    void onBuildsViewRemove(@Nonnull MultipleBuildsView buildsView) {
+    void onBuildsViewRemove(MultipleBuildsView buildsView) {
         if (isDisposed.get()) {
             return;
         }
@@ -212,7 +211,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         EventResult result;
         Content content;
 
-        BuildInfo(@Nonnull BuildDescriptor descriptor) {
+        BuildInfo(BuildDescriptor descriptor) {
             super(descriptor);
         }
 
@@ -270,7 +269,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             boolean selected = !myContent.isPinned();
             if (selected) {
                 myContent.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
@@ -280,7 +279,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (!myContent.isValid()) {
                 return;
             }

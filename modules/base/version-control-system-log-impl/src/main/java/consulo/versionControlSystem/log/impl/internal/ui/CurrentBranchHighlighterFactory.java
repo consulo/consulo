@@ -21,26 +21,25 @@ import consulo.versionControlSystem.log.VcsLogHighlighter;
 import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.versionControlSystem.log.VcsLogUi;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class CurrentBranchHighlighterFactory implements VcsLogHighlighterFactory {
-  @Nonnull
+  
   public static final String ID = "CURRENT_BRANCH";
 
-  @Nonnull
+  
   @Override
-  public VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
+  public VcsLogHighlighter createHighlighter(VcsLogData logData, VcsLogUi logUi) {
     return new CurrentBranchHighlighter(logData, logUi);
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return ID;
   }
 
-  @Nonnull
+  
   @Override
   public String getTitle() {
     return "Current Branch";

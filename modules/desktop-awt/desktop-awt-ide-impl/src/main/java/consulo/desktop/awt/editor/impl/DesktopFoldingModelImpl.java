@@ -6,12 +6,11 @@ import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 import consulo.codeEditor.impl.FoldRegionImpl;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 public class DesktopFoldingModelImpl extends CodeEditorFoldingModelBase {
   private static final Logger LOG = Logger.getInstance(DesktopFoldingModelImpl.class);
 
-  DesktopFoldingModelImpl(@Nonnull DesktopEditorImpl editor) {
+  DesktopFoldingModelImpl(DesktopEditorImpl editor) {
     super(editor);
   }
 

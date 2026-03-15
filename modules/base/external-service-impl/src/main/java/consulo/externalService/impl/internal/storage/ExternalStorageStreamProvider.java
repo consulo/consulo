@@ -20,8 +20,7 @@ import consulo.component.store.internal.StreamProvider;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,25 +49,25 @@ public class ExternalStorageStreamProvider extends StreamProvider {
         return myExternalServiceConfiguration.getState(ExternalService.STORAGE) == ThreeState.YES;
     }
 
-    @Nonnull
+    
     @Override
-    public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+    public Collection<String> listSubFiles(String fileSpec, RoamingType roamingType) {
         return myStorage.listSubFiles(fileSpec, roamingType);
     }
 
     @Override
-    public void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, @Nonnull RoamingType roamingType) throws IOException {
+    public void saveContent(String fileSpec, byte[] content, RoamingType roamingType) throws IOException {
         myStorage.saveContent(fileSpec, roamingType, content);
     }
 
     @Nullable
     @Override
-    public InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException {
+    public InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException {
         return myStorage.loadContent(fileSpec, roamingType);
     }
 
     @Override
-    public void delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+    public void delete(String fileSpec, RoamingType roamingType) {
         myStorage.delete(fileSpec, roamingType);
     }
 }

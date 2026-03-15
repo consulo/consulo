@@ -29,7 +29,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.KeyEvent;
 
@@ -44,19 +43,19 @@ public class ShowExpressionTypeAction extends BaseCodeInsightAction implements D
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myRequestFocus = ScreenReader.isActive() && (e.getInputEvent() instanceof KeyEvent);
         super.actionPerformed(e);
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new ShowExpressionTypeHandler(myRequestFocus);
     }
 
     @Override
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
         return !ShowExpressionTypeHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()).isEmpty();
     }

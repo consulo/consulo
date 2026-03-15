@@ -37,8 +37,7 @@ import consulo.versionControlSystem.IssueNavigationConfiguration;
 import consulo.versionControlSystem.IssueNavigationLink;
 import consulo.versionControlSystem.IssueNavigationLinkProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +61,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             IssueLinkConfigurationDialog dlg = new IssueLinkConfigurationDialog(myProject);
             dlg.setTitle(VcsLocalize.issueLinkAddTitle());
             dlg.show();
@@ -86,7 +85,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myProvider.ask(myParent).whenComplete((issueNavigationLink, throwable) -> {
                 if (issueNavigationLink != null) {
                     myModel.addRow(issueNavigationLink);
@@ -137,7 +136,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
         ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
 
         builder.add(new ActionGroup() {
-            @Nonnull
+            
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 List<AnAction> list = new ArrayList<>();
@@ -172,7 +171,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
         builder.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 if (Messages.showOkCancelDialog(
                     myProject,
                     VcsLocalize.issueLinkDeletePrompt().get(),
@@ -193,7 +192,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(myLinkTable.getSelectedRow() != -1);
             }
         });
@@ -201,7 +200,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
         builder.add(new DumbAwareAction(CommonLocalize.buttonEdit(), LocalizeValue.empty(), PlatformIconGroup.actionsEdit()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 IssueNavigationLink link = myModel.getItem(myLinkTable.getSelectedRow());
                 IssueLinkConfigurationDialog dlg = new IssueLinkConfigurationDialog(myProject);
                 dlg.setTitle(VcsLocalize.issueLinkEditTitle());
@@ -217,7 +216,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(myLinkTable.getSelectedRow() != -1);
             }
         });
@@ -262,21 +261,21 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
         myLinkTable.setModel(myModel);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Issue Navigation");
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "project.propVCSSupport.Issue.Navigation";
     }
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    public JComponent createComponent(Disposable uiDisposable) {
         myPanel = createPanel();
         return myPanel;
     }

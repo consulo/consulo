@@ -357,8 +357,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     }
   }
 
-  @Nullable
-  private Set<Map.Entry<K, V>> entrySet = null;
+  private @Nullable Set<Map.Entry<K, V>> entrySet = null;
 
   @Override
   public Set<Map.Entry<K, V>> entrySet() {

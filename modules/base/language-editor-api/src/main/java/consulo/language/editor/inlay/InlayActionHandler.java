@@ -8,8 +8,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Handler for inlay clicks (must be clicked while holding ctrl).
@@ -27,7 +26,7 @@ public interface InlayActionHandler {
         return EP.findFirstSafe(b -> handlerId.equals(b.getHandlerId()));
     }
 
-    @Nonnull
+    
     String getHandlerId();
 
     /**

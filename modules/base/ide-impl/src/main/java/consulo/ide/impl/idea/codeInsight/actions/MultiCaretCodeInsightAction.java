@@ -30,7 +30,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 /**
  * Base class for PSI-aware editor actions that need to support multiple carets.
@@ -43,13 +42,13 @@ import jakarta.annotation.Nonnull;
  * @see MultiCaretCodeInsightActionHandler
  */
 public abstract class MultiCaretCodeInsightAction extends AnAction {
-    protected MultiCaretCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected MultiCaretCodeInsightAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor hostEditor = e.getRequiredData(Editor.KEY);
         actionPerformedImpl(project, hostEditor);
@@ -76,7 +75,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Editor hostEditor = e.getData(Editor.KEY);
         if (project == null || hostEditor == null) {
@@ -90,7 +89,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
             hostEditor,
             new MultiCaretCodeInsightActionHandler() {
                 @Override
-                public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
+                public void invoke(Project project, Editor editor, Caret caret, PsiFile file) {
                     if (isValidFor(project, editor, caret, file)) {
                         enabled.set(true);
                     }
@@ -101,9 +100,9 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     }
 
     private static void iterateOverCarets(
-        @Nonnull Project project,
-        @Nonnull Editor hostEditor,
-        @Nonnull MultiCaretCodeInsightActionHandler handler
+        Project project,
+        Editor hostEditor,
+        MultiCaretCodeInsightActionHandler handler
     ) {
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
         PsiFile psiFile = documentManager.getCachedPsiFile(hostEditor.getDocument());
@@ -129,10 +128,10 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
      * During action status update this method is invoked for each caret in editor. If at least for a single caret it returns
      * <code>true</code>, action is considered enabled.
      */
-    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
+    protected boolean isValidFor(Project project, Editor editor, Caret caret, PsiFile file) {
         return true;
     }
 
-    @Nonnull
+    
     protected abstract MultiCaretCodeInsightActionHandler getHandler();
 }

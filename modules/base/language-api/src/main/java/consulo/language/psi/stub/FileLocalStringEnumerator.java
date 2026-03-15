@@ -7,8 +7,7 @@ import consulo.index.io.data.IOUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -41,7 +40,7 @@ class FileLocalStringEnumerator implements AbstractStringEnumerator {
     return myStrings.get(idx - 1);
   }
 
-  void write(@Nonnull DataOutput stream) throws IOException {
+  void write(DataOutput stream) throws IOException {
     assert myEnumerates != null;
     DataInputOutputUtil.writeINT(stream, myStrings.size());
     byte[] buffer = IOUtil.allocReadWriteUTFBuffer();
@@ -67,7 +66,7 @@ class FileLocalStringEnumerator implements AbstractStringEnumerator {
   public void force() {
   }
 
-  static void readEnumeratedStrings(@Nonnull FileLocalStringEnumerator enumerator, @Nonnull DataInput stream, @Nonnull UnaryOperator<String> interner) throws IOException {
+  static void readEnumeratedStrings(FileLocalStringEnumerator enumerator, DataInput stream, UnaryOperator<String> interner) throws IOException {
     int numberOfStrings = DataInputOutputUtil.readINT(stream);
     byte[] buffer = IOUtil.allocReadWriteUTFBuffer();
     enumerator.myStrings.ensureCapacity(numberOfStrings);

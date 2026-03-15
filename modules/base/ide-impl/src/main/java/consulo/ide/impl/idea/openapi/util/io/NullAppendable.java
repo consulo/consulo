@@ -15,25 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.util.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
 class NullAppendable implements Appendable {
   static Appendable INSTANCE = new NullAppendable();
-  @Nonnull
+  
   @Override
   public Appendable append(CharSequence csq) throws IOException {
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public Appendable append(CharSequence csq, int start, int end) throws IOException {
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public Appendable append(char c) throws IOException {
     return this;

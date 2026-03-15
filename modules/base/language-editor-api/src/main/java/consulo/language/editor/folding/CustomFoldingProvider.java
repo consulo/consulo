@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * Base class and extension point for custom folding providers.
@@ -39,7 +38,7 @@ public abstract class CustomFoldingProvider {
     /**
      * @return A description string shown in "Surround With" action.
      */
-    @Nonnull
+    
     public abstract LocalizeValue getDescription();
 
     public abstract String getStartString();

@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -20,19 +19,19 @@ import java.util.Collection;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface VcsFileListenerContextHelper {
 
-  static VcsFileListenerContextHelper getInstance(@Nonnull Project project) {
+  static VcsFileListenerContextHelper getInstance(Project project) {
     return project.getInstance(VcsFileListenerContextHelper.class);
   }
 
-  void ignoreDeleted(@Nonnull Collection<? extends FilePath> filePath);
+  void ignoreDeleted(Collection<? extends FilePath> filePath);
 
-  boolean isDeletionIgnored(@Nonnull FilePath filePath);
+  boolean isDeletionIgnored(FilePath filePath);
 
-  void ignoreAdded(@Nonnull Collection<? extends FilePath> filePaths);
+  void ignoreAdded(Collection<? extends FilePath> filePaths);
 
-  void ignoreAddedRecursive(@Nonnull Collection<? extends FilePath> filePaths);
+  void ignoreAddedRecursive(Collection<? extends FilePath> filePaths);
 
-  boolean isAdditionIgnored(@Nonnull FilePath filePath);
+  boolean isAdditionIgnored(FilePath filePath);
 
   void clearContext();
 

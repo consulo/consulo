@@ -19,7 +19,6 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -44,7 +43,7 @@ public interface RangeMarker extends UserDataHolder, Segment {
      *
      * @return the document instance.
      */
-    @Nonnull
+    
     Document getDocument();
 
     /**
@@ -101,7 +100,7 @@ public interface RangeMarker extends UserDataHolder, Segment {
      * the more conventional {@code TextRange.create(getStartOffset(), getEndOffset())} could return inconsistent range when the selection
      * changed between {@link #getStartOffset()} and {@link #getEndOffset()} calls.
      */
-    @Nonnull
+    
     default TextRange getTextRange() {
         return new TextRange(getStartOffset(), getEndOffset());
     }

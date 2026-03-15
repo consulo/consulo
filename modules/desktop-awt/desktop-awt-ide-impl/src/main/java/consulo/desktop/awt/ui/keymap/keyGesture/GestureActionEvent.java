@@ -18,7 +18,6 @@ package consulo.desktop.awt.ui.keymap.keyGesture;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionEventVisitor;
 import consulo.ui.ex.action.ActionManager;
-import jakarta.annotation.Nonnull;
 
 public class GestureActionEvent extends AnActionEvent {
   public GestureActionEvent(KeyboardGestureProcessor processor) {
@@ -35,7 +34,7 @@ public class GestureActionEvent extends AnActionEvent {
     }
 
     @Override
-    public void accept(@Nonnull AnActionEventVisitor visitor) {
+    public void accept(AnActionEventVisitor visitor) {
       visitor.visitGestureInitEvent(this);
     }
   }
@@ -46,7 +45,7 @@ public class GestureActionEvent extends AnActionEvent {
     }
 
     @Override
-    public void accept(@Nonnull AnActionEventVisitor visitor) {
+    public void accept(AnActionEventVisitor visitor) {
       visitor.visitGesturePerformedEvent(this);
     }
   }
@@ -57,7 +56,7 @@ public class GestureActionEvent extends AnActionEvent {
     }
 
     @Override
-    public void accept(@Nonnull AnActionEventVisitor visitor) {
+    public void accept(AnActionEventVisitor visitor) {
       visitor.visitGestureFinishEvent(this);
     }
   }

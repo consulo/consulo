@@ -17,26 +17,25 @@ package consulo.versionControlSystem.log.impl.internal.graph.bek;
 
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.log.graph.TimestampGetter;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class BekBranchMerger {
-  @Nonnull
+  
   private final List<BekBranch> myBekBranches;
-  @Nonnull
+  
   private final BekEdgeRestrictions myEdgeRestrictions;
-  @Nonnull
+  
   private final TimestampGetter myTimestampGetter;
 
-  @Nonnull
+  
   private final List<Integer> myInverseResultList = new ArrayList<>();
 
   public BekBranchMerger(
-    @Nonnull List<BekBranch> bekBranches,
-    @Nonnull BekEdgeRestrictions edgeRestrictions,
-    @Nonnull TimestampGetter timestampGetter
+    List<BekBranch> bekBranches,
+    BekEdgeRestrictions edgeRestrictions,
+    TimestampGetter timestampGetter
   ) {
     myBekBranches = bekBranches;
     myEdgeRestrictions = edgeRestrictions;
@@ -84,7 +83,7 @@ class BekBranchMerger {
     selectBranch.doneInsertPreparedPart();
   }
 
-  @Nonnull
+  
   public List<Integer> getResult() {
     while (prepareLastPartsForBranches()) {
       step();

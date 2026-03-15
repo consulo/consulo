@@ -23,8 +23,7 @@ import consulo.versionControlSystem.log.graph.EdgePrintElement;
 import consulo.versionControlSystem.log.graph.NodePrintElement;
 import consulo.versionControlSystem.log.graph.PrintElement;
 import consulo.versionControlSystem.log.impl.internal.graph.TerminalEdgePrintElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -39,10 +38,10 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
     private static final double ARROW_ANGLE_COS2 = 0.7;
     private static final double ARROW_LENGTH = 0.3;
 
-    @Nonnull
+    
     private final ColorGenerator myColorGenerator;
 
-    public SimpleGraphCellPainter(@Nonnull ColorGenerator colorGenerator) {
+    public SimpleGraphCellPainter(ColorGenerator colorGenerator) {
         myColorGenerator = colorGenerator;
     }
 
@@ -60,17 +59,17 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         return new float[]{2 * dashApprox, 2 * space};
     }
 
-    @Nonnull
+    
     private BasicStroke getOrdinaryStroke() {
         return new BasicStroke(PaintParameters.getLineThickness(getRowHeight()), BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
     }
 
-    @Nonnull
+    
     private BasicStroke getSelectedStroke() {
         return new BasicStroke(PaintParameters.getSelectedLineThickness(getRowHeight()), BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
     }
 
-    @Nonnull
+    
     private Stroke getDashedStroke(float[] dash) {
         return new BasicStroke(
             PaintParameters.getLineThickness(getRowHeight()),
@@ -82,7 +81,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         );
     }
 
-    @Nonnull
+    
     private Stroke getSelectedDashedStroke(float[] dash) {
         return new BasicStroke(
             PaintParameters.getSelectedLineThickness(getRowHeight()),
@@ -95,8 +94,8 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
     }
 
     private void paintUpLine(
-        @Nonnull Graphics2D g2,
-        @Nonnull Color color,
+        Graphics2D g2,
+        Color color,
         int from,
         int to,
         boolean hasArrow,
@@ -124,8 +123,8 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
     }
 
     private void paintDownLine(
-        @Nonnull Graphics2D g2,
-        @Nonnull Color color,
+        Graphics2D g2,
+        Color color,
         int from,
         int to,
         boolean hasArrow,
@@ -151,8 +150,8 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
     }
 
     private void paintLine(
-        @Nonnull Graphics2D g2,
-        @Nonnull Color color,
+        Graphics2D g2,
+        Color color,
         boolean hasArrow,
         int x1,
         int y1,
@@ -193,7 +192,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         }
     }
 
-    @Nonnull
+    
     private static Couple<Integer> rotate(
         double x,
         double y,
@@ -216,7 +215,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         return Couple.of((int)Math.round(rotateX + centerX), (int)Math.round(rotateY + centerY));
     }
 
-    private void paintCircle(@Nonnull Graphics2D g2, int position, @Nonnull Color color, boolean select) {
+    private void paintCircle(Graphics2D g2, int position, Color color, boolean select) {
         int nodeWidth = PaintParameters.getNodeWidth(getRowHeight());
         int circleRadius = PaintParameters.getCircleRadius(getRowHeight());
         int selectedCircleRadius = PaintParameters.getSelectedCircleRadius(getRowHeight());
@@ -232,7 +231,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         g2.fill(circle);
     }
 
-    private void setStroke(@Nonnull Graphics2D g2, boolean usual, boolean select, int edgeLength) {
+    private void setStroke(Graphics2D g2, boolean usual, boolean select, int edgeLength) {
         if (usual) {
             if (select) {
                 g2.setStroke(getSelectedStroke());
@@ -251,12 +250,12 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         }
     }
 
-    @Nonnull
-    private Color getColor(@Nonnull PrintElement printElement) {
+    
+    private Color getColor(PrintElement printElement) {
         return myColorGenerator.getColor(printElement.getColorId());
     }
 
-    private static boolean isUsual(@Nonnull PrintElement printElement) {
+    private static boolean isUsual(PrintElement printElement) {
         if (!(printElement instanceof EdgePrintElement)) {
             return true;
         }
@@ -265,7 +264,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
     }
 
     @Override
-    public void draw(@Nonnull Graphics2D g2, @Nonnull Collection<? extends PrintElement> printElements) {
+    public void draw(Graphics2D g2, Collection<? extends PrintElement> printElements) {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         for (PrintElement printElement : printElements) {
@@ -284,7 +283,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         }
     }
 
-    protected void drawElement(@Nonnull Graphics2D g2, @Nonnull PrintElement printElement, boolean isSelected) {
+    protected void drawElement(Graphics2D g2, PrintElement printElement, boolean isSelected) {
         if (printElement instanceof EdgePrintElement) {
             if (isSelected) {
                 printEdge(g2, MARK_COLOR, true, (EdgePrintElement)printElement);
@@ -305,7 +304,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         }
     }
 
-    private void printEdge(@Nonnull Graphics2D g2, @Nonnull Color color, boolean isSelected, @Nonnull EdgePrintElement edgePrintElement) {
+    private void printEdge(Graphics2D g2, Color color, boolean isSelected, EdgePrintElement edgePrintElement) {
         int from = edgePrintElement.getPositionInCurrentRow();
         int to = edgePrintElement.getPositionInOtherRow();
         boolean isUsual = isUsual(edgePrintElement);
@@ -338,7 +337,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
 
     @Nullable
     @Override
-    public PrintElement getElementUnderCursor(@Nonnull Collection<? extends PrintElement> printElements, int x, int y) {
+    public PrintElement getElementUnderCursor(Collection<? extends PrintElement> printElements, int x, int y) {
         int nodeWidth = PaintParameters.getNodeWidth(getRowHeight());
         for (PrintElement printElement : printElements) {
             if (printElement instanceof NodePrintElement) {

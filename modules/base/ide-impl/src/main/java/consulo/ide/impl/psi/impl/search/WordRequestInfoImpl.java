@@ -2,9 +2,8 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.search.SearchSession;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public final class WordRequestInfoImpl implements WordRequestInfo {
@@ -18,7 +17,7 @@ public final class WordRequestInfoImpl implements WordRequestInfo {
 
   private String containerName;
 
-  public WordRequestInfoImpl(@Nonnull String word, @Nonnull SearchScope searchScope, boolean caseSensitive, short searchContext, @Nullable String containerName) {
+  public WordRequestInfoImpl(String word, SearchScope searchScope, boolean caseSensitive, short searchContext, @Nullable String containerName) {
     this.word = word;
     this.searchScope = searchScope;
     this.caseSensitive = caseSensitive;
@@ -26,12 +25,12 @@ public final class WordRequestInfoImpl implements WordRequestInfo {
     this.containerName = containerName;
   }
 
-  @Nonnull
+  
   public String getWord() {
     return word;
   }
 
-  @Nonnull
+  
   public SearchScope getSearchScope() {
     return searchScope;
   }
@@ -49,17 +48,17 @@ public final class WordRequestInfoImpl implements WordRequestInfo {
     return containerName;
   }
 
-  @Nonnull
+  
   public SearchSession getSearchSession() {
     return new SearchSession();
   }
 
-  @Nonnull
+  
   private String component1() {
     return word;
   }
 
-  @Nonnull
+  
   private SearchScope component2() {
     return searchScope;
   }
@@ -77,12 +76,12 @@ public final class WordRequestInfoImpl implements WordRequestInfo {
     return containerName;
   }
 
-  @Nonnull
-  public final WordRequestInfoImpl copy(@Nonnull String word, @Nonnull SearchScope searchScope, boolean caseSensitive, short searchContext, @Nullable String containerName) {
+  
+  public final WordRequestInfoImpl copy(String word, SearchScope searchScope, boolean caseSensitive, short searchContext, @Nullable String containerName) {
     return new WordRequestInfoImpl(word, searchScope, caseSensitive, searchContext, containerName);
   }
 
-  @Nonnull
+  
   public String toString() {
     StringBuilder __builder = new StringBuilder();
     __builder.append("WordRequestInfoImpl(");

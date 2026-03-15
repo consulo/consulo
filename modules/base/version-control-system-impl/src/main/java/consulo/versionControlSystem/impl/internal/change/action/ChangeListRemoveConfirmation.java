@@ -22,7 +22,6 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -33,7 +32,7 @@ import java.util.*;
  * from kotlin platform\vcs-impl\src\com\intellij\openapi\vcs\changes\actions\ChangeListRemoveConfirmation.kt
  */
 public abstract class ChangeListRemoveConfirmation {
-  public abstract boolean askIfShouldRemoveChangeLists(@Nonnull List<? extends LocalChangeList> toAsk);
+  public abstract boolean askIfShouldRemoveChangeLists(List<? extends LocalChangeList> toAsk);
 
   public static void processLists(Project project, boolean explicitly, Collection<LocalChangeList> allLists, ChangeListRemoveConfirmation ask) {
     List<String> allIds = ContainerUtil.map(allLists, LocalChangeList::getId);

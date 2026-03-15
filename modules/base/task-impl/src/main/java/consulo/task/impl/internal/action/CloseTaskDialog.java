@@ -30,8 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -123,8 +122,8 @@ public class CloseTaskDialog extends DialogWrapper {
             @Nullable
             @Override
             protected CustomTaskState getPreferredState(
-                @Nonnull TaskRepository repository,
-                @Nonnull Collection<CustomTaskState> available
+                TaskRepository repository,
+                Collection<CustomTaskState> available
             ) {
                 return repository.getPreferredCloseTaskState();
             }

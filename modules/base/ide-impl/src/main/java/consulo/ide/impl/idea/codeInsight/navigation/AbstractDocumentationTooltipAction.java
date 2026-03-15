@@ -22,8 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.ref.PatchedWeakReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 
@@ -39,19 +38,19 @@ public abstract class AbstractDocumentationTooltipAction extends AnAction {
     @Nullable
     private WeakReference<PsiElement> myOriginalElement;
 
-    public void setDocInfo(@Nonnull PsiElement docAnchor, @Nonnull PsiElement originalElement) {
+    public void setDocInfo(PsiElement docAnchor, PsiElement originalElement) {
         myDocAnchor = new PatchedWeakReference<PsiElement>(docAnchor);
         myOriginalElement = new PatchedWeakReference<PsiElement>(originalElement);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setVisible(getDocInfo() != null);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Pair<PsiElement, PsiElement> info = getDocInfo();
         if (info == null) {
             return;
@@ -62,9 +61,9 @@ public abstract class AbstractDocumentationTooltipAction extends AnAction {
     }
 
     protected abstract void doActionPerformed(
-        @Nonnull DataContext context,
-        @Nonnull PsiElement docAnchor,
-        @Nonnull PsiElement originalElement
+        DataContext context,
+        PsiElement docAnchor,
+        PsiElement originalElement
     );
 
     @Nullable

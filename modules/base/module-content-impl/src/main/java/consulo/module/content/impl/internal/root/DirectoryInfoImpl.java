@@ -21,8 +21,7 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.ContentFolderTypeProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -40,7 +39,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   private final ContentFolderTypeProvider mySourceRootTypeId;
   private final String myUnloadedModuleName;
 
-  DirectoryInfoImpl(@Nonnull VirtualFile root,
+  DirectoryInfoImpl(VirtualFile root,
                     Module module,
                     VirtualFile contentRoot,
                     VirtualFile sourceRoot,
@@ -100,7 +99,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   }
 
   @Override
-  public boolean isInProject(@Nonnull VirtualFile file) {
+  public boolean isInProject(VirtualFile file) {
     return !isExcluded(file);
   }
 
@@ -143,7 +142,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   }
 
   @Override
-  public boolean isInLibrarySource(@Nonnull VirtualFile file) {
+  public boolean isInLibrarySource(VirtualFile file) {
     return myInLibrarySource;
   }
 
@@ -153,12 +152,12 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   }
 
   @Override
-  public boolean isExcluded(@Nonnull VirtualFile file) {
+  public boolean isExcluded(VirtualFile file) {
     return myExcluded;
   }
 
   @Override
-  public boolean isInModuleSource(@Nonnull VirtualFile file) {
+  public boolean isInModuleSource(VirtualFile file) {
     return myInModuleSource;
   }
 
@@ -177,7 +176,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
     return myUnloadedModuleName;
   }
 
-  @Nonnull
+  
   public VirtualFile getRoot() {
     return myRoot;
   }

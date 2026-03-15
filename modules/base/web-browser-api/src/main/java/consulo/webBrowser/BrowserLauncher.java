@@ -20,34 +20,33 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.net.URI;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class BrowserLauncher {
-    @Nonnull
+    
     public static BrowserLauncher getInstance() {
         return Application.get().getInstance(BrowserLauncher.class);
     }
 
-    public abstract void open(@Nonnull String url);
+    public abstract void open(String url);
 
-    public abstract void browse(@Nonnull URI uri);
+    public abstract void browse(URI uri);
 
-    public abstract void browse(@Nonnull File file);
+    public abstract void browse(File file);
 
-    public abstract void browse(@Nonnull String url, @Nullable WebBrowser browser);
+    public abstract void browse(String url, @Nullable WebBrowser browser);
 
-    public abstract void browse(@Nonnull String url, @Nullable WebBrowser browser, @Nullable Project project);
+    public abstract void browse(String url, @Nullable WebBrowser browser, @Nullable Project project);
 
     public abstract boolean browseUsingPath(
         @Nullable String url,
         @Nullable String browserPath,
         @Nullable WebBrowser browser,
         @Nullable Project project,
-        @Nonnull String[] additionalParameters
+        String[] additionalParameters
     );
 }

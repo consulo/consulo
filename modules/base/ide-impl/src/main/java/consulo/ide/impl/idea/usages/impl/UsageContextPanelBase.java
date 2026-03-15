@@ -23,9 +23,8 @@ import consulo.usage.UsageInfo;
 import consulo.usage.UsageContextPanel;
 import consulo.usage.UsageViewPresentation;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -35,18 +34,18 @@ import java.util.List;
  */
 public abstract class UsageContextPanelBase extends JBPanelWithEmptyText implements UsageContextPanel {
   protected final Project myProject;
-  @Nonnull
+  
   protected final UsageViewPresentation myPresentation;
   protected volatile boolean isDisposed;
 
-  public UsageContextPanelBase(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
+  public UsageContextPanelBase(Project project, UsageViewPresentation presentation) {
     myProject = project;
     myPresentation = presentation;
     setLayout(new BorderLayout());
     setBorder(JBUI.Borders.empty());
   }
 
-  @Nonnull
+  
   @Override
   public final JComponent createComponent() {
     isDisposed = false;

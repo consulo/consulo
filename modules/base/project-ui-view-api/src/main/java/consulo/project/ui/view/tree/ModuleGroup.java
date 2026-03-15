@@ -25,7 +25,6 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -36,7 +35,7 @@ public class ModuleGroup {
 
   private final String[] myGroupPath;
 
-  public ModuleGroup(@Nonnull String[] groupPath) {
+  public ModuleGroup(String[] groupPath) {
     myGroupPath = groupPath;
   }
 
@@ -57,7 +56,7 @@ public class ModuleGroup {
     return myGroupPath;
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   public Collection<Module> modulesInGroup(Project project, boolean recursively) {
     Module[] allModules = ModuleManager.getInstance(project).getModules();

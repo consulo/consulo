@@ -30,7 +30,6 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.xml.sax.ContentHandler;
@@ -269,7 +268,7 @@ public class TestResultsXmlFormatter {
             }
 
             @Override
-            public void onNewAvailable(@Nonnull Printable printable) {
+            public void onNewAvailable(Printable printable) {
             }
 
             @Override

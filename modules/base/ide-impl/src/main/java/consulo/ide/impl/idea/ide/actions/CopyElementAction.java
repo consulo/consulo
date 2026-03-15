@@ -33,7 +33,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "CopyElement")
@@ -43,13 +42,13 @@ public class CopyElementAction extends AnAction {
         super(ActionLocalize.actionCopyelementText(), ActionLocalize.actionCopyelementDescription());
     }
 
-    public CopyElementAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    public CopyElementAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = dataContext.getRequiredData(Project.KEY);
 
@@ -85,7 +84,7 @@ public class CopyElementAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         presentation.setEnabled(false);

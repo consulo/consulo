@@ -25,8 +25,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +55,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         Collection<Language> languages = ReadAction.compute(myLanguagesGetter::get);
@@ -70,7 +69,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
             result.add(new DumbAwareAction(language.getDisplayName(), LocalizeValue.empty(), icon) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     myLanguageConsumer.accept(language);
                 }
             });
@@ -80,7 +79,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
         presentation.setTextValue(XDebuggerLocalize.xdebuggerEvaluateLanguageHint());

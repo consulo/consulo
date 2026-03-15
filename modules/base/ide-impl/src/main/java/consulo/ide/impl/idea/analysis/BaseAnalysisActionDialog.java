@@ -41,8 +41,7 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,13 +77,13 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
   private final PsiElement myContext;
 
   public BaseAnalysisActionDialog(
-    @Nonnull String title,
-    @Nonnull String analysisNoon,
-    @Nonnull Project project,
-    @Nonnull AnalysisScope scope,
+    String title,
+    String analysisNoon,
+    Project project,
+    AnalysisScope scope,
     String moduleName,
     boolean rememberScope,
-    @Nonnull AnalysisUIOptions analysisUIOptions,
+    AnalysisUIOptions analysisUIOptions,
     @Nullable PsiElement context
   ) {
     super(true);
@@ -275,11 +274,11 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     return myInspectTestSource.isSelected();
   }
 
-  @Nonnull
+  
   public AnalysisScope getScope(
-    @Nonnull AnalysisUIOptions uiOptions,
-    @Nonnull AnalysisScope defaultScope,
-    @Nonnull Project project,
+    AnalysisUIOptions uiOptions,
+    AnalysisScope defaultScope,
+    Project project,
     Module module
   ) {
     AnalysisScope scope;

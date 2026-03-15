@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -31,6 +30,6 @@ public interface PredefinedCopyrightProvider {
   /**
    * Map of copyright name and text
    */
-  @Nonnull
+  
   Map<LocalizeValue, String> getCopyrightTexts();
 }

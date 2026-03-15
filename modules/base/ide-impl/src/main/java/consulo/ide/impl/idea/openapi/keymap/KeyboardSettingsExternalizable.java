@@ -25,8 +25,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
 import consulo.platform.Platform;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
@@ -45,7 +44,7 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
 
   private static final String[] supportedNonEnglishLanguages = {"de", "fr", "it", "uk"};
 
-  public static boolean isSupportedKeyboardLayout(@Nonnull Component component) {
+  public static boolean isSupportedKeyboardLayout(Component component) {
     if (Registry.is("ide.keyboard.dvorak")) return true;
     if (Platform.current().os().isMac()) return false;
     String keyboardLayoutLanguage = getLanguageForComponent(component);
@@ -58,19 +57,19 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
   }
 
   @Nullable
-  public static String getLanguageForComponent(@Nonnull Component component) {
+  public static String getLanguageForComponent(Component component) {
     Locale locale = getLocaleForComponent(component);
     return locale == null ? null : locale.getLanguage();
   }
 
   @Nullable
-  protected static Locale getLocaleForComponent(@Nonnull Component component) {
+  protected static Locale getLocaleForComponent(Component component) {
     InputContext context = component.getInputContext();
     return context == null ? null : context.getLocale();
   }
 
   @Nullable
-  public static String getDisplayLanguageNameForComponent(@Nonnull Component component) {
+  public static String getDisplayLanguageNameForComponent(Component component) {
     Locale locale = getLocaleForComponent(component);
     return locale == null ? null : locale.getDisplayLanguage();
   }

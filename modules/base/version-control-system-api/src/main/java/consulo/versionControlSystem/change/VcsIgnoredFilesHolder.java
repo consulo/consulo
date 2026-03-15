@@ -16,13 +16,12 @@
 package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.AbstractVcs;
-import jakarta.annotation.Nonnull;
 
 public interface VcsIgnoredFilesHolder extends IgnoredFilesHolder {
     default boolean isInUpdatingMode() {
         return false;
     }
 
-    @Nonnull
+    
     AbstractVcs getVcs();
 }

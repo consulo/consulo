@@ -4,8 +4,7 @@ package consulo.project.ui.view.tree;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -24,7 +23,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    *                  {@code true} to continue visiting with children,
    *                  {@code false} to continue visiting without children
    */
-  public AbstractTreeNodeVisitor(@Nonnull Supplier<? extends T> supplier, @Nullable Predicate<? super TreePath> predicate) {
+  public AbstractTreeNodeVisitor(Supplier<? extends T> supplier, @Nullable Predicate<? super TreePath> predicate) {
     this.supplier = supplier;
     this.predicate = predicate;
   }
@@ -37,9 +36,9 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
     return supplier.get();
   }
 
-  @Nonnull
+  
   @Override
-  public Action visit(@Nonnull TreePath path) {
+  public Action visit(TreePath path) {
     if (LOG.isTraceEnabled()) LOG.debug("process ", path);
     T element = getElement();
     if (element == null) return Action.SKIP_SIBLINGS;
@@ -75,8 +74,8 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return an action that controls visiting a tree
    */
-  @Nonnull
-  protected Action visit(@Nonnull TreePath path, @Nonnull AbstractTreeNode node, @Nonnull T element) {
+  
+  protected Action visit(TreePath path, AbstractTreeNode node, T element) {
     if (matches(node, element)) {
       LOG.debug("found ", path);
       if (predicate == null) return Action.INTERRUPT;
@@ -94,7 +93,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return {@code true} if the specified node represents the given element
    */
-  protected boolean matches(@Nonnull AbstractTreeNode node, @Nonnull T element) {
+  protected boolean matches(AbstractTreeNode node, T element) {
     return node.canRepresent(element);
   }
 
@@ -103,7 +102,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return {@code true} if the specified node is an ancestor of the given element
    */
-  protected boolean contains(@Nonnull AbstractTreeNode node, @Nonnull T element) {
+  protected boolean contains(AbstractTreeNode node, T element) {
     T content = getContent(node);
     return content != null && isAncestor(content, element);
   }
@@ -112,7 +111,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param node a node of a tree structure
    * @return a content of the specified tree or {@code null}
    */
-  protected T getContent(@Nonnull AbstractTreeNode node) {
+  protected T getContent(AbstractTreeNode node) {
     return null;
   }
 
@@ -121,7 +120,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return {@code true} if the specified content is an ancestor of the given element
    */
-  protected boolean isAncestor(@Nonnull T content, @Nonnull T element) {
+  protected boolean isAncestor(T content, T element) {
     return false;
   }
 }

@@ -2,7 +2,6 @@
 package consulo.language.editor.inlay;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -21,7 +20,7 @@ public interface DeclarativePresentationTreeBuilder {
         collapsibleList(CollapseState.NoPreference, expandedState, collapsedState);
     }
 
-    void icon(@Nonnull Image image);
+    void icon(Image image);
 
     void text(String text, InlayActionData actionData);
 

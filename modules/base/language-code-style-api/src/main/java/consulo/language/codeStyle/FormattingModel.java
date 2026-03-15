@@ -19,7 +19,6 @@ import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines the formatting model for a file. A formatting model defines how a file is broken
@@ -43,7 +42,7 @@ public interface FormattingModel {
      *
      * @return the root block of the model.
      */
-    @Nonnull
+    
     Block getRootBlock();
 
     /**
@@ -52,7 +51,7 @@ public interface FormattingModel {
      *
      * @return the formatting document model.
      */
-    @Nonnull
+    
     FormattingDocumentModel getDocumentModel();
 
     /**

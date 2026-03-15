@@ -17,7 +17,6 @@ package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Inherit this interface if you want the reference to resolve to more than one element,
@@ -38,7 +37,7 @@ public interface PsiPolyVariantReference extends PsiReference {
    *
    * @return the array of results for resolving the reference.
    */
-  @Nonnull
+  
   @RequiredReadAction
   ResolveResult[] multiResolve(boolean incompleteCode);
 }

@@ -38,8 +38,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -141,7 +140,7 @@ public class TodoCheckinHandlerWorker {
     }
 
     @Nullable
-    private static VirtualFile getFileWithRefresh(@Nonnull FilePath filePath) {
+    private static VirtualFile getFileWithRefresh(FilePath filePath) {
         VirtualFile file = filePath.getVirtualFile();
         if (file == null) {
             file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.getIOFile());

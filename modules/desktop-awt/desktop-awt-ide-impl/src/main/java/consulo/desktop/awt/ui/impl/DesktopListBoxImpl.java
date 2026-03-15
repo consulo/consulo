@@ -24,7 +24,6 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.model.ListModel;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,11 +31,11 @@ import jakarta.annotation.Nonnull;
  */
 class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
     class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
-        MyJBList(@Nonnull javax.swing.ListModel<T> dataModel) {
+        MyJBList(javax.swing.ListModel<T> dataModel) {
             super(dataModel);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopListBoxImpl.this;
@@ -60,14 +59,14 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         return  component;
     }
 
-    @Nonnull
+    
     @Override
     public ListModel<E> getListModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
         myRenderer = renderer;
     }
 
@@ -82,16 +81,16 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         toAWTComponent().setSelectedValue(value, true);
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
+    public Disposable addValueListener(ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
         DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, toAWTComponent(), valueListener);
         toAWTComponent().addListSelectionListener(listener);
         return () -> toAWTComponent().removeListSelectionListener(listener);
     }
 
     @SuppressWarnings("unchecked")
-    @Nonnull
+    
     @Override
     public E getValue() {
         return toAWTComponent().getSelectedValue();

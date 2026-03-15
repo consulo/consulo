@@ -20,8 +20,6 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 /**
  * @author VISTALL
@@ -29,28 +27,28 @@ import org.jetbrains.annotations.Nls;
  */
 @ExtensionImpl(id = "incommingChangesWidget", order = "after readOnlyWidget")
 public class IncomingChangesWidgetFactory implements StatusBarWidgetFactory {
-  @Nls
-  @Nonnull
+  
+  
   @Override
   public String getDisplayName() {
     return "Incoming Changes";
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project) {
+  public boolean isAvailable(Project project) {
     IncomingChangesIndicator indicator = project.getInstance(IncomingChangesIndicator.class);
     return indicator.needIndicator();
   }
 
-  @Nonnull
+  
   @Override
-  public StatusBarWidget createWidget(@Nonnull Project project) {
+  public StatusBarWidget createWidget(Project project) {
     IncomingChangesIndicator indicator = project.getInstance(IncomingChangesIndicator.class);
     return new IncomingChangesWidget(this, indicator);
   }
 
   @Override
-  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+  public boolean canBeEnabledOn(StatusBar statusBar) {
     return false;
   }
 }

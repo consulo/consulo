@@ -17,7 +17,6 @@
 package consulo.externalTool.impl.internal;
 
 import consulo.component.persist.scheme.CompoundScheme;
-import jakarta.annotation.Nonnull;
 
 public class ToolsGroup<T extends Tool> extends CompoundScheme<T> {
     public ToolsGroup(String name) {
@@ -36,7 +35,7 @@ public class ToolsGroup<T extends Tool> extends CompoundScheme<T> {
         insertElement(tool, index + 1);
     }
 
-    @Nonnull
+    
     @Override
     protected CompoundScheme<T> createNewInstance(String name) {
         return new ToolsGroup<>(name);

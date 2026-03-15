@@ -9,8 +9,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 /**
  * @author konstantin.aleev
@@ -35,7 +33,7 @@ public class RunDashboardRunConfigurationStatus implements WeighedItem {
     myWeight = weight;
   }
 
-  public @Nls String getName() {
+  public String getName() {
     return myName.get();
   }
 
@@ -48,7 +46,7 @@ public class RunDashboardRunConfigurationStatus implements WeighedItem {
     return myWeight;
   }
 
-  public static @Nonnull RunDashboardRunConfigurationStatus getStatus(RunDashboardRunConfigurationNode node) {
+  public static RunDashboardRunConfigurationStatus getStatus(RunDashboardRunConfigurationNode node) {
     RunContentDescriptor descriptor = node.getDescriptor();
     if (descriptor == null) {
       return CONFIGURED;

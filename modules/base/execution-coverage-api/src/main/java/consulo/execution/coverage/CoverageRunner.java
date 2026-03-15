@@ -4,8 +4,7 @@ import com.intellij.rt.coverage.data.ProjectData;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -15,7 +14,7 @@ import java.io.File;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CoverageRunner {
-    public abstract ProjectData loadCoverageData(@Nonnull File sessionDataFile, @Nullable CoverageSuite baseCoverageSuite);
+    public abstract ProjectData loadCoverageData(File sessionDataFile, @Nullable CoverageSuite baseCoverageSuite);
 
     public abstract String getPresentableName();
 
@@ -23,9 +22,9 @@ public abstract class CoverageRunner {
 
     public abstract String getDataFileExtension();
 
-    public abstract boolean acceptsCoverageEngine(@Nonnull CoverageEngine engine);
+    public abstract boolean acceptsCoverageEngine(CoverageEngine engine);
 
-    public static <T extends CoverageRunner> T getInstance(@Nonnull Class<T> coverageRunnerClass) {
+    public static <T extends CoverageRunner> T getInstance(Class<T> coverageRunnerClass) {
         return Application.get().getExtensionPoint(CoverageRunner.class).findExtensionOrFail(coverageRunnerClass);
     }
 

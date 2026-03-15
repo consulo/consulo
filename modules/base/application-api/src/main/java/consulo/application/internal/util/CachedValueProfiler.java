@@ -5,8 +5,7 @@ import consulo.application.util.CachedValueProvider;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -96,19 +95,18 @@ public final class CachedValueProfiler {
       }
     }
 
-    @Nullable
-    public ValueTracker newValueTracker(@Nonnull CachedValueProvider.Result<?> result) {
+    public ValueTracker newValueTracker(CachedValueProvider.@Nullable Result<?> result) {
       timeComputed = currentTime();
       return onResultReturned(this, result);
     }
   }
 
-  @Nonnull
+ 
   public static Frame newFrame() {
     return new Frame();
   }
 
-  public static void onResultCreated(@Nonnull CachedValueProvider.Result<?> result, @Nullable Object original) {
+  public static void onResultCreated(CachedValueProvider.Result<?> result, @Nullable Object original) {
     long time = currentTime();
     ThreadContext context = ourContext.get();
     if (context.consumer == null || context.consumer != ourEventConsumer) return;
@@ -125,8 +123,7 @@ public final class CachedValueProfiler {
     ourFrameOverhead.overhead.addAndGet(currentTime() - time);
   }
 
-  @Nullable
-  static ValueTracker onResultReturned(@Nonnull Frame frame, @Nonnull CachedValueProvider.Result<?> result) {
+  static ValueTracker onResultReturned(Frame frame, CachedValueProvider.@Nullable Result<?> result) {
     long time = currentTime();
     ThreadContext context = ourContext.get();
     if (context.consumer == null) return null;
@@ -185,7 +182,7 @@ public final class CachedValueProfiler {
     return null;
   }
 
-  @Nonnull
+ 
   static StackTraceElement findCallerPlace(Throwable stackTraceHolder) {
     StackTraceElement[] stackTrace = stackTraceHolder.getStackTrace();
     for (int idx = 2, len = stackTrace.length; idx < len; idx++) {
@@ -210,7 +207,7 @@ public final class CachedValueProfiler {
     final long computed;
     volatile long used;
 
-    ValueTracker(@Nonnull EventPlace place, long start, long computed) {
+    ValueTracker(EventPlace place, long start, long computed) {
       this.place = place;
       this.start = start;
       this.computed = computed;

@@ -40,8 +40,7 @@ import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,10 +56,10 @@ public class CommonRefactoringUtil {
 
     @RequiredUIAccess
     public static void showErrorMessage(
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue message,
+        LocalizeValue title,
+        LocalizeValue message,
         @Nullable String helpId,
-        @Nonnull Project project
+        Project project
     ) {
         if (project.getApplication().isUnitTestMode()) {
             throw new RuntimeException(message.get());
@@ -73,7 +72,7 @@ public class CommonRefactoringUtil {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
-    public static void showErrorMessage(String title, String message, @Nullable String helpId, @Nonnull Project project) {
+    public static void showErrorMessage(String title, String message, @Nullable String helpId, Project project) {
         showErrorMessage(LocalizeValue.ofNullable(title), LocalizeValue.ofNullable(message), helpId, project);
     }
 
@@ -99,7 +98,7 @@ public class CommonRefactoringUtil {
      * Fatal refactoring problem during unit test run. Corresponds to message of modal dialog shown during user driven refactoring.
      */
     public static class RefactoringErrorHintException extends RuntimeException {
-        public RefactoringErrorHintException(@Nonnull LocalizeValue message) {
+        public RefactoringErrorHintException(LocalizeValue message) {
             super(message.get());
         }
 
@@ -110,10 +109,10 @@ public class CommonRefactoringUtil {
 
     @RequiredUIAccess
     public static void showErrorHint(
-        @Nonnull Project project,
+        Project project,
         @Nullable Editor editor,
-        @Nonnull LocalizeValue message,
-        @Nonnull LocalizeValue title,
+        LocalizeValue message,
+        LocalizeValue title,
         @Nullable String helpId
     ) {
         if (project.getApplication().isUnitTestMode()) {
@@ -134,32 +133,32 @@ public class CommonRefactoringUtil {
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
     public static void showErrorHint(
-        @Nonnull Project project,
+        Project project,
         @Nullable Editor editor,
-        @Nonnull String message,
-        @Nonnull String title,
+        String message,
+        String title,
         @Nullable String helpId
     ) {
         showErrorHint(project, editor, LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title), helpId);
     }
 
-    public static String htmlEmphasize(@Nonnull String text) {
+    public static String htmlEmphasize(String text) {
         return StringUtil.htmlEmphasize(text);
     }
 
     @RequiredUIAccess
-    public static boolean checkReadOnlyStatus(@Nonnull PsiElement element) {
+    public static boolean checkReadOnlyStatus(PsiElement element) {
         VirtualFile file = element.getContainingFile().getVirtualFile();
         return file != null && !ReadonlyStatusHandler.getInstance(element.getProject()).ensureFilesWritable(file).hasReadonlyFiles();
     }
 
     @RequiredUIAccess
-    public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement element) {
+    public static boolean checkReadOnlyStatus(Project project, PsiElement element) {
         return checkReadOnlyStatus(element, project, RefactoringLocalize.refactoringCannotBePerformed());
     }
 
     @RequiredUIAccess
-    public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement... elements) {
+    public static boolean checkReadOnlyStatus(Project project, PsiElement... elements) {
         return checkReadOnlyStatus(
             project,
             Collections.<PsiElement>emptySet(),
@@ -171,8 +170,8 @@ public class CommonRefactoringUtil {
 
     @RequiredUIAccess
     public static boolean checkReadOnlyStatus(
-        @Nonnull Project project,
-        @Nonnull Collection<? extends PsiElement> elements,
+        Project project,
+        Collection<? extends PsiElement> elements,
         boolean notifyOnFail
     ) {
         return checkReadOnlyStatus(
@@ -185,7 +184,7 @@ public class CommonRefactoringUtil {
     }
 
     @RequiredUIAccess
-    public static boolean checkReadOnlyStatus(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull LocalizeValue messagePrefix) {
+    public static boolean checkReadOnlyStatus(PsiElement element, Project project, LocalizeValue messagePrefix) {
         return element.isWritable()
             || checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), Collections.singleton(element), messagePrefix, true);
     }
@@ -193,12 +192,12 @@ public class CommonRefactoringUtil {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
-    public static boolean checkReadOnlyStatus(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull String messagePrefix) {
+    public static boolean checkReadOnlyStatus(PsiElement element, Project project, String messagePrefix) {
         return checkReadOnlyStatus(element, project, LocalizeValue.of(messagePrefix));
     }
 
     @RequiredUIAccess
-    public static boolean checkReadOnlyStatusRecursively(@Nonnull Project project, @Nonnull Collection<? extends PsiElement> elements) {
+    public static boolean checkReadOnlyStatusRecursively(Project project, Collection<? extends PsiElement> elements) {
         return checkReadOnlyStatus(
             project,
             elements,
@@ -210,8 +209,8 @@ public class CommonRefactoringUtil {
 
     @RequiredUIAccess
     public static boolean checkReadOnlyStatusRecursively(
-        @Nonnull Project project,
-        @Nonnull Collection<? extends PsiElement> elements,
+        Project project,
+        Collection<? extends PsiElement> elements,
         boolean notifyOnFail
     ) {
         return checkReadOnlyStatus(
@@ -225,9 +224,9 @@ public class CommonRefactoringUtil {
 
     @RequiredUIAccess
     public static boolean checkReadOnlyStatus(
-        @Nonnull Project project,
-        @Nonnull Collection<? extends PsiElement> recursive,
-        @Nonnull Collection<? extends PsiElement> flat,
+        Project project,
+        Collection<? extends PsiElement> recursive,
+        Collection<? extends PsiElement> flat,
         boolean notifyOnFail
     ) {
         return checkReadOnlyStatus(project, recursive, flat, RefactoringLocalize.refactoringCannotBePerformed(), notifyOnFail);
@@ -235,10 +234,10 @@ public class CommonRefactoringUtil {
 
     @RequiredUIAccess
     private static boolean checkReadOnlyStatus(
-        @Nonnull Project project,
-        @Nonnull Collection<? extends PsiElement> recursive,
-        @Nonnull Collection<? extends PsiElement> flat,
-        @Nonnull LocalizeValue messagePrefix,
+        Project project,
+        Collection<? extends PsiElement> recursive,
+        Collection<? extends PsiElement> flat,
+        LocalizeValue messagePrefix,
         boolean notifyOnFail
     ) {
         Collection<VirtualFile> readonly = new HashSet<>();  // not writable, but could be checked out
@@ -337,12 +336,12 @@ public class CommonRefactoringUtil {
         return seenNonWritablePsiFilesWithoutVirtualFile;
     }
 
-    public static void collectReadOnlyFiles(@Nonnull VirtualFile vFile, @Nonnull final Collection<VirtualFile> list) {
+    public static void collectReadOnlyFiles(VirtualFile vFile, final Collection<VirtualFile> list) {
         final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
 
         VirtualFileUtil.visitChildrenRecursively(vFile, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 boolean ignored = fileTypeManager.isFileIgnored(file);
                 if (!file.isWritable() && !ignored) {
                     list.add(file);
@@ -352,11 +351,11 @@ public class CommonRefactoringUtil {
         });
     }
 
-    public static String capitalize(@Nonnull String text) {
+    public static String capitalize(String text) {
         return StringUtil.capitalize(text);
     }
 
-    public static boolean isAncestor(@Nonnull PsiElement resolved, @Nonnull Collection<? extends PsiElement> scopes) {
+    public static boolean isAncestor(PsiElement resolved, Collection<? extends PsiElement> scopes) {
         for (PsiElement scope : scopes) {
             if (PsiTreeUtil.isAncestor(scope, resolved, false)) {
                 return true;
@@ -371,7 +370,7 @@ public class CommonRefactoringUtil {
         int[] choice,
         PsiFile file,
         String name,
-        @Nonnull LocalizeValue title
+        LocalizeValue title
     ) {
         if (targetDirectory == null) {
             return false;

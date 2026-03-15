@@ -18,8 +18,7 @@ package consulo.language.psi.resolve;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface PsiScopeProcessor {
   interface Event {
@@ -32,10 +31,10 @@ public interface PsiScopeProcessor {
    * @param state   current state of resolver.
    * @return false to stop processing.
    */
-  boolean execute(@Nonnull PsiElement element, ResolveState state);
+  boolean execute(PsiElement element, ResolveState state);
 
   @Nullable
-  default <T> T getHint(@Nonnull Key<T> hintKey) {
+  default <T> T getHint(Key<T> hintKey) {
     return null;
   }
 

@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,11 +28,11 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface XDebuggerExpressionEditorFactory {
-    @Nonnull
-    XDebuggerExpressionEditor create(@Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
+    
+    XDebuggerExpressionEditor create(XDebuggerEditorsProvider debuggerEditorsProvider,
                                      @Nullable String historyId,
                                      @Nullable XSourcePosition sourcePosition,
-                                     @Nonnull XExpression text,
+                                     XExpression text,
                                      boolean multiline,
                                      boolean editorFont,
                                      boolean showEditor);

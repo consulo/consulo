@@ -28,7 +28,6 @@ import consulo.execution.debug.impl.internal.evaluate.ValueLookupManagerImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -39,7 +38,7 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
         super(ActionLocalize.actionQuickevaluateexpressionText(), ActionLocalize.actionQuickevaluateexpressionDescription(), null, true);
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return new QuickEvaluateHandlerWrapper(XQuickEvaluateHandler.getInstance());
@@ -53,7 +52,7 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
         }
 
         @Override
-        public void perform(@Nonnull Project project, AnActionEvent event) {
+        public void perform(Project project, AnActionEvent event) {
             Editor editor = event.getRequiredData(Editor.KEY);
             LogicalPosition logicalPosition = editor.getCaretModel().getLogicalPosition();
             ((ValueLookupManagerImpl) ValueLookupManager.getInstance(project))
@@ -61,7 +60,7 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
         }
 
         @Override
-        public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
+        public boolean isEnabled(Project project, AnActionEvent event) {
             return myHandler.isEnabled(project) && event.hasData(Editor.KEY) && !event.hasData(EditorGutter.KEY);
         }
     }

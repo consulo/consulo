@@ -29,8 +29,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -41,16 +40,16 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
   protected final ConcurrentMap<Language, PsiFileImpl> myRoots = ContainerUtil.newConcurrentMap(1, 0.75f, 1);
   private MultiplePsiFilesPerDocumentFileViewProvider myOriginal;
 
-  public MultiplePsiFilesPerDocumentFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, boolean eventSystemEnabled) {
+  public MultiplePsiFilesPerDocumentFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean eventSystemEnabled) {
     super(manager, virtualFile, eventSystemEnabled);
   }
 
   @Override
-  @Nonnull
+  
   public abstract Language getBaseLanguage();
 
   @Override
-  @Nonnull
+  
   public List<PsiFile> getAllFiles() {
     List<PsiFile> roots = new ArrayList<>();
     for (Language language : getLanguages()) {
@@ -65,7 +64,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
     return roots;
   }
 
-  protected final void removeFile(@Nonnull Language language) {
+  protected final void removeFile(Language language) {
     PsiFileImpl file = myRoots.remove(language);
     if (file != null) {
       file.markInvalidated();
@@ -73,7 +72,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
   }
 
   @Override
-  protected PsiFile getPsiInner(@Nonnull Language target) {
+  protected PsiFile getPsiInner(Language target) {
     PsiFileImpl file = myRoots.get(target);
     if (file == null) {
       if (!shouldCreatePsi()) return null;
@@ -94,22 +93,22 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
   }
 
   @Nullable
-  protected PsiFileImpl createPsiFileImpl(@Nonnull Language target) {
+  protected PsiFileImpl createPsiFileImpl(Language target) {
     return (PsiFileImpl)createFile(target);
   }
 
   @Override
-  public final PsiFile getCachedPsi(@Nonnull Language target) {
+  public final PsiFile getCachedPsi(Language target) {
     return myRoots.get(target);
   }
 
-  @Nonnull
+  
   @Override
   public final List<PsiFile> getCachedPsiFiles() {
     return ContainerUtil.mapNotNull(myRoots.keySet(), this::getCachedPsi);
   }
 
-  @Nonnull
+  
   @Override
   public final List<FileElement> getKnownTreeRoots() {
     List<FileElement> files = new ArrayList<>(myRoots.size());
@@ -136,20 +135,20 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
     }
   }
 
-  @Nonnull
+  
   @Override
-  public final MultiplePsiFilesPerDocumentFileViewProvider createCopy(@Nonnull VirtualFile fileCopy) {
+  public final MultiplePsiFilesPerDocumentFileViewProvider createCopy(VirtualFile fileCopy) {
     MultiplePsiFilesPerDocumentFileViewProvider copy = cloneInner(fileCopy);
     copy.myOriginal = myOriginal == null ? this : myOriginal;
     return copy;
   }
 
-  @Nonnull
-  protected abstract MultiplePsiFilesPerDocumentFileViewProvider cloneInner(@Nonnull VirtualFile fileCopy);
+  
+  protected abstract MultiplePsiFilesPerDocumentFileViewProvider cloneInner(VirtualFile fileCopy);
 
   @Override
   @Nullable
-  public PsiElement findElementAt(int offset, @Nonnull Class<? extends Language> lang) {
+  public PsiElement findElementAt(int offset, Class<? extends Language> lang) {
     PsiFile mainRoot = getPsi(getBaseLanguage());
     PsiElement ret = null;
     for (Language language : getLanguages()) {

@@ -6,14 +6,13 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.module.content.internal.PushedFilePropertiesUpdaterInternal;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
 @ServiceAPI(value = ComponentScope.PROJECT)
 public sealed interface PushedFilePropertiesUpdater permits PushedFilePropertiesUpdaterInternal {
-  @Nonnull
-  public static PushedFilePropertiesUpdater getInstance(@Nonnull Project project) {
+  
+  public static PushedFilePropertiesUpdater getInstance(Project project) {
     return project.getInstance(PushedFilePropertiesUpdater.class);
   }
 
@@ -25,7 +24,7 @@ public sealed interface PushedFilePropertiesUpdater permits PushedFileProperties
    * @deprecated Use {@link #filePropertiesChanged(VirtualFile, Predicate)}
    */
   @Deprecated
-  void filePropertiesChanged(@Nonnull VirtualFile file);
+  void filePropertiesChanged(VirtualFile file);
 
   void pushAllPropertiesNow();
 
@@ -35,5 +34,5 @@ public sealed interface PushedFilePropertiesUpdater permits PushedFileProperties
    * Invalidates indices and other caches for the given file or its immediate children (in case it's a directory).
    * Only files matching the condition are processed.
    */
-  void filePropertiesChanged(@Nonnull VirtualFile fileOrDir, @Nonnull Predicate<? super VirtualFile> acceptFileCondition);
+  void filePropertiesChanged(VirtualFile fileOrDir, Predicate<? super VirtualFile> acceptFileCondition);
 }

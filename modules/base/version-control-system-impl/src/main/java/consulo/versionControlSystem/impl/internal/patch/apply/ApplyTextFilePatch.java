@@ -28,13 +28,14 @@ import consulo.virtualFileSystem.internal.LoadTextUtil;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.function.Supplier;
+import org.jspecify.annotations.Nullable;
 
 public class ApplyTextFilePatch extends ApplyFilePatchBase<TextFilePatch> {
   public ApplyTextFilePatch(TextFilePatch patch) {
     super(patch);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected Result applyChange(final Project project, final VirtualFile fileToPatch, final FilePath pathBeforeRename, final Supplier<CharSequence> baseContents) throws IOException {
     byte[] fileContents = fileToPatch.contentsToByteArray();
     CharSequence text = LoadTextUtil.getTextByBinaryPresentation(fileContents, fileToPatch);

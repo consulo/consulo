@@ -15,17 +15,16 @@
  */
 package consulo.component.store.internal;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 public final class ReadOnlyModificationException extends RuntimeException {
   private final File myFile;
 
-  public ReadOnlyModificationException(@Nonnull File file) {
+  public ReadOnlyModificationException(File file) {
     myFile = file;
   }
 
-  @Nonnull
+  
   public File getFile() {
     return myFile;
   }

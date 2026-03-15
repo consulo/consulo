@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.versionControlSystem.log.VcsUser;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -26,23 +25,23 @@ import java.util.Objects;
  */
 public class VcsUserImpl implements VcsUser {
 
-  @Nonnull
+  
   private final String myName;
-  @Nonnull
+  
   private final String myEmail;
 
-  public VcsUserImpl(@Nonnull String name, @Nonnull String email) {
+  public VcsUserImpl(String name, String email) {
     myName = name;
     myEmail = VcsUserUtil.emailToLowerCase(email);
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myName;
   }
 
-  @Nonnull
+  
   @Override
   public String getEmail() {
     return myEmail;

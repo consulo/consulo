@@ -24,7 +24,6 @@ import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,11 +33,11 @@ import java.util.Set;
  */
 public abstract class AbstractRunConfigurationTypeUsagesCollector extends AbstractApplicationUsagesCollector {
 
-    protected abstract boolean isApplicable(@Nonnull RunManager runManager, @Nonnull RunConfiguration runConfiguration);
+    protected abstract boolean isApplicable(RunManager runManager, RunConfiguration runConfiguration);
 
-    @Nonnull
+    
     @Override
-    public final Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
+    public final Set<UsageDescriptor> getProjectUsages(Project project) {
         Set<String> runConfigurationTypes = new HashSet<>();
         UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
             if (project.isDisposed()) {

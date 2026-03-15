@@ -11,7 +11,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.SimpleListPopupStepBuilder;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -65,13 +64,13 @@ public class SearchUtils {
         }
     }
 
-    @Nonnull
-    public static CustomShortcutSet shortcutSetOf(@Nonnull List<Shortcut> shortcuts) {
+    
+    public static CustomShortcutSet shortcutSetOf(List<Shortcut> shortcuts) {
         return new CustomShortcutSet(shortcuts.toArray(new Shortcut[shortcuts.size()]));
     }
 
-    @Nonnull
-    public static List<Shortcut> shortcutsOf(@Nonnull String actionId) {
+    
+    public static List<Shortcut> shortcutsOf(String actionId) {
         AnAction action = ActionManager.getInstance().getAction(actionId);
         return action == null ? List.of() : List.of(action.getShortcutSet().getShortcuts());
     }

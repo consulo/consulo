@@ -16,7 +16,6 @@
 
 package consulo.ui.ex.awt.dnd;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +29,7 @@ public interface DnDAware {
   
   void dropSelectionButUnderPoint(Point point);
 
-  @Nonnull
+  
   JComponent getComponent();
 
 }

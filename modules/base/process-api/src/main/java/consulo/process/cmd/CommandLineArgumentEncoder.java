@@ -3,7 +3,6 @@ package consulo.process.cmd;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Used to safely pass command argument. It handles quoting, escaping.
@@ -11,7 +10,7 @@ import jakarta.annotation.Nonnull;
 public interface CommandLineArgumentEncoder {
   CommandLineArgumentEncoder DEFAULT_ENCODER = new CommandLineArgumentEncoder() {
     @Override
-    public void encodeArgument(@Nonnull StringBuilder builder) {
+    public void encodeArgument(StringBuilder builder) {
       StringUtil.escapeQuotes(builder);
       if (builder.length() == 0 || StringUtil.indexOf(builder, ' ') >= 0 || StringUtil.indexOf(builder, '|') >= 0) {
         // don't let a trailing backslash (if any) unintentionally escape the closing quote
@@ -22,5 +21,5 @@ public interface CommandLineArgumentEncoder {
     }
   };
 
-  void encodeArgument(@Nonnull StringBuilder argument);
+  void encodeArgument(StringBuilder argument);
 }

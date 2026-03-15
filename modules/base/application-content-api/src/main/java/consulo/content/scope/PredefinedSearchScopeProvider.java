@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -42,7 +41,7 @@ public abstract class PredefinedSearchScopeProvider {
      * @param showEmptyScopes     add <i>Current File</i> and <i>Open Files</i> scopes even if there are no files open
      */
     public abstract List<SearchScope> getPredefinedScopes(
-        @Nonnull Project project,
+        Project project,
         @Nullable DataContext dataContext,
         boolean suggestSearchInLibs,
         boolean prevSearchFiles,
@@ -52,7 +51,7 @@ public abstract class PredefinedSearchScopeProvider {
     );
 
     public final List<SearchScope> getPredefinedScopes(
-        @Nonnull Project project,
+        Project project,
         @Nullable DataContext dataContext,
         boolean suggestSearchInLibs,
         boolean prevSearchFiles,

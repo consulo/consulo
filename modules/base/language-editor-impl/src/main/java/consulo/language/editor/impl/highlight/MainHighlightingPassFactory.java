@@ -21,15 +21,14 @@ import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Should be implemented to include corresponding pass in code smells check
  */
 public interface MainHighlightingPassFactory extends TextEditorHighlightingPassFactory {
   @Nullable
-  TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
-                                                        @Nonnull Document document,
-                                                        @Nonnull HighlightInfoProcessor highlightInfoProcessor);
+  TextEditorHighlightingPass createMainHighlightingPass(PsiFile file,
+                                                        Document document,
+                                                        HighlightInfoProcessor highlightInfoProcessor);
 }

@@ -56,8 +56,7 @@ import consulo.util.io.PathUtil;
 import consulo.util.lang.Couple;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -135,13 +134,13 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         myComponent.revalidate();
     }
 
-    @Nonnull
+    
     @Override
     protected DesktopFileEditorWindow[] createArray(int size) {
         return new DesktopFileEditorWindow[size];
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return myComponent;
@@ -169,7 +168,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     }
 
     @Override
-    public void writeExternal(@Nonnull Element element) {
+    public void writeExternal(Element element) {
         if (myComponent.getComponentCount() == 0) {
             return;
         }
@@ -189,7 +188,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     }
 
     @SuppressWarnings("HardCodedStringLiteral")
-    private Element writePanel(@Nonnull Component comp) {
+    private Element writePanel(Component comp) {
         if (comp instanceof Splitter splitter) {
             Element res = new Element("splitter");
             res.setAttribute("split-orientation", splitter.getOrientation() ? "vertical" : "horizontal");
@@ -218,7 +217,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         }
     }
 
-    private void writeWindow(@Nonnull Element res, @Nullable DesktopFileEditorWindow window) {
+    private void writeWindow(Element res, @Nullable DesktopFileEditorWindow window) {
         if (window != null) {
             FileEditorWithProviderComposite[] composites = window.getEditors();
             for (int i = 0; i < composites.length; i++) {
@@ -228,7 +227,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         }
     }
 
-    @Nonnull
+    
     private Element writeComposite(
         VirtualFile file,
         FileEditorWithProviderComposite composite,
@@ -243,9 +242,9 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         return fileElement;
     }
 
-    @Nonnull
+    
     @Override
-    public CompletableFuture<?> openFilesAsync(@Nonnull UIAccess uiAccess) {
+    public CompletableFuture<?> openFilesAsync(UIAccess uiAccess) {
         if (mySplittersElement == null) {
             return CompletableFuture.completedFuture(null);
         }
@@ -347,7 +346,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     }
 
     @Override
-    @Nonnull
+    
     public DesktopFileEditorWindow[] getOrderedWindows() {
         final List<DesktopFileEditorWindow> res = new ArrayList<>();
 
@@ -397,7 +396,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     @RequiredUIAccess
     @Override
     @Nullable
-    public FileEditorWindow openInRightSplit(@Nonnull VirtualFile file, boolean requestFocus) {
+    public FileEditorWindow openInRightSplit(VirtualFile file, boolean requestFocus) {
         DesktopFileEditorWindow window = getCurrentWindow();
 
         if (window == null) {
@@ -471,9 +470,9 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
 
     private class UIBuilder extends AsyncConfigTreeReader<JPanel> {
-        @Nonnull
+        
         @Override
-        protected CompletableFuture<JPanel> processFiles(@Nonnull List<Element> fileElements,
+        protected CompletableFuture<JPanel> processFiles(List<Element> fileElements,
                                                          JPanel context,
                                                          Element parent,
                                                          UIAccess uiAccess) {
@@ -490,7 +489,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
             return editorWindow;
         }
 
-        private JPanel processFilesImpl(@Nonnull List<Element> fileElements,
+        private JPanel processFilesImpl(List<Element> fileElements,
                                         UIAccess uiAccess,
                                         DesktopFileEditorWindow window) {
             LOG.assertTrue(window != null);
@@ -565,18 +564,18 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         }
 
 
-        @Nonnull
+        
         @Override
-        protected CompletableFuture<JPanel> processSplitter(@Nonnull Element splitterElement,
+        protected CompletableFuture<JPanel> processSplitter(Element splitterElement,
                                                             Element firstChild,
                                                             Element secondChild,
                                                             JPanel context,
-                                                            @Nonnull UIAccess uiAccess) {
+                                                            UIAccess uiAccess) {
             return processSplitterImpl(splitterElement, firstChild, secondChild, context, uiAccess);
         }
 
 
-        protected CompletableFuture<JPanel> processSplitterImpl(@Nonnull Element splitterElement,
+        protected CompletableFuture<JPanel> processSplitterImpl(Element splitterElement,
                                                                 Element firstChild,
                                                                 Element secondChild,
                                                                 JPanel context,

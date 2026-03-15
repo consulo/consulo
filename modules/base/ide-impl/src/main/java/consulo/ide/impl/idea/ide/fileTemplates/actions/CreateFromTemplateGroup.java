@@ -31,8 +31,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +45,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         Presentation presentation = event.getPresentation();
         if (project != null && !project.isDisposed()) {
@@ -61,7 +60,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
         presentation.setEnabled(false);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
@@ -120,7 +119,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
         return result.toArray(new AnAction[result.size()]);
     }
 
-    static boolean canCreateFromTemplate(@Nonnull AnActionEvent e, FileTemplate template) {
+    static boolean canCreateFromTemplate(AnActionEvent e, FileTemplate template) {
         IdeView view = e.getData(IdeView.KEY);
         if (view == null) {
             return false;
@@ -131,7 +130,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     }
 
     private static class CreateFromTemplatesAction extends CreateFromTemplateActionBase {
-        public CreateFromTemplatesAction(@Nonnull LocalizeValue actionText) {
+        public CreateFromTemplatesAction(LocalizeValue actionText) {
             super(actionText, actionText, null);
         }
 

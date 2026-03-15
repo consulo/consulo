@@ -18,7 +18,6 @@ package consulo.versionControlSystem.change.commited;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 
@@ -26,12 +25,12 @@ import java.util.Collections;
  * @author yole
  */
 public class ReceivedChangeList extends CommittedChangeListImpl {
-  @Nonnull
+  
   private final CommittedChangeList myBaseList;
   private final int myBaseCount;
   private boolean myForcePartial;
 
-  public ReceivedChangeList(@Nonnull CommittedChangeList baseList) {
+  public ReceivedChangeList(CommittedChangeList baseList) {
     super(baseList.getName(), baseList.getComment(), baseList.getCommitterName(),
           baseList.getNumber(), baseList.getCommitDate(), Collections.<Change>emptyList());
     myBaseList = baseList;
@@ -56,7 +55,7 @@ public class ReceivedChangeList extends CommittedChangeListImpl {
     return myBaseList.getVcs();
   }
 
-  @Nonnull
+  
   public CommittedChangeList getBaseList() {
     return myBaseList;
   }

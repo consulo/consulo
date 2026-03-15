@@ -19,8 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.task.BaseRepository;
 import consulo.task.Task;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,17 +38,17 @@ public class SandTaskRepository extends BaseRepository {
 
 
   @Override
-  public Task[] getIssues(@Nullable String query, int offset, int limit, boolean withClosed, @Nonnull ProgressIndicator cancelled) throws Exception {
+  public Task[] getIssues(@Nullable String query, int offset, int limit, boolean withClosed, ProgressIndicator cancelled) throws Exception {
     return myTasks.values().toArray(Task[]::new);
   }
 
   @Nullable
   @Override
-  public Task findTask(@Nonnull String id) throws Exception {
+  public Task findTask(String id) throws Exception {
     return myTasks.get(id);
   }
 
-  @Nonnull
+  
   @Override
   public BaseRepository clone() {
     SandTaskRepository repository = new SandTaskRepository();

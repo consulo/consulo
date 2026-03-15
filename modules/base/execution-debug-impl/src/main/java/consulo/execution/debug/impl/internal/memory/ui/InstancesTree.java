@@ -11,8 +11,7 @@ import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +21,10 @@ public class InstancesTree extends XDebuggerTree {
     private final Runnable myOnRootExpandAction;
     private List<XValueChildrenList> myChildren;
 
-    public InstancesTree(@Nonnull Project project,
-                         @Nonnull XDebuggerEditorsProvider editorsProvider,
+    public InstancesTree(Project project,
+                         XDebuggerEditorsProvider editorsProvider,
                          @Nullable XValueMarkers<?, ?> valueMarkers,
-                         @Nonnull Runnable onRootExpand) {
+                         Runnable onRootExpand) {
         super(project, editorsProvider, null, XDebuggerActions.INSPECT_TREE_POPUP_GROUP, valueMarkers);
         myOnRootExpandAction = onRootExpand;
         myRoot = new XValueNodeImpl(this, null, "root", new MyRootValue());
@@ -37,7 +36,7 @@ public class InstancesTree extends XDebuggerTree {
         expandNodesOnLoad(node -> node == myRoot);
     }
 
-    public void addChildren(@Nonnull XValueChildrenList children, boolean last) {
+    public void addChildren(XValueChildrenList children, boolean last) {
         if (myChildren == null) {
             myChildren = new ArrayList<>();
         }
@@ -46,7 +45,7 @@ public class InstancesTree extends XDebuggerTree {
         myRoot.addChildren(children, last);
     }
 
-    void rebuildTree(@Nonnull RebuildPolicy policy, @Nonnull XDebuggerTreeState state) {
+    void rebuildTree(RebuildPolicy policy, XDebuggerTreeState state) {
         if (policy == RebuildPolicy.RELOAD_INSTANCES) {
             myChildren = null;
         }
@@ -54,11 +53,11 @@ public class InstancesTree extends XDebuggerTree {
         rebuildAndRestore(state);
     }
 
-    public void rebuildTree(@Nonnull RebuildPolicy policy) {
+    public void rebuildTree(RebuildPolicy policy) {
         rebuildTree(policy, XDebuggerTreeState.saveState(this));
     }
 
-    void setInfoMessage(@Nonnull LocalizeValue text) {
+    void setInfoMessage(LocalizeValue text) {
         myChildren = null;
         myRoot.clearChildren();
         myRoot.setMessage(text, XDebuggerUIConstants.INFORMATION_MESSAGE_ICON, SimpleTextAttributes.REGULAR_ATTRIBUTES, null);
@@ -71,7 +70,7 @@ public class InstancesTree extends XDebuggerTree {
 
     private class MyRootValue extends XValue {
         @Override
-        public void computeChildren(@Nonnull XCompositeNode node) {
+        public void computeChildren(XCompositeNode node) {
             if (myChildren == null) {
                 myOnRootExpandAction.run();
             }
@@ -85,7 +84,7 @@ public class InstancesTree extends XDebuggerTree {
         }
 
         @Override
-        public void computePresentation(@Nonnull XValueNode node, @Nonnull XValuePlace place) {
+        public void computePresentation(XValueNode node, XValuePlace place) {
             node.setPresentation(null, "", "", true);
         }
     }

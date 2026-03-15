@@ -16,7 +16,6 @@
 package consulo.ui.ex.action;
 
 import consulo.util.collection.Maps;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -24,8 +23,8 @@ public class BasePresentationFactory implements PresentationFactory {
     private final Map<AnAction, Presentation> myAction2Presentation = Maps.newConcurrentWeakKeySoftValueHashMap();
 
     @Override
-    @Nonnull
-    public final Presentation getPresentation(@Nonnull AnAction action) {
+    
+    public final Presentation getPresentation(AnAction action) {
         Presentation presentation = myAction2Presentation.get(action);
         if (presentation == null || !action.isDefaultIcon()) {
             Presentation templatePresentation = action.getTemplatePresentation();

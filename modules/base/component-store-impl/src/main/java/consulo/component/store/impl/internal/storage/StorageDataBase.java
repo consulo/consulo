@@ -15,13 +15,12 @@
  */
 package consulo.component.store.impl.internal.storage;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
 public abstract class StorageDataBase {
-  @Nonnull
+  
   public abstract Set<String> getComponentNames();
 
-  public abstract boolean hasState(@Nonnull String componentName);
+  public abstract boolean hasState(String componentName);
 }

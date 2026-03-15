@@ -16,8 +16,7 @@
 package consulo.codeEditor.util;
 
 import consulo.codeEditor.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -26,7 +25,7 @@ import java.awt.*;
  * @since 2024-12-06
  */
 public class SoftWrapUtil {
-    public static void toggleSoftWraps(@Nonnull Editor editor, @Nullable SoftWrapAppliancePlaces places, boolean state) {
+    public static void toggleSoftWraps(Editor editor, @Nullable SoftWrapAppliancePlaces places, boolean state) {
         Point point = editor.getScrollingModel().getVisibleArea().getLocation();
         LogicalPosition anchorPosition = editor.xyToLogicalPosition(point);
         int intraLineShift = point.y - editor.logicalPositionToXY(anchorPosition).y;

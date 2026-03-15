@@ -6,7 +6,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.ex.content.Content;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -19,22 +18,22 @@ public abstract class UsageViewContentManager {
         return project.getInstance(UsageViewContentManager.class);
     }
 
-    @Nonnull
+    
     public abstract Content addContent(
-        @Nonnull String contentName,
+        String contentName,
         boolean reusable,
-        @Nonnull JComponent component,
+        JComponent component,
         boolean toOpenInNewTab,
         boolean isLockable
     );
 
-    @Nonnull
+    
     public abstract Content addContent(
-        @Nonnull String contentName,
+        String contentName,
         String tabName,
         String toolwindowTitle,
         boolean reusable,
-        @Nonnull JComponent component,
+        JComponent component,
         boolean toOpenInNewTab,
         boolean isLockable
     );
@@ -45,5 +44,5 @@ public abstract class UsageViewContentManager {
 
     public abstract Content getSelectedContent();
 
-    public abstract void closeContent(@Nonnull Content usageView);
+    public abstract void closeContent(Content usageView);
 }

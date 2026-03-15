@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.query;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -19,5 +18,5 @@ public interface QueryExecutor<Result, Param> {
      *
      * @return {@code false} if the searching should be stopped immediately. This should happen only when consumer has returned {@code false}.
      */
-    boolean execute(@Nonnull Param queryParameters, @Nonnull Predicate<? super Result> consumer);
+    boolean execute(Param queryParameters, Predicate<? super Result> consumer);
 }

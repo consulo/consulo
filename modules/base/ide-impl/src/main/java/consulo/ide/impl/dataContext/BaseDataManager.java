@@ -40,8 +40,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -76,14 +75,14 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
             myCachedData.clear();
         }
 
-        @Nonnull
+       
         protected M getDataManager() {
             return myDataManager;
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T getData(@Nonnull Key<T> dataId) {
+        public <T> T getData(Key<T> dataId) {
             if (ourSafeKeys.contains(dataId)) {
                 Object answer = myCachedData.get(dataId);
                 if (answer == null) {
@@ -110,17 +109,17 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         }
 
         @Override
-        public <T> T getUserData(@Nonnull Key<T> key) {
+        public <T> T getUserData(Key<T> key) {
             //noinspection unchecked
             return (T) getOrCreateMap().get(key);
         }
 
         @Override
-        public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
             getOrCreateMap().put(key, value);
         }
 
-        @Nonnull
+       
         private Map<Key, Object> getOrCreateMap() {
             Map<Key, Object> userData = myUserData;
             if (userData == null) {
@@ -138,7 +137,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         @Override
         @Nullable
         @SuppressWarnings("unchecked")
-        protected <T> T doGetData(@Nonnull Key<T> dataId) {
+        protected <T> T doGetData(Key<T> dataId) {
             consulo.ui.Component component = getComponent();
             if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
                 if (component == null) {
@@ -181,7 +180,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
 
     @Override
     @Nullable
-    public <T> GetDataRule<T> getDataRule(@Nonnull Key<T> dataId) {
+    public <T> GetDataRule<T> getDataRule(Key<T> dataId) {
         GetDataRule<T> rule = getRuleFromMap(dataId);
         if (rule != null) {
             return rule;
@@ -190,7 +189,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         final GetDataRule<T> plainRule = getRuleFromMap(AnActionEvent.uninjectedId(dataId));
         if (plainRule != null) {
             return new GetDataRule<>() {
-                @Nonnull
+               
                 @Override
                 public Key<T> getKey() {
                     return plainRule.getKey();
@@ -198,7 +197,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
 
                 @Nullable
                 @Override
-                public T getData(@Nonnull DataProvider dataProvider) {
+                public T getData(DataProvider dataProvider) {
                     return plainRule.getData(key -> dataProvider.getData(AnActionEvent.injectedId(key)));
                 }
             };
@@ -207,7 +206,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return null;
     }
 
-    @Nonnull
+   
     @Override
     public AsyncResult<DataContext> getDataContextFromFocus() {
         AsyncResult<DataContext> context = AsyncResult.undefined();
@@ -215,7 +214,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return context;
     }
 
-    @Nonnull
+   
     @Override
     public Promise<DataContext> getDataContextFromFocusAsync() {
         AsyncPromise<DataContext> result = new AsyncPromise<>();
@@ -225,13 +224,13 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    protected <T> GetDataRule<T> getRuleFromMap(@Nonnull Key<T> dataId) {
+    protected <T> GetDataRule<T> getRuleFromMap(Key<T> dataId) {
         Map<Key, GetDataRule> map = myApplication.getExtensionPoint(GetDataRule.class).getOrBuildCache(GetDataRuleCache.CACHE_KEY);
         return map.get(dataId);
     }
 
     @Nullable
-    public <T> T getDataFromProvider(@Nonnull DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
+    public <T> T getDataFromProvider(DataProvider provider, Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
         if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
             return null;
         }
@@ -262,7 +261,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
 
     @Nullable
-    protected static <T> T validated(@Nonnull T data, @Nonnull Key<T> dataId, @Nonnull Object dataSource) {
+    protected static <T> T validated(T data, Key<T> dataId, Object dataSource) {
         T invalidData = DataValidators.findInvalidData(dataId, data, dataSource);
         if (invalidData != null) {
             return null;
@@ -282,7 +281,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
 
     @Override
-    public <T> void saveInDataContext(DataContext dataContext, @Nonnull Key<T> dataKey, @Nullable T data) {
+    public <T> void saveInDataContext(DataContext dataContext, Key<T> dataKey, @Nullable T data) {
         if (dataContext instanceof UserDataHolder) {
             ((UserDataHolder) dataContext).putUserData(dataKey, data);
         }
@@ -290,12 +289,11 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
 
     @Override
     @Nullable
-    public <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey) {
+    public <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey) {
         return dataContext instanceof UserDataHolder ? ((UserDataHolder) dataContext).getUserData(dataKey) : null;
     }
 
-    @Nullable
-    protected <T> T getData(@Nonnull Key<T> dataId, consulo.ui.Component focusedComponent) {
+    protected <T> T getData(Key<T> dataId, consulo.ui.@Nullable Component focusedComponent) {
         for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
             DataProvider dataProvider = c::getUserData;
             T data = getDataFromProvider(dataProvider, dataId, null);
@@ -306,9 +304,9 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return null;
     }
 
-    @Nonnull
+   
     @Override
-    public DataContext getDataContext(@Nullable consulo.ui.Component component) {
+    public DataContext getDataContext(consulo.ui.@Nullable Component component) {
         return new MyUIDataContext(this, component);
     }
 }

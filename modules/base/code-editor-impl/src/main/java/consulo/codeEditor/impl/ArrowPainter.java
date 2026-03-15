@@ -17,7 +17,6 @@ package consulo.codeEditor.impl;
 
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.function.Supplier;
@@ -41,7 +40,7 @@ public class ArrowPainter {
    * @param widthProvider defines character width, it is used to calculate an inset for the arrow's tip
    * @param heightProvider defines character height, it's used to calculate an arrow's width and height
    */
-  public ArrowPainter(@Nonnull ColorProvider colorHolder, @Nonnull Supplier<Integer> widthProvider, @Nonnull Supplier<Integer> heightProvider) {
+  public ArrowPainter(ColorProvider colorHolder, Supplier<Integer> widthProvider, Supplier<Integer> heightProvider) {
     myColorHolder = colorHolder;
     myWidthProvider = widthProvider;
     myHeightProvider = heightProvider;

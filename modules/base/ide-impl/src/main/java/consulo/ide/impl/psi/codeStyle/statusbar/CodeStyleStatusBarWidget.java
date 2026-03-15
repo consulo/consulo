@@ -24,8 +24,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -37,11 +36,11 @@ import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implements CodeStyleSettingsListener {
     private CodeStyleStatusBarPanel myPanel;
 
-    public CodeStyleStatusBarWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    public CodeStyleStatusBarWidget(Project project, StatusBarWidgetFactory factory) {
         super(project, factory, true);
     }
 
-    @Nonnull
+    
     @Override
     protected WidgetState getWidgetState(@Nullable VirtualFile file) {
         if (file == null) {
@@ -63,20 +62,20 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
 
 
     @Nullable
-    private static CodeStyleStatusBarUIContributor getUiContributor(@Nonnull TransientCodeStyleSettings settings) {
+    private static CodeStyleStatusBarUIContributor getUiContributor(TransientCodeStyleSettings settings) {
         CodeStyleSettingsModifier modifier = settings.getModifier();
         return modifier != null ? modifier.getStatusBarUiContributor(settings) : null;
     }
 
 
     @Nullable
-    private static IndentStatusBarUIContributor getUiContributor(@Nonnull VirtualFile file, @Nonnull IndentOptions indentOptions) {
+    private static IndentStatusBarUIContributor getUiContributor(VirtualFile file, IndentOptions indentOptions) {
         FileIndentOptionsProvider provider = findProvider(file, indentOptions);
         return provider != null ? provider.getIndentStatusBarUiContributor(indentOptions) : null;
     }
 
     @Nullable
-    private static FileIndentOptionsProvider findProvider(@Nonnull VirtualFile file, @Nonnull IndentOptions indentOptions) {
+    private static FileIndentOptionsProvider findProvider(VirtualFile file, IndentOptions indentOptions) {
         FileIndentOptionsProvider optionsProvider = indentOptions.getFileIndentOptionsProvider();
         if (optionsProvider != null) {
             return optionsProvider;
@@ -91,8 +90,8 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     }
 
     private static WidgetState createWidgetState(
-        @Nonnull PsiFile psiFile,
-        @Nonnull IndentOptions indentOptions,
+        PsiFile psiFile,
+        IndentOptions indentOptions,
         @Nullable CodeStyleStatusBarUIContributor uiContributor
     ) {
         if (uiContributor != null) {
@@ -132,7 +131,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
             AnAction[] actions = getActions(uiContributor, psiFile);
             ActionGroup actionGroup = new ActionGroup() {
                 @Override
-                @Nonnull
+                
                 public AnAction[] getChildren(@Nullable AnActionEvent e) {
                     return actions;
                 }
@@ -148,8 +147,8 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         return null;
     }
 
-    @Nonnull
-    private static AnAction[] getActions(@Nullable CodeStyleStatusBarUIContributor uiContributor, @Nonnull PsiFile psiFile) {
+    
+    private static AnAction[] getActions(@Nullable CodeStyleStatusBarUIContributor uiContributor, PsiFile psiFile) {
         List<AnAction> allActions = new ArrayList<>();
         if (uiContributor != null) {
             AnAction[] actions = uiContributor.getActions(psiFile);
@@ -184,29 +183,29 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     }
 
     @Override
-    public void codeStyleSettingsChanged(@Nonnull CodeStyleSettingsChangeEvent event) {
+    public void codeStyleSettingsChanged(CodeStyleSettingsChangeEvent event) {
         update();
     }
 
-    @Nonnull
+    
     @Override
-    protected StatusBarWidget createInstance(@Nonnull Project project) {
+    protected StatusBarWidget createInstance(Project project) {
         return new CodeStyleStatusBarWidget(project, myFactory);
     }
 
     private static class MyWidgetState extends WidgetState {
-        @Nonnull
+        
         private final IndentOptions myIndentOptions;
         @Nullable
         private final CodeStyleStatusBarUIContributor myContributor;
-        @Nonnull
+        
         private final PsiFile myPsiFile;
 
         protected MyWidgetState(
             String toolTip,
             String text,
-            @Nonnull PsiFile psiFile,
-            @Nonnull IndentOptions indentOptions,
+            PsiFile psiFile,
+            IndentOptions indentOptions,
             @Nullable CodeStyleStatusBarUIContributor uiContributor
         ) {
             super(toolTip, text, true);
@@ -223,12 +222,12 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
             return myContributor;
         }
 
-        @Nonnull
+        
         public IndentOptions getIndentOptions() {
             return myIndentOptions;
         }
 
-        @Nonnull
+        
         public PsiFile getPsiFile() {
             return myPsiFile;
         }
@@ -241,7 +240,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     }
 
     @Override
-    protected void updateComponent(@Nonnull WidgetState state) {
+    protected void updateComponent(WidgetState state) {
         updateToolTip(state);
 
         myPanel.setIcon(state.getIcon());

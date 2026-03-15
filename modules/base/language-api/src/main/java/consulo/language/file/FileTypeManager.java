@@ -10,10 +10,8 @@ import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.*;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -29,13 +27,13 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @return the instance of FileTypeManager
    */
-  @Nonnull
+  
   public static FileTypeManager getInstance() {
     return ourInstance.get();
   }
 
   @Nullable
-  public LanguageFileType findFileTypeByLanguage(@Nonnull Language language) {
+  public LanguageFileType findFileTypeByLanguage(Language language) {
     return language.findMyFileType(getRegisteredFileTypes());
   }
 
@@ -46,7 +44,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @param name The name of the file to check.
    * @return {@code true} if the file is ignored, {@code false} otherwise.
    */
-  public abstract boolean isFileIgnored(@Nonnull String name);
+  public abstract boolean isFileIgnored(String name);
 
   /**
    * Returns the list of extensions associated with the specified file type.
@@ -56,12 +54,12 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @deprecated since more generic way of associations using wildcards exist, not every association matches extension paradigm
    */
   @Deprecated
-  @Nonnull
-  public abstract String[] getAssociatedExtensions(@Nonnull FileType type);
+  
+  public abstract String[] getAssociatedExtensions(FileType type);
 
 
-  @Nonnull
-  public abstract List<FileNameMatcher> getAssociations(@Nonnull FileType type);
+  
+  public abstract List<FileNameMatcher> getAssociations(FileType type);
 
   /**
    * Adds a listener for receiving notifications about changes in the list of
@@ -71,7 +69,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @deprecated Subscribe to {@link #TOPIC} on any message bus level instead.
    */
   @Deprecated
-  public abstract void addFileTypeListener(@Nonnull FileTypeListener listener);
+  public abstract void addFileTypeListener(FileTypeListener listener);
 
   /**
    * Removes a listener for receiving notifications about changes in the list of
@@ -81,7 +79,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @deprecated Subscribe to {@link #TOPIC} on any message bus level instead.
    */
   @Deprecated
-  public abstract void removeFileTypeListener(@Nonnull FileTypeListener listener);
+  public abstract void removeFileTypeListener(FileTypeListener listener);
 
   /**
    * If file is already associated with any known file type returns it.
@@ -93,16 +91,16 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    */
   @Nullable
   @Deprecated
-  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file) {
+  public FileType getKnownFileTypeOrAssociate(VirtualFile file) {
     return file.getFileType();
   }
 
   @Nullable
-  public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull Project project);
+  public abstract FileType getKnownFileTypeOrAssociate(VirtualFile file, Project project);
 
   @Nullable
   @Override
-  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project) {
+  public FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project) {
     return getKnownFileTypeOrAssociate(file, (Project)project);
   }
 
@@ -113,7 +111,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @return Semicolon-delimited list of patterns.
    */
-  @Nonnull
+  
   @Deprecated
   public String getIgnoredFilesList() {
     Set<String> masks = getIgnoredFiles();
@@ -125,7 +123,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * which are excluded from the project structure though they may be present
    * physically on disk.
    */
-  @Nonnull
+  
   public Set<String> getIgnoredFiles() {
     throw new UnsupportedOperationException();
   }
@@ -136,7 +134,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @param list List of semicolon-delimited patterns.
    */
-  public void setIgnoredFilesList(@Nonnull String list) {
+  public void setIgnoredFilesList(String list) {
     Set<String> files = new LinkedHashSet<>();
     StringTokenizer tokenizer = new StringTokenizer(list, ";");
     while (tokenizer.hasMoreTokens()) {
@@ -154,7 +152,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * are excluded from the project structure.
    *
    */
-  public void setIgnoredFiles(@Nonnull Set<String> list) {
+  public void setIgnoredFiles(Set<String> list) {
     throw new UnsupportedOperationException();
   }
 
@@ -164,15 +162,15 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @param type      the file type to associate the extension with.
    * @param extension the extension to associate.
    */
-  public final void associateExtension(@Nonnull FileType type, @Nonnull @NonNls String extension) {
+  public final void associateExtension(FileType type, String extension) {
     associate(type, FileNameMatcherFactory.getInstance().createExtensionFileNameMatcher(extension));
   }
 
-  public final void associatePattern(@Nonnull FileType type, @Nonnull @NonNls String pattern) {
+  public final void associatePattern(FileType type, String pattern) {
     associate(type, parseFromString(pattern));
   }
 
-  public abstract void associate(@Nonnull FileType type, @Nonnull FileNameMatcher matcher);
+  public abstract void associate(FileType type, FileNameMatcher matcher);
 
   /**
    * Removes an extension from the list of extensions associated with a file type.
@@ -180,17 +178,17 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @param type      the file type to remove the extension from.
    * @param extension the extension to remove.
    */
-  public final void removeAssociatedExtension(@Nonnull FileType type, @Nonnull @NonNls String extension) {
+  public final void removeAssociatedExtension(FileType type, String extension) {
     removeAssociation(type, FileNameMatcherFactory.getInstance().createExtensionFileNameMatcher(extension));
   }
 
-  public abstract void removeAssociation(@Nonnull FileType type, @Nonnull FileNameMatcher matcher);
+  public abstract void removeAssociation(FileType type, FileNameMatcher matcher);
 
-  @Nonnull
-  public static FileNameMatcher parseFromString(@Nonnull String pattern) {
+  
+  public static FileNameMatcher parseFromString(String pattern) {
     return FileNameMatcherFactory.getInstance().createMatcher(pattern);
   }
 
-  @Nonnull
-  public abstract FileType getStdFileType(@Nonnull @NonNls String fileTypeName);
+  
+  public abstract FileType getStdFileType(String fileTypeName);
 }

@@ -17,13 +17,12 @@ package consulo.ui.ex.awt.popup;
 
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-10-20
  */
 public interface ListPopupInternal extends ListPopup {
-    @Nonnull
+    
     PopupInlineActionsSupport getPopupInlineActionsSupport();
 }

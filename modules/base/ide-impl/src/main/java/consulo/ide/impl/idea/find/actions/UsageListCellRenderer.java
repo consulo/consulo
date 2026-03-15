@@ -27,7 +27,6 @@ import consulo.usage.UsagePresentation;
 import consulo.usage.rule.UsageInFile;
 import consulo.language.icon.IconDescriptorUpdaters;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -37,7 +36,7 @@ import javax.swing.*;
 public class UsageListCellRenderer extends ColoredListCellRenderer {
   private final Project myProject;
 
-  public UsageListCellRenderer(@Nonnull Project project) {
+  public UsageListCellRenderer(Project project) {
     myProject = project;
   }
 

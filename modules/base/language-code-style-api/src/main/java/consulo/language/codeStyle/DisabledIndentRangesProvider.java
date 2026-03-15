@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -41,5 +40,5 @@ public interface DisabledIndentRangesProvider {
      * @return A collection of ranges with indentation disabled or <i>null</i> if the check is not relevant for the element in question.
      */
     @Nullable
-    Collection<TextRange> getDisabledIndentRanges(@Nonnull PsiElement element);
+    Collection<TextRange> getDisabledIndentRanges(PsiElement element);
 }

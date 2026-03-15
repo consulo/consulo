@@ -23,8 +23,7 @@ import consulo.build.ui.issue.BuildIssue;
 import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -37,91 +36,91 @@ import java.util.function.Supplier;
 @ServiceImpl
 @Singleton
 public class BuildEventFactoryImpl implements BuildEventFactory {
-    @Nonnull
+    
     @Override
     public SkippedResult createSkippedResult() {
         return new SkippedResultImpl();
     }
 
-    @Nonnull
+    
     @Override
     public SuccessResult createSuccessResult(boolean isUpToDate) {
         return new SuccessResultImpl(isUpToDate);
     }
 
-    @Nonnull
+    
     @Override
     public DerivedResult createDerivedResult(@Nullable Supplier<EventResult> onDefault, @Nullable Supplier<FailureResult> onFail) {
         return new DerivedResultImpl(onDefault, onFail);
     }
 
-    @Nonnull
+    
     @Override
-    public Failure createFailure(String message, String description, @Nonnull List<? extends Failure> causes, @Nullable Throwable error, @Nullable Notification notification, @Nullable Navigatable navigatable) {
+    public Failure createFailure(String message, String description, List<? extends Failure> causes, @Nullable Throwable error, @Nullable Notification notification, @Nullable Navigatable navigatable) {
         return new FailureImpl(message, description, causes, error, notification, navigatable);
     }
 
-    @Nonnull
+    
     @Override
-    public FailureResult createFailureResult(@Nonnull List<Failure> failures) {
+    public FailureResult createFailureResult(List<Failure> failures) {
         return new FailureResultImpl(failures);
     }
 
-    @Nonnull
+    
     @Override
-    public FileMessageEvent createFileMessageEvent(@Nonnull Object parentId,
-                                                   @Nonnull MessageEvent.Kind kind,
-                                                   @Nonnull NotificationGroup group,
-                                                   @Nonnull String message,
+    public FileMessageEvent createFileMessageEvent(Object parentId,
+                                                   MessageEvent.Kind kind,
+                                                   NotificationGroup group,
+                                                   String message,
                                                    @Nullable String detailedMessage,
-                                                   @Nonnull FilePosition filePosition) {
+                                                   FilePosition filePosition) {
         return new FileMessageEventImpl(parentId, kind, group, message, detailedMessage, filePosition);
     }
 
-    @Nonnull
+    
     @Override
-    public FinishEvent createFinishEvent(@Nonnull Object eventId, @Nullable Object parentId, long eventTime, @Nonnull String message, @Nonnull EventResult result) {
+    public FinishEvent createFinishEvent(Object eventId, @Nullable Object parentId, long eventTime, String message, EventResult result) {
         return new FinishEventImpl(eventId, parentId, eventTime, message, result);
     }
 
-    @Nonnull
+    
     @Override
-    public FinishBuildEvent createFinishBuildEvent(@Nonnull Object eventId, @Nullable Object parentId, long eventTime, @Nonnull String message, @Nonnull EventResult result) {
+    public FinishBuildEvent createFinishBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, String message, EventResult result) {
         return new FinishBuildEventImpl(eventId, parentId, eventTime, message, result);
     }
 
-    @Nonnull
+    
     @Override
-    public MessageEvent createMessageEvent(@Nonnull Object parentId,
-                                           @Nonnull MessageEvent.Kind kind,
-                                           @Nonnull NotificationGroup group,
-                                           @Nonnull String message,
+    public MessageEvent createMessageEvent(Object parentId,
+                                           MessageEvent.Kind kind,
+                                           NotificationGroup group,
+                                           String message,
                                            @Nullable String detailedMessage,
                                            @Nullable Navigatable navigatable) {
         return new MessageEventImpl(parentId, kind, group, message, detailedMessage, navigatable);
     }
 
-    @Nonnull
+    
     @Override
-    public StartEvent createStartEvent(@Nonnull Object eventId, @Nullable Object parentId, long eventTime, @Nonnull String message) {
+    public StartEvent createStartEvent(Object eventId, @Nullable Object parentId, long eventTime, String message) {
         return new StartEventImpl(eventId, parentId, eventTime, message);
     }
 
-    @Nonnull
+    
     @Override
-    public BuildIssueEvent createBuildIssueEvent(@Nonnull Object parentId, @Nonnull BuildIssue buildIssue, @Nonnull MessageEvent.Kind kind) {
+    public BuildIssueEvent createBuildIssueEvent(Object parentId, BuildIssue buildIssue, MessageEvent.Kind kind) {
         return new BuildIssueEventImpl(parentId, buildIssue, kind);
     }
 
-    @Nonnull
+    
     @Override
-    public StartBuildEvent createStartBuildEvent(@Nonnull BuildDescriptor descriptor, @Nonnull String message) {
+    public StartBuildEvent createStartBuildEvent(BuildDescriptor descriptor, String message) {
         return new StartBuildEventImpl(descriptor, message);
     }
 
-    @Nonnull
+    
     @Override
-    public OutputBuildEvent createOutputBuildEvent(@Nonnull Object eventId, @Nullable Object parentId, @Nonnull String message, boolean stdOut) {
+    public OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, String message, boolean stdOut) {
         return new OutputBuildEventImpl(eventId, parentId, message, false);
     }
 }

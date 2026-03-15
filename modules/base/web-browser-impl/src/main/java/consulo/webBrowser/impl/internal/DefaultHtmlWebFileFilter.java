@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.webBrowser.WebFileFilter;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "default", order = "last")
 public class DefaultHtmlWebFileFilter implements WebFileFilter {
   @Override
-  public boolean isWebFile(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public boolean isWebFile(Project project, VirtualFile file) {
     return "html".equals(file.getExtension()) || "htm".equals(file.getExtension());
   }
 }

@@ -32,7 +32,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -43,8 +42,8 @@ public interface LanguageLineWrapPositionStrategy extends LineWrapPositionStrate
   ExtensionPointCacheKey<LanguageLineWrapPositionStrategy, ByLanguageValue<LanguageLineWrapPositionStrategy>> KEY =
           ExtensionPointCacheKey.create("LanguageLineWrapPositionStrategy", LanguageOneToOne.build(LanguageDefaultLineWrapPositionStrategy.INSTANCE));
 
-  @Nonnull
-  static LanguageLineWrapPositionStrategy forLanguage(@Nonnull Language language) {
+  
+  static LanguageLineWrapPositionStrategy forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageLineWrapPositionStrategy.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -54,9 +53,9 @@ public interface LanguageLineWrapPositionStrategy extends LineWrapPositionStrate
    * @param editor editor that manages document which text should be processed by wrap position strategy
    * @return line wrap position strategy to use for the lines from the document managed by the given editor
    */
-  @Nonnull
+  
   @RequiredReadAction
-  static LineWrapPositionStrategy forEditor(@Nonnull Editor editor) {
+  static LineWrapPositionStrategy forEditor(Editor editor) {
     LineWrapPositionStrategy result = null;
     Project project = editor.getProject();
     if (project != null && !project.isDisposed()) {
@@ -68,7 +67,7 @@ public interface LanguageLineWrapPositionStrategy extends LineWrapPositionStrate
     return ObjectUtil.notNull(result, getDefaultImplementation());
   }
 
-  @Nonnull
+  
   static LineWrapPositionStrategy getDefaultImplementation() {
     return LanguageDefaultLineWrapPositionStrategy.INSTANCE;
   }

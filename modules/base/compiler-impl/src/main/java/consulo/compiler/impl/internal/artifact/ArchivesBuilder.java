@@ -34,8 +34,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -52,9 +51,9 @@ public class ArchivesBuilder {
     private Map<ArchivePackageInfo, File> myBuiltArchives;
 
     public ArchivesBuilder(
-        @Nonnull Set<ArchivePackageInfo> archivesToBuild,
-        @Nonnull FileFilter fileFilter,
-        @Nonnull CompileContext context
+        Set<ArchivePackageInfo> archivesToBuild,
+        FileFilter fileFilter,
+        CompileContext context
     ) {
         DependentArchivesEvaluator evaluator = new DependentArchivesEvaluator();
         for (ArchivePackageInfo archivePackageInfo : archivesToBuild) {
@@ -211,8 +210,8 @@ public class ArchivesBuilder {
     }
 
     private <T> void extractFileAndAddToArchive(
-        @Nonnull T archiveObject,
-        @Nonnull ArchivePackageWriter<T> writer,
+        T archiveObject,
+        ArchivePackageWriter<T> writer,
         VirtualFile sourceFile,
         String relativePath,
         Set<String> writtenPaths
@@ -244,11 +243,11 @@ public class ArchivesBuilder {
     }
 
     private <T> void addFileToArchive(
-        @Nonnull T archiveObject,
-        @Nonnull ArchivePackageWriter<T> writer,
-        @Nonnull File file,
-        @Nonnull String relativePath,
-        @Nonnull Set<String> writtenPaths
+        T archiveObject,
+        ArchivePackageWriter<T> writer,
+        File file,
+        String relativePath,
+        Set<String> writtenPaths
     ) throws IOException {
         if (!file.exists()) {
             return;
@@ -272,8 +271,8 @@ public class ArchivesBuilder {
     }
 
     private static <T> String addParentDirectories(
-        @Nonnull T archiveObject,
-        @Nonnull ArchivePackageWriter<T> writer,
+        T archiveObject,
+        ArchivePackageWriter<T> writer,
         Set<String> writtenPaths,
         String relativePath
     ) throws IOException {

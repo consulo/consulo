@@ -30,8 +30,7 @@ import consulo.ui.util.TextWithMnemonic;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -272,7 +271,7 @@ public class CustomizationUtil {
     }
 
     @Deprecated
-    public static MouseListener installPopupHandler(JComponent component, @Nonnull String groupId, String place) {
+    public static MouseListener installPopupHandler(JComponent component, String groupId, String place) {
         return PopupHandler.installPopupHandlerFromCustomActions(component, groupId, place);
     }
 }

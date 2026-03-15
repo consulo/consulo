@@ -25,7 +25,6 @@ import consulo.util.xml.serializer.*;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -41,13 +40,13 @@ public class XDebuggerBreakpointsContextProvider extends WorkingContextProvider 
     myBreakpointManager = (XBreakpointManagerImpl)debuggerManager.getBreakpointManager();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "xDebugger";
   }
 
-  @Nonnull
+  
   @Override
   public String getDescription() {
     return "XDebugger breakpoints";

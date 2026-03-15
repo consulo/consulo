@@ -16,21 +16,20 @@
 package consulo.diff.comparison.iterable;
 
 import consulo.diff.util.Range;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 class RangesDiffIterable extends ChangeDiffIterableBase {
-  @Nonnull
+  
   private final List<? extends Range> myRanges;
 
-  public RangesDiffIterable(@Nonnull List<? extends Range> ranges, int length1, int length2) {
+  public RangesDiffIterable(List<? extends Range> ranges, int length1, int length2) {
     super(length1, length2);
     myRanges = ranges;
   }
 
-  @Nonnull
+  
   @Override
   protected ChangeIterable createChangeIterable() {
     return new RangesChangeIterable();

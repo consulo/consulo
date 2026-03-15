@@ -26,7 +26,6 @@ package consulo.language.ignore.psi;
 
 import consulo.language.ast.IElementType;
 import consulo.language.ignore.IgnoreLanguage;
-import jakarta.annotation.Nonnull;
 
 /**
  * Token type definition.
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
  * @author Jakub Chrzanowski <jakub@hsz.mobi>
  */
 public class IgnoreTokenType extends IElementType {
-    public IgnoreTokenType(@Nonnull String debugName) {
+    public IgnoreTokenType(String debugName) {
         super(debugName, IgnoreLanguage.INSTANCE);
     }
 

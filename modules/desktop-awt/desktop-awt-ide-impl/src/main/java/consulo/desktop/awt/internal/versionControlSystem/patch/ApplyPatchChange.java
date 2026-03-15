@@ -45,8 +45,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.impl.internal.LineStatusMarkerRenderer;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch.HunkStatus;
 import consulo.versionControlSystem.impl.internal.patch.tool.PatchChangeBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -55,28 +54,28 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 class ApplyPatchChange {
-    @Nonnull
+    
     private final ApplyPatchViewer myViewer;
     private final int myIndex; // index in myModelChanges
 
-    @Nonnull
+    
     private final LineRange myPatchDeletionRange;
-    @Nonnull
+    
     private final LineRange myPatchInsertionRange;
-    @Nonnull
+    
     private final HunkStatus myStatus;
 
     @Nullable
     private final List<DiffFragment> myPatchInnerDifferences;
-    @Nonnull
+    
     private final List<MyGutterOperation> myOperations = new ArrayList<>();
 
-    @Nonnull
+    
     private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
 
     private boolean myResolved;
 
-    public ApplyPatchChange(@Nonnull PatchChangeBuilder.Hunk hunk, int index, @Nonnull ApplyPatchViewer viewer) {
+    public ApplyPatchChange(PatchChangeBuilder.Hunk hunk, int index, ApplyPatchViewer viewer) {
         myIndex = index;
         myViewer = viewer;
         myPatchDeletionRange = hunk.getPatchDeletionRange();
@@ -88,8 +87,8 @@ class ApplyPatchChange {
 
     @Nullable
     private static List<DiffFragment> calcPatchInnerDifferences(
-        @Nonnull PatchChangeBuilder.Hunk hunk,
-        @Nonnull ApplyPatchViewer viewer
+        PatchChangeBuilder.Hunk hunk,
+        ApplyPatchViewer viewer
     ) {
         LineRange deletionRange = hunk.getPatchDeletionRange();
         LineRange insertionRange = hunk.getPatchInsertionRange();
@@ -208,27 +207,27 @@ class ApplyPatchChange {
         return myIndex;
     }
 
-    @Nonnull
+    
     public HunkStatus getStatus() {
         return myStatus;
     }
 
-    @Nonnull
+    
     public LineRange getPatchRange() {
         return new LineRange(myPatchDeletionRange.start, myPatchInsertionRange.end);
     }
 
-    @Nonnull
+    
     public LineRange getPatchAffectedRange() {
         return isRangeApplied() ? myPatchInsertionRange : myPatchDeletionRange;
     }
 
-    @Nonnull
+    
     public LineRange getPatchDeletionRange() {
         return myPatchDeletionRange;
     }
 
-    @Nonnull
+    
     public LineRange getPatchInsertionRange() {
         return myPatchInsertionRange;
     }
@@ -253,7 +252,7 @@ class ApplyPatchChange {
         myResolved = resolved;
     }
 
-    @Nonnull
+    
     public TextDiffType getDiffType() {
         return DiffImplUtil.getDiffType(!myPatchDeletionRange.isEmpty(), !myPatchInsertionRange.isEmpty());
     }
@@ -262,7 +261,7 @@ class ApplyPatchChange {
         return myResolved || getStatus() == HunkStatus.ALREADY_APPLIED;
     }
 
-    @Nonnull
+    
     private String getStatusText() {
         switch (myStatus) {
             case ALREADY_APPLIED:
@@ -276,7 +275,7 @@ class ApplyPatchChange {
         }
     }
 
-    @Nonnull
+    
     private Color getStatusColor() {
         return switch (myStatus) {
             case ALREADY_APPLIED -> JBColor.YELLOW.darker();
@@ -305,7 +304,7 @@ class ApplyPatchChange {
     }
 
     @Nullable
-    private MyGutterOperation createOperation(@Nonnull OperationType type) {
+    private MyGutterOperation createOperation(OperationType type) {
         if (isResolved()) {
             return null;
         }
@@ -327,12 +326,12 @@ class ApplyPatchChange {
     }
 
     private class MyGutterOperation {
-        @Nonnull
+        
         private final RangeHighlighter myHighlighter;
-        @Nonnull
+        
         private final OperationType myType;
 
-        private MyGutterOperation(@Nonnull RangeHighlighter highlighter, @Nonnull OperationType type) {
+        private MyGutterOperation(RangeHighlighter highlighter, OperationType type) {
             myHighlighter = highlighter;
             myType = type;
 
@@ -373,11 +372,11 @@ class ApplyPatchChange {
         );
     }
 
-    @Nonnull
+    
     private static GutterIconRenderer createIconRenderer(
-        @Nonnull LocalizeValue text,
-        @Nonnull Image icon,
-        @RequiredUIAccess @Nonnull final Runnable perform
+        LocalizeValue text,
+        Image icon,
+        @RequiredUIAccess final Runnable perform
     ) {
         final String tooltipText = DiffImplUtil.createTooltipText(text.get(), null);
         return new DiffGutterRenderer(icon, tooltipText) {
@@ -397,7 +396,7 @@ class ApplyPatchChange {
     // State
     //
 
-    @Nonnull
+    
     public State storeState() {
         LineRange resultRange = getResultRange();
         return new State(
@@ -408,7 +407,7 @@ class ApplyPatchChange {
         );
     }
 
-    public void restoreState(@Nonnull State state) {
+    public void restoreState(State state) {
         myResolved = state.myResolved;
     }
 

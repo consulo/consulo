@@ -20,13 +20,12 @@ import consulo.usage.RuleAction;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
-import jakarta.annotation.Nonnull;
 
 /**
 * @author cdr
 */
 class PreviewUsageAction extends RuleAction {
-  PreviewUsageAction(@Nonnull UsageView usageView) {
+  PreviewUsageAction(UsageView usageView) {
     super(usageView, UsageViewBundle.message("preview.usages.action.text"), AllIcons.Actions.PreviewDetails);
   }
 

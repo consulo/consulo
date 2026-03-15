@@ -21,7 +21,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.*;
 import java.util.concurrent.Future;
@@ -32,7 +31,7 @@ import java.util.concurrent.Future;
 public class ShowSplashAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     DesktopSplash splash = new DesktopSplash(true);
 
     Future<?> task = ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {

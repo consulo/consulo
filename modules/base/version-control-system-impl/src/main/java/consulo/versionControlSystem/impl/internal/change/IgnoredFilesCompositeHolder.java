@@ -23,8 +23,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -166,7 +165,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
 
 
     @Nullable
-    private static VcsIgnoredFilesHolder getHolderFromExtensions(AbstractVcs vcs, @Nonnull Project project) {
+    private static VcsIgnoredFilesHolder getHolderFromExtensions(AbstractVcs vcs, Project project) {
         ExtensionPoint<VcsIgnoredFilesHolderProvider> point = project.getExtensionPoint(VcsIgnoredFilesHolderProvider.class);
 
         VcsIgnoredFilesHolderProvider provider = point.findFirstSafe(p -> Objects.equals(p.getVcsKey(), vcs.getKeyInstanceMethod()));

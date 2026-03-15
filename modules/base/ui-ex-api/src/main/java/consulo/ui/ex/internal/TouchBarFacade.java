@@ -21,8 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,10 +33,10 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TouchBarFacade {
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
+    
     LocalizeValue getDisplayName();
 
     boolean isAvailable();
@@ -46,18 +45,18 @@ public interface TouchBarFacade {
 
     void initialize();
 
-    void setButtonActions(@Nonnull JComponent component,
+    void setButtonActions(JComponent component,
                           Collection<? extends JButton> buttons,
                           Collection<? extends JButton> principal,
                           JButton defaultButton,
                           @Nullable ActionGroup extraActions);
 
     @Nullable
-    Disposable showWindowActions(@Nonnull Component contentPane);
+    Disposable showWindowActions(Component contentPane);
 
-    void onUpdateEditorHeader(@Nonnull Object editor, JComponent header);
+    void onUpdateEditorHeader(Object editor, JComponent header);
 
-    void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent);
+    void showPopupItems(JBPopup popup, JComponent popupComponent);
 
-    void setActions(@Nonnull JComponent component, @Nullable ActionGroup group);
+    void setActions(JComponent component, @Nullable ActionGroup group);
 }

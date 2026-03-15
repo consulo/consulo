@@ -2,14 +2,13 @@
 package consulo.language.index.impl.internal;
 
 import consulo.index.io.InputData;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
 public class HashedInputData<Key, Value> extends InputData<Key, Value> {
   private final int myHashId;
 
-  protected HashedInputData(@Nonnull Map<Key, Value> values, int hashId) {
+  protected HashedInputData(Map<Key, Value> values, int hashId) {
     super(values);
     myHashId = hashId;
   }

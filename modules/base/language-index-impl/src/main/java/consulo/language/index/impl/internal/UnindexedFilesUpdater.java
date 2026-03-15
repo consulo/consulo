@@ -22,7 +22,6 @@ import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
 
         project.getMessageBus().connect(this).subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
-            public void rootsChanged(@Nonnull ModuleRootEvent event) {
+            public void rootsChanged(ModuleRootEvent event) {
                 DumbService.getInstance(project).cancelTask(UnindexedFilesUpdater.this);
             }
         });
@@ -108,7 +107,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
         MessageBusConnection connection = myProject.getApplication().getMessageBus().connect();
         connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectClosed(Project project, UIAccess uiAccess) {
                 if (project == myProject) {
                     RefreshQueue.getInstance().cancelSession(sessionId);
                     connection.disconnect();
@@ -122,7 +121,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
     }
 
     @Override
-    public void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace) {
+    public void performInDumbMode(ProgressIndicator indicator, Exception trace) {
         myIndex.filesUpdateStarted(myProject);
         try {
             updateUnindexedFiles(indicator, trace);

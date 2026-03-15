@@ -22,8 +22,7 @@ import consulo.execution.debug.impl.internal.action.handler.XDependentBreakpoint
 import consulo.proxy.EventDispatcher;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -41,7 +40,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         myDispatcher = EventDispatcher.create(XDependentBreakpointListener.class);
         myBreakpointManager.addBreakpointListener(new XBreakpointListener<>() {
             @Override
-            public void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
+            public void breakpointRemoved(XBreakpoint<?> breakpoint) {
                 XDependentBreakpointInfo info = mySlave2Info.remove(breakpoint);
                 if (info != null) {
                     myMaster2Info.remove(info.myMasterBreakpoint, info);
@@ -117,7 +116,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         }
     }
 
-    public void setMasterBreakpoint(@Nonnull XBreakpoint<?> slave, @Nonnull XBreakpoint<?> master, boolean leaveEnabled) {
+    public void setMasterBreakpoint(XBreakpoint<?> slave, XBreakpoint<?> master, boolean leaveEnabled) {
         XDependentBreakpointInfo info = mySlave2Info.get(slave);
         if (info == null) {
             addDependency((XBreakpointBase<?, ?, ?>) master, (XBreakpointBase<?, ?, ?>) slave, leaveEnabled);
@@ -134,7 +133,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         myDispatcher.getMulticaster().dependencySet(slave, master);
     }
 
-    public void clearMasterBreakpoint(@Nonnull XBreakpoint<?> slave) {
+    public void clearMasterBreakpoint(XBreakpoint<?> slave) {
         XDependentBreakpointInfo info = mySlave2Info.remove(slave);
         if (info != null) {
             myMaster2Info.remove(info.myMasterBreakpoint, info);
@@ -150,12 +149,12 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
 
     @Override
     @Nullable
-    public XBreakpoint<?> getMasterBreakpoint(@Nonnull XBreakpoint<?> slave) {
+    public XBreakpoint<?> getMasterBreakpoint(XBreakpoint<?> slave) {
         XDependentBreakpointInfo info = mySlave2Info.get(slave);
         return info != null ? info.myMasterBreakpoint : null;
     }
 
-    public boolean isLeaveEnabled(@Nonnull XBreakpoint<?> slave) {
+    public boolean isLeaveEnabled(XBreakpoint<?> slave) {
         XDependentBreakpointInfo info = mySlave2Info.get(slave);
         return info != null && info.myLeaveEnabled;
     }
@@ -185,7 +184,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         private final XBreakpointBase mySlaveBreakpoint;
         private boolean myLeaveEnabled;
 
-        private XDependentBreakpointInfo(@Nonnull XBreakpointBase masterBreakpoint, XBreakpointBase slaveBreakpoint, boolean leaveEnabled) {
+        private XDependentBreakpointInfo(XBreakpointBase masterBreakpoint, XBreakpointBase slaveBreakpoint, boolean leaveEnabled) {
             myMasterBreakpoint = masterBreakpoint;
             myLeaveEnabled = leaveEnabled;
             mySlaveBreakpoint = slaveBreakpoint;

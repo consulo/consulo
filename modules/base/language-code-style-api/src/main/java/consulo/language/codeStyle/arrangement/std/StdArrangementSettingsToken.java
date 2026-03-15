@@ -18,7 +18,6 @@ package consulo.language.codeStyle.arrangement.std;
 import consulo.language.codeStyle.CodeStyleBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents ArrangementSettingsToken designed for use with standard GUI, i.e. a token that knows its UI role.
@@ -27,37 +26,37 @@ import jakarta.annotation.Nonnull;
  */
 public class StdArrangementSettingsToken extends ArrangementSettingsToken {
 
-  @Nonnull
+  
   private final StdArrangementTokenType myTokenType;
 
-  @Nonnull
-  public static StdArrangementSettingsToken tokenById(@Nonnull String id,
-                                                      @Nonnull StdArrangementTokenType tokenType) {
+  
+  public static StdArrangementSettingsToken tokenById(String id,
+                                                      StdArrangementTokenType tokenType) {
     return new StdArrangementSettingsToken(id, id.toLowerCase().replace("_", " "), tokenType);
   }
 
-  @Nonnull
-  public static StdArrangementSettingsToken token(@Nonnull String id,
-                                                  @Nonnull String name,
-                                                  @Nonnull StdArrangementTokenType tokenType) {
+  
+  public static StdArrangementSettingsToken token(String id,
+                                                  String name,
+                                                  StdArrangementTokenType tokenType) {
     return new StdArrangementSettingsToken(id, name, tokenType);
   }
 
-  @Nonnull
-  public static StdArrangementSettingsToken tokenByBundle(@Nonnull String id,
-                                                          @Nonnull @PropertyKey(resourceBundle = CodeStyleBundle.BUNDLE) String key,
-                                                          @Nonnull StdArrangementTokenType tokenType) {
+  
+  public static StdArrangementSettingsToken tokenByBundle(String id,
+                                                          @PropertyKey(resourceBundle = CodeStyleBundle.BUNDLE) String key,
+                                                          StdArrangementTokenType tokenType) {
     return new StdArrangementSettingsToken(id, CodeStyleBundle.message(key), tokenType);
   }
 
-  @Nonnull
+  
   public StdArrangementTokenType getTokenType() {
     return myTokenType;
   }
 
-  protected StdArrangementSettingsToken(@Nonnull String id,
-                                        @Nonnull String uiName,
-                                        @Nonnull StdArrangementTokenType tokenType) {
+  protected StdArrangementSettingsToken(String id,
+                                        String uiName,
+                                        StdArrangementTokenType tokenType) {
     super(id, uiName);
     myTokenType = tokenType;
   }

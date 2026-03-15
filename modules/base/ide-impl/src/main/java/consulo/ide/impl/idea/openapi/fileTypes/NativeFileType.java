@@ -32,7 +32,6 @@ import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -48,18 +47,18 @@ public class NativeFileType implements INativeFileType {
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "Native";
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getDescription() {
         return FileTypeLocalize.nativeFileTypeDescription();
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return ICON;
@@ -72,13 +71,13 @@ public class NativeFileType implements INativeFileType {
 
     @RequiredUIAccess
     @Override
-    public void openFileInAssociatedApplication(ComponentManager project, @Nonnull VirtualFile file) {
+    public void openFileInAssociatedApplication(ComponentManager project, VirtualFile file) {
         Application application = ((Project)project).getApplication();
 
         application.executeOnPooledThread(() -> openAssociatedApplication(application, file));
     }
 
-    public static void openAssociatedApplication(@Nonnull Application application, @Nonnull VirtualFile file) {
+    public static void openAssociatedApplication(Application application, VirtualFile file) {
         UIAccess.assetIsNotUIThread();
 
         GeneralCommandLine cmd = new GeneralCommandLine();

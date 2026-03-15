@@ -22,7 +22,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public class DesktopSwtRadioButtonImpl extends SWTComponentDelegate<Button> impl
     component.setSelection(mySelected);
   }
 
-  @Nonnull
+  
   @Override
   public Boolean getValue() {
     return mySelected;
@@ -53,7 +52,7 @@ public class DesktopSwtRadioButtonImpl extends SWTComponentDelegate<Button> impl
 
   @RequiredUIAccess
   @Override
-  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+  public void setValue(Boolean value, boolean fireListeners) {
     mySelected = value;
 
     if(myComponent != null) {
@@ -61,7 +60,7 @@ public class DesktopSwtRadioButtonImpl extends SWTComponentDelegate<Button> impl
     }
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getLabelText() {
     return myText;
@@ -69,7 +68,7 @@ public class DesktopSwtRadioButtonImpl extends SWTComponentDelegate<Button> impl
 
   @RequiredUIAccess
   @Override
-  public void setLabelText(@Nonnull LocalizeValue text) {
+  public void setLabelText(LocalizeValue text) {
     myText = text;
 
     if(myComponent != null) {

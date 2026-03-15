@@ -16,8 +16,7 @@
 package consulo.component.persist.scheme;
 
 import consulo.util.lang.function.ThrowableFunction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.File;
@@ -26,18 +25,18 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class SchemeManager<T, E extends ExternalizableScheme> {
-    @Nonnull
+    
     public abstract Collection<E> loadSchemes();
 
-    public abstract void addNewScheme(@Nonnull T scheme, boolean replaceExisting);
+    public abstract void addNewScheme(T scheme, boolean replaceExisting);
 
     public abstract void clearAllSchemes();
 
-    @Nonnull
+    
     public abstract List<T> getAllSchemes();
 
     @Nullable
-    public abstract T findSchemeByName(@Nonnull String schemeName);
+    public abstract T findSchemeByName(String schemeName);
 
     public abstract void save();
 
@@ -46,13 +45,13 @@ public abstract class SchemeManager<T, E extends ExternalizableScheme> {
     @Nullable
     public abstract T getCurrentScheme();
 
-    public abstract void removeScheme(@Nonnull T scheme);
+    public abstract void removeScheme(T scheme);
 
-    @Nonnull
+    
     public abstract Collection<String> getAllSchemeNames();
 
     public abstract File getRootDirectory();
 
-    public void loadBundledScheme(@Nonnull URL requestor, @Nonnull ThrowableFunction<Element, T, Throwable> convertor) {
+    public void loadBundledScheme(URL requestor, ThrowableFunction<Element, T, Throwable> convertor) {
     }
 }

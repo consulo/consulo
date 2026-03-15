@@ -7,9 +7,7 @@ import consulo.project.Project;
 import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.log.LoggingHandler;
 import consulo.remoteServer.runtime.log.TerminalHandler;
-import org.jetbrains.annotations.Nls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,7 +25,7 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
     private final Disposable myLogsDisposable;
     private boolean myMainHandlerVisible = false;
 
-    public DeploymentLogManagerImpl(@Nonnull Project project, @Nonnull Runnable changeListener) {
+    public DeploymentLogManagerImpl(Project project, Runnable changeListener) {
         myProject = project;
         myChangeListener = changeListener;
         myMainLoggingHandler = new LoggingHandlerImpl.Colored(null, project);
@@ -37,7 +35,7 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
     }
 
     @Override
-    public @Nonnull Project getProject() {
+    public Project getProject() {
         return myProject;
     }
 
@@ -51,12 +49,12 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
     }
 
     @Override
-    public @Nonnull LoggingHandlerImpl getMainLoggingHandler() {
+    public LoggingHandlerImpl getMainLoggingHandler() {
         return myMainLoggingHandler;
     }
 
     @Override
-    public @Nonnull LoggingHandler addAdditionalLog(@Nonnull String presentableName) {
+    public LoggingHandler addAdditionalLog(String presentableName) {
         synchronized (myLogsDisposed) {
             if (myLogsDisposed.get()) {
                 throw new IllegalStateException("Already disposed, can't add " + presentableName);
@@ -69,14 +67,14 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
     }
 
     @Override
-    public void removeAdditionalLog(@Nonnull String presentableName) {
+    public void removeAdditionalLog(String presentableName) {
         synchronized (myAdditionalLoggingHandlers) {
             myAdditionalLoggingHandlers.removeIf(next -> presentableName.equals(next.getPresentableName()));
         }
         myChangeListener.run();
     }
 
-    public @Nonnull LoggingHandler findOrCreateAdditionalLog(@Nonnull String presentableName) {
+    public LoggingHandler findOrCreateAdditionalLog(String presentableName) {
         synchronized (myAdditionalLoggingHandlers) {
             for (LoggingHandlerBase next : myAdditionalLoggingHandlers) {
                 if (next instanceof LoggingHandler loggingHandler && presentableName.equals(next.getPresentableName())) {
@@ -89,7 +87,7 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
 
     @Override
     public @Nullable TerminalHandler addTerminal(
-        @Nonnull @Nls String presentableName,
+        String presentableName,
         InputStream terminalOutput,
         OutputStream terminalInput
     ) {
@@ -127,7 +125,7 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
     /*
       FIXME: memory leak. We need to remove closed handlers
      */
-    public @Nonnull List<LoggingHandlerBase> getAdditionalLoggingHandlers() {
+    public List<LoggingHandlerBase> getAdditionalLoggingHandlers() {
         List<LoggingHandlerBase> result;
         synchronized (myAdditionalLoggingHandlers) {
             result = new ArrayList<>(myAdditionalLoggingHandlers);

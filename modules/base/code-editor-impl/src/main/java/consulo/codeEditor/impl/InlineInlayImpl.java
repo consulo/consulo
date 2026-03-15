@@ -9,7 +9,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.document.util.DocumentUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -19,11 +18,11 @@ public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends Inla
 
     private final int myPriority;
 
-    public InlineInlayImpl(@Nonnull CodeEditorBase editor,
+    public InlineInlayImpl(CodeEditorBase editor,
                            int offset,
                            boolean relatesToPrecedingText,
                            int priority,
-                           @Nonnull R renderer) {
+                           R renderer) {
         super(editor, offset, relatesToPrecedingText, renderer);
         myPriority = priority;
     }
@@ -35,7 +34,7 @@ public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends Inla
     }
 
     @Override
-    protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+    protected void changedUpdateImpl(DocumentEvent e) {
         myEditor.getInlayModel().myPutMergedIntervalsAtBeginning = intervalStart() == e.getOffset();
         super.changedUpdateImpl(e);
         if (isValid() && DocumentUtil.isInsideSurrogatePair(getDocument(), intervalStart())) {
@@ -44,7 +43,7 @@ public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends Inla
     }
 
     @Override
-    protected void onReTarget(@Nonnull DocumentEvent e) {
+    protected void onReTarget(DocumentEvent e) {
         CodeEditorInlayModelBase inlayModel = myEditor.getInlayModel();
         inlayModel.myPutMergedIntervalsAtBeginning = intervalStart() == e.getMoveOffset() + e.getNewLength();
         if (DocumentUtil.isInsideSurrogatePair(getDocument(), getOffset())) {
@@ -76,13 +75,13 @@ public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends Inla
         }
     }
 
-    @Nonnull
+    
     @Override
     public Inlay.Placement getPlacement() {
         return Inlay.Placement.INLINE;
     }
 
-    @Nonnull
+    
     @Override
     public VisualPosition getVisualPosition() {
         int offset = getOffset();
@@ -109,7 +108,7 @@ public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends Inla
     }
 
     @Override
-    @Nonnull
+    
     public InlayProperties getProperties() {
         return new InlayProperties()
             .relatesToPrecedingText(isRelatedToPrecedingText())

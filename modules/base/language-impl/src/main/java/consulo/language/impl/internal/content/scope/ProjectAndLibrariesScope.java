@@ -28,7 +28,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiBundle;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +37,7 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   protected final ProjectFileIndex myProjectFileIndex;
   private String myDisplayName = PsiBundle.message("psi.search.scope.project.and.libraries");
 
-  public ProjectAndLibrariesScope(@Nonnull Project project) {
+  public ProjectAndLibrariesScope(Project project) {
     super(project);
     myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
   }
@@ -52,12 +51,12 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return myProjectFileIndex.isInContent(file) || myProjectFileIndex.isInLibrary(file);
   }
 
   @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     List<OrderEntry> entries1 = myProjectFileIndex.getOrderEntriesForFile(file1);
     List<OrderEntry> entries2 = myProjectFileIndex.getOrderEntriesForFile(file2);
     if (entries1.size() != entries2.size()) return 0;
@@ -86,7 +85,7 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return true;
   }
 
@@ -95,7 +94,7 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<UnloadedModuleDescription> getUnloadedModulesBelongingToScope() {
     Project project = getProject();
@@ -103,12 +102,12 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   }
 
   @Override
-  @Nonnull
+  
   public String getDisplayName() {
     return myDisplayName;
   }
 
-  public void setDisplayName(@Nonnull String displayName) {
+  public void setDisplayName(String displayName) {
     myDisplayName = displayName;
   }
 

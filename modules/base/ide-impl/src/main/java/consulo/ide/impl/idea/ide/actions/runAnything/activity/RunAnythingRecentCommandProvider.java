@@ -5,8 +5,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCacheImpl;
 import consulo.ide.internal.RunAnythingCache;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -14,9 +13,9 @@ import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.fetc
 
 @ExtensionImpl(order = "last")
 public class RunAnythingRecentCommandProvider extends RunAnythingCommandProvider {
-    @Nonnull
+    
     @Override
-    public Collection<String> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Collection<String> getValues(DataContext dataContext, String pattern) {
         return ((RunAnythingCacheImpl) RunAnythingCache.getInstance(fetchProject(dataContext))).getState().getCommands();
     }
 

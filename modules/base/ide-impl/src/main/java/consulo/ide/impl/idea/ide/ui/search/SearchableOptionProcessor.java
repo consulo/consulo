@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.configurable.SearchableConfigurable;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -25,8 +24,8 @@ public interface SearchableOptionProcessor {
    */
   void addOption(String option, String path, String hit, String configurableId, String configurableDisplayName);
 
-  Set<String> getProcessedWordsWithoutStemming(@Nonnull String text);
+  Set<String> getProcessedWordsWithoutStemming(String text);
 
-  Set<String> getProcessedWords(@Nonnull String text);
+  Set<String> getProcessedWords(String text);
 }
 

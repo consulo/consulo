@@ -8,12 +8,11 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.usage.UsageViewContentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public final class RangeSearchCreatorImpl implements RangeSearchCreator {
 
     @Override
-    public @Nonnull RangeSearch createContent(Project project,
+    public RangeSearch createContent(Project project,
                                               VirtualFile virtualFile,
                                               String titleName) {
         RangeSearchCallback rangeSearchCallback = new RangeSearchCallbackImpl();

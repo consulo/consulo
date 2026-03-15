@@ -25,7 +25,6 @@ import consulo.language.psi.PsiPackageManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -41,8 +40,8 @@ public class PsiPackageHelperImpl extends PsiPackageHelper {
   }
 
   @Override
-  @Nonnull
-  public String getQualifiedName(@Nonnull PsiDirectory directory, boolean presentable) {
+  
+  public String getQualifiedName(PsiDirectory directory, boolean presentable) {
     if (presentable) {
       return UserHomeFileUtil.getLocationRelativeToUserHome(directory.getVirtualFile().getPresentableUrl());
     }
@@ -50,7 +49,7 @@ public class PsiPackageHelperImpl extends PsiPackageHelper {
   }
 
   @Override
-  public PsiDirectoryContainer getDirectoryContainer(@Nonnull PsiDirectory directory) {
+  public PsiDirectoryContainer getDirectoryContainer(PsiDirectory directory) {
     return myPackageManager.findAnyPackage(directory);
   }
 

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.compiler.artifact.Artifact;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -28,12 +27,12 @@ import java.util.EventListener;
 @TopicAPI(ComponentScope.PROJECT)
 public interface ArtifactListener extends EventListener {
 
-  default void artifactAdded(@Nonnull Artifact artifact) {
+  default void artifactAdded(Artifact artifact) {
   }
 
-  default void artifactRemoved(@Nonnull Artifact artifact) {
+  default void artifactRemoved(Artifact artifact) {
   }
 
-  default void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
+  default void artifactChanged(Artifact artifact, String oldName) {
   }
 }

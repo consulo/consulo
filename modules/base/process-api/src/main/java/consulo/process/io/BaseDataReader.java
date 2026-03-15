@@ -6,7 +6,6 @@ import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
@@ -43,7 +42,7 @@ public abstract class BaseDataReader {
     }
   }
 
-  protected void start(@Nonnull String presentableName) {
+  protected void start(String presentableName) {
     if (StringUtil.isEmptyOrSpaces(presentableName)) {
       LOG.warn(new Throwable("Must provide not-empty presentable name"));
     }
@@ -91,8 +90,8 @@ public abstract class BaseDataReader {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
-  protected abstract Future<?> executeOnPooledThread(@Nonnull Runnable runnable);
+  
+  protected abstract Future<?> executeOnPooledThread(Runnable runnable);
 
   /**
    * <p>

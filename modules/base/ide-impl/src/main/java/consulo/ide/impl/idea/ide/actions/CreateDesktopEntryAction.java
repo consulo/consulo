@@ -41,8 +41,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -63,13 +62,13 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         event.getPresentation().setEnabledAndVisible(isAvailable());
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         CreateDesktopEntryDialog dialog = new CreateDesktopEntryDialog(project);
         if (!dialog.showAndGet()) {
@@ -79,13 +78,13 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         boolean globalEntry = dialog.myGlobalEntryCheckBox.isSelected();
         ProgressManager.getInstance().run(new Task.Backgroundable(project, event.getPresentation().getTextValue()) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 createDesktopEntry((Project) getProject(), indicator, globalEntry);
             }
         });
     }
 
-    public static void createDesktopEntry(@Nullable Project project, @Nonnull ProgressIndicator indicator, boolean globalEntry) {
+    public static void createDesktopEntry(@Nullable Project project, ProgressIndicator indicator, boolean globalEntry) {
         if (!isAvailable()) {
             return;
         }

@@ -10,8 +10,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author konstantin.aleev
@@ -30,7 +29,7 @@ public final class RunAction extends ExecutorAction {
   }
 
   @Override
-  protected void update(@Nonnull AnActionEvent e, boolean running) {
+  protected void update(AnActionEvent e, boolean running) {
     Presentation presentation = e.getPresentation();
     if (running) {
       presentation.setTextValue(ExecutionLocalize.runDashboardRerunActionName());

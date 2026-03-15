@@ -25,8 +25,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,14 +83,14 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
         });
     }
 
-    @Nonnull
+    
     @Override
     public ListModel<E> getListModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
         myRenderer = renderer;
     }
 

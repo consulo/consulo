@@ -18,7 +18,6 @@ package consulo.externalSystem.scope;
 import consulo.project.Project;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -26,12 +25,12 @@ import jakarta.annotation.Nonnull;
  */
 public class ExternalModuleBuildGlobalSearchScope extends DelegatingGlobalSearchScope {
 
-  @Nonnull
+  
   private final String externalModulePath;
 
-  public ExternalModuleBuildGlobalSearchScope(@Nonnull final Project project, @Nonnull GlobalSearchScope baseScope, @Nonnull String externalModulePath) {
+  public ExternalModuleBuildGlobalSearchScope(final Project project, GlobalSearchScope baseScope, String externalModulePath) {
     super(new DelegatingGlobalSearchScope(baseScope) {
-      @Nonnull
+      
       @Override
       public Project getProject() {
         return project;
@@ -40,7 +39,7 @@ public class ExternalModuleBuildGlobalSearchScope extends DelegatingGlobalSearch
     this.externalModulePath = externalModulePath;
   }
 
-  @Nonnull
+  
   public String getExternalModulePath() {
     return externalModulePath;
   }

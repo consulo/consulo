@@ -20,14 +20,13 @@ import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.impl.internal.editor.DiffVirtualFile;
 import consulo.desktop.awt.internal.diff.CacheDiffRequestChainProcessor;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 // from kotlin
 public class ChainDiffVirtualFile extends DiffVirtualFile {
-  @Nonnull
+  
   private final DiffRequestChain myChain;
 
-  public ChainDiffVirtualFile(@Nonnull DiffRequestChain chain, @Nonnull String name) {
+  public ChainDiffVirtualFile(DiffRequestChain chain, String name) {
     super(name);
     myChain = chain;
   }

@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.event.VirtualFileListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +40,7 @@ public interface VirtualFileSystem {
    * @see VirtualFile#getUrl
    * @see VirtualFileManager#getFileSystem
    */
-  @Nonnull
+  
   String getProtocol();
 
   /**
@@ -53,7 +52,7 @@ public interface VirtualFileSystem {
    * @return a virtual file if found, {@code null} otherwise
    */
   @Nullable
-  public abstract VirtualFile findFileByPath(@Nonnull String path);
+  public abstract VirtualFile findFileByPath(String path);
 
   /**
    * Fetches presentable URL of file with the given path in this file system.
@@ -62,8 +61,8 @@ public interface VirtualFileSystem {
    * @return presentable URL
    * @see VirtualFile#getPresentableUrl
    */
-  @Nonnull
-  default String extractPresentableUrl(@Nonnull String path) {
+  
+  default String extractPresentableUrl(String path) {
     return path.replace('/', File.separatorChar);
   }
 
@@ -96,7 +95,7 @@ public interface VirtualFileSystem {
    * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
    */
   @Nullable
-  VirtualFile refreshAndFindFileByPath(@Nonnull String path);
+  VirtualFile refreshAndFindFileByPath(String path);
 
   /**
    * Adds listener to the file system. Normally one should use {@link VirtualFileManager#addVirtualFileListener}.
@@ -105,62 +104,62 @@ public interface VirtualFileSystem {
    * @see VirtualFileListener
    * @see VirtualFileManager#addVirtualFileListener
    */
-  void addVirtualFileListener(@Nonnull VirtualFileListener listener);
+  void addVirtualFileListener(VirtualFileListener listener);
 
   /**
    * Removes listener form the file system.
    *
    * @param listener the listener
    */
-  public abstract void removeVirtualFileListener(@Nonnull VirtualFileListener listener);
+  public abstract void removeVirtualFileListener(VirtualFileListener listener);
 
   /**
    * Implementation of deleting files in this file system
    *
    * @see VirtualFile#delete(Object)
    */
-  void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException;
+  void deleteFile(Object requestor, VirtualFile vFile) throws IOException;
 
   /**
    * Implementation of moving files in this file system
    *
    * @see VirtualFile#move(Object, VirtualFile)
    */
-  void moveFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent) throws IOException;
+  void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException;
 
   /**
    * Implementation of renaming files in this file system
    *
    * @see VirtualFile#rename(Object, String)
    */
-  void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException;
+  void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException;
 
   /**
    * Implementation of adding files in this file system
    *
    * @see VirtualFile#createChildData(Object, String)
    */
-  @Nonnull
-  VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException;
+  
+  VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException;
 
   /**
    * Implementation of adding directories in this file system
    *
    * @see VirtualFile#createChildDirectory(Object, String)
    */
-  @Nonnull
-  VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException;
+  
+  VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException;
 
   /**
    * Implementation of copying files in this file system
    *
    * @see VirtualFile#copy(Object, VirtualFile, String)
    */
-  @Nonnull
+  
   VirtualFile copyFile(Object requestor,
-                       @Nonnull VirtualFile virtualFile,
-                       @Nonnull VirtualFile newParent,
-                       @Nonnull String copyName) throws IOException;
+                       VirtualFile virtualFile,
+                       VirtualFile newParent,
+                       String copyName) throws IOException;
 
   boolean isReadOnly();
 
@@ -168,7 +167,7 @@ public interface VirtualFileSystem {
     return true;
   }
 
-  default boolean isValidName(@Nonnull String name) {
+  default boolean isValidName(String name) {
     return name.length() > 0 && name.indexOf('\\') < 0 && name.indexOf('/') < 0;
   }
 
@@ -179,7 +178,7 @@ public interface VirtualFileSystem {
    * The returned {@link Path} may not have a default filesystem behind.
    */
   @Nullable
-  default Path getNioPath(@Nonnull VirtualFile file) {
+  default Path getNioPath(VirtualFile file) {
     return null;
   }
 }

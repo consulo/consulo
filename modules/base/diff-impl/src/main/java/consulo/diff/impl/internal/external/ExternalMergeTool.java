@@ -27,10 +27,10 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 public class ExternalMergeTool {
   public static final Logger LOG = Logger.getInstance(ExternalMergeTool.class);
@@ -43,8 +43,8 @@ public class ExternalMergeTool {
     return ExternalDiffSettings.getInstance().isMergeEnabled();
   }
 
-  public static void show(@jakarta.annotation.Nullable Project project,
-                          @Nonnull MergeRequest request) {
+  public static void show(@Nullable Project project,
+                          MergeRequest request) {
     try {
       if (canShow(request)) {
         showRequest(project, request);
@@ -61,14 +61,14 @@ public class ExternalMergeTool {
     }
   }
 
-  public static void showRequest(@jakarta.annotation.Nullable Project project, @Nonnull MergeRequest request)
+  public static void showRequest(@Nullable Project project, MergeRequest request)
           throws ExecutionException, IOException {
     ExternalDiffSettings settings = ExternalDiffSettings.getInstance();
 
     ExternalDiffToolUtil.executeMerge(project, settings, (ThreesideMergeRequest)request);
   }
 
-  public static boolean canShow(@Nonnull MergeRequest request) {
+  public static boolean canShow(MergeRequest request) {
     if (request instanceof ThreesideMergeRequest) {
       DiffContent outputContent = ((ThreesideMergeRequest)request).getOutputContent();
       if (!canProcessOutputContent(outputContent)) return false;
@@ -83,7 +83,7 @@ public class ExternalMergeTool {
     return false;
   }
 
-  private static boolean canProcessOutputContent(@Nonnull DiffContent content) {
+  private static boolean canProcessOutputContent(DiffContent content) {
     if (content instanceof DocumentContent) return true;
     if (content instanceof FileContent && ((FileContent)content).getFile().isInLocalFileSystem()) return true;
     return false;

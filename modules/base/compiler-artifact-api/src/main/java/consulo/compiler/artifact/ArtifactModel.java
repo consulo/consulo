@@ -15,8 +15,7 @@
  */
 package consulo.compiler.artifact;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,20 +23,20 @@ import java.util.List;
  * @author nik
  */
 public interface ArtifactModel {
-  @Nonnull
+  
   Artifact[] getArtifacts();
 
   @Nullable
-  Artifact findArtifact(@Nonnull String name);
+  Artifact findArtifact(String name);
 
-  @Nonnull
-  Artifact getArtifactByOriginal(@Nonnull Artifact artifact);
+  
+  Artifact getArtifactByOriginal(Artifact artifact);
 
-  @Nonnull
-  Artifact getOriginalArtifact(@Nonnull Artifact artifact);
+  
+  Artifact getOriginalArtifact(Artifact artifact);
 
-  @Nonnull
-  Collection<? extends Artifact> getArtifactsByType(@Nonnull ArtifactType type);
+  
+  Collection<? extends Artifact> getArtifactsByType(ArtifactType type);
 
   List<? extends Artifact> getAllArtifactsIncludingInvalid();
 }

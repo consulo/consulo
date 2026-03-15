@@ -25,8 +25,7 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.Collection;
@@ -36,12 +35,12 @@ import java.util.Set;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SdkType implements SdkTypeId {
     private final String myId;
-    @Nonnull
+    
     private final LocalizeValue myDisplayName;
-    @Nonnull
+    
     private final Image myIcon;
 
-    public SdkType(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
+    public SdkType(String id, LocalizeValue displayName, Image icon) {
         myId = id;
         myDisplayName = displayName;
         myIcon = icon;
@@ -50,7 +49,7 @@ public abstract class SdkType implements SdkTypeId {
     /**
      * @return paths for select in file chooser. Selected path will exists on file system
      */
-    @Nonnull
+    
     public Collection<String> suggestHomePaths() {
         return List.of();
     }
@@ -62,8 +61,8 @@ public abstract class SdkType implements SdkTypeId {
     /**
      * @return env variables which will be checked while creating predefined sdks
      */
-    @Nonnull
-    public Set<String> getEnviromentVariables(@Nonnull Platform platform) {
+    
+    public Set<String> getEnviromentVariables(Platform platform) {
         return Set.of();
     }
 
@@ -94,18 +93,18 @@ public abstract class SdkType implements SdkTypeId {
     @Nullable
     public abstract String getVersionString(String sdkHome);
 
-    @Nonnull
+    
     public String suggestSdkName(String currentSdkName, String sdkHome) {
         return getDisplayName().get() + " " + getVersionString(sdkHome);
     }
 
-    public void setupSdkPaths(@Nonnull Sdk sdk) {
+    public void setupSdkPaths(Sdk sdk) {
         SdkModificator sdkModificator = sdk.getSdkModificator();
         setupSdkPaths(sdkModificator);
         sdkModificator.commitChanges();
     }
 
-    public void setupSdkPaths(@Nonnull SdkModificator sdkModificator) {
+    public void setupSdkPaths(SdkModificator sdkModificator) {
     }
 
     /**
@@ -127,28 +126,28 @@ public abstract class SdkType implements SdkTypeId {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public final String getId() {
         return myId;
     }
 
-    @Nonnull
+    
     public final LocalizeValue getDisplayName() {
         return myDisplayName;
     }
 
-    @Nonnull
+    
     public final Image getIcon() {
         return myIcon;
     }
 
-    @Nonnull
+    
     public Image getGroupIcon() {
         return ImageEffects.transparent(getIcon(), 0.5f);
     }
 
-    @Nonnull
+    
     public String getHelpTopic() {
         return "bundle";
     }
@@ -170,7 +169,7 @@ public abstract class SdkType implements SdkTypeId {
         return getId();
     }
 
-    @Nonnull
+    
     public FileChooserDescriptor getHomeChooserDescriptor() {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
             @Override
@@ -195,7 +194,7 @@ public abstract class SdkType implements SdkTypeId {
     }
 
     @Nullable
-    public String getDefaultDocumentationUrl(@Nonnull Sdk sdk) {
+    public String getDefaultDocumentationUrl(Sdk sdk) {
         return null;
     }
 
@@ -221,7 +220,7 @@ public abstract class SdkType implements SdkTypeId {
      * @return true if the home path is valid, false otherwise.
      * @since 12.1
      */
-    public boolean sdkHasValidPath(@Nonnull Sdk sdk) {
+    public boolean sdkHasValidPath(Sdk sdk) {
         VirtualFile homeDir = sdk.getHomeDirectory();
         return homeDir != null && homeDir.isValid();
     }

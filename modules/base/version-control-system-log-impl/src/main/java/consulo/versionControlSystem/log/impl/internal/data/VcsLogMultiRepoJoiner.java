@@ -1,14 +1,13 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.versionControlSystem.log.graph.GraphCommit;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
 public class VcsLogMultiRepoJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
 
-  @Nonnull
-  public List<Commit> join(@Nonnull Collection<List<Commit>> logsFromRepos) {
+  
+  public List<Commit> join(Collection<List<Commit>> logsFromRepos) {
     if (logsFromRepos.size() == 1) {
       return logsFromRepos.iterator().next();
     }
@@ -41,8 +40,8 @@ public class VcsLogMultiRepoJoiner<CommitId, Commit extends GraphCommit<CommitId
     return result;
   }
 
-  @Nonnull
-  private Commit findLatestCommit(@Nonnull Set<Commit> commits) {
+  
+  private Commit findLatestCommit(Set<Commit> commits) {
     long maxTimeStamp = Long.MIN_VALUE;
     Commit lastCommit = null;
     for (Commit commit : commits) {

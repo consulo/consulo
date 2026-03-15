@@ -22,13 +22,12 @@ import consulo.execution.debug.event.XDebugSessionListener;
 import consulo.execution.debug.impl.internal.stream.action.TraceStreamRunner;
 import consulo.execution.debug.stream.ChainStatus;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class TraceDebuggerStateListener {
     private volatile ChainStatus lastChainStatus;
 
-    public TraceDebuggerStateListener(@Nonnull XDebugSession session, @Nonnull Disposable disposable) {
+    public TraceDebuggerStateListener(XDebugSession session, Disposable disposable) {
         session.addSessionListener(new XDebugSessionListener() {
             @Override
             public void sessionPaused() {
@@ -57,7 +56,7 @@ public final class TraceDebuggerStateListener {
         }, disposable);
     }
 
-    private void collect(@Nonnull XDebugSession session) {
+    private void collect(XDebugSession session) {
         Project project = session.getProject();
 
         lastChainStatus = ReadAction.compute(() -> TraceStreamRunner.getInstance(project).getChainStatus(session));

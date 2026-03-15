@@ -23,8 +23,7 @@ import consulo.diff.dir.DirDiffSettings;
 import consulo.application.util.DateFormatUtil;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.diff.dir.DirDiffOperation.*;
 
@@ -96,9 +95,9 @@ public class DirDiffElementImpl implements DirDiffElement {
   }
 
   public static DirDiffElementImpl createChange(DTree parent,
-                                                @Nonnull DiffElement source,
-                                                @Nonnull DiffElement target,
-                                                @Nullable DirDiffSettings.CustomSourceChooser customSourceChooser) {
+                                                DiffElement source,
+                                                DiffElement target,
+                                                DirDiffSettings.@Nullable CustomSourceChooser customSourceChooser) {
     DirDiffOperation defaultOperation = null;
     if (customSourceChooser != null) {
       DiffElement chosenSource = customSourceChooser.chooseSource(source, target);
@@ -116,11 +115,11 @@ public class DirDiffElementImpl implements DirDiffElement {
     return new DirDiffElementImpl(parent, source, target, DiffType.ERROR, source == null ? target.getName() : source.getName(), null);
   }
 
-  public static DirDiffElementImpl createSourceOnly(DTree parent, @Nonnull DiffElement source) {
+  public static DirDiffElementImpl createSourceOnly(DTree parent, DiffElement source) {
     return new DirDiffElementImpl(parent, source, null, DiffType.SOURCE, null, null);
   }
 
-  public static DirDiffElementImpl createTargetOnly(DTree parent, @Nonnull DiffElement target) {
+  public static DirDiffElementImpl createTargetOnly(DTree parent, DiffElement target) {
     return new DirDiffElementImpl(parent, null, target, DiffType.TARGET, null, null);
   }
 
@@ -128,7 +127,7 @@ public class DirDiffElementImpl implements DirDiffElement {
     return new DirDiffElementImpl(parent, src, trg, DiffType.SEPARATOR, name, null);
   }
 
-  public static DirDiffElementImpl createEqual(DTree parent, @Nonnull DiffElement source, @Nonnull DiffElement target) {
+  public static DirDiffElementImpl createEqual(DTree parent, DiffElement source, DiffElement target) {
     return new DirDiffElementImpl(parent, source, target, DiffType.EQUAL, source.getName(), null);
   }
 
@@ -222,7 +221,7 @@ public class DirDiffElementImpl implements DirDiffElement {
     }
   }
 
-  public void setOperation(@Nonnull DirDiffOperation operation) {
+  public void setOperation(DirDiffOperation operation) {
     if (myType == DiffType.EQUAL || myType == DiffType.SEPARATOR) return;
     if (myType == DiffType.TARGET && operation == COPY_TO) return;
     if (myType == DiffType.SOURCE && operation == COPY_FROM) return;

@@ -27,18 +27,17 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.*;
 
 @ActionImpl(id = "WelcomeScreen.GetFromVcs")
 public class WelcomeGetFromVcsAction extends WelcomePopupAction {
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public WelcomeGetFromVcsAction(@Nonnull Application application) {
+    public WelcomeGetFromVcsAction(Application application) {
         super(
             ActionLocalize.actionWelcomescreenGetfromvcsText(),
             ActionLocalize.actionWelcomescreenGetfromvcsDescription(),
@@ -59,7 +58,7 @@ public class WelcomeGetFromVcsAction extends WelcomePopupAction {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getTextForEmpty() {
         return UILocalize.welcomeScreenGetFromVcsActionNoVcsPluginsWithCheckOutActionInstalledActionName();
@@ -71,7 +70,7 @@ public class WelcomeGetFromVcsAction extends WelcomePopupAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(myApplication.getExtensionPoint(CheckoutProvider.class).hasAnyExtensions());
         e.getPresentation().setIcon(PlatformIconGroup.welcomeFromvcs());
     }

@@ -15,13 +15,12 @@
  */
 package consulo.ui.ex.awt.util;
 
-import jakarta.annotation.Nonnull;
 
 public interface CollectionItemEditor<T> {
   /**
    * Class must have an empty constructor.
    */
-  @Nonnull
+  
   Class<? extends T> getItemClass();
 
   /**
@@ -29,13 +28,13 @@ public interface CollectionItemEditor<T> {
    *
    * You must perform deep clone in case of "add" operation, but in case of "in place edit" you should copy only exposed (via column) properties.
    */
-  T clone(@Nonnull T item, boolean forInPlaceEditing);
+  T clone(T item, boolean forInPlaceEditing);
 
-  default boolean isRemovable(@Nonnull T item) {
+  default boolean isRemovable(T item) {
     return true;
   }
 
-  default boolean isEmpty(@Nonnull T item) {
+  default boolean isEmpty(T item) {
     return false;
   }
 }

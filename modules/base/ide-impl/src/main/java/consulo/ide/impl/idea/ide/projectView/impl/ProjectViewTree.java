@@ -23,8 +23,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -59,7 +58,7 @@ public class ProjectViewTree extends DnDAwareTree {
 
       @RequiredUIAccess
       @Override
-      public void customizeCellRenderer(@Nonnull JTree tree,
+      public void customizeCellRenderer(JTree tree,
                                         Object value,
                                         boolean selected,
                                         boolean expanded,

@@ -3,7 +3,6 @@ package consulo.ide.action.ui;
 
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -62,8 +61,8 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
     myTemplatesListModel.update(templatesList);
   }
 
-  @Nonnull
-  private JBList<T> createTemplatesList(@Nonnull ListModel<T> model, ListCellRenderer<T> renderer) {
+  
+  private JBList<T> createTemplatesList(ListModel<T> model, ListCellRenderer<T> renderer) {
     JBList<T> list = new JBList<>(model);
     MouseAdapter mouseListener = new MouseAdapter() {
       @Override

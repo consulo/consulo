@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the indent and alignment settings which are applied to a new child block

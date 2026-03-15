@@ -10,7 +10,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +56,7 @@ final class MouseShortcutDialog extends ShortcutDialog<MouseShortcut> {
     }
 
     @Override
-    @Nonnull
+    
     Collection<String> getConflicts(MouseShortcut shortcut, String actionId, Keymap keymap) {
         return Set.of(keymap.getActionIds(shortcut));
     }

@@ -4,7 +4,6 @@ package consulo.execution.debug.stream.trace.dsl.impl;
 import consulo.execution.debug.stream.trace.dsl.Expression;
 import consulo.execution.debug.stream.trace.dsl.Variable;
 import consulo.execution.debug.stream.trace.impl.handler.type.GenericType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
@@ -13,26 +12,26 @@ public class VariableImpl implements Variable {
   private final GenericType type;
   private final String name;
 
-  public VariableImpl(@Nonnull GenericType type, @Nonnull String name) {
+  public VariableImpl(GenericType type, String name) {
     this.type = type;
     this.name = name;
   }
 
-  @Nonnull
+  
   @Override
   public GenericType getType() {
     return type;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return name;
   }
 
-  @Nonnull
+  
   @Override
-  public Expression call(@Nonnull String callName, @Nonnull Expression... args) {
+  public Expression call(String callName, Expression... args) {
     StringBuilder sb = new StringBuilder();
     sb.append(name).append(".").append(callName).append("(");
     for (int i = 0; i < args.length; i++) {

@@ -73,8 +73,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -184,7 +183,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         EditSourceOnEnterKeyHandler.install(myTree);
         myCopyPasteDelegator = new CopyPasteDelegator(myProject, this) {
             @Override
-            @Nonnull
+            
             protected PsiElement[] getSelectedElements() {
                 return getSelectedPsiElements();
             }
@@ -261,7 +260,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         return myTree;
     }
 
-    @Nonnull
+    
     private PsiElement[] getSelectedPsiElements() {
         Object[] elements = getSelectedNodeElements();
         if (elements == null) {
@@ -296,7 +295,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (Project.KEY == dataId) {
             return myProject;
         }
@@ -568,13 +567,13 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
 
     private final class MyDeletePSIElementProvider implements DeleteProvider {
         @Override
-        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public boolean canDeleteElement(DataContext dataContext) {
             PsiElement[] elements = getElementsToDelete();
             return DeleteHandler.shouldEnableDeleteAction(elements);
         }
 
         @Override
-        public void deleteElement(@Nonnull DataContext dataContext) {
+        public void deleteElement(DataContext dataContext) {
             List<PsiElement> allElements = Arrays.asList(getElementsToDelete());
             List<PsiElement> validElements = new ArrayList<>();
             for (PsiElement psiElement : allElements) {
@@ -710,9 +709,9 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         return getAcceptArea();
     }
 
-    @Nonnull
+    
     @Override
-    public ContentResponse getContentResponse(@Nonnull DockableContent content, RelativePoint point) {
+    public ContentResponse getContentResponse(DockableContent content, RelativePoint point) {
         if (content.getKey() instanceof VirtualFile) {
             return ContentResponse.ACCEPT_COPY;
         }
@@ -726,7 +725,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
 
     @Override
     @RequiredReadAction
-    public void add(@Nonnull DockableContent content, RelativePoint dropTarget) {
+    public void add(DockableContent content, RelativePoint dropTarget) {
         if (content.getKey() instanceof VirtualFile vFile) {
             PsiFileSystemItem psiFile = vFile.isDirectory()
                 ? PsiManager.getInstance(myProject).findDirectory(vFile)
@@ -756,13 +755,13 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
 
     @Nullable
     @Override
-    public Image startDropOver(@Nonnull DockableContent content, RelativePoint point) {
+    public Image startDropOver(DockableContent content, RelativePoint point) {
         return null;
     }
 
     @Nullable
     @Override
-    public Image processDropOver(@Nonnull DockableContent content, RelativePoint point) {
+    public Image processDropOver(DockableContent content, RelativePoint point) {
         Point p = point.getScreenPoint();
         SwingUtilities.convertPointFromScreen(p, myTree);
         TreePath treePath = myTree.getClosestPathForLocation(p.x, p.y);
@@ -775,7 +774,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     }
 
     @Override
-    public void resetDropOver(@Nonnull DockableContent content) {
+    public void resetDropOver(DockableContent content) {
     }
 
     @Override

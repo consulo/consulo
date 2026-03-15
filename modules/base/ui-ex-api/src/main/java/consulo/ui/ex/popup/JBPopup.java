@@ -10,8 +10,7 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.LightweightWindow;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -34,16 +33,16 @@ public interface JBPopup extends Disposable, LightweightWindow {
      *
      * @param componentUnder the component near which the popup should be displayed.
      */
-    void showUnderneathOf(@Nonnull Component componentUnder);
+    void showUnderneathOf(Component componentUnder);
 
     /**
      * Shows the popup at the specified point.
      *
      * @param point the relative point where the popup should be displayed.
      */
-    void show(@Nonnull RelativePoint point);
+    void show(RelativePoint point);
 
-    void showInScreenCoordinates(@Nonnull Component owner, @Nonnull Point point);
+    void showInScreenCoordinates(Component owner, Point point);
 
     /**
      * Returns location most appropriate for the specified data context.
@@ -51,8 +50,8 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * @see #showInBestPositionFor(DataContext)
      * @see #setLocation(Point)
      */
-    @Nonnull
-    Point getBestPositionFor(@Nonnull DataContext dataContext);
+    
+    Point getBestPositionFor(DataContext dataContext);
 
     /**
      * Shows the popup in the position most appropriate for the specified data context.
@@ -61,7 +60,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * @see JBPopupFactory#guessBestPopupLocation(DataContext)
      * @see #getBestPositionFor(DataContext)
      */
-    void showInBestPositionFor(@Nonnull DataContext dataContext);
+    void showInBestPositionFor(DataContext dataContext);
 
     /**
      * Shows the popup near the cursor location in the specified editor.
@@ -69,14 +68,14 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * @param editor the editor relative to which the popup should be displayed.
      * @see JBPopupFactory#guessBestPopupLocation(Editor)
      */
-    //void showInBestPositionFor(@Nonnull Editor editor);
+    //void showInBestPositionFor(Editor editor);
 
     /**
      * Shows the popup in the center of the specified component.
      *
      * @param component the component at which the popup should be centered.
      */
-    void showInCenterOf(@Nonnull Component component);
+    void showInCenterOf(Component component);
 
 
     /**
@@ -87,23 +86,23 @@ public interface JBPopup extends Disposable, LightweightWindow {
     /**
      * Shows in best position with a given owner
      */
-    void show(@Nonnull Component owner);
+    void show(Component owner);
 
     /**
      * Shows popup inside position by event
      */
-    default void showBy(@Nonnull ComponentEvent<? extends consulo.ui.Component> uiEvent) {
+    default void showBy(ComponentEvent<? extends consulo.ui.Component> uiEvent) {
         showBy(uiEvent.getComponent(), Objects.requireNonNull(uiEvent.getInputDetails()));
     }
 
-    void showBy(@Nonnull consulo.ui.Component component, @Nonnull InputDetails inputDetails);
+    void showBy(consulo.ui.Component component, InputDetails inputDetails);
 
     /**
      * Shows the popup in the center of the active window in the IDE frame for the specified project.
      *
      * @param project the project in which the popup should be displayed.
      */
-    void showCenteredInCurrentWindow(@Nonnull ComponentManager project);
+    void showCenteredInCurrentWindow(ComponentManager project);
 
     /**
      * Hides popup as if <kbd>Enter</kbd> was pressed or or any other "accept" action.
@@ -146,7 +145,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
      *
      * @return the contents of the popup.
      */
-    @Nonnull
+    
     JComponent getContent();
 
     /**
@@ -154,13 +153,13 @@ public interface JBPopup extends Disposable, LightweightWindow {
      *
      * @param screenPoint Point to move to.
      */
-    void setLocation(@Nonnull Point screenPoint);
+    void setLocation(Point screenPoint);
 
-    void setSize(@Nonnull Dimension size);
+    void setSize(Dimension size);
 
     Dimension getSize();
 
-    void setCaption(@Nonnull String title);
+    void setCaption(String title);
 
     boolean isPersistent();
 
@@ -171,15 +170,15 @@ public interface JBPopup extends Disposable, LightweightWindow {
     void setUiVisible(boolean visible);
 
     @Nullable
-    <T> T getUserData(@Nonnull Class<T> userDataClass);
+    <T> T getUserData(Class<T> userDataClass);
 
     boolean isFocused();
 
     boolean isCancelKeyEnabled();
 
-    void addListener(@Nonnull JBPopupListener listener);
+    void addListener(JBPopupListener listener);
 
-    void removeListener(@Nonnull JBPopupListener listener);
+    void removeListener(JBPopupListener listener);
 
     boolean isDisposed();
 
@@ -191,18 +190,18 @@ public interface JBPopup extends Disposable, LightweightWindow {
 
     void moveToFitScreen();
 
-    @Nonnull
+    
     Point getLocationOnScreen();
 
     void pack(boolean width, boolean height);
 
-    default void setAdText(@Nonnull String s) {
+    default void setAdText(String s) {
         setAdText(s, SwingConstants.LEFT);
     }
 
     void setAdText(String s, @JdkConstants.HorizontalAlignment int alignment);
 
-    void setDataProvider(@Nonnull DataProvider dataProvider);
+    void setDataProvider(DataProvider dataProvider);
 
     /**
      * This callback is called when new key event from the event queue is being processed.
@@ -213,7 +212,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * @return {@code true} if the event is completely dispatched, i.e. no further processing is necessary;
      * {@code false} otherwise
      */
-    boolean dispatchKeyEvent(@Nonnull KeyEvent e);
+    boolean dispatchKeyEvent(KeyEvent e);
 
     /**
      * Whether it's OK to invoke one of the 'show' methods. Some implementation might prohibit it e.g. if the popup is shown already.

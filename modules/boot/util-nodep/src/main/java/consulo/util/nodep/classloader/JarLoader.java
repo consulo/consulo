@@ -37,8 +37,7 @@ class JarLoader extends Loader {
     private final URL myUrl;
     @Nullable
     private volatile SoftReference<JarFile> myZipFileSoftReference = null; // Used only when myConfiguration.myCanLockJars==true
-    @Nullable
-    private volatile Map<Resource.Attribute, String> myAttributes = null;
+    private volatile Map<Resource.@Nullable Attribute, String> myAttributes = null;
     @Nullable
     private volatile String myClassPathManifestAttribute = null;
     private static final String NULL_STRING = "<null>";
@@ -191,8 +190,7 @@ class JarLoader extends Loader {
         }
     }
 
-    @Nullable
-    private static Map<Resource.Attribute, String> getAttributes(@Nullable Attributes attributes) {
+    private static Map<Resource.@Nullable Attribute, String> getAttributes(@Nullable Attributes attributes) {
         if (attributes == null) {
             return null;
         }

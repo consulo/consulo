@@ -2,7 +2,6 @@
 package consulo.language.pattern;
 
 import consulo.language.util.ProcessingContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -21,7 +20,7 @@ public class CharPattern extends ObjectPattern<Character, CharPattern> {
   public CharPattern javaIdentifierPart() {
     return with(new PatternCondition<Character>("javaIdentifierPart") {
       @Override
-      public boolean accepts(@Nonnull Character character, ProcessingContext context) {
+      public boolean accepts(Character character, ProcessingContext context) {
         return Character.isJavaIdentifierPart(character.charValue());
       }
     });
@@ -30,7 +29,7 @@ public class CharPattern extends ObjectPattern<Character, CharPattern> {
   public CharPattern javaIdentifierStart() {
     return with(new PatternCondition<Character>("javaIdentifierStart") {
       @Override
-      public boolean accepts(@Nonnull Character character, ProcessingContext context) {
+      public boolean accepts(Character character, ProcessingContext context) {
         return Character.isJavaIdentifierStart(character.charValue());
       }
     });
@@ -39,7 +38,7 @@ public class CharPattern extends ObjectPattern<Character, CharPattern> {
   public CharPattern whitespace() {
     return with(new PatternCondition<Character>("whitespace") {
       @Override
-      public boolean accepts(@Nonnull Character character, ProcessingContext context) {
+      public boolean accepts(Character character, ProcessingContext context) {
         return Character.isWhitespace(character.charValue());
       }
     });
@@ -48,7 +47,7 @@ public class CharPattern extends ObjectPattern<Character, CharPattern> {
   public CharPattern letterOrDigit() {
     return with(new PatternCondition<Character>("letterOrDigit") {
       @Override
-      public boolean accepts(@Nonnull Character character, ProcessingContext context) {
+      public boolean accepts(Character character, ProcessingContext context) {
         return Character.isLetterOrDigit(character.charValue());
       }
     });

@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -23,10 +22,10 @@ import javax.swing.*;
  * @since 2019-07-27
  */
 public abstract class LookAndFeelInfoWithClassLoader extends UIManager.LookAndFeelInfo {
-  @Nonnull
+  
   public static LookAndFeelInfoWithClassLoader simple(String name, Class<?> lafClass) {
     return new LookAndFeelInfoWithClassLoader(name, lafClass.getName()) {
-      @Nonnull
+      
       @Override
       public ClassLoader getClassLoader() {
         return lafClass.getClassLoader();
@@ -38,7 +37,7 @@ public abstract class LookAndFeelInfoWithClassLoader extends UIManager.LookAndFe
     super(name, className);
   }
 
-  @Nonnull
+  
   public ClassLoader getClassLoader() {
     return getClass().getClassLoader();
   }

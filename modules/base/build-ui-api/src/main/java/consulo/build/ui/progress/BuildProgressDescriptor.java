@@ -3,19 +3,18 @@ package consulo.build.ui.progress;
 
 import consulo.build.ui.BuildDescriptor;
 
-import jakarta.annotation.Nonnull;
 
 public interface BuildProgressDescriptor {
-  @Nonnull
-  public static BuildProgressDescriptor of(@Nonnull BuildDescriptor descriptor) {
+  
+  public static BuildProgressDescriptor of(BuildDescriptor descriptor) {
     return new BuildProgressDescriptor() {
-      @Nonnull
+      
       @Override
       public String getTitle() {
         return descriptor.getTitle();
       }
 
-      @Nonnull
+      
       @Override
       public BuildDescriptor getBuildDescriptor() {
         return descriptor;
@@ -23,9 +22,9 @@ public interface BuildProgressDescriptor {
     };
   }
 
-  @Nonnull
+  
   String getTitle();
 
-  @Nonnull
+  
   BuildDescriptor getBuildDescriptor();
 }

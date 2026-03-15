@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VirtualFileQualifiedNameProvider {
@@ -29,5 +28,5 @@ public interface VirtualFileQualifiedNameProvider {
      * @return {@code virtualFile} fqn (relative path for example) or null if not handled by this provider
      */
     @Nullable
-    String getQualifiedName(@Nonnull Project project, @Nonnull VirtualFile virtualFile);
+    String getQualifiedName(Project project, VirtualFile virtualFile);
 }

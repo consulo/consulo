@@ -18,8 +18,7 @@ import consulo.language.util.CharTable;
 import consulo.project.Project;
 import consulo.project.internal.SingleProjectHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class TreeElement extends UserDataHolderBase implements ASTNode, Cloneable {
     public static final TreeElement[] EMPTY_ARRAY = new TreeElement[0];
@@ -30,16 +29,16 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     private final IElementType myType;
     private volatile int myStartOffsetInParent = -1;
 
-    public TreeElement(@Nonnull IElementType type) {
+    public TreeElement(IElementType type) {
         myType = type;
     }
 
-    private static PsiFileImpl getCachedFile(@Nonnull TreeElement each) {
+    private static PsiFileImpl getCachedFile(TreeElement each) {
         FileElement node = (FileElement) SharedImplUtil.findFileElement(each);
         return node == null ? null : (PsiFileImpl) node.getCachedPsi();
     }
 
-    @Nonnull
+    
     @Override
     public Object clone() {
         TreeElement clone = (TreeElement) super.clone();
@@ -78,7 +77,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     @Override
     public abstract LeafElement findLeafElementAt(int offset);
 
-    @Nonnull
+    
     public abstract char[] textToCharArray();
 
     @Override
@@ -151,18 +150,18 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         return getStartOffset();
     }
 
-    public boolean textMatches(@Nonnull CharSequence buffer, int startOffset, int endOffset) {
+    public boolean textMatches(CharSequence buffer, int startOffset, int endOffset) {
         return textMatches(buffer, startOffset) == endOffset;
     }
 
-    public abstract int textMatches(@Nonnull CharSequence buffer, int start);
+    public abstract int textMatches(CharSequence buffer, int start);
 
-    public boolean textMatches(@Nonnull CharSequence seq) {
+    public boolean textMatches(CharSequence seq) {
         return textMatches(seq, 0, seq.length());
     }
 
     @RequiredReadAction
-    public boolean textMatches(@Nonnull PsiElement element) {
+    public boolean textMatches(PsiElement element) {
         return getTextLength() == element.getTextLength() && textMatches(element.getText());
     }
 
@@ -231,13 +230,13 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
 
     public abstract int hc(); // Used in tree diffing
 
-    public abstract void acceptTree(@Nonnull TreeElementVisitor visitor);
+    public abstract void acceptTree(TreeElementVisitor visitor);
 
     protected void onInvalidated() {
         DebugUtil.onInvalidated(this);
     }
 
-    public void rawInsertBeforeMe(@Nonnull TreeElement firstNew) {
+    public void rawInsertBeforeMe(TreeElement firstNew) {
         TreeElement anchorPrev = getTreePrev();
         if (anchorPrev == null) {
             firstNew.rawRemoveUpToLast();
@@ -267,7 +266,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         DebugUtil.checkTreeStructure(this);
     }
 
-    public void rawInsertAfterMe(@Nonnull TreeElement firstNew) {
+    public void rawInsertAfterMe(TreeElement firstNew) {
         rawInsertAfterMeWithoutNotifications(firstNew);
 
         CompositeElement parent = getTreeParent();
@@ -276,7 +275,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         }
     }
 
-    final void rawInsertAfterMeWithoutNotifications(@Nonnull TreeElement firstNew) {
+    final void rawInsertAfterMeWithoutNotifications(TreeElement firstNew) {
         firstNew.rawRemoveUpToWithoutNotifications(null, false);
         CompositeElement p = getTreeParent();
         TreeElement treeNext = getTreeNext();
@@ -417,7 +416,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     }
 
     @Override
-    @Nonnull
+    
     public IElementType getElementType() {
         return myType;
     }

@@ -18,8 +18,7 @@ package consulo.language.codeStyle.ui.setting;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -43,7 +42,7 @@ public interface CodeStyleSchemesModel {
 
   void addScheme(CodeStyleScheme newScheme, boolean changeSelection);
 
-  @Nonnull
+  
   List<CodeStyleScheme> getAllSortedSchemes();
 
   CodeStyleScheme getProjectScheme();
@@ -55,10 +54,10 @@ public interface CodeStyleSchemesModel {
 
   void fireSchemeChanged(CodeStyleScheme scheme);
 
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   CodeStyleScheme getSelectedScheme();
 
   void removeScheme(CodeStyleScheme scheme);
@@ -67,7 +66,7 @@ public interface CodeStyleSchemesModel {
 
   CodeStyleScheme createNewScheme(String preferredName, CodeStyleScheme parentScheme);
 
-  CodeStyleScheme exportProjectScheme(@Nonnull String name);
+  CodeStyleScheme exportProjectScheme(String name);
 
   List<CodeStyleScheme> getSchemes();
 }

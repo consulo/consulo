@@ -23,7 +23,6 @@ import consulo.component.ComponentManager;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -42,7 +41,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     }
 
     @Override
-    public void execute(@Nonnull Runnable command) {
+    public void execute(Runnable command) {
       Application application = Application.get();
       if (application.isDispatchThread() && !application.getCurrentModalityState().dominates(modality)) {
         command.run();
@@ -61,7 +60,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     }
 
     @Override
-    public void execute(@Nonnull Runnable command) {
+    public void execute(Runnable command) {
       Application application = Application.get();
       if (application.isWriteThread() && !application.getCurrentModalityState().dominates(modality)) {
         command.run();
@@ -98,13 +97,13 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     this.modality = modalityState;
   }
 
-  @Nonnull
+  
   @Override
   protected AppUIExecutorImpl cloneWith(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirationSet) {
     return new AppUIExecutorImpl(modality, thread, constraints, cancellationConditions, expirationSet);
   }
 
-  @Nonnull
+  
   @Override
   public AppUIExecutor later() {
     int edtEventCount = UIAccess.isUIThread() ? UIAccess.current().getEventCount() : -1;
@@ -141,15 +140,15 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     });
   }
 
-  @Nonnull
+  
   @Override
-  public AppUIExecutor withDocumentsCommitted(@Nonnull ComponentManager project) {
+  public AppUIExecutor withDocumentsCommitted(ComponentManager project) {
     return withConstraint(new WithDocumentsCommitted((Project)project, modality), project);
   }
 
-  @Nonnull
+  
   @Override
-  public AppUIExecutor inSmartMode(@Nonnull ComponentManager project) {
+  public AppUIExecutor inSmartMode(ComponentManager project) {
     return withConstraint(new InSmartMode((Project)project), project);
   }
 

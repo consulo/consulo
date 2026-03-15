@@ -9,8 +9,7 @@ import consulo.language.psi.stub.SerializationManager;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.stub.StubIndexKey;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -22,16 +21,16 @@ import java.util.Set;
 public abstract class StubForwardIndexExternalizer<StubKeySerializationState> implements DataExternalizer<Map<StubIndexKey, Map<Object, StubIdList>>> {
   private volatile boolean myEnsuredStubElementTypesLoaded;
 
-  protected abstract StubKeySerializationState createStubIndexKeySerializationState(@Nonnull DataOutput out, @Nonnull Set<StubIndexKey> set) throws IOException;
+  protected abstract StubKeySerializationState createStubIndexKeySerializationState(DataOutput out, Set<StubIndexKey> set) throws IOException;
 
-  protected abstract void writeStubIndexKey(@Nonnull DataOutput out, @Nonnull StubIndexKey key, StubKeySerializationState state) throws IOException;
+  protected abstract void writeStubIndexKey(DataOutput out, StubIndexKey key, StubKeySerializationState state) throws IOException;
 
-  protected abstract StubKeySerializationState createStubIndexKeySerializationState(@Nonnull DataInput input, int stubIndexKeyCount) throws IOException;
+  protected abstract StubKeySerializationState createStubIndexKeySerializationState(DataInput input, int stubIndexKeyCount) throws IOException;
 
-  protected abstract ID<?, ?> readStubIndexKey(@Nonnull DataInput input, StubKeySerializationState stubKeySerializationState) throws IOException;
+  protected abstract ID<?, ?> readStubIndexKey(DataInput input, StubKeySerializationState stubKeySerializationState) throws IOException;
 
   @Override
-  public void save(@Nonnull DataOutput out, Map<StubIndexKey, Map<Object, StubIdList>> indexedStubs) throws IOException {
+  public void save(DataOutput out, Map<StubIndexKey, Map<Object, StubIdList>> indexedStubs) throws IOException {
 
     DataInputOutputUtil.writeINT(out, indexedStubs.size());
     if (!indexedStubs.isEmpty()) {
@@ -47,12 +46,12 @@ public abstract class StubForwardIndexExternalizer<StubKeySerializationState> im
   }
 
   @Override
-  public Map<StubIndexKey, Map<Object, StubIdList>> read(@Nonnull DataInput in) throws IOException {
+  public Map<StubIndexKey, Map<Object, StubIdList>> read(DataInput in) throws IOException {
     return doRead(in, null, null);
   }
 
   @Nullable
-  <K> Map<StubIndexKey, Map<Object, StubIdList>> doRead(@Nonnull DataInput in, @Nullable StubIndexKey<K, ?> requestedIndex, @Nullable K requestedKey) throws IOException {
+  <K> Map<StubIndexKey, Map<Object, StubIdList>> doRead(DataInput in, @Nullable StubIndexKey<K, ?> requestedIndex, @Nullable K requestedKey) throws IOException {
     if (!myEnsuredStubElementTypesLoaded) {
       ProgressManager.getInstance().executeNonCancelableSection(() -> {
         SerializationManager.getInstance().initSerializers();
@@ -91,22 +90,22 @@ public abstract class StubForwardIndexExternalizer<StubKeySerializationState> im
     static final IdeStubForwardIndexesExternalizer INSTANCE = new IdeStubForwardIndexesExternalizer();
 
     @Override
-    protected void writeStubIndexKey(@Nonnull DataOutput out, @Nonnull StubIndexKey key, Void aVoid) throws IOException {
+    protected void writeStubIndexKey(DataOutput out, StubIndexKey key, Void aVoid) throws IOException {
       DataInputOutputUtil.writeINT(out, key.getUniqueId());
     }
 
     @Override
-    protected Void createStubIndexKeySerializationState(@Nonnull DataOutput out, @Nonnull Set<StubIndexKey> set) {
+    protected Void createStubIndexKeySerializationState(DataOutput out, Set<StubIndexKey> set) {
       return null;
     }
 
     @Override
-    protected ID<?, ?> readStubIndexKey(@Nonnull DataInput input, Void aVoid) throws IOException {
+    protected ID<?, ?> readStubIndexKey(DataInput input, Void aVoid) throws IOException {
       return ID.findById(DataInputOutputUtil.readINT(input));
     }
 
     @Override
-    protected Void createStubIndexKeySerializationState(@Nonnull DataInput input, int stubIndexKeyCount) {
+    protected Void createStubIndexKeySerializationState(DataInput input, int stubIndexKeyCount) {
       return null;
     }
   }

@@ -6,7 +6,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.versionControlSystem.log.ui.VcsLogColorManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -21,13 +20,13 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
   private static Color[] ROOT_COLORS =
     {JBColor.RED, JBColor.GREEN, JBColor.BLUE, JBColor.ORANGE, JBColor.CYAN, JBColor.YELLOW, JBColor.MAGENTA, JBColor.PINK};
 
-  @Nonnull
+  
   private final List<VirtualFile> myRoots;
 
-  @Nonnull
+  
   private final Map<VirtualFile, Color> myRoots2Colors;
 
-  public VcsLogColorManagerImpl(@Nonnull Collection<VirtualFile> roots) {
+  public VcsLogColorManagerImpl(Collection<VirtualFile> roots) {
     myRoots = new ArrayList<>(roots);
     Collections.sort(myRoots, Comparator.comparing(VirtualFile::getName));
     myRoots2Colors = new HashMap<>();
@@ -48,8 +47,8 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
     }
   }
 
-  @Nonnull
-  public static JBColor getBackgroundColor(@Nonnull Color baseRootColor) {
+  
+  public static JBColor getBackgroundColor(Color baseRootColor) {
     return new JBColor(() -> ColorUtil.mix(baseRootColor, UIUtil.getTableBackground(), 0.75));
   }
 
@@ -58,9 +57,9 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
     return myRoots.size() > 1;
   }
 
-  @Nonnull
+  
   @Override
-  public Color getRootColor(@Nonnull VirtualFile root) {
+  public Color getRootColor(VirtualFile root) {
     Color color = myRoots2Colors.get(root);
     if (color == null) {
       LOG.error("No color record for root " + root + ". All roots: " + myRoots2Colors);

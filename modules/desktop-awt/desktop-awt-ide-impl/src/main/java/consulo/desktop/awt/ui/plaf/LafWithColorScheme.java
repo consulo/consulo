@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14.12.14
  */
 public interface LafWithColorScheme {
-  @Nonnull
+  
   String getColorSchemeName();
 }

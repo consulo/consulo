@@ -19,15 +19,14 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2022-02-09
  */
 public interface SearchScope extends VirtualFileFilter {
-    @Nonnull
+    
     default String getDisplayName() {
         return "<unknown scope>";
     }
@@ -37,13 +36,13 @@ public interface SearchScope extends VirtualFileFilter {
         return null;
     }
 
-    @Nonnull
-    SearchScope intersectWith(@Nonnull SearchScope scope2);
+    
+    SearchScope intersectWith(SearchScope scope2);
 
-    @Nonnull
-    SearchScope union(@Nonnull SearchScope scope);
+    
+    SearchScope union(SearchScope scope);
 
-    boolean contains(@Nonnull VirtualFile file);
+    boolean contains(VirtualFile file);
 
     @Override
     default boolean accept(VirtualFile file) {

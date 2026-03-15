@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
@@ -90,7 +89,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
   @RequiredUIAccess
   @Override
-  public final JComponent createComponent(@Nonnull Disposable parentDisposable) {
+  public final JComponent createComponent(Disposable parentDisposable) {
     if (myOptionsComponent == null) {
       myOptionsComponent = createOptionsPanel(parentDisposable);
       JComponent component = createTopRightComponent(myNameField);
@@ -127,7 +126,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
   @RequiredUIAccess
   @SuppressWarnings("deprecation")
-  public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
+  public JComponent createOptionsPanel(Disposable parentDisposable) {
     return createOptionsPanel();
   }
 

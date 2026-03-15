@@ -41,8 +41,7 @@ import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -88,31 +87,31 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   @Override
-  @Nonnull
+  
   public Artifact[] getArtifacts() {
     return myModel.getArtifacts();
   }
 
   @Override
-  public Artifact findArtifact(@Nonnull String name) {
+  public Artifact findArtifact(String name) {
     return myModel.findArtifact(name);
   }
 
   @Override
-  @Nonnull
-  public Artifact getArtifactByOriginal(@Nonnull Artifact artifact) {
+  
+  public Artifact getArtifactByOriginal(Artifact artifact) {
     return myModel.getArtifactByOriginal(artifact);
   }
 
   @Override
-  @Nonnull
-  public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
+  
+  public Artifact getOriginalArtifact(Artifact artifact) {
     return myModel.getOriginalArtifact(artifact);
   }
 
   @Override
-  @Nonnull
-  public Collection<? extends Artifact> getArtifactsByType(@Nonnull ArtifactType type) {
+  
+  public Collection<? extends Artifact> getArtifactsByType(ArtifactType type) {
     return myModel.getArtifactsByType(type);
   }
 
@@ -383,14 +382,14 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   @Override
-  public void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath, @Nonnull PackagingElement<?> element) {
+  public void addElementsToDirectory(Artifact artifact, String relativePath, PackagingElement<?> element) {
     addElementsToDirectory(artifact, relativePath, Collections.singletonList(element));
   }
 
   @Override
-  public void addElementsToDirectory(@Nonnull Artifact artifact,
-                                     @Nonnull String relativePath,
-                                     @Nonnull Collection<? extends PackagingElement<?>> elements) {
+  public void addElementsToDirectory(Artifact artifact,
+                                     String relativePath,
+                                     Collection<? extends PackagingElement<?>> elements) {
     ModifiableArtifactModel model = createModifiableModel();
     CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
     myPackagingElementFactory.getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);

@@ -22,8 +22,7 @@ import consulo.language.ast.ASTNode;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,7 +112,7 @@ public class CStyleCommentBlock extends AbstractBlock {
     return result;
   }
 
-  public CStyleCommentBlock(@Nonnull ASTNode node, @Nullable Indent indent) {
+  public CStyleCommentBlock(ASTNode node, @Nullable Indent indent) {
     super(node, null, null);
     myIndent = indent;
   }
@@ -150,7 +149,7 @@ public class CStyleCommentBlock extends AbstractBlock {
 
   @Nullable
   @Override
-  public Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2) {
+  public Spacing getSpacing(@Nullable Block child1, Block child2) {
     boolean isLicenseComment = child1 == null && FormatterTreeUtil.prev(getNode()) == null;
     if (isLicenseComment) {
       return Spacing.getReadOnlySpacing();

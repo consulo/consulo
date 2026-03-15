@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.refactoring.rename.RenamePsiFileProcessorBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(order = "last")
 public class RenamePsiFileProcessor extends RenamePsiFileProcessorBase {
     @Override
-    public boolean canProcessElement(@Nonnull PsiElement element) {
+    public boolean canProcessElement(PsiElement element) {
         return element instanceof PsiFileSystemItem;
     }
 }

@@ -18,8 +18,7 @@ package consulo.language.editor.template;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.platform.base.icon.PlatformIconGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -30,20 +29,20 @@ abstract public class LiveTemplateLookupElement extends LookupElement {
   private final boolean myWorthShowingInAutoPopup;
   private final String myDescription;
 
-  public LiveTemplateLookupElement(@Nonnull String lookupString, @Nullable String description, boolean sudden, boolean worthShowingInAutoPopup) {
+  public LiveTemplateLookupElement(String lookupString, @Nullable String description, boolean sudden, boolean worthShowingInAutoPopup) {
     myDescription = description;
     this.sudden = sudden;
     myLookupString = lookupString;
     myWorthShowingInAutoPopup = worthShowingInAutoPopup;
   }
 
-  @Nonnull
+  
   @Override
   public String getLookupString() {
     return myLookupString;
   }
 
-  @Nonnull
+  
   protected String getItemText() {
     return myLookupString;
   }

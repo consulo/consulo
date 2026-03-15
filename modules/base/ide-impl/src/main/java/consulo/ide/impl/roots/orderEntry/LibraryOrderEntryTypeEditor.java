@@ -33,7 +33,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -44,20 +43,20 @@ import java.util.function.Consumer;
 public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<LibraryOrderEntryImpl> {
   @RequiredUIAccess
   @Override
-  public void navigate(@Nonnull LibraryOrderEntryImpl orderEntry) {
+  public void navigate(LibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(orderEntry, true));
   }
 
-  @Nonnull
+  
   @Override
   public String getOrderTypeId() {
     return LibraryOrderEntryType.ID;
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRender(@Nonnull LibraryOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRender(LibraryOrderEntryImpl orderEntry) {
     if (!orderEntry.isValid()) { //library can be removed
       return FileAppearanceService.getInstance().getRenderForInvalidUrl(orderEntry.getPresentableName());
     }
@@ -68,12 +67,12 @@ public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<Library
 
   }
 
-  @Nonnull
+  
   @Override
-  public ClasspathTableItem<LibraryOrderEntryImpl> createTableItem(@Nonnull LibraryOrderEntryImpl orderEntry,
-                                                                   @Nonnull Project project,
-                                                                   @Nonnull ModulesConfigurator modulesConfigurator,
-                                                                   @Nonnull LibrariesConfigurator librariesConfigurator) {
+  public ClasspathTableItem<LibraryOrderEntryImpl> createTableItem(LibraryOrderEntryImpl orderEntry,
+                                                                   Project project,
+                                                                   ModulesConfigurator modulesConfigurator,
+                                                                   LibrariesConfigurator librariesConfigurator) {
     return new LibraryClasspathTableItem<>(orderEntry, project, modulesConfigurator, librariesConfigurator);
   }
 }

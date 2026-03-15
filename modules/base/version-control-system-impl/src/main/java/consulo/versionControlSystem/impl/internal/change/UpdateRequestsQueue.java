@@ -26,8 +26,7 @@ import consulo.ui.ModalityState;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -61,10 +60,10 @@ public class UpdateRequestsQueue {
   private final StartupManager myStartupManager;
   private final boolean myTrackHeavyLatch;
 
-  public UpdateRequestsQueue(@Nonnull Project project,
-                             @Nonnull ProjectLevelVcsManager projectLevelVcsManager,
-                             @Nonnull StartupManager startupManager,
-                             @Nonnull ChangeListScheduler scheduler,
+  public UpdateRequestsQueue(Project project,
+                             ProjectLevelVcsManager projectLevelVcsManager,
+                             StartupManager startupManager,
+                             ChangeListScheduler scheduler,
                              Runnable delegate) {
     myProject = project;
     myScheduler = scheduler;
@@ -175,8 +174,8 @@ public class UpdateRequestsQueue {
     }
   }
 
-  public void invokeAfterUpdate(@Nonnull Runnable afterUpdate,
-                                @Nonnull InvokeAfterUpdateMode mode,
+  public void invokeAfterUpdate(Runnable afterUpdate,
+                                InvokeAfterUpdateMode mode,
                                 @Nullable String title,
                                 @Nullable Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
                                 @Nullable ModalityState state) {

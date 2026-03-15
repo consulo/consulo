@@ -50,7 +50,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +115,7 @@ public class RecentProjectPanel {
 
     protected final JComponent myTargetComponent;
 
-    public RecentProjectPanel(@Nonnull consulo.disposer.Disposable parentDisposable) {
+    public RecentProjectPanel(consulo.disposer.Disposable parentDisposable) {
         myRootPanel = new JPanel(new BorderLayout());
 
         AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false, isUseGroups());
@@ -148,7 +147,7 @@ public class RecentProjectPanel {
 
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
+            public boolean onClick(MouseEvent event, int clickCount) {
                 int selectedIndex = myList.getSelectedIndex();
                 if (selectedIndex >= 0) {
                     Rectangle cellBounds = myList.getCellBounds(selectedIndex, selectedIndex);
@@ -190,7 +189,7 @@ public class RecentProjectPanel {
         removeRecentProjectAction = new AnAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 List<AnAction> selection = myList.getSelectedValuesList();
 
                 if (selection != null && !selection.isEmpty()) {
@@ -244,13 +243,13 @@ public class RecentProjectPanel {
         return myRootPanel;
     }
 
-    @Nonnull
+    
     public JBList<AnAction> getList() {
         return myList;
     }
 
-    @Nonnull
-    private AnAction performSelectedAction(@Nonnull InputEvent event, AnAction selection) {
+    
+    private AnAction performSelectedAction(InputEvent event, AnAction selection) {
         String actionPlace =
             UIUtil.uiParents(myList, true).filter(FlatWelcomeFrame.class).isEmpty() ? ActionPlaces.POPUP : ActionPlaces.WELCOME_SCREEN;
         AnActionEvent actionEvent = AnActionEvent.createFromInputEvent(
@@ -350,7 +349,7 @@ public class RecentProjectPanel {
     protected static class MyList extends JBList<AnAction> {
         private final Dimension mySize;
 
-        protected MyList(Dimension size, @Nonnull AnAction... listData) {
+        protected MyList(Dimension size, AnAction... listData) {
             super(listData);
             mySize = size;
             setEmptyText("  No Project Open Yet  ");
@@ -473,7 +472,7 @@ public class RecentProjectPanel {
             return new Dimension(Math.min(size.width, JBUI.scale(245)), size.height);
         }
 
-        @Nonnull
+        
         @Override
         public Dimension getSize() {
             return getPreferredSize();
@@ -542,17 +541,17 @@ public class RecentProjectPanel {
         }
 
         @Override
-        public void applicationActivated(@Nonnull IdeFrame ideFrame) {
+        public void applicationActivated(IdeFrame ideFrame) {
             onAppStateChanged();
         }
 
         @Override
-        public void delayedApplicationDeactivated(@Nonnull IdeFrame ideFrame) {
+        public void delayedApplicationDeactivated(IdeFrame ideFrame) {
             onAppStateChanged();
         }
 
         @Override
-        public void applicationDeactivated(@Nonnull IdeFrame ideFrame) {
+        public void applicationDeactivated(IdeFrame ideFrame) {
         }
 
         @Override

@@ -40,8 +40,7 @@ import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.tree.PresentationData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -134,7 +133,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
     ) {
         final List<AbstractTreeNode<Object>> copyChildren = new ArrayList<>();
         AbstractTreeNode<Object> copy = new AbstractTreeNode<>(myProject, source.getUserObject()) {
-            @Nonnull
+            
             @Override
             @RequiredReadAction
             public Collection<? extends AbstractTreeNode> getChildren() {
@@ -173,9 +172,9 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
+    public LocalizeValue getCustomName(CommonActionsPanel.Buttons type) {
         return switch (type) {
             case EDIT -> ActionLocalize.actionEditbreakpointText();
             case REMOVE -> XDebuggerLocalize.xdebuggerRemoveLineBreakpointActionText();
@@ -184,16 +183,16 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
     }
 
     @Override
-    public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
+    public boolean willHandle(CommonActionsPanel.Buttons type, Project project, Set<Object> selectedObjects) {
         return (selectedObjects.size() == 1 && (type == CommonActionsPanel.Buttons.EDIT || type == CommonActionsPanel.Buttons.REMOVE))
             && ((AbstractTreeNode) selectedObjects.iterator().next()).getValue() instanceof BreakpointItem;
     }
 
     @Override
     public void handle(
-        @Nonnull CommonActionsPanel.Buttons type,
+        CommonActionsPanel.Buttons type,
         Project project,
-        @Nonnull Set<Object> selectedObjects,
+        Set<Object> selectedObjects,
         JComponent component
     ) {
         Rectangle bounds = component.getBounds();
@@ -219,7 +218,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
     public void customizeRenderer(
         ColoredTreeCellRenderer renderer,
         JTree tree,
-        @Nonnull Object value,
+        Object value,
         boolean selected,
         boolean expanded,
         boolean leaf,

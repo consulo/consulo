@@ -21,8 +21,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.StringTokenizer;
 
 /**
@@ -36,7 +35,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
 
   @Override
   @Nullable
-  public PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature, @Nullable StringBuilder processingInfoStorage) {
+  public PsiElement restoreBySignature(PsiFile file, String signature, @Nullable StringBuilder processingInfoStorage) {
     int semicolonIndex = signature.indexOf(ELEMENTS_SEPARATOR);
     PsiElement parent;
 
@@ -70,10 +69,10 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
   }
 
   @Nullable
-  protected abstract PsiElement restoreBySignatureTokens(@Nonnull PsiFile file,
-                                                         @Nonnull PsiElement parent,
-                                                         @Nonnull String type,
-                                                         @Nonnull StringTokenizer tokenizer,
+  protected abstract PsiElement restoreBySignatureTokens(PsiFile file,
+                                                         PsiElement parent,
+                                                         String type,
+                                                         StringTokenizer tokenizer,
                                                          @Nullable StringBuilder processingInfoStorage);
 
   protected static <T extends PsiNamedElement> int getChildIndex(T element, PsiElement parent, String name, Class<T> hisClass) {
@@ -98,10 +97,10 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
   }
 
   @Nullable
-  protected static <T extends PsiNamedElement> T restoreElementInternal(@Nonnull PsiElement parent,
+  protected static <T extends PsiNamedElement> T restoreElementInternal(PsiElement parent,
                                                                         String name,
                                                                         int index,
-                                                                        @Nonnull Class<T> hisClass)
+                                                                        Class<T> hisClass)
   {
     PsiElement[] children = parent.getChildren();
 

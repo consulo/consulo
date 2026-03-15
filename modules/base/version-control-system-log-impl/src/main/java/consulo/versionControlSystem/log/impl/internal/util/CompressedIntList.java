@@ -16,17 +16,16 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 public class CompressedIntList implements IntList {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
-  @Nonnull
+  
   public static IntList newInstance(int[] delegateArray) {
     return newInstance(delegateArray, DEFAULT_BLOCK_SIZE);
   }
 
-  @Nonnull
+  
   public static IntList newInstance(final int[] delegateArray, int blockSize) {
     return newInstance(new IntList() {
       @Override
@@ -41,7 +40,7 @@ public class CompressedIntList implements IntList {
     }, blockSize);
   }
 
-  @Nonnull
+  
   public static IntList newInstance(final IntList delegateList, final int blockSize) {
     if (blockSize < 1) throw new IllegalArgumentException("Unsupported blockSize:" + blockSize);
 
@@ -69,13 +68,13 @@ public class CompressedIntList implements IntList {
 
   private final int myBlockSize;
 
-  @Nonnull
+  
   private final int[] myStrongValues;
 
-  @Nonnull
+  
   private final IntList myCompressedDeltas;
 
-  private CompressedIntList(int blockSize, @Nonnull int[] strongValues, @Nonnull IntList compressedDeltas) {
+  private CompressedIntList(int blockSize, int[] strongValues, IntList compressedDeltas) {
     myBlockSize = blockSize;
     myStrongValues = strongValues;
     myCompressedDeltas = compressedDeltas;

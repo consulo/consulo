@@ -9,8 +9,7 @@ import consulo.language.codeStyle.internal.CompositeBlockWrapper;
 import consulo.language.codeStyle.internal.IndentImpl;
 import consulo.language.codeStyle.internal.WrapImpl;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ class InitialInfoBuilderState {
 
   private final List<AbstractBlockWrapper> myWrappedChildren = new ArrayList<>();
 
-  InitialInfoBuilderState(@Nonnull Block parentBlock, @Nonnull CompositeBlockWrapper wrappedBlock, @Nullable WrapImpl parentBlockWrap) {
+  InitialInfoBuilderState(Block parentBlock, CompositeBlockWrapper wrappedBlock, @Nullable WrapImpl parentBlockWrap) {
     this.parentBlock = parentBlock;
     this.wrappedBlock = wrappedBlock;
     this.parentBlockWrap = parentBlockWrap;
@@ -34,7 +33,7 @@ class InitialInfoBuilderState {
     return myWrappedChildren.size();
   }
 
-  public boolean childBlockProcessed(@Nonnull Block child, @Nonnull AbstractBlockWrapper wrappedChild, CommonCodeStyleSettings.IndentOptions options) {
+  public boolean childBlockProcessed(Block child, AbstractBlockWrapper wrappedChild, CommonCodeStyleSettings.IndentOptions options) {
     myWrappedChildren.add(wrappedChild);
     previousBlock = child;
 

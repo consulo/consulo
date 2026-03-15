@@ -17,7 +17,6 @@ package consulo.execution.configuration;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,47 +28,47 @@ public abstract class SimpleConfigurationType extends ConfigurationFactory imple
   private final LocalizeValue myDescription;
   private final Image myIcon;
 
-  public SimpleConfigurationType(@Nonnull String id,
-                                 @Nonnull LocalizeValue displayName,
-                                 @Nonnull Image icon)  {
+  public SimpleConfigurationType(String id,
+                                 LocalizeValue displayName,
+                                 Image icon)  {
     this(id, displayName, displayName, icon);
   }
 
-  public SimpleConfigurationType(@Nonnull String id,
-                                 @Nonnull LocalizeValue displayName,
-                                 @Nonnull LocalizeValue description,
-                                 @Nonnull Image icon) {
+  public SimpleConfigurationType(String id,
+                                 LocalizeValue displayName,
+                                 LocalizeValue description,
+                                 Image icon) {
     myId = id;
     myDisplayName = displayName;
     myDescription = description;
     myIcon = icon;
   }
 
-  @Nonnull
+  
   @Override
   public final ConfigurationType getType() {
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public final LocalizeValue getDisplayName() {
     return myDisplayName;
   }
 
-  @Nonnull
+  
   @Override
   public final LocalizeValue getConfigurationTypeDescription() {
     return myDescription;
   }
 
-  @Nonnull
+  
   @Override
   public final Image getIcon() {
     return myIcon;
   }
 
-  @Nonnull
+  
   @Override
   public final String getId() {
     return myId;

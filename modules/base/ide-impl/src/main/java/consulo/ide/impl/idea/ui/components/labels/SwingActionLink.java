@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -32,7 +31,7 @@ import java.beans.PropertyChangeListener;
 public class SwingActionLink extends LinkLabel<Action> implements LinkListener<Action> {
   private final ActionEvent myEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, Action.ACTION_COMMAND_KEY);
 
-  public SwingActionLink(@Nonnull Action action) {
+  public SwingActionLink(Action action) {
     super((String)action.getValue(Action.NAME), (Image)action.getValue(Action.SMALL_ICON));
     setToolTipText((String)action.getValue(Action.SHORT_DESCRIPTION));
     setVisible(action.isEnabled());

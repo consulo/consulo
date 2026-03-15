@@ -19,8 +19,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -50,7 +49,7 @@ public class CustomisedActionGroup extends ActionGroup {
         return myGroup;
     }
 
-    @Nonnull
+    
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (myForceUpdate) {
             myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);

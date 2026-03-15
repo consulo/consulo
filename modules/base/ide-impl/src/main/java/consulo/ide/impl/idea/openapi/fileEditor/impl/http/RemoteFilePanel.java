@@ -39,8 +39,7 @@ import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileState;
 import consulo.virtualFileSystem.http.event.FileDownloadingListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -207,7 +206,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         }
 
         @Override
-        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+        public void errorOccurred(LocalizeValue errorMessage) {
             Application.get().invokeLater(() -> {
                 myErrorLabel.setText(errorMessage.getNullIfEmpty());
                 showCard(ERROR_CARD);
@@ -215,7 +214,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         }
 
         @Override
-        public void progressMessageChanged(boolean indeterminate, @Nonnull LocalizeValue message) {
+        public void progressMessageChanged(boolean indeterminate, LocalizeValue message) {
             myProgressUpdatesQueue.queue(new Update("progress text") {
                 @Override
                 public void run() {

@@ -20,8 +20,7 @@ import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
 public class LazyFileHyperlinkInfo extends FileHyperlinkInfoBase {
   private final LazyValue<VirtualFile> myFile;
 
-  public LazyFileHyperlinkInfo(@Nonnull Project project, String filePath, int line, int column) {
+  public LazyFileHyperlinkInfo(Project project, String filePath, int line, int column) {
     super(project, line, column);
     myFile = LazyValue.nullable(() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath));
   }

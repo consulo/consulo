@@ -21,8 +21,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,15 +29,15 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CompilerConfiguration {
-    @Nonnull
-    public static CompilerConfiguration getInstance(@Nonnull Project project) {
+    
+    public static CompilerConfiguration getInstance(Project project) {
         return project.getInstance(CompilerConfiguration.class);
     }
 
     @Nullable
     public abstract VirtualFile getCompilerOutput();
 
-    @Nonnull
+    
     public abstract String getCompilerOutputUrl();
 
     public abstract VirtualFilePointer getCompilerOutputPointer();

@@ -27,8 +27,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Used for "goto code block start/end" and "highlight current scope".
@@ -40,7 +39,7 @@ public interface CodeBlockProvider extends LanguageExtension {
   ExtensionPointCacheKey<CodeBlockProvider, ByLanguageValue<CodeBlockProvider>> KEY = ExtensionPointCacheKey.create("CodeBlockProvider", LanguageOneToOne.build());
 
   @Nullable
-  static CodeBlockProvider forLanguage(@Nonnull Language language) {
+  static CodeBlockProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(CodeBlockProvider.class).getOrBuildCache(KEY).get(language);
   }
 

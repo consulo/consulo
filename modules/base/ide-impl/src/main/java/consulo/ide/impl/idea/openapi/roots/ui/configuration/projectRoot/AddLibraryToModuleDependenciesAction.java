@@ -24,25 +24,24 @@ import consulo.content.library.Library;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final BaseLibrariesConfigurable myConfigurable;
 
-    public AddLibraryToModuleDependenciesAction(@Nonnull Project project, @Nonnull BaseLibrariesConfigurable configurable) {
+    public AddLibraryToModuleDependenciesAction(Project project, BaseLibrariesConfigurable configurable) {
         super("Add to Modules...", "Add the library to the dependencies list of chosen modules", null);
         myProject = project;
         myConfigurable = configurable;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ProjectStructureElement element = myConfigurable.getSelectedElement();
         boolean visible = false;
         if (element instanceof LibraryProjectStructureElement) {
@@ -54,7 +53,7 @@ public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         LibraryProjectStructureElement element = (LibraryProjectStructureElement) myConfigurable.getSelectedElement();
         if (element == null) {
             return;

@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.progress;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines general contract for processing that may be executed by parts, i.e. it remembers the state after every iteration
@@ -28,7 +27,7 @@ public interface SequentialTask {
    */
   boolean iteration();
 
-  default boolean iteration(@Nonnull ProgressIndicator indicator) {
+  default boolean iteration(ProgressIndicator indicator) {
     return iteration();
   }
 

@@ -48,8 +48,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.IllegalDataException;
 
@@ -60,10 +59,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DefaultInspectionToolPresentation implements ProblemDescriptionsProcessor, InspectionToolPresentation {
-    @Nonnull
+    
     private final InspectionToolWrapper myToolWrapper;
 
-    @Nonnull
+    
     private final GlobalInspectionContextImpl myContext;
     protected static String ourOutputPath;
     protected InspectionNode myToolNode;
@@ -81,12 +80,12 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     protected static final Logger LOG = Logger.getInstance(DefaultInspectionToolPresentation.class);
     private boolean isDisposed;
 
-    public DefaultInspectionToolPresentation(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull GlobalInspectionContextImpl context) {
+    public DefaultInspectionToolPresentation(InspectionToolWrapper toolWrapper, GlobalInspectionContextImpl context) {
         myToolWrapper = toolWrapper;
         myContext = context;
     }
 
-    @Nonnull
+    
     protected static FileStatus calcStatus(boolean old, boolean current) {
         if (old) {
             if (!current) {
@@ -118,7 +117,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @RequiredReadAction
-    protected HighlightSeverity getSeverity(@Nonnull RefElement element) {
+    protected HighlightSeverity getSeverity(RefElement element) {
         PsiElement psiElement = element.getPointer().getContainingFile();
         if (psiElement != null) {
             GlobalInspectionContextImpl context = (GlobalInspectionContextImpl) getContext();
@@ -145,9 +144,9 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     protected static String getTextAttributeKey(
-        @Nonnull Project project,
-        @Nonnull HighlightSeverity severity,
-        @Nonnull ProblemHighlightType highlightType
+        Project project,
+        HighlightSeverity severity,
+        ProblemHighlightType highlightType
     ) {
         HighlightInfoType type = ProblemHighlightTypeInspectionRuler.REGISTRY.get(highlightType);
         if (type != null) {
@@ -162,28 +161,28 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         return registrar.getHighlightInfoTypeBySeverity(severity).getAttributesKey().getExternalName();
     }
 
-    @Nonnull
+    
     public InspectionToolWrapper getToolWrapper() {
         return myToolWrapper;
     }
 
-    @Nonnull
+    
     public RefManager getRefManager() {
         return getContext().getRefManager();
     }
 
-    @Nonnull
+    
     @Override
     public GlobalInspectionContextBase getContext() {
         return myContext;
     }
 
     @Override
-    public void exportResults(@Nonnull final Element parentNode) {
+    public void exportResults(final Element parentNode) {
         getRefManager().iterate(new RefVisitor() {
             @Override
             @RequiredReadAction
-            public void visitElement(@Nonnull RefEntity elem) {
+            public void visitElement(RefEntity elem) {
                 exportResults(parentNode, elem);
             }
         });
@@ -197,13 +196,13 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
     @Override
     @RequiredReadAction
-    public void addProblemElement(RefEntity refElement, @Nonnull CommonProblemDescriptor... descriptions) {
+    public void addProblemElement(RefEntity refElement, CommonProblemDescriptor... descriptions) {
         addProblemElement(refElement, true, descriptions);
     }
 
     @Override
     @RequiredReadAction
-    public void addProblemElement(RefEntity refElement, boolean filterSuppressed, @Nonnull CommonProblemDescriptor... descriptors) {
+    public void addProblemElement(RefEntity refElement, boolean filterSuppressed, CommonProblemDescriptor... descriptors) {
         if (refElement == null) {
             return;
         }
@@ -285,7 +284,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @RequiredReadAction
-    private void writeOutput(@Nonnull CommonProblemDescriptor[] descriptions, @Nonnull RefEntity refElement) {
+    private void writeOutput(CommonProblemDescriptor[] descriptions, RefEntity refElement) {
         Element parentNode = new Element(InspectionLocalize.inspectionProblems().get());
         exportResults(descriptions, refElement, parentNode);
         List list = parentNode.getChildren();
@@ -322,13 +321,13 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         }
     }
 
-    @Nonnull
+    
     @Override
     public Collection<CommonProblemDescriptor> getProblemDescriptors() {
         return getProblemToElements().keySet();
     }
 
-    private void collectQuickFixes(QuickFix[] fixes, @Nonnull RefEntity refEntity) {
+    private void collectQuickFixes(QuickFix[] fixes, RefEntity refEntity) {
         if (fixes != null && fixes.length != 0) {
             Set<QuickFix> localQuickFixes = getQuickFixActions().get(refEntity);
             if (localQuickFixes == null) {
@@ -340,7 +339,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @Override
-    public void ignoreElement(@Nonnull RefEntity refEntity) {
+    public void ignoreElement(RefEntity refEntity) {
         getProblemElements().remove(refEntity);
         getQuickFixActions().remove(refEntity);
     }
@@ -441,7 +440,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
     @Override
     @Nullable
-    public CommonProblemDescriptor[] getDescriptions(@Nonnull RefEntity refEntity) {
+    public CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
         CommonProblemDescriptor[] problems = getProblemElements().get(refEntity);
         if (problems == null) {
             return null;
@@ -455,7 +454,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         return problems;
     }
 
-    @Nonnull
+    
     @Override
     public HTMLComposerBase getComposer() {
         if (myComposer == null) {
@@ -466,7 +465,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
     @Override
     @RequiredReadAction
-    public void exportResults(@Nonnull Element parentNode, @Nonnull RefEntity refEntity) {
+    public void exportResults(Element parentNode, RefEntity refEntity) {
         synchronized (lock) {
             if (getProblemElements().containsKey(refEntity)) {
                 CommonProblemDescriptor[] descriptions = getDescriptions(refEntity);
@@ -478,7 +477,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @RequiredReadAction
-    private void exportResults(@Nonnull CommonProblemDescriptor[] descriptors, @Nonnull RefEntity refEntity, @Nonnull Element parentNode) {
+    private void exportResults(CommonProblemDescriptor[] descriptors, RefEntity refEntity, Element parentNode) {
         for (CommonProblemDescriptor descriptor : descriptors) {
             LocalizeValue template = descriptor.getDescriptionTemplate();
             int line = descriptor instanceof ProblemDescriptor problemDescriptor ? problemDescriptor.getLineNumber() : -1;
@@ -632,13 +631,13 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
     @Override
     @Nullable
-    public QuickFixAction[] getQuickFixes(@Nonnull RefEntity[] refElements) {
+    public QuickFixAction[] getQuickFixes(RefEntity[] refElements) {
         return extractActiveFixes(refElements, getQuickFixActions());
     }
 
     @Override
     @Nullable
-    public QuickFixAction[] extractActiveFixes(@Nonnull RefEntity[] refElements, @Nonnull Map<RefEntity, Set<QuickFix>> actions) {
+    public QuickFixAction[] extractActiveFixes(RefEntity[] refElements, Map<RefEntity, Set<QuickFix>> actions) {
         Map<Class, QuickFixAction> result = new HashMap<>();
         for (RefEntity refElement : refElements) {
             Set<QuickFix> localQuickFixes = actions.get(refElement);
@@ -664,12 +663,12 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @Override
-    public RefEntity getElement(@Nonnull CommonProblemDescriptor descriptor) {
+    public RefEntity getElement(CommonProblemDescriptor descriptor) {
         return getProblemToElements().get(descriptor);
     }
 
     @Override
-    public void ignoreProblem(@Nonnull CommonProblemDescriptor descriptor, @Nonnull QuickFix fix) {
+    public void ignoreProblem(CommonProblemDescriptor descriptor, QuickFix fix) {
         RefEntity refElement = getProblemToElements().get(descriptor);
         if (refElement != null) {
             QuickFix[] fixes = descriptor.getFixes();
@@ -706,10 +705,10 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         return false;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public FileStatus getProblemStatus(@Nonnull CommonProblemDescriptor descriptor) {
+    public FileStatus getProblemStatus(CommonProblemDescriptor descriptor) {
         GlobalInspectionContextImpl context = (GlobalInspectionContextImpl) getContext();
         if (!isDisposed() && context.getUIOptions().SHOW_DIFF_WITH_PREVIOUS_RUN) {
             if (myOldProblemElements != null) {
@@ -729,7 +728,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
     @RequiredReadAction
     private static boolean containsDescriptor(
-        @Nonnull CommonProblemDescriptor descriptor,
+        CommonProblemDescriptor descriptor,
         Collection<CommonProblemDescriptor> descriptors
     ) {
         PsiElement element = null;
@@ -749,7 +748,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public FileStatus getElementStatus(RefEntity element) {
         GlobalInspectionContextImpl context = (GlobalInspectionContextImpl) getContext();
@@ -763,14 +762,14 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         return FileStatus.NOT_CHANGED;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<RefEntity> getIgnoredRefElements() {
         return getIgnoredElements().keySet();
     }
 
     @Override
-    @Nonnull
+    
     public Map<RefEntity, CommonProblemDescriptor[]> getProblemElements() {
         synchronized (lock) {
             if (myProblemElements == null) {
@@ -786,7 +785,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         return myOldProblemElements;
     }
 
-    @Nonnull
+    
     private Map<CommonProblemDescriptor, RefEntity> getProblemToElements() {
         synchronized (lock) {
             if (myProblemToElements == null) {
@@ -796,7 +795,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         }
     }
 
-    @Nonnull
+    
     private Map<RefEntity, Set<QuickFix>> getQuickFixActions() {
         synchronized (lock) {
             if (myQuickFixActions == null) {
@@ -806,7 +805,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         }
     }
 
-    @Nonnull
+    
     private Map<RefEntity, CommonProblemDescriptor[]> getIgnoredElements() {
         synchronized (lock) {
             if (myIgnoredElements == null) {
@@ -816,13 +815,13 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         }
     }
 
-    @Nonnull
+    
     @Override
     public InspectionNode createToolNode(
-        @Nonnull GlobalInspectionContextImpl globalInspectionContext,
-        @Nonnull InspectionNode node,
-        @Nonnull InspectionRVContentProvider provider,
-        @Nonnull InspectionTreeNode parentNode,
+        GlobalInspectionContextImpl globalInspectionContext,
+        InspectionNode node,
+        InspectionRVContentProvider provider,
+        InspectionTreeNode parentNode,
         boolean showStructure
     ) {
         return node;
@@ -831,7 +830,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     @Override
     @Nullable
     @RequiredReadAction
-    public IntentionAction findQuickFixes(@Nonnull final CommonProblemDescriptor commonProblemDescriptor, String hint) {
+    public IntentionAction findQuickFixes(final CommonProblemDescriptor commonProblemDescriptor, String hint) {
         InspectionTool tool = getToolWrapper().getTool();
         if (!(tool instanceof GlobalInspectionTool globalInspectionTool)) {
             return null;
@@ -855,13 +854,13 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         }
         return new IntentionAction() {
             @Override
-            @Nonnull
+            
             public LocalizeValue getText() {
                 return fix.getName();
             }
 
             @Override
-            public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+            public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
                 fix.applyFix(project, commonProblemDescriptor); //todo check type consistency
             }
 

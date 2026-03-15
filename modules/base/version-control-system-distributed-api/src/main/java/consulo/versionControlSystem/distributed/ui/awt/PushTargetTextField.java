@@ -22,7 +22,6 @@ import consulo.language.editor.ui.awt.TextFieldWithCompletion;
 import consulo.language.editor.ui.awt.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -30,7 +29,7 @@ import java.util.List;
 
 @UsedInPlugin
 public class PushTargetTextField extends TextFieldWithCompletion {
-    public PushTargetTextField(@Nonnull Project project, @Nonnull List<String> targetVariants, @Nonnull String defaultTargetName) {
+    public PushTargetTextField(Project project, List<String> targetVariants, String defaultTargetName) {
         super(project, getCompletionProvider(targetVariants), defaultTargetName, true, true, true);
         addFocusListener(new FocusAdapter() {
             @Override
@@ -45,8 +44,8 @@ public class PushTargetTextField extends TextFieldWithCompletion {
         });
     }
 
-    @Nonnull
-    private static TextCompletionProvider getCompletionProvider(@Nonnull List<String> targetVariants) {
+    
+    private static TextCompletionProvider getCompletionProvider(List<String> targetVariants) {
         return new ValuesCompletionProviderDumbAware<>(
             new DefaultTextCompletionValueDescriptor.StringValueDescriptor() {
                 @Override

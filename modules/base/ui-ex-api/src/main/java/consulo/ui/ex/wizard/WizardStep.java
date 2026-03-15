@@ -21,8 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,40 +29,39 @@ import jakarta.annotation.Nullable;
  */
 public interface WizardStep<CONTEXT> {
 
-  @Nonnull
+ 
   @RequiredUIAccess
-  Component getComponent(@Nonnull CONTEXT context, @Nonnull Disposable uiDisposable);
+  Component getComponent(CONTEXT context, Disposable uiDisposable);
 
   @Nullable
   default Component getPreferredFocusedComponent() {
     return null;
   }
 
-  @Nonnull
+ 
   @Deprecated
   @DeprecationInfo("Desktop UI version")
   @RequiredUIAccess
-  default java.awt.Component getSwingComponent(@Nonnull CONTEXT context, @Nonnull Disposable uiDisposable) {
+  default java.awt.Component getSwingComponent(CONTEXT context, Disposable uiDisposable) {
     return TargetAWT.to(getComponent(context, uiDisposable));
   }
 
-  @Nullable
   @Deprecated
   @DeprecationInfo("Desktop UI version")
-  default java.awt.Component getSwingPreferredFocusedComponent() {
+  default java.awt.@Nullable Component getSwingPreferredFocusedComponent() {
     return TargetAWT.to(getPreferredFocusedComponent());
   }
 
-  default void onStepEnter(@Nonnull CONTEXT context) {
+  default void onStepEnter(CONTEXT context) {
   }
 
-  default void onStepLeave(@Nonnull CONTEXT context) {
+  default void onStepLeave(CONTEXT context) {
   }
 
-  default void validateStep(@Nonnull CONTEXT context) throws WizardStepValidationException {
+  default void validateStep(CONTEXT context) throws WizardStepValidationException {
   }
 
-  default boolean isVisible(@Nonnull CONTEXT context) {
+  default boolean isVisible(CONTEXT context) {
     return true;
   }
 }

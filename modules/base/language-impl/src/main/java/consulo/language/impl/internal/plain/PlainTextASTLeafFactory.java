@@ -21,17 +21,16 @@ import consulo.language.impl.ast.ASTLeafFactory;
 import consulo.language.version.LanguageVersion;
 import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 @ExtensionImpl
 public class PlainTextASTLeafFactory implements ASTLeafFactory {
-  @Nonnull
+  
   @Override
-  public LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text) {
+  public LeafElement createLeaf(IElementType type, LanguageVersion languageVersion, CharSequence text) {
     return new PsiPlainTextImpl(text);
   }
 

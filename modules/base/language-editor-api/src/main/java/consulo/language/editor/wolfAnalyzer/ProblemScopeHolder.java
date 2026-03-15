@@ -18,7 +18,6 @@ package consulo.language.editor.wolfAnalyzer;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.content.scope.NamedScope;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProblemScopeHolder {
-    @Nonnull
+    
     NamedScope getProblemsScope();
 }

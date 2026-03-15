@@ -18,22 +18,21 @@ package consulo.ide.impl.idea.openapi.module.impl.scopes;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
-import jakarta.annotation.Nonnull;
 
 // Tests only (module plus dependencies) scope
 // Delegates to ModuleWithDependentsScope with extra flag testOnly to reduce memory for holding modules and CPU for traversing dependencies.
 class ModuleWithDependentsTestScope extends DelegatingGlobalSearchScope {
-  ModuleWithDependentsTestScope(@Nonnull Module module) {
+  ModuleWithDependentsTestScope(Module module) {
     // the additional equality argument allows to distinguish ModuleWithDependentsTestScope from ModuleWithDependentsScope
     super(new ModuleWithDependentsScope(module), true);
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return getBaseScope().contains(file, true);
   }
 
-  @Nonnull
+  
   ModuleWithDependentsScope getBaseScope() {
     return (ModuleWithDependentsScope)myBaseScope;
   }

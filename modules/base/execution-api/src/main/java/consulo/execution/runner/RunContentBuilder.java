@@ -39,15 +39,13 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 
 public class RunContentBuilder extends RunTab {
-  @NonNls private static final String JAVA_RUNNER = "JavaRunner";
+  private static final String JAVA_RUNNER = "JavaRunner";
 
   private final List<AnAction> myRunnerActions = new SmartList<AnAction>();
   private final ExecutionResult myExecutionResult;
@@ -57,11 +55,11 @@ public class RunContentBuilder extends RunTab {
    * to remove in IDEA 14
    */
   @SuppressWarnings("UnusedParameters")
-  public RunContentBuilder(@Nonnull Project project,
+  public RunContentBuilder(Project project,
                            ProgramRunner runner,
                            Executor executor,
                            ExecutionResult executionResult,
-                           @Nonnull ExecutionEnvironment environment) {
+                           ExecutionEnvironment environment) {
     //noinspection deprecation
     this(runner, executionResult, environment);
   }
@@ -72,19 +70,19 @@ public class RunContentBuilder extends RunTab {
    */
   public RunContentBuilder(ProgramRunner runner,
                            ExecutionResult executionResult,
-                           @Nonnull ExecutionEnvironment environment) {
+                           ExecutionEnvironment environment) {
     this(executionResult, fix(environment, runner));
   }
 
-  public RunContentBuilder(@Nonnull ExecutionResult executionResult, @Nonnull ExecutionEnvironment environment) {
+  public RunContentBuilder(ExecutionResult executionResult, ExecutionEnvironment environment) {
     super(environment, getRunnerType(executionResult.getExecutionConsole()));
 
     myExecutionResult = executionResult;
     myUi.getOptions().setMoveToGridActionEnabled(false).setMinimizeActionEnabled(false);
   }
 
-  @Nonnull
-  public static ExecutionEnvironment fix(@Nonnull ExecutionEnvironment environment, @Nullable ProgramRunner runner) {
+  
+  public static ExecutionEnvironment fix(ExecutionEnvironment environment, @Nullable ProgramRunner runner) {
     if (runner == null || runner.equals(environment.getRunner())) {
       return environment;
     }
@@ -95,7 +93,7 @@ public class RunContentBuilder extends RunTab {
 
   @SuppressWarnings("UnusedDeclaration")
   @Deprecated
-  @Nonnull
+  
   /**
    * @deprecated to remove in IDEA 15
    */
@@ -103,16 +101,16 @@ public class RunContentBuilder extends RunTab {
     return ExecutionSearchScopeProvider.createSearchScope(project, runProfile);
   }
 
-  @Nonnull
+  
   public ExecutionResult getExecutionResult() {
     return myExecutionResult;
   }
 
-  public void addAction(@Nonnull AnAction action) {
+  public void addAction(AnAction action) {
     myRunnerActions.add(action);
   }
 
-  @Nonnull
+  
   private RunContentDescriptor createDescriptor() {
     RunProfile profile = myEnvironment.getRunProfile();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -146,7 +144,7 @@ public class RunContentBuilder extends RunTab {
     return contentDescriptor;
   }
 
-  @Nonnull
+  
   private static String getRunnerType(@Nullable ExecutionConsole console) {
     String runnerType = JAVA_RUNNER;
     if (console instanceof ExecutionConsoleEx) {
@@ -179,8 +177,8 @@ public class RunContentBuilder extends RunTab {
     consoleContent.setActions(consoleActions, ActionPlaces.UNKNOWN, console.getComponent());
   }
 
-  @Nonnull
-  private ActionGroup createActionToolbar(@Nonnull RunContentDescriptor contentDescriptor) {
+  
+  private ActionGroup createActionToolbar(RunContentDescriptor contentDescriptor) {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_RERUN));
     AnAction[] actions = contentDescriptor.getRestartActions();
@@ -222,22 +220,22 @@ public class RunContentBuilder extends RunTab {
   }
 
   public static class ConsoleToFrontListener implements ObservableConsoleView.ChangeListener {
-    @Nonnull
+    
     private final RunConfigurationBase myRunConfigurationBase;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final Executor myExecutor;
-    @Nonnull
+    
     private final RunContentDescriptor myRunContentDescriptor;
-    @Nonnull
+    
     private final RunnerLayoutUi myUi;
 
-    public ConsoleToFrontListener(@Nonnull RunConfigurationBase runConfigurationBase,
-                                  @Nonnull Project project,
-                                  @Nonnull Executor executor,
-                                  @Nonnull RunContentDescriptor runContentDescriptor,
-                                  @Nonnull RunnerLayoutUi ui) {
+    public ConsoleToFrontListener(RunConfigurationBase runConfigurationBase,
+                                  Project project,
+                                  Executor executor,
+                                  RunContentDescriptor runContentDescriptor,
+                                  RunnerLayoutUi ui) {
       myRunConfigurationBase = runConfigurationBase;
       myProject = project;
       myExecutor = executor;

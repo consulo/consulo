@@ -2,7 +2,6 @@ package consulo.externalSystem.impl.internal.service;
 
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import jakarta.annotation.Nonnull;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -21,7 +20,7 @@ public interface RemoteExternalSystemService<S extends ExternalSystemExecutionSe
    * @param settings  settings to use
    * @throws RemoteException      as required by RMI
    */
-  void setSettings(@Nonnull S settings) throws RemoteException;
+  void setSettings(S settings) throws RemoteException;
 
   /**
    * Allows to define notification callback to use within the current service
@@ -29,5 +28,5 @@ public interface RemoteExternalSystemService<S extends ExternalSystemExecutionSe
    * @param notificationListener  notification listener to use with the current service
    * @throws RemoteException      as required by RMI
    */
-  void setNotificationListener(@Nonnull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException;
+  void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener) throws RemoteException;
 }

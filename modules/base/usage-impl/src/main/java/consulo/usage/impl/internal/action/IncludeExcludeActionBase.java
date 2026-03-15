@@ -21,13 +21,12 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public abstract class IncludeExcludeActionBase extends AnAction {
-    protected IncludeExcludeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected IncludeExcludeActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
@@ -43,13 +42,13 @@ public abstract class IncludeExcludeActionBase extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(getUsages(e).length > 0);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         process(getUsages(e), e.getData(UsageView.USAGE_VIEW_KEY));
     }
 }

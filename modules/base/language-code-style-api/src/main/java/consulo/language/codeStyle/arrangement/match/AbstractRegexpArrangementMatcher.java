@@ -17,8 +17,7 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.regex.Pattern;
 
@@ -28,12 +27,12 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractRegexpArrangementMatcher implements ArrangementEntryMatcher {
   
-  @Nonnull
+  
   private final String myPattern;
 
   @Nullable private final Pattern myCompiledPattern;
 
-  public AbstractRegexpArrangementMatcher(@Nonnull String pattern) {
+  public AbstractRegexpArrangementMatcher(String pattern) {
     myPattern = pattern;
     Pattern p = null;
     try {
@@ -46,7 +45,7 @@ public abstract class AbstractRegexpArrangementMatcher implements ArrangementEnt
   }
 
   @Override
-  public boolean isMatched(@Nonnull ArrangementEntry entry) {
+  public boolean isMatched(ArrangementEntry entry) {
     if (myCompiledPattern == null) {
       return false;
     }
@@ -55,9 +54,9 @@ public abstract class AbstractRegexpArrangementMatcher implements ArrangementEnt
   }
   
   @Nullable
-  protected abstract String getTextToMatch(@Nonnull ArrangementEntry entry);
+  protected abstract String getTextToMatch(ArrangementEntry entry);
 
-  @Nonnull
+  
   public String getPattern() {
     return myPattern;
   }

@@ -15,9 +15,7 @@
  */
 package consulo.codeEditor;
 
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents a visual position in the editor. Visual positions take folding into account -
@@ -71,7 +69,7 @@ public class VisualPosition {
    * @param other   visual position to compare with the current one
    * @return        <code>true</code> if current position is 'after' the given one; <code>false</code> otherwise
    */
-  public boolean after(@Nonnull VisualPosition other) {
+  public boolean after(VisualPosition other) {
     if (line == other.line) {
       return column > other.column;
     }
@@ -85,7 +83,7 @@ public class VisualPosition {
     return new VisualPosition(line, column, value);
   }
 
-  @NonNls
+  
   public String toString() {
     return "VisualPosition: (" + line + ", " + column+")" + (leansRight ? " leans right" : "");
   }

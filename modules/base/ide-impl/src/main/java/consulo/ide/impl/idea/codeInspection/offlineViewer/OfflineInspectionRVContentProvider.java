@@ -33,8 +33,7 @@ import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -50,15 +49,15 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     private final Map<String, Map<String, Set<OfflineProblemDescriptor>>> myContent;
 
     public OfflineInspectionRVContentProvider(
-        @Nonnull Map<String, Map<String, Set<OfflineProblemDescriptor>>> content,
-        @Nonnull Project project
+        Map<String, Map<String, Set<OfflineProblemDescriptor>>> content,
+        Project project
     ) {
         super(project);
         myContent = content;
     }
 
     @Override
-    public boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context, @Nonnull InspectionToolWrapper toolWrapper) {
+    public boolean checkReportedProblems(GlobalInspectionContextImpl context, InspectionToolWrapper toolWrapper) {
         Map<String, Set<OfflineProblemDescriptor>> content = getFilteredContent(context, toolWrapper);
         return content != null && !content.values().isEmpty();
     }
@@ -66,7 +65,7 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     @Nullable
     @Override
     @RequiredReadAction
-    public QuickFixAction[] getQuickFixes(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull InspectionTree tree) {
+    public QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree) {
         List<RefEntity> selectedElements = new ArrayList<>();
         Map<RefEntity, Set<QuickFix>> actions = new HashMap<>();
         for (TreePath selectionPath : tree.getSelectionPaths()) {
@@ -118,12 +117,12 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
 
     @Override
     public void appendToolNodeContent(
-        @Nonnull GlobalInspectionContextImpl context,
-        @Nonnull InspectionNode toolNode,
-        @Nonnull InspectionTreeNode parentNode,
+        GlobalInspectionContextImpl context,
+        InspectionNode toolNode,
+        InspectionTreeNode parentNode,
         boolean showStructure,
-        @Nonnull Map<String, Set<RefEntity>> contents,
-        @Nonnull Map<RefEntity, CommonProblemDescriptor[]> problems,
+        Map<String, Set<RefEntity>> contents,
+        Map<RefEntity, CommonProblemDescriptor[]> problems,
         DefaultTreeModel model
     ) {
         InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
@@ -143,8 +142,8 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     @Nullable
     @SuppressWarnings({"UnusedAssignment"})
     private Map<String, Set<OfflineProblemDescriptor>> getFilteredContent(
-        @Nonnull GlobalInspectionContextImpl context,
-        @Nonnull InspectionToolWrapper toolWrapper
+        GlobalInspectionContextImpl context,
+        InspectionToolWrapper toolWrapper
     ) {
         Map<String, Set<OfflineProblemDescriptor>> content = myContent.get(toolWrapper.getShortName());
         if (content == null) {
@@ -185,10 +184,10 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
 
     @Override
     protected void appendDescriptor(
-        @Nonnull GlobalInspectionContextImpl context,
-        @Nonnull InspectionToolWrapper toolWrapper,
-        @Nonnull UserObjectContainer container,
-        @Nonnull InspectionPackageNode packageNode,
+        GlobalInspectionContextImpl context,
+        InspectionToolWrapper toolWrapper,
+        UserObjectContainer container,
+        InspectionPackageNode packageNode,
         boolean canPackageRepeat
     ) {
         InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
@@ -204,10 +203,10 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
 
 
     private static class OfflineProblemDescriptorContainer implements UserObjectContainer<OfflineProblemDescriptor> {
-        @Nonnull
+        
         private final OfflineProblemDescriptor myDescriptor;
 
-        public OfflineProblemDescriptorContainer(@Nonnull OfflineProblemDescriptor descriptor) {
+        public OfflineProblemDescriptorContainer(OfflineProblemDescriptor descriptor) {
             myDescriptor = descriptor;
         }
 
@@ -222,14 +221,14 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
             return null;
         }
 
-        @Nonnull
+        
         @Override
-        public RefElementNode createNode(@Nonnull InspectionToolPresentation presentation) {
+        public RefElementNode createNode(InspectionToolPresentation presentation) {
             return new OfflineRefElementNode(myDescriptor, presentation);
         }
 
         @Override
-        @Nonnull
+        
         public OfflineProblemDescriptor getUserObject() {
             return myDescriptor;
         }

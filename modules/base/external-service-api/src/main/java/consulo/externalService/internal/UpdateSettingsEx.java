@@ -16,7 +16,6 @@
 package consulo.externalService.internal;
 
 import consulo.externalService.update.UpdateSettings;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ public interface UpdateSettingsEx extends UpdateSettings {
 
     long getLastTimeCheck();
 
-    @Nonnull
+    
     PlatformOrPluginUpdateResultType getLastCheckResult();
 
     void setLastCheckResult(PlatformOrPluginUpdateResultType type);

@@ -20,8 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.codeStyle.AbstractBlock;
 import consulo.language.codeStyle.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,19 +32,19 @@ public class DataLanguageBlockFragmentWrapper implements Block {
   private final Block myOwner;
   private final TextRange myRange;
 
-  public DataLanguageBlockFragmentWrapper(@Nonnull Block owner, @Nonnull TextRange range) {
+  public DataLanguageBlockFragmentWrapper(Block owner, TextRange range) {
     myOwner = owner;
     myRange = range;
   }
 
   @Override
-  @Nonnull
+  
   public TextRange getTextRange() {
     return myRange;
   }
 
   @Override
-  @Nonnull
+  
   public List<Block> getSubBlocks() {
     return AbstractBlock.EMPTY;
   }
@@ -67,12 +66,12 @@ public class DataLanguageBlockFragmentWrapper implements Block {
 
   @Override
   @Nullable
-  public Spacing getSpacing(Block child1, @Nonnull Block child2) {
+  public Spacing getSpacing(Block child1, Block child2) {
     return Spacing.getReadOnlySpacing();
   }
 
   @Override
-  @Nonnull
+  
   public ChildAttributes getChildAttributes(int newChildIndex) {
     return myOwner.getChildAttributes(newChildIndex);
   }

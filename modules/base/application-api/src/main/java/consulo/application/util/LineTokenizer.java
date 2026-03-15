@@ -18,7 +18,6 @@ package consulo.application.util;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.CharArrayCharSequence;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,23 +29,23 @@ public class LineTokenizer {
   private boolean atEnd;
   private final CharSequence myText;
 
-  @Nonnull
+  
   public static String[] tokenize(CharSequence chars, boolean includeSeparators) {
     return tokenize(chars, includeSeparators, true);
   }
 
-  @Nonnull
+  
   public static String[] tokenize(CharSequence chars, boolean includeSeparators, boolean skipLastEmptyLine) {
     List<String> strings = tokenizeIntoList(chars, includeSeparators, skipLastEmptyLine);
     return strings.isEmpty() ? ArrayUtil.EMPTY_STRING_ARRAY : ArrayUtil.toStringArray(strings);
   }
 
-  @Nonnull
+  
   public static List<String> tokenizeIntoList(CharSequence chars, boolean includeSeparators) {
     return tokenizeIntoList(chars, includeSeparators, true);
   }
 
-  @Nonnull
+  
   public static List<String> tokenizeIntoList(CharSequence chars, boolean includeSeparators, boolean skipLastEmptyLine) {
     if (chars == null || chars.length() == 0){
       return Collections.emptyList();
@@ -73,7 +72,7 @@ public class LineTokenizer {
   }
 
 
-  public static int calcLineCount(@Nonnull CharSequence chars, boolean skipLastEmptyLine) {
+  public static int calcLineCount(CharSequence chars, boolean skipLastEmptyLine) {
     int lineCount = 0;
     if (chars.length() != 0) {
       LineTokenizer tokenizer = new LineTokenizer(chars);
@@ -88,38 +87,38 @@ public class LineTokenizer {
     return lineCount;
   }
 
-  @Nonnull
-  public static String[] tokenize(@Nonnull char[] chars, boolean includeSeparators) {
+  
+  public static String[] tokenize(char[] chars, boolean includeSeparators) {
     return tokenize(chars, includeSeparators, true);
   }
 
-  @Nonnull
-  public static String[] tokenize(@Nonnull char[] chars, boolean includeSeparators, boolean skipLastEmptyLine) {
+  
+  public static String[] tokenize(char[] chars, boolean includeSeparators, boolean skipLastEmptyLine) {
     return tokenize(chars, 0, chars.length, includeSeparators, skipLastEmptyLine);
   }
 
-  @Nonnull
-  public static String[] tokenize(@Nonnull char[] chars, int startOffset, int endOffset, boolean includeSeparators,
+  
+  public static String[] tokenize(char[] chars, int startOffset, int endOffset, boolean includeSeparators,
                                   boolean skipLastEmptyLine) {
     return tokenize(new CharArrayCharSequence(chars, startOffset, endOffset), includeSeparators, skipLastEmptyLine);
   }
 
-  private static boolean stringEndsWithSeparator(@Nonnull LineTokenizer tokenizer) {
+  private static boolean stringEndsWithSeparator(LineTokenizer tokenizer) {
     return tokenizer.getLineSeparatorLength() > 0;
   }
 
-  @Nonnull
-  public static String[] tokenize(@Nonnull char[] chars, int startOffset, int endOffset, boolean includeSeparators) {
+  
+  public static String[] tokenize(char[] chars, int startOffset, int endOffset, boolean includeSeparators) {
     return tokenize(chars, startOffset, endOffset, includeSeparators, true);
   }
 
-  public LineTokenizer(@Nonnull CharSequence text) {
+  public LineTokenizer(CharSequence text) {
     myText = text;
     myOffset = 0;
     advance();
   }
 
-  public LineTokenizer(@Nonnull char[] text, int startOffset, int endOffset) {
+  public LineTokenizer(char[] text, int startOffset, int endOffset) {
     this(new CharArrayCharSequence(text, startOffset, endOffset));
   }
 

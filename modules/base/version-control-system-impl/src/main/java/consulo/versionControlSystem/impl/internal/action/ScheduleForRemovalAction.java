@@ -24,7 +24,6 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.impl.internal.change.action.AbstractMissingFilesAction;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +55,7 @@ public class ScheduleForRemovalAction extends AbstractMissingFilesAction {
         return result;
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getName() {
         return LocalizeValue.empty();

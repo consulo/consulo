@@ -20,8 +20,7 @@ import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.sm.runner.SMTestProxy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -75,8 +74,8 @@ public interface TestResultsViewer extends Disposable {
         @Override
         public void onSelected(
             @Nullable SMTestProxy selectedTestProxy,
-            @Nonnull TestResultsViewer viewer,
-            @Nonnull TestFrameworkRunningModel model
+            TestResultsViewer viewer,
+            TestFrameworkRunningModel model
         ) {
         }
     }

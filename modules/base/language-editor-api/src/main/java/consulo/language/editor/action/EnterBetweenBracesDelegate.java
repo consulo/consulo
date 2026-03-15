@@ -17,8 +17,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The class is responsible for recognizing the input context of the Enter key (new line) to support indentation.
@@ -33,12 +32,12 @@ public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
     ExtensionPointCacheKey.create("EnterBetweenBracesDelegate", LanguageOneToOne.build());
 
   @Nullable
-  public static EnterBetweenBracesDelegate forLanguage(@Nonnull Language language) {
+  public static EnterBetweenBracesDelegate forLanguage(Language language) {
     return Application.get().getExtensionPoint(EnterBetweenBracesDelegate.class).getOrBuildCache(KEY).get(language);
   }
 
-  public boolean isApplicable(@Nonnull PsiFile file,
-                              @Nonnull Editor editor,
+  public boolean isApplicable(PsiFile file,
+                              Editor editor,
                               CharSequence documentText,
                               int caretOffset) {
     return true;
@@ -54,7 +53,7 @@ public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
    * @param rBraceOffset The right brace offset.
    * @return <code>true</code> if the left and the right braces are within the same syntax element.
    */
-  public boolean bracesAreInTheSameElement(@Nonnull PsiFile file, @Nonnull Editor editor, int lBraceOffset, int rBraceOffset) {
+  public boolean bracesAreInTheSameElement(PsiFile file, Editor editor, int lBraceOffset, int rBraceOffset) {
     PsiDocumentManager.getInstance(file.getProject()).commitDocument(editor.getDocument());
     if (file.findElementAt(lBraceOffset) == file.findElementAt(rBraceOffset)) {
       return true;
@@ -69,7 +68,7 @@ public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
    * @param file   The PSI file to reformat.
    * @param offset The offset the line at which should be reformatted.
    */
-  public void formatAtOffset(@Nonnull PsiFile file, @Nonnull Editor editor, int offset, @Nullable Language language) {
+  public void formatAtOffset(PsiFile file, Editor editor, int offset, @Nullable Language language) {
     PsiDocumentManager.getInstance(file.getProject()).commitDocument(editor.getDocument());
     try {
       CodeStyleManager.getInstance(file.getProject()).adjustLineIndent(file, offset);
@@ -88,7 +87,7 @@ public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
    * @param offset The position in the editor.
    * @return <code>true</code> if you need to use the standard indentation procedure in comments.
    */
-  public boolean isInComment(@Nonnull PsiFile file, @Nonnull Editor editor, int offset) {
+  public boolean isInComment(PsiFile file, Editor editor, int offset) {
     return PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiComment.class) != null;
   }
 

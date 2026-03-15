@@ -3,7 +3,6 @@ package consulo.language.editor.inspection;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * This kind of suppression fix allows to clients to specify whether the fix should
@@ -14,8 +13,8 @@ import jakarta.annotation.Nonnull;
  * See {@link InspectionTool#getBatchSuppressActions(PsiElement)} for details.
  */
 public interface InjectionAwareSuppressQuickFix extends SuppressQuickFix {
-  @Nonnull
+  
   ThreeState isShouldBeAppliedToInjectionHost();
 
-  void setShouldBeAppliedToInjectionHost(@Nonnull ThreeState shouldBeAppliedToInjectionHost);
+  void setShouldBeAppliedToInjectionHost(ThreeState shouldBeAppliedToInjectionHost);
 }

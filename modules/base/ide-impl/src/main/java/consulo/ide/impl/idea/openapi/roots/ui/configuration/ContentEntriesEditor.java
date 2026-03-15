@@ -41,8 +41,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,9 +118,9 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public JPanel createComponentImpl(@Nonnull Disposable parentUIDisposable) {
+    public JPanel createComponentImpl(Disposable parentUIDisposable) {
         Module module = getModule();
         Project project = module.getProject();
 
@@ -305,12 +304,12 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     private final class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
         @Override
-        public void editingStarted(@Nonnull ContentEntryEditor editor) {
+        public void editingStarted(ContentEntryEditor editor) {
             selectContentEntry(editor.getContentEntry());
         }
 
         @Override
-        public void beforeEntryDeleted(@Nonnull ContentEntryEditor editor) {
+        public void beforeEntryDeleted(ContentEntryEditor editor) {
             ContentEntry entryUrl = editor.getContentEntry();
             if (mySelectedEntry != null && mySelectedEntry.equals(entryUrl)) {
                 myRootTreeEditor.setContentEntryEditor(null);
@@ -322,7 +321,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         }
 
         @Override
-        public void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file) {
+        public void navigationRequested(ContentEntryEditor editor, VirtualFile file) {
             if (mySelectedEntry != null && mySelectedEntry.equals(editor.getContentEntry())) {
                 myRootTreeEditor.requestFocus();
                 myRootTreeEditor.select(file);
@@ -364,7 +363,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             FileChooser.chooseFiles(myDescriptor, myProject, myLastSelectedDir).doWhenDone(virtualFiles -> {
                 myLastSelectedDir = virtualFiles[0];
                 addContentEntries(virtualFiles);

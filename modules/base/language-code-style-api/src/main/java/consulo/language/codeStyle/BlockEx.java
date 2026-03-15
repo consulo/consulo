@@ -17,7 +17,7 @@ package consulo.language.codeStyle;
 
 import consulo.language.Language;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov

@@ -1,36 +1,35 @@
 package consulo.webBrowser;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
 
 public abstract class WebBrowser {
-    @Nonnull
+    
     public abstract String getName();
 
-    @Nonnull
+    
     public abstract UUID getId();
 
-    @Nonnull
+    
     public abstract BrowserFamily getFamily();
 
-    @Nonnull
+    
     public abstract Image getIcon();
 
     @Nullable
     public abstract String getPath();
 
-    @Nonnull
+    
     public abstract String getBrowserNotFoundMessage();
 
     @Nullable
     public abstract BrowserSpecificSettings getSpecificSettings();
 
-    public void addOpenUrlParameter(@Nonnull List<? super String> command, @Nonnull String url) {
+    public void addOpenUrlParameter(List<? super String> command, String url) {
         command.add(url);
     }
 }

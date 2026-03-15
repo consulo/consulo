@@ -21,8 +21,7 @@ import consulo.language.editor.TargetElementUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -40,5 +39,5 @@ public abstract class HighlightUsagesHandlerFactoryBase<T extends PsiElement> im
 
   @Nullable
   @RequiredReadAction
-  public abstract HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull PsiElement target);
+  public abstract HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file, PsiElement target);
 }

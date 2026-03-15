@@ -16,10 +16,8 @@
 package consulo.language.pattern;
 
 import consulo.language.util.ProcessingContext;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.BiPredicate;
 
 /**
@@ -27,7 +25,7 @@ import java.util.function.BiPredicate;
  */
 public abstract class PropertyPatternCondition<T,P> extends PatternConditionPlus<T, P> {
 
-  public PropertyPatternCondition(@NonNls String methodName, ElementPattern propertyPattern) {
+  public PropertyPatternCondition(String methodName, ElementPattern propertyPattern) {
     super(methodName, propertyPattern);
   }
 
@@ -37,5 +35,5 @@ public abstract class PropertyPatternCondition<T,P> extends PatternConditionPlus
   }
 
   @Nullable
-  public abstract P getPropertyValue(@Nonnull Object o);
+  public abstract P getPropertyValue(Object o);
 }

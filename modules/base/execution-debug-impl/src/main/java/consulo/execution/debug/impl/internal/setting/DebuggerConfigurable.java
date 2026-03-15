@@ -27,8 +27,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -46,12 +45,12 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
     private Configurable[] myChildren;
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "project.propDebugger";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return XDebuggerLocalize.debuggerConfigurableDisplayName();
@@ -63,7 +62,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public Configurable[] getConfigurables() {
         compute();
@@ -116,7 +115,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
         }
     }
 
-    private static void computeMergedConfigurables(@Nonnull List<Configurable> result) {
+    private static void computeMergedConfigurables(List<Configurable> result) {
         for (DebuggerSettingsCategory category : MERGED_CATEGORIES) {
             Collection<Configurable> configurables = XDebuggerConfigurableProvider.getConfigurables(category);
             if (!configurables.isEmpty()) {
@@ -171,7 +170,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(@Nonnull Disposable parent) {
+    public JComponent createComponent(Disposable parent) {
         compute();
         return myRootConfigurable != null ? ConfigurableUIMigrationUtil.createComponent(myRootConfigurable, parent) : null;
     }
@@ -179,7 +178,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
     @Nullable
     @Override
     @RequiredUIAccess
-    public Component createUIComponent(@Nonnull Disposable parent) {
+    public Component createUIComponent(Disposable parent) {
         compute();
         return myRootConfigurable != null ? myRootConfigurable.createUIComponent(parent) : null;
     }

@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -30,5 +29,5 @@ import java.util.Collection;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EditorLinePainter {
     @Nullable
-    public abstract Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber);
+    public abstract Collection<LineExtensionInfo> getLineExtensions(Project project, VirtualFile file, int lineNumber);
 }

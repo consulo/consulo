@@ -20,26 +20,25 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class XDebuggerActionHandler extends DebuggerActionHandler {
 
-  public void perform(@Nonnull Project project, AnActionEvent event) {
+  public void perform(Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session != null) {
       perform(session, event.getDataContext());
     }
   }
 
-  public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
+  public boolean isEnabled(Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && isEnabled(session, event.getDataContext());
   }
 
-  protected abstract boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext);
+  protected abstract boolean isEnabled(XDebugSession session, DataContext dataContext);
 
-  protected abstract void perform(@Nonnull XDebugSession session, DataContext dataContext);
+  protected abstract void perform(XDebugSession session, DataContext dataContext);
 }

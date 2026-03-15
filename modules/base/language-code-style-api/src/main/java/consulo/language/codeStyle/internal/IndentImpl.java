@@ -17,7 +17,6 @@
 package consulo.language.codeStyle.internal;
 
 import consulo.language.codeStyle.Indent;
-import org.jetbrains.annotations.NonNls;
 
 public class IndentImpl extends Indent {
   private final boolean myIsAbsolute;
@@ -84,7 +83,7 @@ public class IndentImpl extends Indent {
     return myEnforceIndentToChildren;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     if (myType == Type.SPACES) {

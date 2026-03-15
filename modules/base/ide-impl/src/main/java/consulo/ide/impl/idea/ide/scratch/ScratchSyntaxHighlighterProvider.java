@@ -26,14 +26,13 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(order = "first")
 public class ScratchSyntaxHighlighterProvider implements SyntaxHighlighterProvider {
   @Override
   @Nullable
-  public SyntaxHighlighter create(@Nonnull FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
+  public SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
     if (project == null || file == null) return null;
     if (!ScratchUtil.isScratch(file)) return null;
 

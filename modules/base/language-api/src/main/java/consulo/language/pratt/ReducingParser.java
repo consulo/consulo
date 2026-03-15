@@ -17,7 +17,7 @@ package consulo.language.pratt;
 
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter

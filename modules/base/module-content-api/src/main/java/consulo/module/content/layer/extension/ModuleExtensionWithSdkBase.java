@@ -22,8 +22,7 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ public abstract class ModuleExtensionWithSdkBase<T extends ModuleExtensionWithSd
 
   private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
-  public ModuleExtensionWithSdkBase(@Nonnull String id, @Nonnull ModuleRootLayer rootLayer) {
+  public ModuleExtensionWithSdkBase(String id, ModuleRootLayer rootLayer) {
     super(id, rootLayer);
 
     mySdkPointer = new SdkModuleInheritableNamedPointerImpl(rootLayer, id);
@@ -41,13 +40,13 @@ public abstract class ModuleExtensionWithSdkBase<T extends ModuleExtensionWithSd
 
   @RequiredReadAction
   @Override
-  public void commit(@Nonnull T mutableModuleExtension) {
+  public void commit(T mutableModuleExtension) {
     super.commit(mutableModuleExtension);
 
     mySdkPointer.set(mutableModuleExtension.getInheritableSdk());
   }
 
-  @Nonnull
+  
   @Override
   public ModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
     return mySdkPointer;
@@ -73,7 +72,7 @@ public abstract class ModuleExtensionWithSdkBase<T extends ModuleExtensionWithSd
   }
 
   @Override
-  protected void getStateImpl(@Nonnull Element element) {
+  protected void getStateImpl(Element element) {
     super.getStateImpl(element);
 
     mySdkPointer.toXml(element);
@@ -81,7 +80,7 @@ public abstract class ModuleExtensionWithSdkBase<T extends ModuleExtensionWithSd
 
   @Override
   @RequiredReadAction
-  protected void loadStateImpl(@Nonnull Element element) {
+  protected void loadStateImpl(Element element) {
     super.loadStateImpl(element);
 
     mySdkPointer.fromXml(element);

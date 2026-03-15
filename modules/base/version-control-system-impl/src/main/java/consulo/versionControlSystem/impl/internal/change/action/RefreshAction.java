@@ -29,7 +29,6 @@ import consulo.versionControlSystem.change.ChangesViewRefresher;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -47,7 +46,7 @@ public class RefreshAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -55,7 +54,7 @@ public class RefreshAction extends AnAction implements DumbAware {
         doRefresh(project);
     }
 
-    public static void doRefresh(@Nonnull Project project) {
+    public static void doRefresh(Project project) {
         if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
             return;
         }
@@ -71,7 +70,7 @@ public class RefreshAction extends AnAction implements DumbAware {
         });
     }
 
-    private static void invokeCustomRefreshes(@Nonnull Project project) {
+    private static void invokeCustomRefreshes(Project project) {
         project.getExtensionPoint(ChangesViewRefresher.class).forEach(it -> it.refresh(project));
     }
 }

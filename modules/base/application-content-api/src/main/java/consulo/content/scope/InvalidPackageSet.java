@@ -18,18 +18,17 @@ package consulo.content.scope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
  */
 public class InvalidPackageSet extends AbstractPackageSet {
-    public InvalidPackageSet(@Nonnull String text) {
+    public InvalidPackageSet(String text) {
         super(text);
     }
 
     @Override
-    public boolean contains(VirtualFile file, @Nonnull Project project, NamedScopesHolder holder) {
+    public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
         return false;
     }
 }

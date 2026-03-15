@@ -38,8 +38,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.*;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +94,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private boolean myLeftHorizontalSplit;
     private boolean myRightHorizontalSplit;
 
-    DesktopToolWindowPanelImpl(@Nonnull DesktopIdeFrameImpl ideFrame, @Nonnull DesktopToolWindowManagerImpl manager) {
+    DesktopToolWindowPanelImpl(DesktopIdeFrameImpl ideFrame, DesktopToolWindowManagerImpl manager) {
         myManager = manager;
 
         AWTComponentProviderUtil.putMark(this, this);
@@ -231,8 +230,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     @Override
     public final void addButton(
         ToolWindowStripeButton button,
-        @Nonnull WindowInfo info,
-        @Nonnull Comparator<ToolWindowStripeButton> comparator
+        WindowInfo info,
+        Comparator<ToolWindowStripeButton> comparator
     ) {
         WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
         myId2Button.put(copiedInfo.getId(), (DesktopStripeButton) button);
@@ -268,7 +267,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      */
     @Override
     @RequiredUIAccess
-    public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode) {
+    public void addDecorator(ToolWindowInternalDecorator decorator, WindowInfo info, boolean dirtyMode) {
         WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
         String id = copiedInfo.getId();
 
@@ -299,7 +298,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      */
     @Override
     @RequiredUIAccess
-    public void removeButton(@Nonnull String id) {
+    public void removeButton(String id) {
         DesktopStripeButton button = getButtonById(id);
         if (button == null) {
             return;
@@ -337,7 +336,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      */
     @Override
     @RequiredUIAccess
-    public void removeDecorator(@Nonnull String id, boolean dirtyMode) {
+    public void removeDecorator(String id, boolean dirtyMode) {
         Component decorator = getDecoratorById(id);
         WindowInfoImpl info = getDecoratorInfoById(id);
 
@@ -378,7 +377,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
     @Override
     @RequiredUIAccess
-    public void updateButtonPosition(@Nonnull String id) {
+    public void updateButtonPosition(String id) {
         DesktopStripeButton stripeButton = getButtonById(id);
         if (stripeButton == null) {
             return;
@@ -405,7 +404,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
 
     @Override
-    @Nonnull
+    
     public final JComponent getMyLayeredPane() {
         return myLayeredPane;
     }
@@ -438,7 +437,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     /**
      * Sets (docks) specified component to the specified anchor.
      */
-    private void setComponent(JComponent component, @Nonnull ToolWindowAnchor anchor, float weight) {
+    private void setComponent(JComponent component, ToolWindowAnchor anchor, float weight) {
         if (ToolWindowAnchor.TOP == anchor) {
             myVerticalSplitter.setFirstComponent(component);
             myVerticalSplitter.setFirstSize((int) (myLayeredPane.getHeight() * weight));
@@ -460,7 +459,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         }
     }
 
-    private JComponent getComponentAt(@Nonnull ToolWindowAnchor anchor) {
+    private JComponent getComponentAt(ToolWindowAnchor anchor) {
         if (ToolWindowAnchor.TOP == anchor) {
             return myVerticalSplitter.getFirstComponent();
         }
@@ -479,12 +478,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         }
     }
 
-    private float getPreferredSplitProportion(@Nonnull String id, float defaultValue) {
+    private float getPreferredSplitProportion(String id, float defaultValue) {
         Float f = myId2SplitProportion.get(id);
         return f == null ? defaultValue : f;
     }
 
-    private WindowInfoImpl getDockedInfoAt(@Nonnull ToolWindowAnchor anchor, boolean side) {
+    private WindowInfoImpl getDockedInfoAt(ToolWindowAnchor anchor, boolean side) {
         for (WindowInfoImpl info : myDecorator2Info.values()) {
             if (info.isVisible() && info.isDocked() && info.getAnchor() == anchor && side == info.isSplit()) {
                 return info;
@@ -557,7 +556,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
 
     @Nullable
-    DesktopStripePanelImpl getStripeFor(@Nonnull Rectangle screenRec, @Nonnull DesktopStripePanelImpl preferred) {
+    DesktopStripePanelImpl getStripeFor(Rectangle screenRec, DesktopStripePanelImpl preferred) {
         if (preferred.containsScreen(screenRec)) {
             return myStripes.get(myStripes.indexOf(preferred));
         }
@@ -583,15 +582,15 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         }
     }
 
-    void stretchWidth(@Nonnull ToolWindow wnd, int value) {
+    void stretchWidth(ToolWindow wnd, int value) {
         stretch(wnd, value);
     }
 
-    void stretchHeight(@Nonnull ToolWindow wnd, int value) {
+    void stretchHeight(ToolWindow wnd, int value) {
         stretch(wnd, value);
     }
 
-    private void stretch(@Nonnull ToolWindow wnd, int value) {
+    private void stretch(ToolWindow wnd, int value) {
         Pair<Resizer, Component> pair = findResizerAndComponent(wnd);
         if (pair == null) {
             return;
@@ -607,7 +606,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
 
     @Nullable
-    private Pair<Resizer, Component> findResizerAndComponent(@Nonnull ToolWindow wnd) {
+    private Pair<Resizer, Component> findResizerAndComponent(ToolWindow wnd) {
         if (!wnd.isVisible()) {
             return null;
         }
@@ -708,11 +707,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         }
     }
 
-    public boolean isMaximized(@Nonnull ToolWindow wnd) {
+    public boolean isMaximized(ToolWindow wnd) {
         return myMaximizedProportion != null && myMaximizedProportion.first == wnd;
     }
 
-    void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
+    void setMaximized(ToolWindow wnd, boolean maximized) {
         Pair<Resizer, Component> resizerAndComponent = findResizerAndComponent(wnd);
         if (resizerAndComponent == null) {
             return;
@@ -746,12 +745,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         abstract class Splitter implements Resizer {
             ThreeComponentsSplitter mySplitter;
 
-            Splitter(@Nonnull ThreeComponentsSplitter splitter) {
+            Splitter(ThreeComponentsSplitter splitter) {
                 mySplitter = splitter;
             }
 
             static class FirstComponent extends Splitter {
-                FirstComponent(@Nonnull ThreeComponentsSplitter splitter) {
+                FirstComponent(ThreeComponentsSplitter splitter) {
                     super(splitter);
                 }
 
@@ -762,7 +761,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             }
 
             static class LastComponent extends Splitter {
-                LastComponent(@Nonnull ThreeComponentsSplitter splitter) {
+                LastComponent(ThreeComponentsSplitter splitter) {
                     super(splitter);
                 }
 
@@ -776,7 +775,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         abstract class LayeredPane implements Resizer {
             Component myComponent;
 
-            LayeredPane(@Nonnull Component component) {
+            LayeredPane(Component component) {
                 myComponent = component;
             }
 
@@ -793,7 +792,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             abstract void _setSize(int size);
 
             static class Left extends LayeredPane {
-                Left(@Nonnull Component component) {
+                Left(Component component) {
                     super(component);
                 }
 
@@ -804,7 +803,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             }
 
             static class Right extends LayeredPane {
-                Right(@Nonnull Component component) {
+                Right(Component component) {
                     super(component);
                 }
 
@@ -819,7 +818,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             }
 
             static class Top extends LayeredPane {
-                Top(@Nonnull Component component) {
+                Top(Component component) {
                     super(component);
                 }
 
@@ -830,7 +829,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             }
 
             static class Bottom extends LayeredPane {
-                Bottom(@Nonnull Component component) {
+                Bottom(Component component) {
                     super(component);
                 }
 
@@ -851,7 +850,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public AddDockedComponentCmd(@Nonnull JComponent component, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
+        public AddDockedComponentCmd(JComponent component, WindowInfoImpl info, boolean dirtyMode) {
             myComponent = component;
             myInfo = info;
             myDirtyMode = dirtyMode;
@@ -873,7 +872,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        private AddAndSplitDockedComponentCmd(@Nonnull JComponent newComponent, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
+        private AddAndSplitDockedComponentCmd(JComponent newComponent, WindowInfoImpl info, boolean dirtyMode) {
             myNewComponent = newComponent;
             myInfo = info;
             myDirtyMode = dirtyMode;
@@ -964,7 +963,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public AddSlidingComponentCmd(@Nonnull Component component, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
+        public AddSlidingComponentCmd(Component component, WindowInfoImpl info, boolean dirtyMode) {
             myComponent = component;
             myInfo = info;
             myDirtyMode = dirtyMode;
@@ -1028,7 +1027,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, boolean dirtyMode) {
+        public RemoveDockedComponentCmd(WindowInfoImpl info, boolean dirtyMode) {
             myInfo = info;
             myDirtyMode = dirtyMode;
         }
@@ -1047,7 +1046,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        private RemoveSplitAndDockedComponentCmd(@Nonnull WindowInfoImpl info, boolean dirtyMode) {
+        private RemoveSplitAndDockedComponentCmd(WindowInfoImpl info, boolean dirtyMode) {
             myInfo = info;
             myDirtyMode = dirtyMode;
         }
@@ -1078,7 +1077,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public RemoveSlidingComponentCmd(Component component, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
+        public RemoveSlidingComponentCmd(Component component, WindowInfoImpl info, boolean dirtyMode) {
             myComponent = component;
             myInfo = info;
             myDirtyMode = dirtyMode;
@@ -1140,7 +1139,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private Reference<BufferedImage> myBottomImageRef;
         private Reference<BufferedImage> myTopImageRef;
 
-        public MyLayeredPane(@Nonnull JComponent splitter) {
+        public MyLayeredPane(JComponent splitter) {
             setOpaque(false);
             add(splitter, JLayeredPane.DEFAULT_LAYER);
         }
@@ -1157,7 +1156,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             return result.first;
         }
 
-        @Nonnull
+        
         private Pair<BufferedImage, Reference<BufferedImage>> getImage(@Nullable Reference<BufferedImage> imageRef) {
             LOG.assertTrue(UISettings.getInstance().getAnimateWindows());
             Window awtWindow = TargetAWT.to(myIdeFrame.getWindow());
@@ -1221,7 +1220,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             }
         }
 
-        final void setBoundsInPaletteLayer(@Nonnull Component component, @Nonnull ToolWindowAnchor anchor, float weight) {
+        final void setBoundsInPaletteLayer(Component component, ToolWindowAnchor anchor, float weight) {
             if (weight < .0f) {
                 weight = WindowInfoImpl.DEFAULT_WEIGHT;
             }

@@ -23,7 +23,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import gnu.trove.TIntObjectHashMap;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 
@@ -33,7 +32,7 @@ import java.awt.datatransfer.DataFlavor;
  */
 public class HtmlTransferableData extends AbstractSyntaxAwareReaderTransferableData implements MarkupHandler {
 
-  @Nonnull
+  
   public static final DataFlavor FLAVOR = new DataFlavor("text/html; class=java.io.Reader; charset=UTF-8", "HTML text");
 
   private final int myTabSize;
@@ -54,13 +53,13 @@ public class HtmlTransferableData extends AbstractSyntaxAwareReaderTransferableD
 
   private final TIntObjectHashMap<String> myColors = new TIntObjectHashMap<String>();
 
-  public HtmlTransferableData(@Nonnull SyntaxInfo syntaxInfo, int tabSize) {
+  public HtmlTransferableData(SyntaxInfo syntaxInfo, int tabSize) {
     super(syntaxInfo, FLAVOR);
     myTabSize = tabSize;
   }
 
   @Override
-  protected void build(@Nonnull StringBuilder holder, int maxLength) {
+  protected void build(StringBuilder holder, int maxLength) {
     myResultBuffer = holder;
     myColorRegistry = mySyntaxInfo.getColorRegistry();
     myFontNameRegistry = mySyntaxInfo.getFontNameRegistry();
@@ -99,25 +98,25 @@ public class HtmlTransferableData extends AbstractSyntaxAwareReaderTransferableD
     }
   }
 
-  private void appendFontFamilyRule(@Nonnull StringBuilder styleBuffer, int fontFamilyId) {
+  private void appendFontFamilyRule(StringBuilder styleBuffer, int fontFamilyId) {
     styleBuffer.append("font-family:'").append(myFontNameRegistry.dataById(fontFamilyId)).append("';");
   }
 
-  private static void defineBold(@Nonnull StringBuilder styleBuffer) {
+  private static void defineBold(StringBuilder styleBuffer) {
     styleBuffer.append("font-weight:bold;");
   }
 
-  private static void defineItalic(@Nonnull StringBuilder styleBuffer) {
+  private static void defineItalic(StringBuilder styleBuffer) {
     styleBuffer.append("font-style:italic;");
   }
 
-  private void defineForeground(int id, @Nonnull StringBuilder styleBuffer) {
+  private void defineForeground(int id, StringBuilder styleBuffer) {
     styleBuffer.append("color:");
     appendColor(styleBuffer, id);
     styleBuffer.append(";");
   }
 
-  private void defineBackground(int id, @Nonnull StringBuilder styleBuffer) {
+  private void defineBackground(int id, StringBuilder styleBuffer) {
     styleBuffer.append("background-color:");
     appendColor(styleBuffer, id);
     styleBuffer.append(";");

@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.task.ui.TaskRepositoryEditor;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -44,16 +43,16 @@ public abstract class TaskRepositoryType<T extends TaskRepository> implements Ta
         return EP_NAME.getExtensionList();
     }
 
-    @Nonnull
+    
     @Override
     public abstract String getId();
 
-    @Nonnull
+    
     @Override
     public abstract LocalizeValue getPresentableName();
 
     @Override
-    @Nonnull
+    
     public abstract Image getIcon();
 
     @Nullable
@@ -61,20 +60,20 @@ public abstract class TaskRepositoryType<T extends TaskRepository> implements Ta
         return null;
     }
 
-    @Nonnull
+    
     public abstract TaskRepositoryEditor createEditor(T repository, Project project, Consumer<T> changeListener);
 
     public List<TaskRepositorySubtype> getAvailableSubtypes() {
         return Arrays.asList((TaskRepositorySubtype)this);
     }
 
-    @Nonnull
+    
     public TaskRepository createRepository(TaskRepositorySubtype subtype) {
         return subtype.createRepository();
     }
 
     @Override
-    @Nonnull
+    
     public abstract TaskRepository createRepository();
 
     public abstract Class<T> getRepositoryClass();

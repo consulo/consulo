@@ -40,8 +40,7 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -60,7 +59,7 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
 
     @Inject
     @RequiredReadAction
-    public DirectoryIndexImpl(@Nonnull Project project) {
+    public DirectoryIndexImpl(Project project) {
         myProject = project;
         myConnection = project.getMessageBus().connect(project);
 
@@ -70,7 +69,7 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
 
         myConnection.subscribe(FileTypeListener.class, new FileTypeListener() {
             @Override
-            public void fileTypesChanged(@Nonnull FileTypeEvent event) {
+            public void fileTypesChanged(FileTypeEvent event) {
                 myRootIndex = null;
             }
         });
@@ -106,7 +105,7 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
 
         myConnection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
-            public void after(@Nonnull List<? extends VFileEvent> events) {
+            public void after(List<? extends VFileEvent> events) {
                 RootIndexImpl rootIndex = myRootIndex;
                 if (rootIndex != null && rootIndex.resetOnEvents(events)) {
                     myRootIndex = null;
@@ -133,12 +132,12 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
     }
 
     @Override
-    @Nonnull
-    public Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources) {
+    
+    public Query<VirtualFile> getDirectoriesByPackageName(String packageName, boolean includeLibrarySources) {
         return getRootIndex().getDirectoriesByPackageName(packageName, includeLibrarySources);
     }
 
-    @Nonnull
+    
     private RootIndex getRootIndex() {
         if (!myProject.isModulesReady()) {
             return StubRootIndex.INSTANCE;
@@ -157,26 +156,26 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
             private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = IntMaps.newConcurrentIntObjectHashMap();
 
             @Override
-            public void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info) {
+            public void cacheInfo(VirtualFile dir, DirectoryInfo info) {
                 myInfoCache.put(((NewVirtualFile) dir).getId(), info);
             }
 
             @Override
-            public DirectoryInfo getCachedInfo(@Nonnull VirtualFile dir) {
+            public DirectoryInfo getCachedInfo(VirtualFile dir) {
                 return myInfoCache.get(((NewVirtualFile) dir).getId());
             }
         };
     }
 
     @Override
-    public DirectoryInfo getInfoForDirectory(@Nonnull VirtualFile dir) {
+    public DirectoryInfo getInfoForDirectory(VirtualFile dir) {
         DirectoryInfo info = getInfoForFile(dir);
         return info.isInProject(dir) ? info : null;
     }
 
-    @Nonnull
+    
     @Override
-    public DirectoryInfo getInfoForFile(@Nonnull VirtualFile file) {
+    public DirectoryInfo getInfoForFile(VirtualFile file) {
         checkAvailability();
         dispatchPendingEvents();
 
@@ -189,7 +188,7 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
 
     @Override
     @Nullable
-    public ContentFolderTypeProvider getContentFolderType(@Nonnull VirtualFile file, @Nonnull DirectoryInfo info) {
+    public ContentFolderTypeProvider getContentFolderType(VirtualFile file, DirectoryInfo info) {
         if (info.isInModuleSource(file)) {
             return getRootIndex().getContentFolderType(info);
         }
@@ -197,7 +196,7 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
     }
 
     @Override
-    public String getPackageName(@Nonnull VirtualFile dir) {
+    public String getPackageName(VirtualFile dir) {
         checkAvailability();
         if (!(dir instanceof NewVirtualFile)) {
             return null;
@@ -207,9 +206,9 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info) {
+    public OrderEntry[] getOrderEntries(DirectoryInfo info) {
         checkAvailability();
         return getRootIndex().getOrderEntries(info);
     }

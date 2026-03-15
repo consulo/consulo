@@ -32,8 +32,7 @@ import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,14 +42,14 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
 
     private static final AtomicLong myIdHolder = new AtomicLong(1L);
 
-    @Nonnull
+   
     private final Project myProject;
 
-    @Nonnull
+   
     private RunProfile myRunProfile;
-    @Nonnull
+   
     private final Executor myExecutor;
-    @Nonnull
+   
     private ExecutionTarget myTarget;
 
     @Nullable
@@ -65,11 +64,10 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     private long myExecutionId = 0;
     @Nullable
     private DataContext myDataContext;
-    @Nullable
-    private  ProgramRunner.Callback myCallback;
+    private  ProgramRunner.@Nullable Callback myCallback;
 
 
-    public ExecutionEnvironment(@Nonnull Executor executor, @Nonnull ProgramRunner runner, @Nonnull RunnerAndConfigurationSettings configuration, @Nonnull Project project) {
+    public ExecutionEnvironment(Executor executor, ProgramRunner runner, RunnerAndConfigurationSettings configuration, Project project) {
         this(configuration.getConfiguration(), executor, DefaultExecutionTarget.INSTANCE, project, configuration.getRunnerSettings(runner), configuration.getConfigurationSettings(runner), null, null,
             runner);
     }
@@ -79,11 +77,11 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
      * to remove in IDEA 14
      */
     @TestOnly
-    public ExecutionEnvironment(@Nonnull Executor executor,
-                                @Nonnull ProgramRunner runner,
-                                @Nonnull ExecutionTarget target,
-                                @Nonnull RunnerAndConfigurationSettings configuration,
-                                @Nonnull Project project) {
+    public ExecutionEnvironment(Executor executor,
+                                ProgramRunner runner,
+                                ExecutionTarget target,
+                                RunnerAndConfigurationSettings configuration,
+                                Project project) {
         this(configuration.getConfiguration(), executor, target, project, configuration.getRunnerSettings(runner), configuration.getConfigurationSettings(runner), null, configuration, runner);
     }
 
@@ -91,20 +89,20 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
      * @deprecated, use {@link consulo.ide.impl.idea.execution.runners.ExecutionEnvironmentBuilder} instead
      * to remove in IDEA 15
      */
-    public ExecutionEnvironment(@Nonnull RunProfile runProfile, @Nonnull Executor executor, @Nonnull Project project, @Nullable RunnerSettings runnerSettings) {
+    public ExecutionEnvironment(RunProfile runProfile, Executor executor, Project project, @Nullable RunnerSettings runnerSettings) {
         //noinspection ConstantConditions
         this(runProfile, executor, DefaultExecutionTarget.INSTANCE, project, runnerSettings, null, null, null, RunnerRegistry.getInstance().getRunner(executor.getId(), runProfile));
     }
 
-    ExecutionEnvironment(@Nonnull RunProfile runProfile,
-                         @Nonnull Executor executor,
-                         @Nonnull ExecutionTarget target,
-                         @Nonnull Project project,
+    ExecutionEnvironment(RunProfile runProfile,
+                         Executor executor,
+                         ExecutionTarget target,
+                         Project project,
                          @Nullable RunnerSettings runnerSettings,
                          @Nullable ConfigurationPerRunnerSettings configurationSettings,
                          @Nullable RunContentDescriptor contentToReuse,
                          @Nullable RunnerAndConfigurationSettings settings,
-                         @Nonnull ProgramRunner<?> runner) {
+                         ProgramRunner<?> runner) {
         myExecutor = executor;
         myTarget = target;
         myRunProfile = runProfile;
@@ -122,17 +120,17 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
         myContentToReuse = null;
     }
 
-    @Nonnull
+   
     public Project getProject() {
         return myProject;
     }
 
-    @Nonnull
+   
     public ExecutionTarget getExecutionTarget() {
         return myTarget;
     }
 
-    @Nonnull
+   
     public RunProfile getRunProfile() {
         return myRunProfile;
     }
@@ -164,7 +162,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
         return myRunner.getRunnerId();
     }
 
-    @Nonnull
+   
     public ProgramRunner<?> getRunner() {
         return myRunner;
     }
@@ -197,17 +195,16 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
         return myExecutionId;
     }
 
-    @Nonnull
+   
     public Executor getExecutor() {
         return myExecutor;
     }
 
-    public void setCallback(@Nullable ProgramRunner.Callback callback) {
+    public void setCallback(ProgramRunner.@Nullable Callback callback) {
         myCallback = callback;
     }
 
-    @Nullable
-    public ProgramRunner.Callback getCallback() {
+    public ProgramRunner.@Nullable Callback getCallback() {
         return myCallback;
     }
 
@@ -225,7 +222,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
         return super.toString();
     }
 
-    public void setDataContext(@Nonnull DataContext dataContext) {
+    public void setDataContext(DataContext dataContext) {
         myDataContext = ExecutionDataContextCacher.getInstance().getCachedContext(dataContext);
     }
 

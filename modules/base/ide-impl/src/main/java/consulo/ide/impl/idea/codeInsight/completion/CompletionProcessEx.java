@@ -14,43 +14,42 @@ import consulo.language.pattern.ElementPattern;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
  * @author yole
  */
 interface CompletionProcessEx extends CompletionProcess {
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   Editor getEditor();
 
-  @Nonnull
+  
   Caret getCaret();
 
-  @Nonnull
+  
   OffsetMap getOffsetMap();
 
-  @Nonnull
+  
   OffsetsInFile getHostOffsets();
 
   @Nullable
   Lookup getLookup();
 
-  void registerChildDisposable(@Nonnull Supplier<? extends Disposable> child);
+  void registerChildDisposable(Supplier<? extends Disposable> child);
 
   void itemSelected(LookupElement item, char aChar);
 
   void addWatchedPrefix(int startOffset, ElementPattern<String> restartCondition);
 
-  void addAdvertisement(@Nonnull String message, @Nullable Image icon);
+  void addAdvertisement(String message, @Nullable Image icon);
 
   CompletionParameters getParameters();
 
-  void setParameters(@Nonnull CompletionParameters parameters);
+  void setParameters(CompletionParameters parameters);
 
   void scheduleRestart();
 

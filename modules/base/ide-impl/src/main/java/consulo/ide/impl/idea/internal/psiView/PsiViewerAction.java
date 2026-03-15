@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -31,24 +30,24 @@ import jakarta.inject.Inject;
  */
 @ActionImpl(id = "PsiViewer")
 public class PsiViewerAction extends AnAction implements DumbAware {
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public PsiViewerAction(@Nonnull Application application) {
+    public PsiViewerAction(Application application) {
         super(ActionLocalize.actionPsiviewerText());
         myApplication = application;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         new PsiViewerDialog(project, false, null, null).show();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && myApplication.isInternal());
     }
 }

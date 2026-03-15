@@ -17,8 +17,7 @@ package consulo.ui.ex.popup;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         this(title, Arrays.asList(values), Arrays.asList(icons));
     }
 
-    public BaseListPopupStep(@Nullable String aTitle, @Nonnull List<? extends T> aValues, Image aSameIcon) {
+    public BaseListPopupStep(@Nullable String aTitle, List<? extends T> aValues, Image aSameIcon) {
         List<Image> icons = new ArrayList<>(aValues.size());
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < aValues.size(); i++) {
@@ -53,14 +52,14 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         init(aTitle, aValues, icons);
     }
 
-    public BaseListPopupStep(@Nullable String title, @Nonnull List<? extends T> values, List<Image> icons) {
+    public BaseListPopupStep(@Nullable String title, List<? extends T> values, List<Image> icons) {
         init(title, values, icons);
     }
 
     protected BaseListPopupStep() {
     }
 
-    protected final void init(@Nullable String title, @Nonnull List<? extends T> values, @Nullable List<Image> icons) {
+    protected final void init(@Nullable String title, List<? extends T> values, @Nullable List<Image> icons) {
         myTitle = title;
         myValues = new ArrayList<>(values);
         myIcons = icons;
@@ -72,7 +71,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         return myTitle;
     }
 
-    @Nonnull
+    
     @Override
     public final List<T> getValues() {
         return myValues;
@@ -104,7 +103,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public String getTextFor(T value) {
         return value.toString();

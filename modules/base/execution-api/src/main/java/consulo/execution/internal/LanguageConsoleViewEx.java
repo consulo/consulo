@@ -20,19 +20,18 @@ import consulo.document.util.TextRange;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15/01/2023
  */
 public interface LanguageConsoleViewEx extends LanguageConsoleView {
-  @Nonnull
-  String addTextRangeToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx inputEditor, boolean preserveMarkup);
+  
+  String addTextRangeToHistory(TextRange textRange, EditorEx inputEditor, boolean preserveMarkup);
 
   void doAddPromptToHistory();
 
-  @Nonnull
+  
   String prepareExecuteAction(boolean addToHistory, boolean preserveMarkup, boolean clearInput);
 
   void addToHistory(String text);

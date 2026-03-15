@@ -18,14 +18,13 @@ package consulo.fileEditor.text;
 import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Implementations of this interface are expected to provide correct {@link #equals(Object)} & {@link #hashCode()} implementations.
  */
 public interface CodeFoldingState {
   @RequiredUIAccess
-  void setToEditor(@Nonnull Editor editor);
+  void setToEditor(Editor editor);
 
   boolean equals(Object o);
 

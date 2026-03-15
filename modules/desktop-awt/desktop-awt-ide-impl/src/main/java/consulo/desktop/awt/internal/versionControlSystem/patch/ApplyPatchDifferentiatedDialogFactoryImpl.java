@@ -24,7 +24,6 @@ import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchMode;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -40,8 +39,8 @@ public class ApplyPatchDifferentiatedDialogFactoryImpl implements ApplyPatchDiff
   public DialogWrapper create(Project project,
                               ApplyPatchExecutor callback,
                               List<ApplyPatchExecutor> executors,
-                              @Nonnull ApplyPatchMode applyPatchMode,
-                              @Nonnull VirtualFile patchFile) {
+                              ApplyPatchMode applyPatchMode,
+                              VirtualFile patchFile) {
     return new ApplyPatchDifferentiatedDialog(project, callback, executors, applyPatchMode, patchFile);
   }
 

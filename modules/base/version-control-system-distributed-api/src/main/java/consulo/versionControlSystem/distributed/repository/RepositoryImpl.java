@@ -20,40 +20,39 @@ import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Nadya Zabrodina
  */
 public abstract class RepositoryImpl implements Repository {
 
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final VirtualFile myRootDir;
 
 
-  @Nonnull
+  
   protected volatile State myState;
   @Nullable protected volatile String myCurrentRevision;
 
-  protected RepositoryImpl(@Nonnull Project project,
-                           @Nonnull VirtualFile dir,
-                           @Nonnull Disposable parentDisposable) {
+  protected RepositoryImpl(Project project,
+                           VirtualFile dir,
+                           Disposable parentDisposable) {
     myProject = project;
     myRootDir = dir;
     Disposer.register(parentDisposable, this);
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile getRoot() {
     return myRootDir;
   }
 
   @Override
-  @Nonnull
+  
   public String getPresentableUrl() {
     return getRoot().getPresentableUrl();
   }
@@ -64,12 +63,12 @@ public abstract class RepositoryImpl implements Repository {
   }
 
   @Override
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
 
-  @Nonnull
+  
   @Override
   public State getState() {
     return myState;
@@ -77,7 +76,7 @@ public abstract class RepositoryImpl implements Repository {
 
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public String getCurrentRevision() {
     return myCurrentRevision;
   }

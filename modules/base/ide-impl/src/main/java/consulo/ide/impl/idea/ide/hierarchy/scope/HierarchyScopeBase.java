@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.hierarchy.scope;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
  * @since 2025-04-24
  */
 public abstract class HierarchyScopeBase implements HierarchyScope {
-    @Nonnull
+    
     @Override
     public String getId() {
         return getPresentableName().getId();

@@ -19,8 +19,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -41,7 +40,7 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
         myFilter = project == null ? null : createFileTypeFilter(project);
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupName() {
         return "Files";
@@ -57,13 +56,13 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
     }
 
     @Override
-    public int getElementPriority(@Nonnull Object element, @Nonnull String searchPattern) {
+    public int getElementPriority(Object element, String searchPattern) {
         return super.getElementPriority(element, searchPattern) + 2;
     }
 
-    @Nonnull
+    
     @Override
-    protected FilteringGotoByModel<FileType> createModel(@Nonnull Project project) {
+    protected FilteringGotoByModel<FileType> createModel(Project project) {
         GotoFileModel model = new GotoFileModel(project);
         if (myFilter != null) {
             model.setFilterItems(myFilter.getSelectedElements());
@@ -71,20 +70,20 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
         return model;
     }
 
-    @Nonnull
+    
     @Override
-    public List<AnAction> getActions(@Nonnull Runnable onChanged) {
+    public List<AnAction> getActions(Runnable onChanged) {
         return doGetActions(includeNonProjectItemsText(), myFilter, onChanged);
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
     public ListCellRenderer<Object> getElementsRenderer() {
         return (ListCellRenderer)new SERenderer() {
-            @Nonnull
+            
             @Override
-            protected ItemMatchers getItemMatchers(@Nonnull JList list, @Nonnull Object value) {
+            protected ItemMatchers getItemMatchers(JList list, Object value) {
                 ItemMatchers defaultMatchers = super.getItemMatchers(list, value);
                 if (!(value instanceof PsiFileSystemItem) || myModelForRenderer == null) {
                     return defaultMatchers;
@@ -96,7 +95,7 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
     }
 
     @Override
-    public boolean processSelectedItem(@Nonnull Object selected, int modifiers, @Nonnull String searchText) {
+    public boolean processSelectedItem(Object selected, int modifiers, String searchText) {
         if (selected instanceof PsiFile file) {
             VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile != null && myProject != null) {
@@ -114,7 +113,7 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
     }
 
     @Override
-    public Object getDataForItem(@Nonnull Object element, @Nonnull Key dataId) {
+    public Object getDataForItem(Object element, Key dataId) {
         if (PsiFile.KEY == dataId && element instanceof PsiFile) {
             return element;
         }
@@ -134,8 +133,8 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
         return super.getDataForItem(element, dataId);
     }
 
-    @Nonnull
-    public static PersistentSearchEverywhereContributorFilter<FileType> createFileTypeFilter(@Nonnull Project project) {
+    
+    public static PersistentSearchEverywhereContributorFilter<FileType> createFileTypeFilter(Project project) {
         List<FileType> items = Stream.of(FileTypeManager.getInstance().getRegisteredFileTypes())
             .sorted(GotoFileAction.FileTypeComparator.INSTANCE)
             .collect(Collectors.toList());

@@ -15,33 +15,31 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CompositeArrangementToken extends StdArrangementSettingsToken {
   private final Set<ArrangementSettingsToken> myParentTokenTypes;
 
-  private CompositeArrangementToken(@Nonnull String id,
-                                    @Nonnull String uiName,
-                                    @Nonnull StdArrangementTokenType tokenType,
-                                    @Nonnull ArrangementSettingsToken... tokens)
+  private CompositeArrangementToken(String id,
+                                    String uiName,
+                                    StdArrangementTokenType tokenType,
+                                    ArrangementSettingsToken... tokens)
   {
     super(id, uiName, tokenType);
     myParentTokenTypes = new HashSet<>(Set.of(tokens));
   }
 
-  @Nonnull
-  public static CompositeArrangementToken create(@NonNls @Nonnull String id,
-                                                 @Nonnull StdArrangementTokenType tokenType,
-                                                 @Nonnull ArrangementSettingsToken... tokens)
+  
+  public static CompositeArrangementToken create(String id,
+                                                 StdArrangementTokenType tokenType,
+                                                 ArrangementSettingsToken... tokens)
   {
     return new CompositeArrangementToken(id, id.toLowerCase().replace("_", " "), tokenType, tokens);
   }
 
-  @Nonnull
+  
   public Set<ArrangementSettingsToken> getAdditionalTokens() {
     return myParentTokenTypes;
   }

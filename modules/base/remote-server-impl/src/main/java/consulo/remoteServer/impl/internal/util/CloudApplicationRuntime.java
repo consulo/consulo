@@ -10,8 +10,7 @@ import consulo.remoteServer.runtime.Deployment;
 import consulo.remoteServer.runtime.ServerTaskExecutor;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class CloudApplicationRuntime extends DeploymentRuntime {
 
@@ -37,7 +36,7 @@ public abstract class CloudApplicationRuntime extends DeploymentRuntime {
         return null;
     }
 
-    public void setDeploymentModel(@Nonnull Deployment deployment) {
+    public void setDeploymentModel(Deployment deployment) {
         myDeployment = deployment;
     }
 

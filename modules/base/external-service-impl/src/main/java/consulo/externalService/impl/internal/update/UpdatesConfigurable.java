@@ -33,8 +33,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,13 +41,13 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class UpdatesConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
-    @Nonnull
+    
     @Override
     public String getId() {
         return "updateSettings";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return ExternalServiceLocalize.settingsUpdateDisplayName();
@@ -61,9 +60,9 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
         UpdateSettings updateSettings = UpdateSettings.getInstance();
 
         VerticalLayout layout = VerticalLayout.create();

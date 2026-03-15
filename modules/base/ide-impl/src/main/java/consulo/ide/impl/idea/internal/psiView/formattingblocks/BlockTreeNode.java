@@ -22,7 +22,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -71,7 +70,7 @@ public class BlockTreeNode extends SimpleNode {
         }
     }
 
-    @Nonnull
+    
     @Override
     public Object[] getEqualityObjects() {
         return new Object[]{myBlock};

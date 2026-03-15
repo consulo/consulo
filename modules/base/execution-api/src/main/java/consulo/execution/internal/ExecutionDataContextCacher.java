@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,6 +31,6 @@ public interface ExecutionDataContextCacher {
     return Application.get().getInstance(ExecutionDataContextCacher.class);
   }
 
-  @Nonnull
-  DataContext getCachedContext(@Nonnull DataContext dataContext);
+  
+  DataContext getCachedContext(DataContext dataContext);
 }

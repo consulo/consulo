@@ -29,8 +29,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ven
@@ -41,7 +40,7 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
   private final String myNewName;
   private final LocalizeValue myText;
 
-  public RenameElementFix(@Nonnull PsiNamedElement element) {
+  public RenameElementFix(PsiNamedElement element) {
     super(element);
     VirtualFile vFile = element.getContainingFile().getVirtualFile();
     assert vFile != null : element;
@@ -49,24 +48,24 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
     myText = CodeInsightLocalize.renamePublicClassText(element.getName(), myNewName);
   }
 
-  public RenameElementFix(@Nonnull PsiNamedElement element, @Nonnull String newName) {
+  public RenameElementFix(PsiNamedElement element, String newName) {
     super(element);
     myNewName = newName;
     myText = CodeInsightLocalize.renameNamedElementText(element.getName(), myNewName);
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getText() {
     return myText;
   }
 
   @Override
-  public void invoke(@Nonnull Project project,
-                     @Nonnull PsiFile file,
+  public void invoke(Project project,
+                     PsiFile file,
                      @Nullable Editor editor,
-                     @Nonnull PsiElement startElement,
-                     @Nonnull PsiElement endElement) {
+                     PsiElement startElement,
+                     PsiElement endElement) {
     if (isAvailable(project, null, file)) {
       LOG.assertTrue(file == startElement.getContainingFile());
       if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
@@ -76,10 +75,10 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project,
-                             @Nonnull PsiFile file,
-                             @Nonnull PsiElement startElement,
-                             @Nonnull PsiElement endElement) {
+  public boolean isAvailable(Project project,
+                             PsiFile file,
+                             PsiElement startElement,
+                             PsiElement endElement) {
     if (!startElement.isValid()) {
       return false;
     }

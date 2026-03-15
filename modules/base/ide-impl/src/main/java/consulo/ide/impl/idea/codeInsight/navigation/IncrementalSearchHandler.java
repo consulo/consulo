@@ -51,9 +51,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.application.util.StringSearcher;
 import consulo.ui.ex.awt.UIUtil;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -235,7 +233,7 @@ public class IncrementalSearchHandler {
       boolean caseSensitive = detectSmartCaseSensitive(prefix);
 
       if (acceptableRegExp(prefix)) {
-        @NonNls StringBuffer buf = new StringBuffer(prefix.length());
+        StringBuffer buf = new StringBuffer(prefix.length());
         int len = prefix.length();
 
         for (int i = 0; i < len; ++i) {
@@ -366,7 +364,7 @@ public class IncrementalSearchHandler {
     }
 
     @Override
-    public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
+    public void execute(Editor editor, char charTyped, DataContext dataContext) {
       PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
       if (data == null || data.hint == null){
         if (myOriginalHandler != null) myOriginalHandler.execute(editor, charTyped, dataContext);

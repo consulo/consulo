@@ -52,8 +52,7 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,7 +73,7 @@ class FindInProjectTask {
     private static final Logger LOG = Logger.getInstance(FindInProjectTask.class);
     private static final int FILES_SIZE_LIMIT = 70 * 1024 * 1024; // megabytes.
     private final FindModel myFindModel;
-    @Nonnull
+    
     private final Project myProject;
     private final PsiManager myPsiManager;
     @Nullable
@@ -89,13 +88,13 @@ class FindInProjectTask {
     private final Set<? extends VirtualFile> myFilesToScanInitially;
     private final AtomicLong myTotalFilesSize = new AtomicLong();
     private final
-    @Nonnull
+    
     List<FindInProjectSearchEngine.FindInProjectSearcher> mySearchers;
 
     FindInProjectTask(
-        @Nonnull FindModel findModel,
-        @Nonnull Project project,
-        @Nonnull Set<? extends VirtualFile> filesToScanInitially
+        FindModel findModel,
+        Project project,
+        Set<? extends VirtualFile> filesToScanInitially
     ) {
         myFindModel = findModel;
         myProject = project;
@@ -120,7 +119,7 @@ class FindInProjectTask {
         mySearchers = ContainerUtil.mapNotNull(FindInProjectSearchEngine.getExtensions(), se -> se.createSearcher(findModel, project));
     }
 
-    void findUsages(@Nonnull FindUsagesProcessPresentation processPresentation, @Nonnull Predicate<? super UsageInfo> consumer) {
+    void findUsages(FindUsagesProcessPresentation processPresentation, Predicate<? super UsageInfo> consumer) {
         CoreProgressManager.assertUnderProgress(myProgress);
 
         try {
@@ -167,7 +166,7 @@ class FindInProjectTask {
         }
     }
 
-    private static void logStats(@Nonnull Collection<? extends VirtualFile> otherFiles, long time) {
+    private static void logStats(Collection<? extends VirtualFile> otherFiles, long time) {
         Map<String, Long> extensionToCount = otherFiles.stream()
             .collect(Collectors.groupingBy(
                 file -> StringUtil.toLowerCase(StringUtil.notNullize(file.getExtension())),
@@ -186,9 +185,9 @@ class FindInProjectTask {
     }
 
     private void searchInFiles(
-        @Nonnull Collection<? extends VirtualFile> virtualFiles,
-        @Nonnull FindUsagesProcessPresentation processPresentation,
-        @Nonnull Predicate<? super UsageInfo> consumer
+        Collection<? extends VirtualFile> virtualFiles,
+        FindUsagesProcessPresentation processPresentation,
+        Predicate<? super UsageInfo> consumer
     ) {
         AtomicInteger occurrenceCount = new AtomicInteger();
         AtomicInteger processedFileCount = new AtomicInteger();
@@ -303,8 +302,8 @@ class FindInProjectTask {
     }
 
     // must return non-binary files
-    @Nonnull
-    private Collection<VirtualFile> collectFilesInScope(@Nonnull final Set<VirtualFile> alreadySearched, final boolean skipIndexed) {
+    
+    private Collection<VirtualFile> collectFilesInScope(final Set<VirtualFile> alreadySearched, final boolean skipIndexed) {
         SearchScope customScope = myFindModel.isCustomScope() ? myFindModel.getCustomScope() : null;
         final GlobalSearchScope globalCustomScope =
             customScope == null ? null : GlobalSearchScopeUtil.toGlobalSearchScope(customScope, myProject);
@@ -313,7 +312,7 @@ class FindInProjectTask {
             private final Set<VirtualFile> myFiles = new CompactVirtualFileSet();
 
             @Override
-            public boolean processFile(@Nonnull VirtualFile virtualFile) {
+            public boolean processFile(VirtualFile virtualFile) {
                 ReadAction.run(() -> {
                     ProgressManager.checkCanceled();
                     if (virtualFile.isDirectory() || !virtualFile.isValid() || !myFileMask.test(virtualFile) || globalCustomScope != null && !globalCustomScope.contains(
@@ -338,7 +337,7 @@ class FindInProjectTask {
                 return true;
             }
 
-            @Nonnull
+            
             private Collection<VirtualFile> getFiles() {
                 return myFiles;
             }
@@ -363,7 +362,7 @@ class FindInProjectTask {
             VirtualFileVisitor.Option limit = VirtualFileVisitor.limit(myFindModel.isWithSubdirectories() ? -1 : 1);
             VirtualFileUtil.visitChildrenRecursively(myDirectory, new VirtualFileVisitor<Void>(limit) {
                 @Override
-                public boolean visitFile(@Nonnull VirtualFile file) {
+                public boolean visitFile(VirtualFile file) {
                     if (checkExcluded && myProjectFileIndex.isExcluded(file)) {
                         return false;
                     }
@@ -387,9 +386,9 @@ class FindInProjectTask {
     }
 
     private static void iterateAll(
-        @Nonnull VirtualFile[] files,
-        @Nonnull GlobalSearchScope searchScope,
-        @Nonnull ContentIterator iterator
+        VirtualFile[] files,
+        GlobalSearchScope searchScope,
+        ContentIterator iterator
     ) {
         FileTypeManager fileTypeManager = FileTypeManager.getInstance();
         VirtualFileFilter contentFilter =
@@ -406,7 +405,7 @@ class FindInProjectTask {
         return ContainerUtil.find(mySearchers, FindInProjectSearchEngine.FindInProjectSearcher::isReliable) != null;
     }
 
-    @Nonnull
+    
     private Set<VirtualFile> getFilesForFastWordSearch() {
         Set<VirtualFile> resultFiles = new CompactVirtualFileSet();
         for (VirtualFile file : myFilesToScanInitially) {
@@ -428,7 +427,7 @@ class FindInProjectTask {
     }
 
     @RequiredReadAction
-    private Pair.NonNull<PsiFile, VirtualFile> findFile(@Nonnull VirtualFile virtualFile) {
+    private Pair.NonNull<PsiFile, VirtualFile> findFile(VirtualFile virtualFile) {
         PsiFile psiFile = myPsiManager.findFile(virtualFile);
         if (psiFile != null) {
             PsiElement sourceFile = psiFile.getNavigationElement();

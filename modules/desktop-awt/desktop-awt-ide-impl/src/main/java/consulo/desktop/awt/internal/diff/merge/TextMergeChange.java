@@ -38,8 +38,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,16 +47,16 @@ import java.util.List;
 public class TextMergeChange extends ThreesideDiffChangeBase {
     private static final String CTRL_CLICK_TO_RESOLVE = "Ctrl+click to resolve conflict";
 
-    @Nonnull
+    
     private final TextMergeViewer myMergeViewer;
-    @Nonnull
+    
     private final TextMergeViewer.MyThreesideViewer myViewer;
 
-    @Nonnull
+    
     private final List<MyGutterOperation> myOperations = new ArrayList<>();
 
     private final int myIndex;
-    @Nonnull
+    
     private final MergeLineFragment myFragment;
 
     private final boolean[] myResolved = new boolean[2];
@@ -69,9 +68,9 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     @RequiredUIAccess
     public TextMergeChange(
         int index,
-        @Nonnull MergeLineFragment fragment,
-        @Nonnull MergeConflictType conflictType,
-        @Nonnull TextMergeViewer viewer
+        MergeLineFragment fragment,
+        MergeConflictType conflictType,
+        TextMergeViewer viewer
     ) {
         super(conflictType);
         myMergeViewer = viewer;
@@ -110,7 +109,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @RequiredUIAccess
-    void setResolved(@Nonnull Side side, boolean value) {
+    void setResolved(Side side, boolean value) {
         myResolved[side.getIndex()] = value;
 
         if (isResolved()) {
@@ -131,7 +130,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         return myResolved[0] && myResolved[1];
     }
 
-    public boolean isResolved(@Nonnull Side side) {
+    public boolean isResolved(Side side) {
         return side.select(myResolved);
     }
 
@@ -144,7 +143,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @Override
-    public boolean isResolved(@Nonnull ThreeSide side) {
+    public boolean isResolved(ThreeSide side) {
         switch (side) {
             case LEFT:
                 return isResolved(Side.LEFT);
@@ -166,7 +165,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @Override
-    public int getStartLine(@Nonnull ThreeSide side) {
+    public int getStartLine(ThreeSide side) {
         if (side == ThreeSide.BASE) {
             return getStartLine();
         }
@@ -174,16 +173,16 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @Override
-    public int getEndLine(@Nonnull ThreeSide side) {
+    public int getEndLine(ThreeSide side) {
         if (side == ThreeSide.BASE) {
             return getEndLine();
         }
         return myFragment.getEndLine(side);
     }
 
-    @Nonnull
+    
     @Override
-    protected Editor getEditor(@Nonnull ThreeSide side) {
+    protected Editor getEditor(ThreeSide side) {
         return myViewer.getEditor(side);
     }
 
@@ -193,7 +192,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         return myInnerFragments;
     }
 
-    @Nonnull
+    
     public MergeLineFragment getFragment() {
         return myFragment;
     }
@@ -233,7 +232,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @Nullable
-    private MyGutterOperation createOperation(@Nonnull ThreeSide side, @Nonnull OperationType type) {
+    private MyGutterOperation createOperation(ThreeSide side, OperationType type) {
         if (isResolved(side)) {
             return null;
         }
@@ -256,17 +255,17 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     private class MyGutterOperation {
-        @Nonnull
+        
         private final ThreeSide mySide;
-        @Nonnull
+        
         private final RangeHighlighter myHighlighter;
-        @Nonnull
+        
         private final OperationType myType;
 
         private boolean myCtrlPressed;
         private boolean myShiftPressed;
 
-        private MyGutterOperation(@Nonnull ThreeSide side, @Nonnull RangeHighlighter highlighter, @Nonnull OperationType type) {
+        private MyGutterOperation(ThreeSide side, RangeHighlighter highlighter, OperationType type) {
             mySide = side;
             myHighlighter = highlighter;
             myType = type;
@@ -329,7 +328,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @Nullable
-    private GutterIconRenderer createApplyRenderer(@Nonnull Side side, boolean modifier) {
+    private GutterIconRenderer createApplyRenderer(Side side, boolean modifier) {
         if (isResolved(side)) {
             return null;
         }
@@ -345,7 +344,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @Nullable
-    private GutterIconRenderer createIgnoreRenderer(@Nonnull Side side, boolean modifier) {
+    private GutterIconRenderer createIgnoreRenderer(Side side, boolean modifier) {
         if (isResolved(side)) {
             return null;
         }
@@ -375,12 +374,12 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         );
     }
 
-    @Nonnull
+    
     private GutterIconRenderer createIconRenderer(
-        @Nonnull String text,
-        @Nonnull final Image icon,
+        String text,
+        final Image icon,
         boolean ctrlClickVisible,
-        @RequiredUIAccess @Nonnull final Runnable perform
+        @RequiredUIAccess final Runnable perform
     ) {
         final String tooltipText = DiffImplUtil.createTooltipText(text, ctrlClickVisible ? CTRL_CLICK_TO_RESOLVE : null);
         return new DiffGutterRenderer(icon, tooltipText) {
@@ -401,7 +400,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     // State
     //
 
-    @Nonnull
+    
     State storeState() {
         return new State(
             myIndex,
@@ -413,7 +412,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         );
     }
 
-    void restoreState(@Nonnull State state) {
+    void restoreState(State state) {
         myResolved[0] = state.myResolved1;
         myResolved[1] = state.myResolved2;
 

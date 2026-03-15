@@ -24,7 +24,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.*;
 import consulo.virtualFileSystem.http.event.FileDownloadingAdapter;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
@@ -51,8 +50,8 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
         myDefaultRemoteContentProvider = new DefaultRemoteContentProvider();
     }
 
-    @Nonnull
-    public RemoteContentProvider findContentProvider(@Nonnull String url) {
+    
+    public RemoteContentProvider findContentProvider(String url) {
         for (RemoteContentProvider provider : myProviders) {
             if (provider.canProvideContent(url)) {
                 return provider;
@@ -61,7 +60,7 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
         return myDefaultRemoteContentProvider;
     }
 
-    public synchronized HttpXVirtualFileImpl getOrCreateFile(@Nonnull String url, @Nonnull String path, boolean directory) throws IOException {
+    public synchronized HttpXVirtualFileImpl getOrCreateFile(String url, String path, boolean directory) throws IOException {
         Pair<Boolean, String> key = Pair.create(directory, url);
         HttpXVirtualFileImpl file = myRemoteFiles.get(key);
 
@@ -79,43 +78,43 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
         return file;
     }
 
-    private static BaseHttpFileSystem getHttpFileSystem(@Nonnull String url) {
+    private static BaseHttpFileSystem getHttpFileSystem(String url) {
         return url.startsWith(HttpsFileSystem.HTTPS_PROTOCOL) ? HttpsFileSystem.getInstance() : HttpFileSystem.getInstance();
     }
 
     @Override
-    public void addRemoteContentProvider(@Nonnull final RemoteContentProvider provider, @Nonnull Disposable parentDisposable) {
+    public void addRemoteContentProvider(final RemoteContentProvider provider, Disposable parentDisposable) {
         addRemoteContentProvider(provider);
         Disposer.register(parentDisposable, () -> removeRemoteContentProvider(provider));
     }
 
     @Override
-    public void addRemoteContentProvider(@Nonnull RemoteContentProvider provider) {
+    public void addRemoteContentProvider(RemoteContentProvider provider) {
         myProviders.add(provider);
     }
 
     @Override
-    public void removeRemoteContentProvider(@Nonnull RemoteContentProvider provider) {
+    public void removeRemoteContentProvider(RemoteContentProvider provider) {
         myProviders.remove(provider);
     }
 
     @Override
-    public void addFileListener(@Nonnull HttpVirtualFileListener listener) {
+    public void addFileListener(HttpVirtualFileListener listener) {
         myDispatcher.addListener(listener);
     }
 
     @Override
-    public void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable) {
+    public void addFileListener(HttpVirtualFileListener listener, Disposable parentDisposable) {
         addFileListener(listener);
         Disposer.register(parentDisposable, () -> removeFileListener(listener));
     }
 
     @Override
-    public void removeFileListener(@Nonnull HttpVirtualFileListener listener) {
+    public void removeFileListener(HttpVirtualFileListener listener) {
         myDispatcher.removeListener(listener);
     }
 
-    public void fireFileDownloaded(@Nonnull VirtualFile file) {
+    public void fireFileDownloaded(VirtualFile file) {
         myDispatcher.getMulticaster().fileDownloaded(file);
     }
 

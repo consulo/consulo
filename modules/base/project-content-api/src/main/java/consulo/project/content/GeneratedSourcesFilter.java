@@ -22,7 +22,6 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -30,10 +29,10 @@ import jakarta.annotation.Nonnull;
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface GeneratedSourcesFilter {
     @RequiredReadAction
-    boolean isGeneratedSource(@Nonnull VirtualFile file);
+    boolean isGeneratedSource(VirtualFile file);
 
     @RequiredReadAction
-    public static boolean isGeneratedSourceByAnyFilter(@Nonnull VirtualFile file, @Nonnull Project project) {
+    public static boolean isGeneratedSourceByAnyFilter(VirtualFile file, Project project) {
         if (project.isDisposed() || !file.isValid()) {
             return false;
         }
@@ -44,7 +43,7 @@ public interface GeneratedSourcesFilter {
 
     @RequiredReadAction
     @Deprecated
-    public static boolean isGenerated(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public static boolean isGenerated(Project project, VirtualFile file) {
         return isGeneratedSourceByAnyFilter(file, project);
     }
 }

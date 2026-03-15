@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,13 +31,13 @@ import java.util.List;
 public abstract class RelatedItemLineMarkerProvider implements LineMarkerProvider {
   @RequiredReadAction
   @Override
-  public RelatedItemLineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
+  public RelatedItemLineMarkerInfo getLineMarkerInfo(PsiElement element) {
     return null;
   }
 
   @RequiredReadAction
   @Override
-  public final void collectSlowLineMarkers(@Nonnull List<PsiElement> elements, @Nonnull Collection<LineMarkerInfo> result) {
+  public final void collectSlowLineMarkers(List<PsiElement> elements, Collection<LineMarkerInfo> result) {
     collectNavigationMarkers(elements, result, false);
   }
 
@@ -58,6 +57,6 @@ public abstract class RelatedItemLineMarkerProvider implements LineMarkerProvide
     }
   }
 
-  protected void collectNavigationMarkers(@Nonnull PsiElement element, Collection<? super RelatedItemLineMarkerInfo> result) {
+  protected void collectNavigationMarkers(PsiElement element, Collection<? super RelatedItemLineMarkerInfo> result) {
   }
 }

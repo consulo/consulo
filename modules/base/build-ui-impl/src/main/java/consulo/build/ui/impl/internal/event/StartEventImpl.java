@@ -17,15 +17,14 @@ package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.StartEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  */
 public class StartEventImpl extends AbstractBuildEvent implements StartEvent {
 
-  public StartEventImpl(@Nonnull Object eventId, @Nullable Object parentId, long eventTime, @Nonnull @BuildEventsNls.Message String message) {
+  public StartEventImpl(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
     super(eventId, parentId, eventTime, message);
   }
 }

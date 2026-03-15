@@ -16,10 +16,9 @@
 
 package consulo.language.ast;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface RoleFinder {
   @Nullable
-  ASTNode findChild(@Nonnull ASTNode parent);
+  ASTNode findChild(ASTNode parent);
 }

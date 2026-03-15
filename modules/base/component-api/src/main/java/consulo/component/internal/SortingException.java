@@ -2,7 +2,6 @@
 package consulo.component.internal;
 
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Alexander Kireyev
@@ -10,12 +9,12 @@ import jakarta.annotation.Nonnull;
 public class SortingException extends RuntimeException {
   private final LoadingOrder.Orderable[] myConflictingElements;
 
-  SortingException(String message, @Nonnull LoadingOrder.Orderable... conflictingElements) {
+  SortingException(String message, LoadingOrder.Orderable... conflictingElements) {
     super(message + ": " + StringUtil.join(conflictingElements, item -> item.getOrderId() + "(" + item.getOrder() + ")", "; "));
     myConflictingElements = conflictingElements;
   }
 
-  @Nonnull
+  
   public LoadingOrder.Orderable[] getConflictingElements() {
     return myConflictingElements;
   }

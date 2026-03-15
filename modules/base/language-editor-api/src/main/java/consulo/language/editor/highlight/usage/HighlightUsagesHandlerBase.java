@@ -29,8 +29,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -100,7 +99,7 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
   public abstract void computeUsages(List<T> targets);
 
   @RequiredReadAction
-  public void addOccurrence(@Nonnull PsiElement element) {
+  public void addOccurrence(PsiElement element) {
     TextRange range = element.getTextRange();
     if (range != null) {
       range = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range);

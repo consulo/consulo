@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -55,7 +54,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         new NotificationDialog(event.getData(Project.KEY)).show();
     }
 
@@ -89,7 +88,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
             return panel;
         }
 
-        @Nonnull
+        
         @Override
         protected Action[] createActions() {
             return new Action[]{getOKAction(), getCancelAction()};
@@ -226,14 +225,14 @@ public class NotificationTestAction extends AnAction implements DumbAware {
             myAddListener = addListener;
         }
 
-        public void addContent(@Nonnull String content) {
+        public void addContent(String content) {
             if (myContent == null) {
                 myContent = new ArrayList<>();
             }
             myContent.add(content);
         }
 
-        public void setActions(@Nonnull List<String> actions) {
+        public void setActions(List<String> actions) {
             myActions = actions;
         }
 
@@ -259,7 +258,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
         @Override
         @RequiredUIAccess
-        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+        public void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
             if (MessageDialogBuilder.yesNo("VcsBranchMappingChangedNotification Listener", event.getDescription() + "      Expire?")
                 .isYes()) {
                 myNotification.expire();
@@ -283,7 +282,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Notification.get(e);
                 if (MessageDialogBuilder.yesNo("AnAction", getTemplatePresentation().getText() + "      Expire?").isYes()) {
                     myNotification.expire();

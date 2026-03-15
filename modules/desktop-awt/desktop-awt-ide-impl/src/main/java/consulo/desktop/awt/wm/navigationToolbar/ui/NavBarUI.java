@@ -17,8 +17,7 @@ package consulo.desktop.awt.wm.navigationToolbar.ui;
 
 import consulo.desktop.awt.wm.navigationToolbar.NavBarItem;
 import consulo.desktop.awt.wm.navigationToolbar.NavBarPanel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -48,7 +47,7 @@ public interface NavBarUI {
    * @param item nav bar item
    * @return offset for NavBarPopup
    */
-  int getPopupOffset(@Nonnull NavBarItem item);
+  int getPopupOffset(NavBarItem item);
 
   Insets getElementIpad(boolean isPopupElement);
   Insets getElementPadding();

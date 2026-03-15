@@ -31,7 +31,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,12 +38,12 @@ import jakarta.annotation.Nonnull;
  */
 public class LanguageEditorNavigationUtil {
     @RequiredUIAccess
-    public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt) {
+    public static boolean activateFileWithPsiElement(PsiElement elt) {
         return activateFileWithPsiElement(elt, true);
     }
 
     @RequiredUIAccess
-    public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt, boolean searchForOpen) {
+    public static boolean activateFileWithPsiElement(PsiElement elt, boolean searchForOpen) {
         return openFileWithPsiElement(elt, searchForOpen, true);
     }
 
@@ -93,7 +92,7 @@ public class LanguageEditorNavigationUtil {
     }
 
     @RequiredReadAction
-    private static boolean activatePsiElementIfOpen(@Nonnull PsiElement elt, boolean searchForOpen, boolean requestFocus) {
+    private static boolean activatePsiElementIfOpen(PsiElement elt, boolean searchForOpen, boolean requestFocus) {
         if (!elt.isValid()) {
             return false;
         }

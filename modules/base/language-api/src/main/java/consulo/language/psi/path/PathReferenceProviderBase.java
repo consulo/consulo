@@ -7,7 +7,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public abstract class PathReferenceProviderBase implements PathReferenceProvider
 
     @Override
     @RequiredReadAction
-    public boolean createReferences(@Nonnull PsiElement psiElement, @Nonnull List<PsiReference> references, boolean soft) {
+    public boolean createReferences(PsiElement psiElement, List<PsiReference> references, boolean soft) {
         TextRange range = ElementManipulators.getValueTextRange(psiElement);
         int offset = range.getStartOffset();
         int endOffset = range.getEndOffset();
@@ -49,14 +48,14 @@ public abstract class PathReferenceProviderBase implements PathReferenceProvider
     }
 
     public abstract boolean createReferences(
-        @Nonnull PsiElement psiElement,
+        PsiElement psiElement,
         int offset,
         String text,
-        @Nonnull List<PsiReference> references,
+        List<PsiReference> references,
         boolean soft
     );
 
-    public static int getLastPosOfURL(int offset, @Nonnull String url) {
+    public static int getLastPosOfURL(int offset, String url) {
         for (int i = offset; i < url.length(); i++) {
             switch (url.charAt(i)) {
                 case '?':

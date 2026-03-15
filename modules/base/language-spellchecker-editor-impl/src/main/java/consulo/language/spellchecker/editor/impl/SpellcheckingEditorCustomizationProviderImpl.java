@@ -23,7 +23,6 @@ import consulo.language.spellchecker.editor.SpellcheckerEngineManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -43,7 +42,7 @@ public class SpellcheckingEditorCustomizationProviderImpl implements Spellchecki
         mySpellcheckerEngineManager = spellcheckerEngineManager;
     }
 
-    @Nonnull
+    
     @Override
     public Optional<Consumer<EditorEx>> getCustomizationOpt(boolean enabled) {
         SpellcheckerEngine activeEngine = mySpellcheckerEngineManager.getActiveEngine();

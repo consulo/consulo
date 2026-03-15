@@ -22,8 +22,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.collection.*;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -51,7 +50,7 @@ public class ActionUpdater {
     private final UpdateStrategy myRealUpdateStrategy;
     private final UpdateStrategy myCheapStrategy;
     private final ActionManager myActionManager;
-    @Nonnull
+    
     private final UIAccess myUiAccess;
 
     private boolean myAllowPartialExpand = true;
@@ -63,7 +62,7 @@ public class ActionUpdater {
         String place,
         boolean isContextMenuAction,
         boolean isToolbarAction,
-        @Nonnull UIAccess uiAccess
+        UIAccess uiAccess
     ) {
         myUiAccess = uiAccess;
         myProject = dataContext.getData(Project.KEY);
@@ -115,7 +114,7 @@ public class ActionUpdater {
         }
     }
 
-    private DataContext getDataContext(@Nonnull AnAction action) {
+    private DataContext getDataContext(AnAction action) {
         return myDataContext;
     }
 
@@ -124,7 +123,7 @@ public class ActionUpdater {
         return action instanceof UpdateInBackground || action.getActionUpdateThread() == ActionUpdateThread.BGT;
     }
 
-    private static <T> T callAction(@Nonnull UIAccess uiAccess, @Nonnull AnAction action, String operation, Supplier<T> call) {
+    private static <T> T callAction(UIAccess uiAccess, AnAction action, String operation, Supplier<T> call) {
         if (isUpdateInBackground(action) || UIAccess.isUIThread()) {
             return call.get();
         }
@@ -185,7 +184,7 @@ public class ActionUpdater {
     /**
      * @return actions from the given and nested non-popup groups that are visible after updating
      */
-    @Nonnull
+    
     public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled) {
         return expandActionGroupWithTimeout(group, hideDisabled, Registry.intValue("actionSystem.update.timeout.ms"));
     }
@@ -193,7 +192,7 @@ public class ActionUpdater {
     /**
      * @return actions from the given and nested non-popup groups that are visible after updating
      */
-    @Nonnull
+    
     public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled, int timeoutMs) {
         List<AnAction> result = ProgressIndicatorUtils.withTimeout(timeoutMs, () -> expandActionGroup(group, hideDisabled));
         try {
@@ -204,7 +203,7 @@ public class ActionUpdater {
         }
     }
 
-    @Nonnull
+    
     public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(
         ActionGroup group,
         boolean hideDisabled
@@ -355,8 +354,8 @@ public class ActionUpdater {
     }
 
 
-    @Nonnull
-    private JBIterable<AnAction> iterateGroupChildren(@Nonnull ActionGroup group, @Nonnull UpdateStrategy strategy) {
+    
+    private JBIterable<AnAction> iterateGroupChildren(ActionGroup group, UpdateStrategy strategy) {
         boolean isDumb = myProject != null && DumbService.getInstance(myProject).isDumb();
         return JBTreeTraverser.<AnAction>from(o -> {
                 if (o == group) {

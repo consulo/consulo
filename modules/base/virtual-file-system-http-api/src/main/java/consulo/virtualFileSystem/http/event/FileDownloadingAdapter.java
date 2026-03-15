@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.http.event;
 
 import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,7 +27,7 @@ public class FileDownloadingAdapter implements FileDownloadingListener {
     }
 
     @Override
-    public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+    public void errorOccurred(LocalizeValue errorMessage) {
     }
 
     @Override
@@ -40,7 +39,7 @@ public class FileDownloadingAdapter implements FileDownloadingListener {
     }
 
     @Override
-    public void progressMessageChanged(boolean indeterminate, @Nonnull LocalizeValue message) {
+    public void progressMessageChanged(boolean indeterminate, LocalizeValue message) {
     }
 
     @Override

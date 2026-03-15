@@ -20,8 +20,7 @@ import consulo.execution.test.Printer;
 import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,7 @@ public class CompoundTestFailedState extends TestFailedState {
         }
     }
 
-    @Nonnull
+    
     public List<DiffHyperlink> getHyperlinks() {
         return ContainerUtil.map(
             ContainerUtil.filter(myStates, state -> state instanceof TestComparisionFailedState),

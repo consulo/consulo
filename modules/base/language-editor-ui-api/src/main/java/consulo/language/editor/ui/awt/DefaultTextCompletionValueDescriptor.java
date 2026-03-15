@@ -21,30 +21,29 @@ import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.util.lang.StringUtil;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCompletionValueDescriptor<T> {
-  @Nonnull
-  protected abstract String getLookupString(@Nonnull T item);
+  
+  protected abstract String getLookupString(T item);
 
   @Nullable
-  protected Image getIcon(@Nonnull T item) {
+  protected Image getIcon(T item) {
     return null;
   }
 
   @Nullable
-  protected String getTailText(@Nonnull T item) {
+  protected String getTailText(T item) {
     return null;
   }
 
   @Nullable
-  protected String getTypeText(@Nonnull T item) {
+  protected String getTypeText(T item) {
     return null;
   }
 
   @Nullable
-  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull T item) {
+  protected InsertHandler<LookupElement> createInsertHandler(T item) {
     return null;
   }
 
@@ -53,9 +52,9 @@ public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCom
     return StringUtil.compare(getLookupString(item1), getLookupString(item2), false);
   }
 
-  @Nonnull
+  
   @Override
-  public LookupElementBuilder createLookupBuilder(@Nonnull T item) {
+  public LookupElementBuilder createLookupBuilder(T item) {
     LookupElementBuilder builder = LookupElementBuilder.create(item, getLookupString(item))
             .withIcon(getIcon(item));
 
@@ -77,9 +76,9 @@ public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCom
   }
 
   public static class StringValueDescriptor extends DefaultTextCompletionValueDescriptor<String> {
-    @Nonnull
+    
     @Override
-    public String getLookupString(@Nonnull String item) {
+    public String getLookupString(String item) {
       return item;
     }
   }

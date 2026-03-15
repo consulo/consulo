@@ -39,8 +39,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -169,7 +168,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectLocalize.globalBundlesDisplayName();
@@ -182,7 +181,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return ID;
     }
@@ -237,12 +236,12 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         TreeUtil.expandAll(getTree());
     }
 
-    @Nonnull
+    
     private static MyNode createSdkGroupNode(SdkType key) {
         return new MyNode(new TextConfigurable<>(key, key.getDisplayName(), "", "", key.getGroupIcon()), true);
     }
 
-    @Nonnull
+    
     @Override
     protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
         SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
@@ -362,7 +361,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         return super.isModified() || sdksModel.isModified();
     }
 
-    @Nonnull
+    
     @Override
     protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
         return Collections.singletonList(new CopySdkAction());
@@ -371,7 +370,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     @Override
     public AbstractAddGroup createAddAction() {
         return new AbstractAddGroup(ProjectLocalize.addActionName()) {
-            @Nonnull
+            
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();

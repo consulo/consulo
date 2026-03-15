@@ -22,8 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation can provide default level of highlighting (one of "none", "syntax checks", "inspections") for a file.
@@ -36,5 +35,5 @@ public abstract class DefaultHighlightingSettingProvider {
   public static final ExtensionPointName<DefaultHighlightingSettingProvider> EP_NAME = ExtensionPointName.create(DefaultHighlightingSettingProvider.class);
 
   @Nullable
-  public abstract FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file);
+  public abstract FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file);
 }

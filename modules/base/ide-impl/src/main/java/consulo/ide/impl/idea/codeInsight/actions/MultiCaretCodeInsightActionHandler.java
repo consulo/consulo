@@ -19,7 +19,6 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * Delegate class that performs actual work for {@link MultiCaretCodeInsightAction}
@@ -30,7 +29,7 @@ public abstract class MultiCaretCodeInsightActionHandler {
    * and <code>file</code> values can be different in presence of multi-root PSI and injected fragments. For injected fragments
    * caret instance will belong to corresponding injected editor.
    */
-  public abstract void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file);
+  public abstract void invoke(Project project, Editor editor, Caret caret, PsiFile file);
 
   /**
    * Invoked after processing all carets.

@@ -45,8 +45,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -66,7 +65,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
     public static final String TEST_HISTORY_SIZE = "test_history_size";
     private SMTRunnerConsoleProperties myProperties;
 
-    public AbstractImportTestsAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public AbstractImportTestsAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -78,8 +77,8 @@ public abstract class AbstractImportTestsAction extends AnAction {
 
     public AbstractImportTestsAction(
         SMTRunnerConsoleProperties properties,
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         this(text, description, icon);
@@ -110,12 +109,12 @@ public abstract class AbstractImportTestsAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 
     @Nullable
-    public abstract VirtualFile getFile(@Nonnull Project project);
+    public abstract VirtualFile getFile(Project project);
 
     @Override
     @RequiredUIAccess
@@ -229,7 +228,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
 
         @Nullable
         @Override
-        public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
+        public RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException {
             if (!myImported) {
                 myImported = true;
                 return new ImportedTestRunnableState(this, VirtualFileUtil.virtualToIoFile(myFile));

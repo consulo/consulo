@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -43,7 +42,7 @@ public class AWTIdleHolder {
     private final int myTimeout;
 
 
-    MyFireIdleRequest(@Nonnull Runnable runnable, int timeout) {
+    MyFireIdleRequest(Runnable runnable, int timeout) {
       myTimeout = timeout;
       myRunnable = runnable;
     }
@@ -107,7 +106,7 @@ public class AWTIdleHolder {
     myIdleTimeCounterAlarm.cancel(false);
   }
 
-  public void addIdleListener(@Nonnull Runnable runnable, int timeoutMillis) {
+  public void addIdleListener(Runnable runnable, int timeoutMillis) {
     if (timeoutMillis <= 0 || TimeUnit.MILLISECONDS.toHours(timeoutMillis) >= 24) {
       throw new IllegalArgumentException("This timeout value is unsupported: " + timeoutMillis);
     }
@@ -120,7 +119,7 @@ public class AWTIdleHolder {
     }
   }
 
-  public void removeIdleListener(@Nonnull Runnable runnable) {
+  public void removeIdleListener(Runnable runnable) {
     synchronized (myLock) {
       boolean wasRemoved = myIdleListeners.remove(runnable);
       if (!wasRemoved) {

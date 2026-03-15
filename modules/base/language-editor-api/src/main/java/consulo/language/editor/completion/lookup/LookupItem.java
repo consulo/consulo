@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -63,7 +62,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     /**
      * @deprecated use {@link LookupElementBuilder}
      */
-    public LookupItem(T o, @Nonnull String lookupString) {
+    public LookupItem(T o, String lookupString) {
         setObject(o);
         setLookupString(lookupString);
     }
@@ -72,7 +71,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
         return new LookupItem<>(s, s);
     }
 
-    public void setObject(@Nonnull T o) {
+    public void setObject(T o) {
         myObject = o;
 
         if (o instanceof LookupValueWithPriority lookupValueWithPriority) {
@@ -105,7 +104,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     /**
      * Returns a data object.  This object is used e.g. for rendering the node.
      */
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
     public T getObject() {
@@ -117,12 +116,12 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
      * choosen.
      */
     @Override
-    @Nonnull
+    
     public String getLookupString() {
         return myLookupString;
     }
 
-    public void setLookupString(@Nonnull String lookupString) {
+    public void setLookupString(String lookupString) {
         if (myAllLookupStrings.contains("")) {
             myAllLookupStrings.remove("");
         }
@@ -180,7 +179,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
 
     @Override
     @RequiredUIAccess
-    public void handleInsert(@Nonnull InsertionContext context) {
+    public void handleInsert(InsertionContext context) {
         InsertHandler<? extends LookupElement> handler = getInsertHandler();
         if (handler != null) {
             //noinspection unchecked
@@ -206,10 +205,10 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
         };
     }
 
-    @Nonnull
+    
     public static TailType handleCompletionChar(
-        @Nonnull Editor editor,
-        @Nonnull LookupElement lookupElement,
+        Editor editor,
+        LookupElement lookupElement,
         char completionChar
     ) {
         TailType type = getDefaultTailType(completionChar);
@@ -227,26 +226,26 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
 
-    @Nonnull
+    
     public TailType getTailType() {
         TailType tailType = getAttribute(TAIL_TYPE_ATTR);
         return tailType != null ? tailType : TailType.UNKNOWN;
     }
 
     @Override
-    @Nonnull
-    public LookupItem<T> setTailType(@Nonnull TailType type) {
+    
+    public LookupItem<T> setTailType(TailType type) {
         setAttribute(TAIL_TYPE_ATTR, type);
         return this;
     }
 
     @Override
-    public int compareTo(@Nonnull LookupItem<?> o) {
+    public int compareTo(LookupItem<?> o) {
         return getLookupString().compareTo(o.getLookupString());
     }
 
     @Override
-    public LookupItem<T> setInsertHandler(@Nonnull InsertHandler<? extends LookupElement> handler) {
+    public LookupItem<T> setInsertHandler(InsertHandler<? extends LookupElement> handler) {
         myInsertHandler = handler;
         return this;
     }
@@ -285,14 +284,14 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    @Nonnull
+    
     public LookupItem<T> setIcon(Icon icon) {
         setAttribute(ICON_ATTR, icon);
         return this;
     }
 
     @Override
-    @Nonnull
+    
     public LookupItem<T> setPriority(double priority) {
         myPriority = priority;
         return this;
@@ -303,8 +302,8 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    @Nonnull
-    public LookupItem<T> setPresentableText(@Nonnull String displayText) {
+    
+    public LookupItem<T> setPresentableText(String displayText) {
         myPresentable = displayText;
         return this;
     }
@@ -315,13 +314,13 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    @Nonnull
+    
     public LookupItem<T> setTypeText(String text) {
         setAttribute(TYPE_TEXT_ATTR, text);
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public MutableLookupElement<T> setTailText(String text, boolean grayed) {
         setAttribute(TAIL_TEXT_ATTR, text);
@@ -330,7 +329,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    @Nonnull
+    
     public LookupItem<T> setCaseSensitive(boolean caseSensitive) {
         setAttribute(CASE_INSENSITIVE, !caseSensitive);
         return this;

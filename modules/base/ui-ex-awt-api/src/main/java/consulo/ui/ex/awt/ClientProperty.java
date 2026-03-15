@@ -2,9 +2,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +17,7 @@ public final class ClientProperty {
    * @param value     new value for the client property
    * @see JComponent#putClientProperty(Object, Object)
    */
-  public static <T> void put(@Nonnull JComponent component, @Nonnull Key<T> key, @Nullable T value) {
+  public static <T> void put(JComponent component, Key<T> key, @Nullable T value) {
     component.putClientProperty(key, value);
   }
 
@@ -32,7 +30,7 @@ public final class ClientProperty {
    * @param value  new value for the client property
    * @return {@code true} if property is set to the corresponding root pane, {@code false} otherwise
    */
-  public static <T> boolean put(@Nonnull Window window, @Nonnull Key<T> key, @Nullable T value) {
+  public static <T> boolean put(Window window, Key<T> key, @Nullable T value) {
     return put(window, (Object)key, value);
   }
 
@@ -45,7 +43,7 @@ public final class ClientProperty {
    * @param value  new value for the client property
    * @return {@code true} if property is set to the corresponding root pane, {@code false} otherwise
    */
-  public static boolean put(@Nullable Window window, @Nonnull @NonNls Object key, @Nullable Object value) {
+  public static boolean put(@Nullable Window window, Object key, @Nullable Object value) {
     JComponent holder = getPropertiesHolder(window);
     if (holder != null) holder.putClientProperty(key, value);
     return holder != null;
@@ -68,7 +66,7 @@ public final class ClientProperty {
    * @return the property value from the specified component or {@code null}
    */
   @Nullable
-  public static Object get(@Nullable Component component, @Nonnull @NonNls Object key) {
+  public static Object get(@Nullable Component component, Object key) {
     JComponent holder = getPropertiesHolder(component);
     return holder == null ? null : holder.getClientProperty(key);
   }
@@ -79,7 +77,7 @@ public final class ClientProperty {
    * @return the property value from the specified component or {@code null}
    */
   @Nullable
-  public static Object findInHierarchy(@Nullable Component component, @Nonnull @NonNls Object key) {
+  public static Object findInHierarchy(@Nullable Component component, Object key) {
     while (component != null) {
       Object value = get(component, key);
       if (value != null) return value;
@@ -97,7 +95,7 @@ public final class ClientProperty {
    */
   @SuppressWarnings("unchecked")
   @Nullable
-  public static <T> T get(@Nullable Component component, @Nonnull Key<T> key) {
+  public static <T> T get(@Nullable Component component, Key<T> key) {
     Object value = get(component, (Object)key);
     return value != null ? (T)value : null;
   }
@@ -109,7 +107,7 @@ public final class ClientProperty {
    */
   @SuppressWarnings("unchecked")
   @Nullable
-  public static <T> T findInHierarchy(@Nullable Component component, @Nonnull Key<T> key) {
+  public static <T> T findInHierarchy(@Nullable Component component, Key<T> key) {
     Object value = findInHierarchy(component, (Object)key);
     return value != null ? (T)value : null;
   }
@@ -120,7 +118,7 @@ public final class ClientProperty {
    * @param key       a key corresponding to a client property
    * @return {@code true} if the property value is not null, or {@code false} otherwise
    */
-  public static boolean isSet(@Nullable Component component, @Nonnull @NonNls Object key) {
+  public static boolean isSet(@Nullable Component component, Object key) {
     return null != get(component, key);
   }
 
@@ -129,7 +127,7 @@ public final class ClientProperty {
    * @param key       a key corresponding to a client property
    * @return {@code true} if the property value is not null, or {@code false} otherwise
    */
-  public static boolean isSetInHierarchy(@Nullable Component component, @Nonnull @NonNls Object key) {
+  public static boolean isSetInHierarchy(@Nullable Component component, Object key) {
     return null != findInHierarchy(component, key);
   }
 
@@ -140,7 +138,7 @@ public final class ClientProperty {
    * @param value     the expected value
    * @return {@code true} if the property value is equal to the {@code expected}, or {@code false} otherwise
    */
-  public static boolean isSet(@Nullable Component component, @Nonnull @NonNls Object key, @Nonnull Object value) {
+  public static boolean isSet(@Nullable Component component, Object key, Object value) {
     return value.equals(get(component, key));
   }
 
@@ -150,7 +148,7 @@ public final class ClientProperty {
    * @param value     the expected value
    * @return {@code true} if the property value is equal to the {@code expected}, or {@code false} otherwise
    */
-  public static boolean isSetInHierarchy(@Nullable Component component, @Nonnull @NonNls Object key, @Nonnull Object value) {
+  public static boolean isSetInHierarchy(@Nullable Component component, Object key, Object value) {
     return value.equals(findInHierarchy(component, key));
   }
 
@@ -160,7 +158,7 @@ public final class ClientProperty {
    * @param key       a key corresponding to a boolean client property
    * @return {@code true} if the property value is {@link Boolean#TRUE}, or {@code false} otherwise
    */
-  public static boolean isTrue(@Nullable Component component, @Nonnull Object key) {
+  public static boolean isTrue(@Nullable Component component, Object key) {
     return isSet(component, key, Boolean.TRUE);
   }
 
@@ -169,7 +167,7 @@ public final class ClientProperty {
    * @param key       a key corresponding to a boolean client property
    * @return {@code true} if the property value is {@link Boolean#TRUE}, or {@code false} otherwise
    */
-  public static boolean isTrueInHierarchy(@Nullable Component component, @Nonnull Object key) {
+  public static boolean isTrueInHierarchy(@Nullable Component component, Object key) {
     return isSetInHierarchy(component, key, Boolean.TRUE);
   }
 
@@ -179,7 +177,7 @@ public final class ClientProperty {
    * @param key       a key corresponding to a boolean client property
    * @return {@code true} if the property value is {@link Boolean#FALSE}, or {@code false} otherwise
    */
-  public static boolean isFalse(@Nullable Component component, @Nonnull Object key) {
+  public static boolean isFalse(@Nullable Component component, Object key) {
     return isSet(component, key, Boolean.FALSE);
   }
 
@@ -188,7 +186,7 @@ public final class ClientProperty {
    * @param key       a key corresponding to a boolean client property
    * @return {@code true} if the property value is {@link Boolean#FALSE}, or {@code false} otherwise
    */
-  public static boolean isFalseInHierarchy(@Nullable Component component, @Nonnull Object key) {
+  public static boolean isFalseInHierarchy(@Nullable Component component, Object key) {
     return isSetInHierarchy(component, key, Boolean.FALSE);
   }
 }

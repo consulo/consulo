@@ -49,8 +49,7 @@ import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,13 +74,13 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     private String[] myGeneratedFilePaths;
 
     public BackgroundTaskByVfsChangeTaskImpl(
-        @Nonnull Project project,
-        @Nonnull VirtualFilePointer pointer,
-        @Nonnull BackgroundTaskByVfsParameters parameters,
-        @Nonnull String providerName,
-        @Nonnull String name,
+        Project project,
+        VirtualFilePointer pointer,
+        BackgroundTaskByVfsParameters parameters,
+        String providerName,
+        String name,
         @Nullable BackgroundTaskByVfsChangeProvider provider,
-        @Nonnull BackgroundTaskByVfsChangeManagerImpl manager
+        BackgroundTaskByVfsChangeManagerImpl manager
     ) {
         myProject = project;
         myParameters = parameters;
@@ -94,12 +93,12 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     }
 
     public BackgroundTaskByVfsChangeTaskImpl(
-        @Nonnull Project project,
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull BackgroundTaskByVfsChangeManagerImpl manager,
-        @Nonnull BackgroundTaskByVfsChangeProvider provider,
-        @Nonnull String name,
-        @Nonnull BackgroundTaskByVfsParameters parameters
+        Project project,
+        VirtualFile virtualFile,
+        BackgroundTaskByVfsChangeManagerImpl manager,
+        BackgroundTaskByVfsChangeProvider provider,
+        String name,
+        BackgroundTaskByVfsParameters parameters
     ) {
         this(
             project,
@@ -114,12 +113,12 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     }
 
     public BackgroundTaskByVfsChangeTaskImpl(
-        @Nonnull Project project,
-        @Nonnull VirtualFilePointer pointer,
-        @Nonnull String provider,
-        @Nonnull String name,
-        @Nonnull BackgroundTaskByVfsParameters parameters,
-        @Nonnull BackgroundTaskByVfsChangeManagerImpl manager
+        Project project,
+        VirtualFilePointer pointer,
+        String provider,
+        String name,
+        BackgroundTaskByVfsParameters parameters,
+        BackgroundTaskByVfsChangeManagerImpl manager
     ) {
         this(project, pointer, parameters, provider, name, findProviderByName(provider), manager);
     }
@@ -136,7 +135,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         return temp;
     }
 
-    public void run(@Nonnull AsyncResult<Void> actionCallback, BuildProgress<BuildProgressDescriptor> buildProgress) {
+    public void run(AsyncResult<Void> actionCallback, BuildProgress<BuildProgressDescriptor> buildProgress) {
         try {
             UIAccess uiAccess = Application.get().getLastUIAccess();
 
@@ -243,13 +242,13 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         myEnabled = enabled;
     }
 
-    @Nonnull
+    
     @Override
     public String getProviderName() {
         return myProviderName;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myName;
@@ -261,20 +260,20 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         return myProvider;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFilePointer getVirtualFilePointer() {
         return myVirtualFilePointer;
     }
 
-    @Nonnull
+    
     @Override
     public BackgroundTaskByVfsParameters getParameters() {
         return myParameters;
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
     public String[] getGeneratedFilePaths() {
         if (myGeneratedFilePaths == null) {
@@ -284,7 +283,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
     public VirtualFile[] getGeneratedFiles() {
         if (myProvider.containsGeneratedFiles()) {
@@ -305,7 +304,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         return VirtualFileUtil.toVirtualFileArray(list);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private String[] generateFilePaths() {
         if (myProvider == null) {
@@ -331,13 +330,13 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         return allPaths;
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return myProject;
     }
 
-    @Nonnull
+    
     @Override
     public BackgroundTaskByVfsChangeTask clone() {
         BackgroundTaskByVfsChangeTaskImpl task = new BackgroundTaskByVfsChangeTaskImpl(

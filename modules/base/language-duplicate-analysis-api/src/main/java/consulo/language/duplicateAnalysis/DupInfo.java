@@ -2,7 +2,7 @@ package consulo.language.duplicateAnalysis;
 
 import consulo.language.duplicateAnalysis.util.PsiFragment;
 import consulo.usage.UsageInfo;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface DupInfo {
     int getPatterns();

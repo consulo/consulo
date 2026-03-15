@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,15 +53,15 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
         return myRootPsiElement;
     }
 
-    @Nonnull
+    
     @Override
     public Object getRootElement() {
         return myRootElement;
     }
 
-    @Nonnull
+    
     @Override
-    public Object[] getChildElements(@Nonnull Object element) {
+    public Object[] getChildElements(Object element) {
         if (myRootElement == element) {
             if (myRootPsiElement == null) {
                 return ArrayUtil.EMPTY_OBJECT_ARRAY;
@@ -127,7 +126,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         if (element == myRootElement) {
             return null;
         }
@@ -154,8 +153,8 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    @Nonnull
-    public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+    
+    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         if (element == myRootElement) {
             return new NodeDescriptor(null) {
                 @RequiredUIAccess

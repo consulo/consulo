@@ -25,7 +25,6 @@ import consulo.language.file.FileTypeManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 
 /**
@@ -37,7 +36,7 @@ import jakarta.annotation.Nonnull;
 @State(name = "ExportableFileTemplateSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE))
 public class ExportableFileTemplateSettings extends FileTemplateSettingsBase {
   @Inject
-  public ExportableFileTemplateSettings(@Nonnull FileTypeManager typeManager) {
+  public ExportableFileTemplateSettings(FileTypeManager typeManager) {
     super(typeManager, null);
   }
 }

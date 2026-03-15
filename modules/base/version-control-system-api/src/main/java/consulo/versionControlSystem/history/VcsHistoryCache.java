@@ -20,8 +20,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.annotate.VcsAnnotation;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
@@ -49,7 +48,7 @@ public class VcsHistoryCache {
                                                                                 @Nullable FilePath correctedPath,
                                                                                 VcsKey vcsKey,
                                                                                 T session,
-                                                                                @Nonnull VcsCacheableHistorySessionFactory<C, T> factory,
+                                                                                VcsCacheableHistorySessionFactory<C, T> factory,
                                                                                 boolean isFull) {
     synchronized (myLock) {
       myHistoryCache.put(new HistoryCacheBaseKey(filePath, vcsKey),
@@ -69,7 +68,7 @@ public class VcsHistoryCache {
 
   @Nullable
   public <C extends Serializable, T extends VcsAbstractHistorySession> T getFull(FilePath filePath, VcsKey vcsKey,
-                                                                                 @Nonnull VcsCacheableHistorySessionFactory<C, T> factory) {
+                                                                                 VcsCacheableHistorySessionFactory<C, T> factory) {
     synchronized (myLock) {
       CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
       if (cachedHistory == null || ! cachedHistory.isIsFull()) {
@@ -82,7 +81,7 @@ public class VcsHistoryCache {
 
   @Nullable
   public <C extends Serializable, T extends VcsAbstractHistorySession> T getMaybePartial(FilePath filePath, VcsKey vcsKey,
-                                                                                         @Nonnull VcsCacheableHistorySessionFactory<C, T> factory) {
+                                                                                         VcsCacheableHistorySessionFactory<C, T> factory) {
     synchronized (myLock) {
       CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
       if (cachedHistory == null) {
@@ -105,14 +104,14 @@ public class VcsHistoryCache {
     }
   }
 
-  public void put(@Nonnull FilePath filePath, @Nonnull VcsKey vcsKey, @Nonnull VcsRevisionNumber number,
-                  @Nonnull VcsAnnotation vcsAnnotation) {
+  public void put(FilePath filePath, VcsKey vcsKey, VcsRevisionNumber number,
+                  VcsAnnotation vcsAnnotation) {
     synchronized (myLock) {
       myAnnotationCache.put(new HistoryCacheWithRevisionKey(filePath, vcsKey, number), vcsAnnotation);
     }
   }
 
-  public VcsAnnotation get(@Nonnull FilePath filePath, @Nonnull VcsKey vcsKey, @Nonnull VcsRevisionNumber number) {
+  public VcsAnnotation get(FilePath filePath, VcsKey vcsKey, VcsRevisionNumber number) {
     synchronized (myLock) {
       return myAnnotationCache.get(new HistoryCacheWithRevisionKey(filePath, vcsKey, number));
     }

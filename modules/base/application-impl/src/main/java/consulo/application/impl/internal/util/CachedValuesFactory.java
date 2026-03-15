@@ -24,8 +24,7 @@ import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -34,17 +33,17 @@ import java.util.function.Supplier;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface CachedValuesFactory {
-    <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue);
+    <T> CachedValue<T> createCachedValue(CachedValueProvider<T> provider, boolean trackValue);
 
     <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
-        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue
     );
 
     default void checkProviderForMemoryLeak(
-        @Nonnull CachedValueProvider<?> provider,
-        @Nonnull Key<?> key,
-        @Nonnull UserDataHolder userDataHolder
+        CachedValueProvider<?> provider,
+        Key<?> key,
+        UserDataHolder userDataHolder
     ) {
     }
 
@@ -62,7 +61,7 @@ public interface CachedValuesFactory {
     default <T> void checkEquivalence(
         @Nullable T existing,
         @Nullable T fresh,
-        @Nonnull Class<?> providerClass,
+        Class<?> providerClass,
         @Nullable Supplier<? extends T> recomputeValue
     ) {
     }

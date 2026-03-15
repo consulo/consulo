@@ -27,8 +27,7 @@ import consulo.navigation.NavigationItem;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.stub.SandIndexKeys;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,12 +36,12 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class SandClassContributor implements GotoClassOrTypeContributor {
   @Override
-  public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter) {
+  public void processNames(Processor<String> processor, SearchScope scope, @Nullable IdFilter filter) {
     StubIndex.getInstance().processAllKeys(SandIndexKeys.SAND_CLASSES, processor, (GlobalSearchScope)scope, filter);
   }
 
   @Override
-  public void processElementsWithName(@Nonnull String name, @Nonnull Processor<NavigationItem> processor, @Nonnull FindSymbolParameters parameters) {
+  public void processElementsWithName(String name, Processor<NavigationItem> processor, FindSymbolParameters parameters) {
     StubIndex.getInstance()
             .processElements(SandIndexKeys.SAND_CLASSES, name, parameters.getProject(), (GlobalSearchScope)parameters.getSearchScope(), parameters.getIdFilter(), SandClass.class, processor);
   }

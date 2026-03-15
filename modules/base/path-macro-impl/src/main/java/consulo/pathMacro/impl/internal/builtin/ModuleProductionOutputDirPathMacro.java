@@ -18,14 +18,13 @@ package consulo.pathMacro.impl.internal.builtin;
 import consulo.pathMacro.PathMacroBundle;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18.08.14
  */
 public class ModuleProductionOutputDirPathMacro extends ModuleOutputDirPathMacro {
-  @Nonnull
+  
   @Override
   public ContentFolderTypeProvider getContentFolderTypeProvider() {
     return ProductionContentFolderTypeProvider.getInstance();

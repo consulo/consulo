@@ -28,8 +28,7 @@ import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.TemplateState;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -77,7 +76,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
         myOriginalHandler = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_ESCAPE;

@@ -19,7 +19,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeKey;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;

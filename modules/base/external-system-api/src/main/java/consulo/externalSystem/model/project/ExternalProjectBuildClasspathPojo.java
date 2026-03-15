@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.model.project;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +29,11 @@ public class ExternalProjectBuildClasspathPojo {
   /**
    * Common for all project modules build classpath. E.g. it can be build system SDK libraries, configured at project level.
    */
-  @Nonnull
+  
   private List<String> myProjectBuildClasspath;
-  @Nonnull
+  
   private Map<String, ExternalModuleBuildClasspathPojo> myModulesBuildClasspath;
-  @Nonnull
+  
   private String myName;
 
   @SuppressWarnings("UnusedDeclaration")
@@ -43,36 +42,36 @@ public class ExternalProjectBuildClasspathPojo {
     this("___DUMMY___", new ArrayList<>(), new HashMap<>());
   }
 
-  public ExternalProjectBuildClasspathPojo(@Nonnull String name, @Nonnull List<String> projectBuildClasspath, @Nonnull Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
+  public ExternalProjectBuildClasspathPojo(String name, List<String> projectBuildClasspath, Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
     myName = name;
     myProjectBuildClasspath = projectBuildClasspath;
     myModulesBuildClasspath = modulesBuildClasspath;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
-  @Nonnull
+  
   public Map<String, ExternalModuleBuildClasspathPojo> getModulesBuildClasspath() {
     return myModulesBuildClasspath;
   }
 
-  public void setModulesBuildClasspath(@Nonnull Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
+  public void setModulesBuildClasspath(Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
     myModulesBuildClasspath = modulesBuildClasspath;
   }
 
-  @Nonnull
+  
   public List<String> getProjectBuildClasspath() {
     return myProjectBuildClasspath;
   }
 
-  public void setProjectBuildClasspath(@Nonnull List<String> projectBuildClasspath) {
+  public void setProjectBuildClasspath(List<String> projectBuildClasspath) {
     myProjectBuildClasspath = projectBuildClasspath;
   }
 

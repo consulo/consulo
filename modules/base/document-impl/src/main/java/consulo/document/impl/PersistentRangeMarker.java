@@ -15,8 +15,7 @@ import consulo.document.util.TextRangeScalarUtil;
 import consulo.document.util.UnfairTextRange;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -28,18 +27,18 @@ import java.util.Objects;
  * All document text is replaced then but in essence it's the same, hence, we may want particular range markers to be still valid.
  */
 class PersistentRangeMarker extends RangeMarkerImpl {
-    @Nonnull
+   
     private LinesCols myLinesCols;
     private volatile boolean documentLoaded;
 
-    PersistentRangeMarker(@Nonnull DocumentEx document, int startOffset, int endOffset, boolean register) {
+    PersistentRangeMarker(DocumentEx document, int startOffset, int endOffset, boolean register) {
         super(document, startOffset, endOffset, register, false);
         myLinesCols = Objects.requireNonNull(storeLinesAndCols(document, TextRangeScalarUtil.toScalarRange(startOffset, endOffset)));
         documentLoaded = true;
     }
 
     // The constructor which creates a marker without a document and saves it in the virtual file directly. Can be cheaper than loading the entire document.
-    PersistentRangeMarker(@Nonnull VirtualFile virtualFile,
+    PersistentRangeMarker(VirtualFile virtualFile,
                           int startOffset,
                           int endOffset,
                           int startLine,
@@ -53,7 +52,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
         documentLoaded = FileDocumentManager.getInstance().getCachedDocument(virtualFile) != null;
     }
 
-    static @Nullable LinesCols storeLinesAndCols(@Nonnull Document document, long range) {
+    static @Nullable LinesCols storeLinesAndCols(Document document, long range) {
         LineCol start = calcLineCol(document, TextRangeScalarUtil.startOffset(range));
         LineCol end = calcLineCol(document, TextRangeScalarUtil.endOffset(range));
 
@@ -63,7 +62,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
         return new LinesCols(start.line, start.col, end.line, end.col);
     }
 
-    private static LineCol calcLineCol(@Nonnull Document document, int offset) {
+    private static LineCol calcLineCol(Document document, int offset) {
         // document might have been changed already
         if (offset <= document.getTextLength()) {
             int line = document.getLineNumber(offset);
@@ -86,7 +85,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
         }
     }
 
-    static @Nullable Pair.NonNull<TextRange, LinesCols> translateViaDiff(@Nonnull DocumentEventImpl event, @Nonnull LinesCols linesCols) {
+    static Pair.@Nullable NonNull<TextRange, LinesCols> translateViaDiff(DocumentEventImpl event, LinesCols linesCols) {
         try {
             int myStartLine = event.translateLineViaDiffStrict(linesCols.myStartLine);
             Document document = event.getDocument();
@@ -124,7 +123,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
     }
 
     @Override
-    protected void changedUpdateImpl(@Nonnull DocumentEvent event) {
+    protected void changedUpdateImpl(DocumentEvent event) {
         if (!isValid()) {
             return;
         }
@@ -199,8 +198,8 @@ class PersistentRangeMarker extends RangeMarkerImpl {
     }
 
     @Override
-    @Nonnull
-    TextRange reCalcTextRangeAfterReload(@Nonnull DocumentImpl document, int tabSize) {
+   
+    TextRange reCalcTextRangeAfterReload(DocumentImpl document, int tabSize) {
         // have to convert line/col back to offset if the persistent range marker was created with line/col only
         LinesCols linesCols = myLinesCols;
         int startOffset = DocumentUtil.calculateOffset(document, linesCols.myStartLine, linesCols.myStartColumn, tabSize);

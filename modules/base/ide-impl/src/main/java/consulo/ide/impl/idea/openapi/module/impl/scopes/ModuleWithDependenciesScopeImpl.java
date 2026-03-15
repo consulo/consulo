@@ -34,8 +34,7 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
@@ -65,7 +64,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     private ModuleRootsProcessor myRootsProcessor;
     private ModuleRootManager myModuleRootManager;
 
-    public ModuleWithDependenciesScopeImpl(@Nonnull Module module, @ScopeConstant int options) {
+    public ModuleWithDependenciesScopeImpl(Module module, @ScopeConstant int options) {
         super(module.getProject());
         myModule = module;
         myOptions = options;
@@ -133,7 +132,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
         }
     }
 
-    @Nonnull
+    
     @Override
     public Module getModule() {
         return myModule;
@@ -143,7 +142,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
         return (myOptions & option) != 0;
     }
 
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
         return hasOption(COMPILE) ? PsiBundle.message("search.scope.module", myModule.getName())
@@ -151,12 +150,12 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
         return myModules.contains(aModule);
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
+    public boolean isSearchInModuleContent(Module aModule, boolean testSources) {
         return isSearchInModuleContent(aModule) && (hasOption(TESTS) || !testSources);
     }
 
@@ -166,7 +165,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         if (hasOption(CONTENT)) {
             return myRoots.containsKey(myProjectFileIndex.getContentRootForFile(file));
         }
@@ -180,7 +179,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
         VirtualFile r1 = getFileRoot(file1);
         VirtualFile r2 = getFileRoot(file2);
         if (Comparing.equal(r1, r2)) {
@@ -206,7 +205,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     }
 
     @Nullable
-    private VirtualFile getFileRoot(@Nonnull VirtualFile file) {
+    private VirtualFile getFileRoot(VirtualFile file) {
         if (myProjectFileIndex.isInContent(file)) {
             return myProjectFileIndex.getSourceRootForFile(file);
         }

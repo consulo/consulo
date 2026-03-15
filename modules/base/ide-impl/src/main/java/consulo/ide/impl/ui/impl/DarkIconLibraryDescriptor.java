@@ -18,15 +18,14 @@ package consulo.ide.impl.ui.impl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.IconLibraryDescriptor;
 import consulo.ui.image.IconLibraryManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2020-10-08
  */
 public class DarkIconLibraryDescriptor implements IconLibraryDescriptor {
-    @Nonnull
+    
     @Override
     public String getLibraryId() {
         return IconLibraryManager.DARK_LIBRARY_ID;
@@ -38,7 +37,7 @@ public class DarkIconLibraryDescriptor implements IconLibraryDescriptor {
         return IconLibraryManager.LIGHT_LIBRARY_ID;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Dark");

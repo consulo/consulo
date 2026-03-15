@@ -18,8 +18,7 @@ package consulo.language.psi;
 
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,15 +34,15 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
   private final PsiElement myElement;
   private final char mySeparator;
 
-  public ReferenceSetBase(@Nonnull PsiElement element) {
+  public ReferenceSetBase(PsiElement element) {
     this(element, ElementManipulators.getOffsetInElement(element));
   }
   
-  public ReferenceSetBase(@Nonnull PsiElement element, int offset) {
+  public ReferenceSetBase(PsiElement element, int offset) {
     this(ElementManipulators.getValueText(element), element, offset, DOT_SEPARATOR);
   }
 
-  public ReferenceSetBase(String text, @Nonnull PsiElement element, int offset, char separator) {
+  public ReferenceSetBase(String text, PsiElement element, int offset, char separator) {
     myElement = element;
     mySeparator = separator;
     myReferences = parse(text, offset);
@@ -53,7 +52,7 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
     return true;
   }
   
-  @Nonnull
+  
   protected List<T> parse(String str, int offset) {
 
     List<T> references = new ArrayList<T>();

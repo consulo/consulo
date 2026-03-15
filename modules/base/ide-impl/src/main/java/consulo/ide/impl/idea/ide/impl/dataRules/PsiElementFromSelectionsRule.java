@@ -22,18 +22,17 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class PsiElementFromSelectionsRule implements GetDataRule<PsiElement[]> {
-  @Nonnull
+  
   @Override
   public Key<PsiElement[]> getKey() {
     return PsiElement.KEY_OF_ARRAY;
   }
 
   @Override
-  public PsiElement[] getData(@Nonnull DataProvider dataProvider) {
+  public PsiElement[] getData(DataProvider dataProvider) {
     Object[] objects = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEMS);
     if (objects != null) {
       PsiElement[] elements = new PsiElement[objects.length];

@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.AntialiasingType;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -47,8 +46,8 @@ public enum DesktopAntialiasingType {
     return isEnabled;
   }
 
-  @Nonnull
-  public static DesktopAntialiasingType from(@Nonnull AntialiasingType uiType) {
+  
+  public static DesktopAntialiasingType from(AntialiasingType uiType) {
     switch (uiType) {
       case SUBPIXEL:
         return SUBPIXEL;

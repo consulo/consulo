@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,13 +118,13 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         return PlatformIconGroup.actionsResume();
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public Component getUIComponent() {
         throw new UnsupportedOperationException("desktop only");
@@ -235,7 +234,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             DefaultListModel model = (DefaultListModel) myThreadList.getModel();
             ThreadState selected = (ThreadState) myThreadList.getSelectedValue();
             ArrayList<ThreadState> states = new ArrayList<ThreadState>();
@@ -257,7 +256,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setIcon(COMPARATOR == BY_TYPE ? AllIcons.ObjectBrowser.SortByType : AllIcons.ObjectBrowser.Sorted);
             e.getPresentation().setText(COMPARATOR == BY_TYPE ? TYPE_LABEL : NAME_LABEL);
         }

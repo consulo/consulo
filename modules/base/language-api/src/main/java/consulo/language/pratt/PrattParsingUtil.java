@@ -18,8 +18,7 @@ package consulo.language.pratt;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -28,7 +27,7 @@ public class PrattParsingUtil {
   private PrattParsingUtil() {
   }
 
-  public static void searchFor(PrattBuilder builder, @Nonnull PrattTokenType... types) {
+  public static void searchFor(PrattBuilder builder, PrattTokenType... types) {
     searchFor(builder, true, types);
   }
 

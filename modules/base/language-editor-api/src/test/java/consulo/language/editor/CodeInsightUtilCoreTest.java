@@ -15,8 +15,7 @@
  */
 package consulo.language.editor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.junit.jupiter.api.Test;
@@ -90,29 +89,29 @@ public class CodeInsightUtilCoreTest {
         default ParseStringCharsTester expectResult(@Nullable String expected) {
             return expectResult(expected == null ? AbstractAssert::isNull : a -> a.hasToString(expected));
         }
-        ParseStringCharsTester expectResult(@Nonnull Consumer<AbstractCharSequenceAssert> check);
-        ParseStringCharsTester expectOffsets(@Nonnull int... expectedOffsets);
+        ParseStringCharsTester expectResult(Consumer<AbstractCharSequenceAssert> check);
+        ParseStringCharsTester expectOffsets(int... expectedOffsets);
     }
 
     private abstract class AbstractParseStringCharsTester implements ParseStringCharsTester {
         @Nullable
         protected CharSequence myNoOffsets, myWithOffsets;
-        @Nonnull
+        
         protected final int[] mySourceOffsets;
 
-        protected AbstractParseStringCharsTester(@Nonnull String chars) {
+        protected AbstractParseStringCharsTester(String chars) {
             mySourceOffsets = new int[chars.length() + 1];
         }
 
         @Override
-        public ParseStringCharsTester expectResult(@Nonnull Consumer<AbstractCharSequenceAssert> check) {
+        public ParseStringCharsTester expectResult(Consumer<AbstractCharSequenceAssert> check) {
             check.accept(assertThat(myNoOffsets));
             check.accept(assertThat(myWithOffsets));
             return this;
         }
 
         @Override
-        public ParseStringCharsTester expectOffsets(@Nonnull int... expectedOffsets) {
+        public ParseStringCharsTester expectOffsets(int... expectedOffsets) {
             assertThat(mySourceOffsets).containsExactly(padExpectedOffsets(expectedOffsets));
             return this;
         }
@@ -128,7 +127,7 @@ public class CodeInsightUtilCoreTest {
     }
 
     private class ParseToCharSequence extends AbstractParseStringCharsTester {
-        private ParseToCharSequence(@Nonnull String chars) {
+        private ParseToCharSequence(String chars) {
             super(chars);
             myNoOffsets = CodeInsightUtilCore.parseStringCharacters(chars, null);
             myWithOffsets = CodeInsightUtilCore.parseStringCharacters(chars, mySourceOffsets);
@@ -136,7 +135,7 @@ public class CodeInsightUtilCoreTest {
     }
 
     private class ParseToStringBuilder extends AbstractParseStringCharsTester {
-        private ParseToStringBuilder(@Nonnull String chars) {
+        private ParseToStringBuilder(String chars) {
             super(chars);
             StringBuilder out = new StringBuilder();
             myNoOffsets = CodeInsightUtilCore.parseStringCharacters(chars, out, null) ? out : null;
@@ -144,7 +143,7 @@ public class CodeInsightUtilCoreTest {
             myWithOffsets = CodeInsightUtilCore.parseStringCharacters(chars, out, mySourceOffsets) ? out : null;
         }
 
-        private ParseToStringBuilder(@Nonnull String chars, boolean textBlock) {
+        private ParseToStringBuilder(String chars, boolean textBlock) {
             super(chars);
             StringBuilder out = new StringBuilder();
             myNoOffsets = CodeInsightUtilCore.parseStringCharacters(chars, out, null, textBlock) ? out : null;
@@ -154,15 +153,15 @@ public class CodeInsightUtilCoreTest {
     }
 
     private class GroupParseTester implements ParseStringCharsTester {
-        @Nonnull
+        
         private final ParseStringCharsTester[] testers;
 
-        private GroupParseTester(@Nonnull ParseStringCharsTester... testers) {
+        private GroupParseTester(ParseStringCharsTester... testers) {
             this.testers = testers;
         }
 
         @Override
-        public ParseStringCharsTester expectResult(@Nonnull Consumer<AbstractCharSequenceAssert> check) {
+        public ParseStringCharsTester expectResult(Consumer<AbstractCharSequenceAssert> check) {
             for (ParseStringCharsTester tester : testers) {
                 tester.expectResult(check);
             }
@@ -170,7 +169,7 @@ public class CodeInsightUtilCoreTest {
         }
 
         @Override
-        public ParseStringCharsTester expectOffsets(@Nonnull int[] expectedOffsets) {
+        public ParseStringCharsTester expectOffsets(int[] expectedOffsets) {
             for (ParseStringCharsTester tester : testers) {
                 tester.expectOffsets(expectedOffsets);
             }

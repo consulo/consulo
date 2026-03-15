@@ -28,14 +28,13 @@ import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsLog;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAction {
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
     VcsLog log = e.getRequiredData(VcsLog.KEY);
     List<VcsFullCommitDetails> details = log.getSelectedDetails();
@@ -45,7 +44,7 @@ public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAct
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     VcsLog log = e.getData(VcsLog.KEY);
     if (project == null || log == null) {
@@ -64,25 +63,25 @@ public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAct
     }
   }
 
-  protected abstract void actionPerformed(@Nonnull Project project, @Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped);
+  protected abstract void actionPerformed(Project project, MultiMap<Repo, VcsFullCommitDetails> grouped);
 
-  protected abstract boolean isEnabled(@Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped);
+  protected abstract boolean isEnabled(MultiMap<Repo, VcsFullCommitDetails> grouped);
 
-  protected boolean isVisible(@Nonnull Project project, @Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  protected boolean isVisible(Project project, MultiMap<Repo, VcsFullCommitDetails> grouped) {
     return ContainerUtil.and(grouped.keySet(), repo -> {
       RepositoryManager<Repo> manager = getRepositoryManager(project);
       return !manager.isExternal(repo);
     });
   }
 
-  @Nonnull
-  protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(@Nonnull Project project);
+  
+  protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(Project project);
 
   @Nullable
-  protected abstract Repo getRepositoryForRoot(@Nonnull Project project, @Nonnull VirtualFile root);
+  protected abstract Repo getRepositoryForRoot(Project project, VirtualFile root);
 
   @Nullable
-  private MultiMap<Repo, VcsFullCommitDetails> groupByRootWithCheck(@Nonnull Project project, @Nonnull List<VcsFullCommitDetails> commits) {
+  private MultiMap<Repo, VcsFullCommitDetails> groupByRootWithCheck(Project project, List<VcsFullCommitDetails> commits) {
     MultiMap<Repo, VcsFullCommitDetails> map = MultiMap.create();
     for (VcsFullCommitDetails commit : commits) {
       Repo root = getRepositoryForRoot(project, commit.getRoot());

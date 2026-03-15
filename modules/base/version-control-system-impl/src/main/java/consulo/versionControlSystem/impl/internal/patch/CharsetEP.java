@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.HashMap;
@@ -48,26 +47,26 @@ public class CharsetEP implements PatchEP {
     myBaseDir = myProject.getBaseDir().getPath();
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "consulo.versionControlSystem.impl.internal.patch.CharsetEP";
   }
 
   @Override
-  public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
+  public CharSequence provideContent(String path, CommitContext commitContext) {
     File file = new File(myBaseDir, path);
     VirtualFile vf = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
     return vf == null ? null : vf.getCharset().name();
   }
 
   @Override
-  public void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
+  public void consumeContent(String path, CharSequence content, CommitContext commitContext) {
   }
 
   @Override
-  public void consumeContentBeforePatchApplied(@Nonnull String path,
-                                               @Nonnull CharSequence content,
+  public void consumeContentBeforePatchApplied(String path,
+                                               CharSequence content,
                                                CommitContext commitContext) {
     if (commitContext == null) return;
     Map<String, String> map = commitContext.getUserData(ourName);

@@ -28,23 +28,22 @@ import consulo.versionControlSystem.log.impl.internal.data.index.VcsLogIndex;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
 public class IndexSpeedSearch extends VcsLogSpeedSearch {
-  @Nonnull
+  
   private final VcsLogIndex myIndex;
-  @Nonnull
+  
   private final VcsUserRegistry myUserRegistry;
 
   @Nullable private Set<Integer> myMatchedByUserCommits;
   @Nullable private Collection<VcsUser> myMatchedUsers;
 
-  public IndexSpeedSearch(@Nonnull Project project, @Nonnull VcsLogIndex index, @Nonnull VcsLogGraphTable component) {
+  public IndexSpeedSearch(Project project, VcsLogIndex index, VcsLogGraphTable component) {
     super(component);
     myIndex = index;
     myUserRegistry = project.getInstance(VcsUserRegistry.class);
@@ -88,13 +87,13 @@ public class IndexSpeedSearch extends VcsLogSpeedSearch {
 
   @Nullable
   @Override
-  protected String getElementText(@Nonnull Object row) {
+  protected String getElementText(Object row) {
     throw new UnsupportedOperationException(
             "Getting row text in a Log is unsupported since we match commit subject and author separately.");
   }
 
   @Nullable
-  private String getCommitSubject(@Nonnull Integer row) {
+  private String getCommitSubject(Integer row) {
     Integer id = myComponent.getModel().getIdAtRow(row);
     String message = myIndex.getFullMessage(id);
     if (message == null) return super.getElementText(row);
@@ -112,21 +111,21 @@ public class IndexSpeedSearch extends VcsLogSpeedSearch {
   }
 
   private static class SimpleVcsLogUserFilter implements VcsLogUserFilter {
-    @Nonnull
+    
     private final Collection<VcsUser> myMatchedUsers;
 
-    public SimpleVcsLogUserFilter(@Nonnull Collection<VcsUser> matchedUsers) {
+    public SimpleVcsLogUserFilter(Collection<VcsUser> matchedUsers) {
       myMatchedUsers = matchedUsers;
     }
 
-    @Nonnull
+    
     @Override
-    public Collection<VcsUser> getUsers(@Nonnull VirtualFile root) {
+    public Collection<VcsUser> getUsers(VirtualFile root) {
       return myMatchedUsers;
     }
 
     @Override
-    public boolean matches(@Nonnull VcsCommitMetadata details) {
+    public boolean matches(VcsCommitMetadata details) {
       return myMatchedUsers.contains(details.getAuthor());
     }
   }

@@ -24,7 +24,6 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import gnu.trove.TIntHashSet;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -41,7 +40,7 @@ public class MatchBraceAction extends EditorAction {
         }
 
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project == null) {
                 return;

@@ -26,7 +26,6 @@ import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +34,11 @@ import java.util.List;
  * @author yole
  */
 public abstract class CloseEditorsActionBase extends AnAction implements DumbAware {
-    protected CloseEditorsActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected CloseEditorsActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    @Nonnull
+    
     protected List<Pair<FileEditorComposite, FileEditorWindow>> getFilesToClose(AnActionEvent event) {
         ArrayList<Pair<FileEditorComposite, FileEditorWindow>> res = new ArrayList<>();
         Project project = event.getRequiredData(Project.KEY);
@@ -68,7 +67,7 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
         FileEditorWindow editorWindow = e.getData(FileEditorWindow.DATA_KEY);
         boolean inSplitter = editorWindow != null && editorWindow.inSplitter();
@@ -85,7 +84,7 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
         boolean inSplitter = editorWindow != null && editorWindow.inSplitter();
@@ -104,6 +103,6 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
         return getFilesToClose(event).size() > 0;
     }
 
-    @Nonnull
+    
     protected abstract LocalizeValue getPresentationText(boolean inSplitter);
 }

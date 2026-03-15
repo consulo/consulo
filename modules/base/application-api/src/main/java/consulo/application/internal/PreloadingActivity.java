@@ -18,7 +18,6 @@ package consulo.application.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.progress.ProgressIndicator;
-import jakarta.annotation.Nonnull;
 
 /**
  * An activity to be executed in background on IDE startup. It may load some classes or other configuration
@@ -36,5 +35,5 @@ public abstract class PreloadingActivity {
    *                  Canceled if the application has exited.
    *                  Long actions should periodically perform <code>indicator.checkCanceled()</code>.
    */
-  public abstract void preload(@Nonnull ProgressIndicator indicator);
+  public abstract void preload(ProgressIndicator indicator);
 }

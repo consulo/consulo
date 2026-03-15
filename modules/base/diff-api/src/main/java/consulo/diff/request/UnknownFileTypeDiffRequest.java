@@ -26,8 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -37,19 +36,19 @@ public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
   @Nullable
   private final String myTitle;
 
-  public UnknownFileTypeDiffRequest(@Nonnull VirtualFile file, @Nullable String title) {
+  public UnknownFileTypeDiffRequest(VirtualFile file, @Nullable String title) {
     this(file.getName(), title);
   }
 
-  public UnknownFileTypeDiffRequest(@Nonnull String fileName, @Nullable String title) {
+  public UnknownFileTypeDiffRequest(String fileName, @Nullable String title) {
     boolean knownFileType = FileTypeRegistry.getInstance().getFileTypeByFileName(fileName) != UnknownFileType.INSTANCE;
     myFileName = knownFileType ? null : fileName;
     myTitle = title;
   }
 
-  @Nonnull
+  
   @Override
-  public JComponent getComponent(@Nonnull final DiffContext context) {
+  public JComponent getComponent(final DiffContext context) {
     SimpleColoredComponent label = new SimpleColoredComponent();
     label.setTextAlign(SwingConstants.CENTER);
     label.append("Can't show diff for unknown file type. ",
@@ -78,7 +77,7 @@ public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
     return myTitle;
   }
 
-  protected void onSuccess(@Nonnull DiffContext context) {
+  protected void onSuccess(DiffContext context) {
     if (context instanceof DiffContextEx) ((DiffContextEx)context).reloadDiffRequest();
   }
 }

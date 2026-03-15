@@ -3,7 +3,7 @@ package consulo.remoteServer.configuration;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik

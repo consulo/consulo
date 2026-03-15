@@ -23,14 +23,13 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author anna
  * @author Konstantin Bulenkov
  */
 public class PsiFileUrl extends AbstractUrl {
-  @NonNls
+  
   private static final String ELEMENT_TYPE = "psiFile";
 
   public PsiFileUrl(String url) {

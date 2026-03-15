@@ -23,12 +23,11 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BookmarkManagerStartupActivity implements PostStartupActivity, DumbAware {
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     project.getMessageBus().connect().subscribe(PsiDocumentListener.class, BookmarkManagerImpl::documentCreated);
 
     BookmarkManagerImpl manager = (BookmarkManagerImpl)BookmarkManager.getInstance(project);

@@ -38,7 +38,6 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -124,7 +123,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
         String title,
         List<ContentFolder> folders,
         Color foregroundColor,
-        @Nonnull ContentFolderTypeProvider editor
+        ContentFolderTypeProvider editor
     ) {
         JPanel rowsPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 4, true, false));
         rowsPanel.setBorder(JBUI.Borders.emptyLeft(14));
@@ -198,7 +197,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
     }
 
     @RequiredUIAccess
-    private Button createChangeOptionsAction(ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
+    private Button createChangeOptionsAction(ContentFolder folder, ContentFolderTypeProvider editor) {
         Button button = Button.create(LocalizeValue.empty());
         button.setToolTipText(ProjectLocalize.modulePathsPropertiesTooltip());
         button.addStyle(ButtonStyle.INPLACE);
@@ -208,7 +207,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
     }
 
     @RequiredUIAccess
-    private Button createFolderDeleteAction(ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
+    private Button createFolderDeleteAction(ContentFolder folder, ContentFolderTypeProvider editor) {
         LocalizeValue tooltipText;
         if (folder.getFile() != null && getContentEntry().getFile() != null) {
             tooltipText = ProjectLocalize.modulePathsUnmark0Tooltip(editor.getName());

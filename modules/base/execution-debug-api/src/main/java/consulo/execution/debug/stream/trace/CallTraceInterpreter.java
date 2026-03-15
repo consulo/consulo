@@ -2,12 +2,11 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface CallTraceInterpreter {
-  @Nonnull
-  TraceInfo resolve(@Nonnull StreamCall call, @Nonnull Value value);
+  
+  TraceInfo resolve(StreamCall call, Value value);
 }

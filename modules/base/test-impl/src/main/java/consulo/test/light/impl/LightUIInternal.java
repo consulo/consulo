@@ -28,8 +28,7 @@ import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -117,7 +116,7 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public IntBox _Components_intBox(int value) {
     return null;
@@ -144,22 +143,22 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public Image _ImageEffects_layered(@Nonnull Image[] images) {
+  public Image _ImageEffects_layered(Image[] images) {
     return null;
   }
 
   @Override
-  public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+  public Image _ImageEffects_transparent(Image original, float alpha) {
     return null;
   }
 
   @Override
-  public Image _ImageEffects_grayed(@Nonnull Image original) {
+  public Image _ImageEffects_grayed(Image original) {
     return null;
   }
 
   @Override
-  public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+  public Image _ImageEffects_appendRight(Image i0, Image i1) {
     return null;
   }
 
@@ -198,19 +197,19 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public StyleManager _StyleManager_get() {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public FontManager _FontManager_get() {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public Window _Window_create(String title, WindowOptions options) {
     return null;
@@ -238,7 +237,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public UIAccess _UIAccess_get() {
     return null;
@@ -267,13 +266,13 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public ModalityState _ModalityState_any() {
     return LightModalityState.INSTANCE;
   }
 
-  @Nonnull
+  
   @Override
   public ModalityState _ModalityState_nonModal() {
     return LightModalityState.INSTANCE;

@@ -24,14 +24,13 @@ import consulo.diff.util.TextDiffType;
 import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
-  @Nonnull
+  
   private final RangeHighlighter myHighlighter;
-  @Nonnull
+  
   private final TextDiffType myDiffType;
   private final boolean myIgnoredFoldingOutline;
   private final boolean myResolved;
@@ -40,8 +39,8 @@ public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
   private final boolean myEmptyRange;
   private final boolean myLastLine;
 
-  public DiffLineMarkerRenderer(@Nonnull RangeHighlighter highlighter,
-                                @Nonnull TextDiffType diffType,
+  public DiffLineMarkerRenderer(RangeHighlighter highlighter,
+                                TextDiffType diffType,
                                 boolean ignoredFoldingOutline,
                                 boolean resolved,
                                 boolean hideWithoutLineNumbers,
@@ -119,7 +118,7 @@ public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
     }
   }
 
-  @Nonnull
+  
   @Override
   public Position getPosition() {
     return Position.CUSTOM;

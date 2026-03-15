@@ -17,8 +17,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.ui.ex.popup.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -59,15 +58,15 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
      * @deprecated use {@link #WizardPopup(Project, JBPopup, PopupStep)}
      */
     @Deprecated
-    public WizardPopup(@Nonnull PopupStep<Object> aStep) {
+    public WizardPopup(PopupStep<Object> aStep) {
         this(DataManager.getInstance().getDataContext().getData(Project.KEY), null, aStep);
     }
 
-    public WizardPopup(@Nullable Project project, @Nullable JBPopup aParent, @Nonnull PopupStep<Object> aStep) {
+    public WizardPopup(@Nullable Project project, @Nullable JBPopup aParent, PopupStep<Object> aStep) {
         this(project, aParent, aStep, true);
     }
 
-    public WizardPopup(@Nullable Project project, @Nullable JBPopup aParent, @Nonnull PopupStep<Object> aStep, boolean forceHeavyPopup) {
+    public WizardPopup(@Nullable Project project, @Nullable JBPopup aParent, PopupStep<Object> aStep, boolean forceHeavyPopup) {
         myParent = (WizardPopup) aParent;
         myStep = aStep;
 
@@ -158,7 +157,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         };
     }
 
-    @Nonnull
+    
     protected JScrollPane createScrollPane(JComponent content) {
         return ScrollPaneFactory.createScrollPane(content);
     }
@@ -212,7 +211,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     @RequiredUIAccess
     @Override
-    public void show(@Nonnull Component owner, int aScreenX, int aScreenY, boolean considerForcedXY) {
+    public void show(Component owner, int aScreenX, int aScreenY, boolean considerForcedXY) {
         LOG.assertTrue(!isDisposed());
 
         Rectangle targetBounds = new Rectangle(new Point(aScreenX, aScreenY), getContent().getPreferredSize());
@@ -324,7 +323,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
     }
 
     @Override
-    @Nonnull
+    
     protected MyContentPanel createContentPanel(boolean resizable, Border border, boolean isToDrawMacCorner) {
         return new MyContainer(border);
     }

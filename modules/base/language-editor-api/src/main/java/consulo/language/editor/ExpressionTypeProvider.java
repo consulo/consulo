@@ -25,7 +25,6 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -37,8 +36,8 @@ public abstract class ExpressionTypeProvider<T extends PsiElement> implements La
   private static final ExtensionPointCacheKey<ExpressionTypeProvider, ByLanguageValue<List<ExpressionTypeProvider>>> KEY =
           ExtensionPointCacheKey.create("ExpressionTypeProvider", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<ExpressionTypeProvider> forLanguage(@Nonnull Language language) {
+  
+  public static List<ExpressionTypeProvider> forLanguage(Language language) {
     return Application.get().getExtensionPoint(ExpressionTypeProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -47,20 +46,20 @@ public abstract class ExpressionTypeProvider<T extends PsiElement> implements La
    *
    * @see consulo.util.lang.xml.XmlStringUtil#escapeText(CharSequence)
    */
-  @Nonnull
-  public abstract String getInformationHint(@Nonnull T element);
+  
+  public abstract String getInformationHint(T element);
 
   /**
    * Returns HTML string if no target found at position.
    */
-  @Nonnull
+  
   public abstract String getErrorHint();
 
   /**
    * Returns the list of all possible targets at specified position.
    */
-  @Nonnull
-  public abstract List<T> getExpressionsAt(@Nonnull PsiElement elementAt);
+  
+  public abstract List<T> getExpressionsAt(PsiElement elementAt);
 
   /**
    * @return true if this type provider can provide more useful information (e.g. value range, nullability, etc.)
@@ -79,8 +78,8 @@ public abstract class ExpressionTypeProvider<T extends PsiElement> implements La
    * @throws UnsupportedOperationException if this provider does not provide any advanced information
    *                                       (in this case {@link #hasAdvancedInformation()} method must return false).
    */
-  @Nonnull
-  public String getAdvancedInformationHint(@Nonnull T element) {
+  
+  public String getAdvancedInformationHint(T element) {
     throw new UnsupportedOperationException();
   }
 }

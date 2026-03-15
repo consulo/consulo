@@ -23,9 +23,7 @@ import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -42,7 +40,7 @@ public interface RefactoringQuickFix extends LocalQuickFix {
    * Usually a call to consulo.ide.impl.idea.refactoring.RefactoringActionHandlerFactory or a language specific factory like
    * consulo.ide.impl.idea.refactoring.JavaRefactoringActionHandlerFactory.
    */
-  @Nonnull
+  
   RefactoringActionHandler getHandler();
 
   default PsiElement getElementToRefactor(PsiElement element) {
@@ -50,7 +48,7 @@ public interface RefactoringQuickFix extends LocalQuickFix {
     return (parent instanceof PsiNamedElement) ? parent : element;
   }
 
-  default void doFix(@Nonnull PsiElement element) {
+  default void doFix(PsiElement element) {
     PsiElement elementToRefactor = getElementToRefactor(element);
     if (elementToRefactor == null) {
       return;
@@ -64,15 +62,15 @@ public interface RefactoringQuickFix extends LocalQuickFix {
   }
 
   @Override
-  default void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+  default void applyFix(Project project, ProblemDescriptor descriptor) {
     doFix(descriptor.getPsiElement());
   }
 
   /**
    * @see consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext
    */
-  @Nonnull
-  default DataContext enhanceDataContext(@NonNls DataContext context) {
+  
+  default DataContext enhanceDataContext(DataContext context) {
     return context;
   }
 }

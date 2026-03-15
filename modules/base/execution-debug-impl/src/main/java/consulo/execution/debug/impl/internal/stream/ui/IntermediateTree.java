@@ -9,7 +9,6 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.stream.trace.CollectionTreeBuilder;
 import consulo.execution.debug.stream.trace.GenericEvaluationContext;
 import consulo.execution.debug.stream.trace.TraceElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,10 +19,10 @@ public class IntermediateTree extends CollectionTree {
     private final CollectionTreeBuilder myBuilder;
     private final int itemsCount;
 
-    public IntermediateTree(@Nonnull List<TraceElement> traceElements,
-                            @Nonnull GenericEvaluationContext context,
-                            @Nonnull CollectionTreeBuilder builder,
-                            @Nonnull String debugName) {
+    public IntermediateTree(List<TraceElement> traceElements,
+                            GenericEvaluationContext context,
+                            CollectionTreeBuilder builder,
+                            String debugName) {
         super(traceElements, context, builder, debugName);
         myBuilder = builder;
         itemsCount = traceElements.size();
@@ -34,7 +33,7 @@ public class IntermediateTree extends CollectionTree {
 
         addTreeListener(new XDebuggerTreeListener() {
             @Override
-            public void nodeLoaded(@Nonnull RestorableStateNode node, @Nonnull String name) {
+            public void nodeLoaded(RestorableStateNode node, String name) {
                 XDebuggerTreeListener listener = this;
                 if (node instanceof XValueContainerNode<?>) {
                     XValueContainer container = ((XValueContainerNode<?>) node).getValueContainer();
@@ -61,13 +60,13 @@ public class IntermediateTree extends CollectionTree {
         private final List<TraceElement> myTraceElements;
         private final GenericEvaluationContext myEvaluationContext;
 
-        MyTraceElementsRoot(@Nonnull List<TraceElement> traceElements, @Nonnull GenericEvaluationContext context) {
+        MyTraceElementsRoot(List<TraceElement> traceElements, GenericEvaluationContext context) {
             myTraceElements = traceElements;
             myEvaluationContext = context;
         }
 
         @Override
-        public void computeChildren(@Nonnull XCompositeNode node) {
+        public void computeChildren(XCompositeNode node) {
             XValueChildrenList children = new XValueChildrenList();
             for (TraceElement value : myTraceElements) {
                 XNamedValue namedValue = myBuilder.createXNamedValue(value.getValue(), myEvaluationContext);
@@ -79,7 +78,7 @@ public class IntermediateTree extends CollectionTree {
         }
 
         @Override
-        public void computePresentation(@Nonnull XValueNode node, @Nonnull XValuePlace place) {
+        public void computePresentation(XValueNode node, XValuePlace place) {
             node.setPresentation(null, "", "", true);
         }
     }

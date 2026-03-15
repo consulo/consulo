@@ -43,8 +43,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -61,7 +60,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor editor = e.getRequiredData(Editor.KEY);
         if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
@@ -88,13 +87,13 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Editor.KEY) && e.hasData(Project.KEY));
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static Collection<FoldingDescriptor> getCustomFoldingDescriptors(@Nonnull Editor editor, @Nonnull Project project) {
+    private static Collection<FoldingDescriptor> getCustomFoldingDescriptors(Editor editor, Project project) {
         Set<FoldingDescriptor> foldingDescriptors = new HashSet<>();
         Document document = editor.getDocument();
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
@@ -129,7 +128,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
         return null;
     }
 
-    private static void notifyCustomRegionsUnavailable(@Nonnull Editor editor, @Nonnull Project project) {
+    private static void notifyCustomRegionsUnavailable(Editor editor, Project project) {
         JBPopupFactory popupFactory = JBPopupFactory.getInstance();
         Balloon balloon = popupFactory.createHtmlTextBalloonBuilder(
                 IdeLocalize.gotoCustomRegionMessageUnavailable().get(),

@@ -21,7 +21,6 @@ import consulo.logging.Logger;
 import consulo.language.psi.PsiPackageHelper;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -32,7 +31,7 @@ public class DefaultNonCodeSearchElementDescriptionProvider implements ElementDe
   public static final DefaultNonCodeSearchElementDescriptionProvider INSTANCE = new DefaultNonCodeSearchElementDescriptionProvider();
 
   @Override
-  public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+  public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
     if (!(location instanceof NonCodeSearchDescriptionLocation)) return null;
     NonCodeSearchDescriptionLocation ncdLocation = (NonCodeSearchDescriptionLocation)location;
 

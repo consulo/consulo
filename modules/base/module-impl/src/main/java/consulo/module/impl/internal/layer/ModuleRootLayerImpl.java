@@ -46,8 +46,7 @@ import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.*;
@@ -64,15 +63,15 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         public static final ContentComparator INSTANCE = new ContentComparator();
 
         @Override
-        public int compare(@Nonnull ContentEntryEx o1, @Nonnull ContentEntryEx o2) {
+        public int compare(ContentEntryEx o1, ContentEntryEx o2) {
             return o1.getUrl().compareTo(o2.getUrl());
         }
     }
 
     private static class CollectDependentModules extends RootPolicy<List<String>> {
-        @Nonnull
+        
         @Override
-        public List<String> visitModuleOrderEntry(@Nonnull ModuleOrderEntry moduleOrderEntry, @Nonnull List<String> arrayList) {
+        public List<String> visitModuleOrderEntry(ModuleOrderEntry moduleOrderEntry, List<String> arrayList) {
             arrayList.add(moduleOrderEntry.getModuleName());
             return arrayList;
         }
@@ -85,9 +84,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
             clearCachedEntries();
         }
 
-        @Nonnull
+        
         @Override
-        public OrderEntry set(int i, @Nonnull OrderEntry orderEntry) {
+        public OrderEntry set(int i, OrderEntry orderEntry) {
             super.set(i, orderEntry);
             ((OrderEntryBaseImpl) orderEntry).setIndex(i);
             clearCachedEntries();
@@ -95,7 +94,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
 
         @Override
-        public boolean add(@Nonnull OrderEntry orderEntry) {
+        public boolean add(OrderEntry orderEntry) {
             super.add(orderEntry);
             ((OrderEntryBaseImpl) orderEntry).setIndex(size() - 1);
             clearCachedEntries();
@@ -153,7 +152,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
 
         @Override
-        public boolean removeAll(@Nonnull Collection<?> collection) {
+        public boolean removeAll(Collection<?> collection) {
             boolean result = super.removeAll(collection);
             setIndicies(0);
             clearCachedEntries();
@@ -161,7 +160,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
 
         @Override
-        public boolean retainAll(@Nonnull Collection<?> collection) {
+        public boolean retainAll(Collection<?> collection) {
             boolean result = super.retainAll(collection);
             setIndicies(0);
             clearCachedEntries();
@@ -188,13 +187,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     private Map<String, ModuleExtension> myExtensions = new HashMap<>();
     private final List<Element> myUnknownModuleExtensions = new SmartList<>();
     private RootModelImpl myRootModel;
-    @Nonnull
+    
     private final ModuleLibraryTable myModuleLibraryTable;
 
     private boolean myDisposed;
 
     @RequiredReadAction
-    public ModuleRootLayerImpl(@Nullable ModuleRootLayerImpl originalLayer, @Nonnull RootModelImpl rootModel) {
+    public ModuleRootLayerImpl(@Nullable ModuleRootLayerImpl originalLayer, RootModelImpl rootModel) {
         myRootModel = rootModel;
         myModuleLibraryTable = new ModuleLibraryTable(this);
 
@@ -208,7 +207,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
     }
 
-    public void loadState(@Nonnull Element element, @Nullable ProgressIndicator progressIndicator) {
+    public void loadState(Element element, @Nullable ProgressIndicator progressIndicator) {
         removeAllContentEntries();
         removeAllOrderEntries();
 
@@ -273,7 +272,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
     }
 
-    public void writeExternal(@Nonnull Element element) {
+    public void writeExternal(Element element) {
         List<Element> moduleExtensionElements = new ArrayList<>();
         for (ModuleExtension<?> extension : myExtensions.values()) {
             Element state = extension.getState();
@@ -309,7 +308,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
     @SuppressWarnings("unchecked")
     @RequiredReadAction
-    public void copy(@Nonnull ModuleRootLayerImpl toSet) {
+    public void copy(ModuleRootLayerImpl toSet) {
 
         for (ModuleExtension extension : myExtensions.values()) {
             MutableModuleExtension mutableExtension = (MutableModuleExtension) extension;
@@ -351,7 +350,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
     }
 
-    private void setOrderEntriesFrom(@Nonnull ModuleRootLayerImpl layer) {
+    private void setOrderEntriesFrom(ModuleRootLayerImpl layer) {
         removeAllOrderEntries();
         for (OrderEntry orderEntry : layer.myOrderEntries) {
             if (orderEntry instanceof ClonableOrderEntry) {
@@ -360,7 +359,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
     }
 
-    private void setContentEntriesFrom(@Nonnull ModuleRootLayerImpl layer) {
+    private void setContentEntriesFrom(ModuleRootLayerImpl layer) {
         removeAllContentEntries();
         for (ContentEntryEx contentEntry : layer.myContent) {
             myContent.add(contentEntry.cloneEntry(this));
@@ -381,8 +380,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         myOrderEntries.add(new ModuleSourceOrderEntryImpl(this));
     }
 
-    @Nonnull
-    private ContentEntry addContentEntry(@Nonnull ContentEntryEx e) {
+    
+    private ContentEntry addContentEntry(ContentEntryEx e) {
         checkDisposed();
 
         if (myContent.contains(e)) {
@@ -396,11 +395,11 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return e;
     }
 
-    public boolean areContentEntriesChanged(@Nonnull ModuleRootLayerImpl original) {
+    public boolean areContentEntriesChanged(ModuleRootLayerImpl original) {
         return ArrayUtil.lexicographicCompare(getContentEntries(), original.getContentEntries()) != 0;
     }
 
-    public boolean areOrderEntriesChanged(@Nonnull ModuleRootLayerImpl original) {
+    public boolean areOrderEntriesChanged(ModuleRootLayerImpl original) {
         OrderEntry[] orderEntries = getOrderEntries();
         OrderEntry[] sourceOrderEntries = original.getOrderEntries();
         if (orderEntries.length != sourceOrderEntries.length) {
@@ -416,13 +415,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return false;
     }
 
-    @Nonnull
+    
     public RootModelImpl getRootModel() {
         return myRootModel;
     }
 
     @SuppressWarnings("unchecked")
-    public boolean areExtensionsChanged(@Nonnull ModuleRootLayerImpl original) {
+    public boolean areExtensionsChanged(ModuleRootLayerImpl original) {
         List<ModuleExtensionProvider> extensions = Application.get().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList();
         for (ModuleExtensionProvider extensionProvider : extensions) {
             MutableModuleExtension selfExtension = getExtensionWithoutCheck(extensionProvider.getId());
@@ -439,7 +438,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return false;
     }
 
-    private static boolean orderEntriesEquals(@Nonnull OrderEntry orderEntry1, @Nonnull OrderEntry orderEntry2) {
+    private static boolean orderEntriesEquals(OrderEntry orderEntry1, OrderEntry orderEntry2) {
         if (orderEntry1.getClass() != orderEntry2.getClass()) {
             return false;
         }
@@ -456,7 +455,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return orderEntry1.isEquivalentTo(orderEntry2);
     }
 
-    @Nonnull
+    
     public Collection<ContentEntryEx> getContent() {
         return myContent;
     }
@@ -466,16 +465,16 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return getModule().getProject();
     }
 
-    public boolean isChanged(@Nonnull ModuleRootLayerImpl original) {
+    public boolean isChanged(ModuleRootLayerImpl original) {
         return areExtensionsChanged(original) || areOrderEntriesChanged(original) || areContentEntriesChanged(original);
     }
 
-    @Nonnull
+    
     @Override
     public Module getModule() {
         return myRootModel.getModule();
@@ -488,7 +487,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    public boolean iterateContentEntries(@Nonnull Predicate<ContentEntry> processor) {
+    public boolean iterateContentEntries(Predicate<ContentEntry> processor) {
         for (ContentEntry contentEntry : myContent) {
             if (!processor.test(contentEntry)) {
                 return false;
@@ -497,7 +496,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public OrderEntry[] getOrderEntries() {
         OrderEntry[] cachedOrderEntries = myCachedOrderEntries;
@@ -507,7 +506,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return cachedOrderEntries;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getContentRoots() {
         ArrayList<VirtualFile> result = new ArrayList<>();
@@ -521,7 +520,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return VirtualFileUtil.toVirtualFileArray(result);
     }
 
-    @Nonnull
+    
     @Override
     public String[] getContentRootUrls() {
         if (getContent().isEmpty()) {
@@ -536,9 +535,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return ArrayUtil.toStringArray(result);
     }
 
-    @Nonnull
+    
     @Override
-    public String[] getContentFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+    public String[] getContentFolderUrls(Predicate<ContentFolderTypeProvider> predicate) {
         List<String> result = new SmartList<>();
         for (ContentEntry contentEntry : getContent()) {
             Collections.addAll(result, contentEntry.getFolderUrls(predicate));
@@ -546,9 +545,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return ArrayUtil.toStringArray(result);
     }
 
-    @Nonnull
+    
     @Override
-    public VirtualFile[] getContentFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+    public VirtualFile[] getContentFolderFiles(Predicate<ContentFolderTypeProvider> predicate) {
         List<VirtualFile> result = new SmartList<>();
         for (ContentEntry contentEntry : getContent()) {
             Collections.addAll(result, contentEntry.getFolderFiles(predicate));
@@ -556,9 +555,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return VirtualFileUtil.toVirtualFileArray(result);
     }
 
-    @Nonnull
+    
     @Override
-    public ContentFolder[] getContentFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+    public ContentFolder[] getContentFolders(Predicate<ContentFolderTypeProvider> predicate) {
         List<ContentFolder> result = new SmartList<>();
         for (ContentEntry contentEntry : getContent()) {
             Collections.addAll(result, contentEntry.getFolders(predicate));
@@ -566,7 +565,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return result.isEmpty() ? ContentFolder.EMPTY_ARRAY : result.toArray(new ContentFolder[result.size()]);
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getExcludeRoots() {
         List<VirtualFile> result = new SmartList<>();
@@ -576,7 +575,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return VirtualFileUtil.toVirtualFileArray(result);
     }
 
-    @Nonnull
+    
     @Override
     public String[] getExcludeRootUrls() {
         List<String> result = new SmartList<>();
@@ -586,13 +585,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return ArrayUtil.toStringArray(result);
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getSourceRoots() {
         return getSourceRoots(true);
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getSourceRoots(boolean includingTests) {
         List<VirtualFile> result = new SmartList<>();
@@ -602,13 +601,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return VirtualFileUtil.toVirtualFileArray(result);
     }
 
-    @Nonnull
+    
     @Override
     public String[] getSourceRootUrls() {
         return getSourceRootUrls(true);
     }
 
-    @Nonnull
+    
     @Override
     public String[] getSourceRootUrls(boolean includingTests) {
         List<String> result = new SmartList<>();
@@ -627,20 +626,20 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return result;
     }
 
-    @Nonnull
+    
     @Override
     public OrderEnumerator orderEntries() {
         return new ModuleOrderEnumerator(this, null);
     }
 
-    @Nonnull
+    
     @Override
     public String[] getDependencyModuleNames() {
         List<String> result = orderEntries().withoutSdk().withoutLibraries().withoutModuleSourceEntries().process(new CollectDependentModules(), new ArrayList<>());
         return ArrayUtil.toStringArray(result);
     }
 
-    @Nonnull
+    
     @Override
     public List<ModuleExtension> getExtensions() {
         if (myExtensions.isEmpty()) {
@@ -655,13 +654,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return list;
     }
 
-    @Nonnull
+    
     @Override
     public Module[] getModuleDependencies() {
         return getModuleDependencies(true);
     }
 
-    @Nonnull
+    
     @Override
     public Module[] getModuleDependencies(boolean includeTests) {
         List<Module> result = new ArrayList<>();
@@ -722,7 +721,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends ModuleExtension> T getExtension(@Nonnull String key) {
+    public <T extends ModuleExtension> T getExtension(String key) {
         checkDisposed();
 
         ModuleExtension extension = myExtensions.get(key);
@@ -732,39 +731,39 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends ModuleExtension> T getExtensionWithoutCheck(@Nonnull String key) {
+    public <T extends ModuleExtension> T getExtensionWithoutCheck(String key) {
         checkDisposed();
 
         ModuleExtension extension = myExtensions.get(key);
         return (T) extension;
     }
 
-    @Nonnull
+    
     @Override
-    public ContentEntry addContentEntry(@Nonnull VirtualFile file) {
+    public ContentEntry addContentEntry(VirtualFile file) {
         return addContentEntry(new ContentEntryImpl(file, this));
     }
 
-    @Nonnull
+    
     @Override
-    public ContentEntry addContentEntry(@Nonnull String url) {
+    public ContentEntry addContentEntry(String url) {
         return addContentEntry(new ContentEntryImpl(url, this));
     }
 
-    @Nonnull
+    
     @Override
-    public ContentEntry addSingleContentEntry(@Nonnull VirtualFile file) {
+    public ContentEntry addSingleContentEntry(VirtualFile file) {
         return addContentEntry(new OptimizedSingleContentEntryImpl(file, this));
     }
 
-    @Nonnull
+    
     @Override
-    public ContentEntry addSingleContentEntry(@Nonnull String url) {
+    public ContentEntry addSingleContentEntry(String url) {
         return addContentEntry(new OptimizedSingleContentEntryImpl(url, this));
     }
 
     @Override
-    public void removeContentEntry(@Nonnull ContentEntry entry) {
+    public void removeContentEntry(ContentEntry entry) {
         checkDisposed();
 
         LOG.assertTrue(myContent.contains(entry));
@@ -775,25 +774,25 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    public void addOrderEntry(@Nonnull OrderEntry entry) {
+    public void addOrderEntry(OrderEntry entry) {
         checkDisposed();
 
         LOG.assertTrue(!myOrderEntries.contains(entry));
         myOrderEntries.add(entry);
     }
 
-    @Nonnull
+    
     @Override
-    public LibraryOrderEntry addLibraryEntry(@Nonnull Library library) {
+    public LibraryOrderEntry addLibraryEntry(Library library) {
         LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(library, this);
         assert libraryOrderEntry.isValid();
         myOrderEntries.add(libraryOrderEntry);
         return libraryOrderEntry;
     }
 
-    @Nonnull
+    
     @Override
-    public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@Nonnull ModuleExtensionWithSdk<?> moduleExtension) {
+    public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(ModuleExtensionWithSdk<?> moduleExtension) {
         checkDisposed();
 
         ModuleExtensionWithSdkOrderEntryImpl moduleSdkOrderEntry = new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension.getId(), this);
@@ -823,9 +822,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return moduleSdkOrderEntry;
     }
 
-    @Nonnull
+    
     @Override
-    public LibraryOrderEntry addInvalidLibrary(@Nonnull String name, @Nonnull String level) {
+    public LibraryOrderEntry addInvalidLibrary(String name, String level) {
         checkDisposed();
 
         LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this);
@@ -833,9 +832,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return libraryOrderEntry;
     }
 
-    @Nonnull
+    
     @Override
-    public ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module) {
+    public ModuleOrderEntry addModuleOrderEntry(Module module) {
         checkDisposed();
 
         LOG.assertTrue(!module.equals(getModule()));
@@ -845,10 +844,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return moduleOrderEntry;
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
-    public <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(@Nonnull CustomOrderEntryTypeProvider<M> type, @Nonnull M model) {
+    public <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(CustomOrderEntryTypeProvider<M> type, M model) {
         checkDisposed();
 
         OrderEntryType<?> entryType = OrderEntrySerializationUtil.findOrderEntryType(type.getId());
@@ -862,9 +861,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return entry;
     }
 
-    @Nonnull
+    
     @Override
-    public ModuleOrderEntry addInvalidModuleEntry(@Nonnull String name) {
+    public ModuleOrderEntry addInvalidModuleEntry(String name) {
         checkDisposed();
 
         LOG.assertTrue(!name.equals(getModule().getName()));
@@ -875,7 +874,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
     @Nullable
     @Override
-    public LibraryOrderEntry findLibraryOrderEntry(@Nonnull Library library) {
+    public LibraryOrderEntry findLibraryOrderEntry(Library library) {
         for (OrderEntry orderEntry : getOrderEntries()) {
             if (orderEntry instanceof LibraryOrderEntry && library.equals(((LibraryOrderEntry) orderEntry).getLibrary())) {
                 return (LibraryOrderEntry) orderEntry;
@@ -886,7 +885,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
     @Nullable
     @Override
-    public ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@Nonnull ModuleExtension extension) {
+    public ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(ModuleExtension extension) {
         for (OrderEntry orderEntry : getOrderEntries()) {
             if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry && extension.getId().equals(((ModuleExtensionWithSdkOrderEntry) orderEntry).getModuleExtensionId())) {
                 return (ModuleExtensionWithSdkOrderEntry) orderEntry;
@@ -896,7 +895,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    public void removeOrderEntry(@Nonnull OrderEntry orderEntry) {
+    public void removeOrderEntry(OrderEntry orderEntry) {
         removeOrderEntryInternal(orderEntry);
     }
 
@@ -909,7 +908,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    public void rearrangeOrderEntries(@Nonnull OrderEntry[] newEntries) {
+    public void rearrangeOrderEntries(OrderEntry[] newEntries) {
         checkDisposed();
 
         assertValidRearrangement(newEntries);
@@ -917,13 +916,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         ContainerUtil.addAll(myOrderEntries, newEntries);
     }
 
-    private void assertValidRearrangement(@Nonnull OrderEntry[] newEntries) {
+    private void assertValidRearrangement(OrderEntry[] newEntries) {
         String error = checkValidRearrangement(newEntries);
         LOG.assertTrue(error == null, error);
     }
 
     @Nullable
-    private String checkValidRearrangement(@Nonnull OrderEntry[] newEntries) {
+    private String checkValidRearrangement(OrderEntry[] newEntries) {
         if (newEntries.length != myOrderEntries.size()) {
             return "Size mismatch: old size=" + myOrderEntries.size() + "; new size=" + newEntries.length;
         }
@@ -989,7 +988,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
     }
 
-    @Nonnull
+    
     @Override
     public LibraryTable getModuleLibraryTable() {
         return myModuleLibraryTable;
@@ -1020,7 +1019,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return myRootModel.getConfigurationAccessor();
     }
 
-    @Nonnull
+    
     public VirtualFilePointerListener getRootsChangedListener() {
         return ProjectRootManagerImpl.getInstanceImpl(getProject()).getRootsValidityChangedListener();
     }

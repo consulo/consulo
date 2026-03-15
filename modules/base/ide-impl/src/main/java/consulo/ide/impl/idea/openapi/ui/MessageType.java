@@ -20,7 +20,6 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class MessageType {
@@ -40,39 +39,39 @@ public class MessageType {
   private final Color myForeground;
   private final Color myBorderColor;
 
-  private MessageType(@Nonnull Image defaultIcon, @Nonnull Color popupBackground, @Nonnull Color foreground, @Nonnull Color borderColor) {
+  private MessageType(Image defaultIcon, Color popupBackground, Color foreground, Color borderColor) {
     myDefaultIcon = defaultIcon;
     myPopupBackground = popupBackground;
     myForeground = foreground;
     myBorderColor = borderColor;
   }
 
-  @Nonnull
+  
   public Image getDefaultIcon() {
     return myDefaultIcon;
   }
 
-  @Nonnull
+  
   public Color getPopupBackground() {
     return myPopupBackground;
   }
 
-  @Nonnull
+  
   public Color getTitleForeground() {
     return myForeground;
   }
 
-  @Nonnull
+  
   public Color getBorderColor() {
     return myBorderColor;
   }
 
-  @Nonnull
+  
   public NotificationType toNotificationType() {
     return this == ERROR ? NotificationType.ERROR : this == WARNING ? NotificationType.WARNING : NotificationType.INFORMATION;
   }
 
-  @Nonnull
+  
   public static MessageType from(consulo.ui.NotificationType type) {
     switch (type) {
       case INFO:

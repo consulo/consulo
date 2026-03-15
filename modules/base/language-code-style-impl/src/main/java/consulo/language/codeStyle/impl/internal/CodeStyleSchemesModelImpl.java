@@ -25,8 +25,7 @@ import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModelListener;
 import consulo.project.Project;
 import consulo.proxy.EventDispatcher;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -84,7 +83,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
   }
 
   @Override
-  @Nonnull
+  
   public CodeStyleScheme getSelectedScheme(){
     if (myUsePerProjectSettings) {
       return myProjectScheme;
@@ -234,7 +233,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
   }
 
   @Override
-  public CodeStyleScheme exportProjectScheme(@Nonnull String name) {
+  public CodeStyleScheme exportProjectScheme(String name) {
     CodeStyleScheme newScheme = createNewScheme(name, myProjectScheme);
     ((CodeStyleSchemeImpl)newScheme).setCodeStyleSettings(getCloneSettings(myProjectScheme));
     addScheme(newScheme, false);

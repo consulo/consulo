@@ -14,7 +14,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -30,5 +29,5 @@ public abstract class ConfigurationErrorQuickFix {
     return myActionName;
   }
 
-  public abstract void performFix(@Nonnull DataContext dataContext);
+  public abstract void performFix(DataContext dataContext);
 }

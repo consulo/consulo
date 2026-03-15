@@ -28,8 +28,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,16 +37,16 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageVersionResolver extends LanguageExtension {
   LanguageVersionResolver DEFAULT = new LanguageVersionResolver() {
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
       return Language.ANY;
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element) {
+    public LanguageVersion getLanguageVersion(Language language, @Nullable PsiElement element) {
       LanguageVersion[] versions = language.getVersions();
       for (LanguageVersion version : versions) {
         if (version instanceof LanguageVersionWithDefinition && ((LanguageVersionWithDefinition)version).isMyElement(element)) {
@@ -58,9 +57,9 @@ public interface LanguageVersionResolver extends LanguageExtension {
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+    public LanguageVersion getLanguageVersion(Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       LanguageVersion[] versions = language.getVersions();
       for (LanguageVersion version : versions) {
         if (version instanceof LanguageVersionWithDefinition && ((LanguageVersionWithDefinition)version).isMyFile(project, virtualFile)) {
@@ -71,8 +70,8 @@ public interface LanguageVersionResolver extends LanguageExtension {
     }
   };
 
-  @Nonnull
-  static LanguageVersionResolver forLanguage(@Nonnull Language language) {
+  
+  static LanguageVersionResolver forLanguage(Language language) {
     ByLanguageValue<LanguageVersionResolver> value = Application.get().getExtensionPoint(LanguageVersionResolver.class).getOrBuildCache(KEY);
     return value.get(language);
   }
@@ -80,11 +79,11 @@ public interface LanguageVersionResolver extends LanguageExtension {
   ExtensionPointCacheKey<LanguageVersionResolver, ByLanguageValue<LanguageVersionResolver>> KEY =
           ExtensionPointCacheKey.create("LanguageVersionResolver", LanguageOneToOne.build(LanguageVersionResolver.DEFAULT));
 
-  @Nonnull
+  
   @RequiredReadAction
-  LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element);
+  LanguageVersion getLanguageVersion(Language language, @Nullable PsiElement element);
 
-  @Nonnull
+  
   @RequiredReadAction
-  LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile);
+  LanguageVersion getLanguageVersion(Language language, @Nullable Project project, @Nullable VirtualFile virtualFile);
 }

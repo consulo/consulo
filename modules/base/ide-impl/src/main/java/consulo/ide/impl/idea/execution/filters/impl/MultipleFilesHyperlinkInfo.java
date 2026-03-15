@@ -38,8 +38,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -51,15 +50,15 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
     private final Project myProject;
     private final HyperlinkInfoFactory.HyperlinkHandler myAction;
 
-    MultipleFilesHyperlinkInfo(@Nonnull List<? extends VirtualFile> virtualFiles, int lineNumber, @Nonnull Project project) {
+    MultipleFilesHyperlinkInfo(List<? extends VirtualFile> virtualFiles, int lineNumber, Project project) {
         this(virtualFiles, lineNumber, project, null);
     }
 
     MultipleFilesHyperlinkInfo(
-        @Nonnull List<? extends VirtualFile> virtualFiles,
+        List<? extends VirtualFile> virtualFiles,
         int lineNumber,
-        @Nonnull Project project,
-        @Nullable HyperlinkInfoFactory.HyperlinkHandler action
+        Project project,
+        HyperlinkInfoFactory.@Nullable HyperlinkHandler action
     ) {
         myVirtualFiles = virtualFiles;
         myLineNumber = lineNumber;
@@ -68,7 +67,7 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
     }
 
     @Override
-    public void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
+    public void navigate(Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
         List<PsiFile> currentFiles = new ArrayList<>();
         Editor originalEditor;
         if (hyperlinkLocationPoint != null) {
@@ -123,7 +122,7 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
         }
     }
 
-    private void open(@Nonnull VirtualFile file, Editor originalEditor) {
+    private void open(VirtualFile file, Editor originalEditor) {
         Document document = FileDocumentManager.getInstance().getDocument(file);
         int offset = 0;
         if (document != null && myLineNumber >= 0 && myLineNumber < document.getLineCount()) {

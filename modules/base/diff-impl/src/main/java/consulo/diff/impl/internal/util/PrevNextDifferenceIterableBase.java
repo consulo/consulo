@@ -17,22 +17,21 @@ package consulo.diff.impl.internal.util;
 
 import consulo.codeEditor.EditorEx;
 import consulo.diff.PrevNextDifferenceIterable;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class PrevNextDifferenceIterableBase<T> implements PrevNextDifferenceIterable {
-  @Nonnull
+  
   protected abstract List<? extends T> getChanges();
 
-  @Nonnull
+  
   protected abstract EditorEx getEditor();
 
-  protected abstract int getStartLine(@Nonnull T change);
+  protected abstract int getStartLine(T change);
 
-  protected abstract int getEndLine(@Nonnull T change);
+  protected abstract int getEndLine(T change);
 
-  protected abstract void scrollToChange(@Nonnull T change);
+  protected abstract void scrollToChange(T change);
 
   @Override
   public boolean canGoNext() {

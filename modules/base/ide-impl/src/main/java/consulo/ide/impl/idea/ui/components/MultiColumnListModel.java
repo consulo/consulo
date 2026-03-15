@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.components;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;

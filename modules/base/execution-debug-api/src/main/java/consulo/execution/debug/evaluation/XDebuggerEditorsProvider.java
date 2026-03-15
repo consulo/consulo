@@ -24,34 +24,33 @@ import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 
 public abstract class XDebuggerEditorsProvider {
-    @Nonnull
+    
     public abstract FileType getFileType();
 
-    @Nonnull
+    
     @RequiredReadAction
-    public abstract Document createDocument(@Nonnull Project project,
-                                            @Nonnull String text,
+    public abstract Document createDocument(Project project,
+                                            String text,
                                             @Nullable XSourcePosition sourcePosition,
-                                            @Nonnull EvaluationMode mode);
+                                            EvaluationMode mode);
 
-    @Nonnull
+    
     @RequiredReadAction
-    public Document createDocument(@Nonnull Project project,
-                                   @Nonnull XExpression expression,
+    public Document createDocument(Project project,
+                                   XExpression expression,
                                    @Nullable XSourcePosition sourcePosition,
-                                   @Nonnull EvaluationMode mode) {
+                                   EvaluationMode mode) {
         return createDocument(project, expression.getExpression(), sourcePosition, mode);
     }
 
-    @Nonnull
-    public Collection<Language> getSupportedLanguages(@Nonnull Project project, @Nullable XSourcePosition sourcePosition) {
+    
+    public Collection<Language> getSupportedLanguages(Project project, @Nullable XSourcePosition sourcePosition) {
         FileType type = getFileType();
         if (type instanceof LanguageFileType) {
             return Collections.singleton(((LanguageFileType) type).getLanguage());
@@ -59,12 +58,12 @@ public abstract class XDebuggerEditorsProvider {
         return Collections.emptyList();
     }
 
-    @Nonnull
-    public XExpression createExpression(@Nonnull Project project, @Nonnull Document document, @Nullable Language language, @Nonnull EvaluationMode mode) {
+    
+    public XExpression createExpression(Project project, Document document, @Nullable Language language, EvaluationMode mode) {
         return XDebuggerUtil.getInstance().createExpression(document.getText(), language, null, mode);
     }
 
-    @Nonnull
+    
     public InlineDebuggerHelper getInlineDebuggerHelper() {
         return InlineDebuggerHelper.DEFAULT;
     }

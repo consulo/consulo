@@ -24,8 +24,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -41,17 +40,17 @@ public abstract class XDebuggerActionBase extends AnAction {
         myHideDisabledInPopup = hideDisabledInPopup;
     }
 
-    protected XDebuggerActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected XDebuggerActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         this(text, description, icon, false);
     }
 
-    protected XDebuggerActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon, boolean hideDisabledInPopup) {
+    protected XDebuggerActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon, boolean hideDisabledInPopup) {
         super(text, description, icon);
         myHideDisabledInPopup = hideDisabledInPopup;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         boolean hidden = isHidden(event);
         if (hidden) {
@@ -69,12 +68,12 @@ public abstract class XDebuggerActionBase extends AnAction {
         presentation.setEnabled(enabled);
     }
 
-    protected boolean isEnabled(@Nonnull AnActionEvent e) {
+    protected boolean isEnabled(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         return project != null && isEnabled(project, e);
     }
 
-    @Nonnull
+    
     protected abstract DebuggerActionHandler getHandler();
 
     private boolean isEnabled(Project project, AnActionEvent event) {
@@ -83,7 +82,7 @@ public abstract class XDebuggerActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         performWithHandler(e);
     }
 

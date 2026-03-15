@@ -21,7 +21,6 @@ import consulo.ui.Alert;
 import consulo.ui.AlertValueRemember;
 import consulo.ui.NotificationType;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -74,49 +73,49 @@ public abstract class BaseAlert<V> implements Alert<V> {
 
   protected Supplier<V> myExitValue;
 
-  @Nonnull
+  
   @Override
-  public Alert<V> remember(@Nonnull AlertValueRemember<V> remember) {
+  public Alert<V> remember(AlertValueRemember<V> remember) {
     myRemember = remember;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public Alert<V> asWarning() {
     myType = NotificationType.WARNING;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public Alert<V> asQuestion() {
     myType = NotificationType.QUESTION;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public Alert<V> asError() {
     myType = NotificationType.ERROR;
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public Alert<V> button(int buttonId, @Nonnull Supplier<V> valueGetter) {
+  public Alert<V> button(int buttonId, Supplier<V> valueGetter) {
     myButtons.add(new ButtonImpl(buttonId, null, valueGetter));
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public Alert<V> button(@Nonnull LocalizeValue textValue, @Nonnull Supplier<V> valueGetter) {
+  public Alert<V> button(LocalizeValue textValue, Supplier<V> valueGetter) {
     myButtons.add(new ButtonImpl(-1, textValue, valueGetter));
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public Alert<V> asDefaultButton() {
     if (myButtons.isEmpty()) {
@@ -126,7 +125,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public Alert<V> asExitButton() {
     if (myButtons.isEmpty()) {
@@ -136,23 +135,23 @@ public abstract class BaseAlert<V> implements Alert<V> {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public Alert<V> exitValue(@Nonnull Supplier<V> valueGetter) {
+  public Alert<V> exitValue(Supplier<V> valueGetter) {
     myExitValue = valueGetter;
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public Alert<V> title(@Nonnull LocalizeValue text) {
+  public Alert<V> title(LocalizeValue text) {
     myTitle = text;
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public Alert<V> text(@Nonnull LocalizeValue text) {
+  public Alert<V> text(LocalizeValue text) {
     myText = text;
     return this;
   }

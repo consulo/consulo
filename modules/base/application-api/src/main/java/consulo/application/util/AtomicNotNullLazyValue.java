@@ -18,7 +18,6 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -28,10 +27,10 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use LazyValue")
 public abstract class AtomicNotNullLazyValue<T> extends NotNullLazyValue<T> {
-  @Nonnull
-  public static <K> AtomicNotNullLazyValue<K> createValue(@Nonnull final Supplier<K> value) {
+  
+  public static <K> AtomicNotNullLazyValue<K> createValue(final Supplier<K> value) {
     return new AtomicNotNullLazyValue<K>() {
-      @Nonnull
+      
       @Override
       protected K compute() {
         return Objects.requireNonNull(value.get());
@@ -42,7 +41,7 @@ public abstract class AtomicNotNullLazyValue<T> extends NotNullLazyValue<T> {
   private volatile T myValue;
 
   @Override
-  @Nonnull
+  
   public final T getValue() {
     T value = myValue;
     if (value != null) {

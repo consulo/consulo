@@ -36,7 +36,6 @@ import consulo.ui.HasFocus;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
      *                              Usually, this expensive process should be executed only once per highlighting session
      */
     @RequiredUIAccess
-    ShowIntentionsPass(@Nonnull Project project, @Nonnull Editor editor, boolean queryIntentionActions) {
+    ShowIntentionsPass(Project project, Editor editor, boolean queryIntentionActions) {
         super(project, editor.getDocument(), false);
         myQueryIntentionActions = queryIntentionActions;
         myPassIdToShowIntentionsFor = -1;
@@ -71,11 +70,11 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         assert myFile != null : FileDocumentManager.getInstance().getFile(myEditor.getDocument());
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static List<IntentionActionDescriptor> getAvailableFixes(
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
+        Editor editor,
+        PsiFile file,
         int passId,
         int offset
     ) {
@@ -96,7 +95,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     }
 
     @RequiredReadAction
-    public static boolean markActionInvoked(@Nonnull Project project, @Nonnull Editor editor, @Nonnull IntentionAction action) {
+    public static boolean markActionInvoked(Project project, Editor editor, IntentionAction action) {
         int offset = editor.getExpectedCaretOffset();
 
         List<HighlightInfo> infos = new ArrayList<>();
@@ -125,10 +124,10 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     }
 
     private static void addAvailableFixesForGroups(
-        @Nonnull HighlightInfo i,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull List<? super IntentionActionDescriptor> outList,
+        HighlightInfo i,
+        Editor editor,
+        PsiFile file,
+        List<? super IntentionActionDescriptor> outList,
         int group,
         int offset
     ) {
@@ -179,13 +178,13 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         }
     }
 
-    private static boolean isEmpty(@Nonnull Segment segment) {
+    private static boolean isEmpty(Segment segment) {
         return segment.getEndOffset() <= segment.getStartOffset();
     }
 
     @Override
     @RequiredReadAction
-    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+    public void doCollectInformation(ProgressIndicator progress) {
         if (!myProject.getApplication().isHeadlessEnvironment() && !HasFocus.hasFocus(myEditor.getContentUIComponent())) {
             return;
         }
@@ -221,9 +220,9 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
      *
      * @param includeSyncActions whether EDT-only providers should be queried, if {@code true}, this method should be invoked in EDT
      */
-    @Nonnull
+    
     @RequiredUIAccess
-    public static IntentionsInfo getActionsToShow(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, boolean includeSyncActions) {
+    public static IntentionsInfo getActionsToShow(Editor hostEditor, PsiFile hostFile, boolean includeSyncActions) {
         IntentionsInfo result = new IntentionsInfo();
         getActionsToShow(hostEditor, hostFile, result, -1);
         if (includeSyncActions) {
@@ -237,9 +236,9 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
      */
     @RequiredUIAccess
     private static void getActionsToShowSync(
-        @Nonnull Editor hostEditor,
-        @Nonnull PsiFile hostFile,
-        @Nonnull IntentionsInfo intentions,
+        Editor hostEditor,
+        PsiFile hostFile,
+        IntentionsInfo intentions,
         int passIdToShowIntentionsFor
     ) {
         UIAccess.assertIsUIThread();
@@ -258,9 +257,9 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
      */
     @RequiredUIAccess
     public static void getActionsToShow(
-        @Nonnull Editor hostEditor,
-        @Nonnull PsiFile hostFile,
-        @Nonnull IntentionsInfo intentions,
+        Editor hostEditor,
+        PsiFile hostFile,
+        IntentionsInfo intentions,
         int passIdToShowIntentionsFor
     ) {
         getActionsToShow(hostEditor, hostFile, intentions, passIdToShowIntentionsFor, true);
@@ -268,9 +267,9 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
 
     @RequiredReadAction
     private static void getActionsToShow(
-        @Nonnull Editor hostEditor,
-        @Nonnull PsiFile hostFile,
-        @Nonnull IntentionsInfo intentions,
+        Editor hostEditor,
+        PsiFile hostFile,
+        IntentionsInfo intentions,
         int passIdToShowIntentionsFor,
         boolean queryIntentionActions
     ) {
@@ -326,9 +325,9 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     }
 
     public static void fillIntentionsInfoForHighlightInfo(
-        @Nonnull HighlightInfoImpl infoAtCursor,
-        @Nonnull IntentionsInfo intentions,
-        @Nonnull List<? extends IntentionActionDescriptor> fixes
+        HighlightInfoImpl infoAtCursor,
+        IntentionsInfo intentions,
+        List<? extends IntentionActionDescriptor> fixes
     ) {
         boolean isError = infoAtCursor.getSeverity() == HighlightSeverity.ERROR;
         for (IntentionActionDescriptor fix : fixes) {

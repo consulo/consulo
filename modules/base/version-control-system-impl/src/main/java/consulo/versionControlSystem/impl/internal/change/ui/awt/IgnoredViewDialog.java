@@ -22,12 +22,11 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class IgnoredViewDialog extends SpecificFilesViewDialog {
-    public IgnoredViewDialog(@Nonnull Project project) {
+    public IgnoredViewDialog(Project project) {
         super(
             project,
             "Ignored Files",
@@ -37,7 +36,7 @@ public class IgnoredViewDialog extends SpecificFilesViewDialog {
     }
 
     @Override
-    protected void addCustomActions(@Nonnull DefaultActionGroup group, @Nonnull ActionToolbar actionToolbar) {
+    protected void addCustomActions(DefaultActionGroup group, ActionToolbar actionToolbar) {
         ActionManager actionManager = ActionManager.getInstance();
         AnAction deleteAction =
             EmptyAction.registerWithShortcutSet(IdeActions.DELETE_UNVERSIONED_FILES, CommonShortcuts.getDelete(), myView);
@@ -58,7 +57,7 @@ public class IgnoredViewDialog extends SpecificFilesViewDialog {
         myView.setMenuActions(new DefaultActionGroup(deleteAction));
     }
 
-    @Nonnull
+    
     @Override
     protected List<VirtualFile> getFiles() {
         return ChangeListManagerEx.getInstanceEx(myProject).getIgnoredFiles();

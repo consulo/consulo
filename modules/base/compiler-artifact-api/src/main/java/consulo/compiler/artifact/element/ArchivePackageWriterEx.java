@@ -15,7 +15,6 @@
  */
 package consulo.compiler.artifact.element;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
@@ -24,12 +23,12 @@ import java.io.IOException;
  * @since 13.04.2016
  */
 public abstract class ArchivePackageWriterEx<T> implements ArchivePackageWriter<T> {
-  @Nonnull
+  
   @Override
-  public T createArchiveObject(@Nonnull File tempFile) throws IOException {
-    throw new UnsupportedOperationException("Use createArchiveObject(@Nonnull File tempFile, @Nonnull ArchivePackageInfo archivePackageInfo)");
+  public T createArchiveObject(File tempFile) throws IOException {
+    throw new UnsupportedOperationException("Use createArchiveObject(File tempFile, ArchivePackageInfo archivePackageInfo)");
   }
 
-  @Nonnull
-  public abstract T createArchiveObject(@Nonnull File tempFile, @Nonnull ArchivePackageInfo archivePackageInfo) throws IOException;
+  
+  public abstract T createArchiveObject(File tempFile, ArchivePackageInfo archivePackageInfo) throws IOException;
 }

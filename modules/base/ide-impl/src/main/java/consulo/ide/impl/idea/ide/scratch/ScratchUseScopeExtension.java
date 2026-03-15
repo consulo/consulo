@@ -21,14 +21,13 @@ import consulo.language.psi.UseScopeEnlarger;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class ScratchUseScopeExtension implements UseScopeEnlarger {
   @Nullable
   @Override
-  public SearchScope getAdditionalUseScope(@Nonnull PsiElement element) {
+  public SearchScope getAdditionalUseScope(PsiElement element) {
     SearchScope useScope = element.getUseScope();
     if (useScope instanceof LocalSearchScope) return null;
     return ScratchesSearchScope.getScratchesScope(element.getProject());

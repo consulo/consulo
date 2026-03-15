@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui;
 
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class UiInterceptors {
    * @param uiComponent UI component which is about to be displayed
    * @return true if interception was successful, in this case no UI should be actually shown
    */
-  public static boolean tryIntercept(@Nonnull Object uiComponent) {
+  public static boolean tryIntercept(Object uiComponent) {
     UiInterceptor<?> interceptor = ourInterceptors.poll();
     if (interceptor == null) return false;
     interceptor.intercept(uiComponent);
@@ -31,7 +30,7 @@ public class UiInterceptors {
    * @param interceptor interceptor to register
    */
   @TestOnly
-  public static void register(@Nonnull UiInterceptor<?> interceptor) {
+  public static void register(UiInterceptor<?> interceptor) {
     ourInterceptors.offer(interceptor);
   }
 
@@ -49,21 +48,21 @@ public class UiInterceptors {
 
   public abstract static class UiInterceptor<T> {
     private final
-    @Nonnull
+    
     Class<T> myClass;
 
-    protected UiInterceptor(@Nonnull Class<T> componentClass) {
+    protected UiInterceptor(Class<T> componentClass) {
       myClass = componentClass;
     }
 
-    public final void intercept(@Nonnull Object component) {
+    public final void intercept(Object component) {
       if (!myClass.isInstance(component)) {
         throw new IllegalStateException("Unexpected UI component appears: wanted " + myClass.getName() + "; got: " + component.getClass().getName() + " (" + component + ")");
       }
       doIntercept(myClass.cast(component));
     }
 
-    protected abstract void doIntercept(@Nonnull T component);
+    protected abstract void doIntercept(T component);
 
     @Override
     public String toString() {

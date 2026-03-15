@@ -20,7 +20,6 @@ import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.history.ImportTestOutputExtension;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.awt.Messages;
-import jakarta.annotation.Nonnull;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -33,18 +32,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 public class ImportedToGeneralTestEventsConverter extends OutputToGeneralTestEventsConverter {
-    @Nonnull
+    
     private final TestConsoleProperties myConsoleProperties;
-    @Nonnull
+    
     private final File myFile;
-    @Nonnull
+    
     private final ProcessHandler myHandler;
 
     public ImportedToGeneralTestEventsConverter(
-        @Nonnull String testFrameworkName,
-        @Nonnull TestConsoleProperties consoleProperties,
-        @Nonnull File file,
-        @Nonnull ProcessHandler handler
+        String testFrameworkName,
+        TestConsoleProperties consoleProperties,
+        File file,
+        ProcessHandler handler
     ) {
         super(testFrameworkName, consoleProperties);
         myConsoleProperties = consoleProperties;

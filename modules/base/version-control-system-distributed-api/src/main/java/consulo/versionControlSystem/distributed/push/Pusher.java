@@ -17,8 +17,7 @@ package consulo.versionControlSystem.distributed.push;
 
 import consulo.versionControlSystem.distributed.repository.Repository;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -34,7 +33,7 @@ public abstract class Pusher<Repo extends Repository, Source extends PushSource,
    *                         {@link PushSupport#createOptionsPanel() the additional panel} if the plugin has one.
    * @param force            if true then force push should be performed.
    */
-  public abstract void push(@Nonnull Map<Repo, PushSpec<Source, Target>> pushSpecs,
+  public abstract void push(Map<Repo, PushSpec<Source, Target>> pushSpecs,
                             @Nullable VcsPushOptionValue additionalOption,
                             boolean force);
 

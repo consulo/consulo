@@ -3,7 +3,6 @@ package consulo.ide.runAnything;
 
 import consulo.dataContext.DataContext;
 import consulo.process.cmd.ParametersListUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -38,7 +37,7 @@ public abstract class RunAnythingCommandLineProvider extends RunAnythingNotifiab
      */
     protected abstract boolean run(DataContext dataContext, CommandLine commandLine);
 
-    @Nonnull
+    
     @Override
     public String getCommand(String value) {
         return value;

@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandl
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
@@ -31,7 +30,7 @@ public class SurroundWithTemplateAction extends BaseCodeInsightAction {
         super(ActionLocalize.actionSurroundwithlivetemplateText(), ActionLocalize.actionSurroundwithlivetemplateDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new SurroundWithTemplateHandler();

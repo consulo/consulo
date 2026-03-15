@@ -34,8 +34,7 @@ import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.Collections;
@@ -57,33 +56,33 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
     }
   }
 
-  @Nonnull
+  
   private final Language myBaseLanguage;
 
-  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile file) {
+  public SingleRootFileViewProvider(PsiManager manager, VirtualFile file) {
     this(manager, file, true);
   }
 
-  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, boolean eventSystemEnabled) {
+  public SingleRootFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean eventSystemEnabled) {
     this(manager, virtualFile, eventSystemEnabled, calcBaseLanguage(virtualFile, manager.getProject(), virtualFile.getFileType()));
   }
 
-  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, boolean eventSystemEnabled, @Nonnull FileType fileType) {
+  public SingleRootFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean eventSystemEnabled, FileType fileType) {
     this(manager, virtualFile, eventSystemEnabled, calcBaseLanguage(virtualFile, manager.getProject(), fileType));
   }
 
-  protected SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, boolean eventSystemEnabled, @Nonnull Language language) {
+  protected SingleRootFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean eventSystemEnabled, Language language) {
     super(manager, virtualFile, eventSystemEnabled);
     myBaseLanguage = language;
   }
 
   @Override
-  @Nonnull
+  
   public Language getBaseLanguage() {
     return myBaseLanguage;
   }
 
-  private static Language calcBaseLanguage(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull FileType fileType) {
+  private static Language calcBaseLanguage(VirtualFile file, Project project, FileType fileType) {
     if (fileType.isBinary()) return Language.ANY;
     if (RawFileLoaderHelper.isTooLargeForIntelligence(file)) return PlainTextLanguage.INSTANCE;
 
@@ -93,20 +92,20 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
   }
 
   @Override
-  @Nonnull
+  
   public Set<Language> getLanguages() {
     return Collections.singleton(getBaseLanguage());
   }
 
   @Override
-  @Nonnull
+  
   public List<PsiFile> getAllFiles() {
     return ContainerUtil.createMaybeSingletonList(getPsi(getBaseLanguage()));
   }
 
   @Override
   @Nullable
-  protected PsiFile getPsiInner(@Nonnull Language target) {
+  protected PsiFile getPsiInner(Language target) {
     if (target != getBaseLanguage()) {
       return null;
     }
@@ -133,20 +132,20 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
   }
 
   @Override
-  public final PsiFile getCachedPsi(@Nonnull Language target) {
+  public final PsiFile getCachedPsi(Language target) {
     if (target != getBaseLanguage()) return null;
     PsiFile file = myPsiFile;
     return file == PsiUtilCore.NULL_PSI_FILE ? null : file;
   }
 
-  @Nonnull
+  
   @Override
   public final List<PsiFile> getCachedPsiFiles() {
     return ContainerUtil.createMaybeSingletonList(getCachedPsi(getBaseLanguage()));
   }
 
   @Override
-  @Nonnull
+  
   public final List<FileElement> getKnownTreeRoots() {
     PsiFile psiFile = getCachedPsi(getBaseLanguage());
     if (!(psiFile instanceof PsiFileImpl)) return Collections.emptyList();
@@ -167,9 +166,9 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
     }
   }
 
-  @Nonnull
+  
   @Override
-  public SingleRootFileViewProvider createCopy(@Nonnull VirtualFile copy) {
+  public SingleRootFileViewProvider createCopy(VirtualFile copy) {
     return new SingleRootFileViewProvider(getManager(), copy, false, getBaseLanguage());
   }
 
@@ -186,12 +185,12 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
 
 
   @Override
-  public PsiElement findElementAt(int offset, @Nonnull Class<? extends Language> lang) {
+  public PsiElement findElementAt(int offset, Class<? extends Language> lang) {
     if (!ReflectionUtil.isAssignable(lang, getBaseLanguage().getClass())) return null;
     return findElementAt(offset);
   }
 
-  public final void forceCachedPsi(@Nonnull PsiFile psiFile) {
+  public final void forceCachedPsi(PsiFile psiFile) {
     while (true) {
       PsiFile prev = myPsiFile;
       if (ourPsiFileUpdater.compareAndSet(this, prev, psiFile)) {
@@ -207,32 +206,32 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
   // region deprecated methods
 
   @Deprecated
-  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile) {
+  public static boolean isTooLargeForIntelligence(VirtualFile vFile) {
     return RawFileLoaderHelper.isTooLargeForIntelligence(vFile);
   }
 
   @Deprecated
-  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile) {
+  public static boolean isTooLargeForContentLoading(VirtualFile vFile) {
     return RawFileLoaderHelper.isTooLargeForContentLoading(vFile);
   }
 
   @Deprecated
-  public static void doNotCheckFileSizeLimit(@Nonnull VirtualFile vFile) {
+  public static void doNotCheckFileSizeLimit(VirtualFile vFile) {
     RawFileLoaderHelper.doNotCheckFileSizeLimit(vFile);
   }
 
   @Deprecated
-  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, long contentSize) {
+  public static boolean isTooLargeForIntelligence(VirtualFile vFile, long contentSize) {
     return RawFileLoaderHelper.isTooLargeForIntelligence(vFile, contentSize);
   }
 
   @Deprecated
-  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, long contentSize) {
+  public static boolean isTooLargeForContentLoading(VirtualFile vFile, long contentSize) {
     return RawFileLoaderHelper.isTooLargeForContentLoading(vFile, contentSize);
   }
 
   @Deprecated
-  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, long maxBytes) {
+  public static boolean fileSizeIsGreaterThan(VirtualFile vFile, long maxBytes) {
     return RawFileLoaderHelper.fileSizeIsGreaterThan(vFile, maxBytes);
   }
 

@@ -48,8 +48,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -142,7 +141,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    @Nonnull
+   
     public DesktopIdeFrameImpl[] getAllProjectFrames() {
         Collection<DesktopIdeFrameImpl> ideFrames = myProject2Frame.values();
         return ideFrames.toArray(new DesktopIdeFrameImpl[ideFrames.size()]);
@@ -179,7 +178,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public Rectangle getScreenBounds(@Nonnull Project project) {
+    public Rectangle getScreenBounds(Project project) {
         GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point onScreen = getFrame(project).getLocationOnScreen();
         GraphicsDevice[] devices = environment.getScreenDevices();
@@ -378,8 +377,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    @Nullable
-    public consulo.ui.Window suggestParentWindow(@Nullable Project project) {
+    public consulo.ui.@Nullable Window suggestParentWindow(@Nullable Project project) {
         return myWindowWatcher.suggestParentWindow(project);
     }
 
@@ -394,17 +392,17 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public StatusBar getStatusBar(@Nonnull Component c) {
+    public StatusBar getStatusBar(Component c) {
         return getStatusBar(c, null);
     }
 
     @Override
-    public StatusBar getStatusBar(@Nonnull consulo.ui.Component c, @Nullable Project project) {
+    public StatusBar getStatusBar(consulo.ui.Component c, @Nullable Project project) {
         return getStatusBar(TargetAWT.to(c), project);
     }
 
     @Override
-    public StatusBar getStatusBar(@Nonnull Component c, @Nullable Project project) {
+    public StatusBar getStatusBar(Component c, @Nullable Project project) {
         Component parent = UIUtil.findUltimateParent(c);
         if (parent instanceof Window) {
             consulo.ui.Window uiWindow = TargetAWT.from((Window) parent);
@@ -486,9 +484,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         return candidate;
     }
 
-    @Nullable
     @Override
-    public consulo.ui.Window getWindow(@Nullable Project project) {
+    public consulo.ui.@Nullable Window getWindow(@Nullable Project project) {
         // no assert! otherwise WindowWatcher.suggestParentWindow fails for default project
         //LOG.assertTrue(myProject2Frame.containsKey(project));
         DesktopIdeFrameImpl frame = myProject2Frame.get(project);
@@ -544,9 +541,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @RequiredUIAccess
-    @Nonnull
+   
     @Override
-    public final IdeFrameEx allocateFrame(@Nonnull Project project, @Nullable IdeFrameState state) {
+    public final IdeFrameEx allocateFrame(Project project, @Nullable IdeFrameState state) {
         LOG.assertTrue(!myProject2Frame.containsKey(project));
 
         JFrame jFrame;
@@ -580,7 +577,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         return ideFrame;
     }
 
-    private void setState(@Nonnull JFrame jFrame, @Nullable IdeFrameState state) {
+    private void setState(JFrame jFrame, @Nullable IdeFrameState state) {
         if (state == null) {
             return;
         }
@@ -657,7 +654,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final Component getFocusedComponent(@Nonnull Window window) {
+    public final Component getFocusedComponent(Window window) {
         return myWindowWatcher.getFocusedComponent(window);
     }
 

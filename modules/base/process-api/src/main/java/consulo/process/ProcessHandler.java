@@ -19,8 +19,7 @@ import consulo.process.event.ProcessListener;
 import consulo.process.io.ProcessIOExecutorService;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -72,7 +71,7 @@ public interface ProcessHandler extends UserDataHolder, TaskExecutor {
   boolean isSilentlyDestroyOnClose();
 
   @Nullable
-  <F extends ProcessHandlerFeature> F getFeature(@Nonnull Class<F> featureClass);
+  <F extends ProcessHandlerFeature> F getFeature(Class<F> featureClass);
 
   @Nullable
   default Charset getCharset() {

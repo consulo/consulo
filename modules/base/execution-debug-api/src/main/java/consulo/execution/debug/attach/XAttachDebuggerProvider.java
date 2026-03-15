@@ -8,7 +8,6 @@ import consulo.platform.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public interface XAttachDebuggerProvider {
    */
   @Deprecated
   //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
-  @Nonnull
+  
   static List<XAttachDebuggerProvider> getAttachDebuggerProviders() {
     return ContainerUtil.concat(new ArrayList<>(EP.getExtensionList()), new ArrayList<>(XLocalAttachDebuggerProvider.EP.getExtensionList()));
   }
@@ -34,7 +33,7 @@ public interface XAttachDebuggerProvider {
    * @return a group in which the supported processes should be visually organized.
    * Return {@link XDefaultLocalAttachGroup} for a common process group.
    */
-  @Nonnull
+  
   default XAttachPresentationGroup<ProcessInfo> getPresentationGroup() {
     return XDefaultLocalAttachGroup.INSTANCE;
   }
@@ -43,7 +42,7 @@ public interface XAttachDebuggerProvider {
   /**
    * @return if this XAttachDebuggerProvider is able to interact with this host
    */
-  boolean isAttachHostApplicable(@Nonnull XAttachHost attachHost);
+  boolean isAttachHostApplicable(XAttachHost attachHost);
 
   /**
    * Attach to Process action invokes {@link #getAvailableDebuggers} method for every running process on the given host.
@@ -57,6 +56,6 @@ public interface XAttachDebuggerProvider {
    * @param process       process to attach to
    * @return a list of the debuggers that can attach and debug a given process
    */
-  @Nonnull
-  List<XAttachDebugger> getAvailableDebuggers(@Nonnull Project project, @Nonnull XAttachHost hostInfo, @Nonnull ProcessInfo process, @Nonnull UserDataHolder contextHolder);
+  
+  List<XAttachDebugger> getAvailableDebuggers(Project project, XAttachHost hostInfo, ProcessInfo process, UserDataHolder contextHolder);
 }

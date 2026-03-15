@@ -41,8 +41,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,25 +51,25 @@ import java.util.List;
 public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer {
     public static final Logger LOG = Logger.getInstance(ThreesideTextDiffViewerEx.class);
 
-    @Nonnull
+    
     private final SyncScrollSupport.SyncScrollable mySyncScrollable1;
-    @Nonnull
+    
     private final SyncScrollSupport.SyncScrollable mySyncScrollable2;
 
-    @Nonnull
+    
     protected final PrevNextDifferenceIterable myPrevNextDifferenceIterable;
-    @Nonnull
+    
     protected final MyStatusPanel myStatusPanel;
 
-    @Nonnull
+    
     protected final MyFoldingModel myFoldingModel;
-    @Nonnull
+    
     protected final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
 
     private int myChangesCount = -1;
     private int myConflictsCount = -1;
 
-    public ThreesideTextDiffViewerEx(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
+    public ThreesideTextDiffViewerEx(DiffContext context, ContentDiffRequest request) {
         super(context, request);
 
         mySyncScrollable1 = new MySyncScrollable(Side.LEFT);
@@ -114,12 +113,12 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     // Diff
     //
 
-    @Nonnull
+    
     public FoldingModelSupport.Settings getFoldingModelSettings() {
         return TextDiffViewerUtil.getFoldingModelSettings(myContext);
     }
 
-    @Nonnull
+    
     protected Runnable applyNotification(@Nullable JComponent notification) {
         return () -> {
             clearDiffPresentation();
@@ -147,13 +146,13 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     //
 
     @Override
-    protected void onDocumentChange(@Nonnull DocumentEvent e) {
+    protected void onDocumentChange(DocumentEvent e) {
         super.onDocumentChange(e);
         myFoldingModel.onDocumentChanged(e);
     }
 
     @RequiredUIAccess
-    protected boolean doScrollToChange(@Nonnull ScrollToPolicy scrollToPolicy) {
+    protected boolean doScrollToChange(ScrollToPolicy scrollToPolicy) {
         ThreesideDiffChangeBase targetChange = scrollToPolicy.select(getChanges());
         if (targetChange == null) {
             return false;
@@ -163,7 +162,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
         return true;
     }
 
-    protected void doScrollToChange(@Nonnull ThreesideDiffChangeBase change, boolean animated) {
+    protected void doScrollToChange(ThreesideDiffChangeBase change, boolean animated) {
         int[] startLines = new int[3];
         int[] endLines = new int[3];
 
@@ -194,7 +193,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
         myConflictsCount = 0;
     }
 
-    protected void onChangeAdded(@Nonnull ThreesideDiffChangeBase change) {
+    protected void onChangeAdded(ThreesideDiffChangeBase change) {
         if (change.isConflict()) {
             myConflictsCount++;
         }
@@ -204,7 +203,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
         myStatusPanel.update();
     }
 
-    protected void onChangeRemoved(@Nonnull ThreesideDiffChangeBase change) {
+    protected void onChangeRemoved(ThreesideDiffChangeBase change) {
         if (change.isConflict()) {
             myConflictsCount--;
         }
@@ -218,33 +217,33 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     // Getters
     //
 
-    @Nonnull
-    protected abstract DiffDividerDrawUtil.DividerPaintable getDividerPaintable(@Nonnull Side side);
+    
+    protected abstract DiffDividerDrawUtil.DividerPaintable getDividerPaintable(Side side);
 
     /*
      * Some changes (ex: applied ones) can be excluded from general processing, but should be painted/used for synchronized scrolling
      */
-    @Nonnull
+    
     protected List<? extends ThreesideDiffChangeBase> getAllChanges() {
         return getChanges();
     }
 
-    @Nonnull
+    
     protected abstract List<? extends ThreesideDiffChangeBase> getChanges();
 
-    @Nonnull
+    
     @Override
-    protected SyncScrollSupport.SyncScrollable getSyncScrollable(@Nonnull Side side) {
+    protected SyncScrollSupport.SyncScrollable getSyncScrollable(Side side) {
         return side.select(mySyncScrollable1, mySyncScrollable2);
     }
 
-    @Nonnull
+    
     @Override
     protected JComponent getStatusPanel() {
         return myStatusPanel;
     }
 
-    @Nonnull
+    
     public SyncScrollSupport.ThreesideSyncScrollSupport getSyncScrollSupport() {
         //noinspection ConstantConditions
         return mySyncScrollSupport;
@@ -256,7 +255,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
 
     @Nullable
     @RequiredUIAccess
-    protected ThreesideDiffChangeBase getSelectedChange(@Nonnull ThreeSide side) {
+    protected ThreesideDiffChangeBase getSelectedChange(ThreeSide side) {
         int caretLine = getEditor(side).getCaretModel().getLogicalPosition().line;
 
         for (ThreesideDiffChangeBase change : getChanges()) {
@@ -275,30 +274,30 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     //
 
     protected class MyPrevNextDifferenceIterable extends PrevNextDifferenceIterableBase<ThreesideDiffChangeBase> {
-        @Nonnull
+        
         @Override
         protected List<? extends ThreesideDiffChangeBase> getChanges() {
             return ThreesideTextDiffViewerEx.this.getChanges();
         }
 
-        @Nonnull
+        
         @Override
         protected EditorEx getEditor() {
             return getCurrentEditor();
         }
 
         @Override
-        protected int getStartLine(@Nonnull ThreesideDiffChangeBase change) {
+        protected int getStartLine(ThreesideDiffChangeBase change) {
             return change.getStartLine(getCurrentSide());
         }
 
         @Override
-        protected int getEndLine(@Nonnull ThreesideDiffChangeBase change) {
+        protected int getEndLine(ThreesideDiffChangeBase change) {
             return change.getEndLine(getCurrentSide());
         }
 
         @Override
-        protected void scrollToChange(@Nonnull ThreesideDiffChangeBase change) {
+        protected void scrollToChange(ThreesideDiffChangeBase change) {
             doScrollToChange(change, true);
         }
     }
@@ -321,7 +320,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     @Nullable
     @Override
     @RequiredUIAccess
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
             return myPrevNextDifferenceIterable;
         }
@@ -335,10 +334,10 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     }
 
     protected class MySyncScrollable extends BaseSyncScrollable {
-        @Nonnull
+        
         private final Side mySide;
 
-        public MySyncScrollable(@Nonnull Side side) {
+        public MySyncScrollable(Side side) {
             mySide = side;
         }
 
@@ -349,7 +348,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
         }
 
         @Override
-        protected void processHelper(@Nonnull ScrollHelper helper) {
+        protected void processHelper(ScrollHelper helper) {
             ThreeSide left = mySide.select(ThreeSide.LEFT, ThreeSide.BASE);
             ThreeSide right = mySide.select(ThreeSide.BASE, ThreeSide.RIGHT);
 
@@ -369,18 +368,18 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     }
 
     protected class MyDividerPainter implements DiffSplitter.Painter {
-        @Nonnull
+        
         private final Side mySide;
-        @Nonnull
+        
         private final DiffDividerDrawUtil.DividerPaintable myPaintable;
 
-        public MyDividerPainter(@Nonnull Side side) {
+        public MyDividerPainter(Side side) {
             mySide = side;
             myPaintable = getDividerPaintable(side);
         }
 
         @Override
-        public void paint(@Nonnull Graphics g, @Nonnull JComponent divider) {
+        public void paint(Graphics g, JComponent divider) {
             Graphics2D gg = DiffDividerDrawUtil.getDividerGraphics(g, divider, getEditor(ThreeSide.BASE).getComponent());
 
             gg.setColor(TargetAWT.to(DiffDrawUtil.getDividerColor(getEditor(ThreeSide.BASE))));
@@ -411,8 +410,8 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
             return makeCounterWord(myChangesCount, "change") + ". " + makeCounterWord(myConflictsCount, "conflict");
         }
 
-        @Nonnull
-        private String makeCounterWord(int number, @Nonnull String word) {
+        
+        private String makeCounterWord(int number, String word) {
             if (number == 0) {
                 return "No " + StringUtil.pluralize(word);
             }
@@ -424,15 +423,15 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
         private final MyPaintable myPaintable1 = new MyPaintable(0, 1);
         private final MyPaintable myPaintable2 = new MyPaintable(1, 2);
 
-        public MyFoldingModel(@Nonnull EditorEx[] editors, @Nonnull Disposable disposable) {
+        public MyFoldingModel(EditorEx[] editors, Disposable disposable) {
             super(editors, disposable);
             assert editors.length == 3;
         }
 
         public void install(
             @Nullable List<MergeLineFragment> fragments,
-            @Nonnull UserDataHolder context,
-            @Nonnull FoldingModelSupport.Settings settings
+            UserDataHolder context,
+            FoldingModelSupport.Settings settings
         ) {
             Iterator<int[]> it = map(fragments, fragment -> new int[]{
                 fragment.getStartLine(ThreeSide.LEFT),
@@ -444,12 +443,12 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
             install(it, context, settings);
         }
 
-        public void paintOnDivider(@Nonnull Graphics2D gg, @Nonnull Component divider, @Nonnull Side side) {
+        public void paintOnDivider(Graphics2D gg, Component divider, Side side) {
             MyPaintable paintable = side.select(myPaintable1, myPaintable2);
             paintable.paintOnDivider(gg, divider);
         }
 
-        public void paintOnScrollbar(@Nonnull Graphics2D gg, int width) {
+        public void paintOnScrollbar(Graphics2D gg, int width) {
             myPaintable2.paintOnScrollbar(gg, width);
         }
     }

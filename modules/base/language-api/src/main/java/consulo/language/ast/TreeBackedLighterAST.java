@@ -15,7 +15,6 @@
  */
 package consulo.language.ast;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,26 +22,26 @@ import java.util.List;
 public class TreeBackedLighterAST extends LighterAST {
   private final FileASTNode myRoot;
 
-  public TreeBackedLighterAST(@Nonnull FileASTNode root) {
+  public TreeBackedLighterAST(FileASTNode root) {
     super(root.getCharTable());
     myRoot = root;
   }
 
-  @Nonnull
+  
   @Override
   public LighterASTNode getRoot() {
     return wrap(myRoot);
   }
 
   @Override
-  public LighterASTNode getParent(@Nonnull LighterASTNode node) {
+  public LighterASTNode getParent(LighterASTNode node) {
     ASTNode parent = ((NodeWrapper)node).myNode.getTreeParent();
     return parent == null ? null : wrap(parent);
   }
 
-  @Nonnull
+  
   @Override
-  public List<LighterASTNode> getChildren(@Nonnull LighterASTNode parent) {
+  public List<LighterASTNode> getChildren(LighterASTNode parent) {
     ASTNode[] children = ((NodeWrapper)parent).myNode.getChildren(null);
     if (children.length == 0) return List.of();
 
@@ -53,13 +52,13 @@ public class TreeBackedLighterAST extends LighterAST {
     return result;
   }
 
-  @Nonnull
-  public static LighterASTNode wrap(@Nonnull ASTNode node) {
+  
+  public static LighterASTNode wrap(ASTNode node) {
     return node.getFirstChildNode() == null && node.getTextLength() > 0 ? new TokenNodeWrapper(node) : new NodeWrapper(node);
   }
 
-  @Nonnull
-  public ASTNode unwrap(@Nonnull LighterASTNode node) {
+  
+  public ASTNode unwrap(LighterASTNode node) {
     return ((NodeWrapper)node).myNode;
   }
 
@@ -70,7 +69,7 @@ public class TreeBackedLighterAST extends LighterAST {
       myNode = node;
     }
 
-    @Nonnull
+    
     @Override
     public IElementType getTokenType() {
       return myNode.getElementType();

@@ -33,7 +33,6 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.Trinity;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -68,24 +67,24 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         MessageBusConnection connection = application.getMessageBus().connect(this);
         connection.subscribe(ExecutionListener.class, new ExecutionListener() {
             @Override
-            public void processStartScheduled(@Nonnull String executorId, @Nonnull ExecutionEnvironment environment) {
+            public void processStartScheduled(String executorId, ExecutionEnvironment environment) {
                 myInProgress.add(createExecutionId(executorId, environment));
             }
 
             @Override
-            public void processNotStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment environment) {
+            public void processNotStarted(String executorId, ExecutionEnvironment environment) {
                 myInProgress.remove(createExecutionId(executorId, environment));
             }
 
             @Override
-            public void processStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment environment, @Nonnull ProcessHandler handler) {
+            public void processStarted(String executorId, ExecutionEnvironment environment, ProcessHandler handler) {
                 myInProgress.remove(createExecutionId(executorId, environment));
             }
         });
 
         connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectClosed(Project project, UIAccess uiAccess) {
                 // perform cleanup
                 synchronized (myInProgress) {
                     for (Iterator<Trinity<Project, String, String>> it = myInProgress.iterator(); it.hasNext(); ) {
@@ -104,7 +103,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         myApplication.getExtensionPoint(Executor.class).forEachExtensionSafe(this::initExecutor);
     }
 
-    synchronized void initExecutor(@Nonnull Executor executor) {
+    synchronized void initExecutor(Executor executor) {
         if (myId2Executor.get(executor.getId()) != null) {
             LOG.error("Executor with id: \"" + executor.getId() + "\" was already registered!");
         }
@@ -121,7 +120,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         registerAction(executor.getContextActionId(), new RunContextAction(executor), RUN_CONTEXT_GROUP, myContextActionId2Action);
     }
 
-    private void registerAction(@Nonnull String actionId, @Nonnull AnAction anAction, @Nonnull String groupId, @Nonnull Map<String, AnAction> map) {
+    private void registerAction(String actionId, AnAction anAction, String groupId, Map<String, AnAction> map) {
         AnAction action = myActionManager.getAction(actionId);
         if (action == null) {
             myActionManager.registerAction(actionId, anAction);
@@ -132,7 +131,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         ((DefaultActionGroup) myActionManager.getAction(groupId)).add(action, Constraints.LAST, myActionManager);
     }
 
-    synchronized void deinitExecutor(@Nonnull Executor executor) {
+    synchronized void deinitExecutor(Executor executor) {
         myExecutors.remove(executor);
         myId2Executor.remove(executor.getId());
         myContextActionIdSet.remove(executor.getContextActionId());
@@ -141,7 +140,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         unregisterAction(executor.getContextActionId(), RUN_CONTEXT_GROUP, myContextActionId2Action);
     }
 
-    private void unregisterAction(@Nonnull String actionId, @Nonnull String groupId, @Nonnull Map<String, AnAction> map) {
+    private void unregisterAction(String actionId, String groupId, Map<String, AnAction> map) {
         DefaultActionGroup group = (DefaultActionGroup) myActionManager.getAction(groupId);
         if (group != null) {
             group.remove(myActionManager.getAction(actionId));
@@ -154,7 +153,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
     }
 
     @Override
-    @Nonnull
+    
     public synchronized Executor[] getRegisteredExecutors() {
         return myExecutors.toArray(new Executor[myExecutors.size()]);
     }
@@ -164,8 +163,8 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         return myId2Executor.get(executorId);
     }
 
-    @Nonnull
-    private static Trinity<Project, String, String> createExecutionId(String executorId, @Nonnull ExecutionEnvironment environment) {
+    
+    private static Trinity<Project, String, String> createExecutionId(String executorId, ExecutionEnvironment environment) {
         return Trinity.create(environment.getProject(), executorId, environment.getRunner().getRunnerId());
     }
 
@@ -175,7 +174,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
     }
 
     @Override
-    public boolean isStarting(@Nonnull ExecutionEnvironment environment) {
+    public boolean isStarting(ExecutionEnvironment environment) {
         return isStarting(environment.getProject(), environment.getExecutor().getId(), environment.getRunner().getRunnerId());
     }
 

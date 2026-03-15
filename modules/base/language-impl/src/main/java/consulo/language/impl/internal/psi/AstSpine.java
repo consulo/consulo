@@ -21,8 +21,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.stub.StubbedSpine;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class AstSpine implements StubbedSpine {
   public static final AstSpine EMPTY_SPINE = new AstSpine(Collections.emptyList());
   private final List<CompositeElement> myNodes;
 
-  public AstSpine(@Nonnull List<CompositeElement> nodes) {
+  public AstSpine(List<CompositeElement> nodes) {
     myNodes = nodes;
   }
 
@@ -48,7 +47,7 @@ public class AstSpine implements StubbedSpine {
     return index >= myNodes.size() ? null : myNodes.get(index).getPsi();
   }
 
-  public int getStubIndex(@Nonnull StubBasedPsiElement psi) {
+  public int getStubIndex(StubBasedPsiElement psi) {
     return myNodes.indexOf((CompositeElement)psi.getNode());
   }
 
@@ -58,7 +57,7 @@ public class AstSpine implements StubbedSpine {
     return index >= myNodes.size() ? null : myNodes.get(index).getElementType();
   }
 
-  @Nonnull
+  
   public List<CompositeElement> getSpineNodes() {
     return myNodes;
   }

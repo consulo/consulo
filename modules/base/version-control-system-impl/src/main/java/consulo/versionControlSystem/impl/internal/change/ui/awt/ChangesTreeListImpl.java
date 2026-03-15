@@ -51,8 +51,7 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -72,7 +71,7 @@ import java.util.*;
  * @author max
  */
 public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDataProvider, ChangesBrowserTree<T> {
-    @Nonnull
+    
     protected final Project myProject;
     private final boolean myShowCheckboxes;
     private final int myCheckboxWidth;
@@ -80,13 +79,13 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     private boolean myShowFlatten;
     private boolean myIsModelFlat;
 
-    @Nonnull
+    
     private final Set<T> myIncludedChanges;
-    @Nonnull
+    
     private Runnable myDoubleClickHandler = EmptyRunnable.getInstance();
     private boolean myAlwaysExpandList;
 
-    @Nonnull
+    
     private final MyTreeCellRenderer myNodeRenderer;
 
     private static final String ROOT = "root";
@@ -98,14 +97,14 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     @Nullable
     private ChangeNodeDecorator myChangeDecorator;
     private Runnable myGenericSelectionListener;
-    @Nonnull
+    
     private final CopyProvider myTreeCopyProvider;
     private TreeState myNonFlatTreeState;
     private final ApplicationFileColorManager myApplicationFileColorManager;
 
     public ChangesTreeListImpl(
-        @Nonnull Project project,
-        @Nonnull Collection<T> initiallyIncluded,
+        Project project,
+        Collection<T> initiallyIncluded,
         boolean showCheckboxes,
         boolean highlightProblems,
         @Nullable Runnable inclusionListener,
@@ -185,7 +184,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
 
         new TreeLinkMouseListener(myNodeRenderer.myTextRenderer) {
             @Override
-            protected int getRendererRelativeX(@Nonnull MouseEvent e, @Nonnull JTree tree, @Nonnull TreePath path) {
+            protected int getRendererRelativeX(MouseEvent e, JTree tree, TreePath path) {
                 int x = super.getRendererRelativeX(e, tree, path);
 
                 return !myShowCheckboxes ? x : x - myCheckboxWidth;
@@ -202,7 +201,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     }
 
     @Override
-    public void setEmptyText(@Nonnull String emptyText) {
+    public void setEmptyText(String emptyText) {
         getEmptyText().setText(emptyText);
     }
 
@@ -215,7 +214,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         myChangeDecorator = changeDecorator;
     }
 
-    public void setDoubleClickHandler(@Nonnull Runnable doubleClickHandler) {
+    public void setDoubleClickHandler(Runnable doubleClickHandler) {
         myDoubleClickHandler = doubleClickHandler;
     }
 
@@ -342,7 +341,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         }
     }
 
-    private int findRowContainingFile(@Nonnull TreeNode root, @Nonnull VirtualFile toSelect) {
+    private int findRowContainingFile(TreeNode root, VirtualFile toSelect) {
         Ref<Integer> row = Ref.create(-1);
         TreeUtil.traverse(root, node -> {
             if (node instanceof DefaultMutableTreeNode mutableTreeNode) {
@@ -360,7 +359,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         return row.get();
     }
 
-    private static boolean matches(@Nonnull Change change, @Nonnull VirtualFile file) {
+    private static boolean matches(Change change, VirtualFile file) {
         VirtualFile virtualFile = change.getVirtualFile();
         return virtualFile != null && virtualFile.equals(file) || seemsToBeMoved(change, file);
     }
@@ -384,13 +383,13 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
      * TODO: This method does not respect T type parameter while filling the result - just "Change" class is used
      * TODO: ("ChangesBrowserNode.getAllChangesUnder()").
      */
-    @Nonnull
+    
     public List<T> getChanges() {
         //noinspection unchecked
         return ((ChangesBrowserNode) getRoot()).getAllChangesUnder();
     }
 
-    @Nonnull
+    
     public List<T> getSelectedChanges() {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) {
@@ -406,7 +405,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         }
     }
 
-    @Nonnull
+    
     private List<T> getSelectedChangesOrAllIfNone() {
         List<T> changes = getSelectedChanges();
         if (!changes.isEmpty()) {
@@ -437,7 +436,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         return path == null ? null : ContainerUtil.getFirstItem(getSelectedObjects(((ChangesBrowserNode<T>) path.getLastPathComponent())));
     }
 
-    @Nonnull
+    
     public ChangesBrowserNode<?> getRoot() {
         return (ChangesBrowserNode<?>) getModel().getRoot();
     }
@@ -500,7 +499,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     }
 
     @Override
-    @Nonnull
+    
     public Collection<T> getIncludedChanges() {
         return myIncludedChanges;
     }
@@ -509,19 +508,19 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         TreeUtil.expandAll(this);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getTreeActions() {
         ToggleShowDirectoriesAction directoriesAction = new ToggleShowDirectoriesAction();
         ExpandAllAction expandAllAction = new ExpandAllAction(this) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabledAndVisible(!myShowFlatten || !myIsModelFlat);
             }
         };
         CollapseAllAction collapseAllAction = new CollapseAllAction(this) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabledAndVisible(!myShowFlatten || !myIsModelFlat);
             }
         };
@@ -554,7 +553,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         private final ChangesBrowserNodeRenderer myTextRenderer;
         private final JCheckBox myCheckBox;
 
-        public MyTreeCellRenderer(@Nonnull ChangesBrowserNodeRenderer textRenderer) {
+        public MyTreeCellRenderer(ChangesBrowserNodeRenderer textRenderer) {
             super(new BorderLayout());
             myCheckBox = new JCheckBox();
             myTextRenderer = textRenderer;
@@ -641,7 +640,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     private class MyToggleSelectionAction extends AnAction implements DumbAware {
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             toggleChanges(getSelectedChangesOrAllIfNone());
         }
     }
@@ -656,12 +655,12 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return (!myProject.isDisposed()) && !ProjectPropertiesComponent.getInstance(myProject).isTrueValue(FLATTEN_OPTION_KEY);
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             ProjectPropertiesComponent.getInstance(myProject).setValue(FLATTEN_OPTION_KEY, String.valueOf(!state));
             setShowFlatten(!state);
         }

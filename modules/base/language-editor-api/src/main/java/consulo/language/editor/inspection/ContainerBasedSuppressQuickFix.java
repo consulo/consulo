@@ -2,7 +2,7 @@ package consulo.language.editor.inspection;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This kind of suppression fix is able to provide suppression container.

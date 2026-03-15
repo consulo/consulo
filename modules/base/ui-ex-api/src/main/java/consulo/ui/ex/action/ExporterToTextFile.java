@@ -3,8 +3,7 @@
  */
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.util.TooManyListenersException;
@@ -21,13 +20,13 @@ public interface ExporterToTextFile {
   default void removeSettingsChangedListener(ChangeListener listener) {
   }
 
-  @Nonnull
+  
   String getReportText();
 
-  @Nonnull
+  
   String getDefaultFilePath();
 
-  default void exportedTo(@Nonnull String filePath) {
+  default void exportedTo(String filePath) {
   }
 
   boolean canExport();

@@ -17,16 +17,15 @@ package consulo.compiler.artifact;
 
 import consulo.component.util.pointer.NamedPointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface ArtifactPointer extends NamedPointer<Artifact> {
-  @Nonnull
-  String getArtifactName(@Nonnull ArtifactModel artifactModel);
+  
+  String getArtifactName(ArtifactModel artifactModel);
 
   @Nullable
-  Artifact findArtifact(@Nonnull ArtifactModel artifactModel);
+  Artifact findArtifact(ArtifactModel artifactModel);
 }

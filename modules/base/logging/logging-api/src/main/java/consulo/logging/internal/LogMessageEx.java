@@ -19,8 +19,7 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.util.LoggerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -129,15 +128,15 @@ public class LogMessageEx extends LogMessage {
     }
 
     @Deprecated
-    public static void error(@Nonnull Logger logger, @Nonnull String message, @Nonnull String... attachmentText) {
+    public static void error(Logger logger, String message, String... attachmentText) {
         error(logger, message, new Throwable(), attachmentText);
     }
 
     @Deprecated
-    public static void error(@Nonnull Logger logger,
-                             @Nonnull String message,
-                             @Nonnull Throwable cause,
-                             @Nonnull String... attachmentText) {
+    public static void error(Logger logger,
+                             String message,
+                             Throwable cause,
+                             String... attachmentText) {
         LoggerUtil.error(logger, message, cause, attachmentText);
     }
 

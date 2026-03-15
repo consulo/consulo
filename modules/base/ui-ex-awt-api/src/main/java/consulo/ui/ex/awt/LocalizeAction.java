@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.util.TextWithMnemonic;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -63,7 +62,7 @@ public abstract class LocalizeAction extends AbstractAction {
         }
     }
 
-    @Nonnull
+    
     public LocalizeValue getTextValue() {
         return myTextValue;
     }

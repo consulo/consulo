@@ -7,15 +7,14 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public class VFileCreateEvent extends VFileEvent {
   private final
-  @Nonnull
+  
   VirtualFile myParent;
   private final boolean myDirectory;
   private final FileAttributes myAttributes;
@@ -36,8 +35,8 @@ public class VFileCreateEvent extends VFileEvent {
    * @param children null means children not available (e.g. the created file is not a directory) or unknown
    */
   public VFileCreateEvent(Object requestor,
-                          @Nonnull VirtualFile parent,
-                          @Nonnull String childName,
+                          VirtualFile parent,
+                          String childName,
                           boolean isDirectory,
                           @Nullable FileAttributes attributes,
                           @Nullable String symlinkTarget,
@@ -52,7 +51,7 @@ public class VFileCreateEvent extends VFileEvent {
     myChildNameId = VirtualFileManager.getInstance().storeName(childName);
   }
 
-  @Nonnull
+  
   public String getChildName() {
     return VirtualFileManager.getInstance().getVFileName(myChildNameId).toString();
   }
@@ -61,7 +60,7 @@ public class VFileCreateEvent extends VFileEvent {
     return myDirectory;
   }
 
-  @Nonnull
+  
   public VirtualFile getParent() {
     return myParent;
   }
@@ -83,7 +82,7 @@ public class VFileCreateEvent extends VFileEvent {
     return isDirectory() && myChildren != null && myChildren.length == 0;
   }
 
-  @Nonnull
+  
   @Override
   protected String computePath() {
     String parentPath = myParent.getPath();
@@ -113,7 +112,7 @@ public class VFileCreateEvent extends VFileEvent {
     myCreatedFile = null;
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myParent.getFileSystem();

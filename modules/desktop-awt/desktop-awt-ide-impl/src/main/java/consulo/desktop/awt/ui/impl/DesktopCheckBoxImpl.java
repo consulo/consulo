@@ -24,7 +24,6 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBCheckBox;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -44,7 +43,7 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
             }
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopCheckBoxImpl.this;
@@ -80,7 +79,7 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
         }
     }
 
-    @Nonnull
+    
     @Override
     public Boolean getValue() {
         return toAWTComponent().isSelected();
@@ -88,7 +87,7 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
 
     @RequiredUIAccess
     @Override
-    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+    public void setValue(Boolean value, boolean fireListeners) {
         toAWTComponent().setSelected(value);
 
         if (fireListeners) {
@@ -102,7 +101,7 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
         getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, toAWTComponent().isSelected()));
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getLabelText() {
         return toAWTComponent().getLabelText();
@@ -110,7 +109,7 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
 
     @RequiredUIAccess
     @Override
-    public void setLabelText(@Nonnull LocalizeValue labelText) {
+    public void setLabelText(LocalizeValue labelText) {
         toAWTComponent().setLabelText(labelText);
         toAWTComponent().updateLabelText();
     }

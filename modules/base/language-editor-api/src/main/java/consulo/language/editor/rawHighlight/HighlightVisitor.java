@@ -18,13 +18,12 @@ package consulo.language.editor.rawHighlight;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @see HighlightVisitorFactory
  */
 public interface HighlightVisitor {
-    void visit(@Nonnull PsiElement element);
+    void visit(PsiElement element);
 
-    boolean analyze(@Nonnull PsiFile file, boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action);
+    boolean analyze(PsiFile file, boolean updateWholeFile, HighlightInfoHolder holder, Runnable action);
 }

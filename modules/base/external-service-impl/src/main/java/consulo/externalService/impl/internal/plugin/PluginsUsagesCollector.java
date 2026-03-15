@@ -23,15 +23,14 @@ import consulo.externalService.statistic.UsageDescriptor;
 import consulo.externalService.statistic.UsagesCollector;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
 
 @ExtensionImpl
 public class PluginsUsagesCollector extends UsagesCollector {
-    @Nonnull
+    
     @Override
     public Set<UsageDescriptor> getUsages(@Nullable Project project) {
         List<PluginDescriptor> plugins = PluginManager.getPlugins();
@@ -41,7 +40,7 @@ public class PluginsUsagesCollector extends UsagesCollector {
         return ContainerUtil.map2Set(enabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupId() {
         return "consulo.platform.base:plugins";

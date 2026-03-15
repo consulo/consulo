@@ -22,8 +22,7 @@ import consulo.versionControlSystem.log.graph.GraphElement;
 import consulo.versionControlSystem.log.graph.GraphNode;
 import consulo.versionControlSystem.log.graph.LinearGraphUtils;
 import consulo.versionControlSystem.log.graph.NormalEdge;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,10 +36,10 @@ public class LinearFragmentGenerator {
   private static final int SHORT_FRAGMENT_MAX_SIZE = 10;
   private static final int MAX_SEARCH_SIZE = 10;
 
-  @Nonnull
+  
   private final LiteLinearGraph myLinearGraph;
 
-  @Nonnull
+  
   private final Set<Integer> myPinnedNodes;
 
   private final Function<Integer, List<Integer>> upNodesFun = new Function<>() {
@@ -57,13 +56,13 @@ public class LinearFragmentGenerator {
     }
   };
 
-  public LinearFragmentGenerator(@Nonnull LiteLinearGraph linearGraph, @Nonnull Set<Integer> pinnedNodes) {
+  public LinearFragmentGenerator(LiteLinearGraph linearGraph, Set<Integer> pinnedNodes) {
     myLinearGraph = linearGraph;
     myPinnedNodes = pinnedNodes;
   }
 
   @Nullable
-  public GraphFragment getRelativeFragment(@Nonnull GraphElement element) {
+  public GraphFragment getRelativeFragment(GraphElement element) {
     int upNodeIndex;
     int downNodeIndex;
     if (element instanceof GraphNode node) {
@@ -108,13 +107,13 @@ public class LinearFragmentGenerator {
   }
 
   @Nullable
-  public GraphFragment getLongFragment(@Nonnull GraphElement element) {
+  public GraphFragment getLongFragment(GraphElement element) {
     return getLongFragment(getRelativeFragment(element), Integer.MAX_VALUE);
   }
 
   // for hover
   @Nullable
-  public GraphFragment getPartLongFragment(@Nonnull GraphElement element) {
+  public GraphFragment getPartLongFragment(GraphElement element) {
     return getLongFragment(getRelativeFragment(element), 500);
   }
 

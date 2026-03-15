@@ -3,7 +3,6 @@ package consulo.remoteServer.impl.internal.util;
 import consulo.application.util.function.Computable;
 import consulo.remoteServer.agent.shared.util.CloudAgentErrorHandler;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CancellationException;
 import java.util.function.Supplier;
@@ -60,7 +59,7 @@ public class AgentTaskExecutor implements CloudAgentErrorHandler {
         }
     }
 
-    private static String safeMessage(@Nonnull CancellationException ex) {
+    private static String safeMessage(CancellationException ex) {
         return ObjectUtil.notNull(ex.getMessage(), "Operation cancelled");
     }
 }

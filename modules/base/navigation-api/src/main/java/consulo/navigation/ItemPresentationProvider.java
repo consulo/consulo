@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.component.extension.ByClassGrouper;
 import consulo.component.extension.ExtensionPointCacheKey;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 /**
@@ -35,7 +34,7 @@ public interface ItemPresentationProvider<T extends NavigationItem> {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends NavigationItem> ItemPresentationProvider<T> getItemPresentationProvider(@Nonnull T element) {
+  public static <T extends NavigationItem> ItemPresentationProvider<T> getItemPresentationProvider(T element) {
     Function<Class, ItemPresentationProvider> call = Application.get().getExtensionPoint(ItemPresentationProvider.class).getOrBuildCache(KEY);
     return call.apply(element.getClass());
   }
@@ -46,9 +45,9 @@ public interface ItemPresentationProvider<T extends NavigationItem> {
     return provider != null ? provider.getPresentation(element) : null;
   }
 
-  @Nonnull
+  
   Class<T> getItemClass();
 
-  @Nonnull
+  
   ItemPresentation getPresentation(T item);
 }

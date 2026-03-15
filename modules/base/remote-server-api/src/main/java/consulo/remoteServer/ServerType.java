@@ -15,8 +15,7 @@ import consulo.remoteServer.runtime.ServerTaskExecutor;
 import consulo.remoteServer.runtime.deployment.SingletonDeploymentSourceType;
 import consulo.remoteServer.runtime.deployment.debug.DebugConnector;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,19 +26,19 @@ public abstract class ServerType<C extends ServerConfiguration> {
     public static final ExtensionPointName<ServerType> EP_NAME = ExtensionPointName.create(ServerType.class);
 
     private final String myId;
-    @Nonnull
+    
     private final String myDeploymentId;
     private final LocalizeValue myPresentableName;
     private final Image myIcon;
 
-    protected ServerType(@Nonnull String id, @Nonnull String deploymentId, LocalizeValue presentableName, Image icon) {
+    protected ServerType(String id, String deploymentId, LocalizeValue presentableName, Image icon) {
         myId = id;
         myDeploymentId = deploymentId;
         myPresentableName = presentableName;
         myIcon = icon;
     }
 
-    @Nonnull
+    
     public final String getId() {
         return myId;
     }
@@ -51,17 +50,17 @@ public abstract class ServerType<C extends ServerConfiguration> {
     /**
      * This method must be overridden and a proper ID must be returned from it (it'll be used as a key in run configuration file).
      */
-    @Nonnull
+    
     public final String getDeploymentConfigurationFactoryId() {
         return myDeploymentId;
     }
 
-    @Nonnull
+    
     public String getHelpTopic() {
         return "reference.settings.clouds";
     }
 
-    @Nonnull
+    
     public final Image getIcon() {
         return myIcon;
     }
@@ -78,15 +77,15 @@ public abstract class ServerType<C extends ServerConfiguration> {
         return false;
     }
 
-    @Nonnull
+    
     public abstract C createDefaultConfiguration();
 
-    @Nonnull
-    public RemoteServerConfigurable createServerConfigurable(@Nonnull C configuration) {
+    
+    public RemoteServerConfigurable createServerConfigurable(C configuration) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     public abstract DeploymentConfigurator<?, C> createDeploymentConfigurator(Project project);
 
     /**
@@ -105,9 +104,9 @@ public abstract class ServerType<C extends ServerConfiguration> {
         return true;
     }
 
-    public abstract @Nonnull ServerConnector<?> createConnector(@Nonnull C configuration, @Nonnull ServerTaskExecutor asyncTasksExecutor);
+    public abstract ServerConnector<?> createConnector(C configuration, ServerTaskExecutor asyncTasksExecutor);
 
-    public @Nonnull ServerConnector<?> createConnector(@Nonnull RemoteServer<C> server, @Nonnull ServerTaskExecutor asyncTasksExecutor) {
+    public ServerConnector<?> createConnector(RemoteServer<C> server, ServerTaskExecutor asyncTasksExecutor) {
         return createConnector(server.getConfiguration(), asyncTasksExecutor);
     }
 
@@ -118,7 +117,7 @@ public abstract class ServerType<C extends ServerConfiguration> {
         return null;
     }
 
-    public @Nonnull Comparator<Deployment> getDeploymentComparator() {
+    public Comparator<Deployment> getDeploymentComparator() {
         return Comparator.comparing(Deployment::getName);
     }
 

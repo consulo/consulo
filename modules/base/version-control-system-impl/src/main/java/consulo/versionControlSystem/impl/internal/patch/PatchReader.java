@@ -22,8 +22,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringEscapeUtil;
 import consulo.versionControlSystem.change.patch.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -71,7 +70,7 @@ public class PatchReader {
         return myPatches;
     }
 
-    @Nonnull
+    
     public List<TextFilePatch> readTextPatches() throws PatchSyntaxException {
         parseAllPatches();
         return getTextPatches();
@@ -115,12 +114,12 @@ public class PatchReader {
     }*/
 
     @Deprecated
-    @Nonnull
+    
     public List<TextFilePatch> getPatches() {
         return myPatches;
     }
 
-    @Nonnull
+    
     public List<TextFilePatch> getTextPatches() {
         return ContainerUtil.findAll(myPatches, TextFilePatch.class);
     }
@@ -177,7 +176,7 @@ public class PatchReader {
         myPatches = myPatchContentParser.getResult();
     }
 
-    @Nonnull
+    
     public ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> getAdditionalInfo(@Nullable Set<String> paths) {
         ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> result;
         PatchSyntaxException e = myAdditionalInfoParser.getSyntaxException();

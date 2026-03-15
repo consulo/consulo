@@ -5,8 +5,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.internal.FileContentUtilCore;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -20,8 +19,8 @@ public class VFilePropertyChangeEvent extends VFileEvent {
   private final Object myNewValue;
 
   public VFilePropertyChangeEvent(Object requestor,
-                                  @Nonnull VirtualFile file,
-                                  @VirtualFile.PropName @Nonnull String propertyName,
+                                  VirtualFile file,
+                                  @VirtualFile.PropName String propertyName,
                                   @Nullable Object oldValue,
                                   @Nullable Object newValue,
                                   boolean isFromRefresh) {
@@ -33,7 +32,7 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     checkPropertyValuesCorrect(requestor, propertyName, oldValue, newValue);
   }
 
-  public static void checkPropertyValuesCorrect(Object requestor, @VirtualFile.PropName @Nonnull String propertyName, Object oldValue, Object newValue) {
+  public static void checkPropertyValuesCorrect(Object requestor, @VirtualFile.PropName String propertyName, Object oldValue, Object newValue) {
     if (Objects.equals(oldValue, newValue) && FileContentUtilCore.FORCE_RELOAD_REQUESTOR != requestor) {
       throw new IllegalArgumentException("Values must be different, got the same: " + oldValue);
     }
@@ -74,7 +73,7 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     return myPropertyName == VirtualFile.PROP_NAME && getRequestor() != FileContentUtilCore.FORCE_RELOAD_REQUESTOR;
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getFile() {
     return myFile;
@@ -88,25 +87,25 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     return myOldValue;
   }
 
-  @Nonnull
+  
   @VirtualFile.PropName
   public String getPropertyName() {
     return myPropertyName;
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     return computePath();
   }
 
-  @Nonnull
+  
   @Override
   protected String computePath() {
     return myFile.getPath();
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
@@ -141,18 +140,18 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     return result;
   }
 
-  @Nonnull
+  
   @Override
   public String toString() {
     return "VfsEvent[property(" + myPropertyName + ") changed for '" + myFile + "': " + myOldValue + " -> " + myNewValue + ']';
   }
 
-  @Nonnull
+  
   public String getOldPath() {
     return getPathWithFileName(myOldValue);
   }
 
-  @Nonnull
+  
   public String getNewPath() {
     return getPathWithFileName(myNewValue);
   }
@@ -160,7 +159,7 @@ public class VFilePropertyChangeEvent extends VFileEvent {
   /**
    * Replaces file name in {@code myFile} path with {@code fileName}, if an event is a rename event; leaves path as is otherwise
    */
-  @Nonnull
+  
   private String getPathWithFileName(Object fileName) {
     if (VirtualFile.PROP_NAME.equals(myPropertyName)) {
       // fileName must be String, according to `checkPropertyValuesCorrect` implementation

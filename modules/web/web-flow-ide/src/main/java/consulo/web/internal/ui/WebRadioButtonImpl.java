@@ -25,8 +25,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -68,13 +67,13 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
         setValue(selected);
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
-    @Nonnull
+    
     @Override
     public Boolean getValue() {
         // TODO
@@ -83,19 +82,19 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
 
     @RequiredUIAccess
     @Override
-    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+    public void setValue(Boolean value, boolean fireListeners) {
         // TODO
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getLabelText() {
         return myText;
     }
 
     @RequiredUIAccess
     @Override
-    public void setLabelText(@Nonnull LocalizeValue text) {
+    public void setLabelText(LocalizeValue text) {
         UIAccess.assertIsUIThread();
 
         myText = text;

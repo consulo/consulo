@@ -17,7 +17,6 @@ package consulo.undoRedo.internal.builder;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.builder.*;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -37,13 +36,13 @@ public interface WrappableRunnableCommandBuilder<R, THIS extends WrappableRunnab
 
     @Override
     @SuppressWarnings("unchecked")
-    default THIS outerWrap(@RequiredUIAccess @Nonnull Consumer<Runnable> runner) {
+    default THIS outerWrap(@RequiredUIAccess Consumer<Runnable> runner) {
         return (THIS)new OuterWrapper<R, THIS, THIS>((THIS)this, runner);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    default THIS innerWrap(@RequiredUIAccess @Nonnull Consumer<Runnable> runner) {
+    default THIS innerWrap(@RequiredUIAccess Consumer<Runnable> runner) {
         return (THIS)new InnerWrapper<R, THIS, THIS>((THIS)this, runner);
     }
 
@@ -56,7 +55,7 @@ public interface WrappableRunnableCommandBuilder<R, THIS extends WrappableRunnab
     class OuterWrapper<R, THIS extends WrappableRunnableCommandBuilder<R, THIS>, THAT extends WrappableExecutableCommandBuilder<R, THAT>>
         extends WrappableExecutableCommandBuilder.OuterWrapper<R, THIS, THAT> implements WrappableRunnableCommandBuilder<R, THIS> {
 
-        public OuterWrapper(THAT subBuilder, @Nonnull Consumer<Runnable> runner) {
+        public OuterWrapper(THAT subBuilder, Consumer<Runnable> runner) {
             super(subBuilder, runner);
         }
     }
@@ -64,7 +63,7 @@ public interface WrappableRunnableCommandBuilder<R, THIS extends WrappableRunnab
     class InnerWrapper<R, THIS extends WrappableRunnableCommandBuilder<R, THIS>, THAT extends WrappableExecutableCommandBuilder<R, THAT>>
         extends WrappableExecutableCommandBuilder.InnerWrapper<R, THIS, THAT> implements WrappableRunnableCommandBuilder<R, THIS> {
 
-        public InnerWrapper(THAT subBuilder, @Nonnull Consumer<Runnable> runner) {
+        public InnerWrapper(THAT subBuilder, Consumer<Runnable> runner) {
             super(subBuilder, runner);
         }
     }

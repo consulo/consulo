@@ -34,8 +34,7 @@ import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.Ref;
 import gnu.trove.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.Arrays;
@@ -82,16 +81,16 @@ public class SharedIndicesData {
   private static class IndexedStateMap extends PersistentHashMap<Integer, byte[]> {
     final IndexedStateCache myStateCache;
 
-    public IndexedStateMap(@Nonnull File file) throws IOException {
+    public IndexedStateMap(File file) throws IOException {
       super(file, EnumeratorIntegerDescriptor.INSTANCE,
             new DataExternalizer<byte[]>() {
               @Override
-              public void save(@Nonnull DataOutput out, byte[] value) throws IOException {
+              public void save(DataOutput out, byte[] value) throws IOException {
                 out.write(value);
               }
 
               @Override
-              public byte[] read(@Nonnull DataInput in) throws IOException {
+              public byte[] read(DataInput in) throws IOException {
                 int available = ((InputStream)in).available();
                 byte[] result = new byte[available];
                 in.readFully(result);

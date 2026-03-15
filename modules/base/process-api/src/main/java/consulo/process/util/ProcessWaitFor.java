@@ -18,7 +18,6 @@ package consulo.process.util;
 import consulo.logging.Logger;
 import consulo.process.TaskExecutor;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -29,7 +28,7 @@ public class ProcessWaitFor {
   private final Future<?> myWaitForThreadFuture;
   private final BlockingQueue<Consumer<Integer>> myTerminationCallback = new ArrayBlockingQueue<>(1);
 
-  public ProcessWaitFor(@Nonnull final Process process, @Nonnull TaskExecutor executor, @Nonnull final String presentableName) {
+  public ProcessWaitFor(final Process process, TaskExecutor executor, final String presentableName) {
     myWaitForThreadFuture = executor.executeTask(new Runnable() {
       @Override
       public void run() {
@@ -68,7 +67,7 @@ public class ProcessWaitFor {
     myWaitForThreadFuture.cancel(true);
   }
 
-  public void setTerminationCallback(@Nonnull Consumer<Integer> r) {
+  public void setTerminationCallback(Consumer<Integer> r) {
     myTerminationCallback.offer(r);
   }
 
@@ -83,7 +82,7 @@ public class ProcessWaitFor {
     }
   }
 
-  public boolean waitFor(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
+  public boolean waitFor(long timeout, TimeUnit unit) throws InterruptedException {
     try {
       myWaitForThreadFuture.get(timeout, unit);
     }

@@ -20,7 +20,6 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.project.Project;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.TreePopupStep;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,7 +71,7 @@ public class BaseTreePopupStep<T> extends BaseStep<T> implements TreePopupStep<T
     return value.toString();
   }
 
-  @Nonnull
+  
   public List<T> getValues() {
     return Collections.emptyList();
   }

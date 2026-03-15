@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class LazyRangeMarkerFactory {
@@ -28,9 +27,9 @@ public abstract class LazyRangeMarkerFactory {
     return project.getInstance(LazyRangeMarkerFactory.class);
   }
 
-  @Nonnull
-  public abstract RangeMarker createRangeMarker(@Nonnull VirtualFile file, int offset);
+  
+  public abstract RangeMarker createRangeMarker(VirtualFile file, int offset);
 
-  @Nonnull
-  public abstract RangeMarker createRangeMarker(@Nonnull VirtualFile file, int line, int column, boolean persistent);
+  
+  public abstract RangeMarker createRangeMarker(VirtualFile file, int line, int column, boolean persistent);
 }

@@ -24,8 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.model.MutableListModel;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -37,12 +36,12 @@ import java.util.function.Predicate;
  */
 public final class BundleBoxBuilder {
 
-  @Nonnull
+  
   public static BundleBoxBuilder create(@Nullable Disposable uiDisposable) {
     return create(null, uiDisposable);
   }
 
-  @Nonnull
+  
   public static BundleBoxBuilder create(@Nullable SdkModel sdkModel, @Nullable Disposable uiDisposable) {
     return new BundleBoxBuilder(sdkModel, uiDisposable);
   }
@@ -66,57 +65,57 @@ public final class BundleBoxBuilder {
     myUIDisposable = uiDisposable;
   }
 
-  @Nonnull
-  public BundleBoxBuilder withSdkTypeFilterByClass(@Nonnull Class<? extends SdkTypeId> clazz) {
+  
+  public BundleBoxBuilder withSdkTypeFilterByClass(Class<? extends SdkTypeId> clazz) {
     mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
     return this;
   }
 
-  @Nonnull
-  public BundleBoxBuilder withSdkTypeFilter(@Nonnull Predicate<SdkTypeId> sdkFilter) {
+  
+  public BundleBoxBuilder withSdkTypeFilter(Predicate<SdkTypeId> sdkFilter) {
     mySdkFilter = sdkFilter;
     return this;
   }
 
-  @Nonnull
-  public BundleBoxBuilder withSdkTypeFilterBySet(@Nonnull Set<? extends SdkType> sdkTypes) {
+  
+  public BundleBoxBuilder withSdkTypeFilterBySet(Set<? extends SdkType> sdkTypes) {
     mySdkFilter = sdkTypes::contains;
     return this;
   }
 
-  @Nonnull
-  public BundleBoxBuilder withSdkTypeFilterByType(@Nonnull SdkType sdkType) {
+  
+  public BundleBoxBuilder withSdkTypeFilterByType(SdkType sdkType) {
     return withSdkTypeFilterBySet(Collections.singleton(sdkType));
   }
 
-  @Nonnull
+  
   public BundleBoxBuilder withNoneItem() {
     myWithNoneItem = true;
     return this;
   }
 
-  @Nonnull
-  public BundleBoxBuilder withNoneItem(@Nonnull String noneItemName) {
+  
+  public BundleBoxBuilder withNoneItem(String noneItemName) {
     myWithNoneItem = true;
     myNoneItemName = noneItemName;
     return this;
   }
 
-  @Nonnull
-  public BundleBoxBuilder withNoneItemImage(@Nonnull Image noneItemImage) {
+  
+  public BundleBoxBuilder withNoneItemImage(Image noneItemImage) {
     myNoneItemImage = noneItemImage;
     return this;
   }
 
-  @Nonnull
-  public BundleBoxBuilder withNoneItem(@Nonnull String noneItemName, @Nonnull Image noneItemImage) {
+  
+  public BundleBoxBuilder withNoneItem(String noneItemName, Image noneItemImage) {
     myWithNoneItem = true;
     myNoneItemName = noneItemName;
     myNoneItemImage = noneItemImage;
     return this;
   }
 
-  @Nonnull
+  
   private static SdkModel effectiveModel(@Nullable SdkModel sdkModel) {
     if (sdkModel == null) {
       return SdkModelFactory.getInstance().getOrCreateModel();
@@ -126,7 +125,7 @@ public final class BundleBoxBuilder {
     }
   }
 
-  @Nonnull
+  
   public BundleBox build() {
     final SdkModel sdkModel = effectiveModel(mySdkModel);
 

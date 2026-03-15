@@ -28,7 +28,6 @@ import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.version.LanguageVersionableParserDefinition;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -43,28 +42,28 @@ public class SandParsingDefinition extends LanguageVersionableParserDefinition {
     }
   };
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return SandLanguage.INSTANCE;
   }
 
-  @Nonnull
+  
   @Override
   public IFileElementType getFileNodeType() {
     return FILE;
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
-  public PsiElement createElement(@Nonnull ASTNode node) {
+  public PsiElement createElement(ASTNode node) {
     return new ASTWrapperPsiElement(node);
   }
 
-  @Nonnull
+  
   @Override
-  public PsiFile createFile(@Nonnull FileViewProvider viewProvider) {
+  public PsiFile createFile(FileViewProvider viewProvider) {
     return new SandFile(viewProvider);
   }
 }

@@ -21,8 +21,7 @@ import consulo.util.collection.Maps;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -216,12 +215,12 @@ public class PathInterner {
     private final PathInterner myInterner = new PathInterner();
 
     @Nullable
-    public T get(@Nonnull String path) {
+    public T get(String path) {
       PathInterner.SubstringWrapper[] seq = myInterner.internParts(path, false);
       return seq == null ? null : myMap.get(seq);
     }
 
-    public void put(@Nonnull String path, @Nonnull T value) {
+    public void put(String path, T value) {
       myMap.put(myInterner.internParts(path, true), value);
     }
 

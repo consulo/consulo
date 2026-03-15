@@ -15,8 +15,7 @@
  */
 package consulo.repository.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -44,7 +43,7 @@ public class PackageVersionComparator implements Comparator<String> {
   }
 
   @Nullable
-  private static String replace(@Nonnull String s) {
+  private static String replace(String s) {
     Map<String, String> sub = Map.of("pre", "c", "preview", "c", "rc", "c", "dev", "@");
     String tmp = sub.get(s);
     if (tmp != null) {
@@ -65,7 +64,7 @@ public class PackageVersionComparator implements Comparator<String> {
     return "*" + s;
   }
 
-  @Nonnull
+  
   private static List<String> parse(@Nullable String s) {
     // Version parsing from pkg_resources ensures that all the "pre", "alpha", "rc", etc. are sorted correctly
     if (s == null) {

@@ -27,7 +27,7 @@ import consulo.compiler.artifact.ui.PackagingSourceItemsProvider;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.awt.tree.SimpleNode;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

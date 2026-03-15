@@ -26,8 +26,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.StringWriter;
 import java.util.Properties;
 
@@ -37,8 +36,8 @@ public class VelocityHelper {
   private VelocityHelper() {
   }
 
-  @Nonnull
-  public static String evaluate(@Nullable PsiFile file, @Nullable Project project, @Nullable Module module, @Nonnull String template) throws Exception {
+  
+  public static String evaluate(@Nullable PsiFile file, @Nullable Project project, @Nullable Module module, String template) throws Exception {
     VelocityEngine engine = getEngine();
 
     VelocityContext vc = new VelocityContext();

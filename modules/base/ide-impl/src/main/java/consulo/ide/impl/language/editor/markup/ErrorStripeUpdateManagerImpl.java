@@ -34,8 +34,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -55,7 +54,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
 
   @Override
   @RequiredUIAccess
-  public void repaintErrorStripePanel(@Nonnull Editor editor) {
+  public void repaintErrorStripePanel(Editor editor) {
     UIAccess.assertIsUIThread();
     if (!myProject.isInitialized()) return;
 
@@ -69,7 +68,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
 
   @Override
   @RequiredUIAccess
-  public void setOrRefreshErrorStripeRenderer(@Nonnull EditorMarkupModel editorMarkupModel, @Nullable PsiFile file) {
+  public void setOrRefreshErrorStripeRenderer(EditorMarkupModel editorMarkupModel, @Nullable PsiFile file) {
     UIAccess.assertIsUIThread();
     if (!editorMarkupModel.isErrorStripeVisible() || !DaemonCodeAnalyzer.getInstance(myProject).isHighlightingAvailable(file)) {
       return;
@@ -87,13 +86,13 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
     editorMarkupModel.setErrorStripeRenderer(createRenderer(editor, file));
   }
 
-  @Nonnull
+  
   private ErrorStripTooltipRendererProvider createTooltipRenderer(Editor editor) {
     return new DaemonTooltipRendererProvider(myProject, editor);
   }
 
   @Nullable
-  protected ErrorStripeRenderer createRenderer(@Nonnull Editor editor, @Nullable PsiFile file) {
+  protected ErrorStripeRenderer createRenderer(Editor editor, @Nullable PsiFile file) {
     return new TrafficLightRenderer(myProject, editor.getDocument());
   }
 }

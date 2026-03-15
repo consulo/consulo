@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The base abstract class for actions which create new file elements in IDE view
@@ -40,20 +39,20 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
         super(text, description, icon);
     }
 
-    protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text) {
+    protected CreateInDirectoryActionBase(LocalizeValue text) {
         super(text);
     }
 
-    protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected CreateInDirectoryActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected CreateInDirectoryActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (!e.getPresentation().isVisible()) {
             return;
         }

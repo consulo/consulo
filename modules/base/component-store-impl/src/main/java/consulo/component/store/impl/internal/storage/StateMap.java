@@ -23,8 +23,7 @@ import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
 import org.jdom.Element;
@@ -58,29 +57,29 @@ final class StateMap {
     states = new HashMap<String, Object>((Map<String, Object>)stateMap.states);
   }
 
-  @Nonnull
+  
   public Set<String> keys() {
     return states.keySet();
   }
 
-  @Nonnull
+  
   public Collection<Object> values() {
     return states.values();
   }
 
   @Nullable
-  public Object get(@Nonnull String key) {
+  public Object get(String key) {
     return states.get(key);
   }
 
-  @Nonnull
-  public Element getElement(@Nonnull String key, @Nonnull Map<String, Element> newLiveStates) {
+  
+  public Element getElement(String key, Map<String, Element> newLiveStates) {
     Object state = states.get(key);
     return stateToElement(key, state, newLiveStates);
   }
 
-  @Nonnull
-  static Element stateToElement(@Nonnull String key, @Nullable Object state, @Nonnull Map<String, Element> newLiveStates) {
+  
+  static Element stateToElement(String key, @Nullable Object state, Map<String, Element> newLiveStates) {
     if (state instanceof Element) {
       return ((Element)state).clone();
     }
@@ -94,7 +93,7 @@ final class StateMap {
     }
   }
 
-  public void put(@Nonnull String key, @Nonnull Object value) {
+  public void put(String key, Object value) {
     states.put(key, value);
   }
 
@@ -103,12 +102,12 @@ final class StateMap {
   }
 
   @Nullable
-  public Element getState(@Nonnull String key) {
+  public Element getState(String key) {
     Object state = states.get(key);
     return state instanceof Element ? (Element)state : null;
   }
 
-  public boolean hasState(@Nonnull String key) {
+  public boolean hasState(String key) {
     return states.get(key) instanceof Element;
   }
 
@@ -125,7 +124,7 @@ final class StateMap {
     return false;
   }
 
-  public void compare(@Nonnull String key, @Nonnull StateMap newStates, @Nonnull Set<String> diffs) {
+  public void compare(String key, StateMap newStates, Set<String> diffs) {
     Object oldState = states.get(key);
     Object newState = newStates.get(key);
     if (oldState instanceof Element) {
@@ -142,7 +141,7 @@ final class StateMap {
   }
 
   @Nullable
-  public static byte[] getNewByteIfDiffers(@Nonnull String key, @Nonnull Object newState, @Nonnull byte[] oldState) {
+  public static byte[] getNewByteIfDiffers(String key, Object newState, byte[] oldState) {
     byte[] newBytes = newState instanceof Element ? archiveState((Element)newState) : (byte[])newState;
     if (Arrays.equals(newBytes, oldState)) {
       return null;
@@ -160,8 +159,8 @@ final class StateMap {
     return newBytes;
   }
 
-  @Nonnull
-  private static byte[] archiveState(@Nonnull Element state) {
+  
+  private static byte[] archiveState(Element state) {
     BufferExposingByteArrayOutputStream byteOut = new BufferExposingByteArrayOutputStream();
     try {
       try (OutputStreamWriter writer = new OutputStreamWriter(new LZ4BlockOutputStream(byteOut), StandardCharsets.UTF_8)) {
@@ -177,7 +176,7 @@ final class StateMap {
   }
 
   @Nullable
-  public Element getStateAndArchive(@Nonnull String key) {
+  public Element getStateAndArchive(String key) {
     Object state = states.get(key);
     if (!(state instanceof Element)) {
       return null;
@@ -187,8 +186,8 @@ final class StateMap {
     return (Element)state;
   }
 
-  @Nonnull
-  public static Element unarchiveState(@Nonnull byte[] state) {
+  
+  public static Element unarchiveState(byte[] state) {
     InputStream in = null;
     try {
       try {
@@ -206,8 +205,8 @@ final class StateMap {
     }
   }
 
-  @Nonnull
-  public static String stateToString(@Nonnull Object state) {
+  
+  public static String stateToString(Object state) {
     Element element;
     if (state instanceof Element) {
       element = (Element)state;
@@ -225,7 +224,7 @@ final class StateMap {
   }
 
   @Nullable
-  public Object remove(@Nonnull String key) {
+  public Object remove(String key) {
     return states.remove(key);
   }
 
@@ -233,7 +232,7 @@ final class StateMap {
     return states.size();
   }
 
-  public void forEachEntry(@Nonnull BiConsumer<String, Object> consumer) {
+  public void forEachEntry(BiConsumer<String, Object> consumer) {
     states.forEach(consumer);
   }
 }

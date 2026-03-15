@@ -22,8 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -37,13 +36,13 @@ import java.util.function.BiPredicate;
 @ServiceImpl
 public final class ExecutionTargetManagerImpl extends ExecutionTargetManager implements PersistentStateComponent<Element> {
   public static final ExecutionTarget MULTIPLE_TARGETS = new ExecutionTarget() {
-    @Nonnull
+    
     @Override
     public String getId() {
       return "multiple_targets";
     }
 
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
       return ExecutionLocalize.multipleSpecified().get();
@@ -55,14 +54,14 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     }
 
     @Override
-    public boolean canRun(@Nonnull RunConfiguration configuration) {
+    public boolean canRun(RunConfiguration configuration) {
       return true;
     }
   };
 
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final Object myActiveTargetLock = new Object();
   @Nullable
   private ExecutionTarget myActiveTarget;
@@ -71,12 +70,12 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   private String mySavedActiveTargetId;
 
   @Inject
-  public ExecutionTargetManagerImpl(@Nonnull Project project) {
+  public ExecutionTargetManagerImpl(Project project) {
     myProject = project;
 
     project.getMessageBus().connect().subscribe(RunManagerListener.class, new RunManagerListener() {
       @Override
-      public void runConfigurationChanged(@Nonnull RunManagerListenerEvent event) {
+      public void runConfigurationChanged(RunManagerListenerEvent event) {
         RunnerAndConfigurationSettings settings = event.getSettings();
 
         if (settings == event.getSource().getSelectedConfiguration()) {
@@ -85,7 +84,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
       }
 
       @Override
-      public void runConfigurationSelected(@Nonnull RunManagerListenerEvent event) {
+      public void runConfigurationSelected(RunManagerListenerEvent event) {
         updateActiveTarget(event.getSource(), event.getSettings());
       }
     });
@@ -94,7 +93,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   @Nullable
   private RunManagerImpl myRunManager;
 
-  @Nonnull
+  
   private RunManagerImpl getRunManager() {
     RunManagerImpl runManager = myRunManager;
     if (runManager == null) {
@@ -105,7 +104,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   }
 
   @TestOnly
-  public void setRunManager(@Nonnull RunManagerImpl runManager) {
+  public void setRunManager(RunManagerImpl runManager) {
     myRunManager = runManager;
   }
 
@@ -121,7 +120,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   }
 
   @Override
-  public void loadState(@Nonnull Element state) {
+  public void loadState(Element state) {
     synchronized (myActiveTargetLock) {
       if (myActiveTarget == null && mySavedActiveTargetId == null) {
         mySavedActiveTargetId = state.getAttributeValue("SELECTED_TARGET");
@@ -129,7 +128,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     }
   }
 
-  @Nonnull
+  
   @Override
   public ExecutionTarget getActiveTarget() {
     RunManagerImpl runManager = getRunManager();
@@ -143,7 +142,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
 
   @Override
   @RequiredUIAccess
-  public void setActiveTarget(@Nonnull ExecutionTarget target) {
+  public void setActiveTarget(ExecutionTarget target) {
     UIAccess.assertIsUIThread();
     RunManagerImpl runManager = getRunManager();
     synchronized (myActiveTargetLock) {
@@ -151,15 +150,15 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     }
   }
 
-  private void updateActiveTarget(@Nonnull RunManager runManager) {
+  private void updateActiveTarget(RunManager runManager) {
     updateActiveTarget(runManager, runManager.getSelectedConfiguration());
   }
 
-  private void updateActiveTarget(@Nonnull RunManager runManager, @Nullable RunnerAndConfigurationSettings settings) {
+  private void updateActiveTarget(RunManager runManager, @Nullable RunnerAndConfigurationSettings settings) {
     updateActiveTarget(runManager, settings, null);
   }
 
-  private void updateActiveTarget(@Nonnull RunManager runManager,
+  private void updateActiveTarget(RunManager runManager,
                                   @Nullable RunnerAndConfigurationSettings settings,
                                   @Nullable ExecutionTarget toSelect) {
     List<ExecutionTarget> suitable =
@@ -205,7 +204,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   }
 
   @Nullable
-  private ExecutionTarget doSetActiveTarget(@Nonnull ExecutionTarget newTarget) {
+  private ExecutionTarget doSetActiveTarget(ExecutionTarget newTarget) {
     if (!DefaultExecutionTarget.INSTANCE.equals(newTarget)) {
       mySavedActiveTargetId = newTarget.getId();
     }
@@ -219,11 +218,11 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   }
 
   @Override
-  public boolean doCanRun(@Nullable RunConfiguration configuration, @Nonnull ExecutionTarget target) {
+  public boolean doCanRun(@Nullable RunConfiguration configuration, ExecutionTarget target) {
     return doCanRunImpl(getRunManager(), configuration, target);
   }
 
-  private boolean doCanRunImpl(@Nonnull RunManager runManager, @Nullable RunConfiguration configuration, @Nonnull ExecutionTarget target) {
+  private boolean doCanRunImpl(RunManager runManager, @Nullable RunConfiguration configuration, ExecutionTarget target) {
     if (configuration == null) {
       return false;
     }
@@ -247,14 +246,14 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     });
   }
 
-  @Nonnull
+  
   @Override
   public List<ExecutionTarget> getTargetsFor(@Nullable RunConfiguration configuration) {
     return getTargetsForImpl(getRunManager(), configuration);
   }
 
-  @Nonnull
-  private List<ExecutionTarget> getTargetsForImpl(@Nonnull RunManager runManager, @Nullable RunConfiguration configuration) {
+  
+  private List<ExecutionTarget> getTargetsForImpl(RunManager runManager, @Nullable RunConfiguration configuration) {
     if (configuration == null) {
       return List.of();
     }
@@ -287,9 +286,9 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     return Collections.unmodifiableList(ContainerUtil.filter(result, it -> doCanRunImpl(runManager, configuration, it)));
   }
 
-  private boolean doWithEachNonCompoundWithSpecifiedTarget(@Nonnull RunManager runManager,
-                                                           @Nonnull RunConfiguration configuration,
-                                                           @Nonnull BiPredicate<? super RunConfiguration, ? super ExecutionTarget> action) {
+  private boolean doWithEachNonCompoundWithSpecifiedTarget(RunManager runManager,
+                                                           RunConfiguration configuration,
+                                                           BiPredicate<? super RunConfiguration, ? super ExecutionTarget> action) {
     Set<RunConfiguration> recursionGuard = new HashSet<>();
     LinkedList<Pair<RunConfiguration, ExecutionTarget>> toProcess = new LinkedList<>();
     toProcess.add(Pair.create(configuration, null));

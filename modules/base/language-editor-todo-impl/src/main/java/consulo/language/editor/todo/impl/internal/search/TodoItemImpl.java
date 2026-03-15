@@ -6,7 +6,6 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.TodoItem;
 import consulo.language.psi.search.TodoPattern;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class TodoItemImpl implements TodoItem {
   private final TodoPattern myPattern;
   private final List<TextRange> myAdditionalRanges;
 
-  public TodoItemImpl(@Nonnull PsiFile file, int startOffset, int endOffset, @Nonnull TodoPattern pattern, @Nonnull List<TextRange> additionalRanges) {
+  public TodoItemImpl(PsiFile file, int startOffset, int endOffset, TodoPattern pattern, List<TextRange> additionalRanges) {
     myFile = file;
     myStartOffset = startOffset;
     myEndOffset = endOffset;
@@ -25,25 +24,25 @@ public class TodoItemImpl implements TodoItem {
     myAdditionalRanges = additionalRanges;
   }
 
-  @Nonnull
+  
   @Override
   public PsiFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   @Override
   public TextRange getTextRange() {
     return new TextRange(myStartOffset, myEndOffset);
   }
 
-  @Nonnull
+  
   @Override
   public List<TextRange> getAdditionalTextRanges() {
     return myAdditionalRanges;
   }
 
-  @Nonnull
+  
   @Override
   public TodoPattern getPattern() {
     return myPattern;

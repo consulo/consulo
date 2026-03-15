@@ -30,7 +30,6 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ import java.util.List;
 @ExtensionImpl(id = "fileList")
 public class FileListPasteProvider implements FilePasteProvider {
   @Override
-  public void performPaste(@Nonnull DataContext dataContext) {
+  public void performPaste(DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
     IdeView ideView = dataContext.getData(IdeView.KEY);
     if (project == null || ideView == null) return;
@@ -81,12 +80,12 @@ public class FileListPasteProvider implements FilePasteProvider {
   }
 
   @Override
-  public boolean isPastePossible(@Nonnull DataContext dataContext) {
+  public boolean isPastePossible(DataContext dataContext) {
     return true;
   }
 
   @Override
-  public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
+  public boolean isPasteEnabled(DataContext dataContext) {
     return dataContext.hasData(IdeView.KEY) && FileCopyPasteUtil.isFileListFlavorAvailable();
   }
 }

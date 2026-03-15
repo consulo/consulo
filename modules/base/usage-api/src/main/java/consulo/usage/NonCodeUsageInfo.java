@@ -21,14 +21,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class NonCodeUsageInfo extends MoveRenameUsageInfo {
     public final String newText;
 
     @RequiredReadAction
-    private NonCodeUsageInfo(@Nonnull PsiElement element, int startOffset, int endOffset, PsiElement referencedElement, String newText) {
+    private NonCodeUsageInfo(PsiElement element, int startOffset, int endOffset, PsiElement referencedElement, String newText) {
         super(element, null, startOffset, endOffset, referencedElement, true);
         this.newText = newText;
     }
@@ -36,7 +35,7 @@ public class NonCodeUsageInfo extends MoveRenameUsageInfo {
     @Nullable
     @RequiredReadAction
     public static NonCodeUsageInfo create(
-        @Nonnull PsiFile file,
+        PsiFile file,
         int startOffset,
         int endOffset,
         PsiElement referencedElement,

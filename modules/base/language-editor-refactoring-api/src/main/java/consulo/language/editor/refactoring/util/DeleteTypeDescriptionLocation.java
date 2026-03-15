@@ -20,7 +20,6 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.*;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -48,7 +47,7 @@ public class DeleteTypeDescriptionLocation extends ElementDescriptionLocation {
 
   public static class DefaultProvider implements ElementDescriptionProvider {
     @Override
-    public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+    public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
       if (location instanceof DeleteTypeDescriptionLocation deleteTypeDescriptionLocation) {
         boolean plural = deleteTypeDescriptionLocation.isPlural();
         int count = plural ? 2 : 1;

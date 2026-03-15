@@ -19,13 +19,12 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ColorGenerator {
-  @Nonnull
-  public static List<ColorValue> generateLinearColorSequence(@Nonnull List<ColorValue> anchorColors, int colorsBetweenAnchors) {
+  
+  public static List<ColorValue> generateLinearColorSequence(List<ColorValue> anchorColors, int colorsBetweenAnchors) {
     assert colorsBetweenAnchors >= 0;
     if (anchorColors.isEmpty()) return List.of(StandardColors.GRAY);
     if (anchorColors.size() == 1) return List.of(anchorColors.get(0));
@@ -46,8 +45,8 @@ public class ColorGenerator {
     return result;
   }
 
-  @Nonnull
-  public static List<ColorValue> generateLinearColorSequence(@Nonnull ColorValue color1, @Nonnull ColorValue color2, int colorsBetweenAnchors) {
+  
+  public static List<ColorValue> generateLinearColorSequence(ColorValue color1, ColorValue color2, int colorsBetweenAnchors) {
     assert colorsBetweenAnchors >= 0;
 
     List<ColorValue> result = new ArrayList<>(colorsBetweenAnchors + 2);

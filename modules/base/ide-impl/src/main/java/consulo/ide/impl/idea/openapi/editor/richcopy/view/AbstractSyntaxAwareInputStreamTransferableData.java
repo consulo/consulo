@@ -21,8 +21,7 @@ import consulo.ide.impl.idea.util.StringBuilderSpinAllocator;
 import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,15 +38,15 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
   private static final Logger LOG = Logger.getInstance(AbstractSyntaxAwareInputStreamTransferableData.class);
 
   protected String myRawText;
-  @Nonnull
+  
   protected final SyntaxInfo mySyntaxInfo;
-  @Nonnull
+  
   private final DataFlavor myDataFlavor;
 
   @Nullable
   private transient InputStream myDelegate;
 
-  public AbstractSyntaxAwareInputStreamTransferableData(@Nonnull SyntaxInfo syntaxInfo, @Nonnull DataFlavor flavor) {
+  public AbstractSyntaxAwareInputStreamTransferableData(SyntaxInfo syntaxInfo, DataFlavor flavor) {
     mySyntaxInfo = syntaxInfo;
     myDataFlavor = flavor;
   }
@@ -78,7 +77,7 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
   }
 
   @Override
-  public int read(@Nonnull byte[] b, int off, int len) throws IOException {
+  public int read(byte[] b, int off, int len) throws IOException {
     return getDelegate().read(b, off, len);
   }
 
@@ -92,7 +91,7 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
     myRawText = rawText;
   }
 
-  @Nonnull
+  
   private InputStream getDelegate() {
     if (myDelegate != null) {
       return myDelegate;
@@ -124,8 +123,8 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
     }
   }
 
-  protected abstract void build(@Nonnull StringBuilder holder, int maxLength);
+  protected abstract void build(StringBuilder holder, int maxLength);
 
-  @Nonnull
+  
   protected abstract String getCharset();
 }

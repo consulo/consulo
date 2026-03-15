@@ -28,7 +28,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "MakeModule")
 public class MakeModuleAction extends CompileActionBase {
@@ -59,7 +58,7 @@ public class MakeModuleAction extends CompileActionBase {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
         if (!presentation.isEnabled()) {

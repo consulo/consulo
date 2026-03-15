@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -34,7 +33,7 @@ public final class FoldingGroup {
     myId = ourCounter.incrementAndGet();
   }
 
-  public static FoldingGroup newGroup(@Nonnull String debugName) {
+  public static FoldingGroup newGroup(String debugName) {
     return new FoldingGroup(debugName);
   }
 

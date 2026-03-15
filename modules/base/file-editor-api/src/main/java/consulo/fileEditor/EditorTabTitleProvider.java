@@ -21,9 +21,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -33,10 +32,10 @@ public interface EditorTabTitleProvider {
     ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create(EditorTabTitleProvider.class);
 
     @Nullable
-    String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file);
+    String getEditorTabTitle(Project project, VirtualFile file);
 
     @Nullable
-    default String getEditorTabTooltipText(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+    default String getEditorTabTooltipText(Project project, VirtualFile virtualFile) {
         return null;
     }
 }

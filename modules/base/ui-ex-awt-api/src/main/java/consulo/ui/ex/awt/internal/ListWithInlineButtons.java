@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt.internal;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ListWithInlineButtons {
     @Nullable

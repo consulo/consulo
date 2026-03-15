@@ -18,8 +18,7 @@ package consulo.codeEditor;
 import consulo.document.Document;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines contract for the strategy that calculates the best place to apply wrap to particular line (sequence of characters).
@@ -51,5 +50,5 @@ public interface LineWrapPositionStrategy {
    * @return offset from <code>(startOffset; endOffset)</code> interval where
    * target line should be wrapped OR <code>-1</code> if no wrapping should be performed
    */
-  int calculateWrapPosition(@Nonnull Document document, @Nullable Project project, int startOffset, int endOffset, int maxPreferredOffset, boolean allowToBeyondMaxPreferredOffset, boolean virtual);
+  int calculateWrapPosition(Document document, @Nullable Project project, int startOffset, int endOffset, int maxPreferredOffset, boolean allowToBeyondMaxPreferredOffset, boolean virtual);
 }

@@ -16,9 +16,8 @@
 
 package consulo.ui.ex.tree;
 
-import jakarta.annotation.Nonnull;
 
 public interface NodeDescriptorProvidingKey {
-  @Nonnull
+  
   Object getKey();
 }

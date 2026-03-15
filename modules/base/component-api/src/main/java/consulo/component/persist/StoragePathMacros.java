@@ -17,7 +17,6 @@ package consulo.component.persist;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * We have a framework for persisting component states (see {@link State} {@link Storage}). It allows to specify which file
@@ -34,13 +33,13 @@ public class StoragePathMacros {
   /**
    * Points to the application-level settings root directory.
    */
-  @Nonnull
+  
   public static final String ROOT_CONFIG = "$ROOT_CONFIG$";
 
   /**
    * Points to {@link #ROOT_CONFIG}/options by default. Should be used to store single files and {@link #ROOT_CONFIG} to store subdirectories with many files.
    */
-  @Nonnull
+  
   public static final String APP_CONFIG = "$APP_CONFIG$";
 
   /**
@@ -48,13 +47,13 @@ public class StoragePathMacros {
    */
   @Deprecated
   @DeprecationInfo(value = "Project file types is not supported anymore")
-  @Nonnull
+  
   public static final String PROJECT_FILE = "$PROJECT_FILE$";
 
   /**
    * <code>'.consulo'</code> directory path key.
    */
-  @Nonnull
+  
   public static final String PROJECT_CONFIG_DIR = "$PROJECT_CONFIG_DIR$";
 
   /**
@@ -63,16 +62,16 @@ public class StoragePathMacros {
    * <code>'Workspace file'</code> holds settings that are local to a particular environment and should not be shared with another
    * team members.
    */
-  @Nonnull
+  
   public static final String WORKSPACE_FILE = "$WORKSPACE_FILE$";
 
   /**
    * Default file for storage. For application it's 'other.xml', for project it's 'misc.xml'
    */
-  @Nonnull
+  
   public static final String DEFAULT_FILE = "$DEFAULT_FILE$";
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo(value = "Module file types is not supported anymore")
   public static final String MODULE_FILE = "$MODULE_FILE$";
@@ -89,9 +88,9 @@ public class StoragePathMacros {
    * @return name of the given macro definition
    * @throws IllegalArgumentException if given macro definition has unexpected format
    */
-  @Nonnull
+  
   @Deprecated
-  public static String getMacroName(@Nonnull String macro) throws IllegalArgumentException {
+  public static String getMacroName(String macro) throws IllegalArgumentException {
     if (macro.length() < 3 || macro.charAt(0) != '$' || macro.charAt(macro.length() - 1) != '$') {
       throw new IllegalArgumentException("Malformed macro definition (" + macro + ")");
     }

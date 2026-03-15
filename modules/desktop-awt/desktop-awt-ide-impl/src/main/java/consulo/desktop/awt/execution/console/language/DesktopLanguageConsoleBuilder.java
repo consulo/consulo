@@ -41,8 +41,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,22 +58,22 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
 
     GutteredLanguageConsole console;
 
-    public MyHelper(@Nonnull Project project,
-                    @Nonnull String title,
-                    @Nonnull Language language,
+    public MyHelper(Project project,
+                    String title,
+                    Language language,
                     @Nullable BiFunction<VirtualFile, Project, PsiFile> psiFileFactory) {
       super(project, new LightVirtualFile(title, language, ""));
       this.psiFileFactory = psiFileFactory;
     }
 
-    @Nonnull
+    
     @Override
     public PsiFile getFile() {
       return psiFileFactory == null ? super.getFile() : psiFileFactory.apply(virtualFile, project);
     }
 
     @Override
-    public void setupEditor(@Nonnull EditorEx editor) {
+    public void setupEditor(EditorEx editor) {
       super.setupEditor(editor);
 
       console.setupEditor(editor);
@@ -88,7 +87,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
   private final static class GutteredLanguageConsole extends LanguageConsoleImpl {
     private final GutterContentProvider gutterContentProvider;
 
-    public GutteredLanguageConsole(@Nonnull MyHelper helper, @Nullable GutterContentProvider gutterContentProvider) {
+    public GutteredLanguageConsole(MyHelper helper, @Nullable GutterContentProvider gutterContentProvider) {
       super(helper);
 
       helper.console = this;
@@ -105,7 +104,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
       return 1;
     }
 
-    void setupEditor(@Nonnull EditorEx editor) {
+    void setupEditor(EditorEx editor) {
       if (editor == getConsoleEditor()) {
         return;
       }
@@ -151,7 +150,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
                                                                                          .getWidth()), 0, lineEndGutterWidth, h);
         }
 
-        @Nonnull
+        
         private EditorComponentImpl getEditorComponent() {
           for (int i = getComponentCount() - 1; i >= 0; i--) {
             Component component = getComponent(i);
@@ -199,7 +198,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
 
       private final CustomHighlighterRenderer renderer = new CustomHighlighterRenderer() {
         @Override
-        public void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g) {
+        public void paint(Editor editor, RangeHighlighter highlighter, Graphics g) {
           Rectangle clip = g.getClipBounds();
           int lineHeight = editor.getLineHeight();
           int startLine = clip.y / lineHeight;
@@ -221,14 +220,14 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
         }
       };
 
-      public GutterUpdateScheduler(@Nonnull ConsoleGutterComponent lineStartGutter, @Nonnull ConsoleGutterComponent lineEndGutter) {
+      public GutterUpdateScheduler(ConsoleGutterComponent lineStartGutter, ConsoleGutterComponent lineEndGutter) {
         this.lineStartGutter = lineStartGutter;
         this.lineEndGutter = lineEndGutter;
 
         // console view can invoke markupModel.removeAllHighlighters(), so, we must be aware of it
         getHistoryViewer().getMarkupModel().addMarkupModelListener(GutteredLanguageConsole.this, new MarkupModelListener() {
           @Override
-          public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
+          public void beforeRemoved(RangeHighlighterEx highlighter) {
             if (lineSeparatorPainter == highlighter) {
               lineSeparatorPainter = null;
             }
@@ -285,11 +284,11 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
       }
 
       @Override
-      public void updateStarted(@Nonnull Document document) {
+      public void updateStarted(Document document) {
       }
 
       @Override
-      public void updateFinished(@Nonnull Document document) {
+      public void updateFinished(Document document) {
         if (getDocument().getTextLength() == 0) {
           documentCleared();
         }
@@ -333,7 +332,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
   }
 
   @Override
-  @Nonnull
+  
   public LanguageConsoleView build() {
     MyHelper helper = new MyHelper(myProject, myLanguage.getDisplayName() + " Console", myLanguage, psiFileFactory);
     GutteredLanguageConsole consoleView = new GutteredLanguageConsole(helper, gutterContentProvider);
@@ -358,9 +357,9 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
     return consoleView;
   }
 
-  private void doInitAction(@Nonnull LanguageConsoleView console,
-                            @Nonnull BaseConsoleExecuteActionHandler executeActionHandler,
-                            @Nonnull String historyType) {
+  private void doInitAction(LanguageConsoleView console,
+                            BaseConsoleExecuteActionHandler executeActionHandler,
+                            String historyType) {
     ConsoleExecuteAction action = new ConsoleExecuteAction(console, executeActionHandler, executionEnabled);
     action.registerCustomShortcutSet(action.getShortcutSet(), console.getConsoleEditor().getComponent());
     new ConsoleHistoryControllerImpl(new MyConsoleRootType(historyType), null, console).install();

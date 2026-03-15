@@ -9,7 +9,6 @@ import consulo.language.index.impl.internal.hash.MergedInvertedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,22 +16,22 @@ import java.io.IOException;
 public interface ProvidedIndexExtension<K, V> {
   Logger LOG = Logger.getInstance(ProvidedIndexExtension.class);
 
-  @Nonnull
+  
   File getIndexPath();
 
-  @Nonnull
+  
   ID<K, V> getIndexId();
 
-  @Nonnull
+  
   KeyDescriptor<K> createKeyDescriptor();
 
-  @Nonnull
+  
   DataExternalizer<V> createValueExternalizer();
 
-  @Nonnull
-  static <K, V> UpdatableIndex<K, V, FileContent> wrapWithProvidedIndex(@Nonnull ProvidedIndexExtension<K, V> providedIndexExtension,
-                                                                        @Nonnull FileBasedIndexExtension<K, V> originalExtension,
-                                                                        @Nonnull UpdatableIndex<K, V, FileContent> index) {
+  
+  static <K, V> UpdatableIndex<K, V, FileContent> wrapWithProvidedIndex(ProvidedIndexExtension<K, V> providedIndexExtension,
+                                                                        FileBasedIndexExtension<K, V> originalExtension,
+                                                                        UpdatableIndex<K, V, FileContent> index) {
     try {
       return MergedInvertedIndex.create(providedIndexExtension, originalExtension, index);
     }

@@ -15,26 +15,25 @@
  */
 package consulo.language.codeStyle.setting;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Shein
  * @since 2015-09-16
  */
 public class CodeStyleSelectSettingPresentation extends CodeStyleSettingPresentation {
-    @Nonnull
+    
     protected int[] myValues;
-    @Nonnull
+    
     protected String[] myValueUiNames;
 
     protected int myLowerBound;
     protected int myUpperBound;
 
     public CodeStyleSelectSettingPresentation(
-        @Nonnull String fieldName,
-        @Nonnull String uiName,
-        @Nonnull int[] values,
-        @Nonnull String[] valueUiNames
+        String fieldName,
+        String uiName,
+        int[] values,
+        String[] valueUiNames
     ) {
         super(fieldName, uiName);
 
@@ -53,9 +52,9 @@ public class CodeStyleSelectSettingPresentation extends CodeStyleSettingPresenta
         }
     }
 
-    @Nonnull
+    
     @Override
-    public String getValueUiName(@Nonnull Object value) {
+    public String getValueUiName(Object value) {
         if (value instanceof Integer) {
             int intValue = (Integer) value;
             for (int i = 0; i < myValues.length; ++i) {
@@ -75,12 +74,12 @@ public class CodeStyleSelectSettingPresentation extends CodeStyleSettingPresenta
         return myUpperBound;
     }
 
-    @Nonnull
+    
     public int[] getValues() {
         return myValues;
     }
 
-    @Nonnull
+    
     public String[] getOptions() {
         return myValueUiNames;
     }

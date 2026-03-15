@@ -22,8 +22,7 @@ import consulo.ui.ModalityState;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -60,8 +59,8 @@ import java.util.Objects;
 public interface ProgressIndicator {
     Key<ProgressIndicator> KEY = Key.of(ProgressIndicator.class);
 
-    @Nonnull
-    static ProgressIndicator from(@Nonnull Continuation<?> continuation) {
+    
+    static ProgressIndicator from(Continuation<?> continuation) {
         ProgressIndicator indicator = continuation.scope().getCopyableUserData(KEY);
         return Objects.requireNonNull(indicator, "ProgressIndicator must be set");
     }
@@ -115,7 +114,7 @@ public interface ProgressIndicator {
      * @param text Text to set
      * @see #setTextValue2(LocalizeValue)
      */
-    void setTextValue(@Nonnull LocalizeValue textValue);
+    void setTextValue(LocalizeValue textValue);
 
     /**
      * @return text above the progress bar, set by {@link #setText(String)}
@@ -125,7 +124,7 @@ public interface ProgressIndicator {
         return getTextValue().getNullIfEmpty();
     }
 
-    @Nonnull
+    
     LocalizeValue getTextValue();
 
     /**
@@ -146,7 +145,7 @@ public interface ProgressIndicator {
      * @param text Text to set
      * @see #setText(String)
      */
-    void setText2Value(@Nonnull LocalizeValue text);
+    void setText2Value(LocalizeValue text);
 
     /**
      * @return text under the progress bar, set by {@link #setText2(String)}
@@ -156,7 +155,7 @@ public interface ProgressIndicator {
         return getText2Value().getNullIfEmpty();
     }
 
-    @Nonnull
+    
     LocalizeValue getText2Value();
 
     /**
@@ -202,7 +201,7 @@ public interface ProgressIndicator {
      * By default, depending on implementation, it's {@link ModalityState#NON_MODAL} or current modality at the moment of progress indicator creation.
      * It can be later modified by {@link #setModalityProgress(ProgressIndicator)}, but it mostly makes sense for processes showing modal dialogs.
      */
-    @Nonnull
+    
     ModalityState getModalityState();
 
     /**
@@ -237,6 +236,6 @@ public interface ProgressIndicator {
 
     boolean isShowing();
 
-    default void addListener(@Nonnull ProgressIndicatorListener listener) {
+    default void addListener(ProgressIndicatorListener listener) {
     }
 }

@@ -18,8 +18,7 @@ package consulo.desktop.awt.ui.keymap;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.reference.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ public class KeyProcessorContext {
   private WeakReference<Component> myFocusOwner;
   private KeyEvent myInputEvent;
 
-  @Nonnull
+  
   List<AnAction> getActions() {
     return myActions;
   }

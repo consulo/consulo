@@ -14,8 +14,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.WeakList;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -34,12 +33,12 @@ final class CtxToolWindows {
         ourConnection = ApplicationManager.getApplication().getMessageBus().connect();
         ourConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectOpened(@Nonnull Project project) {
+            public void projectOpened(Project project) {
                 subscribeToolWindowTopic(project);
             }
 
             @Override
-            public void projectClosed(@Nonnull Project project) {
+            public void projectClosed(Project project) {
                 forEachToolWindow(project, tw -> {
                     if (tw != null)
                         TouchBarsManager.unregister(tw.getComponent());
@@ -60,14 +59,14 @@ final class CtxToolWindows {
         // no necessity to do it here
     }
 
-    private static void forEachToolWindow(@Nonnull Project project, Consumer<? super ToolWindow> func) {
+    private static void forEachToolWindow(Project project, Consumer<? super ToolWindow> func) {
         ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
             func.accept(window);
         }
     }
 
-    private static void subscribeToolWindowTopic(@Nonnull Project project) {
+    private static void subscribeToolWindowTopic(Project project) {
         if (project.isDisposed()) {
             return;
         }
@@ -77,7 +76,7 @@ final class CtxToolWindows {
         MessageBusConnection pbc = project.getMessageBus().connect();
         pbc.subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
             @Override
-            public void toolWindowsRegistered(@Nonnull List<String> ids, @Nonnull ToolWindowManager toolWindowManager) {
+            public void toolWindowsRegistered(List<String> ids, ToolWindowManager toolWindowManager) {
                 for (String id : ids) {
                     @Nullable Pair<Map<Long, ActionGroup>, Customizer> actions = ActionsLoader.getToolWindowActionGroup(id);
                     if (actions == null || actions.first.get(0L) == null) {
@@ -94,7 +93,7 @@ final class CtxToolWindows {
             }
 
             @Override
-            public void toolWindowUnregistered(@Nonnull String id, @Nonnull ToolWindow toolWindow) {
+            public void toolWindowUnregistered(String id, ToolWindow toolWindow) {
                 TouchBarsManager.unregister(toolWindow.getComponent());
             }
         });

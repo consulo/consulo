@@ -19,8 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.util.collection.Maps;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.ide.impl.script.IdeScriptEngine;
 
@@ -35,7 +34,7 @@ public class IDE {
     private final Map<Object, Object> bindings = Maps.newConcurrentHashMap();
     private final IdeScriptEngine myEngine;
 
-    public IDE(@Nullable Project project, @Nonnull IdeScriptEngine engine) {
+    public IDE(@Nullable Project project, IdeScriptEngine engine) {
         this.project = project;
         myEngine = engine;
     }

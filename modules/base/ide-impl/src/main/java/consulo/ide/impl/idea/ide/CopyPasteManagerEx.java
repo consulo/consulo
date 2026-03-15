@@ -14,8 +14,7 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.*;
 import java.io.IOException;
@@ -51,27 +50,27 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
     }
 
     @Override
-    public void addContentChangedListener(@Nonnull ContentChangedListener listener) {
+    public void addContentChangedListener(ContentChangedListener listener) {
         myDispatcher.addListener(listener);
     }
 
     @Override
-    public void addContentChangedListener(@Nonnull ContentChangedListener listener, @Nonnull Disposable parentDisposable) {
+    public void addContentChangedListener(ContentChangedListener listener, Disposable parentDisposable) {
         myDispatcher.addListener(listener, parentDisposable);
     }
 
     @Override
-    public void removeContentChangedListener(@Nonnull ContentChangedListener listener) {
+    public void removeContentChangedListener(ContentChangedListener listener) {
         myDispatcher.removeListener(listener);
     }
 
     @Override
-    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(DataFlavor... flavors) {
         return flavors.length > 0 && myClipboardSynchronizer.areDataFlavorsAvailable(flavors);
     }
 
     @Override
-    public void setContents(@Nonnull Transferable content) {
+    public void setContents(Transferable content) {
         Transferable oldContent = myOwnContent && !myData.isEmpty() ? myData.get(0) : null;
 
         Transferable contentToUse = addNewContentToStack(content);
@@ -111,8 +110,8 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
      * @param content content to store
      * @return content that is either the given one or the one that was assembled from it and already stored one
      */
-    @Nonnull
-    private Transferable addNewContentToStack(@Nonnull Transferable content) {
+    
+    private Transferable addNewContentToStack(Transferable content) {
         try {
             String clipString = getStringContent(content);
             if (clipString == null) {
@@ -154,7 +153,7 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
         return content;
     }
 
-    private void addToTheTopOfTheStack(@Nonnull Transferable content) {
+    private void addToTheTopOfTheStack(Transferable content) {
         myData.add(0, content);
         deleteAfterAllowedMaximum();
     }
@@ -170,8 +169,8 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
      */
     @Nullable
     private static Transferable merge(
-        @Nonnull KillRingTransferable newData,
-        @Nonnull KillRingTransferable oldData
+        KillRingTransferable newData,
+        KillRingTransferable oldData
     ) throws IOException, UnsupportedFlavorException {
         if (!oldData.isReadyToCombine() || !newData.isReadyToCombine()) {
             return null;
@@ -246,7 +245,7 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
 
     @Nullable
     @Override
-    public <T> T getContents(@Nonnull DataFlavor flavor) {
+    public <T> T getContents(DataFlavor flavor) {
         if (areDataFlavorsAvailable(flavor)) {
             //noinspection unchecked
             return (T)myClipboardSynchronizer.getData(flavor);
@@ -254,7 +253,7 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Transferable[] getAllContents() {
         String clipString = getContents(DataFlavor.stringFlavor);

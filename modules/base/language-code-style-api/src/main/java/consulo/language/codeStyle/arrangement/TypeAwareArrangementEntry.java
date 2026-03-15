@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement;
 
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -30,6 +29,6 @@ import java.util.Set;
  */
 public interface TypeAwareArrangementEntry extends ArrangementEntry {
 
-  @Nonnull
+  
   Set<ArrangementSettingsToken> getTypes();
 }

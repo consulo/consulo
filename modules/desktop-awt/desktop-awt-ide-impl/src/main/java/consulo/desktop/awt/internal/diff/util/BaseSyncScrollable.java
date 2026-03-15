@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.diff.util;
 
 import consulo.diff.util.Side;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScrollable {
@@ -28,10 +27,10 @@ public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScroll
    *
    * handler will return false if precessing should be aborted
    */
-  protected abstract void processHelper(@Nonnull ScrollHelper helper);
+  protected abstract void processHelper(ScrollHelper helper);
 
   @RequiredUIAccess
-  public int transfer(@Nonnull Side baseSide, int line) {
+  public int transfer(Side baseSide, int line) {
     ScrollHelper helper = new ScrollHelper(baseSide, line);
     processHelper(helper);
 
@@ -51,11 +50,11 @@ public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScroll
   }
 
   protected static class ScrollHelper {
-    @Nonnull
+    
     private final Side mySide;
     private final int myLine;
 
-    public ScrollHelper(@Nonnull Side side, int line) {
+    public ScrollHelper(Side side, int line) {
       mySide = side;
       myLine = line;
     }

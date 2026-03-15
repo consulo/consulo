@@ -18,8 +18,7 @@ package consulo.versionControlSystem.impl.internal.change;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ChangeListsWriteOperations {
   @Nullable
@@ -27,15 +26,15 @@ public interface ChangeListsWriteOperations {
 
   boolean setReadOnly(String name, boolean value);
 
-  LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable Object data);
+  LocalChangeList addChangeList(String name, @Nullable String comment, @Nullable Object data);
 
-  boolean removeChangeList(@Nonnull String name);
+  boolean removeChangeList(String name);
 
   @Nullable
   MultiMap<LocalChangeList, Change> moveChangesTo(String name, Change[] changes);
 
-  boolean editName(@Nonnull String fromName, @Nonnull String toName);
+  boolean editName(String fromName, String toName);
 
   @Nullable
-  String editComment(@Nonnull String fromName, String newComment);
+  String editComment(String fromName, String newComment);
 }

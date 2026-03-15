@@ -66,8 +66,7 @@ import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -88,13 +87,13 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             myConfigurable = configurable;
         }
 
-        @Nonnull
+        
         @Override
         public String getId() {
             return myConfigurable.getClass().getName();
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getDisplayName() {
             return myConfigurable.getDisplayName();
@@ -107,14 +106,13 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         @Override
         @RequiredUIAccess
-        public JComponent createComponent(@Nonnull Disposable parent) {
+        public JComponent createComponent(Disposable parent) {
             return myConfigurable.createComponent(parent);
         }
 
-        @Nullable
         @Override
         @RequiredUIAccess
-        public consulo.ui.Component createUIComponent(@Nonnull Disposable parentDisposable) {
+        public consulo.ui.@Nullable Component createUIComponent(Disposable parentDisposable) {
             return myConfigurable.createUIComponent(parentDisposable);
         }
 
@@ -156,7 +154,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             myErrorLabel.setBackground(LightColors.RED);
         }
 
-        void setContent(JComponent component, ConfigurationException e, @Nonnull Configurable configurable) {
+        void setContent(JComponent component, ConfigurationException e, Configurable configurable) {
             if (component != null && mySimpleContent == component && myException == e) {
                 return;
             }
@@ -763,7 +761,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     @Override
     @Nullable
-    public SearchableConfigurable findConfigurableById(@Nonnull String configurableId) {
+    public SearchableConfigurable findConfigurableById(String configurableId) {
         return myTree.findConfigurableById(configurableId);
     }
 
@@ -791,7 +789,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     @Override
-    public AsyncResult<Configurable> select(@Nonnull String configurableId) {
+    public AsyncResult<Configurable> select(String configurableId) {
         Configurable configurableInfo = myTree.findConfigurableById(configurableId);
         if (configurableInfo == null) {
             return AsyncResult.rejected();
@@ -803,9 +801,9 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return callback;
     }
 
-    @Nonnull
+    
     @Override
-    public <T extends UnnamedConfigurable> AsyncResult<T> select(@Nonnull Class<T> clazz) {
+    public <T extends UnnamedConfigurable> AsyncResult<T> select(Class<T> clazz) {
         Pair<Configurable, T> configurableInfo = myTree.findConfigurableInfo(clazz);
         if (configurableInfo == null) {
             return AsyncResult.rejected();
@@ -890,7 +888,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return result;
     }
 
-    public static boolean isProjectConfigurable(@Nonnull Configurable configurable) {
+    public static boolean isProjectConfigurable(Configurable configurable) {
         return ConfigurableWrapper.cast(configurable, ProjectConfigurable.class) != null;
     }
 
@@ -927,7 +925,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     @RequiredUIAccess
-    private void initConfigurable(@Nonnull Configurable configurable, AsyncResult<Void> result) {
+    private void initConfigurable(Configurable configurable, AsyncResult<Void> result) {
         UIAccess.assertIsUIThread();
 
         if (myDisposed) {
@@ -1132,8 +1130,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return builder.toString();
     }
 
-    @Nonnull
-    private static PluginId getPluginId(@Nonnull Configurable configurable) {
+    
+    private static PluginId getPluginId(Configurable configurable) {
         return configurable instanceof ConfigurableWrapper configurableWrapper
             ? PluginManager.getPluginId(configurableWrapper.getConfigurable().getClass())
             : PluginManager.getPluginId(configurable.getClass());
@@ -1208,7 +1206,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (Settings.KEY == dataId) {
             return this;
         }

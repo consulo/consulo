@@ -19,9 +19,8 @@ package consulo.ide.impl.idea.ide.fileTemplates.impl;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.impl.internal.FileTemplateBase;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ abstract class FileTemplateTab {
 
   public abstract void fireDataChanged();
 
-  @Nonnull
+  
   public FileTemplate[] getTemplates() {
     return myTemplates.toArray(new FileTemplate[myTemplates.size()]);
   }

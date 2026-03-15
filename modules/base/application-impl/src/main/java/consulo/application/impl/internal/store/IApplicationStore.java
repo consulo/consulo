@@ -19,14 +19,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.store.internal.IComponentStore;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface IApplicationStore extends IComponentStore {
-  void setOptionsPath(@Nonnull String path);
+  void setOptionsPath(String path);
 
-  @Nonnull
+  
   String getConfigPath();
 
-  void setConfigPath(@Nonnull String configPath);
+  void setConfigPath(String configPath);
 }

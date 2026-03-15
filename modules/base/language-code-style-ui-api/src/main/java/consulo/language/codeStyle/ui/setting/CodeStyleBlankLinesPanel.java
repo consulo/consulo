@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Trinity;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,7 +119,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
     }
 
     @Nullable
-    private OptionGroup createOptionsGroup(@Nonnull String groupName, @Nonnull List<CodeStyleSettingPresentation> settings) {
+    private OptionGroup createOptionsGroup(String groupName, List<CodeStyleSettingPresentation> settings) {
         OptionGroup optionGroup = new OptionGroup(groupName);
 
         for (CodeStyleSettingPresentation setting : settings) {
@@ -267,17 +266,17 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
         private Class<? extends CustomCodeStyleSettings> myTargetClass;
         private int myCurrValue = Integer.MAX_VALUE;
 
-        private IntOption(@Nonnull String title, String fieldName) {
+        private IntOption(String title, String fieldName) {
             this(title, CommonCodeStyleSettings.class, fieldName, false);
         }
 
-        private IntOption(@Nonnull String title, Class<? extends CustomCodeStyleSettings> targetClass, String fieldName) {
+        private IntOption(String title, Class<? extends CustomCodeStyleSettings> targetClass, String fieldName) {
             this(title, targetClass, fieldName, false);
             myTargetClass = targetClass;
         }
 
         // dummy is used to distinguish constructors
-        private IntOption(@Nonnull String title, Class<?> fieldClass, String fieldName, boolean dummy) {
+        private IntOption(String title, Class<?> fieldClass, String fieldName, boolean dummy) {
             try {
                 myTarget = fieldClass.getField(fieldName);
             }
@@ -343,7 +342,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
         }
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getTabTitle() {
         return ApplicationLocalize.titleBlankLines();

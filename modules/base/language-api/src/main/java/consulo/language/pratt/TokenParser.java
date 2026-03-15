@@ -17,8 +17,7 @@ package consulo.language.pratt;
 
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -27,11 +26,11 @@ public abstract class TokenParser {
 
   public abstract boolean parseToken(PrattBuilder builder);
 
-  public static TokenParser infix(int rightPriority, @Nonnull IElementType compositeType) {
+  public static TokenParser infix(int rightPriority, IElementType compositeType) {
     return infix(rightPriority, compositeType, null);
   }
 
-  public static TokenParser infix(final int rightPriority, @Nonnull final IElementType compositeType, @Nullable final String errorMessage) {
+  public static TokenParser infix(final int rightPriority, final IElementType compositeType, @Nullable final String errorMessage) {
     return new ReducingParser() {
       @Override
       @Nullable
@@ -42,7 +41,7 @@ public abstract class TokenParser {
     };
   }
 
-  public static TokenParser postfix(@Nonnull final IElementType compositeType) {
+  public static TokenParser postfix(final IElementType compositeType) {
     return new ReducingParser() {
       @Override
       @Nullable

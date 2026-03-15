@@ -16,7 +16,6 @@
 package consulo.component.store.impl.internal.storage.nio;
 
 import consulo.platform.LineSeparator;
-import jakarta.annotation.Nonnull;
 
 import java.io.FilterReader;
 import java.io.IOException;
@@ -34,8 +33,8 @@ public class DetectingSeparatorReader extends FilterReader {
         super(in);
     }
 
-    @Nonnull
-    public LineSeparator getLineSeparator(@Nonnull LineSeparator defaultSeparator) {
+    
+    public LineSeparator getLineSeparator(LineSeparator defaultSeparator) {
         return Objects.requireNonNullElse(myLineSeparator, defaultSeparator);
     }
 

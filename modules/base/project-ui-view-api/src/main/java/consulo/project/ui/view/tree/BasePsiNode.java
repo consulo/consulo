@@ -22,20 +22,19 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public abstract class BasePsiNode<T extends PsiElement> extends AbstractPsiBasedNode<T> {
   @Nullable
   private final VirtualFile myVirtualFile;
 
-  protected BasePsiNode(Project project, @Nonnull T value, ViewSettings viewSettings) {
+  protected BasePsiNode(Project project, T value, ViewSettings viewSettings) {
     super(project, value, viewSettings);
     myVirtualFile = PsiUtilCore.getVirtualFile(value);
   }
 
-  @Nonnull
+  
   @Override
   public FileStatus getFileStatus() {
     return computeFileStatus(getVirtualFile(), Objects.requireNonNull(getProject()));

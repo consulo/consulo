@@ -22,18 +22,17 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class CutProviderRule implements GetDataRule<CutProvider> {
-  @Nonnull
+  
   @Override
   public Key<CutProvider> getKey() {
     return CutProvider.KEY;
   }
 
   @Override
-  public CutProvider getData(@Nonnull DataProvider dataProvider) {
+  public CutProvider getData(DataProvider dataProvider) {
     Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getCutProvider() : null;
   }

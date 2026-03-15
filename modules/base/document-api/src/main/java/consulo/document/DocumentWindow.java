@@ -17,14 +17,13 @@ package consulo.document;
 
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public interface DocumentWindow extends Document {
-    @Nonnull
+    
     Document getDelegate();
 
     /**
@@ -43,8 +42,8 @@ public interface DocumentWindow extends Document {
      */
     int injectedToHost(int injectedOffset, boolean minHostOffset);
 
-    @Nonnull
-    TextRange injectedToHost(@Nonnull TextRange injectedOffset);
+    
+    TextRange injectedToHost(TextRange injectedOffset);
 
     int hostToInjected(int hostOffset);
 
@@ -53,10 +52,10 @@ public interface DocumentWindow extends Document {
 
     int injectedToHostLine(int line);
 
-    @Nonnull
+    
     Segment[] getHostRanges();
 
-    boolean areRangesEqual(@Nonnull DocumentWindow documentWindow);
+    boolean areRangesEqual(DocumentWindow documentWindow);
 
     boolean isValid();
 

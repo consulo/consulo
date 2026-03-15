@@ -16,7 +16,6 @@
 package consulo.language.codeStyle.arrangement.model;
 
 import consulo.language.codeStyle.arrangement.match.ArrangementEntryMatcher;
-import jakarta.annotation.Nonnull;
 
 /**
  * Generic data model for {@link ArrangementEntryMatcher arrangement entry matcher}.
@@ -28,8 +27,8 @@ import jakarta.annotation.Nonnull;
  */
 public interface ArrangementMatchCondition extends Cloneable {
 
-  void invite(@Nonnull ArrangementMatchConditionVisitor visitor);
+  void invite(ArrangementMatchConditionVisitor visitor);
 
-  @Nonnull
+  
   ArrangementMatchCondition clone();
 }

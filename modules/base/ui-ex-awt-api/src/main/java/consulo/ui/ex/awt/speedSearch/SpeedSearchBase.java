@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -117,7 +116,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         new AnAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 String prefix = getEnteredPrefix();
                 assert prefix != null;
                 String[] strings = NameUtilCore.splitNameIntoWords(prefix);
@@ -127,7 +126,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(isPopupActive() && !StringUtil.isEmpty(getEnteredPrefix()));
             }
         }.registerCustomShortcutSet(
@@ -160,7 +159,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     }
 
     @Override
-    public Iterable<MatcherTextRange> matchingFragments(@Nonnull String text) {
+    public Iterable<MatcherTextRange> matchingFragments(String text) {
         if (!isPopupActive()) {
             return null;
         }
@@ -179,7 +178,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
      */
     protected abstract int getSelectedIndex();
 
-    @Nonnull
+    
     protected abstract Object[] getAllElements();
 
     @Nullable
@@ -202,18 +201,18 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
      */
     protected abstract void selectElement(Object element, String selectedText);
 
-    @Nonnull
+    
     protected ListIterator<Object> getElementIterator(int startingIndex) {
         return new ViewIterator(this, startingIndex < 0 ? getElementCount() : startingIndex);
     }
 
     @Override
-    public void addChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void addChangeListener(PropertyChangeListener listener) {
         myChangeSupport.addPropertyChangeListener(listener);
     }
 
     @Override
-    public void removeChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void removeChangeListener(PropertyChangeListener listener) {
         myChangeSupport.removePropertyChangeListener(listener);
     }
 
@@ -228,7 +227,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         return str != null && compare(str, pattern);
     }
 
-    protected boolean compare(@Nonnull String text, @Nullable String pattern) {
+    protected boolean compare(String text, @Nullable String pattern) {
         return pattern != null && myComparator.matchingFragments(pattern, text) != null;
     }
 
@@ -420,11 +419,11 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     }
 
     @Override
-    public void findAndSelectElement(@Nonnull String searchQuery) {
+    public void findAndSelectElement(String searchQuery) {
         selectElement(findElement(searchQuery), searchQuery);
     }
 
-    public boolean adjustSelection(int keyCode, @Nonnull String searchQuery) {
+    public boolean adjustSelection(int keyCode, String searchQuery) {
         if (isUpDownHomeEnd(keyCode)) {
             Object element = findTargetElement(keyCode, searchQuery);
             if (element != null) {
@@ -703,7 +702,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         private int myCurrentIndex;
         private final Object[] myElements;
 
-        ViewIterator(@Nonnull SpeedSearchBase speedSearch, int startIndex) {
+        ViewIterator(SpeedSearchBase speedSearch, int startIndex) {
             mySpeedSearch = speedSearch;
             myCurrentIndex = startIndex;
             myElements = speedSearch.getAllElements();

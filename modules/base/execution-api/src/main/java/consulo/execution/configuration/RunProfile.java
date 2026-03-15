@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base interface for things that can be executed (run configurations explicitly managed by user, or custom run profile implementations
@@ -43,7 +42,7 @@ public interface RunProfile {
    * @return the RunProfileState describing the process which is about to be started, or null if it's impossible to start the process.
    */
   @Nullable
-  RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException;
+  RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException;
 
   /**
    * Returns the name of the run configuration.

@@ -54,8 +54,7 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -64,15 +63,15 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
     @RequiredReadAction
     InjectedGeneralHighlightingPass(
-        @Nonnull Project project,
-        @Nonnull PsiFile file,
-        @Nonnull Document document,
+        Project project,
+        PsiFile file,
+        Document document,
         int startOffset,
         int endOffset,
         boolean updateAll,
-        @Nonnull ProperTextRange priorityRange,
+        ProperTextRange priorityRange,
         @Nullable Editor editor,
-        @Nonnull HighlightInfoProcessor highlightInfoProcessor
+        HighlightInfoProcessor highlightInfoProcessor
     ) {
         super(project, file, document, startOffset, endOffset, updateAll, priorityRange, editor, highlightInfoProcessor);
     }
@@ -84,7 +83,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
     @Override
     @RequiredReadAction
-    protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
+    protected void collectInformationWithProgress(ProgressIndicator progress) {
         if (!Registry.is("editor.injected.highlighting.enabled")) {
             return;
         }
@@ -176,12 +175,12 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private Set<PsiFile> getInjectedPsiFiles(
-        @Nonnull List<? extends PsiElement> elements1,
-        @Nonnull List<? extends PsiElement> elements2,
-        @Nonnull ProgressIndicator progress
+        List<? extends PsiElement> elements1,
+        List<? extends PsiElement> elements2,
+        ProgressIndicator progress
     ) {
         Application application = myProject.getApplication();
         application.assertReadAccessAllowed();
@@ -239,9 +238,9 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
     // returns false if canceled
     private boolean addInjectedPsiHighlights(
-        @Nonnull Set<? extends PsiFile> injectedFiles,
-        @Nonnull ProgressIndicator progress,
-        @Nonnull Collection<? super HighlightInfo> outInfos
+        Set<? extends PsiFile> injectedFiles,
+        ProgressIndicator progress,
+        Collection<? super HighlightInfo> outInfos
     ) {
         if (injectedFiles.isEmpty()) {
             return true;
@@ -259,10 +258,10 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
     @RequiredReadAction
     private boolean addInjectedPsiHighlights(
-        @Nonnull PsiFile injectedPsi,
+        PsiFile injectedPsi,
         TextAttributes injectedAttributes,
-        @Nonnull Collection<? super HighlightInfo> outInfos,
-        @Nonnull InjectedLanguageManagerInternal injectedLanguageManager
+        Collection<? super HighlightInfo> outInfos,
+        InjectedLanguageManagerInternal injectedLanguageManager
     ) {
         DocumentWindow documentWindow = (DocumentWindow) PsiDocumentManager.getInstance(myProject).getCachedDocument(injectedPsi);
         if (documentWindow == null) {
@@ -347,7 +346,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     }
 
     @Override
-    protected void queueInfoToUpdateIncrementally(@Nonnull HighlightInfo info) {
+    protected void queueInfoToUpdateIncrementally(HighlightInfo info) {
         // do not send info to highlight immediately - we need to convert its offsets first
         // see addPatchedInfos()
     }
@@ -358,7 +357,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
      * @return null means invalid
      */
     @Nullable
-    private static TextRange getFixedTextRange(@Nonnull DocumentWindow documentWindow, int startOffset) {
+    private static TextRange getFixedTextRange(DocumentWindow documentWindow, int startOffset) {
         TextRange fixedTextRange;
         TextRange textRange = documentWindow.getHostRange(startOffset);
         if (textRange == null) {
@@ -380,12 +379,12 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     }
 
     private static void addPatchedInfos(
-        @Nonnull HighlightInfoImpl info,
-        @Nonnull PsiFile injectedPsi,
-        @Nonnull DocumentWindow documentWindow,
-        @Nonnull InjectedLanguageManager injectedLanguageManager,
+        HighlightInfoImpl info,
+        PsiFile injectedPsi,
+        DocumentWindow documentWindow,
+        InjectedLanguageManager injectedLanguageManager,
         @Nullable TextRange fixedTextRange,
-        @Nonnull Collection<? super HighlightInfoImpl> out
+        Collection<? super HighlightInfoImpl> out
     ) {
         ProperTextRange textRange = new ProperTextRange(info.getStartOffset(), info.getEndOffset());
         List<TextRange> editables = injectedLanguageManager.intersectWithAllEditableFragments(injectedPsi, textRange);
@@ -465,7 +464,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     }
 
     @RequiredReadAction
-    private void runHighlightVisitorsForInjected(@Nonnull PsiFile injectedPsi, @Nonnull HighlightInfoHolder holder) {
+    private void runHighlightVisitorsForInjected(PsiFile injectedPsi, HighlightInfoHolder holder) {
         List<HighlightVisitor> filtered = getHighlightVisitors(injectedPsi);
         try {
             List<PsiElement> elements = CollectHighlightsUtil.getElementsInRange(injectedPsi, 0, injectedPsi.getTextLength());
@@ -485,9 +484,9 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
     @RequiredReadAction
     private void highlightInjectedSyntax(
-        @Nonnull InjectedLanguageManagerInternal injectedLanguageManager,
-        @Nonnull PsiFile injectedPsi,
-        @Nonnull HighlightInfoHolder holder
+        InjectedLanguageManagerInternal injectedLanguageManager,
+        PsiFile injectedPsi,
+        HighlightInfoHolder holder
     ) {
         List<InjectedHighlightTokenInfo> tokens = injectedLanguageManager.getHighlightTokens(injectedPsi);
         if (tokens == null) {

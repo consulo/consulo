@@ -19,7 +19,6 @@ import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorCaretBase;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 public class WebCaretImpl extends CodeEditorCaretBase {
 
-  public WebCaretImpl(@Nonnull CodeEditorBase editor, @Nonnull CodeEditorCaretModelBase caretModel) {
+  public WebCaretImpl(CodeEditorBase editor, CodeEditorCaretModelBase caretModel) {
     super(editor, caretModel);
   }
 }

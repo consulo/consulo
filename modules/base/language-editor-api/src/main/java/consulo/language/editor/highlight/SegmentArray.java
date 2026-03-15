@@ -3,7 +3,6 @@ package consulo.language.editor.highlight;
 
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * This class is a data structure specialized for working with the indexed segments, i.e. it holds numerous mappings like
@@ -44,7 +43,7 @@ public class SegmentArray {
         myEnds[i] = endOffset;
     }
 
-    protected void replace(int startOffset, @Nonnull SegmentArray data, int len) {
+    protected void replace(int startOffset, SegmentArray data, int len) {
         System.arraycopy(data.myStarts, 0, myStarts, startOffset, len);
         System.arraycopy(data.myEnds, 0, myEnds, startOffset, len);
     }
@@ -62,8 +61,8 @@ public class SegmentArray {
         return currentArraySize;
     }
 
-    @Nonnull
-    private static int[] reallocateArray(@Nonnull int[] array, int index) {
+    
+    private static int[] reallocateArray(int[] array, int index) {
         if (index < array.length) {
             return array;
         }
@@ -146,23 +145,23 @@ public class SegmentArray {
         mySegmentCount -= endIndex - startIndex;
     }
 
-    @Nonnull
-    protected int[] remove(@Nonnull int[] array, int startIndex, int endIndex) {
+    
+    protected int[] remove(int[] array, int startIndex, int endIndex) {
         if (endIndex < mySegmentCount) {
             System.arraycopy(array, endIndex, array, startIndex, mySegmentCount - endIndex);
         }
         return array;
     }
 
-    protected void insert(@Nonnull SegmentArray segmentArray, int startIndex) {
+    protected void insert(SegmentArray segmentArray, int startIndex) {
         myStarts = insert(myStarts, segmentArray.myStarts, startIndex, segmentArray.getSegmentCount(), mySegmentCount);
         myEnds = insert(myEnds, segmentArray.myEnds, startIndex, segmentArray.getSegmentCount(), mySegmentCount);
         mySegmentCount += segmentArray.getSegmentCount();
     }
 
-    @Nonnull
-    protected static int[] insert(@Nonnull int[] array,
-                                  @Nonnull int[] insertArray,
+    
+    protected static int[] insert(int[] array,
+                                  int[] insertArray,
                                   int startIndex,
                                   int insertLength,
                                   int mySegmentCount) {

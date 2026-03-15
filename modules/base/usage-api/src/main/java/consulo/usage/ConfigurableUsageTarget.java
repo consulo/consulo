@@ -17,13 +17,12 @@ package consulo.usage;
 
 import consulo.ui.ex.action.KeyboardShortcut;
 
-import jakarta.annotation.Nonnull;
 
 public interface ConfigurableUsageTarget extends UsageTarget {
     void showSettings();
 
     KeyboardShortcut getShortcut();
 
-    @Nonnull
+    
     String getLongDescriptiveName();
 }

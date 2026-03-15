@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util;
 
-import org.jetbrains.annotations.NonNls;
 
 
 /**
@@ -28,7 +27,7 @@ public abstract class WaitFor {
   private long myWaitTime;
   private boolean myInterrupted;
   private volatile boolean myConditionRealized;
-  @NonNls public static final String WAIT_FOR_THREAD_NAME = "WaitFor thread";
+  public static final String WAIT_FOR_THREAD_NAME = "WaitFor thread";
 
   /** Blocking call */
   public WaitFor() {

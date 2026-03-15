@@ -18,8 +18,7 @@ package consulo.ui.ex.util;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 /**
@@ -38,7 +37,7 @@ public final class UIXmlSerializeUtil {
   }
 
   @Nullable
-  public static Point2D getLocation(@Nonnull Element element, @Nonnull String x, @Nonnull String y) {
+  public static Point2D getLocation(Element element, String x, String y) {
     String sX = element.getAttributeValue(x);
     if (sX == null) return null;
     String sY = element.getAttributeValue(y);
@@ -51,13 +50,13 @@ public final class UIXmlSerializeUtil {
     }
   }
 
-  @Nonnull
-  public static Element setLocation(@Nonnull Element element, @Nonnull Point2D location) {
+  
+  public static Element setLocation(Element element, Point2D location) {
     return setLocation(element, X, Y, location);
   }
 
-  @Nonnull
-  public static Element setLocation(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull Point2D location) {
+  
+  public static Element setLocation(Element element, String x, String y, Point2D location) {
     return element.setAttribute(x, Integer.toString(location.x())).setAttribute(y, Integer.toString(location.y()));
   }
 
@@ -67,7 +66,7 @@ public final class UIXmlSerializeUtil {
   }
 
   @Nullable
-  public static Size2D getSize(@Nonnull Element element, @Nonnull String width, @Nonnull String height) {
+  public static Size2D getSize(Element element, String width, String height) {
     String sWidth = element.getAttributeValue(width);
     if (sWidth == null) return null;
     String sHeight = element.getAttributeValue(height);
@@ -84,13 +83,13 @@ public final class UIXmlSerializeUtil {
     }
   }
 
-  @Nonnull
-  public static Element setSize(@Nonnull Element element, @Nonnull Size2D size) {
+  
+  public static Element setSize(Element element, Size2D size) {
     return setSize(element, WIDTH, HEIGHT, size);
   }
 
-  @Nonnull
-  public static Element setSize(@Nonnull Element element, @Nonnull String width, @Nonnull String height, @Nonnull Size2D size) {
+  
+  public static Element setSize(Element element, String width, String height, Size2D size) {
     return element.setAttribute(width, Integer.toString(size.width())).setAttribute(height, Integer.toString(size.height()));
   }
 
@@ -101,7 +100,7 @@ public final class UIXmlSerializeUtil {
   }
 
   @Nullable
-  public static Rectangle2D getBounds(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull String width, @Nonnull String height) {
+  public static Rectangle2D getBounds(Element element, String x, String y, String width, String height) {
     String sX = element.getAttributeValue(x);
     if (sX == null) return null;
     String sY = element.getAttributeValue(y);
@@ -122,13 +121,13 @@ public final class UIXmlSerializeUtil {
     }
   }
 
-  @Nonnull
-  public static Element setBounds(@Nonnull Element element, @Nonnull Rectangle2D bounds) {
+  
+  public static Element setBounds(Element element, Rectangle2D bounds) {
     return setBounds(element, X, Y, WIDTH, HEIGHT, bounds);
   }
 
-  @Nonnull
-  public static Element setBounds(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull String width, @Nonnull String height, @Nonnull Rectangle2D bounds) {
+  
+  public static Element setBounds(Element element, String x, String y, String width, String height, Rectangle2D bounds) {
     return element.setAttribute(x, Integer.toString(bounds.minX()))
         .setAttribute(y, Integer.toString(bounds.minY()))
         .setAttribute(width, Integer.toString(bounds.width()))

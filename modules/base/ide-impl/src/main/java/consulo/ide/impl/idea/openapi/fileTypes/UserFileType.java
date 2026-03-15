@@ -9,11 +9,10 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 public abstract class UserFileType<T extends UserFileType> implements FileType, Cloneable {
-  @Nonnull
+  
   private String myName = "";
   private String myDescription = "";
 
@@ -33,18 +32,18 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return myName;
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDescription() {
     return LocalizeValue.of(myDescription);
   }
 
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
@@ -53,12 +52,12 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
   }
 
   @Override
-  @Nonnull
+  
   public String getDefaultExtension() {
     return "";
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     Image icon = myIcon;
@@ -90,20 +89,20 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
   }
 
   @Override
-  public String getCharset(@Nonnull VirtualFile file, @Nonnull byte[] content) {
+  public String getCharset(VirtualFile file, byte[] content) {
     return null;
   }
 
-  public void copyFrom(@Nonnull UserFileType newType) {
+  public void copyFrom(UserFileType newType) {
     myName = newType.getId();
     myDescription = newType.getDescription().get();
   }
 
-  public void setIcon(@Nonnull Image icon) {
+  public void setIcon(Image icon) {
     myIcon = icon;
   }
 
-  public void setIconPath(@Nonnull String value) {
+  public void setIconPath(String value) {
     myIconPath = value;
   }
 

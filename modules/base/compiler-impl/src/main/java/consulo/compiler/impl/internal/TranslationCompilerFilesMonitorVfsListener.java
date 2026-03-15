@@ -40,8 +40,7 @@ import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -75,7 +74,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
 
     @Nullable
     @Override
-    public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+    public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
         List<VFileEvent> beforeEvents = new ArrayList<>();
         List<VFileEvent> afterEvents = new ArrayList<>();
 
@@ -139,7 +138,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         };
     }
 
-    private void propertyChanged(@Nonnull VFilePropertyChangeEvent event) {
+    private void propertyChanged(VFilePropertyChangeEvent event) {
         if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
             final VirtualFile eventFile = event.getFile();
             VirtualFile file = event.getFile();
@@ -153,7 +152,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
                         private StringBuilder filePath = new StringBuilder(root);
 
                         @Override
-                        public boolean visitFile(@Nonnull VirtualFile child) {
+                        public boolean visitFile(VirtualFile child) {
                             if (child.isDirectory()) {
                                 if (!Comparing.equal(child, eventFile)) {
                                     filePath.append("/").append(child.getName());
@@ -170,7 +169,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
                         }
 
                         @Override
-                        public void afterChildrenVisited(@Nonnull VirtualFile file) {
+                        public void afterChildrenVisited(VirtualFile file) {
                             if (file.isDirectory() && !Comparing.equal(file, eventFile)) {
                                 filePath.delete(filePath.length() - file.getName().length() - 1, filePath.length());
                             }
@@ -186,11 +185,11 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         }
     }
 
-    private void contentsChanged(@Nonnull VFileContentChangeEvent event) {
+    private void contentsChanged(VFileContentChangeEvent event) {
         markDirtyIfSource(event.getFile(), false);
     }
 
-    private void beforeFileDeletion(@Nonnull VFileDeleteEvent event) {
+    private void beforeFileDeletion(VFileDeleteEvent event) {
         final VirtualFile eventFile = event.getFile();
         if (LOG.isDebugEnabled() && eventFile.isDirectory() || TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
             String message = "Processing file deletion: " + eventFile.getPresentableUrl();
@@ -397,9 +396,9 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         VirtualFileUtil.visitChildrenRecursively(
             file,
             new VirtualFileVisitor() {
-                @Nonnull
+                
                 @Override
-                public Result visitFileEx(@Nonnull VirtualFile file) {
+                public Result visitFileEx(VirtualFile file) {
                     if (fileTypeManager.isFileIgnored(file)) {
                         return SKIP_CHILDREN;
                     }
@@ -412,7 +411,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
 
                 @Nullable
                 @Override
-                public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
+                public Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
                     return file.isDirectory() && dbOnly ? ((NewVirtualFile) file).iterInDbChildren() : null;
                 }
             }
@@ -435,12 +434,12 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         return FileUtil.isAncestor(getMonitor().getGeneratedPath(project), new File(file.getPath()), true);
     }
 
-    @Nonnull
+    
     TranslatingCompilerFilesMonitorImpl getMonitor() {
         return (TranslatingCompilerFilesMonitorImpl) myMonitorProvider.get();
     }
 
-    @Nonnull
+    
     ProjectManager getProjectManager() {
         return myProjectManagerProvider.get();
     }

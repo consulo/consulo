@@ -16,16 +16,15 @@
 package consulo.diff.merge;
 
 import consulo.diff.content.DocumentContent;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class TextMergeRequest extends ThreesideMergeRequest {
   @Override
-  @Nonnull
+  
   public abstract List<DocumentContent> getContents();
 
   @Override
-  @Nonnull
+  
   public abstract DocumentContent getOutputContent();
 }

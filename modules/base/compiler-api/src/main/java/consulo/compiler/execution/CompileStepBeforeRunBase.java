@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,7 +38,7 @@ public abstract class CompileStepBeforeRunBase<T extends BeforeRunTask<T>> exten
         myProject = project;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
@@ -52,7 +51,7 @@ public abstract class CompileStepBeforeRunBase<T extends BeforeRunTask<T>> exten
     }
 
     @Override
-    public Image getIcon(@Nonnull RunConfiguration runConfiguration) {
+    public Image getIcon(RunConfiguration runConfiguration) {
         ExtensionPoint<CompilerRunner> point = myProject.getExtensionPoint(CompilerRunner.class);
 
         DataContext context = DataContext.builder()

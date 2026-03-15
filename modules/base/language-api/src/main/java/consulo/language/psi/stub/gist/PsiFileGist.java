@@ -17,7 +17,6 @@ package consulo.language.psi.stub.gist;
 
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Calculates some data based on {@link PsiFile} content, persists it between IDE restarts,
@@ -37,5 +36,5 @@ public interface PsiFileGist<Data> {
   /**
    * Calculate or get the cached data by the current PSI content.
    */
-  Data getFileData(@Nonnull PsiFile file);
+  Data getFileData(PsiFile file);
 }

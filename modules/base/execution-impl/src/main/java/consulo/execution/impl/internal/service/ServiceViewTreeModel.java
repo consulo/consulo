@@ -9,7 +9,6 @@ import consulo.util.collection.JBTreeTraverser;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -21,11 +20,11 @@ final class ServiceViewTreeModel extends BaseTreeModel<Object> implements Invoke
   private final ServiceViewModel myModel;
   private final Object myRoot = ObjectUtil.sentinel("services root");
 
-  ServiceViewTreeModel(@Nonnull ServiceViewModel model) {
+  ServiceViewTreeModel(ServiceViewModel model) {
     myModel = model;
   }
 
-  @Nonnull
+  
   @Override
   public Invoker getInvoker() {
     return myModel.getInvoker();
@@ -64,15 +63,15 @@ final class ServiceViewTreeModel extends BaseTreeModel<Object> implements Invoke
     treeStructureChanged(new TreePath(myRoot), null, null);
   }
 
-  Promise<TreePath> findPath(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+  Promise<TreePath> findPath(Object service, Class<?> contributorClass) {
     return doFindPath(service, contributorClass, false);
   }
 
-  Promise<TreePath> findPathSafe(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+  Promise<TreePath> findPathSafe(Object service, Class<?> contributorClass) {
     return doFindPath(service, contributorClass, true);
   }
 
-  private Promise<TreePath> doFindPath(@Nonnull Object service, @Nonnull Class<?> contributorClass, boolean safe) {
+  private Promise<TreePath> doFindPath(Object service, Class<?> contributorClass, boolean safe) {
     AsyncPromise<TreePath> result = new AsyncPromise<>();
     getInvoker().invoke(() -> {
       List<? extends ServiceViewItem> roots = myModel.getVisibleRoots();

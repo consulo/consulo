@@ -17,16 +17,14 @@ package consulo.language.pattern;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
 */
 public class PsiNamePatternCondition<T extends PsiElement> extends PropertyPatternCondition<T, String> {
 
-  public PsiNamePatternCondition(@NonNls String methodName, ElementPattern<String> namePattern) {
+  public PsiNamePatternCondition(String methodName, ElementPattern<String> namePattern) {
     super(methodName, namePattern);
   }
 
@@ -35,7 +33,7 @@ public class PsiNamePatternCondition<T extends PsiElement> extends PropertyPatte
   }
 
   @Override
-  public String getPropertyValue(@Nonnull Object o) {
+  public String getPropertyValue(Object o) {
     return o instanceof PsiNamedElement ? ((PsiNamedElement)o).getName() : null;
   }
 

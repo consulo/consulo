@@ -3,13 +3,12 @@ package consulo.credentialStorage.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.APPLICATION)
 public interface PasswordSafeSettingsListener {
     Class<PasswordSafeSettingsListener> TOPIC = PasswordSafeSettingsListener.class;
 
-    default void typeChanged(@Nonnull ProviderType oldValue, @Nonnull ProviderType newValue) {
+    default void typeChanged(ProviderType oldValue, ProviderType newValue) {
     }
 
     default void credentialStoreCleared() {

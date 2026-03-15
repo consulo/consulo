@@ -40,8 +40,7 @@ import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -80,12 +79,12 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         DFA
     }
 
-    @Nonnull
+    
     public static Configuration getInstance() {
         return Application.get().getInstance(ApplicationInjectionConfiguration.class);
     }
 
-    @Nonnull
+    
     public static Configuration getProjectInstance(Project project) {
         return project.getInstance(ProjectInjectionConfiguration.class);
     }
@@ -336,7 +335,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     @Nullable
-    public BaseInjection findExistingInjection(@Nonnull BaseInjection injection) {
+    public BaseInjection findExistingInjection(BaseInjection injection) {
         List<BaseInjection> list = getInjections(injection.getSupportId());
         for (BaseInjection cur : list) {
             if (cur.intersectsWith(injection)) {
@@ -391,7 +390,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     /**
      * @param injectorId see {@link LanguageInjectionSupport#getId()}
      */
-    @Nonnull
+    
     public List<BaseInjection> getInjections(String injectorId) {
         return Collections.unmodifiableList(myInjections.get(injectorId));
     }
@@ -482,15 +481,15 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
 
     public static class AdvancedConfiguration {
         // runtime pattern validation instrumentation
-        @Nonnull
+        
         private InstrumentationType myInstrumentationType = InstrumentationType.ASSERT;
 
         // annotation class names
-        @Nonnull
+        
         private String myLanguageAnnotation;
-        @Nonnull
+        
         private String myPatternAnnotation;
-        @Nonnull
+        
         private String mySubstAnnotation;
 
         private boolean myIncludeUncomputablesAsLiterals;
@@ -527,7 +526,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             }
         }
 
-        public void setInstrumentationType(@Nonnull InstrumentationType type) {
+        public void setInstrumentationType(InstrumentationType type) {
             myInstrumentationType = type;
         }
 
@@ -575,12 +574,12 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             myIncludeUncomputablesAsLiterals = flag;
         }
 
-        @Nonnull
+        
         public DfaOption getDfaOption() {
             return myDfaOption;
         }
 
-        public void setDfaOption(@Nonnull DfaOption dfaOption) {
+        public void setDfaOption(DfaOption dfaOption) {
             myDfaOption = dfaOption;
         }
 

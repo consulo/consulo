@@ -18,8 +18,7 @@ package consulo.language.editor.completion.lookup;
 import consulo.language.util.ProcessingContext;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -34,35 +33,35 @@ public abstract class Classifier<T> {
     myName = name;
   }
 
-  public void addElement(@Nonnull T t, @Nonnull ProcessingContext context) {
+  public void addElement(T t, ProcessingContext context) {
     if (myNext != null) {
       myNext.addElement(t, context);
     }
   }
 
-  @Nonnull
-  public abstract Iterable<T> classify(@Nonnull Iterable<T> source, @Nonnull ProcessingContext context);
+  
+  public abstract Iterable<T> classify(Iterable<T> source, ProcessingContext context);
 
   /**
    * @return a mapping from the given items to objects (e.g. Comparable instances) used to sort the items in {@link #classify(Iterable, ProcessingContext)}.
    * May return an empty list if there are no suitable objects available.
    * Used for diagnostics and statistic collection.
    */
-  @Nonnull
-  public abstract List<Pair<T, Object>> getSortingWeights(@Nonnull Iterable<T> items, @Nonnull ProcessingContext context);
+  
+  public abstract List<Pair<T, Object>> getSortingWeights(Iterable<T> items, ProcessingContext context);
 
   @Nullable
   public final Classifier<T> getNext() {
     return myNext;
   }
 
-  public void removeElement(@Nonnull T element, @Nonnull ProcessingContext context) {
+  public void removeElement(T element, ProcessingContext context) {
     if (myNext != null) {
       myNext.removeElement(element, context);
     }
   }
 
-  @Nonnull
+  
   public final String getPresentableName() {
     return myName;
   }

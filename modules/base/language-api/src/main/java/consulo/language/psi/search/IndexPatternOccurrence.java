@@ -4,7 +4,6 @@ package consulo.language.psi.search;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public interface IndexPatternOccurrence {
    *
    * @return the file in which the occurrence was found.
    */
-  @Nonnull
+  
   PsiFile getFile();
 
   /**
@@ -29,13 +28,13 @@ public interface IndexPatternOccurrence {
    *
    * @return the text range which was matched by the pattern.
    */
-  @Nonnull
+  
   TextRange getTextRange();
 
   /**
    * Additional ranges associated with matched range (e.g. for multi-line matching)
    */
-  @Nonnull
+  
   default List<TextRange> getAdditionalTextRanges() {
     return Collections.emptyList();
   }
@@ -45,6 +44,6 @@ public interface IndexPatternOccurrence {
    *
    * @return the instance of the pattern which was matched.
    */
-  @Nonnull
+  
   IndexPattern getPattern();
 }

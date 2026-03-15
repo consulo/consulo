@@ -20,8 +20,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines support for JavaDoc-like documentation stub generation when invoked on "Enter within comment" actions in a custom language.
@@ -57,7 +56,7 @@ public interface CodeDocumentationProvider extends DocumentationProvider {
    *                    returned pair must have non-null PSI element and nullable existing comment references then
    */
   @Nullable
-  Pair<PsiElement, PsiComment> parseContext(@Nonnull PsiElement startPoint);
+  Pair<PsiElement, PsiComment> parseContext(PsiElement startPoint);
 
   /**
    * Generate documentation comment content for given context.

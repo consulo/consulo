@@ -6,7 +6,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class ModuleScopeItem implements ModelScopeItem {
   public final Module Module;

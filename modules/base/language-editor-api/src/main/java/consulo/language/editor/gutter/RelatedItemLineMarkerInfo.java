@@ -22,8 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -34,30 +33,30 @@ import java.util.function.Supplier;
 public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerInfo<T> {
   private final Supplier<Collection<? extends GotoRelatedItem>> myTargets;
 
-  public RelatedItemLineMarkerInfo(@Nonnull T element,
-                                   @Nonnull TextRange range,
+  public RelatedItemLineMarkerInfo(T element,
+                                   TextRange range,
                                    Image icon,
                                    int updatePass,
                                    @Nullable Function<? super T, String> tooltipProvider,
                                    @Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
-                                   @Nonnull Supplier<Collection<? extends GotoRelatedItem>> targets) {
+                                   Supplier<Collection<? extends GotoRelatedItem>> targets) {
     super(element, range, icon, updatePass, tooltipProvider, navHandler, alignment);
     myTargets = LazyValue.notNull(targets);
   }
 
-  public RelatedItemLineMarkerInfo(@Nonnull T element,
-                                   @Nonnull TextRange range,
+  public RelatedItemLineMarkerInfo(T element,
+                                   TextRange range,
                                    Image icon,
                                    int updatePass,
                                    @Nullable Function<? super T, String> tooltipProvider,
                                    @Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
-                                   @Nonnull Collection<? extends GotoRelatedItem> targets) {
+                                   Collection<? extends GotoRelatedItem> targets) {
     this(element, range, icon, updatePass, tooltipProvider, navHandler, alignment, () -> targets);
   }
 
-  @Nonnull
+  
   public Collection<? extends GotoRelatedItem> createGotoRelatedItems() {
     return myTargets.get();
   }
@@ -74,7 +73,7 @@ public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerI
     }
 
     @Override
-    protected boolean looksTheSameAs(@Nonnull LineMarkerGutterIconRenderer renderer) {
+    protected boolean looksTheSameAs(LineMarkerGutterIconRenderer renderer) {
       if (!(renderer instanceof RelatedItemLineMarkerGutterIconRenderer) || !super.looksTheSameAs(renderer)) {
         return false;
       }

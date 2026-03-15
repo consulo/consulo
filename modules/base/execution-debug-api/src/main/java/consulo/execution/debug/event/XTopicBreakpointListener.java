@@ -18,7 +18,6 @@ package consulo.execution.debug.event;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.execution.debug.breakpoint.XBreakpoint;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,14 +26,14 @@ import jakarta.annotation.Nonnull;
 @TopicAPI(ComponentScope.PROJECT)
 public interface XTopicBreakpointListener extends XBreakpointListener<XBreakpoint<?>> {
     @Override
-    default void breakpointAdded(@Nonnull XBreakpoint<?> breakpoint) {
+    default void breakpointAdded(XBreakpoint<?> breakpoint) {
     }
 
     @Override
-    default void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
+    default void breakpointRemoved(XBreakpoint<?> breakpoint) {
     }
 
     @Override
-    default void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
+    default void breakpointChanged(XBreakpoint<?> breakpoint) {
     }
 }

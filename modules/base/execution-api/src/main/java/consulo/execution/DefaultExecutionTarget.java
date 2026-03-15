@@ -19,18 +19,17 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 public class DefaultExecutionTarget extends ExecutionTarget {
   public static final ExecutionTarget INSTANCE = new DefaultExecutionTarget();
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "default_target";
   }
 
-  @Nonnull
+  
   @Override
   public String getDisplayName() {
     return ExecutionLocalize.nodeDefault().get();
@@ -42,7 +41,7 @@ public class DefaultExecutionTarget extends ExecutionTarget {
   }
 
   @Override
-  public boolean canRun(@Nonnull RunConfiguration configuration) {
+  public boolean canRun(RunConfiguration configuration) {
     return true;
   }
 }

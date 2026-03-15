@@ -29,7 +29,6 @@ import consulo.ui.UIAccess;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.FileNotFoundException;
@@ -42,16 +41,16 @@ import java.io.FileNotFoundException;
 public class ProjectVirtualFileSanityChecker implements BackgroundStartupActivity {
     private static final Logger LOG = Logger.getInstance(ProjectVirtualFileSanityChecker.class);
 
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
     @Inject
-    public ProjectVirtualFileSanityChecker(@Nonnull NotificationService notificationService) {
+    public ProjectVirtualFileSanityChecker(NotificationService notificationService) {
         myNotificationService = notificationService;
     }
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         try {
             String path = project.getBasePath();
             if (path == null || FileUtil.isAncestor(ContainerPathManager.get().getConfigPath(), path, true)) {

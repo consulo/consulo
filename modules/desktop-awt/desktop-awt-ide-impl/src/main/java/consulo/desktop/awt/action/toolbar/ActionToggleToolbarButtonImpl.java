@@ -20,7 +20,6 @@ import consulo.dataContext.DataManager;
 import consulo.ui.Component;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -71,13 +70,13 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
         super.removeNotify();
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public Presentation getPresentation() {
         return myEngine.getPresentation();
@@ -98,7 +97,7 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
         myEngine.updateIcon();
     }
 
-    @Nonnull
+    
     @Override
     public Component getUIComponent() {
         throw new UnsupportedOperationException();

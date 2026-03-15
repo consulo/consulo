@@ -31,8 +31,7 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -43,11 +42,11 @@ import java.util.List;
  */
 @ActionImpl(id = "Inline")
 public class InlineAction extends BasePlatformRefactoringAction {
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public InlineAction(@Nonnull Application application) {
+    public InlineAction(Application application) {
         super(ActionLocalize.actionInlineText(), ActionLocalize.actionInlineDescription());
         setInjectedContext(true);
         myApplication = application;
@@ -61,17 +60,17 @@ public class InlineAction extends BasePlatformRefactoringAction {
     @Override
     @RequiredReadAction
     protected boolean isAvailableOnElementInEditorAndFile(
-        @Nonnull PsiElement element,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull DataContext context
+        PsiElement element,
+        Editor editor,
+        PsiFile file,
+        DataContext context
     ) {
         return hasInlineActionHandler(element, PsiUtilBase.getLanguageInEditor(editor, element.getProject()), editor);
     }
 
     @Override
     @RequiredReadAction
-    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    public boolean isEnabledOnElements(PsiElement[] elements) {
         return elements.length == 1 && hasInlineActionHandler(elements[0], null, null);
     }
 
@@ -83,12 +82,12 @@ public class InlineAction extends BasePlatformRefactoringAction {
     }
 
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider) {
         return new InlineRefactoringActionHandler();
     }
 
     @Override
-    protected RefactoringActionHandler getHandler(@Nonnull Language language, PsiElement element) {
+    protected RefactoringActionHandler getHandler(Language language, PsiElement element) {
         RefactoringActionHandler handler = super.getHandler(language, element);
         if (handler != null) {
             return handler;

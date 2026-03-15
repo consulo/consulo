@@ -32,8 +32,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,8 +40,8 @@ import java.util.LinkedList;
 
 abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware {
     protected OccurenceNavigatorActionBase(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
@@ -50,7 +49,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         OccurenceNavigator navigator = getNavigator(e.getDataContext());
         if (navigator == null) {
             return;
@@ -69,7 +68,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         }
     }
 
-    @Nonnull
+    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.EDT; // TODO rework
@@ -77,7 +76,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);
         if (project == null) {

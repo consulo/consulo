@@ -27,7 +27,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,16 +43,16 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
     super("extracted-dir", LocalizeValue.localizeTODO("Extracted Directory"));
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.ExtractedFolder;
   }
 
   @Override
-  @Nonnull
-  public List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
-                                                             @Nonnull CompositePackagingElement<?> parent) {
+  
+  public List<? extends PackagingElement<?>> chooseAndCreate(ArtifactEditorContext context, Artifact artifact,
+                                                             CompositePackagingElement<?> parent) {
     FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
       @RequiredUIAccess
       @Override
@@ -72,8 +71,8 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
   }
 
   @Override
-  @Nonnull
-  public ExtractedDirectoryPackagingElement createEmpty(@Nonnull Project project) {
+  
+  public ExtractedDirectoryPackagingElement createEmpty(Project project) {
     return new ExtractedDirectoryPackagingElement();
   }
 }

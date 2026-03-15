@@ -20,8 +20,7 @@ import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -33,20 +32,20 @@ public abstract class PackagingElement<S> {
     myType = type;
   }
 
-  public abstract PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context);
+  public abstract PackagingElementPresentation createPresentation(ArtifactEditorContext context);
 
   public final PackagingElementType getType() {
     return myType;
   }
 
-  public abstract void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                              @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                              @Nonnull ArtifactIncrementalCompilerContext compilerContext,
-                                                              @Nonnull ArtifactType artifactType);
+  public abstract void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                              PackagingElementResolvingContext resolvingContext,
+                                                              ArtifactIncrementalCompilerContext compilerContext,
+                                                              ArtifactType artifactType);
 
-  public abstract boolean isEqualTo(@Nonnull PackagingElement<?> element);
+  public abstract boolean isEqualTo(PackagingElement<?> element);
 
-  @Nonnull
+  
   public PackagingElementOutputKind getFilesKind(PackagingElementResolvingContext context) {
     return PackagingElementOutputKind.OTHER;
   }

@@ -24,7 +24,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -36,20 +35,20 @@ public final class SpeedSearchUtil {
   private SpeedSearchUtil() {
   }
 
-  public static void applySpeedSearchHighlighting(@Nonnull JComponent speedSearchEnabledComponent, @Nonnull ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
+  public static void applySpeedSearchHighlighting(JComponent speedSearchEnabledComponent, ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
     SpeedSearchUtilBase.applySpeedSearchHighlighting(speedSearchEnabledComponent, coloredComponent, mainTextOnly, selected);
   }
 
-  public static void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
-                                                   @Nonnull String text,
-                                                   @Nonnull SimpleTextAttributes attributes,
+  public static void appendFragmentsForSpeedSearch(JComponent speedSearchEnabledComponent,
+                                                   String text,
+                                                   SimpleTextAttributes attributes,
                                                    boolean selected,
-                                                   @Nonnull ColoredTextContainer simpleColoredComponent) {
+                                                   ColoredTextContainer simpleColoredComponent) {
     SpeedSearchUtilBase.appendFragmentsForSpeedSearch(speedSearchEnabledComponent, text, attributes, selected, simpleColoredComponent);
   }
 
-  public static void appendColoredFragmentForMatcher(@Nonnull String text, ColoredTextContainer component,
-                                                     @Nonnull SimpleTextAttributes attributes,
+  public static void appendColoredFragmentForMatcher(String text, ColoredTextContainer component,
+                                                     SimpleTextAttributes attributes,
                                                      Matcher matcher,
                                                      Color selectedBg,
                                                      boolean selected) {

@@ -28,7 +28,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -65,20 +64,20 @@ public class MessageViewImpl implements MessageView {
         }
     }
 
-    @Nonnull
+    
     @Override
     public ToolWindow getToolWindow() {
         return myToolWindow;
     }
 
-    @Nonnull
+    
     @Override
     public ContentManager getContentManager() {
         return myToolWindow.getContentManager();
     }
 
     @Override
-    public void runWhenInitialized(@Nonnull Runnable runnable) {
+    public void runWhenInitialized(Runnable runnable) {
         if (myToolWindow != null) {
             runnable.run();
         }

@@ -20,7 +20,6 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Clock;
 import consulo.util.lang.SyncDateFormat;
-import jakarta.annotation.Nonnull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -51,91 +50,91 @@ public class DateFormatUtil {
     private DateFormatUtil() {
     }
 
-    public static long getDifferenceInDays(@Nonnull Date startDate, @Nonnull Date endDate) {
+    public static long getDifferenceInDays(Date startDate, Date endDate) {
         return (endDate.getTime() - startDate.getTime() + DAY_FACTOR - 1000) / DAY_FACTOR;
     }
 
-    @Nonnull
+    
     public static SyncDateFormat getDateFormat() {
         return DateTimeFormatCache.getInstance().DATE_FORMAT;
     }
 
-    @Nonnull
+    
     public static SyncDateFormat getTimeFormat() {
         return DateTimeFormatCache.getInstance().TIME_FORMAT;
     }
 
-    @Nonnull
+    
     public static SyncDateFormat getTimeWithSecondsFormat() {
         return DateTimeFormatCache.getInstance().TIME_WITH_SECONDS_FORMAT;
     }
 
-    @Nonnull
+    
     public static SyncDateFormat getDateTimeFormat() {
         return DateTimeFormatCache.getInstance().DATE_TIME_FORMAT;
     }
 
-    @Nonnull
+    
     public static SyncDateFormat getIso8601Format() {
         return DateTimeFormatCache.getInstance().ISO8601_FORMAT;
     }
 
-    @Nonnull
-    public static String formatTime(@Nonnull Date time) {
+    
+    public static String formatTime(Date time) {
         return formatTime(time.getTime());
     }
 
-    @Nonnull
+    
     public static String formatTime(long time) {
         return getTimeFormat().format(time);
     }
 
-    @Nonnull
-    public static String formatTimeWithSeconds(@Nonnull Date time) {
+    
+    public static String formatTimeWithSeconds(Date time) {
         return formatTimeWithSeconds(time.getTime());
     }
 
-    @Nonnull
+    
     public static String formatTimeWithSeconds(long time) {
         return getTimeWithSecondsFormat().format(time);
     }
 
-    @Nonnull
-    public static String formatDate(@Nonnull Date time) {
+    
+    public static String formatDate(Date time) {
         return formatDate(time.getTime());
     }
 
-    @Nonnull
+    
     public static String formatDate(long time) {
         return getDateFormat().format(time);
     }
 
-    @Nonnull
-    public static String formatPrettyDate(@Nonnull Date date) {
+    
+    public static String formatPrettyDate(Date date) {
         return formatPrettyDate(date.getTime());
     }
 
-    @Nonnull
+    
     public static String formatPrettyDate(long time) {
         return doFormatPretty(time, false);
     }
 
-    @Nonnull
+    
     public static String formatDateTime(Date date) {
         return formatDateTime(date.getTime());
     }
 
-    @Nonnull
+    
     public static String formatDateTime(long time) {
         return getDateTimeFormat().format(time);
     }
 
-    @Nonnull
-    public static String formatPrettyDateTime(@Nonnull Date date) {
+    
+    public static String formatPrettyDateTime(Date date) {
         return formatPrettyDateTime(date.getTime());
     }
 
-    @Nonnull
+    
     public static String formatPrettyDateTime(long time) {
         return doFormatPretty(time, true);
     }
@@ -144,7 +143,7 @@ public class DateFormatUtil {
         return doFormatPretty(time, true) != null;
     }
 
-    @Nonnull
+    
     private static String doFormatPretty(long time, boolean formatTime) {
         long currentTime = Clock.getTime();
 
@@ -185,7 +184,7 @@ public class DateFormatUtil {
         return formatTime ? cache.DATE_TIME_FORMAT.format(time) : cache.DATE_FORMAT.format(time);
     }
 
-    @Nonnull
+    
     public static String formatDuration(long delta) {
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < DENOMINATORS.length; i++) {
@@ -216,12 +215,12 @@ public class DateFormatUtil {
         };
     }
 
-    @Nonnull
+    
     public static String formatFrequency(long time) {
         return ApplicationLocalize.dateFrequency(formatBetweenDates(time, 0)).get();
     }
 
-    @Nonnull
+    
     public static String formatBetweenDates(long d1, long d2) {
         long delta = Math.abs(d1 - d2);
         if (delta == 0) {
@@ -254,8 +253,8 @@ public class DateFormatUtil {
         return "";
     }
 
-    @Nonnull
-    public static String formatAboutDialogDate(@Nonnull Date date) {
+    
+    public static String formatAboutDialogDate(Date date) {
         DateTimeFormatCache cache = DateTimeFormatCache.getInstance();
         return cache.ABOUT_DATE_FORMAT.format(date);
     }

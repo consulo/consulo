@@ -23,7 +23,6 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.psi.IndentHelper;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -40,13 +39,13 @@ public class DefaultIndentHelperExtension implements IndentHelperExtension {
     }
 
     @Override
-    public boolean isAvailable(@Nonnull PsiFile file) {
+    public boolean isAvailable(PsiFile file) {
         return true;
     }
 
     @RequiredReadAction
     @Override
-    public int getIndentInner(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace, int recursionLevel) {
+    public int getIndentInner(PsiFile file, ASTNode element, boolean includeNonSpace, int recursionLevel) {
         if (recursionLevel > TOO_BIG_WALK_THRESHOLD) {
             return 0;
         }

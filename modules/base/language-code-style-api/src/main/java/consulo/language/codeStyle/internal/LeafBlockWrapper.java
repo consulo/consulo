@@ -23,7 +23,7 @@ import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.codeStyle.IndentInfo;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class LeafBlockWrapper extends AbstractBlockWrapper {
   private static final int CONTAIN_LINE_FEEDS = 4;

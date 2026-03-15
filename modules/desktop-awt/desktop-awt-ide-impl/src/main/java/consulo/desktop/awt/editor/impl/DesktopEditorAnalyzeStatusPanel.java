@@ -65,8 +65,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
@@ -96,7 +95,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
         private final JPanel myContainerPanel;
 
-        private StatusButton(@Nonnull AnAction action, @Nonnull Presentation presentation, @Nonnull String place, @Nonnull EditorColorsScheme colorsScheme, @Nonnull BooleanSupplier hasNavButtons) {
+        private StatusButton(AnAction action, Presentation presentation, String place, EditorColorsScheme colorsScheme, BooleanSupplier hasNavButtons) {
             myContainerPanel = new JPanel(new GridBagLayout());
             myContainerPanel.setOpaque(false);
 
@@ -182,7 +181,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             return ComponentUtil.getParentOfType(ActionToolbar.class, this);
         }
 
-        private void updateContents(@Nonnull List<StatusItem> status) {
+        private void updateContents(List<StatusItem> status) {
             myContainerPanel.removeAll();
 
             setEnabled(!status.isEmpty());
@@ -230,19 +229,19 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
     private class StatusAction extends DumbAwareAction implements CustomComponentAction {
         @Override
-        @Nonnull
-        public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+        
+        public JComponent createCustomComponent(Presentation presentation, String place) {
             return new StatusButton(this, presentation, place, myEditor.getColorsScheme(), () -> showNavigation);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myPopupManager.showPopup(e.getInputEvent());
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
 
             if (analyzerStatus != null) {
@@ -298,7 +297,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
             myPopupListener = new JBPopupListener() {
                 @Override
-                public void onClosed(@Nonnull LightweightWindowEvent event) {
+                public void onClosed(LightweightWindowEvent event) {
                     if (analyzerStatus != null) {
                         analyzerStatus.getController().onClosePopup();
                     }
@@ -307,14 +306,14 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             };
         }
 
-        private void showPopup(@Nonnull InputEvent event) {
+        private void showPopup(InputEvent event) {
             showPopup(event, (size) -> {
                 JComponent owner = (JComponent) event.getComponent();
                 return new RelativePoint(owner, new Point(owner.getWidth() - owner.getInsets().right + JBUIScale.scale(DELTA_X) - size.width, owner.getHeight() + JBUIScale.scale(DELTA_Y)));
             });
         }
 
-        private void showPopup(@Nonnull InputEvent event, @Nonnull Function<Dimension, RelativePoint> pointFunction) {
+        private void showPopup(InputEvent event, Function<Dimension, RelativePoint> pointFunction) {
             hidePopup();
             if (myPopupState.isRecentlyHidden()) {
                 return; // do not show new popup
@@ -343,7 +342,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
 
         @RequiredUIAccess
-        private void updateContentPanel(@Nonnull UIController controller) {
+        private void updateContentPanel(UIController controller) {
             List<PassWrapper> passes = analyzerStatus.getPasses();
             Set<String> presentableNames = ContainerUtil.map2Set(passes, PassWrapper::getPresentableName);
 
@@ -440,7 +439,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             }
         }
 
-        @Nonnull
+        
         private JComponent createDetailsPanel() {
             StringBuilder text = new StringBuilder();
             for (int i = 0; i < analyzerStatus.getExpandedStatus().size(); i++) {
@@ -459,7 +458,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             return new JLabel(text.toString());
         }
 
-        private JPanel createLowerPanel(@Nonnull UIController controller) {
+        private JPanel createLowerPanel(UIController controller) {
             JPanel panel = new JPanel(new GridBagLayout());
             GridBag gc = new GridBag().nextLine();
 
@@ -499,8 +498,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             return panel;
         }
 
-        @Nonnull
-        private DropDownLink<InspectionsLevel> createDropDownLink(@Nonnull LanguageHighlightLevel level, @Nonnull UIController controller) {
+        
+        private DropDownLink<InspectionsLevel> createDropDownLink(LanguageHighlightLevel level, UIController controller) {
             return new DropDownLink<>(level.getLevel(), controller.getAvailableLevels(), inspectionsLevel -> {
                 controller.setHighLightLevel(level.copy(level.getLangID(), inspectionsLevel));
                 myContent.revalidate();
@@ -523,11 +522,11 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     private class WrapperGroup extends DumbAwareActionGroup implements  HintManagerImpl.ActionToIgnore {
         private final ActionGroup[] myActions;
 
-        public WrapperGroup(@Nonnull List<? extends AnAction> actions) {
+        public WrapperGroup(List<? extends AnAction> actions) {
             myActions = new ActionGroup[]{new MenuAction(actions)};
         }
 
-        @Nonnull
+        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myActions;
@@ -535,17 +534,17 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     }
 
     private class MenuAction extends DefaultActionGroup implements DumbAware, HintManagerImpl.ActionToIgnore {
-        private MenuAction(@Nonnull List<? extends AnAction> actions) {
+        private MenuAction(List<? extends AnAction> actions) {
             setPopup(true);
             addAll(actions);
             add(new ToggleAction(CodeEditorLocalize.iwCompactView()) {
                 @Override
-                public boolean isSelected(@Nonnull AnActionEvent e) {
+                public boolean isSelected(AnActionEvent e) {
                     return !showToolbar;
                 }
 
                 @Override
-                public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+                public void setSelected(AnActionEvent e, boolean state) {
                     showToolbar = !state;
                     EditorSettingsExternalizable.getInstance().setShowInspectionWidget(showToolbar);
                     updateTrafficLightVisibility();
@@ -553,7 +552,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 }
 
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     super.update(e);
                     e.getPresentation().setEnabled(analyzerStatus == null || analyzerStatus.getController().enableToolbar());
                 }
@@ -580,7 +579,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     private static class TrackableLinkLabel extends LinkLabel<Object> {
         private InputEvent myEvent;
 
-        private TrackableLinkLabel(@Nonnull String text, @Nonnull Runnable action) {
+        private TrackableLinkLabel(String text, Runnable action) {
             super(text, (Image) null);
             setListener((aSource, aLinkData) -> {
                 action.run();
@@ -629,7 +628,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         AnAction prevErrorAction = createAction("GotoPreviousError", AllIcons.Actions.FindAndShowPrevMatchesSmall);
         DefaultActionGroup navigateGroup = new DefaultActionGroup(nextErrorAction, prevErrorAction) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabledAndVisible(showNavigation);
             }
         };
@@ -641,7 +640,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         MessageBusConnection connection = Application.get().getMessageBus().connect(this);
         connection.subscribe(AnActionListener.class, new AnActionListener() {
             @Override
-            public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+            public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
                 if (action instanceof HintManagerImpl.ActionToIgnore) {
                     return;
                 }
@@ -685,12 +684,12 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         myErrorPanel = errorPanel;
     }
 
-    private AnAction createAction(@Nonnull String id, @Nonnull Image icon) {
+    private AnAction createAction(String id, Image icon) {
         AnAction delegate = ActionManager.getInstance().getAction(id);
         AnAction result = new DumbAwareAction(delegate.getTemplatePresentation().getTextValue(), LocalizeValue.empty(), icon) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myEditor.getProject());
 
                 AnActionEvent delegateEvent = AnActionEvent.createFromAnAction(delegate, e.getInputEvent(), ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, myEditor.getDataContext());
@@ -803,7 +802,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         ActivityTracker.getInstance().inc();
     }
 
-    public void showStatusPopup(InputEvent e, @Nonnull Function<Dimension, RelativePoint> function) {
+    public void showStatusPopup(InputEvent e, Function<Dimension, RelativePoint> function) {
         myPopupManager.showPopup(e, function);
     }
 

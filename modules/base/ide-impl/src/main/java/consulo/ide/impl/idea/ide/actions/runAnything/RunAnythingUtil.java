@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +39,7 @@ public class RunAnythingUtil {
         return UIUtil.getLabelFont().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.SMALL));
     }
 
-    static JComponent createTitle(@Nonnull String titleText, @Nonnull Color background) {
+    static JComponent createTitle(String titleText, Color background) {
         JLabel titleLabel = new JLabel(StringUtil.capitalizeWords(titleText, true));
         titleLabel.setFont(getTitleFont());
         titleLabel.setForeground(UIUtil.getLabelDisabledForeground());
@@ -77,8 +76,8 @@ public class RunAnythingUtil {
         }
     }
 
-    @Nonnull
-    public static Collection<Couple<String>> getOrCreateWrappedCommands(@Nonnull Project project) {
+    
+    public static Collection<Couple<String>> getOrCreateWrappedCommands(Project project) {
         Collection<Couple<String>> list = project.getUserData(RUN_ANYTHING_WRAPPED_COMMANDS);
         if (list == null) {
             list = new ArrayList<>();
@@ -87,13 +86,13 @@ public class RunAnythingUtil {
         return list;
     }
 
-    @Nonnull
+    
     @Deprecated
-    public static Project fetchProject(@Nonnull DataContext dataContext) {
+    public static Project fetchProject(DataContext dataContext) {
         return dataContext.getRequiredData(Project.KEY);
     }
 
-    public static boolean executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public static boolean executeMatched(DataContext dataContext, String pattern) {
         List<String> commands = ((RunAnythingCacheImpl) RunAnythingCache.getInstance(fetchProject(dataContext))).getState().getCommands();
 
         Module module = dataContext.getData(Module.KEY);
@@ -115,7 +114,7 @@ public class RunAnythingUtil {
     }
 
     @Nullable
-    public static RunAnythingSearchListModel getSearchingModel(@Nonnull JBList list) {
+    public static RunAnythingSearchListModel getSearchingModel(JBList list) {
         return list.getModel() instanceof RunAnythingSearchListModel model ? model : null;
     }
 }

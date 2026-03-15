@@ -5,8 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.util.concurrent.Promise;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ServiceViewManager {
@@ -14,15 +13,15 @@ public interface ServiceViewManager {
     return project.getInstance(ServiceViewManager.class);
   }
 
-  @Nonnull
-  Promise<Void> select(@Nonnull Object service, @Nonnull Class<?> contributorClass, boolean activate, boolean focus);
+  
+  Promise<Void> select(Object service, Class<?> contributorClass, boolean activate, boolean focus);
 
-  @Nonnull
-  Promise<Void> expand(@Nonnull Object service, @Nonnull Class<?> contributorClass);
+  
+  Promise<Void> expand(Object service, Class<?> contributorClass);
 
-  @Nonnull
-  Promise<Void> extract(@Nonnull Object service, @Nonnull Class<?> contributorClass);
+  
+  Promise<Void> extract(Object service, Class<?> contributorClass);
 
   @Nullable
-  String getToolWindowId(@Nonnull Class<?> contributorClass);
+  String getToolWindowId(Class<?> contributorClass);
 }

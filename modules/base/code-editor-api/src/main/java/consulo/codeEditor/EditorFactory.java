@@ -12,8 +12,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides services for creating document and editor instances.
@@ -27,7 +26,7 @@ public abstract class EditorFactory {
    *
    * @return the editor factory instance.
    */
-  @Nonnull
+  
   public static EditorFactory getInstance() {
     return Application.get().getInstance(EditorFactory.class);
   }
@@ -35,14 +34,14 @@ public abstract class EditorFactory {
   /**
    * Creates a document from the specified text specified as a character sequence.
    */
-  @Nonnull
-  public abstract Document createDocument(@Nonnull CharSequence text);
+  
+  public abstract Document createDocument(CharSequence text);
 
   /**
    * Creates a document from the specified text specified as an array of characters.
    */
-  @Nonnull
-  public abstract Document createDocument(@Nonnull char[] text);
+  
+  public abstract Document createDocument(char[] text);
 
   /**
    * Creates an editor for the specified document. Must be invoked in EDT.
@@ -50,7 +49,7 @@ public abstract class EditorFactory {
    * The created editor must be disposed after use by calling {@link #releaseEditor(Editor)}.
    * </p>
    */
-  public abstract Editor createEditor(@Nonnull Document document);
+  public abstract Editor createEditor(Document document);
 
   /**
    * Creates a read-only editor for the specified document. Must be invoked in EDT.
@@ -58,7 +57,7 @@ public abstract class EditorFactory {
    * The created editor must be disposed after use by calling {@link #releaseEditor(Editor)}.
    * </p>
    */
-  public abstract Editor createViewer(@Nonnull Document document);
+  public abstract Editor createViewer(Document document);
 
   /**
    * Creates an editor for the specified document associated with the specified project. Must be invoked in EDT.
@@ -68,12 +67,12 @@ public abstract class EditorFactory {
    *
    * @see Editor#getProject()
    */
-  public abstract Editor createEditor(@Nonnull Document document, @Nullable Project project);
+  public abstract Editor createEditor(Document document, @Nullable Project project);
 
   /**
    * Does the same as {@link #createEditor(Document, Project)} and also sets the special kind for the created editor
    */
-  public abstract Editor createEditor(@Nonnull Document document, @Nullable Project project, @Nonnull EditorKind kind);
+  public abstract Editor createEditor(Document document, @Nullable Project project, EditorKind kind);
 
   /**
    * Creates an editor for the specified document associated with the specified project. Must be invoked in EDT.
@@ -87,7 +86,7 @@ public abstract class EditorFactory {
    * @param isViewer true if read-only editor should be created
    * @see Editor#getProject()
    */
-  public abstract Editor createEditor(@Nonnull Document document, Project project, @Nonnull FileType fileType, boolean isViewer);
+  public abstract Editor createEditor(Document document, Project project, FileType fileType, boolean isViewer);
 
   /**
    * Creates an editor for the specified document associated with the specified project. Must be invoked in EDT.
@@ -102,12 +101,12 @@ public abstract class EditorFactory {
    * @return the editor instance.
    * @see Editor#getProject()
    */
-  public abstract Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer);
+  public abstract Editor createEditor(Document document, Project project, VirtualFile file, boolean isViewer);
 
   /**
    * Does the same as {@link #createEditor(Document, Project, VirtualFile, boolean)} and also sets the special kind for the created editor
    */
-  public abstract Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer, @Nonnull EditorKind kind);
+  public abstract Editor createEditor(Document document, Project project, VirtualFile file, boolean isViewer, EditorKind kind);
 
   /**
    * Creates a read-only editor for the specified document associated with the specified project. Must be invoked in EDT.
@@ -115,17 +114,17 @@ public abstract class EditorFactory {
    * The created editor must be disposed after use by calling {@link #releaseEditor(Editor)}
    * </p>
    */
-  public abstract Editor createViewer(@Nonnull Document document, @Nullable Project project);
+  public abstract Editor createViewer(Document document, @Nullable Project project);
 
   /**
    * Does the same as {@link #createViewer(Document, Project)} and also sets the special kind for the created viewer
    */
-  public abstract Editor createViewer(@Nonnull Document document, @Nullable Project project, @Nonnull EditorKind kind);
+  public abstract Editor createViewer(Document document, @Nullable Project project, EditorKind kind);
 
   /**
    * Disposes the specified editor instance. Must be invoked in EDT.
    */
-  public abstract void releaseEditor(@Nonnull Editor editor);
+  public abstract void releaseEditor(Editor editor);
 
   /**
    * Returns the list of editors for the specified document associated with the specified project.
@@ -134,21 +133,21 @@ public abstract class EditorFactory {
    * @param project  the project with which editors should be associated, or null if any editors
    *                 for this document should be returned.
    */
-  @Nonnull
-  public abstract Editor[] getEditors(@Nonnull Document document, @Nullable Project project);
+  
+  public abstract Editor[] getEditors(Document document, @Nullable Project project);
 
   /**
    * Returns the list of all editors for the specified document.
    */
-  @Nonnull
-  public Editor[] getEditors(@Nonnull Document document) {
+  
+  public Editor[] getEditors(Document document) {
     return getEditors(document, null);
   }
 
   /**
    * Returns the list of all currently open editors.
    */
-  @Nonnull
+  
   public abstract Editor[] getAllEditors();
 
   /**
@@ -158,13 +157,13 @@ public abstract class EditorFactory {
    * @deprecated use the {@link #addEditorFactoryListener(EditorFactoryListener, Disposable)} instead
    */
   @Deprecated
-  public abstract void addEditorFactoryListener(@Nonnull EditorFactoryListener listener);
+  public abstract void addEditorFactoryListener(EditorFactoryListener listener);
 
   /**
    * Registers a listener for receiving notifications when editor instances are created and released
    * and removes the listener when the {@code parentDisposable} gets disposed.
    */
-  public abstract void addEditorFactoryListener(@Nonnull EditorFactoryListener listener, @Nonnull Disposable parentDisposable);
+  public abstract void addEditorFactoryListener(EditorFactoryListener listener, Disposable parentDisposable);
 
   /**
    * Un-registers a listener for receiving notifications when editor instances are created
@@ -173,12 +172,12 @@ public abstract class EditorFactory {
    * @deprecated you should have used the {@link #addEditorFactoryListener(EditorFactoryListener, Disposable)} instead
    */
   @Deprecated
-  public abstract void removeEditorFactoryListener(@Nonnull EditorFactoryListener listener);
+  public abstract void removeEditorFactoryListener(EditorFactoryListener listener);
 
   /**
    * Returns the service for attaching event listeners to all editor instances.
    */
-  @Nonnull
+  
   public abstract EditorEventMulticaster getEventMulticaster();
 
   /**

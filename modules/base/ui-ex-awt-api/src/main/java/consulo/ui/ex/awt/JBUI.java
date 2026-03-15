@@ -4,8 +4,7 @@ package consulo.ui.ex.awt;
 import consulo.platform.Platform;
 import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
@@ -127,7 +126,7 @@ public class JBUI {
          */
         PIX_SCALE;
 
-        @Nonnull
+        
         public Scale of(double value) {
             return Scale.create(value, this);
         }
@@ -144,8 +143,8 @@ public class JBUI {
         private static final ThreadLocal<EnumMap<ScaleType, Map<Double, Scale>>> cache =
             ThreadLocal.withInitial(() -> new EnumMap<>(ScaleType.class));
 
-        @Nonnull
-        public static Scale create(double value, @Nonnull ScaleType type) {
+        
+        public static Scale create(double value, ScaleType type) {
             EnumMap<ScaleType, Map<Double, Scale>> emap = cache.get();
             Map<Double, Scale> map = emap.get(type);
             if (map == null) {
@@ -159,7 +158,7 @@ public class JBUI {
             return scale;
         }
 
-        private Scale(double value, @Nonnull ScaleType type) {
+        private Scale(double value, ScaleType type) {
             this.value = value;
             this.type = type;
         }
@@ -168,12 +167,12 @@ public class JBUI {
             return value;
         }
 
-        @Nonnull
+        
         public ScaleType type() {
             return type;
         }
 
-        @Nonnull
+        
         Scale newOrThis(double value) {
             if (this.value == value) {
                 return this;
@@ -191,14 +190,14 @@ public class JBUI {
      * Adds property change listener. Supported properties:
      * {@link #USER_SCALE_FACTOR_PROPERTY}
      */
-    public static void addPropertyChangeListener(@Nonnull String propertyName, @Nonnull PropertyChangeListener listener) {
+    public static void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         JBUIScale.addPropertyChangeListener(propertyName, listener);
     }
 
     /**
      * Removes property change listener
      */
-    public static void removePropertyChangeListener(@Nonnull String propertyName, @Nonnull PropertyChangeListener listener) {
+    public static void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         JBUIScale.removePropertyChangeListener(propertyName, listener);
     }
 
@@ -315,8 +314,8 @@ public class JBUI {
         return JBUIScale.scale(i);
     }
 
-    @Nonnull
-    public static Font scale(@Nonnull Font font) {
+    
+    public static Font scale(Font font) {
         return font.deriveFont((float) scaleFontSize(font.getSize()));
     }
 
@@ -331,13 +330,13 @@ public class JBUI {
         return JBUIScale.getFontScale(fontSize);
     }
 
-    @Nonnull
+    
     public static JBValue value(float value) {
         return new JBValue.Float(value);
     }
 
-    @Nonnull
-    public static JBValue uiIntValue(@Nonnull String key, int defValue) {
+    
+    public static JBValue uiIntValue(String key, int defValue) {
         return new JBValue.UIInteger(key, defValue);
     }
 
@@ -345,12 +344,12 @@ public class JBUI {
         return new JBDimension(width, height);
     }
 
-    @Nonnull
+    
     public static JBDimension size(int widthAndHeight) {
         return new JBDimension(widthAndHeight, widthAndHeight);
     }
 
-    @Nonnull
+    
     public static JBDimension size(Dimension size) {
         if (size instanceof JBDimension dimension) {
             JBDimension newSize = dimension.newSize();
@@ -359,48 +358,48 @@ public class JBUI {
         return new JBDimension(size.width, size.height);
     }
 
-    @Nonnull
+    
     public static JBInsets insets(int top, int left, int bottom, int right) {
         return new JBInsets(top, left, bottom, right);
     }
 
-    @Nonnull
+    
     public static JBInsets insets(int all) {
         return insets(all, all, all, all);
     }
 
-    @Nonnull
+    
     public static JBInsets insets(String propName, JBInsets defaultValue) {
         Insets i = UIManager.getInsets(propName);
         return i != null ? JBInsets.create(i) : defaultValue;
     }
 
-    @Nonnull
+    
     public static JBInsets insets(int topBottom, int leftRight) {
         return insets(topBottom, leftRight, topBottom, leftRight);
     }
 
-    @Nonnull
+    
     public static JBInsets emptyInsets() {
         return new JBInsets(0, 0, 0, 0);
     }
 
-    @Nonnull
+    
     public static JBInsets insetsTop(int t) {
         return insets(t, 0, 0, 0);
     }
 
-    @Nonnull
+    
     public static JBInsets insetsLeft(int l) {
         return insets(0, l, 0, 0);
     }
 
-    @Nonnull
+    
     public static JBInsets insetsBottom(int b) {
         return insets(0, 0, b, 0);
     }
 
-    @Nonnull
+    
     public static JBInsets insetsRight(int r) {
         return insets(0, 0, 0, r);
     }
@@ -408,24 +407,24 @@ public class JBUI {
     /**
      * @deprecated use JBUI.scale(EmptyIcon.create(size)) instead
      */
-    @Nonnull
+    
     public static EmptyIcon emptyIcon(int size) {
         return scale(EmptyIcon.create(size));
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
-    public static <T extends JBIcon> T scale(@Nonnull T icon) {
+    public static <T extends JBIcon> T scale(T icon) {
         return (T) icon.withIconPreScaled(false);
     }
 
-    @Nonnull
+    
     public static JBDimension emptySize() {
         return new JBDimension(0, 0);
     }
 
-    @Nonnull
-    public static JBInsets insets(@Nonnull Insets insets) {
+    
+    public static JBInsets insets(Insets insets) {
         return JBInsets.create(insets);
     }
 
@@ -477,42 +476,42 @@ public class JBUI {
     }
 
     public static class Fonts {
-        @Nonnull
+        
         public static JBFont label() {
             return JBFont.create(UIManager.getFont("Label.font"), false);
         }
 
-        @Nonnull
+        
         public static JBFont label(float size) {
             return label().deriveFont(scale(size));
         }
 
-        @Nonnull
+        
         public static JBFont biggerFont() {
             return label().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.BIGGER));
         }
 
-        @Nonnull
+        
         public static JBFont smallFont() {
             return label().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.SMALL));
         }
 
-        @Nonnull
+        
         public static JBFont miniFont() {
             return label().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.MINI));
         }
 
-        @Nonnull
+        
         public static JBFont create(String fontFamily, int size) {
             return JBFont.create(new Font(fontFamily, Font.PLAIN, size));
         }
 
-        @Nonnull
+        
         public static JBFont toolbarSmallComboBoxFont() {
             return label(11);
         }
 
-        @Nonnull
+        
         public static JBFont toolbarFont() {
             return Platform.current().os().isMac() ? smallFont() : label();
         }
@@ -529,78 +528,78 @@ public class JBUI {
             return new JBEmptyBorder(top, left, bottom, right);
         }
 
-        @Nonnull
+        
         public static JBEmptyBorder empty(int topAndBottom, int leftAndRight) {
             return empty(topAndBottom, leftAndRight, topAndBottom, leftAndRight);
         }
 
-        @Nonnull
+        
         public static JBEmptyBorder emptyTop(int offset) {
             return empty(offset, 0, 0, 0);
         }
 
-        @Nonnull
+        
         public static JBEmptyBorder emptyLeft(int offset) {
             return empty(0, offset, 0, 0);
         }
 
-        @Nonnull
+        
         public static JBEmptyBorder emptyBottom(int offset) {
             return empty(0, 0, offset, 0);
         }
 
-        @Nonnull
+        
         public static JBEmptyBorder emptyRight(int offset) {
             return empty(0, 0, 0, offset);
         }
 
-        @Nonnull
+        
         public static JBEmptyBorder empty() {
             return empty(0, 0, 0, 0);
         }
 
-        @Nonnull
-        public static JBEmptyBorder empty(@Nonnull Insets insets) {
+        
+        public static JBEmptyBorder empty(Insets insets) {
             return empty(insets.top, insets.left, insets.bottom, insets.right);
         }
 
-        @Nonnull
+        
         public static Border empty(int offsets) {
             return empty(offsets, offsets, offsets, offsets);
         }
 
-        @Nonnull
+        
         public static Border customLine(Color color, int top, int left, int bottom, int right) {
             return new CustomLineBorder(color, insets(top, left, bottom, right));
         }
 
-        @Nonnull
+        
         public static Border customLine(int top, int left, int bottom, int right) {
             return new CustomLineBorder(null, insets(top, left, bottom, right));
         }
 
-        @Nonnull
+        
         public static Border customLine(Color color, int thickness) {
             return customLine(color, thickness, thickness, thickness, thickness);
         }
 
-        @Nonnull
+        
         public static Border customLine(Color color) {
             return customLine(color, 1);
         }
 
-        @Nonnull
+        
         public static Border customLineRight(Color color) {
             return customLine(color, 0, 0, 0, 1);
         }
 
-        @Nonnull
+        
         public static Border customLineLeft(Color color) {
             return customLine(color, 0, 1, 0, 0);
         }
 
-        @Nonnull
-        public static Border merge(@Nullable Border source, @Nonnull Border extra, boolean extraIsOutside) {
+        
+        public static Border merge(@Nullable Border source, Border extra, boolean extraIsOutside) {
             if (source == null) {
                 return extra;
             }
@@ -609,27 +608,27 @@ public class JBUI {
     }
 
     public static class Panels {
-        @Nonnull
+        
         public static VerticalLayoutPanel verticalPanel() {
             return new VerticalLayoutPanel();
         }
 
-        @Nonnull
+        
         public static VerticalLayoutPanel verticalPanel(int hgap, int vgap) {
             return new VerticalLayoutPanel(hgap, vgap);
         }
 
-        @Nonnull
+        
         public static BorderLayoutPanel simplePanel() {
             return new BorderLayoutPanel();
         }
 
-        @Nonnull
+        
         public static BorderLayoutPanel simplePanel(Component comp) {
             return simplePanel().addToCenter(comp);
         }
 
-        @Nonnull
+        
         public static BorderLayoutPanel simplePanel(int hgap, int vgap) {
             return new BorderLayoutPanel(hgap, vgap);
         }
@@ -674,7 +673,7 @@ public class JBUI {
          *
          * @return whether the state has been updated
          */
-        public boolean update(@Nonnull Scaler scaler) {
+        public boolean update(Scaler scaler) {
             boolean updated = initialScale != scaler.initialScale;
             initialScale = scaler.initialScale;
             return updated;
@@ -710,8 +709,8 @@ public class JBUI {
         /**
          * Creates a context with the provided scale factors (system scale is ignored)
          */
-        @Nonnull
-        public static BaseScaleContext create(@Nonnull Scale... scales) {
+        
+        public static BaseScaleContext create(Scale... scales) {
             BaseScaleContext ctx = create();
             for (Scale s : scales) ctx.update(s);
             return ctx;
@@ -720,7 +719,7 @@ public class JBUI {
         /**
          * Creates a default context with the current user scale
          */
-        @Nonnull
+        
         public static BaseScaleContext create() {
             return new BaseScaleContext();
         }
@@ -732,7 +731,7 @@ public class JBUI {
         /**
          * @return the context scale factor of the provided type (1d for system scale)
          */
-        public double getScale(@Nonnull ScaleType type) {
+        public double getScale(ScaleType type) {
             return switch (type) {
                 case USR_SCALE -> usrScale.value;
                 case SYS_SCALE -> 1d;
@@ -764,7 +763,7 @@ public class JBUI {
          * @param scale the new scale
          * @return whether the scale factor has been updated
          */
-        public boolean update(@Nonnull Scale scale) {
+        public boolean update(Scale scale) {
             boolean updated = false;
             switch (scale.type) {
                 case USR_SCALE:
@@ -794,7 +793,7 @@ public class JBUI {
             return onUpdated(updateAll(ctx));
         }
 
-        protected <T extends BaseScaleContext> boolean updateAll(@Nonnull T ctx) {
+        protected <T extends BaseScaleContext> boolean updateAll(T ctx) {
             boolean updated = update(usrScale, ctx.usrScale.value);
             return update(objScale, ctx.objScale.value) || updated;
         }
@@ -822,14 +821,14 @@ public class JBUI {
             void contextUpdated();
         }
 
-        public void addUpdateListener(@Nonnull UpdateListener l) {
+        public void addUpdateListener(UpdateListener l) {
             if (listeners == null) {
                 listeners = new ArrayList<>(1);
             }
             listeners.add(l);
         }
 
-        public void removeUpdateListener(@Nonnull UpdateListener l) {
+        public void removeUpdateListener(UpdateListener l) {
             if (listeners != null) {
                 listeners.remove(l);
             }
@@ -844,7 +843,7 @@ public class JBUI {
             }
         }
 
-        protected boolean update(@Nonnull Scale scale, double value) {
+        protected boolean update(Scale scale, double value) {
             Scale newScale = scale.newOrThis(value);
             if (newScale == scale) {
                 return false;
@@ -863,7 +862,7 @@ public class JBUI {
             return true;
         }
 
-        @Nonnull
+        
         public <T extends BaseScaleContext> T copy() {
             BaseScaleContext ctx = createIdentity();
             ctx.updateAll(this);
@@ -889,7 +888,7 @@ public class JBUI {
             /**
              * @param dataProvider provides a data object matching the passed scale context
              */
-            public Cache(@Nonnull Function<S, D> dataProvider) {
+            public Cache(Function<S, D> dataProvider) {
                 this.myDataProvider = dataProvider;
             }
 
@@ -898,7 +897,7 @@ public class JBUI {
              * otherwise provides the new data via the provider and caches it.
              */
             @Nullable
-            public D getOrProvide(@Nonnull S ctx) {
+            public D getOrProvide(S ctx) {
                 Pair<Double, D> data = myData.get();
                 double scale = ctx.getScale(PIX_SCALE);
                 if (data == null || Double.compare(scale, data.first) != 0) {
@@ -935,7 +934,7 @@ public class JBUI {
             update(pixScale, derivePixScale());
         }
 
-        private ScaleContext(@Nonnull Scale scale) {
+        private ScaleContext(Scale scale) {
             switch (scale.type) {
                 case USR_SCALE:
                     update(usrScale, scale.value);
@@ -955,7 +954,7 @@ public class JBUI {
         /**
          * Creates a context with all scale factors set to 1.
          */
-        @Nonnull
+        
         public static ScaleContext createIdentity() {
             return create(USR_SCALE.of(1), SYS_SCALE.of(1));
         }
@@ -963,7 +962,7 @@ public class JBUI {
         /**
          * Creates a context based on the component's system scale and sticks to it via the {@link #update()} method.
          */
-        @Nonnull
+        
         public static ScaleContext create(@Nullable Component comp) {
             ScaleContext ctx = new ScaleContext(SYS_SCALE.of(sysScale(comp)));
             if (comp != null) {
@@ -975,7 +974,7 @@ public class JBUI {
         /**
          * Creates a context based on the component's (or graphics's) scale and sticks to it via the {@link #update()} method.
          */
-        @Nonnull
+        
         public static ScaleContext create(@Nullable Component component, @Nullable Graphics2D graphics) {
             // Component is preferable to Graphics as a scale provider, as it lets the context stick
             // to the component's actual scale via the update method.
@@ -997,7 +996,7 @@ public class JBUI {
         /**
          * Creates a context based on the gc's system scale
          */
-        @Nonnull
+        
         public static ScaleContext create(@Nullable GraphicsConfiguration gc) {
             return new ScaleContext(SYS_SCALE.of(sysScale(gc)));
         }
@@ -1005,7 +1004,7 @@ public class JBUI {
         /**
          * Creates a context based on the g's system scale
          */
-        @Nonnull
+        
         public static ScaleContext create(Graphics2D g) {
             return new ScaleContext(SYS_SCALE.of(sysScale(g)));
         }
@@ -1013,16 +1012,16 @@ public class JBUI {
         /**
          * Creates a context with the provided scale
          */
-        @Nonnull
-        public static ScaleContext create(@Nonnull Scale scale) {
+        
+        public static ScaleContext create(Scale scale) {
             return new ScaleContext(scale);
         }
 
         /**
          * Creates a context with the provided scale factors
          */
-        @Nonnull
-        public static ScaleContext create(@Nonnull Scale... scales) {
+        
+        public static ScaleContext create(Scale... scales) {
             ScaleContext ctx = create();
             for (Scale s : scales) ctx.update(s);
             return ctx;
@@ -1031,7 +1030,7 @@ public class JBUI {
         /**
          * Creates a default context with the default screen scale and the current user scale
          */
-        @Nonnull
+        
         public static ScaleContext create() {
             return new ScaleContext();
         }
@@ -1045,7 +1044,7 @@ public class JBUI {
          * {@inheritDoc}
          */
         @Override
-        public double getScale(@Nonnull ScaleType type) {
+        public double getScale(ScaleType type) {
             if (type == SYS_SCALE) {
                 return sysScale.value;
             }
@@ -1073,7 +1072,7 @@ public class JBUI {
          * Also includes the system scale.
          */
         @Override
-        public boolean update(@Nonnull Scale scale) {
+        public boolean update(Scale scale) {
             if (scale.type == SYS_SCALE) {
                 return onUpdated(update(sysScale, scale.value));
             }
@@ -1081,7 +1080,7 @@ public class JBUI {
         }
 
         @Override
-        protected <T extends BaseScaleContext> boolean updateAll(@Nonnull T ctx) {
+        protected <T extends BaseScaleContext> boolean updateAll(T ctx) {
             boolean updated = super.updateAll(ctx);
             if (!(ctx instanceof ScaleContext context)) {
                 return updated;
@@ -1095,7 +1094,7 @@ public class JBUI {
         }
 
         @Override
-        protected boolean update(@Nonnull Scale scale, double value) {
+        protected boolean update(Scale scale, double value) {
             if (scale.type == SYS_SCALE) {
                 Scale newScale = scale.newOrThis(value);
                 if (newScale == scale) {
@@ -1123,7 +1122,7 @@ public class JBUI {
             }
         }
 
-        @Nonnull
+        
         @Override
         public <T extends BaseScaleContext> T copy() {
             ScaleContext ctx = createIdentity();
@@ -1138,7 +1137,7 @@ public class JBUI {
         }
 
         public static class Cache<D> extends BaseScaleContext.Cache<D, ScaleContext> {
-            public Cache(@Nonnull Function<ScaleContext, D> dataProvider) {
+            public Cache(Function<ScaleContext, D> dataProvider) {
                 super(dataProvider);
             }
         }
@@ -1154,7 +1153,7 @@ public class JBUI {
         /**
          * @return the scale context
          */
-        @Nonnull
+        
         T getScaleContext();
 
         /**
@@ -1170,25 +1169,25 @@ public class JBUI {
         /**
          * @return the scale of the provided type from the context
          */
-        double getScale(@Nonnull ScaleType type);
+        double getScale(ScaleType type);
 
         /**
          * Updates the provided scale in the context
          *
          * @return whether the provided scale has been changed
          */
-        boolean updateScale(@Nonnull Scale scale);
+        boolean updateScale(Scale scale);
     }
 
     public static class ScaleContextSupport<T extends BaseScaleContext> implements ScaleContextAware<T> {
-        @Nonnull
+        
         private final T myScaleContext;
 
-        public ScaleContextSupport(@Nonnull T ctx) {
+        public ScaleContextSupport(T ctx) {
             myScaleContext = ctx;
         }
 
-        @Nonnull
+        
         @Override
         public T getScaleContext() {
             return myScaleContext;
@@ -1200,12 +1199,12 @@ public class JBUI {
         }
 
         @Override
-        public double getScale(@Nonnull ScaleType type) {
+        public double getScale(ScaleType type) {
             return getScaleContext().getScale(type);
         }
 
         @Override
-        public boolean updateScale(@Nonnull Scale scale) {
+        public boolean updateScale(Scale scale) {
             return getScaleContext().update(scale);
         }
     }
@@ -1231,7 +1230,7 @@ public class JBUI {
             super(BaseScaleContext.create());
         }
 
-        protected JBIcon(@Nonnull JBIcon icon) {
+        protected JBIcon(JBIcon icon) {
             this();
             updateScaleContext(icon.getScaleContext());
             myScaler.update(icon.myScaler);
@@ -1268,7 +1267,7 @@ public class JBUI {
          * @return the icon in the provided pre-scaled state
          * @see JBUI#scale(JBIcon)
          */
-        @Nonnull
+        
         public JBIcon withIconPreScaled(boolean preScaled) {
             setIconPreScaled(preScaled);
             return this;
@@ -1310,7 +1309,7 @@ public class JBUI {
         protected ScalableJBIcon() {
         }
 
-        protected ScalableJBIcon(@Nonnull ScalableJBIcon icon) {
+        protected ScalableJBIcon(ScalableJBIcon icon) {
             super(icon);
         }
 
@@ -1320,7 +1319,7 @@ public class JBUI {
         }
 
         @Override
-        @Nonnull
+        
         public Icon scale(float scale) {
             updateScale(OBJ_SCALE.of(scale));
             return this;
@@ -1337,7 +1336,7 @@ public class JBUI {
         /**
          * Updates the context and scales the provided value according to the provided type
          */
-        protected double scaleVal(double value, @Nonnull ScaleType type) {
+        protected double scaleVal(double value, ScaleType type) {
             return switch (type) {
                 case USR_SCALE -> super.scaleVal(value);
                 case SYS_SCALE -> value * getScale(SYS_SCALE);
@@ -1359,7 +1358,7 @@ public class JBUI {
         protected CachingScalableJBIcon() {
         }
 
-        protected CachingScalableJBIcon(@Nonnull CachingScalableJBIcon icon) {
+        protected CachingScalableJBIcon(CachingScalableJBIcon icon) {
             super(icon);
         }
 
@@ -1367,7 +1366,7 @@ public class JBUI {
          * @return a new scaled copy of this icon, or the cached instance of the provided scale
          */
         @Override
-        @Nonnull
+        
         public Icon scale(float scale) {
             if (scale == getScale()) {
                 return this;
@@ -1383,7 +1382,7 @@ public class JBUI {
         /**
          * @return a copy of this icon instance
          */
-        @Nonnull
+        
         protected abstract T copy();
     }
 
@@ -1398,7 +1397,7 @@ public class JBUI {
         }
     }
 
-    public static int getInt(@Nonnull String propertyName, int defaultValue) {
+    public static int getInt(String propertyName, int defaultValue) {
         Object value = UIManager.get(propertyName);
         return value instanceof Integer integerValue ? integerValue : defaultValue;
     }
@@ -1421,14 +1420,14 @@ public class JBUI {
         return defaultValue;
     }
 
-    @Nonnull
-    public static Icon getIcon(@Nonnull String propertyName, @Nonnull Icon defaultIcon) {
+    
+    public static Icon getIcon(String propertyName, Icon defaultIcon) {
         Icon icon = UIManager.getIcon(propertyName);
         return icon == null ? defaultIcon : icon;
     }
 
-    @Nonnull
-    public static Border getBorder(@Nonnull String propertyName, @Nonnull Border defaultBorder) {
+    
+    public static Border getBorder(String propertyName, Border defaultBorder) {
         Border border = UIManager.getBorder(propertyName);
         return border == null ? defaultBorder : border;
     }

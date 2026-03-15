@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.ui.FocusManager;
 import consulo.ui.event.GlobalFocusListener;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 
@@ -30,9 +29,9 @@ import java.beans.PropertyChangeListener;
 public class DesktopAWTFocusManager implements FocusManager {
   public static final DesktopAWTFocusManager ourInstance = new DesktopAWTFocusManager();
 
-  @Nonnull
+  
   @Override
-  public Disposable addListener(@Nonnull GlobalFocusListener focusListener) {
+  public Disposable addListener(GlobalFocusListener focusListener) {
     PropertyChangeListener listener = evt -> focusListener.focusChanged();
     KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener("focusOwner", listener);

@@ -31,8 +31,7 @@ import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.function.Predicate;
@@ -51,8 +50,8 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
 
     public NewElementAction(
         ActionManager actionManager,
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
@@ -61,7 +60,7 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         showPopup(event);
     }
 
@@ -70,7 +69,7 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
         createPopup(context).showInBestPositionFor(context);
     }
 
-    @Nonnull
+    
     protected ListPopup createPopup(DataContext dataContext) {
         return JBPopupFactory.getInstance().createActionGroupPopup(
             getPopupTitle().get(),
@@ -111,14 +110,14 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
         return false;
     }
 
-    @Nonnull
+    
     protected LocalizeValue getPopupTitle() {
         return IdeLocalize.titlePopupNewElement();
     }
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         IdeView ideView = e.getData(IdeView.KEY);
@@ -131,7 +130,7 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
         presentation.setEnabled(!ActionGroupUtil.isGroupEmpty(getGroup(e.getDataContext()), e));
     }
 
-    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull IdeView ideView) {
+    protected boolean isEnabled(AnActionEvent e, IdeView ideView) {
         return true;
     }
 

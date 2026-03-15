@@ -10,8 +10,7 @@ import consulo.language.psi.ResolveResult;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.Set;
 
@@ -26,20 +25,20 @@ import java.util.Set;
 public abstract class LookupElement extends UserDataHolderBase implements CompositeStringHolder {
   public static final LookupElement[] EMPTY_ARRAY = new LookupElement[0];
 
-  @Nonnull
+  
   public abstract String getLookupString();
 
   public Set<String> getAllLookupStrings() {
     return Collections.singleton(getLookupString());
   }
 
-  @Nonnull
+  
   @Override
   public final Set<String> getAllStrings() {
     return getAllLookupStrings();
   }
 
-  @Nonnull
+  
   public Object getObject() {
     return this;
   }
@@ -74,7 +73,7 @@ public abstract class LookupElement extends UserDataHolderBase implements Compos
     return true;
   }
 
-  public void handleInsert(@Nonnull InsertionContext context) {
+  public void handleInsert(InsertionContext context) {
   }
 
   /**

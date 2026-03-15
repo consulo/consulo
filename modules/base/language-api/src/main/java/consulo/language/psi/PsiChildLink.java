@@ -15,8 +15,7 @@
  */
 package consulo.language.psi;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -26,8 +25,8 @@ public abstract class PsiChildLink<Parent extends PsiElement, Child extends PsiE
   @Nullable
   public abstract Child findLinkedChild(@Nullable Parent parent);
 
-  @Nonnull
-  public final PsiElementRef<Child> createChildRef(@Nonnull Parent parent) {
+  
+  public final PsiElementRef<Child> createChildRef(Parent parent) {
     Child existing = findLinkedChild(parent);
     if (existing != null) {
       return PsiElementRef.real(existing);
@@ -35,8 +34,8 @@ public abstract class PsiChildLink<Parent extends PsiElement, Child extends PsiE
     return PsiElementRef.imaginary(PsiElementRef.real(parent), this);
   }
 
-  @Nonnull
-  public final PsiElementRef<Child> createChildRef(@Nonnull PsiElementRef<? extends Parent> parentRef) {
+  
+  public final PsiElementRef<Child> createChildRef(PsiElementRef<? extends Parent> parentRef) {
     Parent parent = parentRef.getPsiElement();
     if (parent != null) {
       Child existing = findLinkedChild(parent);

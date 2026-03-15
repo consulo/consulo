@@ -36,8 +36,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,8 +51,8 @@ public class FileReferenceQuickFixProvider {
   private FileReferenceQuickFixProvider() {
   }
 
-  @Nonnull
-  public static List<? extends LocalQuickFix> registerQuickFix(@Nonnull FileReference reference) {
+  
+  public static List<? extends LocalQuickFix> registerQuickFix(FileReference reference) {
     FileReferenceSet fileReferenceSet = reference.getFileReferenceSet();
     int index = reference.getIndex();
 
@@ -152,7 +151,7 @@ public class FileReferenceQuickFixProvider {
 
 
   @Nullable
-  private static Module getModuleForContext(@Nonnull PsiFileSystemItem context) {
+  private static Module getModuleForContext(PsiFileSystemItem context) {
     VirtualFile file = context.getVirtualFile();
     return file != null ? ModuleUtilCore.findModuleForFile(file, context.getProject()) : null;
   }
@@ -201,7 +200,7 @@ public class FileReferenceQuickFixProvider {
     }
 
     @Override
-    protected void openFile(@Nonnull Project project, PsiDirectory directory, PsiFile newFile, String text) {
+    protected void openFile(Project project, PsiDirectory directory, PsiFile newFile, String text) {
       super.openFile(project, directory, newFile, text);
       if (!isDirectory && myNewFileTemplateName != null) {
         FileTemplateManager fileTemplateManager = FileTemplateManager.getInstance(project);

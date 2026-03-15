@@ -26,8 +26,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides project management.
@@ -40,35 +39,35 @@ public interface ProjectManager {
      *
      * @return <code>ProjectManager</code> instance
      */
-    @Nonnull
+    
     public static ProjectManager getInstance() {
         return Application.get().getInstance(ProjectManager.class);
     }
 
-    @Nonnull
-    AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context);
+    
+    AsyncResult<Project> openProjectAsync(VirtualFile file, UIAccess uiAccess, ProjectOpenContext context);
 
-    @Nonnull
-    default AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
+    
+    default AsyncResult<Project> openProjectAsync(VirtualFile file, UIAccess uiAccess) {
         return openProjectAsync(file, uiAccess, new ProjectOpenContext());
     }
 
-    @Nonnull
-    AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context);
+    
+    AsyncResult<Project> openProjectAsync(Project project, UIAccess uiAccess, ProjectOpenContext context);
 
-    default AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    default AsyncResult<Project> openProjectAsync(Project project, UIAccess uiAccess) {
         return openProjectAsync(project, uiAccess, new ProjectOpenContext());
     }
 
-    @Nonnull
-    default AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    
+    default AsyncResult<Void> closeAndDisposeAsync(Project project, UIAccess uiAccess) {
         return closeAndDisposeAsync(project, uiAccess, true, true, true);
     }
 
     boolean isProjectOpened(Project project);
 
-    @Nonnull
-    AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
+    
+    AsyncResult<Void> closeAndDisposeAsync(Project project, UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 
     /**
      * Adds listener to the specified project.
@@ -76,7 +75,7 @@ public interface ProjectManager {
      * @param project  project to add listener to
      * @param listener listener to add
      */
-    void addProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
+    void addProjectManagerListener(Project project, ProjectManagerListener listener);
 
     /**
      * Removes listener from the specified project.
@@ -84,14 +83,14 @@ public interface ProjectManager {
      * @param project  project to remove listener from
      * @param listener listener to remove
      */
-    void removeProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
+    void removeProjectManagerListener(Project project, ProjectManagerListener listener);
 
     /**
      * Returns the list of currently opened projects.
      *
      * @return the array of currently opened projects.
      */
-    @Nonnull
+    
     Project[] getOpenProjects();
 
     /**
@@ -101,7 +100,7 @@ public interface ProjectManager {
      *
      * @return the template project instance.
      */
-    @Nonnull
+    
     default Project getDefaultProject() {
         return DefaultProjectFactory.getInstance().getDefaultProject();
     }
@@ -113,14 +112,14 @@ public interface ProjectManager {
      * @return true if the project was closed successfully, false if the closing was disallowed by the close listeners.
      */
     @RequiredUIAccess
-    boolean closeProject(@Nonnull Project project);
+    boolean closeProject(Project project);
 
     /**
      * Asynchronously reloads the specified project.
      *
      * @param project the project to reload.
      */
-    void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+    void reloadProject(Project project, UIAccess uiAccess);
 
     /**
      * Create new project in given location.
@@ -141,11 +140,11 @@ public interface ProjectManager {
      */
     @Deprecated
     @DeprecationInfo("Use ProjectManager#TOPIC")
-    void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
+    void addProjectManagerListener(ProjectManagerListener listener);
 
     @Deprecated
     @DeprecationInfo("Use ProjectManager#TOPIC")
-    void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
+    void addProjectManagerListener(ProjectManagerListener listener, Disposable parentDisposable);
 
     /**
      * Removes global listener from all projects.
@@ -154,7 +153,7 @@ public interface ProjectManager {
      */
     @Deprecated
     @DeprecationInfo("Use ProjectManager#TOPIC")
-    void removeProjectManagerListener(@Nonnull ProjectManagerListener listener);
+    void removeProjectManagerListener(ProjectManagerListener listener);
 
     //endregion
 }

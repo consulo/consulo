@@ -15,8 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -53,31 +52,31 @@ public class FormBuilder {
     return new FormBuilder();
   }
 
-  public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component) {
+  public FormBuilder addLabeledComponent(@Nullable Component label, Component component) {
     return addLabeledComponent(label, component, myVerticalGap, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component, int topInset) {
+  public FormBuilder addLabeledComponent(@Nullable Component label, Component component, int topInset) {
     return addLabeledComponent(label, component, topInset, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull Component component, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nullable JComponent label, Component component, boolean labelOnTop) {
     return addLabeledComponent(label, component, myVerticalGap, labelOnTop);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component) {
+  public FormBuilder addLabeledComponent(String labelText, Component component) {
     return addLabeledComponent(labelText, component, myVerticalGap, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, int topInset) {
+  public FormBuilder addLabeledComponent(String labelText, Component component, int topInset) {
     return addLabeledComponent(labelText, component, topInset, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(String labelText, Component component, boolean labelOnTop) {
     return addLabeledComponent(labelText, component, myVerticalGap, labelOnTop);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, int topInset, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(String labelText, Component component, int topInset, boolean labelOnTop) {
     JLabel label = new JLabel(UIUtil.removeMnemonic(labelText));
     int index = UIUtil.getDisplayMnemonicIndex(labelText);
     if (index != -1) {
@@ -88,11 +87,11 @@ public class FormBuilder {
     return addLabeledComponent(label, component, topInset, labelOnTop);
   }
 
-  public FormBuilder addComponent(@Nonnull Component component) {
+  public FormBuilder addComponent(Component component) {
     return addLabeledComponent((JLabel)null, component, myVerticalGap, false);
   }
 
-  public FormBuilder addComponent(@Nonnull Component component, int topInset) {
+  public FormBuilder addComponent(Component component, int topInset) {
     return addLabeledComponent((JLabel)null, component, topInset, false);
   }
 
@@ -115,20 +114,20 @@ public class FormBuilder {
     return addComponentToRightColumn(label, 1);
   }
 
-  public FormBuilder addComponentToRightColumn(@Nonnull Component component) {
+  public FormBuilder addComponentToRightColumn(Component component) {
     return addComponentToRightColumn(component, myVerticalGap);
   }
 
-  public FormBuilder addComponentToRightColumn(@Nonnull Component component, int topInset) {
+  public FormBuilder addComponentToRightColumn(Component component, int topInset) {
     return addLabeledComponent(new JLabel(), component, topInset);
   }
 
-  @Nonnull
-  public FormBuilder addComponentFillVertically(@Nonnull JComponent component, int topInset) {
+  
+  public FormBuilder addComponentFillVertically(JComponent component, int topInset) {
     return addComponent(component); // TODO not supported !
   }
 
-  public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component, int topInset, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nullable Component label, Component component, int topInset, boolean labelOnTop) {
     GridBagConstraints c = new GridBagConstraints();
     topInset = myLineCount > 0 ? topInset : 0;
 

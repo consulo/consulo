@@ -26,7 +26,6 @@ import consulo.module.content.layer.ContentFolderSupportPatcher;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -36,7 +35,7 @@ import java.util.Set;
 @ExtensionImpl
 public class SandContentFolderSupportPatcher implements ContentFolderSupportPatcher {
   @Override
-  public void patch(@Nonnull ModifiableRootModel model, @Nonnull Set<ContentFolderTypeProvider> set) {
+  public void patch(ModifiableRootModel model, Set<ContentFolderTypeProvider> set) {
     SandModuleExtension extension = model.getExtension(SandModuleExtension.class);
     if(extension != null) {
       set.add(ProductionContentFolderTypeProvider.getInstance());

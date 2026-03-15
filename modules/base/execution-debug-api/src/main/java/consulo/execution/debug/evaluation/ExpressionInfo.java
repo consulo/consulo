@@ -16,23 +16,22 @@
 package consulo.execution.debug.evaluation;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ExpressionInfo {
   private final TextRange textRange;
   private final String expressionText;
   private final String displayText;
 
-  public ExpressionInfo(@Nonnull TextRange textRange) {
+  public ExpressionInfo(TextRange textRange) {
     this(textRange, null);
   }
 
-  public ExpressionInfo(@Nonnull TextRange textRange, @Nullable String expressionText) {
+  public ExpressionInfo(TextRange textRange, @Nullable String expressionText) {
     this(textRange, expressionText, expressionText);
   }
 
-  public ExpressionInfo(@Nonnull TextRange textRange, @Nullable String expressionText, @Nullable String displayText) {
+  public ExpressionInfo(TextRange textRange, @Nullable String expressionText, @Nullable String displayText) {
     this.textRange = textRange;
     this.expressionText = expressionText;
     this.displayText = displayText;
@@ -42,7 +41,7 @@ public class ExpressionInfo {
    * Text range to highlight as link,
    * will be used to compute evaluation and display text if these values not specified.
    */
-  @Nonnull
+  
   public TextRange getTextRange() {
     return textRange;
   }

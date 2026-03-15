@@ -34,7 +34,6 @@ import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -49,25 +48,25 @@ public class IgnoreFileImpl extends PsiFileImpl {
     /**
      * Current language.
      */
-    @Nonnull
+    
     private final Language language;
 
     /**
      * Current parser definition.
      */
-    @Nonnull
+    
     private final ParserDefinition parserDefinition;
 
     /**
      * Current file type.
      */
-    @Nonnull
+    
     private final IgnoreFileType fileType;
 
     /**
      * Builds a new instance of {@link IgnoreFileImpl}.
      */
-    public IgnoreFileImpl(@Nonnull FileViewProvider viewProvider, @Nonnull IgnoreFileType fileType) {
+    public IgnoreFileImpl(FileViewProvider viewProvider, IgnoreFileType fileType) {
         super(viewProvider);
 
         this.fileType = fileType;
@@ -119,7 +118,7 @@ public class IgnoreFileImpl extends PsiFileImpl {
      * @param visitor the visitor to pass the element to.
      */
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) {
+    public void accept(PsiElementVisitor visitor) {
         visitor.visitFile(this);
     }
 
@@ -128,7 +127,7 @@ public class IgnoreFileImpl extends PsiFileImpl {
      *
      * @return current {@link Language}
      */
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public final Language getLanguage() {
@@ -140,7 +139,7 @@ public class IgnoreFileImpl extends PsiFileImpl {
      *
      * @return current {@link ParserDefinition}
      */
-    @Nonnull
+    
     public ParserDefinition getParserDefinition() {
         return parserDefinition;
     }
@@ -150,7 +149,7 @@ public class IgnoreFileImpl extends PsiFileImpl {
      *
      * @return the file type instance.
      */
-    @Nonnull
+    
     @Override
     public FileType getFileType() {
         return fileType;

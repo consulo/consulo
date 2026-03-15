@@ -22,7 +22,6 @@ import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEntryType;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.ColoredTextContainer;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -31,15 +30,15 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class ModuleOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleOrderEntryImpl> {
-  @Nonnull
+  
   @Override
   public String getOrderTypeId() {
     return ModuleOrderEntryType.ID;
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRender(@Nonnull ModuleOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRender(ModuleOrderEntryImpl orderEntry) {
     return it -> {
       it.setIcon(PlatformIconGroup.nodesModule());
       it.append(orderEntry.getPresentableName());

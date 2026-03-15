@@ -21,26 +21,25 @@ import consulo.versionControlSystem.log.VcsLogHighlighter;
 import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.versionControlSystem.log.VcsLogUi;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class MergeCommitsHighlighterFactory implements VcsLogHighlighterFactory {
-  @Nonnull
+  
   public static final String ID = "MERGE_COMMITS";
 
-  @Nonnull
+  
   @Override
-  public VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
+  public VcsLogHighlighter createHighlighter(VcsLogData logData, VcsLogUi logUi) {
     return new MergeCommitsHighlighter(logUi);
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return ID;
   }
 
-  @Nonnull
+  
   @Override
   public String getTitle() {
     return "Merge Commits";

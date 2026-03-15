@@ -34,12 +34,10 @@ import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -94,7 +92,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
         application.getMessageBus().connect(application).subscribe(AnActionListener.class, new AnActionListener() {
             @Override
-            public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+            public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
                 hideCurrent(null, action, event);
             }
         });
@@ -652,19 +650,19 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
     }
 
     @Override
-    public JEditorPane initEditorPane(@NonNls String text, HintHint hintHint, @Nullable JLayeredPane layeredPane) {
+    public JEditorPane initEditorPane(String text, HintHint hintHint, @Nullable JLayeredPane layeredPane) {
         return initPane(text, hintHint, layeredPane);
     }
 
-    public static JEditorPane initPane(@NonNls String text, HintHint hintHint, @Nullable JLayeredPane layeredPane) {
+    public static JEditorPane initPane(String text, HintHint hintHint, @Nullable JLayeredPane layeredPane) {
         return initPane(new Html(text), hintHint, layeredPane);
     }
 
-    public static JEditorPane initPane(@NonNls Html html, HintHint hintHint, @Nullable JLayeredPane layeredPane) {
+    public static JEditorPane initPane(Html html, HintHint hintHint, @Nullable JLayeredPane layeredPane) {
         return initPane(html, hintHint, layeredPane, true);
     }
 
-    public static JEditorPane initPane(@NonNls Html html, final HintHint hintHint, @Nullable final JLayeredPane layeredPane, boolean limitWidthToScreen) {
+    public static JEditorPane initPane(Html html, final HintHint hintHint, @Nullable final JLayeredPane layeredPane, boolean limitWidthToScreen) {
         String text = HintUtil.prepareHintText(html, hintHint);
 
         final boolean[] prefSizeWasComputed = {false};

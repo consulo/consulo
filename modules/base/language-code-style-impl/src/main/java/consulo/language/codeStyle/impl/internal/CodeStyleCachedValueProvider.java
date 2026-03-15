@@ -19,8 +19,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,19 +36,19 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
     private final static int MAX_COMPUTATION_THREADS = 10;
 
     private final
-    @Nonnull
+    
     WeakReference<PsiFile> myFileRef;
     private final
-    @Nonnull
+    
     AsyncComputation myComputation;
     private final
-    @Nonnull
+    
     Lock myComputationLock = new ReentrantLock();
 
     private final static ExecutorService ourExecutorService =
         AppExecutorUtil.createBoundedApplicationPoolExecutor("CodeStyleCachedValueProvider", MAX_COMPUTATION_THREADS);
 
-    CodeStyleCachedValueProvider(@Nonnull PsiFile file) {
+    CodeStyleCachedValueProvider(PsiFile file) {
         myFileRef = new WeakReference<>(file);
         myComputation = new AsyncComputation();
     }
@@ -79,7 +78,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         }
     }
 
-    void scheduleWhenComputed(@Nonnull Runnable runnable) {
+    void scheduleWhenComputed(Runnable runnable) {
         myComputation.schedule(runnable);
     }
 
@@ -99,8 +98,8 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         myComputation.cancel();
     }
 
-    @Nonnull
-    Object[] getDependencies(@Nonnull CodeStyleSettings settings, @Nonnull AsyncComputation computation) {
+    
+    Object[] getDependencies(CodeStyleSettings settings, AsyncComputation computation) {
         List<Object> dependencies = new ArrayList<>();
         if (settings instanceof TransientCodeStyleSettings codeStyleSettings) {
             dependencies.addAll(codeStyleSettings.getDependencies());
@@ -114,7 +113,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
     }
 
     @RequiredReadAction
-    private static void logCached(@Nonnull PsiFile file, @Nonnull CodeStyleSettings settings) {
+    private static void logCached(PsiFile file, CodeStyleSettings settings) {
         LOG.debug(String.format(
             "File: %s (%s), cached: %s, tracker: %d",
             file.getName(),
@@ -132,7 +131,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         private final AtomicBoolean myIsActive = new AtomicBoolean();
         private volatile CodeStyleSettings myCurrResult;
         private final
-        @Nonnull
+        
         CodeStyleSettingsManager mySettingsManager;
         private final SimpleModificationTracker myTracker = new SimpleModificationTracker();
         private final Project myProject;
@@ -171,7 +170,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
             return myCurrResult == null;
         }
 
-        private void schedule(@Nonnull Runnable runnable) {
+        private void schedule(Runnable runnable) {
             if (myIsActive.get()) {
                 myScheduledRunnables.add(runnable);
             }
@@ -263,7 +262,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         }
     }
 
-    @Nonnull
+    
     private PsiFile getReferencedPsi() {
         PsiFile file = myFileRef.get();
         if (file == null) {

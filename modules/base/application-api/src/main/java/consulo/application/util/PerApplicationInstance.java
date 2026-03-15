@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.disposer.Disposer;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -30,8 +29,8 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use constructor injecting")
 public final class PerApplicationInstance<V> implements Provider<V>, Supplier<V> {
-  @Nonnull
-  public static <T> PerApplicationInstance<T> of(@Nonnull Class<T> clazz) {
+  
+  public static <T> PerApplicationInstance<T> of(Class<T> clazz) {
     return new PerApplicationInstance<>(clazz);
   }
 
@@ -44,7 +43,7 @@ public final class PerApplicationInstance<V> implements Provider<V>, Supplier<V>
   }
 
   @Override
-  @Nonnull
+  
   public V get() {
     V oldValue = myValue;
     if (oldValue == null) {

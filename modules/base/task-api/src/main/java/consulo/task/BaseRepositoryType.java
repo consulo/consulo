@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.task.ui.BaseRepositoryEditor;
 import consulo.task.ui.TaskRepositoryEditor;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -27,7 +26,7 @@ import java.util.function.Consumer;
  */
 public abstract class BaseRepositoryType<T extends BaseRepository> extends TaskRepositoryType<T> {
   @Override
-  @Nonnull
+  
   public TaskRepositoryEditor createEditor(T repository, Project project, Consumer<T> changeListener) {
     return new BaseRepositoryEditor<T>(project, repository, changeListener);
   }

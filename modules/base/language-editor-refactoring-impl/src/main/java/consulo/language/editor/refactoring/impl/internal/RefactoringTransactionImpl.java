@@ -22,7 +22,6 @@ import consulo.language.editor.refactoring.event.RefactoringElementListenerProvi
 import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +83,7 @@ public class RefactoringTransactionImpl implements RefactoringTransaction {
     }
 
     @Override
-    public void elementMoved(@Nonnull final PsiElement newElement) {
+    public void elementMoved(final PsiElement newElement) {
       myRunnables.add(new Runnable() {
         @Override
         public void run() {
@@ -101,7 +100,7 @@ public class RefactoringTransactionImpl implements RefactoringTransaction {
     }
 
     @Override
-    public void elementRenamed(@Nonnull final PsiElement newElement) {
+    public void elementRenamed(final PsiElement newElement) {
       myRunnables.add(new Runnable() {
         @Override
         public void run() {
@@ -118,7 +117,7 @@ public class RefactoringTransactionImpl implements RefactoringTransaction {
     }
 
     @Override
-    public void undoElementMovedOrRenamed(@Nonnull PsiElement newElement, @Nonnull String oldQualifiedName) {
+    public void undoElementMovedOrRenamed(PsiElement newElement, String oldQualifiedName) {
       for (RefactoringElementListener listener : myListenerList) {
         if (listener instanceof UndoRefactoringElementListener) {
           ((UndoRefactoringElementListener)listener).undoElementMovedOrRenamed(newElement, oldQualifiedName);

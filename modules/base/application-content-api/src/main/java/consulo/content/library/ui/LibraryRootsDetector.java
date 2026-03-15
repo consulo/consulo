@@ -19,8 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.content.library.LibraryRootType;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,7 +27,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class LibraryRootsDetector {
-  @Nonnull
+  
   public static LibraryRootsDetector of(List<? extends RootDetector> detectors) {
     return new LibraryRootsDetectorImpl(detectors);
   }
@@ -40,11 +39,11 @@ public abstract class LibraryRootsDetector {
    * @param progressIndicator can be used to show information about the progress and to abort searching if process is cancelled
    * @return suitable roots
    */
-  public abstract Collection<DetectedLibraryRoot> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator);
+  public abstract Collection<DetectedLibraryRoot> detectRoots(VirtualFile rootCandidate, ProgressIndicator progressIndicator);
 
   /**
    * @return presentable name for the root type or {@code null} if the root type isn't supported by this detector
    */
   @Nullable
-  public abstract String getRootTypeName(@Nonnull LibraryRootType rootType);
+  public abstract String getRootTypeName(LibraryRootType rootType);
 }

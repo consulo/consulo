@@ -23,7 +23,6 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.NewEditChangelistPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,7 +34,7 @@ public class EditChangelistDialog extends DialogWrapper {
   private final Project myProject;
   private final LocalChangeList myList;
 
-  public EditChangelistDialog(Project project, @Nonnull LocalChangeList list) {
+  public EditChangelistDialog(Project project, LocalChangeList list) {
     super(project, true);
     myProject = project;
     myList = list;

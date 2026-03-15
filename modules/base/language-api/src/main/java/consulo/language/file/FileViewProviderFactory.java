@@ -19,7 +19,6 @@ import consulo.language.Language;
 import consulo.language.psi.PsiManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -28,5 +27,5 @@ import jakarta.annotation.Nonnull;
  * @see LanguageFileViewProviderFactory
  */
 public interface FileViewProviderFactory {
-  FileViewProvider createFileViewProvider(@Nonnull VirtualFile file, Language language, @Nonnull PsiManager manager, boolean eventSystemEnabled);
+  FileViewProvider createFileViewProvider(VirtualFile file, Language language, PsiManager manager, boolean eventSystemEnabled);
 }

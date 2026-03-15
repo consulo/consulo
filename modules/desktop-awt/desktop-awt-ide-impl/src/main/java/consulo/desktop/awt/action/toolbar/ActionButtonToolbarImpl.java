@@ -30,7 +30,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,19 +44,19 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     private static final Logger LOG = Logger.getInstance(ActionButtonToolbarImpl.class);
 
     private final ActionToolbarEngine myEngine;
-    @Nonnull
+    
     private final DataManager myDataManager;
 
     private JComponent myTargetComponent;
 
     private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
 
-    public ActionButtonToolbarImpl(@Nonnull String place,
-                                   @Nonnull ActionGroup actionGroup,
-                                   @Nonnull Application application,
-                                   @Nonnull KeymapManager keymapManager,
-                                   @Nonnull ActionManager actionManager,
-                                   @Nonnull DataManager dataManager) {
+    public ActionButtonToolbarImpl(String place,
+                                   ActionGroup actionGroup,
+                                   Application application,
+                                   KeymapManager keymapManager,
+                                   ActionManager actionManager,
+                                   DataManager dataManager) {
         super(new HorizontalLayout(4));
         myDataManager = dataManager;
         myEngine = new ActionToolbarEngine(place, actionGroup, this, application, keymapManager, actionManager, this) {
@@ -109,7 +108,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     }
 
     @RequiredUIAccess
-    private void fillToolBar(@Nonnull List<? extends AnAction> actions) {
+    private void fillToolBar(List<? extends AnAction> actions) {
         boolean isLastElementSeparator = false;
         for (int i = 0; i < actions.size(); i++) {
             AnAction action = actions.get(i);
@@ -140,9 +139,9 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    private JComponent getCustomUIComponent(@Nonnull AnAction action) {
+    private JComponent getCustomUIComponent(AnAction action) {
         Presentation presentation = myEngine.getPresentation(action);
         consulo.ui.Component customComponent = presentation.getClientProperty(CustomUIComponentAction.COMPONENT_KEY);
         if (customComponent == null) {
@@ -160,9 +159,9 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         return (JComponent) TargetAWT.to(customComponent);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    private JComponent getCustomComponent(@Nonnull AnAction action) {
+    private JComponent getCustomComponent(AnAction action) {
         Presentation presentation = myEngine.getPresentation(action);
         JComponent customComponent = presentation.getClientProperty(CustomComponentAction.COMPONENT_KEY);
         if (customComponent == null) {
@@ -176,10 +175,10 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         return customComponent;
     }
 
-    @Nonnull
-    protected ActionButton createToolbarButton(@Nonnull AnAction action,
-                                               @Nonnull String place,
-                                               @Nonnull Presentation presentation) {
+    
+    protected ActionButton createToolbarButton(AnAction action,
+                                               String place,
+                                               Presentation presentation) {
 
         ActionButton actionButton;
         if (action instanceof Toggleable toggleable) {
@@ -204,12 +203,12 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         return actionButton;
     }
 
-    @Nonnull
-    private ActionButton createToolbarButton(@Nonnull AnAction action) {
+    
+    private ActionButton createToolbarButton(AnAction action) {
         return createToolbarButton(action, myEngine.getPlace(), myEngine.getPresentation(action));
     }
 
-    protected void tweakActionComponentUI(@Nonnull AnAction action, Component component) {
+    protected void tweakActionComponentUI(AnAction action, Component component) {
     }
 
     @Override
@@ -250,7 +249,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public CompletableFuture<List<? extends AnAction>> updateActionsAsync() {
         return myEngine.updateActionsAsync();
@@ -261,13 +260,13 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         return getDataContext();
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public consulo.ui.Component getUIComponent() {
         return TargetAWT.wrap(this);
@@ -287,7 +286,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         }
     }
 
-    @Nonnull
+    
     protected DataContext getDataContext() {
         if (myTargetComponent == null && getClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING) == null) {
             putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
@@ -299,7 +298,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         return myDataManager.getDataContext(target);
     }
 
-    @Nonnull
+    
     @Override
     public List<AnAction> getActions() {
         return myEngine.getActions();

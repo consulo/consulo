@@ -15,18 +15,17 @@
  */
 package consulo.versionControlSystem;
 
-import jakarta.annotation.Nonnull;
 
 public final class VcsKey {
-  @Nonnull
+  
   private final String myName;
 
   // to forbid creation outside AbstractVcs
-  VcsKey(@Nonnull String name) {
+  VcsKey(String name) {
     myName = name;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }

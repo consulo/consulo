@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Checks VCS roots, revealing invalid roots (registered in the settings, but not related to real VCS roots on disk)
@@ -37,7 +36,7 @@ public abstract class VcsRootChecker {
    * @param path path to check if it is vcs root directory
    * @return true if it is vcs root
    */
-  public boolean isRoot(@Nonnull String path) {
+  public boolean isRoot(String path) {
     return false;
   }
 

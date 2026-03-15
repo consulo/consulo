@@ -20,8 +20,7 @@ import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueNode;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,9 +31,9 @@ import java.util.List;
 public interface XValueTree {
     Key<XValueTree> KEY = Key.of(XValueTree.class);
 
-    void expand(@Nonnull XValueNode node);
+    void expand(XValueNode node);
 
-    @Nonnull
+    
     List<XValueNode> getSelectedNodes();
 
     @Nullable
@@ -43,7 +42,7 @@ public interface XValueTree {
     @Nullable
     XDebugSession getSession();
 
-    @Nonnull
+    
     Project getProject();
 
     @Nullable

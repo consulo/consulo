@@ -5,7 +5,6 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.dataContext.DataContext;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * Implement this class if a particular run configuration should be created for matching input string.
@@ -18,13 +17,13 @@ public abstract class RunAnythingMatchedRunConfigurationProvider extends RunAnyt
      * @param pattern
      * @return created run configuration
      */
-    @Nonnull
-    public abstract RunnerAndConfigurationSettings createConfiguration(@Nonnull DataContext dataContext, @Nonnull String pattern);
+    
+    public abstract RunnerAndConfigurationSettings createConfiguration(DataContext dataContext, String pattern);
 
     /**
      * Returns current provider associated run configuration factory
      */
-    @Nonnull
+    
     public abstract ConfigurationFactory getConfigurationFactory();
 
     @Override

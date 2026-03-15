@@ -19,9 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ui.ex.awt.hint.HintHint;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -51,5 +50,5 @@ public interface IdeTooltipManager {
 
   String getUlImg(boolean awtTooltip);
 
-  JEditorPane initEditorPane(@NonNls String text, HintHint hintHint, @Nullable JLayeredPane layeredPane);
+  JEditorPane initEditorPane(String text, HintHint hintHint, @Nullable JLayeredPane layeredPane);
 }

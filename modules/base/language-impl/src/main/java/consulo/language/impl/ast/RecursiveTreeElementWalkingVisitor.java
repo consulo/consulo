@@ -20,7 +20,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiRecursiveVisitor;
 import consulo.util.collection.util.WalkingState;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisitor implements PsiRecursiveVisitor {
   private final boolean myDoTransform;
@@ -35,22 +34,22 @@ public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisi
 
   private static class ASTTreeGuide implements WalkingState.TreeGuide<ASTNode> {
     @Override
-    public ASTNode getNextSibling(@Nonnull ASTNode element) {
+    public ASTNode getNextSibling(ASTNode element) {
       return element.getTreeNext();
     }
 
     @Override
-    public ASTNode getPrevSibling(@Nonnull ASTNode element) {
+    public ASTNode getPrevSibling(ASTNode element) {
       return element.getTreePrev();
     }
 
     @Override
-    public ASTNode getFirstChild(@Nonnull ASTNode element) {
+    public ASTNode getFirstChild(ASTNode element) {
       return element.getFirstChildNode();
     }
 
     @Override
-    public ASTNode getParent(@Nonnull ASTNode element) {
+    public ASTNode getParent(ASTNode element) {
       return element.getTreeParent();
     }
 
@@ -59,17 +58,17 @@ public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisi
 
   private final WalkingState<ASTNode> myWalkingState = new WalkingState<ASTNode>(ASTTreeGuide.instance) {
     @Override
-    public void elementFinished(@Nonnull ASTNode element) {
+    public void elementFinished(ASTNode element) {
       RecursiveTreeElementWalkingVisitor.this.elementFinished(element);
     }
 
     @Override
-    public void visit(@Nonnull ASTNode element) {
+    public void visit(ASTNode element) {
       ((TreeElement)element).acceptTree(RecursiveTreeElementWalkingVisitor.this);
     }
   };
 
-  protected void elementFinished(@Nonnull ASTNode element) {
+  protected void elementFinished(ASTNode element) {
   }
 
   @Override

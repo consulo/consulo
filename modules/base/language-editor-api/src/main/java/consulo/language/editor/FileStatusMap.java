@@ -19,8 +19,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,19 +30,19 @@ public interface FileStatusMap {
      * @return null for processed file, whole file for untouched or entirely dirty file, range(usually code block) for dirty region (optimization)
      */
     @Nullable
-    TextRange getFileDirtyScope(@Nonnull Document document, int passId);
+    TextRange getFileDirtyScope(Document document, int passId);
 
-    void setErrorFoundFlag(@Nonnull Project project, @Nonnull Document document, boolean errorFound);
+    void setErrorFoundFlag(Project project, Document document, boolean errorFound);
 
-    void markFileUpToDate(@Nonnull Document document, int passId);
+    void markFileUpToDate(Document document, int passId);
 
     boolean wasErrorFound(Document document);
 
-    void markAllFilesDirty(@Nonnull Object reason);
+    void markAllFilesDirty(Object reason);
 
-    void markFileScopeDirtyDefensively(@Nonnull PsiFile file, @Nonnull Object reason);
+    void markFileScopeDirtyDefensively(PsiFile file, Object reason);
 
-    void markFileScopeDirty(@Nonnull Document document, @Nonnull TextRange scope, int fileLength, @Nonnull Object reason);
+    void markFileScopeDirty(Document document, TextRange scope, int fileLength, Object reason);
 
-    boolean allDirtyScopesAreNull(@Nonnull Document document);
+    boolean allDirtyScopesAreNull(Document document);
 }

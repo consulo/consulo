@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
 public abstract class ArtifactPropertiesProvider {
     private final String myId;
 
-    protected ArtifactPropertiesProvider(@Nonnull String id) {
+    protected ArtifactPropertiesProvider(String id) {
         myId = id;
     }
 
@@ -37,15 +36,15 @@ public abstract class ArtifactPropertiesProvider {
         return myId;
     }
 
-    public boolean isAvailableFor(@Nonnull ArtifactType type) {
+    public boolean isAvailableFor(ArtifactType type) {
         return true;
     }
 
-    @Nonnull
-    public abstract ArtifactProperties<?> createProperties(@Nonnull ArtifactType artifactType);
+    
+    public abstract ArtifactProperties<?> createProperties(ArtifactType artifactType);
 
     @Nullable
-    public static ArtifactPropertiesProvider findById(@Nonnull String id) {
+    public static ArtifactPropertiesProvider findById(String id) {
         return Application.get().getExtensionPoint(ArtifactPropertiesProvider.class)
             .findFirstSafe(provider -> provider.getId().equals(id));
     }

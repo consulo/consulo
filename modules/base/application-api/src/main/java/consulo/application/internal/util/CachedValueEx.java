@@ -16,12 +16,11 @@
 package consulo.application.internal.util;
 
 import consulo.application.util.CachedValueProvider;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2023-11-05
  */
 public interface CachedValueEx<T> {
-    T setValue(@Nonnull CachedValueProvider.Result<T> result);
+    T setValue(CachedValueProvider.Result<T> result);
 }

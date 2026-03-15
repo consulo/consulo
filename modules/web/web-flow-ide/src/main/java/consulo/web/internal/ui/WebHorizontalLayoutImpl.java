@@ -22,8 +22,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -44,15 +43,15 @@ public class WebHorizontalLayoutImpl extends WebLayoutImpl<WebHorizontalLayoutIm
         toVaadinComponent().setAlignItems(FlexComponent.Alignment.CENTER);
     }
 
-    @Nonnull
+    
     @Override
-    public HorizontalLayout add(@Nonnull Component component, @Nonnull StaticPosition constraint) {
+    public HorizontalLayout add(Component component, StaticPosition constraint) {
         toVaadinComponent().add(TargetVaddin.to(component));
         return this;
     }
 
     @Override
-    @Nonnull
+    
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }

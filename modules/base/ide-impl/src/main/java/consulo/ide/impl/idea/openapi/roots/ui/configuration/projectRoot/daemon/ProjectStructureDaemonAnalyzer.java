@@ -11,8 +11,7 @@ import consulo.application.AccessRule;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -115,11 +114,11 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     Application.get().getLastUIAccess().give(runnable);
   }
 
-  public void queueUpdate(@Nonnull ProjectStructureElement element) {
+  public void queueUpdate(ProjectStructureElement element) {
     queueUpdate(element, true, true);
   }
 
-  private void queueUpdate(@Nonnull ProjectStructureElement element, boolean check, boolean collectUsages) {
+  private void queueUpdate(ProjectStructureElement element, boolean check, boolean collectUsages) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("start " + (check ? "checking " : "") + (collectUsages ? "collecting usages " : "") + "for " + element);
     }
@@ -188,7 +187,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     }
   }
 
-  private void addUsage(@Nonnull ProjectStructureElementUsage usage) {
+  private void addUsage(ProjectStructureElementUsage usage) {
     mySourceElement2Usages.put(usage.getSourceElement(), usage);
     myContainingElement2Usages.put(usage.getContainingElement(), usage);
   }
@@ -288,7 +287,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
       return myElement.equals(other.myElement) && (!other.myCheck || myCheck) && (!other.myCollectUsages || myCollectUsages);
     }
 
-    @Nonnull
+    
     @Override
     public Object[] getEqualityObjects() {
       return myEqualityObjects;

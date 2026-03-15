@@ -27,7 +27,6 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.ui.awt.StringComboboxEditor;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -41,7 +40,7 @@ public class ComboEditorCompletionContributor extends CompletionContributor impl
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
+  public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
     if (parameters.getInvocationCount() == 0) {
       return;
     }
@@ -77,7 +76,7 @@ public class ComboEditorCompletionContributor extends CompletionContributor impl
     }
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

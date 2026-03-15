@@ -21,7 +21,6 @@ import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -44,18 +43,18 @@ public abstract class SimpleMacro extends Macro {
   }
 
   @Override
-  @Nonnull
+  
   public String getDefaultValue() {
     return "11.11.1111";
   }
 
   @Override
-  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateResult(Expression[] params, ExpressionContext context) {
     return new TextResult(evaluateSimpleMacro(params, context));
   }
 
   @Override
-  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateQuickResult(Expression[] params, ExpressionContext context) {
     return calculateResult(params, context);
   }
 

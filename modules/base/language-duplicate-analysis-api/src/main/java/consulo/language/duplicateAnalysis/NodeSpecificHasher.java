@@ -17,7 +17,6 @@
 package consulo.language.duplicateAnalysis;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -43,9 +42,9 @@ public abstract class NodeSpecificHasher implements DuplocateVisitor {
   /**
    * This is dual function to getNodeCost, checks whether 2 nodes with same costs are really equal
    */
-  public abstract boolean areNodesEqual(@Nonnull PsiElement node1, @Nonnull PsiElement node2);
+  public abstract boolean areNodesEqual(PsiElement node1, PsiElement node2);
 
-  public boolean areTreesEqual(@Nonnull PsiElement root1, @Nonnull PsiElement root2, int discardCost) {
+  public boolean areTreesEqual(PsiElement root1, PsiElement root2, int discardCost) {
     return TreeComparator.areEqual(root1, root2, this, discardCost);
   }
 

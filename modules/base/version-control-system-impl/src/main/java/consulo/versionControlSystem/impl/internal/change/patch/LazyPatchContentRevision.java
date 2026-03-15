@@ -25,7 +25,6 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.AccessRule;
 
-import jakarta.annotation.Nonnull;
 
 public class LazyPatchContentRevision implements ContentRevision {
   private volatile String myContent;
@@ -73,12 +72,12 @@ public class LazyPatchContentRevision implements ContentRevision {
     return myPatchApplyFailed;
   }
 
-  @Nonnull
+  
   public FilePath getFile() {
     return myNewFilePath;
   }
 
-  @Nonnull
+  
   public VcsRevisionNumber getRevisionNumber() {
     return new VcsRevisionNumber() {
       public String asString() {

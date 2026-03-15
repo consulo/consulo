@@ -25,9 +25,8 @@ import consulo.ui.ex.awt.Messages;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeListener;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
@@ -94,7 +93,7 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     }
 
     @Override
-    public @Nonnull JComponent getComponent() {
+    public JComponent getComponent() {
         return editorModel.getComponent();
     }
 
@@ -104,12 +103,12 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     }
 
     @Override
-    public @Nonnull String getName() {
+    public String getName() {
         return EditorBundle.message("large.file.editor.title");
     }
 
     @Override
-    public void setState(@Nonnull FileEditorState state) {
+    public void setState(FileEditorState state) {
         if (state instanceof LargeFileEditorState largeFileEditorState) {
             editorModel.setCaretAndShow(largeFileEditorState.caretPageNumber,
                 largeFileEditorState.caretSymbolOffsetInPage);
@@ -117,7 +116,7 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     }
 
     @Override
-    public @Nonnull FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+    public FileEditorState getState(FileEditorStateLevel level) {
         LargeFileEditorState state = new LargeFileEditorState();
         state.caretPageNumber = editorModel.getCaretPageNumber();
         state.caretSymbolOffsetInPage = editorModel.getCaretPageOffset();
@@ -135,11 +134,11 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull kava.beans.PropertyChangeListener listener) {
+    public void addPropertyChangeListener(kava.beans.PropertyChangeListener listener) {
     }
 
     @Override
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
     }
 
     @Override
@@ -167,7 +166,7 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     }
 
     @Override
-    public void trySetHighlighter(@Nonnull EditorHighlighter highlighter) {
+    public void trySetHighlighter(EditorHighlighter highlighter) {
         editorModel.trySetHighlighter(highlighter);
     }
 
@@ -187,7 +186,7 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     }
 
     @Override
-    public @Nonnull VirtualFile getFile() {
+    public VirtualFile getFile() {
         return vFile;
     }
 
@@ -195,17 +194,17 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     public LargeFileEditorAccess createAccessForEncodingWidget() {
         return new LargeFileEditorAccess() {
             @Override
-            public @Nonnull VirtualFile getVirtualFile() {
+            public VirtualFile getVirtualFile() {
                 return getFile();
             }
 
             @Override
-            public @Nonnull Editor getEditor() {
+            public Editor getEditor() {
                 return LargeFileEditorImpl.this.getEditor();
             }
 
             @Override
-            public boolean tryChangeEncoding(@Nonnull Charset charset) {
+            public boolean tryChangeEncoding(Charset charset) {
 
                 if (fileManager.hasBOM()) {
                     Messages.showWarningDialog(
@@ -238,7 +237,7 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     }
 
     @Override
-    public @Nonnull LargeFileEditorModel getEditorModel() {
+    public LargeFileEditorModel getEditorModel() {
         return editorModel;
     }
 
@@ -258,7 +257,7 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
 
     private final class MyCaretListener implements CaretListener {
         @Override
-        public void caretPositionChanged(@Nonnull CaretEvent e) {
+        public void caretPositionChanged(CaretEvent e) {
             searchManager.onCaretPositionChanged(e);
         }
     }

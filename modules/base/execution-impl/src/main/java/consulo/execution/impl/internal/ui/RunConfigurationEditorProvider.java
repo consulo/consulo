@@ -23,7 +23,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,27 +32,27 @@ import jakarta.annotation.Nonnull;
 public class RunConfigurationEditorProvider implements ConfigurationFileEditorProvider {
     public static final String RUN_CONFIGURATION_ID = "RUN_CONFIGURATION_ID";
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "run_configuration";
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.actionsExecute();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Run Configurations");
     }
 
-    @Nonnull
+    
     @Override
-    public ConfigurationFileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public ConfigurationFileEditor createEditor(Project project, VirtualFile file) {
         return new RunConfigurationFileEditor(project, file);
     }
 }

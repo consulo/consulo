@@ -23,8 +23,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -48,15 +47,15 @@ public class HttpRequestImpl implements HttpRequest {
     myQueryStringDecoder = urlDecoder;
   }
 
-  @Nonnull
+  
   @Override
   public HttpMethod method() {
     return myMethod;
   }
 
-  @Nonnull
+  
   @Override
-  public String getContentAsString(@Nonnull Charset charset) throws IOException {
+  public String getContentAsString(Charset charset) throws IOException {
     return myFullHttpRequest.content().toString(charset);
   }
 
@@ -65,13 +64,13 @@ public class HttpRequestImpl implements HttpRequest {
     return ByteBufUtil.getBytes(myFullHttpRequest.content());
   }
 
-  @Nonnull
+  
   @Override
   public String uri() {
     return myFullHttpRequest.uri();
   }
 
-  @Nonnull
+  
   @Override
   public String path() {
     return myQueryStringDecoder.path();
@@ -79,13 +78,13 @@ public class HttpRequestImpl implements HttpRequest {
 
   @Nullable
   @Override
-  public String getHeaderValue(@Nonnull String headerName) {
+  public String getHeaderValue(String headerName) {
     return myFullHttpRequest.headers().getAsString(headerName);
   }
 
   @Nullable
   @Override
-  public String getParameterValue(@Nonnull String parameter) {
+  public String getParameterValue(String parameter) {
     return ContainerUtil.getFirstItem(myQueryStringDecoder.parameters().get(parameter));
   }
 

@@ -20,7 +20,6 @@ import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +38,7 @@ public abstract class ProjectViewNodeWithChildrenList<T> extends ProjectViewNode
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {
     return myChildren;

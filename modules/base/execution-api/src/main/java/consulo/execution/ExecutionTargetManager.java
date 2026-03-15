@@ -8,29 +8,28 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ExecutionTargetManager {
-  @Nonnull
-  public static ExecutionTargetManager getInstance(@Nonnull Project project) {
+  
+  public static ExecutionTargetManager getInstance(Project project) {
     return project.getInstance(ExecutionTargetManager.class);
   }
 
-  @Nonnull
-  public static ExecutionTarget getActiveTarget(@Nonnull Project project) {
+  
+  public static ExecutionTarget getActiveTarget(Project project) {
     return getInstance(project).getActiveTarget();
   }
 
-  public static void setActiveTarget(@Nonnull Project project, @Nonnull ExecutionTarget target) {
+  public static void setActiveTarget(Project project, ExecutionTarget target) {
     getInstance(project).setActiveTarget(target);
   }
 
-  @Nonnull
-  public static List<ExecutionTarget> getTargetsToChooseFor(@Nonnull Project project, @Nullable RunConfiguration configuration) {
+  
+  public static List<ExecutionTarget> getTargetsToChooseFor(Project project, @Nullable RunConfiguration configuration) {
     List<ExecutionTarget> result = getInstance(project).getTargetsFor(configuration);
     if (result.size() == 1 && DefaultExecutionTarget.INSTANCE.equals(result.get(0))) return Collections.emptyList();
     result = Collections.unmodifiableList(ContainerUtil.filter(result, target -> !target.isExternallyManaged()));
@@ -57,23 +56,23 @@ public abstract class ExecutionTargetManager {
     }
   }
 
-  public static boolean canRun(@Nonnull ExecutionEnvironment environment) {
+  public static boolean canRun(ExecutionEnvironment environment) {
     RunnerAndConfigurationSettings settings = environment.getRunnerAndConfigurationSettings();
     return settings != null && canRun(settings.getConfiguration(), environment.getExecutionTarget());
   }
 
-  public abstract boolean doCanRun(@Nullable RunConfiguration configuration, @Nonnull ExecutionTarget target);
+  public abstract boolean doCanRun(@Nullable RunConfiguration configuration, ExecutionTarget target);
 
-  public static void update(@Nonnull Project project) {
+  public static void update(Project project) {
     getInstance(project).update();
   }
 
-  @Nonnull
+  
   public abstract ExecutionTarget getActiveTarget();
 
-  public abstract void setActiveTarget(@Nonnull ExecutionTarget target);
+  public abstract void setActiveTarget(ExecutionTarget target);
 
-  @Nonnull
+  
   public abstract List<ExecutionTarget> getTargetsFor(@Nullable RunConfiguration configuration);
 
   public abstract void update();

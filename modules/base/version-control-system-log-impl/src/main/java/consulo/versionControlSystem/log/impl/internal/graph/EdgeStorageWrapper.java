@@ -23,8 +23,7 @@ import consulo.versionControlSystem.log.graph.EdgeFilter;
 import consulo.versionControlSystem.log.graph.GraphEdge;
 import consulo.versionControlSystem.log.graph.GraphEdgeType;
 import consulo.versionControlSystem.log.graph.LinearGraph;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,33 +33,33 @@ import java.util.function.Function;
 import static consulo.versionControlSystem.log.graph.LinearGraphUtils.intEqual;
 
 public class EdgeStorageWrapper {
-  @Nonnull
+  
   private final EdgeStorage myEdgeStorage;
-  @Nonnull
+  
   private final Function<Integer, Integer> myGetNodeIndexById;
-  @Nonnull
+  
   private final Function<Integer, Integer> myGetNodeIdByIndex;
 
-  public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage, @Nonnull LinearGraph graph) {
+  public EdgeStorageWrapper(EdgeStorage edgeStorage, LinearGraph graph) {
     this(edgeStorage, graph::getNodeIndex, graph::getNodeId);
   }
 
   public EdgeStorageWrapper(
-    @Nonnull EdgeStorage edgeStorage,
-    @Nonnull Function<Integer, Integer> getNodeIndexById,
-    @Nonnull Function<Integer, Integer> getNodeIdByIndex
+    EdgeStorage edgeStorage,
+    Function<Integer, Integer> getNodeIndexById,
+    Function<Integer, Integer> getNodeIdByIndex
   ) {
     myEdgeStorage = edgeStorage;
     myGetNodeIndexById = getNodeIndexById;
     myGetNodeIdByIndex = getNodeIdByIndex;
   }
 
-  public void removeEdge(@Nonnull GraphEdge graphEdge) {
+  public void removeEdge(GraphEdge graphEdge) {
     Couple<Integer> nodeIds = getNodeIds(graphEdge);
     myEdgeStorage.removeEdge(nodeIds.first, nodeIds.second, graphEdge.getType());
   }
 
-  public void createEdge(@Nonnull GraphEdge graphEdge) {
+  public void createEdge(GraphEdge graphEdge) {
     Couple<Integer> nodeIds = getNodeIds(graphEdge);
     myEdgeStorage.createEdge(nodeIds.first, nodeIds.second, graphEdge.getType());
   }
@@ -73,8 +72,8 @@ public class EdgeStorageWrapper {
     return false;
   }
 
-  @Nonnull
-  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
+  
+  public List<GraphEdge> getAdjacentEdges(int nodeIndex, EdgeFilter filter) {
     List<GraphEdge> result = new SmartList<>();
     for (Pair<Integer, GraphEdgeType> retrievedEdge : myEdgeStorage.getEdges(myGetNodeIdByIndex.apply(nodeIndex))) {
       GraphEdge edge = decompressEdge(nodeIndex, retrievedEdge.first, retrievedEdge.second);
@@ -83,7 +82,7 @@ public class EdgeStorageWrapper {
     return result;
   }
 
-  @Nonnull
+  
   public Set<GraphEdge> getEdges() {
     Set<GraphEdge> result = new HashSet<>();
     for (int id : myEdgeStorage.getKnownIds()) {
@@ -92,8 +91,8 @@ public class EdgeStorageWrapper {
     return result;
   }
 
-  @Nonnull
-  private Couple<Integer> getNodeIds(@Nonnull GraphEdge graphEdge) {
+  
+  private Couple<Integer> getNodeIds(GraphEdge graphEdge) {
     if (graphEdge.getUpNodeIndex() != null) {
       Integer mainId = myGetNodeIdByIndex.apply(graphEdge.getUpNodeIndex());
       if (graphEdge.getDownNodeIndex() != null) {
@@ -110,7 +109,7 @@ public class EdgeStorageWrapper {
   }
 
   @Nullable
-  private GraphEdge decompressEdge(int nodeIndex, @Nullable Integer targetId, @Nonnull GraphEdgeType edgeType) {
+  private GraphEdge decompressEdge(int nodeIndex, @Nullable Integer targetId, GraphEdgeType edgeType) {
     if (edgeType.isNormalEdge()) {
       assert targetId != null;
       Integer anotherNodeIndex = myGetNodeIndexById.apply(targetId);
@@ -123,7 +122,7 @@ public class EdgeStorageWrapper {
     }
   }
 
-  private static boolean matchedEdge(int startNodeIndex, @Nullable GraphEdge edge, @Nonnull EdgeFilter filter) {
+  private static boolean matchedEdge(int startNodeIndex, @Nullable GraphEdge edge, EdgeFilter filter) {
     if (edge == null) return false;
     if (edge.getType().isNormalEdge()) {
       return (startNodeIndex == convertToInt(edge.getDownNodeIndex()) && filter.upNormal) ||

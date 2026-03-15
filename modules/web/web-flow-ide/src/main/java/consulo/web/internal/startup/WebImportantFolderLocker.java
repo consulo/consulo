@@ -18,7 +18,6 @@ package consulo.web.internal.startup;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.ImportantFolderLocker;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -26,10 +25,10 @@ import java.util.function.Consumer;
  * @since 2019-02-23
  */
 public class WebImportantFolderLocker implements ImportantFolderLocker {
-  public WebImportantFolderLocker(@Nonnull String configPath, @Nonnull String systemPath) {
+  public WebImportantFolderLocker(String configPath, String systemPath) {
   }
 
-  @Nonnull
+  
   @Override
   public ActivateStatus lock(String[] args) throws Exception {
     return ActivateStatus.NO_INSTANCE;

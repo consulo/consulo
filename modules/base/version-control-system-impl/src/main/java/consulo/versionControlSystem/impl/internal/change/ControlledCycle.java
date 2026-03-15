@@ -19,7 +19,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
@@ -35,7 +34,7 @@ public class ControlledCycle {
 
   private final AtomicBoolean myActive;
 
-  public ControlledCycle(final Project project, final BooleanSupplier callback, @Nonnull String name, int refreshInterval) {
+  public ControlledCycle(final Project project, final BooleanSupplier callback, String name, int refreshInterval) {
     myRefreshInterval = (refreshInterval <= 0) ? ourRefreshInterval : refreshInterval;
     myActive = new AtomicBoolean(false);
     myRunnable = new Runnable() {

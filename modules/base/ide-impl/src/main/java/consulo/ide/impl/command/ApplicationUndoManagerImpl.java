@@ -22,7 +22,6 @@ import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ApplicationUndoProvider;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -41,7 +40,7 @@ public class ApplicationUndoManagerImpl extends UndoManagerImpl implements Appli
     }
 
     @Override
-    protected void forEachProvider(@Nonnull Consumer<? super UndoProvider> consumer) {
+    protected void forEachProvider(Consumer<? super UndoProvider> consumer) {
         myApplication.getExtensionPoint(ApplicationUndoProvider.class).forEachExtensionSafe(consumer);
     }
 }

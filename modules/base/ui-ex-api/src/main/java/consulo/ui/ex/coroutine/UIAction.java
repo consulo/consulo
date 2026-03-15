@@ -20,7 +20,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -32,11 +31,11 @@ import java.util.function.Function;
  * @since 2026-01-31
  */
 public class UIAction<I, O> extends CoroutineStep<I, O> {
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess @Nonnull Function<I, O> function) {
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess Function<I, O> function) {
         return new UIAction<>((i, c) -> function.apply(i));
     }
 
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess @Nonnull BiFunction<I, Continuation<?>, O> function) {
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess BiFunction<I, Continuation<?>, O> function) {
         return new UIAction<>(function);
     }
 

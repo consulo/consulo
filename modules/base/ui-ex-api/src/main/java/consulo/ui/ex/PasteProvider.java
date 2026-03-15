@@ -19,18 +19,17 @@ package consulo.ui.ex;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 public interface PasteProvider {
   Key<PasteProvider> KEY = Key.create(PasteProvider.class);
 
-  void performPaste(@Nonnull DataContext dataContext);
+  void performPaste(DataContext dataContext);
 
   /**
    * Should perform fast and memory cheap negation. May return incorrect true.
    * See #12326
    */
-  boolean isPastePossible(@Nonnull DataContext dataContext);
+  boolean isPastePossible(DataContext dataContext);
 
-  boolean isPasteEnabled(@Nonnull DataContext dataContext);
+  boolean isPasteEnabled(DataContext dataContext);
 }

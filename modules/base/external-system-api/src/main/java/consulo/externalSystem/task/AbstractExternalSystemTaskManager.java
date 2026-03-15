@@ -20,8 +20,7 @@ import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -31,12 +30,12 @@ import java.util.List;
  */
 public abstract class AbstractExternalSystemTaskManager<S extends ExternalSystemExecutionSettings> implements ExternalSystemTaskManager<S> {
 
-  public abstract void executeTasks(@Nonnull ExternalSystemTaskId id,
-                                    @Nonnull List<String> taskNames,
-                                    @Nonnull String projectPath,
+  public abstract void executeTasks(ExternalSystemTaskId id,
+                                    List<String> taskNames,
+                                    String projectPath,
                                     @Nullable S settings,
-                                    @Nonnull List<String> vmOptions,
-                                    @Nonnull List<String> scriptParameters,
+                                    List<String> vmOptions,
+                                    List<String> scriptParameters,
                                     @Nullable String debuggerSetup,
-                                    @Nonnull ExternalSystemTaskNotificationListener listener) throws ExternalSystemException;
+                                    ExternalSystemTaskNotificationListener listener) throws ExternalSystemException;
 }

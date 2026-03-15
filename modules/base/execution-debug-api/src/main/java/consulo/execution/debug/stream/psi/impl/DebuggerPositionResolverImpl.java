@@ -8,12 +8,11 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class DebuggerPositionResolverImpl implements DebuggerPositionResolver {
   @Override
-  public @Nullable PsiElement getNearestElementToBreakpoint(@Nonnull XDebugSession session) {
+  public @Nullable PsiElement getNearestElementToBreakpoint(XDebugSession session) {
     final XSourcePosition position = session.getCurrentPosition();
     if (position == null) return null;
 

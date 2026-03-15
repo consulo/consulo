@@ -18,14 +18,13 @@ package consulo.web.internal.ui.editor;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2018-05-10
  */
 public class WebFoldingModelImpl extends CodeEditorFoldingModelBase {
-  public WebFoldingModelImpl(@Nonnull CodeEditorBase editor) {
+  public WebFoldingModelImpl(CodeEditorBase editor) {
     super(editor);
   }
 }

@@ -11,8 +11,7 @@ import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "postfix", order = "last")
 public class PostfixTemplateCompletionContributor extends CompletionContributor {
@@ -21,7 +20,7 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
     }
 
     @Nullable
-    public static PostfixLiveTemplate getPostfixLiveTemplate(@Nonnull PsiFile file, @Nonnull Editor editor) {
+    public static PostfixLiveTemplate getPostfixLiveTemplate(PsiFile file, Editor editor) {
         PostfixLiveTemplate postfixLiveTemplate = CustomLiveTemplate.EP_NAME.findExtension(PostfixLiveTemplate.class);
         TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
         return postfixLiveTemplate != null
@@ -30,7 +29,7 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
             : null;
     }
 
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
         return Language.ANY;

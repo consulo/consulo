@@ -5,7 +5,6 @@ import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +44,7 @@ public abstract class JBValue {
   /**
    * Returns scaled rounded to int (according to {@code rm}) value.
    */
-  public int get(@Nonnull RoundingMode rm) {
+  public int get(RoundingMode rm) {
     return rm.round(JBUI.scale(getUnscaled()));
   }
 
@@ -61,11 +60,11 @@ public abstract class JBValue {
    */
   public static class UIInteger extends JBValue {
     private final
-    @Nonnull
+    
     String key;
     private final int defValue;
 
-    public UIInteger(@Nonnull String key, int defValue) {
+    public UIInteger(String key, int defValue) {
       this.key = key;
       this.defValue = defValue;
     }
@@ -116,7 +115,7 @@ public abstract class JBValue {
     }
 
     @Override
-    public int get(@Nonnull RoundingMode rm) {
+    public int get(RoundingMode rm) {
       return rm.round(cachedScaledValue);
     }
 

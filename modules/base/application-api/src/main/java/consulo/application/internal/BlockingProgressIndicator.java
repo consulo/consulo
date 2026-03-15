@@ -16,11 +16,10 @@
 package consulo.application.internal;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
 public interface BlockingProgressIndicator extends ProgressIndicatorEx {
     @RequiredUIAccess
-    void startBlocking(@Nonnull Runnable init, @Nonnull CompletableFuture<?> stopCondition);
+    void startBlocking(Runnable init, CompletableFuture<?> stopCondition);
 }

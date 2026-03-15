@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.ListPopupStep;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Function;
@@ -35,17 +34,17 @@ import java.util.function.Function;
 @DeprecationInfo("Do not depend to Swing classes")
 public interface AWTPopupFactory {
     @Deprecated
-    <T> AWTPopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list);
+    <T> AWTPopupChooserBuilder<T> createListPopupBuilder(JList<T> list);
 
-    AWTListPopup createListPopup(@Nonnull Project project,
-                                 @Nonnull ListPopupStep step,
-                                 @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory);
+    AWTListPopup createListPopup(Project project,
+                                 ListPopupStep step,
+                                 Function<AWTListPopup, ListCellRenderer> rendererFactory);
 
-    AWTListPopup createListPopup(@Nonnull Project project,
-                                 @Nonnull ListPopupStep step,
+    AWTListPopup createListPopup(Project project,
+                                 ListPopupStep step,
                                  @Nullable AWTListPopup parentPopup,
-                                 @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory,
-                                 @Nonnull AWTPopupSubFactory factory);
+                                 Function<AWTListPopup, ListCellRenderer> rendererFactory,
+                                 AWTPopupSubFactory factory);
 
     int getPointerLength(Balloon.Position position, boolean dialogMode);
 

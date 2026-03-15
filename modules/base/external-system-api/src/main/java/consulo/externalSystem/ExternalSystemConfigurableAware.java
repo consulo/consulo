@@ -17,7 +17,6 @@ package consulo.externalSystem;
 
 import consulo.configurable.Configurable;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -25,6 +24,6 @@ import jakarta.annotation.Nonnull;
  */
 public interface ExternalSystemConfigurableAware {
 
-  @Nonnull
-  Configurable getConfigurable(@Nonnull Project project);
+  
+  Configurable getConfigurable(Project project);
 }

@@ -20,7 +20,6 @@ import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -39,7 +38,7 @@ public class DeleteNameDescriptionLocation extends ElementDescriptionLocation {
 
   public static class DefaultProvider implements ElementDescriptionProvider {
     @Override
-    public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+    public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
       if (location instanceof DeleteNameDescriptionLocation) {
         if (element instanceof PsiNamedElement) {
           return ((PsiNamedElement)element).getName();

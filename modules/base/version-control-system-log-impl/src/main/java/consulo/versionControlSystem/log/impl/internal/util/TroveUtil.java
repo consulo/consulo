@@ -24,8 +24,7 @@ import gnu.trove.TIntIterator;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -37,8 +36,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class TroveUtil {
-  @Nonnull
-  public static <T> Stream<T> streamValues(@Nonnull TIntObjectHashMap<T> map) {
+  
+  public static <T> Stream<T> streamValues(TIntObjectHashMap<T> map) {
     TIntObjectIterator<T> it = map.iterator();
     return Stream.generate(() -> {
       it.advance();
@@ -46,8 +45,8 @@ public class TroveUtil {
     }).limit(map.size());
   }
 
-  @Nonnull
-  public static IntStream streamKeys(@Nonnull TIntObjectHashMap<?> map) {
+  
+  public static IntStream streamKeys(TIntObjectHashMap<?> map) {
     TIntObjectIterator<?> it = map.iterator();
     return IntStream.generate(() -> {
       it.advance();
@@ -55,13 +54,13 @@ public class TroveUtil {
     }).limit(map.size());
   }
 
-  @Nonnull
-  public static IntStream stream(@Nonnull IntList list) {
+  
+  public static IntStream stream(IntList list) {
     return list.stream();
   }
 
-  @Nonnull
-  public static Set<Integer> intersect(@Nonnull IntSet... sets) {
+  
+  public static Set<Integer> intersect(IntSet... sets) {
     IntSet result = null;
 
     Arrays.sort(sets, (set1, set2) -> {
@@ -102,32 +101,32 @@ public class TroveUtil {
     return result;
   }
 
-  @Nonnull
-  private static Set<Integer> createJavaSet(@Nonnull IntSet set) {
+  
+  private static Set<Integer> createJavaSet(IntSet set) {
     Set<Integer> result = new HashSet<>(set.size());
     set.forEach(result::add);
     return result;
   }
 
-  public static void addAll(@Nonnull TIntHashSet where, @Nonnull TIntHashSet what) {
+  public static void addAll(TIntHashSet where, TIntHashSet what) {
     what.forEach(value -> {
       where.add(value);
       return true;
     });
   }
 
-  @Nonnull
-  public static IntStream stream(@Nonnull TIntHashSet set) {
+  
+  public static IntStream stream(TIntHashSet set) {
     TIntIterator it = set.iterator();
     return IntStream.generate(it::next).limit(set.size());
   }
 
-  @Nonnull
-  public static <T> List<T> map(@Nonnull TIntHashSet set, @Nonnull IntFunction<T> function) {
+  
+  public static <T> List<T> map(TIntHashSet set, IntFunction<T> function) {
     return stream(set).mapToObj(function).collect(Collectors.toList());
   }
 
-  public static void processBatches(@Nonnull IntStream stream, int batchSize, @Nonnull Consumer<TIntHashSet> consumer) {
+  public static void processBatches(IntStream stream, int batchSize, Consumer<TIntHashSet> consumer) {
     Ref<TIntHashSet> batch = new Ref<>(new TIntHashSet());
     stream.forEach(commit -> {
       batch.get().add(commit);

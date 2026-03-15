@@ -23,7 +23,6 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl> {
-    @Nonnull
+    
     public static ModuleOrderEntryType getInstance() {
         return EP_NAME.findExtensionOrFail(ModuleOrderEntryType.class);
     }
@@ -42,17 +41,17 @@ public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl
     private static final String EXPORTED_ATTR = "exported";
     private static final String PRODUCTION_ON_TEST_ATTRIBUTE = "production-on-test";
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public ModuleOrderEntryImpl loadOrderEntry(
-        @Nonnull Element element,
-        @Nonnull ModuleRootLayer moduleRootLayer
+        Element element,
+        ModuleRootLayer moduleRootLayer
     ) throws InvalidDataException {
         String moduleName = element.getAttributeValue(MODULE_NAME_ATTR);
         if (moduleName == null) {
@@ -71,7 +70,7 @@ public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl
     }
 
     @Override
-    public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleOrderEntryImpl orderEntry) {
+    public void storeOrderEntry(Element element, ModuleOrderEntryImpl orderEntry) {
         element.setAttribute(MODULE_NAME_ATTR, orderEntry.getModuleName());
         if (orderEntry.isExported()) {
             element.setAttribute(EXPORTED_ATTR, "");

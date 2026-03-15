@@ -42,8 +42,7 @@ import consulo.usage.UsageView;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -64,7 +63,7 @@ import java.util.function.Consumer;
 @ServiceImpl
 public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactory {
     private static class NavigateOrPopupBuilderImpl extends PsiElementListNavigator.NavigateOrPopupBuilder {
-        public NavigateOrPopupBuilderImpl(@Nonnull NavigatablePsiElement[] targets, String title) {
+        public NavigateOrPopupBuilderImpl(NavigatablePsiElement[] targets, String title) {
             super(targets, title);
         }
 
@@ -144,7 +143,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
                 ListComponentUpdater popupUpdater = builder.getBackgroundUpdater();
                 myListUpdaterTask.init(popup, new ListComponentUpdater<>() {
                     @Override
-                    public void replaceModel(@Nonnull List<? extends PsiElement> data) {
+                    public void replaceModel(List<? extends PsiElement> data) {
                         updatedTargetsList.set(data.toArray(NavigatablePsiElement.EMPTY_ARRAY));
                         popupUpdater.replaceModel(data);
                     }
@@ -159,14 +158,14 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
         }
     }
 
-    @Nonnull
+    
     @Override
-    public PsiElementListNavigator.NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title) {
+    public PsiElementListNavigator.NavigateOrPopupBuilder builder(NavigatablePsiElement[] targets, String title) {
         return new NavigateOrPopupBuilderImpl(targets, title);
     }
 
     @Override
-    @Nonnull
+    
     public JBPopup getPsiElementPopup(Object[] elements,
                                       Map<PsiElement, GotoRelatedItem> itemsMap,
                                       String title,

@@ -21,8 +21,7 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.util.io.PathUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -35,18 +34,18 @@ public abstract class DefaultVcsRootPolicy {
     return project.getInstance(DefaultVcsRootPolicy.class);
   }
 
-  @Nonnull
-  public abstract Collection<VirtualFile> getDefaultVcsRoots(@Nonnull VcsMapping mappingList, @Nonnull String vcsName);
+  
+  public abstract Collection<VirtualFile> getDefaultVcsRoots(VcsMapping mappingList, String vcsName);
 
-  public abstract boolean matchesDefaultMapping(@Nonnull VirtualFile file, Object matchContext);
+  public abstract boolean matchesDefaultMapping(VirtualFile file, Object matchContext);
 
   @Nullable
   public abstract Object getMatchContext(VirtualFile file);
 
   @Nullable
-  public abstract VirtualFile getVcsRootFor(@Nonnull VirtualFile file);
+  public abstract VirtualFile getVcsRootFor(VirtualFile file);
 
-  public String getProjectConfigurationMessage(@Nonnull Project project) {
+  public String getProjectConfigurationMessage(Project project) {
     boolean isDirectoryBased = ProjectCoreUtil.isDirectoryBased(project);
     StringBuilder sb = new StringBuilder("Content roots of all modules");
     if (isDirectoryBased) {

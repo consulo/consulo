@@ -37,8 +37,7 @@ import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -55,10 +54,10 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
     private final Project myProject;
 
     public AbstractFileTreeTable(
-        @Nonnull Project project,
-        @Nonnull Class<T> valueClass,
-        @Nonnull String valueTitle,
-        @Nonnull VirtualFileFilter filter,
+        Project project,
+        Class<T> valueClass,
+        String valueTitle,
+        VirtualFileFilter filter,
         boolean showProjectNode
     ) {
         super(new MyModel<>(project, valueClass, valueTitle, filter));
@@ -187,7 +186,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         return ret != 2;
     }
 
-    @Nonnull
+    
     public Map<VirtualFile, T> getValues() {
         return myModel.getValues();
     }
@@ -202,7 +201,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         return tableRenderer;
     }
 
-    public void reset(@Nonnull Map<VirtualFile, T> mappings) {
+    public void reset(Map<VirtualFile, T> mappings) {
         myModel.reset(mappings);
         TreeNode root = (TreeNode) myModel.getRoot();
         myModel.nodeChanged(root);
@@ -217,7 +216,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         }
     }
 
-    private void select(@Nonnull VirtualFile toSelect, TreeNode root) {
+    private void select(VirtualFile toSelect, TreeNode root) {
         for (int i = 0; i < root.getChildCount(); i++) {
             TreeNode child = root.getChildAt(i);
             VirtualFile file = ((FileNode) child).getObject();
@@ -243,10 +242,10 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         private AbstractFileTreeTable<T> myTreeTable;
 
         private MyModel(
-            @Nonnull Project project,
-            @Nonnull Class<T> valueClass,
-            @Nonnull String valueTitle,
-            @Nonnull VirtualFileFilter filter
+            Project project,
+            Class<T> valueClass,
+            String valueTitle,
+            VirtualFileFilter filter
         ) {
             super(new ProjectRootNode(project, filter));
             myValueClass = valueClass;
@@ -334,7 +333,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
             fireTreeNodesChanged(this, new Object[]{getRoot()}, null, null);
         }
 
-        public void reset(@Nonnull Map<VirtualFile, T> mappings) {
+        public void reset(Map<VirtualFile, T> mappings) {
             myCurrentMapping.clear();
             myCurrentMapping.putAll(mappings);
             ((ProjectRootNode) getRoot()).clearCachedChildren();
@@ -348,17 +347,17 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
     public static class ProjectRootNode extends ConvenientNode<Project> {
         private VirtualFileFilter myFilter;
 
-        public ProjectRootNode(@Nonnull Project project) {
+        public ProjectRootNode(Project project) {
             this(project, VirtualFileFilter.ALL);
         }
 
-        public ProjectRootNode(@Nonnull Project project, @Nonnull VirtualFileFilter filter) {
+        public ProjectRootNode(Project project, VirtualFileFilter filter) {
             super(project);
             myFilter = filter;
         }
 
         @Override
-        protected void appendChildrenTo(@Nonnull Collection<ConvenientNode> children) {
+        protected void appendChildrenTo(Collection<ConvenientNode> children) {
             Project project = getObject();
             VirtualFile[] roots = ProjectRootManager.getInstance(project).getContentRoots();
 
@@ -387,7 +386,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
             return myObject;
         }
 
-        protected abstract void appendChildrenTo(@Nonnull Collection<ConvenientNode> children);
+        protected abstract void appendChildrenTo(Collection<ConvenientNode> children);
 
         @Override
         public int getChildCount() {
@@ -457,18 +456,18 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         private final Project myProject;
         private VirtualFileFilter myFilter;
 
-        public FileNode(@Nonnull VirtualFile file, @Nonnull Project project) {
+        public FileNode(VirtualFile file, Project project) {
             this(file, project, VirtualFileFilter.ALL);
         }
 
-        public FileNode(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull VirtualFileFilter filter) {
+        public FileNode(VirtualFile file, Project project, VirtualFileFilter filter) {
             super(file);
             myProject = project;
             myFilter = filter;
         }
 
         @Override
-        protected void appendChildrenTo(@Nonnull Collection<ConvenientNode> children) {
+        protected void appendChildrenTo(Collection<ConvenientNode> children) {
             VirtualFile[] childrenf = getObject().getChildren();
             ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
             for (VirtualFile child : childrenf) {

@@ -9,8 +9,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.index.io.DataIndexer;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public interface IdIndexer extends DataIndexer<IdIndexEntry, Integer, FileConten
         return map.get(fileType);
     }
 
-    @Nonnull
+    
     FileType getFileType();
 
     default int getVersion() {

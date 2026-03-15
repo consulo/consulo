@@ -22,7 +22,6 @@ import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.psi.LiteralTextEscaper;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -33,14 +32,14 @@ public class CommentLiteralEscaper extends LiteralTextEscaper<PsiCommentImpl> {
   }
 
   @Override
-  public boolean decode(@Nonnull TextRange rangeInsideHost, @Nonnull StringBuilder outChars) {
+  public boolean decode(TextRange rangeInsideHost, StringBuilder outChars) {
     ProperTextRange.assertProperRange(rangeInsideHost);
     outChars.append(myHost.getText(), rangeInsideHost.getStartOffset(), rangeInsideHost.getEndOffset());
     return true;
   }
 
   @Override
-  public int getOffsetInHost(int offsetInDecoded, @Nonnull TextRange rangeInsideHost) {
+  public int getOffsetInHost(int offsetInDecoded, TextRange rangeInsideHost) {
     int offset = offsetInDecoded + rangeInsideHost.getStartOffset();
     if (offset < rangeInsideHost.getStartOffset()) offset = rangeInsideHost.getStartOffset();
     if (offset > rangeInsideHost.getEndOffset()) offset = rangeInsideHost.getEndOffset();

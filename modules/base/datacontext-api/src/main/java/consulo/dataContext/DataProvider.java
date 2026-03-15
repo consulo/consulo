@@ -17,8 +17,7 @@ package consulo.dataContext;
 
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows a component hosting actions to provide context information to the actions. When a specific
@@ -39,11 +38,11 @@ public interface DataProvider {
      * @return the value, or null if no value is available in the current context for this identifier.
      */
     @Nullable
-    Object getData(@Nonnull Key<?> dataId);
+    Object getData(Key<?> dataId);
 
     @Nullable
     @SuppressWarnings("unchecked")
-    default <T> T getDataUnchecked(@Nonnull Key<T> key) {
+    default <T> T getDataUnchecked(Key<T> key) {
         return (T)getData(key);
     }
 }

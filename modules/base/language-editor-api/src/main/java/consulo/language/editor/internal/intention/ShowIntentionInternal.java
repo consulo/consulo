@@ -24,8 +24,7 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiPredicate;
 
@@ -39,16 +38,16 @@ public interface ShowIntentionInternal {
         return Application.get().getInstance(ShowIntentionInternal.class);
     }
 
-    boolean markActionInvoked(@Nonnull Project project, @Nonnull Editor editor, @Nonnull IntentionAction action);
+    boolean markActionInvoked(Project project, Editor editor, IntentionAction action);
 
     @Nullable
     Pair<PsiFile, Editor> chooseBetweenHostAndInjected(
-        @Nonnull PsiFile hostFile,
-        @Nonnull Editor hostEditor,
+        PsiFile hostFile,
+        Editor hostEditor,
         @Nullable PsiFile injectedFile,
-        @RequiredReadAction @Nonnull BiPredicate<? super PsiFile, ? super Editor> predicate
+        @RequiredReadAction BiPredicate<? super PsiFile, ? super Editor> predicate
     );
 
     @RequiredReadAction
-    boolean availableFor(@Nonnull PsiFile psiFile, @Nonnull Editor editor, @Nonnull IntentionAction action);
+    boolean availableFor(PsiFile psiFile, Editor editor, IntentionAction action);
 }

@@ -12,8 +12,7 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
     }
 
     @Override
-    @Nonnull
+    
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<ServerType> serverTypes = ContainerUtil.filter(
             ServerType.EP_NAME.getExtensionList(),
@@ -59,7 +58,7 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (e.getPlace().equals(ActionPlaces.ACTION_SEARCH)) {
                 e.getPresentation()
                     .setTextValue(RemoteServerLocalize.newCloudConnectionConfigurableTitle(myServerType.getPresentableName()));
@@ -70,14 +69,14 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         }
 
         @Override
-        @Nonnull
+        
         public ActionUpdateThread getActionUpdateThread() {
             return ActionUpdateThread.EDT;
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             if (project == null) {
                 return;

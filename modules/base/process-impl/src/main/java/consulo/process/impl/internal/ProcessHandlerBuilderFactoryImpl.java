@@ -19,7 +19,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.process.ProcessHandlerBuilder;
 import consulo.process.ProcessHandlerBuilderFactory;
 import consulo.process.cmd.GeneralCommandLine;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -29,9 +28,9 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class ProcessHandlerBuilderFactoryImpl implements ProcessHandlerBuilderFactory {
-    @Nonnull
+    
     @Override
-    public ProcessHandlerBuilder newBuilder(@Nonnull GeneralCommandLine cmd) {
+    public ProcessHandlerBuilder newBuilder(GeneralCommandLine cmd) {
         return new ProcessHandlerBuilderImpl(cmd);
     }
 }

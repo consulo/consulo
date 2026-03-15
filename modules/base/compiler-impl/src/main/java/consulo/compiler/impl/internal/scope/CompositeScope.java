@@ -23,7 +23,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -67,7 +66,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
         }
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getFiles(FileType fileType) {
         Set<VirtualFile> allFiles = new HashSet<>();
@@ -90,7 +89,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public Module[] getAffectedModules() {
         Set<Module> modules = new HashSet<>();
@@ -101,7 +100,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     }
 
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         for (CompileScope compileScope : myScopes) {
             T userData = compileScope.getUserData(key);
             if (userData != null) {

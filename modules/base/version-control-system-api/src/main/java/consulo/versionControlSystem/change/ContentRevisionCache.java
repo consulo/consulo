@@ -12,8 +12,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
@@ -31,10 +30,10 @@ public final class ContentRevisionCache {
 
     private final Map<Key, byte[]> myConstantCache = new HashMap<>();
 
-    private void put(@Nonnull FilePath path,
-                     @Nonnull VcsRevisionNumber number,
-                     @Nonnull VcsKey vcsKey,
-                     @Nonnull UniqueType type,
+    private void put(FilePath path,
+                     VcsRevisionNumber number,
+                     VcsKey vcsKey,
+                     UniqueType type,
                      @Nullable byte[] bytes) {
         if (bytes != null) {
             myCache.put(new Key(path, number, vcsKey, type), bytes);
@@ -42,7 +41,7 @@ public final class ContentRevisionCache {
     }
 
     @Contract("!null, _, _ -> !null")
-    public static @Nullable String getAsString(@Nullable byte[] bytes, @Nonnull FilePath file, @Nullable Charset charset) {
+    public static @Nullable String getAsString(@Nullable byte[] bytes, FilePath file, @Nullable Charset charset) {
         if (bytes == null) {
             return null;
         }
@@ -54,7 +53,7 @@ public final class ContentRevisionCache {
         }
     }
 
-    private static @Nonnull String bytesToString(FilePath path, @Nonnull byte [] bytes) {
+    private static String bytesToString(FilePath path, byte [] bytes) {
         Charset charset = null;
         if (path.getVirtualFile() != null) {
             charset = path.getVirtualFile().getCharset();
@@ -70,25 +69,25 @@ public final class ContentRevisionCache {
     }
 
     @Nullable
-    public byte[] getBytes(FilePath path, VcsRevisionNumber number, @Nonnull VcsKey vcsKey, @Nonnull UniqueType type) {
+    public byte[] getBytes(FilePath path, VcsRevisionNumber number, VcsKey vcsKey, UniqueType type) {
         return myCache.getIfPresent(new Key(path, number, vcsKey, type));
     }
 
-    @Nonnull
-    public static byte[] loadAsBytes(@Nonnull FilePath path,
+    
+    public static byte[] loadAsBytes(FilePath path,
                                      Throwable2Computable<byte[], ? extends VcsException, ? extends IOException> loader)
         throws VcsException, IOException {
         checkLocalFileSize(path);
         return loader.compute();
     }
 
-    @Nonnull
-    public static byte[] getOrLoadAsBytes(@Nonnull Project project,
-                                          @Nonnull FilePath path,
-                                          @Nonnull VcsRevisionNumber number,
-                                          @Nonnull VcsKey vcsKey,
-                                          @Nonnull UniqueType type,
-                                          @Nonnull Throwable2Computable<byte [], ? extends VcsException, ? extends IOException> loader)
+    
+    public static byte[] getOrLoadAsBytes(Project project,
+                                          FilePath path,
+                                          VcsRevisionNumber number,
+                                          VcsKey vcsKey,
+                                          UniqueType type,
+                                          Throwable2Computable<byte [], ? extends VcsException, ? extends IOException> loader)
         throws VcsException, IOException {
         ContentRevisionCache cache = ProjectLevelVcsManager.getInstance(project).getContentRevisionCache();
         byte[] bytes = cache.getBytes(path, number, vcsKey, type);
@@ -106,7 +105,7 @@ public final class ContentRevisionCache {
         return bytes;
     }
 
-    private static void checkLocalFileSize(@Nonnull FilePath path) throws VcsException {
+    private static void checkLocalFileSize(FilePath path) throws VcsException {
         File ioFile = path.getIOFile();
         if (ioFile.exists()) {
             checkContentsSize(ioFile.getPath(), ioFile.length());
@@ -121,19 +120,19 @@ public final class ContentRevisionCache {
         }
     }
 
-    public void putIntoConstantCache(@Nonnull FilePath path,
-                                     @Nonnull VcsRevisionNumber revisionNumber,
-                                     @Nonnull VcsKey vcsKey,
+    public void putIntoConstantCache(FilePath path,
+                                     VcsRevisionNumber revisionNumber,
+                                     VcsKey vcsKey,
                                      byte[] content) {
         synchronized (myConstantCache) {
             myConstantCache.put(new Key(path, revisionNumber, vcsKey, UniqueType.REPOSITORY_CONTENT), content);
         }
     }
 
-    public byte[] getFromConstantCache(@Nonnull FilePath path,
-                                       @Nonnull VcsRevisionNumber revisionNumber,
-                                       @Nonnull VcsKey vcsKey,
-                                       @Nonnull UniqueType type) {
+    public byte[] getFromConstantCache(FilePath path,
+                                       VcsRevisionNumber revisionNumber,
+                                       VcsKey vcsKey,
+                                       UniqueType type) {
         synchronized (myConstantCache) {
             return myConstantCache.get(new Key(path, revisionNumber, vcsKey, type));
         }
@@ -143,10 +142,10 @@ public final class ContentRevisionCache {
         myConstantCache.clear();
     }
 
-    public static Pair<VcsRevisionNumber, byte[]> getOrLoadCurrentAsBytes(@Nonnull Project project,
-                                                                          @Nonnull FilePath path,
-                                                                          @Nonnull VcsKey vcsKey,
-                                                                          @Nonnull CurrentRevisionProvider loader)
+    public static Pair<VcsRevisionNumber, byte[]> getOrLoadCurrentAsBytes(Project project,
+                                                                          FilePath path,
+                                                                          VcsKey vcsKey,
+                                                                          CurrentRevisionProvider loader)
         throws VcsException, IOException {
         ContentRevisionCache cache = ProjectLevelVcsManager.getInstance(project).getContentRevisionCache();
 

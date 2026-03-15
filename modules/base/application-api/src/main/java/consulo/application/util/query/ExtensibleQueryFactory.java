@@ -18,7 +18,6 @@ package consulo.application.util.query;
 
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -32,17 +31,17 @@ public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Res
   }
 
   @Override
-  public void registerExecutor(@Nonnull QueryExecutor<Result, Parameters> queryExecutor) {
+  public void registerExecutor(QueryExecutor<Result, Parameters> queryExecutor) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void unregisterExecutor(@Nonnull QueryExecutor<Result, Parameters> queryExecutor) {
+  public void unregisterExecutor(QueryExecutor<Result, Parameters> queryExecutor) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  @Nonnull
+  
   protected List<? extends QueryExecutor<Result, Parameters>> getExecutors() {
     return Application.get().getExtensionList(myExtensionClass);
   }

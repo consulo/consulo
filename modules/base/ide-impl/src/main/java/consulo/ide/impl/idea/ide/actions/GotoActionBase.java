@@ -42,8 +42,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -66,17 +65,17 @@ public abstract class GotoActionBase extends AnAction {
     private static final Map<Class, List<String>> ourHistory = new HashMap<>();
     private int myHistoryIndex = 0;
 
-    protected GotoActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected GotoActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected GotoActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+    protected GotoActionBase(LocalizeValue text, LocalizeValue description, Image icon) {
         super(text, description, icon);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         LOG.assertTrue(!getClass().equals(myInAction));
         try {
             myInAction = getClass();
@@ -94,7 +93,7 @@ public abstract class GotoActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
@@ -139,14 +138,14 @@ public abstract class GotoActionBase extends AnAction {
 
     protected abstract static class GotoActionCallback<T> {
         @Nullable
-        protected ChooseByNameFilter<T> createFilter(@Nonnull ChooseByNamePopup popup) {
+        protected ChooseByNameFilter<T> createFilter(ChooseByNamePopup popup) {
             return null;
         }
 
         public abstract void elementChosen(ChooseByNamePopup popup, Object element);
     }
 
-    protected static Pair<String, Integer> getInitialText(boolean useEditorSelection, @Nonnull AnActionEvent e) {
+    protected static Pair<String, Integer> getInitialText(boolean useEditorSelection, AnActionEvent e) {
         String predefined = e.getData(PlatformDataKeys.PREDEFINED_TEXT);
         if (!StringUtil.isEmpty(predefined)) {
             return Pair.create(predefined, 0);
@@ -186,7 +185,7 @@ public abstract class GotoActionBase extends AnAction {
     }
 
     @Nullable
-    public static String getInitialTextForNavigation(@Nonnull AnActionEvent e) {
+    public static String getInitialTextForNavigation(AnActionEvent e) {
         Editor editor = e.getData(Editor.KEY);
         String selectedText = editor != null ? editor.getSelectionModel().getSelectedText() : null;
         if (selectedText == null) {
@@ -238,7 +237,7 @@ public abstract class GotoActionBase extends AnAction {
     }
 
     protected <T> void showNavigationPopup(
-        @Nonnull AnActionEvent e,
+        AnActionEvent e,
         ChooseByNameModel model,
         GotoActionCallback<T> callback,
         @Nullable String findUsagesTitle,
@@ -340,11 +339,11 @@ public abstract class GotoActionBase extends AnAction {
         abstract class HistoryAction extends DumbAwareAction {
             @Override
             @RequiredUIAccess
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(historyEnabled());
             }
 
-            void setText(@Nonnull List<String> strings) {
+            void setText(List<String> strings) {
                 javax.swing.text.Document document = editor.getDocument();
                 document.removeDocumentListener(historyResetListener);
                 editor.setText(strings.get(myHistoryIndex));
@@ -358,7 +357,7 @@ public abstract class GotoActionBase extends AnAction {
         new HistoryAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 List<String> strings = ourHistory.get(myInAction);
                 setText(strings);
                 myHistoryIndex = myHistoryIndex >= strings.size() - 1 ? 0 : myHistoryIndex + 1;
@@ -369,7 +368,7 @@ public abstract class GotoActionBase extends AnAction {
         new HistoryAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 List<String> strings = ourHistory.get(myInAction);
                 setText(strings);
                 myHistoryIndex = myHistoryIndex <= 0 ? strings.size() - 1 : myHistoryIndex - 1;
@@ -382,8 +381,8 @@ public abstract class GotoActionBase extends AnAction {
     }
 
     protected void showInSearchEverywherePopup(
-        @Nonnull String searchProviderID,
-        @Nonnull AnActionEvent event,
+        String searchProviderID,
+        AnActionEvent event,
         boolean useEditorSelection,
         boolean sendStatistics
     ) {

@@ -17,17 +17,16 @@ package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.util.concurrent.ResultConsumer;
 import consulo.ui.ex.awt.tree.Tree;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface DebuggerTreeCreator<D> {
-  @Nonnull
-  String getTitle(@Nonnull D descriptor);
+  
+  String getTitle(D descriptor);
 
   void createDescriptorByNode(Object node, ResultConsumer<D> resultConsumer);
 
-  @Nonnull
-  Tree createTree(@Nonnull D descriptor);
+  
+  Tree createTree(D descriptor);
 }

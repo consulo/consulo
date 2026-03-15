@@ -18,8 +18,6 @@ package consulo.ide.impl.idea.ide.util.treeView.smartTree;
 
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.PlaceHolder;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 
@@ -43,11 +41,11 @@ public class TreeStructureUtil {
     return items;
   }
 
-  public static boolean isInStructureViewPopup(@Nonnull PlaceHolder<String> model) {
+  public static boolean isInStructureViewPopup(PlaceHolder<String> model) {
     return PLACE.equals(model.getPlace());
   }
 
-  @NonNls
+  
   public static String getPropertyName(String propertyName) {
     return propertyName + ".file.structure.state";
   }

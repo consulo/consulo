@@ -36,7 +36,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -74,14 +73,14 @@ public class ExternalStoragePluginManager implements PluginActionListener {
     }
 
     @Override
-    public void pluginsInstalled(@Nonnull PluginId[] pluginIds) {
+    public void pluginsInstalled(PluginId[] pluginIds) {
         for (PluginId pluginId : pluginIds) {
             sendAction("/plugins/add", pluginId, StoragePluginState.ENABLED);
         }
     }
 
     @Override
-    public void pluginsUninstalled(@Nonnull PluginId[] pluginIds) {
+    public void pluginsUninstalled(PluginId[] pluginIds) {
         for (PluginId pluginId : pluginIds) {
             sendAction("/plugins/delete", pluginId, StoragePluginState.UNINSTALLED);
         }
@@ -112,7 +111,7 @@ public class ExternalStoragePluginManager implements PluginActionListener {
     /**
      * Return true if restart required
      */
-    public boolean updatePlugins(@Nonnull ProgressIndicator indicator) {
+    public boolean updatePlugins(ProgressIndicator indicator) {
         try {
             indicator.setTextValue(LocalizeValue.localizeTODO("Checking plugins state..."));
 

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.ProjectOpenContext;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectFrameAllocator {
     @RequiredUIAccess
-    Object allocateFrame(@Nonnull ProjectOpenContext context);
+    Object allocateFrame(ProjectOpenContext context);
 
     @RequiredUIAccess
     void initializeFrame();

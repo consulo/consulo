@@ -37,8 +37,7 @@ import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -64,7 +63,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         super(project);
         
         myContentManager = new NotNullLazyValue<>() {
-            @Nonnull
+            
             @Override
             @RequiredUIAccess
             protected ContentManager compute() {
@@ -80,7 +79,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
     }
 
     @Nullable
-    public static SuppressIntentionAction[] getSuppressActions(@Nonnull InspectionToolWrapper toolWrapper) {
+    public static SuppressIntentionAction[] getSuppressActions(InspectionToolWrapper toolWrapper) {
         InspectionTool tool = toolWrapper.getTool();
         if (tool instanceof CustomSuppressableInspectionTool customSuppressableInspectionTool) {
             return customSuppressableInspectionTool.getSuppressActions(null);
@@ -104,9 +103,9 @@ public class InspectionManagerImpl extends InspectionManagerBase {
     }
 
     private static void processText(
-        @Nonnull String descriptionText,
-        @Nonnull InspectionToolWrapper tool,
-        @Nonnull SearchableOptionsRegistrar myOptionsRegistrar
+        String descriptionText,
+        InspectionToolWrapper tool,
+        SearchableOptionsRegistrar myOptionsRegistrar
     ) {
         if (Application.get().isDisposed()) {
             return;
@@ -117,7 +116,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         }
     }
 
-    @Nonnull
+    
     @Override
     public GlobalInspectionContextImpl createNewGlobalContext(boolean reuse) {
         GlobalInspectionContextImpl inspectionContext;
@@ -144,7 +143,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         myRunningContexts.remove(globalInspectionContext);
     }
 
-    @Nonnull
+    
     public Set<GlobalInspectionContextImpl> getRunningContexts() {
         return myRunningContexts;
     }

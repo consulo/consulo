@@ -7,70 +7,69 @@ import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.issue.BuildIssue;
 import consulo.navigation.Navigatable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface BuildProgress<T extends BuildProgressDescriptor> {
     void addListener(BuildProgressListener listener);
  
-    @Nonnull
+    
     Object getId();
 
-    @Nonnull
-    BuildProgress<T> start(@Nonnull T descriptor);
+    
+    BuildProgress<T> start(T descriptor);
 
-    @Nonnull
-    BuildProgress<T> progress(@Nonnull String title);
+    
+    BuildProgress<T> progress(String title);
 
-    @Nonnull
-    BuildProgress<T> progress(@Nonnull String title, long total, long progress, String unit);
+    
+    BuildProgress<T> progress(String title, long total, long progress, String unit);
 
-    @Nonnull
-    BuildProgress<T> output(@BuildEventsNls.Message @Nonnull String text, boolean stdOut);
+    
+    BuildProgress<T> output(@BuildEventsNls.Message String text, boolean stdOut);
 
-    @Nonnull
+    
     BuildProgress<T> message(
-        @BuildEventsNls.Title @Nonnull String title,
-        @BuildEventsNls.Message @Nonnull String message,
-        @Nonnull MessageEvent.Kind kind,
+        @BuildEventsNls.Title String title,
+        @BuildEventsNls.Message String message,
+        MessageEvent.Kind kind,
         @Nullable Navigatable navigatable
     );
 
-    @Nonnull
+    
     BuildProgress<T> fileMessage(
-        @BuildEventsNls.Title @Nonnull String title,
-        @BuildEventsNls.Message @Nonnull String message,
-        @Nonnull MessageEvent.Kind kind,
-        @Nonnull FilePosition filePosition
+        @BuildEventsNls.Title String title,
+        @BuildEventsNls.Message String message,
+        MessageEvent.Kind kind,
+        FilePosition filePosition
     );
 
-    @Nonnull
+    
     BuildProgress<BuildProgressDescriptor> finish();
 
-    @Nonnull
+    
     BuildProgress<BuildProgressDescriptor> finish(long timeStamp);
 
-    @Nonnull
+    
     BuildProgress<BuildProgressDescriptor> finish(boolean isUpToDate);
 
-    @Nonnull
-    BuildProgress<BuildProgressDescriptor> finish(long timeStamp, boolean isUpToDate, @BuildEventsNls.Message @Nonnull String message);
+    
+    BuildProgress<BuildProgressDescriptor> finish(long timeStamp, boolean isUpToDate, @BuildEventsNls.Message String message);
 
-    @Nonnull
+    
     BuildProgress<BuildProgressDescriptor> fail();
 
-    @Nonnull
-    BuildProgress<BuildProgressDescriptor> fail(long timeStamp, @BuildEventsNls.Message @Nonnull String message);
+    
+    BuildProgress<BuildProgressDescriptor> fail(long timeStamp, @BuildEventsNls.Message String message);
 
-    @Nonnull
+    
     BuildProgress<BuildProgressDescriptor> cancel();
 
-    @Nonnull
-    BuildProgress<BuildProgressDescriptor> cancel(long timeStamp, @BuildEventsNls.Message @Nonnull String message);
+    
+    BuildProgress<BuildProgressDescriptor> cancel(long timeStamp, @BuildEventsNls.Message String message);
 
-    @Nonnull
-    BuildProgress<BuildProgressDescriptor> startChildProgress(@BuildEventsNls.Title @Nonnull String title);
+    
+    BuildProgress<BuildProgressDescriptor> startChildProgress(@BuildEventsNls.Title String title);
 
-    @Nonnull
-    BuildProgress<BuildProgressDescriptor> buildIssue(@Nonnull BuildIssue issue, @Nonnull MessageEvent.Kind kind);
+    
+    BuildProgress<BuildProgressDescriptor> buildIssue(BuildIssue issue, MessageEvent.Kind kind);
 }

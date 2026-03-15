@@ -19,7 +19,6 @@ import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author traff
@@ -31,12 +30,12 @@ public class CapturingProcessAdapter implements ProcessListener {
     this(new ProcessOutput());
   }
 
-  public CapturingProcessAdapter(@Nonnull ProcessOutput output) {
+  public CapturingProcessAdapter(ProcessOutput output) {
     myOutput = output;
   }
 
   @Override
-  public void onTextAvailable(@Nonnull ProcessEvent event, @Nonnull Key outputType) {
+  public void onTextAvailable(ProcessEvent event, Key outputType) {
     addToOutput(event.getText(), outputType);
   }
 
@@ -50,7 +49,7 @@ public class CapturingProcessAdapter implements ProcessListener {
   }
 
   @Override
-  public void processTerminated(@Nonnull ProcessEvent event) {
+  public void processTerminated(ProcessEvent event) {
     myOutput.setExitCode(event.getExitCode());
   }
 

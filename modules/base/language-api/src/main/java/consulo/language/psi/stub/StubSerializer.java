@@ -15,7 +15,6 @@
  */
 package consulo.language.psi.stub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /*
@@ -23,16 +22,16 @@ import java.io.IOException;
  */
 public interface StubSerializer<T extends StubElement> extends ObjectStubSerializer<T, StubElement> {
   @Override
-  @Nonnull
+  
   String getExternalId();
 
   @Override
-  void serialize(@Nonnull T stub, @Nonnull StubOutputStream dataStream) throws IOException;
+  void serialize(T stub, StubOutputStream dataStream) throws IOException;
 
-  @Nonnull
+  
   @Override
-  T deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException;
+  T deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException;
 
   @Override
-  void indexStub(@Nonnull T stub, @Nonnull IndexSink sink);
+  void indexStub(T stub, IndexSink sink);
 }

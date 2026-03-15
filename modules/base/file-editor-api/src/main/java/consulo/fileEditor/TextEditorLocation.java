@@ -17,7 +17,6 @@ package consulo.fileEditor;
 
 import consulo.logging.Logger;
 import consulo.codeEditor.LogicalPosition;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -28,22 +27,22 @@ public class TextEditorLocation implements FileEditorLocation {
   private final TextEditor myEditor;
   private final LogicalPosition myPosition;
 
-  public TextEditorLocation(int offset, @Nonnull TextEditor editor) {
+  public TextEditorLocation(int offset, TextEditor editor) {
     this(editor.getEditor().offsetToLogicalPosition(offset), editor);
   }
 
-  public TextEditorLocation(@Nonnull LogicalPosition position, @Nonnull TextEditor editor) {
+  public TextEditorLocation(LogicalPosition position, TextEditor editor) {
     myEditor = editor;
     myPosition = position;
   }
 
-  @Nonnull
+  
   @Override
   public FileEditor getEditor() {
     return myEditor;
   }
 
-  @Nonnull
+  
   public LogicalPosition getPosition() {
     return myPosition;
   }

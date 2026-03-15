@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.util.lang.function.PairProcessor;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,26 +31,26 @@ import java.awt.*;
  */
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface ConfigurationErrors {
-  void addError(@Nonnull ConfigurationError error);
+  void addError(ConfigurationError error);
 
-  void removeError(@Nonnull ConfigurationError error);
+  void removeError(ConfigurationError error);
 
   class Bus {
-    public static void addError(@Nonnull ConfigurationError error, @Nonnull Project project) {
+    public static void addError(ConfigurationError error, Project project) {
       _do(error, project, (configurationErrors, configurationError) -> {
         configurationErrors.addError(configurationError);
         return false;
       });
     }
 
-    public static void removeError(@Nonnull ConfigurationError error, @Nonnull Project project) {
+    public static void removeError(ConfigurationError error, Project project) {
       _do(error, project, (configurationErrors, configurationError) -> {
         configurationErrors.removeError(configurationError);
         return false;
       });
     }
 
-    public static void _do(@Nonnull ConfigurationError error, @Nonnull Project project, @Nonnull PairProcessor<ConfigurationErrors, ConfigurationError> fun) {
+    public static void _do(ConfigurationError error, Project project, PairProcessor<ConfigurationErrors, ConfigurationError> fun) {
       if (!project.isInitialized()) {
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> fun.process(project.getMessageBus().syncPublisher(ConfigurationErrors.class), error));
 

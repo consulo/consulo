@@ -36,8 +36,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -63,7 +62,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   }
 
   @Override
-  @Nonnull
+  
   public PsiFile[] getFilesWithTodoItems() {
     if (myProject.isDefault()) {
       return PsiFile.EMPTY_ARRAY;
@@ -88,7 +87,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
     return allFiles.isEmpty() ? PsiFile.EMPTY_ARRAY : PsiUtilCore.toPsiFileArray(allFiles);
   }
 
-  public static boolean belongsToProject(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public static boolean belongsToProject(Project project, VirtualFile file) {
     if (!ProjectFileIndex.getInstance(project).isInContent(file)) {
       return false;
     }
@@ -96,16 +95,16 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   }
 
   @Override
-  public int getTodoCount(@Nonnull VirtualFile file, @Nonnull IndexPatternProvider patternProvider) {
+  public int getTodoCount(VirtualFile file, IndexPatternProvider patternProvider) {
     return getTodoCountImpl(file, patternProvider.getIndexPatterns());
   }
 
   @Override
-  public int getTodoCount(@Nonnull VirtualFile file, @Nonnull IndexPattern pattern) {
+  public int getTodoCount(VirtualFile file, IndexPattern pattern) {
     return getTodoCountImpl(file, pattern);
   }
 
-  private int getTodoCountImpl(@Nonnull VirtualFile file, IndexPattern ... indexPatterns) {
+  private int getTodoCountImpl(VirtualFile file, IndexPattern ... indexPatterns) {
     if (myProject.isDefault()) {
       return 0;
     }
@@ -125,7 +124,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
     return fetchTodoCountFromIndex(file, indexPatterns);
   }
 
-  private int calculateTodoCount(@Nonnull LightVirtualFile file, @Nonnull IndexPattern[] indexPatterns) {
+  private int calculateTodoCount(LightVirtualFile file, IndexPattern[] indexPatterns) {
     TodoIndex extension = FileBasedIndexExtension.EXTENSION_POINT_NAME.findExtension(TodoIndex.class);
     if (extension == null) return 0;
 
@@ -140,7 +139,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
     }
   }
 
-  private int fetchTodoCountFromIndex(@Nonnull VirtualFile file, @Nonnull IndexPattern[] indexPatterns) {
+  private int fetchTodoCountFromIndex(VirtualFile file, IndexPattern[] indexPatterns) {
     SimpleReference<Map<TodoIndexEntry, Integer>> inputData = SimpleReference.create();
     FileBasedIndex.getInstance().ignoreDumbMode(() -> {
       Map<TodoIndexEntry, Integer> data = FileBasedIndex.getInstance().getFileData(TodoIndex.NAME, file, myProject);
@@ -149,7 +148,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
     return getTodoCountForInputData(inputData.get(), indexPatterns);
   }
 
-  private static int getTodoCountForInputData(@Nullable Map<TodoIndexEntry, Integer> data, @Nonnull IndexPattern[] indexPatterns) {
+  private static int getTodoCountForInputData(@Nullable Map<TodoIndexEntry, Integer> data, IndexPattern[] indexPatterns) {
     if (data == null) return 0;
 
     return Arrays.stream(indexPatterns).map(p -> new TodoIndexEntry(p.getPatternString(), p.isCaseSensitive())).mapToInt(e -> data.getOrDefault(e, 0)).sum();

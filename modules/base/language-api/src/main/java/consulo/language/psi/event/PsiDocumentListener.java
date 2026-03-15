@@ -8,8 +8,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface PsiDocumentListener {
@@ -21,7 +20,7 @@ public interface PsiDocumentListener {
    * @param psiFile  the file for which the document was created.
    * @see PsiDocumentManager#getDocument(PsiFile)
    */
-  void documentCreated(@Nonnull Document document, @Nullable PsiFile psiFile, @Nonnull Project project);
+  void documentCreated(Document document, @Nullable PsiFile psiFile, Project project);
 
   /**
    * Called when a file instance is created for a document.
@@ -30,6 +29,6 @@ public interface PsiDocumentListener {
    * @param document the document for which the file was created.
    * @see PsiDocumentManager#getDocument(PsiFile)
    */
-  default void fileCreated(@Nonnull PsiFile file, @Nonnull Document document) {
+  default void fileCreated(PsiFile file, Document document) {
   }
 }

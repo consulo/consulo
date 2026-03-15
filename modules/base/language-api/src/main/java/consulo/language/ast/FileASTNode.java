@@ -19,8 +19,7 @@ import consulo.language.util.CharTable;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Top-level node in AST, corresponds to PsiFile.
@@ -28,7 +27,7 @@ import jakarta.annotation.Nullable;
  * @see PsiFile
  */
 public interface FileASTNode extends ASTNode {
-  @Nonnull
+  
   CharTable getCharTable();
 
   boolean isParsed();

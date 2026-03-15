@@ -5,7 +5,6 @@ import consulo.disposer.Disposable;
 import consulo.util.concurrent.CancellablePromise;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.Callable;
 
 /**
@@ -18,24 +17,24 @@ public interface BaseExpirableExecutor<E extends BaseExpirableExecutor<E>> {
   /**
    * @return an executor that no longer invokes the given runnable after the supplied Disposable is disposed
    */
-  @Nonnull
+  
   @Contract(pure = true)
-  E expireWith(@Nonnull Disposable parentDisposable);
+  E expireWith(Disposable parentDisposable);
 
   /**
    * Schedule execution of the given task.
    */
-  void execute(@Nonnull Runnable command);
+  void execute(Runnable command);
 
   /**
    * Schedule the given task's execution and return a Promise that allows to get the result when the task is complete,
    * or cancel the task if it's no longer needed.
    */
-  <T> CancellablePromise<T> submit(@Nonnull Callable<T> task);
+  <T> CancellablePromise<T> submit(Callable<T> task);
 
   /**
    * Schedule the given task's execution and return a Promise that allows to check if the task is complete,
    * or cancel the task if it's no longer needed.
    */
-  CancellablePromise<?> submit(@Nonnull Runnable task);
+  CancellablePromise<?> submit(Runnable task);
 }

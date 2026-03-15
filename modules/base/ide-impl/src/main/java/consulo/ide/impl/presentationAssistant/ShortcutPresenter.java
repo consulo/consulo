@@ -31,8 +31,7 @@ import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -51,11 +50,11 @@ class ShortcutPresenter implements Disposable {
     public static class ActionData {
         private final String myActionId;
         private final Project myProject;
-        @Nonnull
+        
         private final LocalizeValue myActionText;
         private final InputEvent myEvent;
 
-        public ActionData(String actionId, Project project, @Nonnull LocalizeValue actionText, @Nullable InputEvent event) {
+        public ActionData(String actionId, Project project, LocalizeValue actionText, @Nullable InputEvent event) {
             myActionId = actionId;
             myProject = project;
             myActionText = actionText;
@@ -293,7 +292,7 @@ class ShortcutPresenter implements Disposable {
         return "";
     }
 
-    @Nonnull
+    
     private String shortcutText(KeyboardShortcut shortcut, Keymaps.KeymapKind kind) {
         List<KeyStroke> list = Arrays.asList(shortcut.getFirstKeyStroke(), shortcut.getSecondKeyStroke());
         return StringUtil.join(
@@ -305,7 +304,7 @@ class ShortcutPresenter implements Disposable {
         );
     }
 
-    @Nonnull
+    
     private String shortcutText(KeyStroke keyStroke, Keymaps.KeymapKind keymapKind) {
         switch (keymapKind) {
             case MAC:
@@ -323,7 +322,7 @@ class ShortcutPresenter implements Disposable {
         }
     }
 
-    @Nonnull
+    
     private String shortcutText(MouseShortcut shortcut, Keymaps.KeymapKind keymapKind) {
         String mouseShortcutText = MouseShortcutPresentation.getMouseShortcutText(shortcut);
         if (mouseShortcutText == null) {
@@ -368,7 +367,7 @@ class ShortcutPresenter implements Disposable {
         return modifiers;
     }
 
-    private void fillParentNames(ActionGroup group, @Nonnull LocalizeValue parentName) {
+    private void fillParentNames(ActionGroup group, LocalizeValue parentName) {
         ActionManager actionManager = ActionManager.getInstance();
         for (AnAction item : group.getChildren(null)) {
             if (item instanceof ActionGroup actionGroup) {

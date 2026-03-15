@@ -20,15 +20,14 @@ import consulo.language.codeStyle.internal.IndentData;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
 public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentProcessor {
 
   @Override
-  public Result applyAlignment(@Nonnull Context context) {
+  public Result applyAlignment(Context context) {
     IndentData indent = calculateAlignmentAnchorIndent(context);
     if (indent == null) {
       return Result.TARGET_BLOCK_PROCESSED_NOT_ALIGNED;
@@ -102,7 +101,7 @@ public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentP
    * @return            indent to use for the white space of the given block
    */
   @Nullable
-  protected abstract IndentData calculateAlignmentAnchorIndent(@Nonnull Context context);
+  protected abstract IndentData calculateAlignmentAnchorIndent(Context context);
 
   /**
    * Encapsulates logic of applying alignment anchor indent to the target block that starts new line.
@@ -112,7 +111,7 @@ public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentP
    * @return                        {@code true} if desired alignment indent is applied to the current block;
    *                                {@code false} otherwise
    */
-  protected abstract boolean applyIndentToTheFirstBlockOnLine(@Nonnull IndentData alignmentAnchorIndent, @Nonnull Context context);
+  protected abstract boolean applyIndentToTheFirstBlockOnLine(IndentData alignmentAnchorIndent, Context context);
 
   /**
    * Calculates the difference between alignment anchor indent and current target block indent.
@@ -121,5 +120,5 @@ public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentP
    * @param context                 current processing context
    * @return                        alignment anchor indent minus current target block indent
    */
-  protected abstract int getAlignmentIndentDiff(@Nonnull IndentData alignmentAnchorIndent, @Nonnull Context context);
+  protected abstract int getAlignmentIndentDiff(IndentData alignmentAnchorIndent, Context context);
 }

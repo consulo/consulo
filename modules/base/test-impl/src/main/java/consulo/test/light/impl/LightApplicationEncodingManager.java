@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingReference;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -30,11 +29,11 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightApplicationEncodingManager extends LightEncodingManager implements ApplicationEncodingManager {
     @Override
-    public void setDefaultConsoleEncodingReference(@Nonnull EncodingReference encodingReference) {
+    public void setDefaultConsoleEncodingReference(EncodingReference encodingReference) {
 
     }
 
-    @Nonnull
+    
     @Override
     public EncodingReference getDefaultConsoleEncodingReference() {
         return EncodingReference.DEFAULT;

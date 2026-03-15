@@ -22,8 +22,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiPredicate;
 
@@ -35,7 +34,7 @@ public interface ConsoleView extends ExecutionConsole {
 
     Key<ConsoleView> CONSOLE_VIEW_IN_EDITOR_VIEW = Key.create("CONSOLE_VIEW_IN_EDITOR_VIEW");
 
-    void print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType);
+    void print(String s, ConsoleViewContentType contentType);
 
     void clear();
 
@@ -71,7 +70,7 @@ public interface ConsoleView extends ExecutionConsole {
 
     boolean canPause();
 
-    @Nonnull
+    
     AnAction[] createConsoleActions();
 
     void allowHeavyFilters();

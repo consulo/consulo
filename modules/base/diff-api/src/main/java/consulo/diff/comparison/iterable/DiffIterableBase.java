@@ -16,19 +16,18 @@
 package consulo.diff.comparison.iterable;
 
 import consulo.diff.util.Range;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 
 @SuppressWarnings("ConstantConditions")
 abstract class DiffIterableBase implements DiffIterable {
-  @Nonnull
+  
   @Override
   public Iterable<Range> iterateUnchanged() {
     return () -> unchanged();
   }
 
-  @Nonnull
+  
   @Override
   public Iterable<Range> iterateChanges() {
     return () -> changes();

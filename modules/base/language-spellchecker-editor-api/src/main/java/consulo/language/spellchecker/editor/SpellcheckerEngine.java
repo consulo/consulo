@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,22 +29,22 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SpellcheckerEngine {
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
+    
     LocalizeValue getDisplayName();
 
-    @Nonnull
-    List<String> getSuggestions(@Nonnull Project project, @Nonnull String text);
+    
+    List<String> getSuggestions(Project project, String text);
 
-    boolean hasProblem(@Nonnull Project project, @Nonnull String word);
+    boolean hasProblem(Project project, String word);
 
-    default boolean canSaveUserWords(@Nonnull Project project) {
+    default boolean canSaveUserWords(Project project) {
         return false;
     }
 
-    default void acceptWordAsCorrect(@Nonnull Project project, @Nonnull String word) {
+    default void acceptWordAsCorrect(Project project, String word) {
         throw new UnsupportedOperationException();
     }
 }

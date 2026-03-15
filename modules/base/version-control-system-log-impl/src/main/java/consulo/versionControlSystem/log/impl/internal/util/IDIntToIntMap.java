@@ -15,10 +15,9 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 public class IDIntToIntMap implements IntToIntMap {
-  @Nonnull
+  
   public static final UpdatableIntToIntMap EMPTY = new EmptyIDIntToIntMap();
 
   private final int size;

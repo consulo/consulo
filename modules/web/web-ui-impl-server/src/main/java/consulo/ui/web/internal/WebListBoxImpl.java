@@ -18,7 +18,6 @@ package consulo.ui.web.internal;
 import consulo.ui.ListBox;
 import consulo.ui.model.ListModel;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     super(model);
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin<E> createVaadinComponent() {
     return new Vaadin<>();

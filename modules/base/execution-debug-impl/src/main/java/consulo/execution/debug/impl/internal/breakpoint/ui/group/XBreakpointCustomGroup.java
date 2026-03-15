@@ -18,8 +18,7 @@ package consulo.execution.debug.impl.internal.breakpoint.ui.group;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Egor
@@ -27,7 +26,7 @@ import jakarta.annotation.Nullable;
 public class XBreakpointCustomGroup extends XBreakpointGroup {
   private final String myName;
 
-  public XBreakpointCustomGroup(@Nonnull String name) {
+  public XBreakpointCustomGroup(String name) {
     myName = name;
   }
 
@@ -38,7 +37,7 @@ public class XBreakpointCustomGroup extends XBreakpointGroup {
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myName;
   }

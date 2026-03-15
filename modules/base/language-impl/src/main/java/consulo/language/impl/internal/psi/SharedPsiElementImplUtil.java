@@ -24,8 +24,7 @@ import consulo.language.psi.PsiMultiReference;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -91,7 +90,7 @@ public class SharedPsiElementImplUtil {
     }
   }
 
-  @Nonnull
+  
   public static PsiReference[] getReferences(PsiElement thisElement) {
     PsiReference ref = thisElement.getReference();
     if (ref == null) return PsiReference.EMPTY_ARRAY;

@@ -31,8 +31,7 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.lang.ClassLoaderUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -48,10 +47,10 @@ public class FileTemplateUtil {
     @Deprecated
     @RequiredUIAccess
     public static PsiElement createFromTemplate(
-        @Nonnull FileTemplate template,
+        FileTemplate template,
         @Nullable String fileName,
         @Nullable Properties props,
-        @Nonnull PsiDirectory directory
+        PsiDirectory directory
     ) throws Exception {
         Map<String, Object> map;
         if (props != null) {
@@ -64,13 +63,13 @@ public class FileTemplateUtil {
         return createFromTemplate(template, fileName, map, directory, null);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static PsiElement createFromTemplate(
-        @Nonnull FileTemplate template,
+        FileTemplate template,
         @Nullable String fileName,
         @Nullable Map<String, Object> props,
-        @Nonnull PsiDirectory directory
+        PsiDirectory directory
     ) throws Exception {
         Map<String, Object> map;
         if (props != null) {
@@ -86,10 +85,10 @@ public class FileTemplateUtil {
     @DeprecationInfo("Use #createFromTemplate with Map parameter")
     @RequiredUIAccess
     public static PsiElement createFromTemplate(
-        @Nonnull FileTemplate template,
+        FileTemplate template,
         @Nullable String fileName,
         @Nullable Properties props,
-        @Nonnull PsiDirectory directory,
+        PsiDirectory directory,
         @Nullable ClassLoader classLoader
     ) throws Exception {
         Map<String, Object> map;
@@ -105,10 +104,10 @@ public class FileTemplateUtil {
 
     @RequiredUIAccess
     public static PsiElement createFromTemplate(
-        @Nonnull FileTemplate template,
+        FileTemplate template,
         @Nullable String fileName,
         @Nullable Map<String, Object> additionalProperties,
-        @Nonnull PsiDirectory directory,
+        PsiDirectory directory,
         @Nullable ClassLoader classLoader
     ) throws Exception {
         Project project = directory.getProject();
@@ -156,7 +155,7 @@ public class FileTemplateUtil {
             .compute(() -> handler.createFromTemplate(project, directory, fileName_, template, templateText, properties));
     }
 
-    @Nonnull
+    
     public static CreateFromTemplateHandler findHandler(FileTemplate template) {
         CreateFromTemplateHandler templateHandler =
             CreateFromTemplateHandler.EP_NAME.computeSafeIfAny(it -> it.handlesTemplate(template) ? it : null);
@@ -176,7 +175,7 @@ public class FileTemplateUtil {
     }
 
     @Nullable
-    public static Image getIcon(@Nonnull FileTemplate fileTemplate) {
+    public static Image getIcon(FileTemplate fileTemplate) {
         String extension = fileTemplate.getExtension();
         return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
     }
@@ -189,7 +188,7 @@ public class FileTemplateUtil {
         }
     }
 
-    @Nonnull
+    
     public static Map<String, Object> convert2Map(Properties p) {
         Map<String, Object> map = new HashMap<>();
         for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements(); ) {
@@ -200,9 +199,9 @@ public class FileTemplateUtil {
     }
 
     public static Pattern getTemplatePattern(
-        @Nonnull FileTemplate template,
-        @Nonnull Project project,
-        @Nonnull IntObjectMap<String> offsetToProperty
+        FileTemplate template,
+        Project project,
+        IntObjectMap<String> offsetToProperty
     ) {
         String templateText = template.getText().trim();
         String regex = templateToRegex(templateText, offsetToProperty, project);

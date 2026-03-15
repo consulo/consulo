@@ -26,20 +26,19 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 
 class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDumbAware {
   private static final Key<Boolean> THE_FIRST_TIME = Key.create("FirstFoldingPass");
   private volatile Runnable myRunnable;
 
-  CodeFoldingPass(@Nonnull Editor editor, @Nonnull PsiFile file) {
+  CodeFoldingPass(Editor editor, PsiFile file) {
     super(editor, file, false);
   }
 
   @RequiredReadAction
   @Override
-  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+  public void doCollectInformation(ProgressIndicator progress) {
     boolean firstTime = isFirstTime(myFile, myEditor, THE_FIRST_TIME);
     myRunnable = CodeFoldingManager.getInstance(myProject).updateFoldRegionsAsync(myEditor, firstTime);
   }

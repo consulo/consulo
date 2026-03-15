@@ -17,8 +17,7 @@ import consulo.dataContext.DataContext;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -36,7 +35,7 @@ public abstract class AttachRootButtonDescriptor {
    * Creates a descriptor for 'attach' button shown in popup when user click on '+' button.
    * Consider using {@link #AttachRootButtonDescriptor(OrderRootType, Image, String)} instead.
    */
-  protected AttachRootButtonDescriptor(@Nonnull OrderRootType orderRootType, @Nonnull String buttonText) {
+  protected AttachRootButtonDescriptor(OrderRootType orderRootType, String buttonText) {
     myOrderRootType = orderRootType;
     myButtonText = buttonText;
     myToolbarIcon = null;
@@ -45,13 +44,13 @@ public abstract class AttachRootButtonDescriptor {
   /**
    * Creates a descriptor for 'attach' button shown in toolbar of a library editor
    */
-  protected AttachRootButtonDescriptor(@Nonnull OrderRootType orderRootType, @Nonnull Image toolbarIcon, @Nonnull String description) {
+  protected AttachRootButtonDescriptor(OrderRootType orderRootType, Image toolbarIcon, String description) {
     myOrderRootType = orderRootType;
     myButtonText = description;
     myToolbarIcon = toolbarIcon;
   }
 
-  public abstract VirtualFile[] selectFiles(@Nonnull JComponent parent, @Nullable VirtualFile initialSelection, @Nonnull DataContext dataContext, @Nonnull LibraryEditor libraryEditor);
+  public abstract VirtualFile[] selectFiles(JComponent parent, @Nullable VirtualFile initialSelection, DataContext dataContext, LibraryEditor libraryEditor);
 
   public String getButtonText() {
     return myButtonText;
@@ -65,8 +64,8 @@ public abstract class AttachRootButtonDescriptor {
     return false;
   }
 
-  @Nonnull
-  public VirtualFile[] scanForActualRoots(@Nonnull VirtualFile[] rootCandidates, JComponent parent) {
+  
+  public VirtualFile[] scanForActualRoots(VirtualFile[] rootCandidates, JComponent parent) {
     return rootCandidates;
   }
 

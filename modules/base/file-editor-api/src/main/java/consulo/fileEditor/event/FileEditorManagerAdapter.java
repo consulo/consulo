@@ -18,15 +18,14 @@ package consulo.fileEditor.event;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class FileEditorManagerAdapter implements FileEditorManagerListener {
   @Override
-  public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {}
+  public void fileOpened(FileEditorManager source, VirtualFile file) {}
 
   @Override
-  public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {}
+  public void fileClosed(FileEditorManager source, VirtualFile file) {}
 
   @Override
-  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {}
+  public void selectionChanged(FileEditorManagerEvent event) {}
 }

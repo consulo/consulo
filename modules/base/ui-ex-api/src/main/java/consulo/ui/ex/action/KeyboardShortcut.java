@@ -15,10 +15,8 @@
  */
 package consulo.ui.ex.action;
 
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Objects;
 
@@ -32,12 +30,12 @@ public final class KeyboardShortcut extends Shortcut {
   /**
    * @throws IllegalArgumentException if <code>firstKeyStroke</code> is <code>null</code>
    */
-  public KeyboardShortcut(@Nonnull KeyStroke firstKeyStroke, @Nullable KeyStroke secondKeyStroke) {
+  public KeyboardShortcut(KeyStroke firstKeyStroke, @Nullable KeyStroke secondKeyStroke) {
     myFirstKeyStroke = firstKeyStroke;
     mySecondKeyStroke = secondKeyStroke;
   }
 
-  @Nonnull
+  
   public KeyStroke getFirstKeyStroke() {
     return myFirstKeyStroke;
   }
@@ -79,7 +77,7 @@ public final class KeyboardShortcut extends Shortcut {
     }
   }
 
-  public static KeyboardShortcut fromString(@NonNls String s) {
+  public static KeyboardShortcut fromString(String s) {
     KeyStroke keyStroke = KeyStroke.getKeyStroke(s);
     assert keyStroke != null : "Can't create key stroke for " + s;
     return new KeyboardShortcut(keyStroke, null);

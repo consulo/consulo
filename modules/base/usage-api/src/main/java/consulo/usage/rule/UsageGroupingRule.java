@@ -21,8 +21,7 @@ import consulo.usage.UsageGroup;
 import consulo.usage.UsageTarget;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -40,8 +39,8 @@ public interface UsageGroupingRule {
      * <p>If the rule returns at most one parent group extend {@link SingleParentUsageGroupingRule} and override
      * {@link SingleParentUsageGroupingRule#getParentGroupFor getParentGroupFor} instead.</p>
      */
-    @Nonnull
-    default List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+    
+    default List<UsageGroup> getParentGroupsFor(Usage usage, UsageTarget[] targets) {
         return ContainerUtil.createMaybeSingletonList(groupUsage(usage));
     }
 
@@ -57,7 +56,7 @@ public interface UsageGroupingRule {
      * @deprecated extend {@link SingleParentUsageGroupingRule} and override {@link SingleParentUsageGroupingRule#getParentGroupFor getParentGroupFor} instead
      */
     @Nullable
-    default UsageGroup groupUsage(@Nonnull Usage usage) {
+    default UsageGroup groupUsage(Usage usage) {
         throw new UnsupportedOperationException();
     }
 }

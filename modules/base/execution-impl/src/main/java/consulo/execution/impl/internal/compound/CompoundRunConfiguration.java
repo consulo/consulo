@@ -33,8 +33,7 @@ import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -47,7 +46,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
   private Set<RunConfiguration> mySetToRun = new TreeSet<>(COMPARATOR);
   private boolean myInitialized = false;
 
-  public CompoundRunConfiguration(Project project, @Nonnull CompoundRunConfigurationType type, String name) {
+  public CompoundRunConfiguration(Project project, CompoundRunConfigurationType type, String name) {
     super(project, type.getConfigurationFactories()[0], name);
   }
 
@@ -69,7 +68,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
     myInitialized = true;
   }
 
-  @Nonnull
+  
   public Map<RunConfiguration, ExecutionTarget> getConfigurationsWithTargets(RunManager manager) {
     initIfNeed();
     Map<RunConfiguration, ExecutionTarget> map = new LinkedHashMap<>();
@@ -78,7 +77,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
     return map;
   }
 
-  @Nonnull
+  
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new CompoundRunConfigurationSettingsEditor(getProject());
@@ -91,7 +90,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
 
   @Nullable
   @Override
-  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
+  public RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException {
     try {
       checkConfiguration();
     }
@@ -101,7 +100,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
     return new RunProfileState() {
       @Nullable
       @Override
-      public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+      public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
         ApplicationManager.getApplication().invokeLater(() -> {
           RunManagerImpl manager = RunManagerImpl.getInstanceImpl(getProject());
           for (RunConfiguration configuration : getSetToRun()) {

@@ -20,7 +20,6 @@ import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -31,14 +30,14 @@ import static consulo.language.editor.inspection.ProblemDescriptorUtil.FlagConst
  * @author UNV
  * @since 2025-12-03
  */
-public record ProblemDescriptionTextRenderer(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, @FlagConstant int flags)
+public record ProblemDescriptionTextRenderer(CommonProblemDescriptor descriptor, PsiElement element, @FlagConstant int flags)
     implements Function<String, String> {
 
     private static final Pattern HTML_TAG_PATTERN = Pattern.compile("<(?:[^'\">]+|\"[^\"]*+\"|'[^']*+')*+>");
 
     @Override
     @RequiredReadAction
-    public String apply(@Nonnull String message) {
+    public String apply(String message) {
         if ((flags & ProblemDescriptorUtil.APPEND_LINE_NUMBER) != 0
             && descriptor instanceof ProblemDescriptor problemDescriptor
             && !message.contains("#ref")

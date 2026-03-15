@@ -30,8 +30,7 @@ import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.File;
@@ -65,7 +64,7 @@ public class ShelvedBinaryFileImpl implements ShelvedBinaryFile, JDOMExternaliza
         DefaultJDOMExternalizer.writeExternal(this, element);
     }
 
-    @Nonnull
+    
     @Override
     public String getBeforePath() {
         return BEFORE_PATH;
@@ -83,7 +82,7 @@ public class ShelvedBinaryFileImpl implements ShelvedBinaryFile, JDOMExternaliza
         return SHELVED_PATH;
     }
 
-    @Nonnull
+    
     @Override
     public FileStatus getFileStatus() {
         if (BEFORE_PATH == null) {
@@ -96,7 +95,7 @@ public class ShelvedBinaryFileImpl implements ShelvedBinaryFile, JDOMExternaliza
     }
 
     @Override
-    @Nonnull
+    
     public Change createChange(Project project) {
         ContentRevision before = null;
         ContentRevision after = null;
@@ -105,7 +104,7 @@ public class ShelvedBinaryFileImpl implements ShelvedBinaryFile, JDOMExternaliza
             final FilePathImpl file = new FilePathImpl(new File(baseDir, BEFORE_PATH), false);
             file.refresh();
             before = new CurrentBinaryContentRevision(file) {
-                @Nonnull
+                
                 @Override
                 public VcsRevisionNumber getRevisionNumber() {
                     return new TextRevisionNumber(VcsLocalize.localVersionTitle().get());

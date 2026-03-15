@@ -24,8 +24,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 /**
@@ -40,7 +39,7 @@ public interface DeclarationRangeHandler<T extends PsiElement> {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends PsiElement> DeclarationRangeHandler<T> findDeclarationHandler(@Nonnull T element) {
+  public static <T extends PsiElement> DeclarationRangeHandler<T> findDeclarationHandler(T element) {
     Function<Class, DeclarationRangeHandler> call = Application.get().getExtensionPoint(DeclarationRangeHandler.class).getOrBuildCache(KEY);
     return call.apply(element.getClass());
   }
@@ -48,7 +47,7 @@ public interface DeclarationRangeHandler<T extends PsiElement> {
   /**
    * @return element class
    */
-  @Nonnull
+  
   Class<T> getElementClass();
 
   /**
@@ -57,6 +56,6 @@ public interface DeclarationRangeHandler<T extends PsiElement> {
    * @param container the container
    * @return the declaration range for it.
    */
-  @Nonnull
-  TextRange getDeclarationRange(@Nonnull T container);
+  
+  TextRange getDeclarationRange(T container);
 }

@@ -24,11 +24,10 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiReference;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -53,14 +52,14 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
   private static final Key<String> FORMAT_KEY = Key.create("Image.format");
 
   private static final List<String> supportedExtensions = Arrays.asList(ImageIO.getReaderFormatNames());
-  @Nonnull
+  
   private final BufferedImage myImage;
 
   /**
    * @param image buffered image
    * @param imageFileSize File length in bytes.
    */
-  private ImagePreviewComponent(@Nonnull BufferedImage image, long imageFileSize) {
+  private ImagePreviewComponent(BufferedImage image, long imageFileSize) {
     setLayout(new BorderLayout());
 
     myImage = image;
@@ -91,8 +90,8 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
     return false;
   }
 
-  @Nonnull
-  private static JLabel createLabel(@Nonnull BufferedImage image, long imageFileSize) {
+  
+  private static JLabel createLabel(BufferedImage image, long imageFileSize) {
     int width = image.getWidth();
     int height = image.getHeight();
     ColorModel colorModel = image.getColorModel();
@@ -101,7 +100,7 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
   }
 
   @SuppressWarnings({"AutoUnboxing"})
-  private static boolean refresh(@Nonnull VirtualFile file) throws IOException {
+  private static boolean refresh(VirtualFile file) throws IOException {
     Long loadedTimeStamp = file.getUserData(TIMESTAMP_KEY);
     SoftReference<BufferedImage> imageRef = file.getUserData(BUFFERED_IMAGE_REF_KEY);
     if (loadedTimeStamp == null || loadedTimeStamp < file.getTimeStamp() || SoftReference.dereference(imageRef) == null) {
@@ -173,7 +172,7 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
   /**
    * This method doesn't use caching, so if you want to use it then you should consider implementing external cache.
    */
-  public static ImagePreviewComponent getPreviewComponent(@Nonnull BufferedImage image, long imageFileSize) {
+  public static ImagePreviewComponent getPreviewComponent(BufferedImage image, long imageFileSize) {
     return new ImagePreviewComponent(image, imageFileSize);
   }
 

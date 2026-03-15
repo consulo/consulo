@@ -28,7 +28,6 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.history.*;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.ShowDiffWithLocal")
 public class ShowDiffWithLocalAction extends DumbAwareAction {
@@ -42,7 +41,7 @@ public class ShowDiffWithLocalAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
             return;
@@ -68,7 +67,7 @@ public class ShowDiffWithLocalAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VcsFileRevision[] selectedRevisions = e.getData(VcsDataKeys.VCS_FILE_REVISIONS);
         VirtualFile virtualFile = e.getData(VirtualFile.KEY);
         VcsHistorySession historySession = e.getData(VcsDataKeys.HISTORY_SESSION);

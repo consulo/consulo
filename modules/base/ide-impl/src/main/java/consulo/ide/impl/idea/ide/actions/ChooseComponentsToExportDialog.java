@@ -35,8 +35,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,14 +53,14 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     public static final String DEFAULT_PATH =
         FileUtil.toSystemDependentName(ContainerPathManager.get().getConfigPath() + "/" + "settings.zip");
     private final boolean myShowFilePath;
-    @Nonnull
+    
     private final LocalizeValue myDescription;
 
     public ChooseComponentsToExportDialog(
         MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents,
         boolean showFilePath,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue description
+        LocalizeValue title,
+        LocalizeValue description
     ) {
         super(false);
         myDescription = description;
@@ -117,7 +116,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
         setOKActionEnabled(!StringUtil.isEmptyOrSpaces(myPathPanel.getText()));
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createLeftSideActions() {
         AbstractAction selectAll = new AbstractAction("Select &All") {
@@ -174,13 +173,13 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
         return file != null;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static AsyncResult<String> chooseSettingsFile(
         String oldPath,
         Component parent,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue description
+        LocalizeValue title,
+        LocalizeValue description
     ) {
         FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
         chooserDescriptor.withDescriptionValue(description);

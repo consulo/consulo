@@ -17,7 +17,6 @@ package consulo.versionControlSystem.internal;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public interface CacheChangeProcessorImpl {
 
   List<Change> getAllChanges();
 
-  void selectChange(@Nonnull Change change);
+  void selectChange(Change change);
 
   default void onAfterNavigate() {
   }

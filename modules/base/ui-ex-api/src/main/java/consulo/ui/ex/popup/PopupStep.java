@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.popup;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base interface for a single step (submenu) of a popup, displaying a list of items or a single level of a tree structure.

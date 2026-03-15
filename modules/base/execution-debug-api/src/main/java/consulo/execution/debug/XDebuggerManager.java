@@ -26,8 +26,7 @@ import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,23 +36,23 @@ import java.util.List;
 @ServiceAPI(value = ComponentScope.PROJECT)
 public interface XDebuggerManager {
 
-    public static XDebuggerManager getInstance(@Nonnull Project project) {
+    public static XDebuggerManager getInstance(Project project) {
         return project.getInstance(XDebuggerManager.class);
     }
 
     @RequiredUIAccess
     void showSettings();
 
-    @Nonnull
+    
     XBreakpointManager getBreakpointManager();
 
-    @Nonnull
+    
     XDebugSession[] getDebugSessions();
 
     @Nullable
-    XDebugSession getDebugSession(@Nonnull ExecutionConsole executionConsole);
+    XDebugSession getDebugSession(ExecutionConsole executionConsole);
 
-    @Nonnull
+    
     <T extends XDebugProcess> List<? extends T> getDebugProcesses(Class<T> processClass);
 
     @Nullable
@@ -67,20 +66,20 @@ public interface XDebuggerManager {
      * @param icon                        icon of 'Debug' tool window
      * @param showToolWindowOnSuspendOnly if {@code true} 'Debug' tool window won't be shown until debug process is suspended on a breakpoint
      */
-    @Nonnull
-    XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+    
+    XDebugSession startSessionAndShowTab(String sessionName,
                                                          @Nullable Image icon,
                                                          @Nullable RunContentDescriptor contentToReuse,
                                                          boolean showToolWindowOnSuspendOnly,
-                                                         @Nonnull XDebugProcessStarter starter) throws ExecutionException;
+                                                         XDebugProcessStarter starter) throws ExecutionException;
 
 
     /**
      * Start a new debugging session. Use this method only if debugging is started by using standard 'Debug' action i.e. this methods is called
      * from {@link ProgramRunner#execute} method. Otherwise use {@link #startSessionAndShowTab} method
      */
-    @Nonnull
-    XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull XDebugProcessStarter processStarter)
+    
+    XDebugSession startSession(ExecutionEnvironment environment, XDebugProcessStarter processStarter)
         throws ExecutionException;
 
     /**
@@ -88,10 +87,10 @@ public interface XDebuggerManager {
      *
      * @param sessionName title of 'Debug' tool window
      */
-    @Nonnull
-    default XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+    
+    default XDebugSession startSessionAndShowTab(String sessionName,
                                                 @Nullable RunContentDescriptor contentToReuse,
-                                                @Nonnull XDebugProcessStarter starter) throws ExecutionException {
+                                                XDebugProcessStarter starter) throws ExecutionException {
         return startSessionAndShowTab(sessionName, contentToReuse, false, starter);
     }
 
@@ -101,11 +100,11 @@ public interface XDebuggerManager {
      * @param sessionName                 title of 'Debug' tool window
      * @param showToolWindowOnSuspendOnly if {@code true} 'Debug' tool window won't be shown until debug process is suspended on a breakpoint
      */
-    @Nonnull
-    default XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+    
+    default XDebugSession startSessionAndShowTab(String sessionName,
                                                 @Nullable RunContentDescriptor contentToReuse,
                                                 boolean showToolWindowOnSuspendOnly,
-                                                @Nonnull XDebugProcessStarter starter) throws ExecutionException {
+                                                XDebugProcessStarter starter) throws ExecutionException {
         return startSessionAndShowTab(sessionName, null, contentToReuse, showToolWindowOnSuspendOnly, starter);
     }
 }

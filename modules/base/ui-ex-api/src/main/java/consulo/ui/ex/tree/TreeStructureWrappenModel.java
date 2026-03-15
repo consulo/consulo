@@ -19,8 +19,7 @@ import consulo.application.ReadAction;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -41,13 +40,13 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
     }
 
     @Override
-    public boolean isNeedBuildChildrenBeforeOpen(@Nonnull TreeNode<T> node) {
+    public boolean isNeedBuildChildrenBeforeOpen(TreeNode<T> node) {
         return myStructure.isToBuildChildrenInBackground(node.getValue());
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void buildChildren(@Nonnull Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
+    public void buildChildren(Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
         ThrowableComputable<Object[], RuntimeException> action = () -> myStructure.getChildElements(parentValue);
 
         for (Object o : ReadAction.compute(action)) {

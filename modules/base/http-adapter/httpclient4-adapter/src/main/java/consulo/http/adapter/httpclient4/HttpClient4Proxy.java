@@ -17,8 +17,7 @@ package consulo.http.adapter.httpclient4;
 
 import consulo.http.HttpProxyManager;
 import consulo.http.internal.IdeHttpClientHelpers;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
@@ -40,7 +39,7 @@ public class HttpClient4Proxy {
      * @param builder HttpClient's request builder used to configure new client
      * @see #setProxyForUrlIfEnabled(RequestConfig.Builder, String)
      */
-    public static void setProxyIfEnabled(@Nonnull RequestConfig.Builder builder) {
+    public static void setProxyIfEnabled(RequestConfig.Builder builder) {
         if (IdeHttpClientHelpers.isHttpProxyEnabled()) {
             builder.setProxy(new HttpHost(IdeHttpClientHelpers.getProxyHost(), IdeHttpClientHelpers.getProxyPort()));
         }
@@ -52,7 +51,7 @@ public class HttpClient4Proxy {
      * @param provider HttpClient's credentials provider used to configure new client
      * @see #setProxyCredentialsForUrlIfEnabled(CredentialsProvider, String)
      */
-    public static void setProxyCredentialsIfEnabled(@Nonnull CredentialsProvider provider) {
+    public static void setProxyCredentialsIfEnabled(CredentialsProvider provider) {
         if (IdeHttpClientHelpers.isHttpProxyEnabled() && IdeHttpClientHelpers.isProxyAuthenticationEnabled()) {
             String ntlmUserPassword = IdeHttpClientHelpers.getProxyLogin().replace('\\', '/') + ":" + IdeHttpClientHelpers.getProxyPassword();
             provider.setCredentials(new AuthScope(IdeHttpClientHelpers.getProxyHost(), IdeHttpClientHelpers.getProxyPort(), AuthScope.ANY_REALM, AuthSchemes.NTLM),
@@ -69,7 +68,7 @@ public class HttpClient4Proxy {
      * @param builder HttpClient's request builder used to configure new client
      * @param url     URL to access (only host part is checked)
      */
-    public static void setProxyForUrlIfEnabled(@Nonnull RequestConfig.Builder builder, @Nullable String url) {
+    public static void setProxyForUrlIfEnabled(RequestConfig.Builder builder, @Nullable String url) {
         if (IdeHttpClientHelpers.getHttpProxyManager().isHttpProxyEnabledForUrl(url)) {
             setProxyIfEnabled(builder);
         }
@@ -82,7 +81,7 @@ public class HttpClient4Proxy {
      * @param provider HttpClient's credentials provider used to configure new client
      * @param url      URL to access (only host part is checked)
      */
-    public static void setProxyCredentialsForUrlIfEnabled(@Nonnull CredentialsProvider provider, @Nullable String url) {
+    public static void setProxyCredentialsForUrlIfEnabled(CredentialsProvider provider, @Nullable String url) {
         if (IdeHttpClientHelpers.getHttpProxyManager().isHttpProxyEnabledForUrl(url)) {
             setProxyCredentialsIfEnabled(provider);
         }

@@ -19,7 +19,6 @@ import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Debugger.EvaluateInConsole")
 final class EvaluateInConsoleAction extends XDebuggerActionBase {
@@ -34,7 +33,7 @@ final class EvaluateInConsoleAction extends XDebuggerActionBase {
         );
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

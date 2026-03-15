@@ -20,8 +20,7 @@ import consulo.component.util.pointer.NamedPointer;
 import consulo.component.util.pointer.NamedPointerImpl;
 import consulo.component.util.pointer.NamedPointerManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,13 +37,13 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   private final Map<T, NamedPointerImpl<T>> myPointers = new HashMap<>();
 
   @Nullable
-  protected abstract T findByName(@Nonnull String name);
+  protected abstract T findByName(String name);
 
   protected void updatePointers(T value) {
     updatePointers(value, value.getName());
   }
 
-  protected void updatePointers(T value, @Nonnull String name) {
+  protected void updatePointers(T value, String name) {
     NamedPointerImpl<T> pointer = myUnresolved.remove(name);
     if (pointer != null && pointer.get() == null) {
       pointer.setValue(value);
@@ -70,9 +69,9 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     }
   }
 
-  @Nonnull
+  
   @Override
-  public NamedPointer<T> create(@Nonnull T value) {
+  public NamedPointer<T> create(T value) {
     NamedPointerImpl<T> pointer = myPointers.get(value);
     if (pointer == null) {
       pointer = myUnresolved.get(value.getName());
@@ -87,14 +86,14 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     return pointer;
   }
 
-  @Nonnull
+  
   @Override
-  public NamedPointer<T> create(@Nonnull String name) {
+  public NamedPointer<T> create(String name) {
     return create(name, this::findByName);
   }
 
-  @Nonnull
-  public NamedPointer<T> create(@Nonnull String name, @Nonnull Function<String, T> findByNameFunc) {
+  
+  public NamedPointer<T> create(String name, Function<String, T> findByNameFunc) {
     T value = findByNameFunc.apply(name);
     if (value != null) {
       return create(value);

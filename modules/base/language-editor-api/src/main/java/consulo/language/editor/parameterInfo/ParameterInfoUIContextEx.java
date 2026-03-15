@@ -16,7 +16,7 @@
 
 package consulo.language.editor.parameterInfo;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.EnumSet;

@@ -5,8 +5,7 @@ import consulo.language.inject.ReferenceInjector;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -17,7 +16,7 @@ class InjectionResult implements Supplier<InjectionResult> {
   final List<? extends Pair<ReferenceInjector, PlaceImpl>> references;
   private final long myModificationCount;
 
-  InjectionResult(@Nonnull PsiFile hostFile, @Nullable List<? extends PsiFile> files, @Nullable List<? extends Pair<ReferenceInjector, PlaceImpl>> references) {
+  InjectionResult(PsiFile hostFile, @Nullable List<? extends PsiFile> files, @Nullable List<? extends Pair<ReferenceInjector, PlaceImpl>> references) {
     this.files = files;
     this.references = references;
     myModificationCount = calcModCount(hostFile);
@@ -47,11 +46,11 @@ class InjectionResult implements Supplier<InjectionResult> {
     return true;
   }
 
-  boolean isModCountUpToDate(@Nonnull PsiFile hostPsiFile) {
+  boolean isModCountUpToDate(PsiFile hostPsiFile) {
     return myModificationCount == calcModCount(hostPsiFile);
   }
 
-  private static long calcModCount(@Nonnull PsiFile hostPsiFile) {
+  private static long calcModCount(PsiFile hostPsiFile) {
     return (hostPsiFile.getModificationStamp() << 32) + hostPsiFile.getManager().getModificationTracker().getModificationCount();
   }
 }

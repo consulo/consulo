@@ -15,8 +15,7 @@
  */
 package consulo.application.progress;
 
-import jakarta.annotation.Nonnull;
 
 public interface Progressive {
-  void run(@Nonnull ProgressIndicator indicator);
+  void run(ProgressIndicator indicator);
 }

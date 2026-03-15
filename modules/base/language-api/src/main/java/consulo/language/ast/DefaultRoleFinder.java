@@ -16,7 +16,6 @@
 
 package consulo.language.ast;
 
-import jakarta.annotation.Nonnull;
 
 public class DefaultRoleFinder implements RoleFinder {
   protected IElementType[] myElementTypes;
@@ -26,7 +25,7 @@ public class DefaultRoleFinder implements RoleFinder {
   }
 
   @Override
-  public ASTNode findChild(@Nonnull ASTNode parent) {
+  public ASTNode findChild(ASTNode parent) {
     ASTNode current = parent.getFirstChildNode();
     while (current != null) {
       for (IElementType elementType : myElementTypes) {

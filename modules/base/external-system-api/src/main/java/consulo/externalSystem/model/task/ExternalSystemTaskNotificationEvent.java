@@ -1,6 +1,5 @@
 package consulo.externalSystem.model.task;
 
-import jakarta.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -16,17 +15,17 @@ public class ExternalSystemTaskNotificationEvent implements Serializable {
   private final ExternalSystemTaskId myId;
   private final String myDescription;
 
-  public ExternalSystemTaskNotificationEvent(@Nonnull ExternalSystemTaskId id, @Nonnull String description) {
+  public ExternalSystemTaskNotificationEvent(ExternalSystemTaskId id, String description) {
     myId = id;
     myDescription = description;
   }
 
-  @Nonnull
+  
   public ExternalSystemTaskId getId() {
     return myId;
   }
 
-  @Nonnull
+  
   public String getDescription() {
     return myDescription;
   }

@@ -21,7 +21,6 @@ import consulo.document.Document;
 import consulo.util.collection.WeakList;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 class UndoRedoStacksHolder {
@@ -37,13 +36,13 @@ class UndoRedoStacksHolder {
     myUndo = isUndo;
   }
 
-  @Nonnull
-  LinkedList<UndoableGroup> getStack(@Nonnull DocumentReference r) {
+  
+  LinkedList<UndoableGroup> getStack(DocumentReference r) {
     return r.getFile() != null ? doGetStackForFile(r) : doGetStackForDocument(r);
   }
 
-  @Nonnull
-  private LinkedList<UndoableGroup> doGetStackForFile(@Nonnull DocumentReference r) {
+  
+  private LinkedList<UndoableGroup> doGetStackForFile(DocumentReference r) {
     LinkedList<UndoableGroup> result = myDocumentStacks.get(r);
     if (result == null) {
       result = new LinkedList<UndoableGroup>();
@@ -52,8 +51,8 @@ class UndoRedoStacksHolder {
     return result;
   }
 
-  @Nonnull
-  private LinkedList<UndoableGroup> doGetStackForDocument(@Nonnull DocumentReference r) {
+  
+  private LinkedList<UndoableGroup> doGetStackForDocument(DocumentReference r) {
     // If document is not associated with file, we have to store its stack in document
     // itself to avoid memory leaks caused by holding stacks of all documents, ever created, here.
     // And to know, what documents do exist now, we have to maintain weak reference list of them.
@@ -68,7 +67,7 @@ class UndoRedoStacksHolder {
     return result;
   }
 
-  public boolean canBeUndoneOrRedone(@Nonnull Collection<DocumentReference> refs) {
+  public boolean canBeUndoneOrRedone(Collection<DocumentReference> refs) {
     if (refs.isEmpty()) return !myGlobalStack.isEmpty() && myGlobalStack.getLast().isValid();
     for (DocumentReference each : refs) {
       if (!getStack(each).isEmpty() && getStack(each).getLast().isValid()) return true;
@@ -76,7 +75,7 @@ class UndoRedoStacksHolder {
     return false;
   }
 
-  @Nonnull
+  
   public UndoableGroup getLastAction(Collection<DocumentReference> refs) {
     if (refs.isEmpty()) return myGlobalStack.getLast();
 
@@ -100,8 +99,8 @@ class UndoRedoStacksHolder {
     return mostRecentAction;
   }
 
-  @Nonnull
-  public Set<DocumentReference> collectClashingActions(@Nonnull UndoableGroup group) {
+  
+  public Set<DocumentReference> collectClashingActions(UndoableGroup group) {
     Set<DocumentReference> result = new HashSet<DocumentReference>();
 
     for (DocumentReference each : group.getAffectedDocuments()) {
@@ -121,13 +120,13 @@ class UndoRedoStacksHolder {
     return result;
   }
 
-  public void addToStacks(@Nonnull UndoableGroup group) {
+  public void addToStacks(UndoableGroup group) {
     for (LinkedList<UndoableGroup> each : getAffectedStacks(group)) {
       doAddToStack(each, group, each == myGlobalStack ? UndoManagerImpl.getGlobalUndoLimit() : UndoManagerImpl.getDocumentUndoLimit());
     }
   }
 
-  private void doAddToStack(@Nonnull LinkedList<UndoableGroup> stack, @Nonnull UndoableGroup group, int limit) {
+  private void doAddToStack(LinkedList<UndoableGroup> stack, UndoableGroup group, int limit) {
     if (!group.isUndoable() && stack.isEmpty()) return;
 
     stack.addLast(group);
@@ -136,14 +135,14 @@ class UndoRedoStacksHolder {
     }
   }
 
-  public void removeFromStacks(@Nonnull UndoableGroup group) {
+  public void removeFromStacks(UndoableGroup group) {
     for (LinkedList<UndoableGroup> each : getAffectedStacks(group)) {
       assert each.getLast() == group;
       each.removeLast();
     }
   }
 
-  public void clearStacks(boolean clearGlobal, @Nonnull Set<DocumentReference> refs) {
+  public void clearStacks(boolean clearGlobal, Set<DocumentReference> refs) {
     for (LinkedList<UndoableGroup> each : getAffectedStacks(clearGlobal, refs)) {
       while(!each.isEmpty()) {
         clearStacksFrom(each.getLast());
@@ -170,7 +169,7 @@ class UndoRedoStacksHolder {
     myDocumentsWithStacks.removeAll(docsToDrop);
   }
 
-  private void clearStacksFrom(@Nonnull UndoableGroup from) {
+  private void clearStacksFrom(UndoableGroup from) {
     for (LinkedList<UndoableGroup> each : getAffectedStacks(from)) {
       int pos = each.indexOf(from);
       if (pos == -1) continue;
@@ -184,13 +183,13 @@ class UndoRedoStacksHolder {
     }
   }
 
-  @Nonnull
-  private List<LinkedList<UndoableGroup>> getAffectedStacks(@Nonnull UndoableGroup group) {
+  
+  private List<LinkedList<UndoableGroup>> getAffectedStacks(UndoableGroup group) {
     return getAffectedStacks(group.isGlobal(), group.getAffectedDocuments());
   }
 
-  @Nonnull
-  private List<LinkedList<UndoableGroup>> getAffectedStacks(boolean global, @Nonnull Collection<DocumentReference> refs) {
+  
+  private List<LinkedList<UndoableGroup>> getAffectedStacks(boolean global, Collection<DocumentReference> refs) {
     List<LinkedList<UndoableGroup>> result = new ArrayList<LinkedList<UndoableGroup>>(refs.size() + 1);
     if (global) result.add(myGlobalStack);
     for (DocumentReference each : refs) {
@@ -203,34 +202,34 @@ class UndoRedoStacksHolder {
     clearStacks(true, getAffectedDocuments());
   }
 
-  public void collectAllAffectedDocuments(@Nonnull Collection<DocumentReference> result) {
+  public void collectAllAffectedDocuments(Collection<DocumentReference> result) {
     for (UndoableGroup each : myGlobalStack) {
       result.addAll(each.getAffectedDocuments());
     }
     collectLocalAffectedDocuments(result);
   }
 
-  private void collectLocalAffectedDocuments(@Nonnull Collection<DocumentReference> result) {
+  private void collectLocalAffectedDocuments(Collection<DocumentReference> result) {
     result.addAll(myDocumentStacks.keySet());
     for (Document each : myDocumentsWithStacks) {
       result.add(DocumentReferenceManager.getInstance().create(each));
     }
   }
 
-  @Nonnull
+  
   private Set<DocumentReference> getAffectedDocuments() {
     Set<DocumentReference> result = new HashSet<DocumentReference>();
     collectAllAffectedDocuments(result);
     return result;
   }
 
-  public int getLastCommandTimestamp(@Nonnull DocumentReference r) {
+  public int getLastCommandTimestamp(DocumentReference r) {
     LinkedList<UndoableGroup> stack = getStack(r);
     if (stack.isEmpty()) return 0;
     return Math.max(stack.getFirst().getCommandTimestamp(), stack.getLast().getCommandTimestamp());
   }
 
-  public void invalidateActionsFor(@Nonnull DocumentReference ref) {
+  public void invalidateActionsFor(DocumentReference ref) {
     for (LinkedList<UndoableGroup> eachStack : getAffectedStacks(true, Collections.singleton(ref))) {
       for (UndoableGroup eachGroup : eachStack) {
         eachGroup.invalidateActionsFor(ref);

@@ -24,8 +24,7 @@ import consulo.ui.ModalityState;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -65,12 +64,12 @@ public abstract class DumbService {
      */
     public abstract boolean isDumb();
 
-    public static boolean isDumb(@Nonnull Project project) {
+    public static boolean isDumb(Project project) {
         return getInstance(project).isDumb();
     }
 
-    @Nonnull
-    public static <T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull ExtensionPointName<T> extensionPoint) {
+    
+    public static <T> List<T> getDumbAwareExtensions(Project project, ExtensionPointName<T> extensionPoint) {
         List<T> list = extensionPoint.getExtensionList();
         if (list.isEmpty()) {
             return list;
@@ -80,8 +79,8 @@ public abstract class DumbService {
         return dumbService.filterByDumbAwareness(list);
     }
 
-    @Nonnull
-    public static <T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull ExtensionPoint<T> extensionPoint) {
+    
+    public static <T> List<T> getDumbAwareExtensions(Project project, ExtensionPoint<T> extensionPoint) {
         List<T> list = extensionPoint.getExtensionList();
         if (list.isEmpty()) {
             return list;
@@ -91,11 +90,11 @@ public abstract class DumbService {
         return dumbService.filterByDumbAwareness(list);
     }
 
-    @Nonnull
+    
     public static <C extends ComponentManager, T> List<T> getDumbAwareExtensions(
-        @Nonnull Project project,
-        @Nonnull C component,
-        @Nonnull ExtensionList<T, C> extensionPoint
+        Project project,
+        C component,
+        ExtensionList<T, C> extensionPoint
     ) {
         List<T> list = extensionPoint.getExtensionList(component);
         if (list.isEmpty()) {
@@ -116,7 +115,7 @@ public abstract class DumbService {
      * Note that it's not guaranteed that the dumb mode won't start again during this runnable execution,
      * it should manage that situation explicitly.
      */
-    public abstract void runWhenSmart(@Nonnull Runnable runnable);
+    public abstract void runWhenSmart(Runnable runnable);
 
     /**
      * Pause the current thread until dumb mode ends and then continue execution.
@@ -131,14 +130,14 @@ public abstract class DumbService {
      *
      * @throws ProcessCanceledException if the project is closed during dumb mode
      */
-    public <T> T runReadActionInSmartMode(@Nonnull Supplier<T> r) {
+    public <T> T runReadActionInSmartMode(Supplier<T> r) {
         SimpleReference<T> result = SimpleReference.create();
         runReadActionInSmartMode(() -> result.set(r.get()));
         return result.get();
     }
 
     @Nullable
-    public <T> T tryRunReadActionInSmartMode(@Nonnull Supplier<T> task, @Nullable String notification) {
+    public <T> T tryRunReadActionInSmartMode(Supplier<T> task, @Nullable String notification) {
         if (ApplicationManager.getApplication().isReadAccessAllowed()) {
             try {
                 return task.get();
@@ -161,7 +160,7 @@ public abstract class DumbService {
      *
      * @throws ProcessCanceledException if the project is closed during dumb mode
      */
-    public void runReadActionInSmartMode(@Nonnull Runnable r) {
+    public void runReadActionInSmartMode(Runnable r) {
         if (Application.get().isReadAccessAllowed()) {
             // we can't wait for smart mode to begin (it'd result in a deadlock),
             // so let's just pretend it's already smart and fail with IndexNotReadyException if not
@@ -194,7 +193,7 @@ public abstract class DumbService {
      * @deprecated This method provides no guarantees and should be avoided, please use {@link #runReadActionInSmartMode} instead.
      */
     @Deprecated
-    public void repeatUntilPassesInSmartMode(@Nonnull Runnable r) {
+    public void repeatUntilPassesInSmartMode(Runnable r) {
         while (true) {
             waitForSmartMode();
             try {
@@ -210,17 +209,17 @@ public abstract class DumbService {
      * Invoke the runnable later on EventDispatchThread AND when IDE isn't in dumb mode.
      * The runnable won't be invoked if the project is disposed during dumb mode.
      */
-    public abstract void smartInvokeLater(@Nonnull Runnable runnable);
+    public abstract void smartInvokeLater(Runnable runnable);
 
     /**
      * Invoke the runnable later on EventDispatchThread with the given modality state AND when IDE isn't in dumb mode.
      * The runnable won't be invoked if the project is disposed during dumb mode.
      */
-    public abstract void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState);
+    public abstract void smartInvokeLater(Runnable runnable, ModalityState modalityState);
 
     private static final Function<Project, DumbService> INSTANCE_KEY = ComponentUtil.createLazyInject(DumbService.class);
 
-    public static DumbService getInstance(@Nonnull Project project) {
+    public static DumbService getInstance(Project project) {
         return INSTANCE_KEY.apply(project);
     }
 
@@ -229,8 +228,8 @@ public abstract class DumbService {
      * or the dumb-aware ones if {@link #isDumb()} is true.
      * @see #isDumbAware(Object)
      */
-    @Nonnull
-    public <T> List<T> filterByDumbAwareness(@Nonnull T[] array) {
+    
+    public <T> List<T> filterByDumbAwareness(T[] array) {
         return filterByDumbAwareness(Arrays.asList(array));
     }
 
@@ -239,9 +238,9 @@ public abstract class DumbService {
      * or the dumb-aware ones if {@link #isDumb()} is true.
      * @see #isDumbAware(Object)
      */
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
-    public <T> List<T> filterByDumbAwareness(@Nonnull Collection<? extends T> collection) {
+    public <T> List<T> filterByDumbAwareness(Collection<? extends T> collection) {
         if (isDumb()) {
             ArrayList<T> result = new ArrayList<>(collection.size());
             for (T element : collection) {
@@ -262,7 +261,7 @@ public abstract class DumbService {
     /**
      * Iterable collection, and skip objects if project is dumb mode, and extension not support dumb mode
      */
-    public <T> void forEachDumAwareness(@Nonnull Iterable<? extends T> collection, Consumer<T> consumer) {
+    public <T> void forEachDumAwareness(Iterable<? extends T> collection, Consumer<T> consumer) {
         if (isDumb()) {
             for (T object : collection) {
                 if (isDumbAware(object)) {
@@ -282,14 +281,14 @@ public abstract class DumbService {
      * Tasks can specify custom "equality" policy via their constructor. Calling this method has no effect
      * if an "equal" task is already enqueued (but not yet running).
      */
-    public abstract void queueTask(@Nonnull DumbModeTask task);
+    public abstract void queueTask(DumbModeTask task);
 
     /**
      * Cancels the given task. If it's in the queue, it won't be executed. If it's already running,
      * its {@link ProgressIndicator} is canceled, so the next {@link ProgressManager#checkCanceled()} call
      * will throw {@link ProcessCanceledException}.
      */
-    public abstract void cancelTask(@Nonnull DumbModeTask task);
+    public abstract void cancelTask(DumbModeTask task);
 
     /**
      * Runs the "just submitted" tasks under a modal dialog. "Just submitted" means that tasks were queued for execution
@@ -306,7 +305,7 @@ public abstract class DumbService {
     /**
      * Disables given component temporarily during dumb mode.
      */
-    public void makeDumbAware(@Nonnull final JComponent componentToDisable, @Nonnull Disposable parentDisposable) {
+    public void makeDumbAware(final JComponent componentToDisable, Disposable parentDisposable) {
         componentToDisable.setEnabled(!isDumb());
         getProject().getMessageBus().connect(parentDisposable).subscribe(DumbModeListener.class, new DumbModeListener() {
             @Override
@@ -324,14 +323,14 @@ public abstract class DumbService {
     /**
      * Show a notification when given action is not available during dumb mode.
      */
-    public abstract void showDumbModeNotification(@Nonnull LocalizeValue message);
+    public abstract void showDumbModeNotification(LocalizeValue message);
 
     /**
      * Show a notification when given action is not available during dumb mode.
      */
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void showDumbModeNotification(@Nonnull String message) {
+    public void showDumbModeNotification(String message) {
         showDumbModeNotification(LocalizeValue.of(message));
     }
 
@@ -363,7 +362,7 @@ public abstract class DumbService {
      *
      * @see #setAlternativeResolveEnabled(boolean)
      */
-    public void withAlternativeResolveEnabled(@Nonnull Runnable runnable) {
+    public void withAlternativeResolveEnabled(Runnable runnable) {
         setAlternativeResolveEnabled(true);
         try {
             runnable.run();
@@ -378,7 +377,7 @@ public abstract class DumbService {
      *
      * @see #setAlternativeResolveEnabled(boolean)
      */
-    public <T, E extends Throwable> T computeWithAlternativeResolveEnabled(@Nonnull ThrowableComputable<T, E> runnable) throws E {
+    public <T, E extends Throwable> T computeWithAlternativeResolveEnabled(ThrowableComputable<T, E> runnable) throws E {
         setAlternativeResolveEnabled(true);
         try {
             return runnable.compute();
@@ -393,7 +392,7 @@ public abstract class DumbService {
      *
      * @see #setAlternativeResolveEnabled(boolean)
      */
-    public <E extends Throwable> void runWithAlternativeResolveEnabled(@Nonnull ThrowableRunnable<E> runnable) throws E {
+    public <E extends Throwable> void runWithAlternativeResolveEnabled(ThrowableRunnable<E> runnable) throws E {
         setAlternativeResolveEnabled(true);
         try {
             runnable.run();
@@ -408,7 +407,7 @@ public abstract class DumbService {
      *
      * @see #setAlternativeResolveEnabled(boolean)
      */
-    public <V, E extends Throwable> V runWithAlternativeResolveEnabled(@Nonnull ThrowableSupplier<V, E> runnable) throws E {
+    public <V, E extends Throwable> V runWithAlternativeResolveEnabled(ThrowableSupplier<V, E> runnable) throws E {
         setAlternativeResolveEnabled(true);
         try {
             return runnable.get();
@@ -430,7 +429,7 @@ public abstract class DumbService {
      */
     @Deprecated
     @SuppressWarnings({"unused"})
-    public static void allowStartingDumbModeInside(@Nonnull DumbModePermission permission, @Nonnull Runnable runnable) {
+    public static void allowStartingDumbModeInside(DumbModePermission permission, Runnable runnable) {
         runnable.run();
     }
 
@@ -440,7 +439,7 @@ public abstract class DumbService {
      *
      * @param activityName the text (a noun phrase) to display as a reason for the indexing being paused
      */
-    public void suspendIndexingAndRun(@Nonnull LocalizeValue activityName, @Nonnull Runnable activity) {
+    public void suspendIndexingAndRun(LocalizeValue activityName, Runnable activity) {
         try (AccessToken ignore = startHeavyActivityStarted(activityName)) {
             activity.run();
         }
@@ -454,7 +453,7 @@ public abstract class DumbService {
      */
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void suspendIndexingAndRun(@Nonnull String activityName, @Nonnull Runnable activity) {
+    public void suspendIndexingAndRun(String activityName, Runnable activity) {
         suspendIndexingAndRun(LocalizeValue.of(activityName), activity);
     }
 
@@ -464,8 +463,8 @@ public abstract class DumbService {
      *
      * @param activityName the text (a noun phrase) to display as a reason for the indexing being paused
      */
-    @Nonnull
-    public abstract AccessToken startHeavyActivityStarted(@Nonnull LocalizeValue activityName);
+    
+    public abstract AccessToken startHeavyActivityStarted(LocalizeValue activityName);
 
     /**
      * Suspend indexing. The user still can manually pause and resume the indexing. In that case, indexing won't be
@@ -475,8 +474,8 @@ public abstract class DumbService {
      */
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
-    public AccessToken startHeavyActivityStarted(@Nonnull String activityName) {
+    
+    public AccessToken startHeavyActivityStarted(String activityName) {
         return startHeavyActivityStarted(LocalizeValue.of(activityName));
     }
 

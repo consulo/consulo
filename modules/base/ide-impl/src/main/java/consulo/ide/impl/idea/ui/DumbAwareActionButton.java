@@ -20,8 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author gregsh
@@ -31,15 +30,15 @@ public abstract class DumbAwareActionButton extends AnActionButton implements Du
         super(text);
     }
 
-    protected DumbAwareActionButton(@Nonnull LocalizeValue text) {
+    protected DumbAwareActionButton(LocalizeValue text) {
         super(text);
     }
 
-    protected DumbAwareActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected DumbAwareActionButton(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected DumbAwareActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected DumbAwareActionButton(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 

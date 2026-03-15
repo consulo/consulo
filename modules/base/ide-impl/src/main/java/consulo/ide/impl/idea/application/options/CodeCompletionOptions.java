@@ -23,14 +23,13 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPanel> implements SearchableConfigurable, ApplicationConfigurable {
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   protected CodeCompletionPanel createPanel(Disposable uiDisposable) {
     return new CodeCompletionPanel(ActionManager.getInstance());
@@ -38,23 +37,23 @@ public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPane
 
   @RequiredUIAccess
   @Override
-  protected boolean isModified(@Nonnull CodeCompletionPanel component) {
+  protected boolean isModified(CodeCompletionPanel component) {
     return component.isModified();
   }
 
   @RequiredUIAccess
   @Override
-  protected void apply(@Nonnull CodeCompletionPanel component) throws ConfigurationException {
+  protected void apply(CodeCompletionPanel component) throws ConfigurationException {
     component.apply();
   }
 
   @RequiredUIAccess
   @Override
-  protected void reset(@Nonnull CodeCompletionPanel component) {
+  protected void reset(CodeCompletionPanel component) {
     component.reset();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return ApplicationLocalize.titleCodeCompletion();
@@ -67,7 +66,7 @@ public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPane
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "editor.preferences.completion";
   }

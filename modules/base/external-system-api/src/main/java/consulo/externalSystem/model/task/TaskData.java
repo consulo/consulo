@@ -18,8 +18,7 @@ package consulo.externalSystem.model.task;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.service.project.AbstractExternalEntityData;
 import consulo.externalSystem.service.project.ExternalConfigPathAware;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Container for external system task information.
@@ -31,27 +30,27 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
 
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
+  
   private final String myName;
-  @Nonnull
+  
   private final String myLinkedExternalProjectPath;
 
   @Nullable private final String myDescription;
 
-  public TaskData(@Nonnull ProjectSystemId owner, @Nonnull String name, @Nonnull String path, @Nullable String description) {
+  public TaskData(ProjectSystemId owner, String name, String path, @Nullable String description) {
     super(owner);
     myName = name;
     myLinkedExternalProjectPath = path;
     myDescription = description;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
   @Override
-  @Nonnull
+  
   public String getLinkedExternalProjectPath() {
     return myLinkedExternalProjectPath;
   }
@@ -86,7 +85,7 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
   }
 
   @Override
-  public int compareTo(@Nonnull TaskData that) {
+  public int compareTo(TaskData that) {
     return myName.compareTo(that.getName());
   }
 

@@ -25,7 +25,6 @@ import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -36,27 +35,27 @@ import java.util.List;
 public interface ChangeSignatureUsageProcessor {
     ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME = ExtensionPointName.create(ChangeSignatureUsageProcessor.class);
 
-    @Nonnull
-    UsageInfo[] findUsages(@Nonnull ChangeInfo info);
+    
+    UsageInfo[] findUsages(ChangeInfo info);
 
-    @Nonnull
-    MultiMap<PsiElement, LocalizeValue> findConflicts(@Nonnull ChangeInfo info, SimpleReference<UsageInfo[]> refUsages);
+    
+    MultiMap<PsiElement, LocalizeValue> findConflicts(ChangeInfo info, SimpleReference<UsageInfo[]> refUsages);
 
     boolean processUsage(
-        @Nonnull ChangeInfo changeInfo,
-        @Nonnull UsageInfo usageInfo,
+        ChangeInfo changeInfo,
+        UsageInfo usageInfo,
         boolean beforeMethodChange,
-        @Nonnull UsageInfo[] usages
+        UsageInfo[] usages
     );
 
-    boolean processPrimaryMethod(@Nonnull ChangeInfo changeInfo);
+    boolean processPrimaryMethod(ChangeInfo changeInfo);
 
-    boolean shouldPreviewUsages(@Nonnull ChangeInfo changeInfo, @Nonnull UsageInfo[] usages);
+    boolean shouldPreviewUsages(ChangeInfo changeInfo, UsageInfo[] usages);
 
     void registerConflictResolvers(
-        @Nonnull List<ResolveSnapshotProvider.ResolveSnapshot> snapshots,
-        @Nonnull ResolveSnapshotProvider resolveSnapshotProvider,
-        @Nonnull UsageInfo[] usages,
-        @Nonnull ChangeInfo changeInfo
+        List<ResolveSnapshotProvider.ResolveSnapshot> snapshots,
+        ResolveSnapshotProvider resolveSnapshotProvider,
+        UsageInfo[] usages,
+        ChangeInfo changeInfo
     );
 }

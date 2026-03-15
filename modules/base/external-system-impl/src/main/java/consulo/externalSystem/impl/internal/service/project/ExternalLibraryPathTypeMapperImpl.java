@@ -24,7 +24,6 @@ import consulo.externalSystem.model.project.LibraryPathType;
 import consulo.externalSystem.service.project.ExternalLibraryPathTypeMapper;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -45,9 +44,9 @@ public class ExternalLibraryPathTypeMapperImpl implements ExternalLibraryPathTyp
     assert LibraryPathType.values().length == MAPPINGS.size();
   }
 
-  @Nonnull
+  
   @Override
-  public OrderRootType map(@Nonnull LibraryPathType type) {
+  public OrderRootType map(LibraryPathType type) {
     return MAPPINGS.get(type);
   }
 }

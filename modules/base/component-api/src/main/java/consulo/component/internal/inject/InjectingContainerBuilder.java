@@ -15,21 +15,20 @@
  */
 package consulo.component.internal.inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2018-08-23
  */
 public interface InjectingContainerBuilder {
-  @Nonnull
-  default <T> InjectingPoint<T> bind(@Nonnull Class<T> key) {
+  
+  default <T> InjectingPoint<T> bind(Class<T> key) {
     return bind(InjectingKey.of(key));
   }
 
-  @Nonnull
-  <T> InjectingPoint<T> bind(@Nonnull InjectingKey<T> key);
+  
+  <T> InjectingPoint<T> bind(InjectingKey<T> key);
 
-  @Nonnull
+  
   InjectingContainer build();
 }

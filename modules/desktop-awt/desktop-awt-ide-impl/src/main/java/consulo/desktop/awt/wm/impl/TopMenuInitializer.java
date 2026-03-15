@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Window;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.io.File;
@@ -92,7 +91,7 @@ public class TopMenuInitializer {
     }
   }
 
-  @Nonnull
+  
   private static Project getNotNullProject() {
     Project project = getProject();
     return project == null ? ProjectManager.getInstance().getDefaultProject() : project;

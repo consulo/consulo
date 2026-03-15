@@ -7,15 +7,14 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
 
 public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPanel<Trinity<LocalizeValue, Image, String>> {
 
-    public CreateWithTemplatesDialogPanel(@Nonnull List<Trinity<LocalizeValue, Image, String>> templates, @Nullable String selectedItem) {
+    public CreateWithTemplatesDialogPanel(List<Trinity<LocalizeValue, Image, String>> templates, @Nullable String selectedItem) {
         super(templates, LIST_RENDERER);
         myTemplatesList.addListSelectionListener(e -> {
             Trinity<LocalizeValue, Image, String> selectedValue = myTemplatesList.getSelectedValue();
@@ -31,12 +30,12 @@ public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPan
         return myTextField;
     }
 
-    @Nonnull
+    
     public String getEnteredName() {
         return myTextField.getValue().trim();
     }
 
-    @Nonnull
+    
     public String getSelectedTemplate() {
         return myTemplatesList.getSelectedValue().third;
     }
@@ -63,7 +62,7 @@ public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPan
 
     private static final ListCellRenderer<Trinity<LocalizeValue, Image, String>> LIST_RENDERER = new ColoredListCellRenderer<>() {
         @Override
-        protected void customizeCellRenderer(@Nonnull JList<? extends Trinity<LocalizeValue, Image, String>> list, Trinity<LocalizeValue, Image, String> value, int index, boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(JList<? extends Trinity<LocalizeValue, Image, String>> list, Trinity<LocalizeValue, Image, String> value, int index, boolean selected, boolean hasFocus) {
             setBorder(JBCurrentTheme.listCellBorderFull());
             if (value != null) {
                 append(value.first);

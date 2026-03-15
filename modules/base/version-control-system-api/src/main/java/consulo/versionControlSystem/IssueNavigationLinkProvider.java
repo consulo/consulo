@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
@@ -31,13 +30,13 @@ import java.util.concurrent.CompletableFuture;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IssueNavigationLinkProvider {
-    @Nonnull
+    
     LocalizeValue getDisplayName();
 
-    @Nonnull
+    
     Image getIcon();
 
-    @Nonnull
+    
     @RequiredUIAccess
-    CompletableFuture<IssueNavigationLink> ask(@Nonnull JComponent fromComponent);
+    CompletableFuture<IssueNavigationLink> ask(JComponent fromComponent);
 }

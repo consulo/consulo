@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.log;
 
 import consulo.annotation.UsedInPlugin;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,45 +28,45 @@ public class LogDataImpl implements VcsLogProvider.DetailedLogData, VcsLogProvid
                                                            Collections.<VcsUser>emptySet(),
                                                            Collections.<VcsCommitMetadata>emptyList());
 
-  @Nonnull
+  
   private final List<VcsCommitMetadata> myCommits;
-  @Nonnull
+  
   private final Set<VcsRef> myRefs;
-  @Nonnull
+  
   private final Set<VcsUser> myUsers;
 
-  @Nonnull
+  
   public static LogDataImpl empty() {
     return EMPTY;
   }
 
-  public LogDataImpl(@Nonnull Set<VcsRef> refs, @Nonnull Set<VcsUser> users) {
+  public LogDataImpl(Set<VcsRef> refs, Set<VcsUser> users) {
     this(refs, users, Collections.<VcsCommitMetadata>emptyList());
   }
 
-  public LogDataImpl(@Nonnull Set<VcsRef> refs, @Nonnull List<VcsCommitMetadata> metadatas) {
+  public LogDataImpl(Set<VcsRef> refs, List<VcsCommitMetadata> metadatas) {
     this(refs, Collections.<VcsUser>emptySet(), metadatas);
   }
 
-  private LogDataImpl(@Nonnull Set<VcsRef> refs, @Nonnull Set<VcsUser> users, @Nonnull List<VcsCommitMetadata> commits) {
+  private LogDataImpl(Set<VcsRef> refs, Set<VcsUser> users, List<VcsCommitMetadata> commits) {
     myRefs = refs;
     myUsers = users;
     myCommits = commits;
   }
 
-  @Nonnull
+  
   @Override
   public List<VcsCommitMetadata> getCommits() {
     return myCommits;
   }
 
   @Override
-  @Nonnull
+  
   public Set<VcsRef> getRefs() {
     return myRefs;
   }
 
-  @Nonnull
+  
   @Override
   public Set<VcsUser> getUsers() {
     return myUsers;

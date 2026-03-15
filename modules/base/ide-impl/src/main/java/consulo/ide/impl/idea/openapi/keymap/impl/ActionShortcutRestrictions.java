@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.ui.ex.action.IdeActions;
 
-import jakarta.annotation.Nonnull;
 
 public class ActionShortcutRestrictions {
   private static final ActionShortcutRestrictions ourInstance = new ActionShortcutRestrictions();
@@ -26,7 +25,7 @@ public class ActionShortcutRestrictions {
     return ourInstance;
   }
 
-  @Nonnull
+  
   public ShortcutRestrictions getForActionId(String actionId) {
     if (IdeActions.ACTION_EDITOR_ADD_OR_REMOVE_CARET.equals(actionId)) {
       return new ShortcutRestrictions(true, false, false, false);

@@ -24,8 +24,7 @@ import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -85,12 +84,12 @@ public abstract class ReorderableListController<T> {
         addAction(new AnAction(UILocalize.moveUpActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMoveup()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 ListUtil.moveSelectedItemsUp(myList);
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(ListUtil.canMoveSelectedItemsUp(myList));
             }
         });
@@ -100,12 +99,12 @@ public abstract class ReorderableListController<T> {
         addAction(new AnAction(UILocalize.moveDownActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMovedown()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 ListUtil.moveSelectedItemsDown(myList);
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(ListUtil.canMoveSelectedItemsDown(myList));
             }
         });
@@ -194,7 +193,7 @@ public abstract class ReorderableListController<T> {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 V change = myBehaviour.performAction(e);
                 if (change == null) {
                     return;
@@ -203,7 +202,7 @@ public abstract class ReorderableListController<T> {
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 myBehaviour.updateAction(e);
             }
         }

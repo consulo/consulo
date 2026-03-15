@@ -23,8 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
  */
 public class LanguageVersionUtil {
   @RequiredReadAction
-  public static LanguageVersion findLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+  public static LanguageVersion findLanguageVersion(Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     LanguageVersion languageVersion = LanguageVersion.KEY.get(virtualFile);
     if (languageVersion != null) {
       return languageVersion;
@@ -43,7 +42,7 @@ public class LanguageVersionUtil {
   }
 
   @RequiredReadAction
-  public static LanguageVersion findLanguageVersion(@Nonnull Language language, @Nonnull PsiFile psiFile) {
+  public static LanguageVersion findLanguageVersion(Language language, PsiFile psiFile) {
     if (psiFile.getLanguage() == language) {
       return psiFile.getLanguageVersion();
     }
@@ -58,7 +57,7 @@ public class LanguageVersionUtil {
   }
 
   @RequiredReadAction
-  public static LanguageVersion findLanguageVersion(@Nonnull Language language, @Nonnull PsiElement element) {
+  public static LanguageVersion findLanguageVersion(Language language, PsiElement element) {
     if (element.getLanguage() == language) {
       return element.getLanguageVersion();
     }
@@ -70,7 +69,7 @@ public class LanguageVersionUtil {
   }
 
   @RequiredReadAction
-  public static LanguageVersion findDefaultVersion(@Nonnull Language language) {
+  public static LanguageVersion findDefaultVersion(Language language) {
     return LanguageVersionResolver.forLanguage(language).getLanguageVersion(language, null, null);
   }
 }

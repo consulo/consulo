@@ -18,7 +18,6 @@ package consulo.ui.ex.internal;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -61,7 +60,7 @@ public class SimpleListPopupStep<T> extends BaseListPopupStep<T> {
         return FINAL_CHOICE;
     }
 
-    @Nonnull
+    
     @Override
     public String getTextFor(T value) {
         return myTextBuilder.apply(value);

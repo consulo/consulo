@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.event;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -28,7 +27,7 @@ public class VFileCopyEvent extends VFileEvent {
   private final VirtualFile myNewParent;
   private final String myNewChildName;
 
-  public VFileCopyEvent(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String newChildName) {
+  public VFileCopyEvent(Object requestor, VirtualFile file, VirtualFile newParent, String newChildName) {
     super(requestor, false);
     myFile = file;
     myNewParent = newParent;
@@ -36,17 +35,17 @@ public class VFileCopyEvent extends VFileEvent {
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   public VirtualFile getNewParent() {
     return myNewParent;
   }
 
-  @Nonnull
+  
   public String getNewChildName() {
     return myNewChildName;
   }
@@ -56,13 +55,13 @@ public class VFileCopyEvent extends VFileEvent {
     return "VfsEvent[copy " + myFile + " to " + myNewParent + " as " + myNewChildName + "]";
   }
 
-  @Nonnull
+  
   @Override
   protected String computePath() {
     return myNewParent.getPath() + "/" + myNewChildName;
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();

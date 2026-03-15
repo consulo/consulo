@@ -60,8 +60,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -108,7 +107,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @Override
-    @Nonnull
+    
     public Module[] getModules() {
         return myModuleModel.getModules();
     }
@@ -134,7 +133,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @Override
-    public ModuleRootModel getRootModel(@Nonnull Module module) {
+    public ModuleRootModel getRootModel(Module module) {
         return getOrCreateModuleEditor(module).getRootModel();
     }
 
@@ -302,7 +301,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         return myModuleModel;
     }
 
-    @Nonnull
+    
     @Override
     public String getRealName(Module module) {
         ModifiableModuleModel moduleModel = getModuleModel();
@@ -331,7 +330,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         return moduleEditor == null || doRemoveModule(moduleEditor);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     public Promise<List<Module>> addModule(boolean anImport) {
@@ -413,7 +412,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @RequiredUIAccess
-    private boolean doRemoveModule(@Nonnull ModuleEditor selectedEditor) {
+    private boolean doRemoveModule(ModuleEditor selectedEditor) {
         LocalizeValue question;
         if (myModuleEditors.size() == 1) {
             question = ProjectLocalize.moduleRemoveLastConfirmation();
@@ -457,7 +456,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         }
     }
 
-    @Nonnull
+    
     @Override
     public String getCompilerOutputUrl() {
         return myCompilerOutputUrl;
@@ -495,7 +494,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @RequiredUIAccess
-    public static void showArtifactSettings(@Nonnull Project project, @Nullable Artifact artifact) {
+    public static void showArtifactSettings(Project project, @Nullable Artifact artifact) {
         ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(artifact, true));
     }
 

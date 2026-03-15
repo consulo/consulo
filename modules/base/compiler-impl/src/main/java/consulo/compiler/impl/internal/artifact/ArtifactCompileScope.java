@@ -31,8 +31,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -50,8 +49,8 @@ public class ArtifactCompileScope {
 
     @RequiredReadAction
     public static ModuleCompileScope createScopeForModulesInArtifacts(
-        @Nonnull Project project,
-        @Nonnull Collection<? extends Artifact> artifacts
+        Project project,
+        Collection<? extends Artifact> artifacts
     ) {
         boolean[] includeTestScope = new boolean[1];
         Set<Module> modules = ArtifactUtil.getModulesIncludedInArtifacts(artifacts, project, includeTestScope);
@@ -60,16 +59,16 @@ public class ArtifactCompileScope {
 
     @RequiredReadAction
     public static CompileScope createArtifactsScope(
-        @Nonnull Project project,
-        @Nonnull Collection<Artifact> artifacts
+        Project project,
+        Collection<Artifact> artifacts
     ) {
         return createArtifactsScope(project, artifacts, false);
     }
 
     @RequiredReadAction
     public static CompileScope createArtifactsScope(
-        @Nonnull Project project,
-        @Nonnull Collection<Artifact> artifacts,
+        Project project,
+        Collection<Artifact> artifacts,
         boolean forceArtifactBuild
     ) {
         return createScopeWithArtifacts(createScopeForModulesInArtifacts(project, artifacts), artifacts, true, forceArtifactBuild);
@@ -77,7 +76,7 @@ public class ArtifactCompileScope {
 
     public static CompileScope createScopeWithArtifacts(
         CompileScope baseScope,
-        @Nonnull Collection<Artifact> artifacts,
+        Collection<Artifact> artifacts,
         boolean useCustomContentId
     ) {
         return createScopeWithArtifacts(baseScope, artifacts, useCustomContentId, false);
@@ -85,7 +84,7 @@ public class ArtifactCompileScope {
 
     public static CompileScope createScopeWithArtifacts(
         CompileScope baseScope,
-        @Nonnull Collection<Artifact> artifacts,
+        Collection<Artifact> artifacts,
         boolean useCustomContentId,
         boolean forceArtifactBuild
     ) {
@@ -138,7 +137,7 @@ public class ArtifactCompileScope {
         return compileScope.getUserData(ARTIFACTS_KEY);
     }
 
-    public static boolean isArtifactRebuildForced(@Nonnull CompileScope scope) {
+    public static boolean isArtifactRebuildForced(CompileScope scope) {
         return Boolean.TRUE.equals(scope.getUserData(FORCE_ARTIFACT_BUILD));
     }
 
@@ -155,10 +154,10 @@ public class ArtifactCompileScope {
         );
     }
 
-    @Nonnull
+    
     private static Set<Artifact> addIncludedArtifacts(
-        @Nonnull Collection<Artifact> artifacts,
-        @Nonnull PackagingElementResolvingContext context,
+        Collection<Artifact> artifacts,
+        PackagingElementResolvingContext context,
         boolean withOutputPathOnly
     ) {
         Set<Artifact> result = new HashSet<>();

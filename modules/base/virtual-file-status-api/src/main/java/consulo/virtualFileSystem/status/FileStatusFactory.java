@@ -20,8 +20,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +31,11 @@ public class FileStatusFactory {
   private FileStatusFactory() {
   }
 
-  public synchronized FileStatus createFileStatus(@Nonnull String id, @Nonnull LocalizeValue description) {
+  public synchronized FileStatus createFileStatus(String id, LocalizeValue description) {
     return createFileStatus(id, description, null);
   }
 
-  public synchronized FileStatus createFileStatus(@Nonnull String id, @Nonnull LocalizeValue description, @Nullable ColorValue color) {
+  public synchronized FileStatus createFileStatus(String id, LocalizeValue description, @Nullable ColorValue color) {
     FileStatusImpl result = new FileStatusImpl(id, EditorColorKey.createColorKey("FILESTATUS_" + id, color), description);
     myStatuses.add(result);
     return result;
@@ -58,18 +57,18 @@ public class FileStatusFactory {
     private final EditorColorKey myColorKey;
     private final LocalizeValue myText;
 
-    public FileStatusImpl(@Nonnull String status, @Nonnull EditorColorKey key, LocalizeValue text) {
+    public FileStatusImpl(String status, EditorColorKey key, LocalizeValue text) {
       myStatus = status;
       myColorKey = key;
       myText = text;
     }
 
-    @Nonnull
+    
     public String toString() {
       return myStatus;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
       return myText;
@@ -80,13 +79,13 @@ public class FileStatusFactory {
       return EditorColorsManager.getInstance().getGlobalScheme().getColor(getColorKey());
     }
 
-    @Nonnull
+    
     @Override
     public EditorColorKey getColorKey() {
       return myColorKey;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
       return myStatus;

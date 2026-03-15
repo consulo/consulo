@@ -23,15 +23,14 @@ import consulo.platform.LineSeparator;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.Charset;
 
 public interface DocumentContent extends DiffContent {
   /**
    * Represents this content as Document
    */
-  @Nonnull
+  
   Document getDocument();
 
   /**
@@ -47,7 +46,7 @@ public interface DocumentContent extends DiffContent {
    * Provides a way to open given text place in editor
    */
   @Nullable
-  default Navigatable getNavigatable(@Nonnull LineCol position) {
+  default Navigatable getNavigatable(LineCol position) {
     return null;
   }
 

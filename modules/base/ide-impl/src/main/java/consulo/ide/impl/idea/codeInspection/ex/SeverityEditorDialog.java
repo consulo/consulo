@@ -46,9 +46,8 @@ import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.style.StandardColors;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -74,9 +73,9 @@ public class SeverityEditorDialog extends DialogWrapper {
   private final SeverityRegistrarImpl mySeverityRegistrar;
   private final CardLayout myCard;
   private final JPanel myRightPanel;
-  @NonNls
+  
   private static final String DEFAULT = "DEFAULT";
-  @NonNls
+  
   private static final String EDITABLE = "EDITABLE";
 
   public SeverityEditorDialog(Project project, HighlightSeverity severity, SeverityRegistrarImpl severityRegistrar) {

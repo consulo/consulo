@@ -4,8 +4,7 @@ package consulo.codeEditor;
 import consulo.disposer.Disposable;
 import consulo.document.RangeMarker;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.awt.*;
@@ -25,7 +24,7 @@ public interface InlayModel {
      * Same as {@link #addInlineElement(int, boolean, EditorCustomElementRenderer)}, making created element associated with following text.
      */
     @Nullable
-    default <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, @Nonnull T renderer) {
+    default <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, T renderer) {
         return addInlineElement(offset, false, renderer);
     }
 
@@ -46,7 +45,7 @@ public interface InlayModel {
         int offset,
         boolean relatesToPrecedingText,
         int priority,
-        @Nonnull T renderer
+        T renderer
     );
 
     /**
@@ -58,7 +57,7 @@ public interface InlayModel {
      * is not supported by current editor instance.
      */
     @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, @Nonnull T renderer);
+    <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, T renderer);
 
     /**
      * Adds an inline inlay at the given offset.
@@ -68,7 +67,7 @@ public interface InlayModel {
      * @return {@code null} if the inlay cannot be created, for example when the editor doesn't support its functionality
      */
     @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, @Nonnull InlayProperties properties, @Nonnull T renderer);
+    <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, InlayProperties properties, T renderer);
 
     /**
      * Adds a block inlay at the given offset.
@@ -89,7 +88,7 @@ public interface InlayModel {
         boolean relatesToPrecedingText,
         boolean showAbove,
         int priority,
-        @Nonnull T renderer);
+        T renderer);
 
     /**
      * Adds a block inlay at the given offset.
@@ -98,7 +97,7 @@ public interface InlayModel {
      * @param renderer defines the size and appearance of the inlay
      * @return {@code null} if the inlay cannot be created, for example when the editor doesn't support its functionality
      */
-    <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, @Nonnull InlayProperties properties, @Nonnull T renderer);
+    <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, InlayProperties properties, T renderer);
 
     /**
      * Introduces a visual element, which will be displayed after the end of corresponding logical line.
@@ -109,7 +108,7 @@ public interface InlayModel {
      * is not supported by current editor instance.
      */
     @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, @Nonnull T renderer);
+    <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, T renderer);
 
     /**
      * Adds an after-line-end inlay at the given offset.
@@ -119,19 +118,19 @@ public interface InlayModel {
      * @return {@code null} if the inlay cannot be created, for example when the editor doesn't support its functionality
      */
     @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, @Nonnull InlayProperties properties, @Nonnull T renderer);
+    <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, InlayProperties properties, T renderer);
 
     /**
      * Returns a list of inline elements for a given offset range (both limits are inclusive). Returned list is sorted by offset.
      * Both visible and invisible (due to folding) elements are returned.
      */
-    @Nonnull
+    
     List<Inlay<?>> getInlineElementsInRange(int startOffset, int endOffset);
 
     /**
      * Same as {@link #getInlineElementsInRange(int, int)}, but returned list contains only inlays with renderer of given type.
      */
-    default <T> List<Inlay<? extends T>> getInlineElementsInRange(int startOffset, int endOffset, @Nonnull Class<T> type) {
+    default <T> List<Inlay<? extends T>> getInlineElementsInRange(int startOffset, int endOffset, Class<T> type) {
         //noinspection unchecked
         return (List) ContainerUtil.filter(getInlineElementsInRange(startOffset, endOffset), inlay -> type.isInstance(inlay.getRenderer()));
     }
@@ -140,13 +139,13 @@ public interface InlayModel {
      * Returns a list of block elements for a given offset range (both limits are inclusive) in priority order
      * (higher priority ones appear first). Both visible and invisible (due to folding) elements are returned.
      */
-    @Nonnull
+    
     List<Inlay<?>> getBlockElementsInRange(int startOffset, int endOffset);
 
     /**
      * Same as {@link #getBlockElementsInRange(int, int)}, but returned list contains only inlays with renderer of given type.
      */
-    default <T> List<Inlay<? extends T>> getBlockElementsInRange(int startOffset, int endOffset, @Nonnull Class<T> type) {
+    default <T> List<Inlay<? extends T>> getBlockElementsInRange(int startOffset, int endOffset, Class<T> type) {
         //noinspection unchecked
         return (List) ContainerUtil.filter(getBlockElementsInRange(startOffset, endOffset), inlay -> type.isInstance(inlay.getRenderer()));
     }
@@ -155,7 +154,7 @@ public interface InlayModel {
      * Returns a list of block elements displayed for a given visual line in appearance order (top to bottom).
      * Only visible (not folded) elements are returned.
      */
-    @Nonnull
+    
     List<Inlay<?>> getBlockElementsForVisualLine(int visualLine, boolean above);
 
     /**
@@ -188,7 +187,7 @@ public interface InlayModel {
      * Tells whether there exists an inline visual element at a given visual position.
      * Only visual position to the left of the element is recognized.
      */
-    default boolean hasInlineElementAt(@Nonnull VisualPosition visualPosition) {
+    default boolean hasInlineElementAt(VisualPosition visualPosition) {
         return getInlineElementAt(visualPosition) != null;
     }
 
@@ -196,21 +195,21 @@ public interface InlayModel {
      * Return a custom visual element at at a given visual position. Only visual position to the left of the element is recognized.
      */
     @Nullable
-    Inlay getInlineElementAt(@Nonnull VisualPosition visualPosition);
+    Inlay getInlineElementAt(VisualPosition visualPosition);
 
     /**
      * Return a custom visual element at given coordinates in editor's coordinate space,
      * or {@code null} if there's no element at given point.
      */
     @Nullable
-    Inlay getElementAt(@Nonnull Point point);
+    Inlay getElementAt(Point point);
 
     /**
      * Return a custom visual element with renderer of given type at given coordinates in editor's coordinate space,
      * or {@code null} if there's no such element at given point.
      */
     @Nullable
-    default <T> Inlay<? extends T> getElementAt(@Nonnull Point point, @Nonnull Class<T> type) {
+    default <T> Inlay<? extends T> getElementAt(Point point, Class<T> type) {
         Inlay inlay = getElementAt(point);
         //noinspection unchecked
         return inlay != null && type.isInstance(inlay.getRenderer()) ? inlay : null;
@@ -222,14 +221,14 @@ public interface InlayModel {
      *
      * @see #addAfterLineEndElement(int, boolean, EditorCustomElementRenderer)
      */
-    @Nonnull
+    
     List<Inlay<?>> getAfterLineEndElementsInRange(int startOffset, int endOffset);
 
     /**
      * Same as {@link #getAfterLineEndElementsInRange(int, int)}, but returned list contains only inlays with renderer of given type.
      */
-    @Nonnull
-    default <T> List<Inlay<? extends T>> getAfterLineEndElementsInRange(int startOffset, int endOffset, @Nonnull Class<T> type) {
+    
+    default <T> List<Inlay<? extends T>> getAfterLineEndElementsInRange(int startOffset, int endOffset, Class<T> type) {
         //noinspection unchecked
         return (List) ContainerUtil.filter(getAfterLineEndElementsInRange(startOffset, endOffset), inlay -> type.isInstance(inlay.getRenderer()));
     }
@@ -240,7 +239,7 @@ public interface InlayModel {
      *
      * @see #addAfterLineEndElement(int, boolean, EditorCustomElementRenderer)
      */
-    @Nonnull
+    
     List<Inlay<?>> getAfterLineEndElementsForLogicalLine(int logicalLine);
 
     /**
@@ -275,7 +274,7 @@ public interface InlayModel {
      *
      * @param batchMode whether to enable batch mode for executed inlay operations
      */
-    default void execute(boolean batchMode, @Nonnull Runnable operation) {
+    default void execute(boolean batchMode, Runnable operation) {
         operation.run();
     }
 
@@ -291,35 +290,35 @@ public interface InlayModel {
     /**
      * Adds a listener that will be notified after adding, updating and removal of custom visual elements.
      */
-    void addListener(@Nonnull Listener listener, @Nonnull Disposable disposable);
+    void addListener(Listener listener, Disposable disposable);
 
     interface Listener extends EventListener {
-        default void onAdded(@Nonnull Inlay<?> inlay) {
+        default void onAdded(Inlay<?> inlay) {
         }
 
-        default void onUpdated(@Nonnull Inlay<?> inlay) {
+        default void onUpdated(Inlay<?> inlay) {
         }
 
         /**
          * @param changeFlags see {@link ChangeFlags}
          */
-        default void onUpdated(@Nonnull Inlay<?> inlay, @MagicConstant(flagsFromClass = ChangeFlags.class) int changeFlags) {
+        default void onUpdated(Inlay<?> inlay, @MagicConstant(flagsFromClass = ChangeFlags.class) int changeFlags) {
             onUpdated(inlay);
         }
 
-        default void onRemoved(@Nonnull Inlay<?> inlay) {
+        default void onRemoved(Inlay<?> inlay) {
         }
 
         /**
          * @see #execute(boolean, Runnable)
          */
-        default void onBatchModeStart(@Nonnull Editor editor) {
+        default void onBatchModeStart(Editor editor) {
         }
 
         /**
          * @see #execute(boolean, Runnable)
          */
-        default void onBatchModeFinish(@Nonnull Editor editor) {
+        default void onBatchModeFinish(Editor editor) {
         }
     }
 
@@ -329,14 +328,14 @@ public interface InlayModel {
      */
     abstract class SimpleAdapter implements Listener {
         @Override
-        public void onAdded(@Nonnull Inlay<?> inlay) {
+        public void onAdded(Inlay<?> inlay) {
             onUpdated(inlay, ChangeFlags.WIDTH_CHANGED |
                 ChangeFlags.HEIGHT_CHANGED |
                 (inlay.getGutterIconRenderer() == null ? 0 : ChangeFlags.GUTTER_ICON_PROVIDER_CHANGED));
         }
 
         @Override
-        public void onRemoved(@Nonnull Inlay<?> inlay) {
+        public void onRemoved(Inlay<?> inlay) {
             onUpdated(inlay, ChangeFlags.WIDTH_CHANGED |
                 ChangeFlags.HEIGHT_CHANGED |
                 (inlay.getGutterIconRenderer() == null ? 0 : ChangeFlags.GUTTER_ICON_PROVIDER_CHANGED));

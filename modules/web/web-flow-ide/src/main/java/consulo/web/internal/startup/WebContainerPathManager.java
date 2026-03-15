@@ -17,7 +17,6 @@ package consulo.web.internal.startup;
 
 import consulo.container.boot.ContainerPathManager;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -27,37 +26,37 @@ import java.io.File;
 class WebContainerPathManager extends ContainerPathManager {
   public static final String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
 
-  @Nonnull
+  
   @Override
   public String getHomePath() {
     return System.getProperty("consulo.home.path");
   }
 
-  @Nonnull
+  
   @Override
   public File getAppHomeDirectory() {
     return new File(System.getProperty("user.dir"));
   }
 
-  @Nonnull
+  
   @Override
   public String getConfigPath() {
     return new File(getAppHomeDirectory(), "/.sandbox/config").getPath();
   }
 
-  @Nonnull
+  
   @Override
   public String getSystemPath() {
     return new File(getAppHomeDirectory(), "/.sandbox/system").getPath();
   }
 
-  @Nonnull
+  
   @Override
   public File getDocumentsDir() {
     return new File(System.getProperty("user.dir"), "Consulo Projects");
   }
 
-  @Nonnull
+  
   @Override
   public String[] getPluginsPaths() {
     String pluginsPath = System.getProperty(CONSULO_PLUGINS_PATHS);

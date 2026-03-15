@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "EditBreakpoint")
 public class EditBreakpointAction extends XDebuggerActionBase {
@@ -55,7 +54,7 @@ public class EditBreakpointAction extends XDebuggerActionBase {
         super(XDebuggerLocalize.actionEditBreakpointText(), LocalizeValue.empty(), null);
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return XDebuggerEditBreakpointActionHandler.INSTANCE;

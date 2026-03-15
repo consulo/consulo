@@ -32,8 +32,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.EmptyRunnable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +74,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         this(shouldShowCancel, shouldShowBackground, project, LocalizeValue.empty());
     }
 
-    public ProgressWindow(boolean shouldShowCancel, boolean shouldShowBackground, @Nullable Project project, @Nonnull LocalizeValue cancelText) {
+    public ProgressWindow(boolean shouldShowCancel, boolean shouldShowBackground, @Nullable Project project, LocalizeValue cancelText) {
         this(shouldShowCancel, shouldShowBackground, project, null, cancelText);
     }
 
@@ -83,7 +82,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
                           boolean shouldShowBackground,
                           @Nullable Project project,
                           JComponent parentComponent,
-                          @Nonnull LocalizeValue cancelText) {
+                          LocalizeValue cancelText) {
         myProject = project;
         myShouldShowCancel = shouldShowCancel;
         myCancelText = cancelText;
@@ -179,7 +178,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
 
     @RequiredUIAccess
     @Override
-    public void startBlocking(@Nonnull Runnable init, @Nonnull CompletableFuture<?> stopCondition) {
+    public void startBlocking(Runnable init, CompletableFuture<?> stopCondition) {
         UIAccess.assertIsUIThread();
 
         synchronized (this) {
@@ -385,16 +384,16 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         }
 
         @Override
-        public void addStateDelegate(@Nonnull ProgressIndicatorEx delegate) {
+        public void addStateDelegate(ProgressIndicatorEx delegate) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void finish(@Nonnull TaskInfo task) {
+        public void finish(TaskInfo task) {
         }
 
         @Override
-        public boolean isFinished(@Nonnull TaskInfo task) {
+        public boolean isFinished(TaskInfo task) {
             return true;
         }
 

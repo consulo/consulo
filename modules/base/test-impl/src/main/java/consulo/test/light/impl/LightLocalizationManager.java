@@ -21,8 +21,7 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeManagerListener;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
@@ -36,9 +35,9 @@ import java.util.Set;
 public class LightLocalizationManager extends LocalizeManager {
     private Locale myLocale = Locale.US;
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo) {
+    public LocalizeValue fromStringKey(String localizeKeyInfo) {
         List<String> values = StringUtil.split(localizeKeyInfo, "@");
         if (values.size() != 2) {
             return LocalizeValue.of(localizeKeyInfo);
@@ -48,15 +47,15 @@ public class LightLocalizationManager extends LocalizeManager {
         return localizeKey.getValue();
     }
 
-    @Nonnull
+    
     @Override
-    public Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeKey key) {
+    public Map.Entry<Locale, String> getUnformattedText(LocalizeKey key) {
         return Map.entry(myLocale, "[" + key.toString() + "]");
     }
 
-    @Nonnull
+    
     @Override
-    public Locale parseLocale(@Nonnull String localeText) {
+    public Locale parseLocale(String localeText) {
         throw new UnsupportedOperationException();
     }
 
@@ -65,13 +64,13 @@ public class LightLocalizationManager extends LocalizeManager {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public Locale getLocale() {
         return myLocale;
     }
 
-    @Nonnull
+    
     @Override
     public Locale getAutoDetectedLocale() {
         return myLocale;
@@ -82,14 +81,14 @@ public class LightLocalizationManager extends LocalizeManager {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public Set<Locale> getAvaliableLocales() {
         return Set.of(myLocale);
     }
 
     @Override
-    public void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable) {
+    public void addListener(LocalizeManagerListener listener, Disposable disposable) {
         throw new UnsupportedOperationException();
     }
 
@@ -98,7 +97,7 @@ public class LightLocalizationManager extends LocalizeManager {
         return 1;
     }
 
-    @Nonnull
+    
     @Override
     public String formatText(String unformattedText, Locale locale, Object[] args) {
         if (args.length == 0) {

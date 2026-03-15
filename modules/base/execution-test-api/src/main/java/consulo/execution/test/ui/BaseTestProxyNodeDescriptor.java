@@ -20,17 +20,16 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.NodeDescriptor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman.Chernyatchik
  */
 public class BaseTestProxyNodeDescriptor<T extends AbstractTestProxy> extends NodeDescriptor<T> {
-  @Nonnull
+  
   private final T myTestProxy;
 
-  public BaseTestProxyNodeDescriptor(@Nullable Project project, @Nonnull T testProxy, @Nullable NodeDescriptor parentDescriptor) {
+  public BaseTestProxyNodeDescriptor(@Nullable Project project, T testProxy, @Nullable NodeDescriptor parentDescriptor) {
     super(parentDescriptor);
     myTestProxy = testProxy;
     myName = testProxy.getName();

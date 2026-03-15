@@ -18,13 +18,12 @@ package consulo.ide.ui;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.ColoredTextContainer;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use just Consumer<ColoredTextContainer>")
 public interface CellAppearanceEx {
-  @Nonnull
+  
   String getText();
 
-  void customize(@Nonnull ColoredTextContainer component);
+  void customize(ColoredTextContainer component);
 }

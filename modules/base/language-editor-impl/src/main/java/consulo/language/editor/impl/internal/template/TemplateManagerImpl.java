@@ -50,8 +50,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -69,7 +68,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     private static final Key<TemplateStateImpl> TEMPLATE_STATE_KEY = Key.create("TEMPLATE_STATE_KEY");
 
     @Inject
-    public TemplateManagerImpl(@Nonnull Project project) {
+    public TemplateManagerImpl(Project project) {
         myProject = project;
     }
 
@@ -93,18 +92,18 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         Disposer.register(parentDisposable, () -> instance.myTemplateTesting = false);
     }
 
-    private static void disposeState(@Nonnull TemplateStateImpl state) {
+    private static void disposeState(TemplateStateImpl state) {
         Disposer.dispose(state);
     }
 
     @Nullable
     @Override
-    public TemplateState getTemplateState(@Nonnull Editor editor) {
+    public TemplateState getTemplateState(Editor editor) {
         return getTemplateStateImpl(editor);
     }
 
     @Nullable
-    public static TemplateStateImpl getTemplateStateImpl(@Nonnull Editor editor) {
+    public static TemplateStateImpl getTemplateStateImpl(Editor editor) {
         TemplateStateImpl templateState = editor.getUserData(TEMPLATE_STATE_KEY);
         if (templateState != null && templateState.isDisposed()) {
             editor.putUserData(TEMPLATE_STATE_KEY, null);
@@ -113,7 +112,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         return templateState;
     }
 
-    static void clearTemplateState(@Nonnull Editor editor) {
+    static void clearTemplateState(Editor editor) {
         TemplateStateImpl prevState = getTemplateStateImpl(editor);
         if (prevState != null) {
             disposeState(prevState);
@@ -121,7 +120,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         editor.putUserData(TEMPLATE_STATE_KEY, null);
     }
 
-    private TemplateStateImpl initTemplateState(@Nonnull Editor editor) {
+    private TemplateStateImpl initTemplateState(Editor editor) {
         clearTemplateState(editor);
         TemplateStateImpl state = new TemplateStateImpl(myProject, editor);
         Disposer.register(this, state);
@@ -131,7 +130,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @RequiredReadAction
-    public boolean startTemplate(@Nonnull Editor editor, char shortcutChar) {
+    public boolean startTemplate(Editor editor, char shortcutChar) {
         Runnable runnable = prepareTemplate(editor, shortcutChar, null);
         if (runnable != null) {
             PsiDocumentManager.getInstance(myProject).commitDocument(editor.getDocument());
@@ -142,21 +141,21 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @RequiredUIAccess
-    public void startTemplate(@Nonnull Editor editor, @Nonnull Template template) {
+    public void startTemplate(Editor editor, Template template) {
         startTemplate(editor, template, null);
     }
 
     @Override
     @RequiredUIAccess
-    public void startTemplate(@Nonnull Editor editor, String selectionString, @Nonnull Template template) {
+    public void startTemplate(Editor editor, String selectionString, Template template) {
         startTemplate(editor, selectionString, template, true, null, null, null);
     }
 
     @Override
     @RequiredUIAccess
     public void startTemplate(
-        @Nonnull Editor editor,
-        @Nonnull Template template,
+        Editor editor,
+        Template template,
         TemplateEditingListener listener,
         BiPredicate<String, String> processor
     ) {
@@ -211,15 +210,15 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @RequiredUIAccess
-    public void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener) {
+    public void startTemplate(Editor editor, Template template, TemplateEditingListener listener) {
         startTemplate(editor, null, template, true, listener, null, null);
     }
 
     @Override
     @RequiredUIAccess
     public void startTemplate(
-        @Nonnull Editor editor,
-        @Nonnull Template template,
+        Editor editor,
+        Template template,
         boolean inSeparateCommand,
         Map<String, String> predefinedVarValues,
         TemplateEditingListener listener
@@ -242,7 +241,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         return !Character.isJavaIdentifierPart(c);
     }
 
-    private static <T, U> void addToMap(@Nonnull Map<T, U> map, @Nonnull Collection<? extends T> keys, U value) {
+    private static <T, U> void addToMap(Map<T, U> map, Collection<? extends T> keys, U value) {
         for (T key : keys) {
             map.put(key, value);
         }
@@ -479,8 +478,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @RequiredReadAction
     private List<TemplateImpl> filterApplicableCandidates(
-        @Nonnull TemplateActionContext templateActionContext,
-        @Nonnull List<TemplateImpl> candidates
+        TemplateActionContext templateActionContext,
+        List<TemplateImpl> candidates
     ) {
         if (candidates.isEmpty()) {
             return candidates;
@@ -502,7 +501,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @RequiredReadAction
-    public boolean isApplicable(Template template, @Nonnull TemplateActionContext templateActionContext) {
+    public boolean isApplicable(Template template, TemplateActionContext templateActionContext) {
         return isApplicable(template, getApplicableContextTypes(templateActionContext));
     }
 
@@ -527,7 +526,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         }
     }
 
-    private static Set<TemplateContextType> getDirectlyApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext) {
+    private static Set<TemplateContextType> getDirectlyApplicableContextTypes(TemplateActionContext templateActionContext) {
         LinkedHashSet<TemplateContextType> set = new LinkedHashSet<>();
         for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensionList()) {
             if (contextType.isInContext(templateActionContext)) {
@@ -549,13 +548,13 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @Nullable
-    public Template getActiveTemplate(@Nonnull Editor editor) {
+    public Template getActiveTemplate(Editor editor) {
         TemplateStateImpl templateState = getTemplateStateImpl(editor);
         return templateState != null ? templateState.getTemplate() : null;
     }
 
     @Override
-    public boolean finishTemplate(@Nonnull Editor editor) {
+    public boolean finishTemplate(Editor editor) {
         TemplateStateImpl state = getTemplateStateImpl(editor);
         if (state != null) {
             state.gotoEnd();
@@ -579,8 +578,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
      * of using one from the callback and this is probably a mistake. If this is the case, action context may be included into the callback.
      */
     public static boolean isApplicable(
-        @Nonnull CustomLiveTemplate customLiveTemplate,
-        @Nonnull TemplateActionContext templateActionContext
+        CustomLiveTemplate customLiveTemplate,
+        TemplateActionContext templateActionContext
     ) {
         CustomTemplateCallback callback =
             new CustomTemplateCallback(Objects.requireNonNull(templateActionContext.getEditor()), templateActionContext.getFile());
@@ -589,7 +588,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @RequiredReadAction
-    public List<Template> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext) {
+    public List<Template> listApplicableTemplates(TemplateActionContext templateActionContext) {
         Set<TemplateContextType> contextTypes = getApplicableContextTypes(templateActionContext);
 
         ArrayList<Template> result = new ArrayList<>();
@@ -606,7 +605,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @RequiredReadAction
-    public List<Template> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext) {
+    public List<Template> listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext templateActionContext) {
         OffsetsInFile offsets = insertDummyIdentifierWithCache(templateActionContext);
         return listApplicableTemplates(TemplateActionContext.create(
             offsets.getFile(),
@@ -617,7 +616,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         ));
     }
 
-    public static List<CustomLiveTemplate> listApplicableCustomTemplates(@Nonnull TemplateActionContext templateActionContext) {
+    public static List<CustomLiveTemplate> listApplicableCustomTemplates(TemplateActionContext templateActionContext) {
         List<CustomLiveTemplate> result = new ArrayList<>();
         for (CustomLiveTemplate template : CustomLiveTemplate.EP_NAME.getExtensionList()) {
             if ((!templateActionContext.isSurrounding() || template.supportsWrapping()) && isApplicable(template, templateActionContext)) {
@@ -628,9 +627,9 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public Set<TemplateContextType> getApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext) {
+    public Set<TemplateContextType> getApplicableContextTypes(TemplateActionContext templateActionContext) {
         Set<TemplateContextType> result = getDirectlyApplicableContextTypes(templateActionContext);
 
         PsiFile file = templateActionContext.getFile();
@@ -666,7 +665,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         return offsets.getOffsets().getOffset(END_OFFSET);
     }
 
-    private static OffsetsInFile insertDummyIdentifierWithCache(@Nonnull TemplateActionContext templateActionContext) {
+    private static OffsetsInFile insertDummyIdentifierWithCache(TemplateActionContext templateActionContext) {
         ProperTextRange editRange = ProperTextRange.create(templateActionContext.getStartOffset(), templateActionContext.getEndOffset());
         PsiFile file = templateActionContext.getFile();
         assertRangeWithinDocument(editRange, Objects.requireNonNull(file.getViewProvider().getDocument()));
@@ -692,7 +691,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         assert docRange.contains(editRange) : docRange + " doesn't contain " + editRange;
     }
 
-    @Nonnull
+    
     public static OffsetsInFile copyWithDummyIdentifier(OffsetsInFile offsetMap, int startOffset, int endOffset, String replacement) {
         offsetMap.getOffsets().addOffset(START_OFFSET, startOffset);
         offsetMap.getOffsets().addOffset(END_OFFSET, endOffset);

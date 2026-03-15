@@ -26,7 +26,6 @@ import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.IElementType;
 import consulo.language.internal.custom.SyntaxTable;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class CustomFileHighlighter extends SyntaxHighlighterBase {
   }
 
   @Override
-  @Nonnull
+  
   public Lexer getHighlightingLexer() {
     Lexer customFileTypeLexer = new CustomFileTypeLexer(myTable, true);
     if (myTable.isHasStringEscapes()) {
@@ -72,7 +71,7 @@ public class CustomFileHighlighter extends SyntaxHighlighterBase {
   }
 
   @Override
-  @Nonnull
+  
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     return pack(ourKeys.get(tokenType));
   }

@@ -33,7 +33,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,13 +40,13 @@ import java.util.Iterator;
 
 public class ModuleToDoNode extends BaseToDoNode<Module> {
 
-  public ModuleToDoNode(Project project, @Nonnull Module value, TodoTreeBuilder builder) {
+  public ModuleToDoNode(Project project, Module value, TodoTreeBuilder builder) {
     super(project, value, builder);
   }
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     ArrayList<AbstractTreeNode> children = new ArrayList<>();
     if (myToDoSettings.getIsPackagesShown()) {
@@ -91,7 +90,7 @@ public class ModuleToDoNode extends BaseToDoNode<Module> {
   }
 
   @Override
-  public void update(@Nonnull PresentationData presentation) {
+  public void update(PresentationData presentation) {
     if (DumbService.getInstance(getProject()).isDumb()) return;
     String newName = getValue().getName();
     int todoItemCount = getTodoItemCount(getValue());

@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.DefaultProgramRunner;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -29,13 +28,13 @@ import jakarta.annotation.Nonnull;
 public class ToolProgramRunner extends DefaultProgramRunner {
 
   @Override
-  @Nonnull
+  
   public String getRunnerId() {
     return "ToolProgramRunner";
   }
 
   @Override
-  public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
+  public boolean canRun(String executorId, RunProfile profile) {
     return DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && profile instanceof ToolRunProfile;
   }
 

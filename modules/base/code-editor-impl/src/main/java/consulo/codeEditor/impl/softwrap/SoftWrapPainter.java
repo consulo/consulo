@@ -17,7 +17,6 @@ package consulo.codeEditor.impl.softwrap;
 
 import consulo.codeEditor.SoftWrapDrawingType;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -47,7 +46,7 @@ public interface SoftWrapPainter {
    * @param lineHeight    line height used at editor
    * @return              horizontal offset introduced to the given 'x' coordinate after target drawing painting
    */
-  int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
+  int paint(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
 
   /**
    * Allows to ask about horizontal offset to be applied to the given <code>'x'</code> coordinate if drawing of the given
@@ -64,7 +63,7 @@ public interface SoftWrapPainter {
    * @param lineHeight    line height used at editor
    * @return              horizontal offset that would be introduced if the drawing is performed
    */
-  int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
+  int getDrawingHorizontalOffset(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
 
   /**
    * Allows to ask for the minimal width in pixels required for painting of the given type.
@@ -72,7 +71,7 @@ public interface SoftWrapPainter {
    * @param drawingType   target drawing type
    * @return              width in pixels required for the painting of the given type
    */
-  int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType);
+  int getMinDrawingWidth(SoftWrapDrawingType drawingType);
 
   /**
    * Allows to answer if it's possible to use current painter implementation at local environment (e.g. there is a possible

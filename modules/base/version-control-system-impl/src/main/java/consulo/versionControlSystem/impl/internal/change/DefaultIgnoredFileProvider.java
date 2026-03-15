@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.IgnoredFileProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -37,7 +36,7 @@ public class DefaultIgnoredFileProvider implements IgnoredFileProvider {
   }
 
   @Override
-  public boolean isIgnoredFilePath(@Nonnull FilePath filePath) {
+  public boolean isIgnoredFilePath(FilePath filePath) {
     return myChangeListManager.get().isIgnoredFile(filePath);
   }
 }

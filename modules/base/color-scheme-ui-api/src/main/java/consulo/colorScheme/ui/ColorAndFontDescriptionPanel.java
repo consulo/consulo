@@ -33,8 +33,7 @@ import consulo.ui.style.StandardColors;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -118,7 +117,7 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
         myEffectsCombo.setModel(myEffectsModel);
         myEffectsCombo.setRenderer(new ColoredListCellRenderer<>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, String value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList list, String value, int index, boolean selected, boolean hasFocus) {
                 append(value != null ? value : "<invalid>");
             }
         });
@@ -163,7 +162,7 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
         myListeners.getMulticaster().onSettingsChanged();
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getPanel() {
         return myPanel;
@@ -187,7 +186,7 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
 
     @Override
     @RequiredUIAccess
-    public void reset(@Nonnull EditorSchemeAttributeDescriptor d) {
+    public void reset(EditorSchemeAttributeDescriptor d) {
         if (!(d instanceof ColorAndFontDescription)) {
             return;
         }
@@ -253,7 +252,7 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
 
     @Override
     @RequiredUIAccess
-    public void apply(@Nonnull EditorSchemeAttributeDescriptor d, EditorColorsScheme scheme) {
+    public void apply(EditorSchemeAttributeDescriptor d, EditorColorsScheme scheme) {
         if (!(d instanceof ColorAndFontDescription)) {
             return;
         }
@@ -308,7 +307,7 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
     }
 
     @Override
-    public void addListener(@Nonnull Listener listener) {
+    public void addListener(Listener listener) {
         myListeners.addListener(listener);
     }
 
@@ -387,7 +386,7 @@ public class ColorAndFontDescriptionPanel implements ColorDescriptionPanel {
          *
          * @param effectName
          */
-        public void setEffectName(@Nonnull String effectName) {
+        public void setEffectName(String effectName) {
             mySelection = effectName;
         }
     }

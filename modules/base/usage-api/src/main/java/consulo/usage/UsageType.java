@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.usage.localize.UsageLocalize;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 public final class UsageType {
     public static final UsageType CLASS_INSTANCE_OF = new UsageType(UsageLocalize.usageTypeInstanceof());
@@ -60,7 +59,7 @@ public final class UsageType {
 
     private final String myName;
 
-    public UsageType(@Nonnull LocalizeValue name) {
+    public UsageType(LocalizeValue name) {
         myName = name.get();
     }
 
@@ -69,8 +68,8 @@ public final class UsageType {
         myName = name;
     }
 
-    @Nonnull
-    public String toString(@Nonnull UsageViewPresentation presentation) {
+    
+    public String toString(UsageViewPresentation presentation) {
         String word = presentation.getUsagesWord();
         String usageWord = StringUtil.startsWithChar(myName, '{') ? StringUtil.capitalize(word) : word;
         return BundleBase.format(myName, usageWord);

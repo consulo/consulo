@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.internal;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -26,7 +25,7 @@ import java.awt.event.ActionEvent;
  * @author Sergey.Malenkov
  */
 public interface NotificationActionProvider extends NotificationFullContent {
-  @Nonnull
+  
   Action[] getActions(HyperlinkListener listener);
 
   final class Action extends AbstractAction {

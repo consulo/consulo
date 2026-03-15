@@ -31,16 +31,15 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.HttpFileSystem;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.function.Consumer;
 
 @Singleton
 @ServiceImpl
 public class FileAppearanceServiceImpl extends FileAppearanceService {
-  @Nonnull
+  
   @Override
-  public CellAppearanceEx forVirtualFile(@Nonnull VirtualFile file) {
+  public CellAppearanceEx forVirtualFile(VirtualFile file) {
     if (!file.isValid()) {
       return forInvalidUrl(file.getPresentableUrl());
     }
@@ -58,9 +57,9 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
     return new ValidFileCellAppearance(file);
   }
 
-  @Nonnull
+  
   @Override
-  public CellAppearanceEx forIoFile(@Nonnull File file) {
+  public CellAppearanceEx forIoFile(File file) {
     String absolutePath = file.getAbsolutePath();
     if (!file.exists()) {
       return forInvalidUrl(absolutePath);
@@ -79,23 +78,23 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
   }
 
   @Override
-  @Nonnull
-  public CellAppearanceEx forInvalidUrl(@Nonnull String text) {
+  
+  public CellAppearanceEx forInvalidUrl(String text) {
     return SimpleTextCellAppearance.invalid(text, AllIcons.Nodes.PpInvalid);
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRenderForInvalidUrl(@Nonnull String url) {
+  public Consumer<ColoredTextContainer> getRenderForInvalidUrl(String url) {
     return it -> {
       it.setIcon(PlatformIconGroup.nodesPpinvalid());
       it.append(url, SimpleTextAttributes.ERROR_ATTRIBUTES);
     };
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRenderForVirtualFile(@Nonnull VirtualFile file) {
+  public Consumer<ColoredTextContainer> getRenderForVirtualFile(VirtualFile file) {
     if (!file.isValid()) {
       return getRenderForInvalidUrl(file.getPresentableUrl());
     }
@@ -103,9 +102,9 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
     return it -> forVirtualFile(file).customize(it);
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRenderForIoFile(@Nonnull File file) {
+  public Consumer<ColoredTextContainer> getRenderForIoFile(File file) {
     String absolutePath = file.getAbsolutePath();
     if (!file.exists()) {
       return getRenderForInvalidUrl(absolutePath);

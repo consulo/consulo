@@ -19,12 +19,11 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 public interface EditorDataProvider {
-  @Nullable Object getData(@Nonnull Key<?> dataId, @Nonnull Editor e, @Nonnull Caret caret);
+  @Nullable Object getData(Key<?> dataId, Editor e, Caret caret);
 }

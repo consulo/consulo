@@ -23,7 +23,6 @@ import consulo.content.scope.SearchScopeProvider;
 import consulo.language.editor.internal.DefaultSearchScopeProviders;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +37,9 @@ public class CustomNamedSearchScopeProvider implements SearchScopeProvider {
     return "Other";
   }
 
-  @Nonnull
+  
   @Override
-  public List<SearchScope> getSearchScopes(@Nonnull Project project) {
+  public List<SearchScope> getSearchScopes(Project project) {
     List<SearchScope> result = new ArrayList<>();
     NamedScopesHolder[] holders = NamedScopesHolder.getAllNamedScopeHolders(project);
     for (NamedScopesHolder holder : holders) {

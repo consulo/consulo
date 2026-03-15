@@ -28,8 +28,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -74,7 +73,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public String getCanonicalText() {
     return myCharsetName;
   }
@@ -87,7 +86,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
 
   @RequiredWriteAction
   @Override
-  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
     return null;
   }
 
@@ -99,7 +98,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Object[] getVariants() {
     Charset[] charsets = CharsetToolkit.getAvailableCharsets();
     List<LookupElement> suggestions = new ArrayList<>(charsets.length);
@@ -115,9 +114,9 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
     return false;
   }
 
-  @Nonnull
+  
   @Override
-  public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
+  public LocalizeValue buildUnresolvedMessage(String referenceText) {
     return CodeInsightLocalize.unknownEncoding0(referenceText);
   }
 }

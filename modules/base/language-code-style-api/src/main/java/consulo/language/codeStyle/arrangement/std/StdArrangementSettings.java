@@ -23,7 +23,6 @@ import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,30 +32,30 @@ import java.util.List;
  * @since 9/17/12 11:53 AM
  */
 public class StdArrangementSettings implements ArrangementSettings {
-  @Nonnull
+  
   private final List<ArrangementSectionRule> mySectionRules = new ArrayList<ArrangementSectionRule>();
-  @Nonnull
+  
   private final List<ArrangementGroupingRule> myGroupings = new ArrayList<ArrangementGroupingRule>();
 
   // cached values
-  @Nonnull
+  
   protected final List<StdArrangementMatchRule> myRulesByPriority = Collections.synchronizedList(new ArrayList<StdArrangementMatchRule>());
 
   public StdArrangementSettings() {
   }
 
   @SuppressWarnings("unchecked")
-  public StdArrangementSettings(@Nonnull List<ArrangementSectionRule> rules) {
+  public StdArrangementSettings(List<ArrangementSectionRule> rules) {
     this(Collections.EMPTY_LIST, rules);
   }
 
-  public StdArrangementSettings(@Nonnull List<ArrangementGroupingRule> groupingRules, @Nonnull List<ArrangementSectionRule> sectionRules) {
+  public StdArrangementSettings(List<ArrangementGroupingRule> groupingRules, List<ArrangementSectionRule> sectionRules) {
     myGroupings.addAll(groupingRules);
     mySectionRules.addAll(sectionRules);
   }
 
-  public static StdArrangementSettings createByMatchRules(@Nonnull List<ArrangementGroupingRule> groupingRules,
-                                                          @Nonnull List<StdArrangementMatchRule> matchRules) {
+  public static StdArrangementSettings createByMatchRules(List<ArrangementGroupingRule> groupingRules,
+                                                          List<StdArrangementMatchRule> matchRules) {
     List<ArrangementSectionRule> sectionRules = new ArrayList<ArrangementSectionRule>();
     for (StdArrangementMatchRule rule : matchRules) {
       sectionRules.add(ArrangementSectionRule.create(rule));
@@ -64,7 +63,7 @@ public class StdArrangementSettings implements ArrangementSettings {
     return new StdArrangementSettings(groupingRules, sectionRules);
   }
 
-  @Nonnull
+  
   protected List<ArrangementGroupingRule> cloneGroupings() {
     ArrayList<ArrangementGroupingRule> groupings = new ArrayList<ArrangementGroupingRule>();
     for (ArrangementGroupingRule grouping : myGroupings) {
@@ -73,7 +72,7 @@ public class StdArrangementSettings implements ArrangementSettings {
     return groupings;
   }
 
-  @Nonnull
+  
   protected List<ArrangementSectionRule> cloneSectionRules() {
     ArrayList<ArrangementSectionRule> rules = new ArrayList<ArrangementSectionRule>();
     for (ArrangementSectionRule rule : mySectionRules) {
@@ -82,31 +81,31 @@ public class StdArrangementSettings implements ArrangementSettings {
     return rules;
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementSettings clone() {
     return new StdArrangementSettings(cloneGroupings(), cloneSectionRules());
   }
 
   @Override
-  @Nonnull
+  
   public List<ArrangementGroupingRule> getGroupings() {
     return myGroupings;
   }
 
-  @Nonnull
+  
   @Override
   public List<ArrangementSectionRule> getSections() {
     return mySectionRules;
   }
 
-  @Nonnull
+  
   @Override
   public List<StdArrangementMatchRule> getRules() {
     return ArrangementUtil.collectMatchRules(mySectionRules);
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends ArrangementMatchRule> getRulesSortedByPriority() {
     synchronized (myRulesByPriority) {
@@ -120,16 +119,16 @@ public class StdArrangementSettings implements ArrangementSettings {
     return myRulesByPriority;
   }
 
-  public void addRule(@Nonnull StdArrangementMatchRule rule) {
+  public void addRule(StdArrangementMatchRule rule) {
     addSectionRule(rule);
     myRulesByPriority.clear();
   }
 
-  public void addSectionRule(@Nonnull StdArrangementMatchRule rule) {
+  public void addSectionRule(StdArrangementMatchRule rule) {
     mySectionRules.add(ArrangementSectionRule.create(rule));
   }
 
-  public void addGrouping(@Nonnull ArrangementGroupingRule rule) {
+  public void addGrouping(ArrangementGroupingRule rule) {
     myGroupings.add(rule);
   }
 

@@ -27,8 +27,7 @@ import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,7 +41,7 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
     @RequiredUIAccess
     @Nullable
     @Override
-    public Component createUIComponent(@Nonnull Disposable parentDisposable) {
+    public Component createUIComponent(Disposable parentDisposable) {
         VerticalLayout verticalLayout = VerticalLayout.create();
 
         verticalLayout.add(Button.create(LocalizeValue.localizeTODO("&Click me"), event -> {
@@ -72,7 +71,7 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
 
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "sand.editor";
@@ -84,7 +83,7 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Sand Editor");

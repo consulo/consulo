@@ -18,26 +18,25 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "codeStyleWidget", order = "after selectionModeWidget")
 public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-    @Nonnull
+    
     @Override
-    public StatusBarWidget createWidget(@Nonnull Project project) {
+    public StatusBarWidget createWidget(Project project) {
         return new CodeStyleStatusBarWidget(project, this);
     }
 
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
         return UILocalize.statusBarCodeStyleWidgetName().get();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static DumbAwareAction createDefaultIndentConfigureAction(@Nonnull PsiFile psiFile) {
+    public static DumbAwareAction createDefaultIndentConfigureAction(PsiFile psiFile) {
         LocalizeValue langName = getLangName(psiFile);
         return DumbAwareAction.create(
             ApplicationLocalize.codeStyleWidgetConfigureIndents(langName),
@@ -54,9 +53,9 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
         );
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static LocalizeValue getLangName(@Nonnull PsiFile psiFile) {
+    private static LocalizeValue getLangName(PsiFile psiFile) {
         Language language = psiFile.getLanguage();
         LanguageCodeStyleSettingsProvider provider = LanguageCodeStyleSettingsProvider.findUsingBaseLanguage(language);
         if (provider != null && provider.getIndentOptionsEditor() != null) {
@@ -69,7 +68,7 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
     }
 
     @Nullable
-    private static Configurable findCodeStyleConfigurableId(@Nonnull Project project, @Nonnull LocalizeValue langName) {
+    private static Configurable findCodeStyleConfigurableId(Project project, LocalizeValue langName) {
         CodeStyleSchemesConfigurable topConfigurable = new CodeStyleSchemesConfigurable(project);
         SearchableConfigurable found = topConfigurable.findSubConfigurable(langName);
         return found != null ? found : topConfigurable.findSubConfigurable(OtherFileTypesCodeStyleConfigurable.getDisplayNameText());

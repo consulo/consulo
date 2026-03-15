@@ -19,7 +19,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BiConsumer;
 
@@ -27,28 +26,28 @@ import java.util.function.BiConsumer;
  * @author Alexander Lobas
  */
 public abstract class NotificationAction extends DumbAwareAction {
-    @Nonnull
+    
     public static NotificationAction create(
-        @Nonnull LocalizeValue textValue,
-        @RequiredUIAccess @Nonnull BiConsumer<AnActionEvent, Notification> consumer
+        LocalizeValue textValue,
+        @RequiredUIAccess BiConsumer<AnActionEvent, Notification> consumer
     ) {
         return new NotificationAction(textValue) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+            public void actionPerformed(AnActionEvent e, Notification notification) {
                 consumer.accept(e, notification);
             }
         };
     }
 
     public static NotificationAction createExpiring(
-        @Nonnull LocalizeValue textValue,
-        @RequiredUIAccess @Nonnull BiConsumer<AnActionEvent, Notification> consumer
+        LocalizeValue textValue,
+        @RequiredUIAccess BiConsumer<AnActionEvent, Notification> consumer
     ) {
         return new NotificationAction(textValue) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+            public void actionPerformed(AnActionEvent e, Notification notification) {
                 notification.expire();
 
                 consumer.accept(e, notification);
@@ -56,16 +55,16 @@ public abstract class NotificationAction extends DumbAwareAction {
         };
     }
 
-    public NotificationAction(@Nonnull LocalizeValue textValue) {
+    public NotificationAction(LocalizeValue textValue) {
         super(textValue);
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         actionPerformed(e, Notification.get(e));
     }
 
     @RequiredUIAccess
-    public abstract void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification);
+    public abstract void actionPerformed(AnActionEvent e, Notification notification);
 }

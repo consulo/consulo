@@ -22,8 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,16 +31,16 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class VcsLogProgress implements Disposable {
-  @Nonnull
+  
   private final Object myLock = new Object();
-  @Nonnull
+  
   private final List<ProgressListener> myListeners = new ArrayList<>();
-  @Nonnull
+  
   private Set<ProgressIndicator> myTasksWithVisibleProgress = new HashSet<>();
-  @Nonnull
+  
   private Set<ProgressIndicator> myTasksWithSilentProgress = new HashSet<>();
 
-  @Nonnull
+  
   public ProgressIndicator createProgressIndicator() {
     return createProgressIndicator(true);
   }
@@ -53,7 +52,7 @@ public class VcsLogProgress implements Disposable {
     return new VcsLogProgressIndicator(visible);
   }
 
-  public void addProgressIndicatorListener(@Nonnull ProgressListener listener, @Nullable Disposable parentDisposable) {
+  public void addProgressIndicatorListener(ProgressListener listener, @Nullable Disposable parentDisposable) {
     synchronized (myLock) {
       myListeners.add(listener);
       if (parentDisposable != null) {
@@ -63,7 +62,7 @@ public class VcsLogProgress implements Disposable {
     }
   }
 
-  public void removeProgressIndicatorListener(@Nonnull ProgressListener listener) {
+  public void removeProgressIndicatorListener(ProgressListener listener) {
     synchronized (myLock) {
       myListeners.remove(listener);
     }
@@ -75,7 +74,7 @@ public class VcsLogProgress implements Disposable {
     }
   }
 
-  private void started(@Nonnull VcsLogProgressIndicator indicator) {
+  private void started(VcsLogProgressIndicator indicator) {
     synchronized (myLock) {
       if (indicator.isVisible()) {
         myTasksWithVisibleProgress.add(indicator);
@@ -87,7 +86,7 @@ public class VcsLogProgress implements Disposable {
     }
   }
 
-  private void stopped(@Nonnull VcsLogProgressIndicator indicator) {
+  private void stopped(VcsLogProgressIndicator indicator) {
     synchronized (myLock) {
       if (indicator.isVisible()) {
         myTasksWithVisibleProgress.remove(indicator);
@@ -99,7 +98,7 @@ public class VcsLogProgress implements Disposable {
     }
   }
 
-  private void fireNotification(@Nonnull Consumer<ProgressListener> action) {
+  private void fireNotification(Consumer<ProgressListener> action) {
     synchronized (myLock) {
       List<ProgressListener> list = ContainerUtil.newArrayList(myListeners);
       Application.get().invokeLater(() -> list.forEach(action));

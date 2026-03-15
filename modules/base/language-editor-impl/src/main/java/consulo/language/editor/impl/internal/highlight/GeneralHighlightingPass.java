@@ -43,8 +43,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -73,15 +72,15 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
     @RequiredReadAction
     public GeneralHighlightingPass(
-        @Nonnull Project project,
-        @Nonnull PsiFile file,
-        @Nonnull Document document,
+        Project project,
+        PsiFile file,
+        Document document,
         int startOffset,
         int endOffset,
         boolean updateAll,
-        @Nonnull ProperTextRange priorityRange,
+        ProperTextRange priorityRange,
         @Nullable Editor editor,
-        @Nonnull HighlightInfoProcessor highlightInfoProcessor
+        HighlightInfoProcessor highlightInfoProcessor
     ) {
         super(
             project,
@@ -109,22 +108,22 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         myGlobalScheme = editor != null ? editor.getColorsScheme() : EditorColorsManager.getInstance().getGlobalScheme();
     }
 
-    @Nonnull
+    
     private PsiFile getFile() {
         return myFile;
     }
 
-    @Nonnull
+    
     @Override
     public Document getDocument() {
         return Objects.requireNonNull(super.getDocument());
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private List<HighlightVisitor> filterVisitors(
-        @Nonnull List<HighlightVisitorFactory> highlightVisitorFactories,
-        @Nonnull PsiFile psiFile
+        List<HighlightVisitorFactory> highlightVisitorFactories,
+        PsiFile psiFile
     ) {
         List<HighlightVisitor> result = new ArrayList<>(highlightVisitorFactories.size());
         DumbService dumbService = DumbService.getInstance(myProject);
@@ -152,13 +151,13 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         return result;
     }
 
-    public void setHighlightVisitorProducer(@Nonnull Supplier<List<HighlightVisitorFactory>> highlightVisitorProducer) {
+    public void setHighlightVisitorProducer(Supplier<List<HighlightVisitorFactory>> highlightVisitorProducer) {
         myHighlightVisitorProducer = highlightVisitorProducer;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public List<HighlightVisitor> getHighlightVisitors(@Nonnull PsiFile psiFile) {
+    public List<HighlightVisitor> getHighlightVisitors(PsiFile psiFile) {
         return filterVisitors(myHighlightVisitorProducer.get(), psiFile);
     }
 
@@ -175,7 +174,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
     @Override
     @RequiredReadAction
-    protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
+    protected void collectInformationWithProgress(ProgressIndicator progress) {
         List<HighlightInfo> outsideResult = new ArrayList<>(100);
         List<HighlightInfo> insideResult = new ArrayList<>(100);
 
@@ -300,20 +299,20 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     }
 
     @Override
-    @Nonnull
+    
     public List<HighlightInfo> getInfos() {
         return new ArrayList<>(myHighlights);
     }
 
     @RequiredReadAction
     private boolean collectHighlights(
-        @Nonnull List<? extends PsiElement> elements1,
-        @Nonnull List<? extends ProperTextRange> ranges1,
-        @Nonnull List<? extends PsiElement> elements2,
-        @Nonnull List<? extends ProperTextRange> ranges2,
-        @Nonnull List<HighlightVisitor> visitors,
-        @Nonnull List<HighlightInfo> insideResult,
-        @Nonnull List<? super HighlightInfo> outsideResult,
+        List<? extends PsiElement> elements1,
+        List<? extends ProperTextRange> ranges1,
+        List<? extends PsiElement> elements2,
+        List<? extends ProperTextRange> ranges2,
+        List<HighlightVisitor> visitors,
+        List<HighlightInfo> insideResult,
+        List<? super HighlightInfo> outsideResult,
         boolean forceHighlightParents
     ) {
         Set<PsiElement> skipParentsSet = new HashSet<>();
@@ -387,10 +386,10 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     }
 
     private boolean analyzeByVisitors(
-        @Nonnull List<HighlightVisitor> visitors,
-        @Nonnull HighlightInfoHolder holder,
+        List<HighlightVisitor> visitors,
+        HighlightInfoHolder holder,
         int i,
-        @Nonnull Runnable action
+        Runnable action
     ) {
         boolean[] success = {true};
         if (i == visitors.size()) {
@@ -405,17 +404,17 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
     @RequiredReadAction
     private void runVisitors(
-        @Nonnull List<? extends PsiElement> elements,
-        @Nonnull List<? extends ProperTextRange> ranges,
+        List<? extends PsiElement> elements,
+        List<? extends ProperTextRange> ranges,
         int chunkSize,
-        @Nonnull Set<? super PsiElement> skipParentsSet,
-        @Nonnull HighlightInfoHolder holder,
-        @Nonnull List<? super HighlightInfo> insideResult,
-        @Nonnull List<? super HighlightInfo> outsideResult,
+        Set<? super PsiElement> skipParentsSet,
+        HighlightInfoHolder holder,
+        List<? super HighlightInfo> insideResult,
+        List<? super HighlightInfo> outsideResult,
         boolean forceHighlightParents,
-        @Nonnull List<HighlightVisitor> visitors,
-        @Nonnull Stack<TextRange> nestedRange,
-        @Nonnull Stack<List<HighlightInfo>> nestedInfos
+        List<HighlightVisitor> visitors,
+        Stack<TextRange> nestedRange,
+        Stack<List<HighlightInfo>> nestedInfos
     ) {
         boolean failed = false;
         int nextLimit = chunkSize;
@@ -525,7 +524,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         return RESTART_REQUESTS.get() > 0;
     }
 
-    private static void cancelAndRestartDaemonLater(@Nonnull ProgressIndicator progress, @Nonnull Project project)
+    private static void cancelAndRestartDaemonLater(ProgressIndicator progress, Project project)
         throws ProcessCanceledException {
         RESTART_REQUESTS.incrementAndGet();
         progress.cancel();
@@ -548,15 +547,15 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
             .anyMatchSafe(extension -> extension.isForceHighlightParents(getFile()));
     }
 
-    @Nonnull
-    protected HighlightInfoHolder createInfoHolder(@Nonnull PsiFile file) {
+    
+    protected HighlightInfoHolder createInfoHolder(PsiFile file) {
         List<HighlightInfoFilter> filters = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensionList();
         EditorColorsScheme actualScheme =
             getColorsScheme() == null ? EditorColorsManager.getInstance().getGlobalScheme() : getColorsScheme();
         return new HighlightInfoHolder(file, filters) {
             int queued;
 
-            @Nonnull
+            
             @Override
             public TextAttributesScheme getColorsScheme() {
                 return actualScheme;
@@ -579,20 +578,20 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         };
     }
 
-    protected void queueInfoToUpdateIncrementally(@Nonnull HighlightInfo info) {
+    protected void queueInfoToUpdateIncrementally(HighlightInfo info) {
         HighlightInfoImpl infoImpl = (HighlightInfoImpl) info;
         int group = infoImpl.getGroup() == 0 ? Pass.UPDATE_ALL : infoImpl.getGroup();
         myHighlightInfoProcessor.infoIsAvailable(myHighlightingSession, info, myPriorityRange, myRestrictRange, group);
     }
 
     public static void highlightTodos(
-        @Nonnull PsiFile file,
-        @Nonnull CharSequence text,
+        PsiFile file,
+        CharSequence text,
         int startOffset,
         int endOffset,
-        @Nonnull ProperTextRange priorityRange,
-        @Nonnull Collection<? super HighlightInfoImpl> insideResult,
-        @Nonnull Collection<? super HighlightInfoImpl> outsideResult
+        ProperTextRange priorityRange,
+        Collection<? super HighlightInfoImpl> insideResult,
+        Collection<? super HighlightInfoImpl> outsideResult
     ) {
         PsiTodoSearchHelper helper = PsiTodoSearchHelper.getInstance(file.getProject());
         if (!shouldHighlightTodos(helper, file)) {
@@ -643,13 +642,13 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     private static void addTodoItem(
         int restrictStartOffset,
         int restrictEndOffset,
-        @Nonnull ProperTextRange priorityRange,
-        @Nonnull Collection<? super HighlightInfoImpl> insideResult,
-        @Nonnull Collection<? super HighlightInfoImpl> outsideResult,
-        @Nonnull TextAttributes attributes,
-        @Nonnull LocalizeValue description,
-        @Nonnull LocalizeValue tooltip,
-        @Nonnull TextRange range
+        ProperTextRange priorityRange,
+        Collection<? super HighlightInfoImpl> insideResult,
+        Collection<? super HighlightInfoImpl> outsideResult,
+        TextAttributes attributes,
+        LocalizeValue description,
+        LocalizeValue tooltip,
+        TextRange range
     ) {
         if (range.getStartOffset() >= restrictEndOffset || range.getEndOffset() <= restrictStartOffset) {
             return;
@@ -665,7 +664,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         result.add(info);
     }
 
-    private static boolean shouldHighlightTodos(@Nonnull PsiTodoSearchHelper helper, @Nonnull PsiFile file) {
+    private static boolean shouldHighlightTodos(PsiTodoSearchHelper helper, PsiFile file) {
         return helper.shouldHighlightInEditor(file);
     }
 
@@ -695,10 +694,10 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         }
     }
 
-    @Nonnull
+    
     private static List<Problem> convertToProblems(
-        @Nonnull Collection<? extends HighlightInfo> infos,
-        @Nonnull VirtualFile file,
+        Collection<? extends HighlightInfo> infos,
+        VirtualFile file,
         boolean hasErrorElement
     ) {
         List<Problem> problems = new SmartList<>();

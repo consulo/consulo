@@ -14,8 +14,7 @@ import consulo.language.psi.*;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -26,8 +25,8 @@ public class CustomRegionStructureUtil {
 
     @RequiredReadAction
     public static Collection<StructureViewTreeElement> groupByCustomRegions(
-        @Nonnull PsiElement rootElement,
-        @Nonnull Collection<StructureViewTreeElement> originalElements
+        PsiElement rootElement,
+        Collection<StructureViewTreeElement> originalElements
     ) {
         if (rootElement instanceof PsiFileEx psiFileEx && !psiFileEx.isContentsLoaded()
             || rootElement instanceof StubBasedPsiElement stubBasedElement && stubBasedElement.getStub() != null) {
@@ -67,7 +66,7 @@ public class CustomRegionStructureUtil {
      * Fix cases when a line comment before an element (for example, method) gets inside it as a first child.
      */
     @RequiredReadAction
-    private static TextRange getTextRange(@Nonnull PsiElement element) {
+    private static TextRange getTextRange(PsiElement element) {
         PsiElement first = element.getFirstChild();
         if (!(element instanceof PsiFile) && first instanceof PsiComment && !first.textContains('\n')) {
             PsiElement next = first.getNextSibling();
@@ -83,8 +82,8 @@ public class CustomRegionStructureUtil {
 
     @RequiredReadAction
     private static Collection<CustomRegionTreeElement> collectCustomRegions(
-        @Nonnull PsiElement rootElement,
-        @Nonnull Set<? extends TextRange> ranges
+        PsiElement rootElement,
+        Set<? extends TextRange> ranges
     ) {
         TextRange rootRange = getTextRange(rootElement);
         Iterator<PsiElement> iterator =
@@ -125,7 +124,7 @@ public class CustomRegionStructureUtil {
     }
 
     @Nullable
-    static CustomFoldingProvider getProvider(@Nonnull PsiElement element) {
+    static CustomFoldingProvider getProvider(PsiElement element) {
         ASTNode node = element.getNode();
         if (node != null) {
             for (CustomFoldingProvider provider : CustomFoldingProvider.EP_NAME.getExtensionList()) {
@@ -138,7 +137,7 @@ public class CustomRegionStructureUtil {
     }
 
     @RequiredReadAction
-    private static boolean isInsideRanges(@Nonnull PsiElement element, @Nonnull Set<? extends TextRange> ranges) {
+    private static boolean isInsideRanges(PsiElement element, Set<? extends TextRange> ranges) {
         for (TextRange range : ranges) {
             TextRange elementRange = element.getTextRange();
             if (range.contains(elementRange.getStartOffset()) || range.contains(elementRange.getEndOffset())) {
@@ -149,7 +148,7 @@ public class CustomRegionStructureUtil {
     }
 
     @RequiredReadAction
-    private static boolean isCustomRegionCommentCandidate(@Nonnull PsiElement element) {
+    private static boolean isCustomRegionCommentCandidate(PsiElement element) {
         Language language = element.getLanguage();
         if (!Language.ANY.is(language)) {
             for (FoldingBuilder builder : FoldingBuilder.forLanguage(language)) {

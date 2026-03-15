@@ -7,13 +7,12 @@ import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 class VirtualFileWindowImpl extends LightVirtualFile implements VirtualFileWindow {
   private final VirtualFile myDelegate;
   private final DocumentWindowImpl myDocumentWindow;
 
-  VirtualFileWindowImpl(@Nonnull String name, @Nonnull VirtualFile delegate, @Nonnull DocumentWindowImpl window, @Nonnull Language language, @Nonnull CharSequence text) {
+  VirtualFileWindowImpl(String name, VirtualFile delegate, DocumentWindowImpl window, Language language, CharSequence text) {
     super(name, language, text);
     setCharset(delegate.getCharset());
     setFileType(language.getAssociatedFileType());
@@ -22,13 +21,13 @@ class VirtualFileWindowImpl extends LightVirtualFile implements VirtualFileWindo
     myDocumentWindow = window;
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getDelegate() {
     return myDelegate;
   }
 
-  @Nonnull
+  
   @Override
   public DocumentWindowImpl getDocumentWindow() {
     return myDocumentWindow;

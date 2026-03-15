@@ -29,7 +29,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.concurrent.ResultConsumer;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -48,10 +47,10 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     private final List<D> myHistory = new ArrayList<D>();
     private int myCurrentIndex = -1;
     protected final DebuggerTreeCreator<D> myTreeCreator;
-    @Nonnull
+    
     protected final Project myProject;
 
-    protected DebuggerTreeWithHistoryContainer(@Nonnull D initialItem, @Nonnull DebuggerTreeCreator<D> creator, @Nonnull Project project) {
+    protected DebuggerTreeWithHistoryContainer(D initialItem, DebuggerTreeCreator<D> creator, Project project) {
         myTreeCreator = creator;
         myProject = project;
         myHistory.add(initialItem);
@@ -69,7 +68,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
         updateTree(item);
     }
 
-    protected void updateTree(@Nonnull D selectedItem) {
+    protected void updateTree(D selectedItem) {
         updateContainer(myTreeCreator.createTree(selectedItem), myTreeCreator.getTitle(selectedItem));
     }
 
@@ -109,7 +108,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1) {
                 myCurrentIndex++;
                 updateTree();
@@ -117,7 +116,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1);
         }
     }
@@ -129,7 +128,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (myHistory.size() > 1 && myCurrentIndex > 0) {
                 myCurrentIndex--;
                 updateTree();
@@ -138,7 +137,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
 
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex > 0);
         }
     }
@@ -156,14 +155,14 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             TreePath path = myTree.getSelectionPath();
             e.getPresentation().setEnabled(path != null && path.getPathCount() > 1);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreePath path = myTree.getSelectionPath();
             if (path != null) {
                 Object node = path.getLastPathComponent();
@@ -179,7 +178,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
                     }
 
                     @Override
-                    public void onFailure(@Nonnull Throwable t) {
+                    public void onFailure(Throwable t) {
                         LOG.debug(t);
                     }
                 });

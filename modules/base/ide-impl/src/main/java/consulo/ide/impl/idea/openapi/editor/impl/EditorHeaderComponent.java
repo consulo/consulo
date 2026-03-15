@@ -19,7 +19,6 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -33,7 +32,7 @@ public class EditorHeaderComponent extends JPanel {
   }
 
   @Override
-  public void paint(@Nonnull Graphics g) {
+  public void paint(Graphics g) {
     UISettingsUtil.setupAntialiasing(g);
     super.paint(g);
   }

@@ -25,7 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     public OpenProjectFileChooserDescriptor(boolean chooseFiles) {

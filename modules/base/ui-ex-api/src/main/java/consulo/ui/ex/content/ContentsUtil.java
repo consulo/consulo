@@ -18,7 +18,6 @@ package consulo.ui.ex.content;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public class ContentsUtil {
@@ -52,7 +51,7 @@ public class ContentsUtil {
     }
   }
 
-  public static void closeContentTab(@Nonnull ContentManager contentManager, @Nonnull Content content) {
+  public static void closeContentTab(ContentManager contentManager, Content content) {
     if (content instanceof TabbedContent) {
       TabbedContent tabbedContent = (TabbedContent)content;
       if (tabbedContent.getTabs().size() > 1) {
@@ -66,7 +65,7 @@ public class ContentsUtil {
     contentManager.removeContent(content, true);
   }
 
-  private static void dispose(@Nonnull JComponent component) {
+  private static void dispose(JComponent component) {
     Object disposable = component.getClientProperty(DISPOSABLE_KEY);
     if (disposable instanceof Disposable) {
       Disposer.dispose((Disposable)disposable);

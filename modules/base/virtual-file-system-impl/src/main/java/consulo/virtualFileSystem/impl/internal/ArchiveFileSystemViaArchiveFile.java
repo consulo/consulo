@@ -28,7 +28,6 @@ import consulo.virtualFileSystem.archive.ArchiveHandler;
 import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.impl.internal.zip.JarHandler;
 import consulo.virtualFileSystem.internal.VfsImplUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,23 +41,23 @@ public abstract class ArchiveFileSystemViaArchiveFile extends BaseArchiveFileSys
     private final Set<String> myNoCopyJarPaths;
     private final String myProtocol;
 
-    protected ArchiveFileSystemViaArchiveFile(@Nonnull String protocol) {
+    protected ArchiveFileSystemViaArchiveFile(String protocol) {
         myProtocol = protocol;
         boolean noCopy = SystemProperties.getBooleanProperty("idea.jars.nocopy", !Platform.current().os().isWindows());
         myNoCopyJarPaths = noCopy ? null : Sets.newConcurrentHashSet(FileUtil.PATH_HASHING_STRATEGY);
     }
 
-    @Nonnull
-    public abstract ArchiveFile createArchiveFile(@Nonnull String filePath) throws IOException;
+    
+    public abstract ArchiveFile createArchiveFile(String filePath) throws IOException;
 
-    @Nonnull
+    
     @Override
     public final String getProtocol() {
         return myProtocol;
     }
 
     @Override
-    public boolean isMakeCopyOfJar(@Nonnull File originalJar) {
+    public boolean isMakeCopyOfJar(File originalJar) {
         return !(myNoCopyJarPaths == null || myNoCopyJarPaths.contains(originalJar.getPath()));
     }
 
@@ -75,9 +74,9 @@ public abstract class ArchiveFileSystemViaArchiveFile extends BaseArchiveFileSys
         myNoCopyJarPaths.add(path);
     }
 
-    @Nonnull
+    
     @Override
-    public ArchiveHandler getHandler(@Nonnull VirtualFile entryFile) {
+    public ArchiveHandler getHandler(VirtualFile entryFile) {
         return VfsImplUtil.getHandler(this, entryFile, JarHandler::new);
     }
 }

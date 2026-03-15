@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface UsageTrigger {
-  public static void trigger(@Nonnull String feature) {
+  public static void trigger(String feature) {
     Application.get().getInstance(UsageTrigger.class).doTrigger(feature);
   }
 

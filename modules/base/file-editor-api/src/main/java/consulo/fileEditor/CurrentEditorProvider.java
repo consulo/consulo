@@ -18,15 +18,14 @@ package consulo.fileEditor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface CurrentEditorProvider {
-  @Nonnull
+  
   static CurrentEditorProvider getInstance() {
     return Application.get().getInstance(CurrentEditorProvider.class);
   }

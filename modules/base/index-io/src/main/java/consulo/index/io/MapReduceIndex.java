@@ -26,8 +26,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +41,9 @@ import java.util.function.Supplier;
 
 public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex<Key, Value, Input> {
     private static final Logger LOG = LoggerFactory.getLogger(MapReduceIndex.class);
-    @Nonnull
+    
     protected final IndexId<Key, Value> myIndexId;
-    @Nonnull
+    
     protected final IndexStorage<Key, Value> myStorage;
 
     protected final DataExternalizer<Value> myValueExternalizer;
@@ -55,7 +54,7 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
     private final ForwardIndex myForwardIndex;
     private final ForwardIndexAccessor<Key, Value> myForwardIndexAccessor;
 
-    @Nonnull
+    
     private final ReadWriteLock myLock;
     private final boolean myUseIntForwardIndex;
     private volatile boolean myDisposed;
@@ -80,8 +79,8 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         }
     });
 
-    protected MapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension,
-                             @Nonnull IndexStorage<Key, Value> storage,
+    protected MapReduceIndex(IndexExtension<Key, Value, Input> extension,
+                             IndexStorage<Key, Value> storage,
                              @Nullable ForwardIndex forwardIndex,
                              @Nullable ForwardIndexAccessor<Key, Value> forwardIndexAccessor,
                              @Nullable ReadWriteLock lock) {
@@ -101,8 +100,8 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         myLock = lock == null ? new ReentrantReadWriteLock() : lock;
     }
 
-    protected MapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension,
-                             @Nonnull IndexStorage<Key, Value> storage,
+    protected MapReduceIndex(IndexExtension<Key, Value, Input> extension,
+                             IndexStorage<Key, Value> storage,
                              @Nullable ForwardIndex forwardIndex,
                              @Nullable ForwardIndexAccessor<Key, Value> forwardIndexAccessor) {
         this(extension, storage, forwardIndex, forwardIndexAccessor, null);
@@ -116,17 +115,17 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         return myForwardIndexAccessor;
     }
 
-    @Nonnull
+    
     public IndexExtension<Key, Value, Input> getExtension() {
         return myExtension;
     }
 
-    @Nonnull
+    
     public IndexStorage<Key, Value> getStorage() {
         return myStorage;
     }
 
-    @Nonnull
+    
     public final ReadWriteLock getLock() {
         return myLock;
     }
@@ -215,19 +214,19 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         }
     }
 
-    @Nonnull
+    
     public final Lock getReadLock() {
         return myLock.readLock();
     }
 
-    @Nonnull
+    
     public final Lock getWriteLock() {
         return myLock.writeLock();
     }
 
     @Override
-    @Nonnull
-    public ValueContainer<Value> getData(@Nonnull Key key) throws StorageException {
+    
+    public ValueContainer<Value> getData(Key key) throws StorageException {
         Lock lock = getReadLock();
         try {
             lock.lock();
@@ -243,15 +242,15 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         }
     }
 
-    @Nonnull
+    
     @Override
     public final Supplier<Boolean> update(int inputId, @Nullable Input content) {
         UpdateData<Key, Value> updateData = calculateUpdateData(inputId, content);
         return createIndexUpdateComputation(updateData);
     }
 
-    @Nonnull
-    protected Supplier<Boolean> createIndexUpdateComputation(@Nonnull AbstractUpdateData<Key, Value> updateData) {
+    
+    protected Supplier<Boolean> createIndexUpdateComputation(AbstractUpdateData<Key, Value> updateData) {
         return () -> {
             try {
                 updateWithMap(updateData);
@@ -273,13 +272,13 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         };
     }
 
-    @Nonnull
+    
     protected UpdateData<Key, Value> calculateUpdateData(int inputId, @Nullable Input content) {
         InputData<Key, Value> data = mapInput(content);
         return createUpdateData(inputId, data.getKeyValues(), () -> getKeysDiffBuilder(inputId), () -> updateForwardIndex(inputId, data));
     }
 
-    protected void updateForwardIndex(int inputId, @Nonnull InputData<Key, Value> data) throws IOException {
+    protected void updateForwardIndex(int inputId, InputData<Key, Value> data) throws IOException {
         if (myForwardIndex != null) {
             if (myUseIntForwardIndex) {
                 ((IntForwardIndex) myForwardIndex).putInt(inputId, ((IntForwardIndexAccessor<Key, Value>) myForwardIndexAccessor).serializeIndexedDataToInt(data));
@@ -290,7 +289,7 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         }
     }
 
-    @Nonnull
+    
     protected InputDataDiffBuilder<Key, Value> getKeysDiffBuilder(int inputId) throws IOException {
         if (myForwardIndex != null) {
             if (myUseIntForwardIndex) {
@@ -303,15 +302,15 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         return new EmptyInputDataDiffBuilder<>(inputId);
     }
 
-    @Nonnull
+    
     private UpdateData<Key, Value> createUpdateData(int inputId,
-                                                    @Nonnull Map<Key, Value> data,
-                                                    @Nonnull ThrowableSupplier<InputDataDiffBuilder<Key, Value>, IOException> keys,
-                                                    @Nonnull ThrowableRunnable<IOException> forwardIndexUpdate) {
+                                                    Map<Key, Value> data,
+                                                    ThrowableSupplier<InputDataDiffBuilder<Key, Value>, IOException> keys,
+                                                    ThrowableRunnable<IOException> forwardIndexUpdate) {
         return new UpdateData<>(inputId, data, keys, myIndexId, forwardIndexUpdate);
     }
 
-    @Nonnull
+    
     protected InputData<Key, Value> mapInput(@Nullable Input content) {
         if (content == null) {
             return InputData.empty();
@@ -324,7 +323,7 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
 
     public abstract void checkCanceled();
 
-    protected abstract void requestRebuild(@Nonnull Throwable e);
+    protected abstract void requestRebuild(Throwable e);
 
     public long getModificationStamp() {
         return myModificationStamp.get();
@@ -355,7 +354,7 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
         }
     };
 
-    public void updateWithMap(@Nonnull AbstractUpdateData<Key, Value> updateData) throws StorageException {
+    public void updateWithMap(AbstractUpdateData<Key, Value> updateData) throws StorageException {
         getWriteLock().lock();
         try {
             IndexId<?, ?> oldIndexId = DebugAssertions.DEBUG_INDEX_ID.get();
@@ -382,7 +381,7 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
     }
 
     @SuppressWarnings("IdentityBinaryExpression") // FIXME error about value.hashCode() == value.hashCode()
-    public static <Key, Value> void checkValuesHaveProperEqualsAndHashCode(@Nonnull Map<Key, Value> data, @Nonnull IndexId<Key, Value> indexId, @Nonnull DataExternalizer<Value> valueExternalizer) {
+    public static <Key, Value> void checkValuesHaveProperEqualsAndHashCode(Map<Key, Value> data, IndexId<Key, Value> indexId, DataExternalizer<Value> valueExternalizer) {
         if (DebugAssertions.DEBUG) {
             for (Map.Entry<Key, Value> e : data.entrySet()) {
                 Value value = e.getValue();

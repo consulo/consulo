@@ -21,7 +21,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiRecursiveElementVisitor;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +56,7 @@ public class FormatterTagHandler {
         return FormatterTag.NONE;
     }
 
-    private FormatterTag getFormatterTag(@Nonnull PsiComment comment) {
+    private FormatterTag getFormatterTag(PsiComment comment) {
         CharSequence nodeChars = comment.getNode().getChars();
         if (mySettings.FORMATTER_TAGS_ACCEPT_REGEXP) {
             Pattern onPattern = mySettings.getFormatterOnPattern();
@@ -82,7 +81,7 @@ public class FormatterTagHandler {
         return FormatterTag.NONE;
     }
 
-    private static boolean isFormatterTagAt(@Nonnull CharSequence s, int pos, @Nonnull String tagName) {
+    private static boolean isFormatterTagAt(CharSequence s, int pos, String tagName) {
         if (!tagName.isEmpty() && tagName.charAt(0) == s.charAt(pos)) {
             int end = pos + tagName.length();
             if (end <= s.length()) {

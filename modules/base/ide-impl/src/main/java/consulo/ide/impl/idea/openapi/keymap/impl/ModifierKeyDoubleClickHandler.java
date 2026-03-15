@@ -33,7 +33,6 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.lang.Clock;
 import consulo.util.lang.Couple;
 import gnu.trove.TIntIntHashMap;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -108,7 +107,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
    * @param actionKeyCode           keyCode for actionKey, or -1 if action should be triggered on bare modifier double click
    * @param skipIfActionHasShortcut do not invoke action if a shortcut is already bound to it in keymap
    */
-  public void registerAction(@Nonnull String actionId, int modifierKeyCode, int actionKeyCode, boolean skipIfActionHasShortcut) {
+  public void registerAction(String actionId, int modifierKeyCode, int actionKeyCode, boolean skipIfActionHasShortcut) {
     MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
     IdeEventQueueProxy.getInstance().addDispatcher(dispatcher, dispatcher);
@@ -123,11 +122,11 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
    * @param modifierKeyCode keyCode for modifier, e.g. KeyEvent.VK_SHIFT
    * @param actionKeyCode   keyCode for actionKey, or -1 if action should be triggered on bare modifier double click
    */
-  public void registerAction(@Nonnull String actionId, int modifierKeyCode, int actionKeyCode) {
+  public void registerAction(String actionId, int modifierKeyCode, int actionKeyCode) {
     registerAction(actionId, modifierKeyCode, actionKeyCode, true);
   }
 
-  public void unregisterAction(@Nonnull String actionId) {
+  public void unregisterAction(String actionId) {
     MyDispatcher oldDispatcher = myDispatchers.remove(actionId);
     if (oldDispatcher != null) {
       Disposer.dispose(oldDispatcher);
@@ -149,7 +148,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     private final AtomicBoolean ourOtherKeyWasPressed = new AtomicBoolean(false);
     private final AtomicLong ourLastTimePressed = new AtomicLong(0);
 
-    public MyDispatcher(@Nonnull String actionId, int modifierKeyCode, int actionKeyCode, boolean skipIfActionHasShortcut) {
+    public MyDispatcher(String actionId, int modifierKeyCode, int actionKeyCode, boolean skipIfActionHasShortcut) {
       myActionId = actionId;
       myModifierKeyCode = modifierKeyCode;
       myActionKeyCode = actionKeyCode;
@@ -157,7 +156,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     }
 
     @Override
-    public boolean test(@Nonnull AWTEvent event) {
+    public boolean test(AWTEvent event) {
       if (event instanceof KeyEvent keyEvent) {
         int keyCode = keyEvent.getKeyCode();
         LOG.debug("", this, event);

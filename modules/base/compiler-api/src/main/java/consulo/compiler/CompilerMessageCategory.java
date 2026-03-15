@@ -17,7 +17,6 @@ package consulo.compiler;
 
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * A set of constants describing possible message categories.
@@ -31,14 +30,14 @@ public enum CompilerMessageCategory {
     INFORMATION(CompilerLocalize.messageCategoryInformation()),
     STATISTICS(CompilerLocalize.messageCategoryStatistics());
 
-    @Nonnull
+    
     private final LocalizeValue myPresentableText;
 
-    CompilerMessageCategory(@Nonnull LocalizeValue presentableText) {
+    CompilerMessageCategory(LocalizeValue presentableText) {
         myPresentableText = presentableText;
     }
 
-    @Nonnull
+    
     public LocalizeValue getPresentableText() {
         return myPresentableText;
     }

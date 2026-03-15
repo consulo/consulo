@@ -20,7 +20,6 @@ import consulo.util.lang.function.ThrowableConsumer;
 import consulo.application.util.concurrent.QueueProcessor;
 import consulo.disposer.Disposer;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -29,13 +28,13 @@ import java.util.function.Consumer;
 public class SequentialLimitedLifoExecutor<Task> implements Disposable {
 
   private final int myMaxTasks;
-  @Nonnull
+  
   private final ThrowableConsumer<Task, ? extends Throwable> myLoadProcess;
-  @Nonnull
+  
   private final QueueProcessor<Task> myLoader;
 
   public SequentialLimitedLifoExecutor(Disposable parentDisposable, int maxTasks,
-                                       @Nonnull ThrowableConsumer<Task, ? extends Throwable> loadProcess) {
+                                       ThrowableConsumer<Task, ? extends Throwable> loadProcess) {
     myMaxTasks = maxTasks;
     myLoadProcess = loadProcess;
     myLoader = new QueueProcessor<>(new DetailsLoadingTask());

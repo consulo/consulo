@@ -27,7 +27,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
@@ -125,7 +124,7 @@ public class SearchTextField extends JPanel {
         }
     }
 
-    public void setPlaceholder(@Nonnull LocalizeValue localizeValue) {
+    public void setPlaceholder(LocalizeValue localizeValue) {
         // TODO [VISTALL] we need better control of localization change
         myTextField.putClientProperty("JTextField.placeholderText", localizeValue.getNullIfEmpty());
     }

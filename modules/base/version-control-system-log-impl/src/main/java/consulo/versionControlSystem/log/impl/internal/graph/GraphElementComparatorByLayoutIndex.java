@@ -19,7 +19,6 @@ import consulo.versionControlSystem.log.graph.GraphEdge;
 import consulo.versionControlSystem.log.graph.GraphElement;
 import consulo.versionControlSystem.log.graph.GraphNode;
 import consulo.versionControlSystem.log.graph.NormalEdge;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.function.Function;
@@ -28,15 +27,15 @@ import static consulo.versionControlSystem.log.graph.LinearGraphUtils.asNormalEd
 import static consulo.versionControlSystem.log.graph.LinearGraphUtils.getNotNullNodeIndex;
 
 public class GraphElementComparatorByLayoutIndex implements Comparator<GraphElement> {
-  @Nonnull
+  
   private final Function<Integer, Integer> myLayoutIndexGetter;
 
-  public GraphElementComparatorByLayoutIndex(@Nonnull Function<Integer, Integer> layoutIndexGetter) {
+  public GraphElementComparatorByLayoutIndex(Function<Integer, Integer> layoutIndexGetter) {
     myLayoutIndexGetter = layoutIndexGetter;
   }
 
   @Override
-  public int compare(@Nonnull GraphElement o1, @Nonnull GraphElement o2) {
+  public int compare(GraphElement o1, GraphElement o2) {
     if (o1 instanceof GraphEdge && o2 instanceof GraphEdge) {
       GraphEdge edge1 = (GraphEdge)o1;
       GraphEdge edge2 = (GraphEdge)o2;
@@ -70,7 +69,7 @@ public class GraphElementComparatorByLayoutIndex implements Comparator<GraphElem
     return 0;
   }
 
-  private int compare2(@Nonnull GraphEdge edge, @Nonnull GraphNode node) {
+  private int compare2(GraphEdge edge, GraphNode node) {
     NormalEdge normalEdge = asNormalEdge(edge);
     if (normalEdge == null) {
       return getLayoutIndex(getNotNullNodeIndex(edge)) - getLayoutIndex(node.getNodeIndex());

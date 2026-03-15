@@ -21,8 +21,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -31,12 +30,12 @@ import java.io.File;
  */
 public abstract class ProjectOpenProcessor {
     @Nullable
-    public abstract Image getIcon(@Nonnull VirtualFile file);
+    public abstract Image getIcon(VirtualFile file);
 
-    public abstract boolean canOpenProject(@Nonnull File file);
+    public abstract boolean canOpenProject(File file);
 
-    @Nonnull
-    public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile,
-                                                            @Nonnull UIAccess uiAccess,
-                                                            @Nonnull ProjectOpenContext context);
+    
+    public abstract AsyncResult<Project> doOpenProjectAsync(VirtualFile virtualFile,
+                                                            UIAccess uiAccess,
+                                                            ProjectOpenContext context);
 }

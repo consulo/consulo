@@ -20,8 +20,7 @@ import consulo.task.Task;
 import consulo.task.TaskType;
 import consulo.task.icon.TaskIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Date;
 
@@ -43,13 +42,13 @@ public class SandTask extends Task {
         myClosed = closed;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myId;
     }
 
-    @Nonnull
+    
     @Override
     public String getSummary() {
         return mySummary;
@@ -61,19 +60,19 @@ public class SandTask extends Task {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Comment[] getComments() {
         return new Comment[0];
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return TaskIconGroup.bug();
     }
 
-    @Nonnull
+    
     @Override
     public TaskType getType() {
         return TaskType.BUG;

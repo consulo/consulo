@@ -18,7 +18,6 @@ package consulo.http.ws;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.platform.Platform;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface WebSocketConnectionBuilderFactory {
-    @Nonnull
-    WebSocketConnectionBuilder newBuilder(@Nonnull Platform platform);
+    
+    WebSocketConnectionBuilder newBuilder(Platform platform);
 }

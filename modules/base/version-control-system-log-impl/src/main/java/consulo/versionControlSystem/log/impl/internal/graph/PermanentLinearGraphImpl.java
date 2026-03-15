@@ -22,7 +22,6 @@ import consulo.versionControlSystem.log.impl.internal.util.BitSetFlags;
 import consulo.versionControlSystem.log.impl.internal.util.CompressedIntList;
 import consulo.versionControlSystem.log.impl.internal.util.Flags;
 import consulo.versionControlSystem.log.impl.internal.util.IntList;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -50,9 +49,9 @@ public class PermanentLinearGraphImpl implements LinearGraph {
     return mySimpleNodes.size();
   }
 
-  @Nonnull
+  
   @Override
-  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
+  public List<GraphEdge> getAdjacentEdges(int nodeIndex, EdgeFilter filter) {
     List<GraphEdge> result = new SmartList<>();
 
     boolean hasUpSimpleEdge = nodeIndex != 0 && mySimpleNodes.get(nodeIndex - 1);
@@ -75,7 +74,7 @@ public class PermanentLinearGraphImpl implements LinearGraph {
     return result;
   }
 
-  @Nonnull
+  
   @Override
   public GraphNode getGraphNode(int nodeIndex) {
     return new GraphNode(nodeIndex);

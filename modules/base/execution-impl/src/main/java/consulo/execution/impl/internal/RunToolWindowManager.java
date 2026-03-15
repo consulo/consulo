@@ -39,8 +39,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 
 import java.util.*;
@@ -59,7 +58,7 @@ public class RunToolWindowManager {
     private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new ConcurrentHashMap<>();
     private final Map<String, Image> myToolwindowIdToBaseIconMap = new HashMap<>();
     private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
-    @Nonnull
+    
     private final Project myProject;
     private final Provider<ToolWindowManager> myToolWindowManager;
     private final Disposable myParentDisposable;
@@ -90,7 +89,7 @@ public class RunToolWindowManager {
         });
     }
 
-    public Image getImage(@Nonnull String toolWindowId) {
+    public Image getImage(String toolWindowId) {
         return myToolwindowIdToBaseIconMap.get(toolWindowId);
     }
 
@@ -103,7 +102,7 @@ public class RunToolWindowManager {
     }
 
     @Nullable
-    public ContentManager get(@Nonnull String toolWindowId, boolean createIfNeed) {
+    public ContentManager get(String toolWindowId, boolean createIfNeed) {
         // if project started disposing, return null
         if (myProject.getDisposeState().get() != ThreeState.NO) {
             return null;
@@ -119,7 +118,7 @@ public class RunToolWindowManager {
     }
 
     @RequiredUIAccess
-    private ContentManager createToolWindow(@Nonnull String toolWindowId) {
+    private ContentManager createToolWindow(String toolWindowId) {
         Executor executor = myProject.getApplication().getExtensionPoint(Executor.class)
             .findFirstSafe(e -> e.getToolWindowId().equals(toolWindowId));
         assert executor != null;
@@ -127,7 +126,7 @@ public class RunToolWindowManager {
     }
 
     @RequiredUIAccess
-    private ContentManager registerToolWindow(@Nonnull String toolWindowId, @Nonnull Image toolWindowIcon, @Nullable Executor executor) {
+    private ContentManager registerToolWindow(String toolWindowId, Image toolWindowIcon, @Nullable Executor executor) {
         ToolWindowManager toolWindowManager = myToolWindowManager.get();
 
         if (toolWindowManager.getToolWindow(toolWindowId) != null) {
@@ -141,7 +140,7 @@ public class RunToolWindowManager {
             private int myInsideGetData = 0;
 
             @Override
-            public Object getData(@Nonnull Key<?> dataId) {
+            public Object getData(Key<?> dataId) {
                 myInsideGetData++;
                 try {
                     if (HelpManager.HELP_ID == dataId) {

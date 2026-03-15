@@ -29,8 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.PathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -49,7 +48,7 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
         LayoutTreeSelection selection = treeComponent.getSelection();
         CompositePackagingElement<?> parent = selection.getCommonParentElement();

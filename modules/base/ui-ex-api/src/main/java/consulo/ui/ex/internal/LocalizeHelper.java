@@ -22,7 +22,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ResourceBundle;
 
@@ -54,9 +53,9 @@ public interface LocalizeHelper {
     class DisabledLocalizeHelper implements LocalizeHelper {
         static final DisabledLocalizeHelper INSTANCE = new DisabledLocalizeHelper();
 
-        @Nonnull
+        
         @Override
-        public LocalizeValue getValue(@Nonnull String key) {
+        public LocalizeValue getValue(String key) {
             return LocalizeValue.of(key);
         }
     }
@@ -68,9 +67,9 @@ public interface LocalizeHelper {
             myLocalize = localize;
         }
 
-        @Nonnull
+        
         @Override
-        public LocalizeValue getValue(@Nonnull String key) {
+        public LocalizeValue getValue(String key) {
             return LocalizeKey.of(myLocalize, key).getValue();
         }
     }
@@ -86,7 +85,7 @@ public interface LocalizeHelper {
             myPluginClassLoader = pluginClassLoader;
         }
 
-        @Nonnull
+        
         @Override
         public String getText(String key) {
             if (myResourceBundle == null) {
@@ -96,9 +95,9 @@ public interface LocalizeHelper {
             return CommonBundle.message(myResourceBundle, key);
         }
 
-        @Nonnull
+        
         @Override
-        public LocalizeValue getValue(@Nonnull String key) {
+        public LocalizeValue getValue(String key) {
             return LocalizeValue.of(getText(key));
         }
     }
@@ -111,13 +110,13 @@ public interface LocalizeHelper {
         }
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #getValue()")
     default String getText(String key) {
         return getValue(key).getValue();
     }
 
-    @Nonnull
-    LocalizeValue getValue(@Nonnull String key);
+    
+    LocalizeValue getValue(String key);
 }

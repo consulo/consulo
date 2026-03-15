@@ -5,7 +5,6 @@ import consulo.externalSystem.service.project.AbstractNamedData;
 import consulo.externalSystem.service.project.Named;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -22,11 +21,11 @@ public class LibraryData extends AbstractNamedData implements Named {
 
   private final boolean myUnresolved;
 
-  public LibraryData(@Nonnull ProjectSystemId owner, @Nonnull String name) {
+  public LibraryData(ProjectSystemId owner, String name) {
     this(owner, name, false);
   }
 
-  public LibraryData(@Nonnull ProjectSystemId owner, @Nonnull String name, boolean unresolved) {
+  public LibraryData(ProjectSystemId owner, String name, boolean unresolved) {
     super(owner, name, String.format("%s: %s", owner.getLibraryPrefix(), name));
     myUnresolved = unresolved;
   }
@@ -35,13 +34,13 @@ public class LibraryData extends AbstractNamedData implements Named {
     return myUnresolved;
   }
 
-  @Nonnull
-  public Set<String> getPaths(@Nonnull LibraryPathType type) {
+  
+  public Set<String> getPaths(LibraryPathType type) {
     Set<String> result = myPaths.get(type);
     return result == null ? Collections.<String>emptySet() : result;
   }
 
-  public void addPath(@Nonnull LibraryPathType type, @Nonnull String path) {
+  public void addPath(LibraryPathType type, String path) {
     Set<String> paths = myPaths.get(type);
     if (paths == null) {
       myPaths.put(type, paths = new HashSet<String>());

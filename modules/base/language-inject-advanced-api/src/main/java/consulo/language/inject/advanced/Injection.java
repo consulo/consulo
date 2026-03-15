@@ -18,8 +18,7 @@ package consulo.language.inject.advanced;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -36,19 +35,19 @@ import java.util.List;
  */
 public interface Injection {
 
-  @Nonnull
+  
   String getInjectedLanguageId();
 
   @Nullable
   Language getInjectedLanguage();
 
-  @Nonnull
+  
   String getPrefix();
 
-  @Nonnull
+  
   String getSuffix();
 
-  @Nonnull
+  
   List<TextRange> getInjectedArea(PsiElement element);
 
   /**
@@ -56,7 +55,7 @@ public interface Injection {
    * return a qualified TAG-NAME/@ATT-NAME combination name instead of just
    * the plain name.
    */
-  @Nonnull
+  
   String getDisplayName();
 
   boolean acceptsPsiElement(PsiElement element);

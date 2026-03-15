@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.archive;
 import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,19 +31,19 @@ public final class ZipArchiveFileType extends ArchiveFileType {
     super(VirtualFileManager.getInstance());
   }
 
-  @Nonnull
+  
   @Override
   public String getProtocol() {
     return PROTOCOL;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription() {
     return FileTypeLocalize.filetypeDescriptionZipFiles();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "ZIP_ARCHIVE";

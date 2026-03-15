@@ -17,7 +17,6 @@ package consulo.ui.ex.popup;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.internal.SimpleListPopupStep;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -28,8 +27,8 @@ import java.util.function.Function;
  * @since 2025-08-03
  */
 public class SimpleListPopupStepBuilder<T> {
-    @Nonnull
-    public static <V> SimpleListPopupStepBuilder<V> newBuilder(@Nonnull List<? extends V> items) {
+    
+    public static <V> SimpleListPopupStepBuilder<V> newBuilder(List<? extends V> items) {
         return new SimpleListPopupStepBuilder<>(items);
     }
 
@@ -47,12 +46,12 @@ public class SimpleListPopupStepBuilder<T> {
         myItems = items;
     }
 
-    public SimpleListPopupStepBuilder<T> withTitle(@Nonnull LocalizeValue title) {
+    public SimpleListPopupStepBuilder<T> withTitle(LocalizeValue title) {
         myTitle = title;
         return this;
     }
 
-    public SimpleListPopupStepBuilder<T> withTextBuilder(@Nonnull Function<T, String> function) {
+    public SimpleListPopupStepBuilder<T> withTextBuilder(Function<T, String> function) {
         myTextBuilder = function;
         return this;
     }
@@ -62,7 +61,7 @@ public class SimpleListPopupStepBuilder<T> {
        return this;
     }
 
-    public SimpleListPopupStepBuilder<T> withDefaultValue(@Nonnull T value) {
+    public SimpleListPopupStepBuilder<T> withDefaultValue(T value) {
         myDefaultValue = value;
         return this;
     }

@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -36,7 +35,7 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   public static final NullFileReferenceHelper INSTANCE = new NullFileReferenceHelper();
 
   @Override
-  public PsiFileSystemItem findRoot(Project project, @Nonnull VirtualFile file) {
+  public PsiFileSystemItem findRoot(Project project, VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     VirtualFile contentRootForFile = index.getContentRootForFile(file);
 
@@ -44,14 +43,14 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  @Nonnull
-  public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
+  
+  public Collection<PsiFileSystemItem> getRoots(Module module) {
     return ContainerUtil.mapNotNull(ModuleRootManager.getInstance(module).getContentRoots(), virtualFile -> PsiManager.getInstance(module.getProject()).findDirectory(virtualFile));
   }
 
   @Override
-  @Nonnull
-  public Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file) {
+  
+  public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
     PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     if (item != null) {
       PsiFileSystemItem parent = item.getParent();
@@ -63,7 +62,7 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  public boolean isMine(Project project, @Nonnull VirtualFile file) {
+  public boolean isMine(Project project, VirtualFile file) {
     return ProjectRootManager.getInstance(project).getFileIndex().isInContent(file);
   }
 

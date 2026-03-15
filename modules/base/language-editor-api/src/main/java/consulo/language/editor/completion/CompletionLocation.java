@@ -19,8 +19,8 @@ import consulo.language.util.ProcessingContext;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -50,12 +50,12 @@ public class CompletionLocation implements UserDataHolder {
   }
 
   @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
+  public <T> T getUserData(Key<T> key) {
     return myProcessingContext.get(key);
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @jakarta.annotation.Nullable T value) {
+  public <T> void putUserData(Key<T> key, @Nullable T value) {
     myProcessingContext.put(key, value);
   }
 }

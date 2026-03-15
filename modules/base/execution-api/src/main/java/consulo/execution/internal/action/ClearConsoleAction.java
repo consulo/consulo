@@ -8,7 +8,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 public class ClearConsoleAction extends DumbAwareAction {
     public ClearConsoleAction() {
@@ -20,14 +19,14 @@ public class ClearConsoleAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ConsoleView data = e.getData(ConsoleView.KEY);
         e.getPresentation().setEnabled(data != null && data.getContentSize() > 0);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         e.getRequiredData(ConsoleView.KEY).clear();
     }
 }

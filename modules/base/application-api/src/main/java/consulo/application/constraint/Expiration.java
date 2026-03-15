@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.constraint;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Capable of invoking a handler whenever something expires -
@@ -23,6 +22,6 @@ public interface Expiration {
   /**
    * The caller must ensure the returned handle is properly disposed.
    */
-  @Nonnull
+  
   Handle invokeOnExpiration(Runnable runnable);
 }

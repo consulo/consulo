@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -341,8 +340,8 @@ public class RegExHelpPopup extends JPanel {
         add(myScrollPane, BorderLayout.CENTER);
     }
 
-    @Nonnull
-    public static LinkLabel createRegExLink(@Nonnull String title, @Nullable final Component owner, @Nullable final Logger logger) {
+    
+    public static LinkLabel createRegExLink(String title, @Nullable final Component owner, @Nullable final Logger logger) {
         return new LinkLabel(title, null, new LinkListener() {
             JBPopup helpPopup;
 

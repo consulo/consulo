@@ -9,8 +9,7 @@ import consulo.repository.ui.PackageManagementService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -44,12 +43,12 @@ public class PackagesNotificationPanel {
     }
 
     @RequiredUIAccess
-    public static void showError(@Nonnull String title, @Nonnull PackageManagementService.ErrorDescription description) {
+    public static void showError(String title, PackageManagementService.ErrorDescription description) {
         PackagingErrorDialog dialog = new PackagingErrorDialog(title, description);
         dialog.showAsync();
     }
 
-    public void showResult(String packageName, @Nullable PackageManagementService.ErrorDescription errorDescription) {
+    public void showResult(String packageName, PackageManagementService.@Nullable ErrorDescription errorDescription) {
         if (errorDescription == null) {
             LocalizeValue message = IdeLocalize.packageInstalledSuccessfully();
             if (packageName != null) {
@@ -83,7 +82,7 @@ public class PackagesNotificationPanel {
         showContent(text, MessageType.INFO.getPopupBackground());
     }
 
-    private void showContent(@Nonnull String text, @Nonnull Color background) {
+    private void showContent(String text, Color background) {
         String htmlText = text.startsWith("<html>") ? text : UIUtil.toHtml(text);
         myHtmlViewer.setText(htmlText);
         myHtmlViewer.setBackground(background);

@@ -4,21 +4,20 @@ package consulo.language.codeStyle.inject;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBuilder {
 
-    private final @Nonnull CodeStyleSettings mySettings;
+    private final CodeStyleSettings mySettings;
 
-    public DefaultInjectedLanguageBlockBuilder(@Nonnull CodeStyleSettings settings) {
+    public DefaultInjectedLanguageBlockBuilder(CodeStyleSettings settings) {
         mySettings = settings;
     }
 
     @Override
-    public @Nonnull CodeStyleSettings getSettings() {
+    public CodeStyleSettings getSettings() {
         return mySettings;
     }
 
@@ -39,21 +38,21 @@ public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBu
 
     private static final class GlueBlock extends AbstractBlock {
 
-        private final @Nonnull Indent myIndent;
-        private final @Nonnull TextRange myRange;
+        private final Indent myIndent;
+        private final TextRange myRange;
 
-        private GlueBlock(@Nonnull ASTNode node,
+        private GlueBlock(ASTNode node,
                           @Nullable Wrap wrap,
                           @Nullable Alignment alignment,
-                          @Nonnull Indent indent,
-                          @Nonnull TextRange range) {
+                          Indent indent,
+                          TextRange range) {
             super(node, wrap, alignment);
             myIndent = indent;
             myRange = range;
         }
 
         @Override
-        public @Nonnull TextRange getTextRange() {
+        public TextRange getTextRange() {
             return myRange;
         }
 
@@ -63,12 +62,12 @@ public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBu
         }
 
         @Override
-        public @Nonnull Indent getIndent() {
+        public Indent getIndent() {
             return myIndent;
         }
 
         @Override
-        public @Nullable Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2) {
+        public @Nullable Spacing getSpacing(@Nullable Block child1, Block child2) {
             return null;
         }
 

@@ -23,7 +23,6 @@ import consulo.util.lang.SystemProperties;
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
 import net.jpountz.lz4.LZ4FastDecompressor;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -41,7 +40,7 @@ public class CompressionUtil {
   private static final int COMPRESSION_THRESHOLD = 64;
   private static final ThreadLocalCachedByteArray spareBufferLocal = new ThreadLocalCachedByteArray();
 
-  public static int writeCompressed(@Nonnull DataOutput out, @Nonnull byte[] bytes, int start, int length) throws IOException {
+  public static int writeCompressed(DataOutput out, byte[] bytes, int start, int length) throws IOException {
     if (length > COMPRESSION_THRESHOLD) {
       LZ4Compressor compressor = compressor();
 
@@ -69,7 +68,7 @@ public class CompressionUtil {
 
   public static final boolean DUMP_COMPRESSION_STATS = SystemProperties.getBooleanProperty("idea.dump.compression.stats", false);
 
-  public static int writeCompressedWithoutOriginalBufferLength(@Nonnull DataOutput out, @Nonnull byte[] bytes, int length) throws IOException {
+  public static int writeCompressedWithoutOriginalBufferLength(DataOutput out, byte[] bytes, int length) throws IOException {
     long started = DUMP_COMPRESSION_STATS ? System.nanoTime() : 0;
 
     LZ4Compressor compressor = compressor();
@@ -96,8 +95,8 @@ public class CompressionUtil {
     return LZ4Factory.fastestJavaInstance().fastCompressor();
   }
 
-  @Nonnull
-  public static byte[] readCompressedWithoutOriginalBufferLength(@Nonnull DataInput in, int originalBufferLength) throws IOException {
+  
+  public static byte[] readCompressedWithoutOriginalBufferLength(DataInput in, int originalBufferLength) throws IOException {
     int size = DataInputOutputUtil.readINT(in);
 
     byte[] bytes = spareBufferLocal.getBuffer(size);
@@ -122,8 +121,8 @@ public class CompressionUtil {
     return LZ4Factory.fastestJavaInstance().fastDecompressor();
   }
 
-  @Nonnull
-  public static byte[] readCompressed(@Nonnull DataInput in) throws IOException {
+  
+  public static byte[] readCompressed(DataInput in) throws IOException {
     int size = DataInputOutputUtil.readINT(in);
     if (size < 0) {
       size = -size;
@@ -144,8 +143,8 @@ public class CompressionUtil {
 
   private static final int STRING_COMPRESSION_THRESHOLD = 1024;
 
-  @Nonnull
-  public static Object compressStringRawBytes(@Nonnull CharSequence string) {
+  
+  public static Object compressStringRawBytes(CharSequence string) {
     int length = string.length();
     if (length < STRING_COMPRESSION_THRESHOLD) {
       if (string instanceof CharBuffer && ((CharBuffer)string).capacity() > STRING_COMPRESSION_THRESHOLD) {
@@ -155,7 +154,7 @@ public class CompressionUtil {
     }
     try {
       BufferExposingByteArrayOutputStream bytes = new BufferExposingByteArrayOutputStream(length);
-      @Nonnull DataOutput out = new DataOutputStream(bytes);
+      DataOutput out = new DataOutputStream(bytes);
 
       for (int i = 0; i < length; i++) {
         char c = string.charAt(i);
@@ -177,8 +176,8 @@ public class CompressionUtil {
     }
   }
 
-  @Nonnull
-  public static CharSequence uncompressStringRawBytes(@Nonnull Object compressed) {
+  
+  public static CharSequence uncompressStringRawBytes(Object compressed) {
     if (compressed instanceof CharSequence) return (CharSequence)compressed;
 
     ByteBuffer buffer = ByteBuffer.wrap((byte[])compressed);

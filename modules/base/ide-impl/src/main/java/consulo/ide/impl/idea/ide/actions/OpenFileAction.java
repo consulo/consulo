@@ -45,8 +45,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "OpenFile")
@@ -56,13 +55,13 @@ public class OpenFileAction extends AnAction implements DumbAware {
         this(ActionLocalize.actionOpenfileText(), ActionLocalize.actionOpenfileDescription(), PlatformIconGroup.nodesFolderopened());
     }
 
-    public OpenFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public OpenFileAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         @Nullable Project project = e.getData(Project.KEY);
         boolean showFiles = project != null;
 
@@ -110,7 +109,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    private static void doOpenFile(@Nullable Project project, @Nonnull VirtualFile[] result) {
+    private static void doOpenFile(@Nullable Project project, VirtualFile[] result) {
         for (VirtualFile file : result) {
             if (file.isDirectory()) {
                 ProjectImplUtil.openAsync(file.getPath(), project, false, UIAccess.current())

@@ -25,8 +25,7 @@ import consulo.ui.layout.TableLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.vaadin.stefan.table.Table;
 import org.vaadin.stefan.table.TableDataCell;
 import org.vaadin.stefan.table.TableRow;
@@ -44,7 +43,7 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
     public class Vaadin extends Table implements FromVaadinComponentWrapper {
         private final Map<Component, TableCell> myChildren = new LinkedHashMap<>();
 
-        public void add(@Nonnull Component component, TableCell cell) {
+        public void add(Component component, TableCell cell) {
             myChildren.put(component, cell);
 
             com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
@@ -89,16 +88,16 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
     public void addStyle(LayoutStyle style) {
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public TableLayout add(@Nonnull consulo.ui.Component component, @Nonnull TableCell tableCell) {
+    public TableLayout add(consulo.ui.Component component, TableCell tableCell) {
         toVaadinComponent().add(component, tableCell);
         return this;
     }

@@ -30,15 +30,14 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UnwrapDescriptor extends LanguageExtension  {
   ExtensionPointCacheKey<UnwrapDescriptor, ByLanguageValue<List<UnwrapDescriptor>>> KEY = ExtensionPointCacheKey.create("UnwrapDescriptor", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<UnwrapDescriptor> forLanguage(@Nonnull Language language) {
+  
+  public static List<UnwrapDescriptor> forLanguage(Language language) {
     return Application.get().getExtensionPoint(UnwrapDescriptor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 

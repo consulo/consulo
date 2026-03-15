@@ -6,7 +6,6 @@ import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,10 +15,10 @@ import java.awt.*;
  */
 public class ExternalSystemRunConfigurationEditor extends SettingsEditor<ExternalSystemRunConfiguration> {
 
-  @Nonnull
+  
   private final ExternalSystemTaskSettingsControl myControl;
 
-  public ExternalSystemRunConfigurationEditor(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
+  public ExternalSystemRunConfigurationEditor(Project project, ProjectSystemId externalSystemId) {
     myControl = new ExternalSystemTaskSettingsControl(project, externalSystemId);
   }
 
@@ -34,7 +33,7 @@ public class ExternalSystemRunConfigurationEditor extends SettingsEditor<Externa
     myControl.apply(s.getSettings());
   }
 
-  @Nonnull
+  
   @Override
   protected JComponent createEditor() {
     PaintAwarePanel result = new PaintAwarePanel(new GridBagLayout());

@@ -13,8 +13,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDocumentListener {
     private static final Logger LOG = Logger.getInstance(EmptyEditorHighlighter.class);
@@ -28,7 +27,7 @@ public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         this(null, HighlighterColors.TEXT);
     }
 
-    public EmptyEditorHighlighter(@Nullable EditorColorsScheme scheme, @Nonnull TextAttributesKey key) {
+    public EmptyEditorHighlighter(@Nullable EditorColorsScheme scheme, TextAttributesKey key) {
         myKey = key;
         myCachedAttributes = scheme != null ? scheme.getAttributes(key) : null;
     }
@@ -39,23 +38,23 @@ public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDoc
     }
 
     @Override
-    public void setText(@Nonnull CharSequence text) {
+    public void setText(CharSequence text) {
         myTextLength = text.length();
     }
 
     @Override
-    public void setEditor(@Nonnull HighlighterClient editor) {
+    public void setEditor(HighlighterClient editor) {
         LOG.assertTrue(myEditor == null, "Highlighters cannot be reused with different editors");
         myEditor = editor;
     }
 
     @Override
-    public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
+    public void setColorScheme(EditorColorsScheme scheme) {
         myCachedAttributes = scheme.getAttributes(myKey);
     }
 
     @Override
-    public void documentChanged(@Nonnull DocumentEvent e) {
+    public void documentChanged(DocumentEvent e) {
         myTextLength += e.getNewLength() - e.getOldLength();
     }
 
@@ -65,7 +64,7 @@ public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDoc
     }
 
     @Override
-    public @Nonnull HighlighterIterator createIterator(int startOffset) {
+    public HighlighterIterator createIterator(int startOffset) {
         return new HighlighterIterator() {
             private final TextAttributesKey[] myKeys = new TextAttributesKey[]{myKey};
             private int index = 0;
@@ -76,7 +75,7 @@ public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDoc
             }
 
             @Override
-            @Nonnull
+            
             public TextAttributesKey[] getTextAttributesKeys() {
                 return myKeys;
             }
@@ -107,7 +106,7 @@ public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDoc
             }
 
             @Override
-            public @Nonnull Document getDocument() {
+            public Document getDocument() {
                 return myEditor.getDocument();
             }
 

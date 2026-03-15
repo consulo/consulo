@@ -24,8 +24,7 @@ import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.ui.ex.localize.ShortcutLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -64,22 +63,22 @@ public class ShortcutUtil {
         }
     }
 
-    @Nonnull
+    
     public static String getKeystrokeText(KeyStroke accelerator) {
         return getKeystrokeTextValue(accelerator).get();
     }
 
-    @Nonnull
+    
     public static String getKeystrokeText(KeyStroke accelerator, boolean useUnicodeCharactersForShortcuts) {
         return getKeystrokeTextValue(accelerator, useUnicodeCharactersForShortcuts).get();
     }
 
-    @Nonnull
+    
     public static LocalizeValue getKeystrokeTextValue(@Nullable KeyStroke accelerator) {
         return getKeystrokeTextValue(accelerator, isUseUnicodeShortcuts());
     }
 
-    @Nonnull
+    
     public static LocalizeValue getKeystrokeTextValue(@Nullable KeyStroke accelerator, boolean useUnicodeCharactersForShortcuts) {
         if (accelerator == null) {
             return LocalizeValue.empty();
@@ -109,7 +108,7 @@ public class ShortcutUtil {
     }
 
     @Nullable
-    public static KeyStroke getKeyStroke(@Nonnull ShortcutSet shortcutSet) {
+    public static KeyStroke getKeyStroke(ShortcutSet shortcutSet) {
         Shortcut[] shortcuts = shortcutSet.getShortcuts();
         if (shortcuts.length != 0 && shortcuts[0] instanceof KeyboardShortcut shortcut && shortcut.getSecondKeyStroke() == null) {
             return shortcut.getFirstKeyStroke();

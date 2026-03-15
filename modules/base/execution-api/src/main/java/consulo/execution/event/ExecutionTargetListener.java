@@ -19,9 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.execution.ExecutionTarget;
 
-import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface ExecutionTargetListener {
-  void activeTargetChanged(@Nonnull ExecutionTarget newTarget);
+  void activeTargetChanged(ExecutionTarget newTarget);
 }

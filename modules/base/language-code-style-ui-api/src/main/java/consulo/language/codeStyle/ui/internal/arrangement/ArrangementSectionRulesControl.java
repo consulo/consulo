@@ -30,8 +30,7 @@ import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 import static consulo.language.codeStyle.ui.internal.arrangement.ArrangementSectionRuleManager.ArrangementSectionRuleData;
@@ -41,13 +40,13 @@ import static consulo.language.codeStyle.ui.internal.arrangement.ArrangementSect
  * @since 10/31/12 1:23 PM
  */
 public class ArrangementSectionRulesControl extends ArrangementMatchingRulesControl {
-  @Nonnull
+  
   public static final Key<ArrangementSectionRulesControl> KEY = Key.create("Arrangement.Rule.Match.Control");
-  @Nonnull
+  
   private static final Logger LOG = Logger.getInstance(ArrangementSectionRulesControl.class);
-  @Nonnull
+  
   private final ArrangementColorsProvider myColorsProvider;
-  @Nonnull
+  
   private final ArrangementStandardSettingsManager mySettingsManager;
 
   @Nullable
@@ -55,18 +54,18 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
   @Nullable
   private ArrangementStandardSettingsManager myExtendedSettingsManager;
 
-  public ArrangementSectionRulesControl(@Nonnull Language language,
-                                        @Nonnull ArrangementStandardSettingsManager settingsManager,
-                                        @Nonnull ArrangementColorsProvider colorsProvider,
-                                        @Nonnull RepresentationCallback callback) {
+  public ArrangementSectionRulesControl(Language language,
+                                        ArrangementStandardSettingsManager settingsManager,
+                                        ArrangementColorsProvider colorsProvider,
+                                        RepresentationCallback callback) {
     super(settingsManager, colorsProvider, callback);
     mySectionRuleManager = ArrangementSectionRuleManager.getInstance(language, settingsManager, colorsProvider, this);
     mySettingsManager = settingsManager;
     myColorsProvider = colorsProvider;
   }
 
-  private static void appendBufferedSectionRules(@Nonnull List<ArrangementSectionRule> result,
-                                                 @Nonnull List<StdArrangementMatchRule> buffer,
+  private static void appendBufferedSectionRules(List<ArrangementSectionRule> result,
+                                                 List<StdArrangementMatchRule> buffer,
                                                  @Nullable String currentSectionStart) {
     if (currentSectionStart == null) {
       return;
@@ -89,7 +88,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
     return new MatchingRulesRenderer();
   }
 
-  @Nonnull
+  
   @Override
   protected ArrangementMatchingRulesValidator createValidator() {
     return new ArrangementSectionRulesValidator(getModel(), mySectionRuleManager);
@@ -181,7 +180,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
     }
   }
 
-  @Nonnull
+  
   public ArrangementRuleAliasDialog createRuleAliasEditDialog() {
     final Set<String> tokenIds = new HashSet<String>();
     List<ArrangementSectionRule> sections = getSections();
@@ -189,14 +188,14 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
       for (StdArrangementMatchRule rule : section.getMatchRules()) {
         rule.getMatcher().getCondition().invite(new ArrangementMatchConditionVisitor() {
           @Override
-          public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
+          public void visit(ArrangementAtomMatchCondition condition) {
             if (ArrangementUtil.isAliasedCondition(condition)) {
               tokenIds.add(condition.getType().getId());
             }
           }
 
           @Override
-          public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
+          public void visit(ArrangementCompositeMatchCondition condition) {
             for (ArrangementMatchCondition operand : condition.getOperands()) {
               operand.invite(this);
             }

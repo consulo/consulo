@@ -53,8 +53,7 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -73,7 +72,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
 
     private static final int MIN_ICON_HEIGHT = 24 + 1 + 1;
 
-    @Nonnull
+    
     private final Application myApplication;
     private IdeFrame myFrame;
 
@@ -91,7 +90,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         JComponent component;
         StatusBarWidget widget;
 
-        static WidgetBean create(@Nonnull StatusBarWidget widget, @Nonnull JComponent component) {
+        static WidgetBean create(StatusBarWidget widget, JComponent component) {
             WidgetBean bean = new WidgetBean();
             bean.widget = widget;
             bean.component = component;
@@ -170,12 +169,12 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @RequiredUIAccess
-    public IdeStatusBarImpl(@Nonnull Application application) {
+    public IdeStatusBarImpl(Application application) {
         this(application, null);
     }
 
     @RequiredUIAccess
-    public IdeStatusBarImpl(@Nonnull Application application, @Nullable IdeStatusBarImpl master) {
+    public IdeStatusBarImpl(Application application, @Nullable IdeStatusBarImpl master) {
         myApplication = application;
         setLayout(new BorderLayout());
         setBorder(JBUI.Borders.empty(1, 0, 0, 6));
@@ -215,7 +214,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull List<String> order, @Nonnull Disposable parentDisposable) {
+    public void addWidget(StatusBarWidget widget, List<String> order, Disposable parentDisposable) {
         myApplication.invokeLater(() -> addWidget(widget, order));
         Disposer.register(parentDisposable, () -> removeWidget(widget.getId()));
     }
@@ -239,7 +238,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @RequiredUIAccess
-    private void addWidget(@Nonnull StatusBarWidget widget, @Nonnull List<String> order) {
+    private void addWidget(StatusBarWidget widget, List<String> order) {
         UIAccess.assertIsUIThread();
 
         JPanel panel = rightPanel();
@@ -283,7 +282,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         }
     }
 
-    @Nonnull
+    
     private JPanel rightPanel() {
         if (myRightPanel == null) {
             myRightPanel = new JPanel();
@@ -309,7 +308,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         return myRightPanel;
     }
 
-    @Nonnull
+    
     private JPanel leftPanel() {
         if (myLeftPanel == null) {
             myLeftPanel = new JPanel();
@@ -323,7 +322,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
 
     @Override
     @Nullable
-    public Object getData(@Nonnull Key dataId) {
+    public Object getData(Key dataId) {
         if (Project.KEY == dataId) {
             return getProject();
         }
@@ -337,7 +336,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void addProgress(@Nonnull ProgressIndicator indicator, @Nonnull TaskInfo info) {
+    public void addProgress(ProgressIndicator indicator, TaskInfo info) {
         this.<InfoAndProgressPanel>findWidget(widget -> widget instanceof InfoAndProgressPanel).ifPresent(widget -> {
             widget.addProgress(indicator, info);
         });
@@ -374,7 +373,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
+    public BalloonHandler notifyProgressByBalloon(NotificationType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
         Optional<InfoAndProgressPanel> optional = this.<InfoAndProgressPanel>findWidget(widget -> widget instanceof InfoAndProgressPanel);
         if (!optional.isPresent()) {
             return null;
@@ -383,11 +382,11 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor) {
+    public void fireNotificationPopup(JComponent content, Color backgroundColor) {
         new NotificationPopup(this, content, backgroundColor);
     }
 
-    private static JComponent wrap(@Nonnull StatusBarWidget widget) {
+    private static JComponent wrap(StatusBarWidget widget) {
         if (widget instanceof CustomStatusBarWidget) {
             JComponent component = ((CustomStatusBarWidget) widget).getComponent();
             if (component.getBorder() == null) {
@@ -420,14 +419,14 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public boolean test(@Nonnull AWTEvent e) {
+    public boolean test(AWTEvent e) {
         if (e instanceof MouseEvent) {
             return dispatchMouseEvent((MouseEvent) e);
         }
         return false;
     }
 
-    private boolean dispatchMouseEvent(@Nonnull MouseEvent e) {
+    private boolean dispatchMouseEvent(MouseEvent e) {
         if (myRightPanel == null || !myRightPanel.isVisible()) {
             return false;
         }
@@ -472,7 +471,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void removeWidget(@Nonnull String id) {
+    public void removeWidget(String id) {
         myApplication.invokeLater(() -> {
             WidgetBean bean = myWidgetMap.remove(id);
             if (bean != null) {
@@ -494,10 +493,10 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         updateChildren(IdeStatusBarImpl::updateWidgets);
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
-    public <W extends StatusBarWidget> Optional<W> findWidget(@Nonnull Predicate<StatusBarWidget> predicate) {
+    public <W extends StatusBarWidget> Optional<W> findWidget(Predicate<StatusBarWidget> predicate) {
         return myWidgetMap
             .values()
             .stream()
@@ -507,7 +506,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void updateWidget(@Nonnull Predicate<StatusBarWidget> widgetPredicate) {
+    public void updateWidget(Predicate<StatusBarWidget> widgetPredicate) {
         myWidgetMap
             .entrySet()
             .stream()
@@ -516,7 +515,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void updateWidget(@Nonnull String id) {
+    public void updateWidget(String id) {
         myApplication.invokeLater(() -> {
             WidgetBean bean = myWidgetMap.get(id);
             if (bean != null) {

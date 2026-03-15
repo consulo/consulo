@@ -16,7 +16,6 @@
 package consulo.diff.comparison.iterable;
 
 import consulo.diff.util.Range;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 
@@ -29,15 +28,15 @@ public interface DiffIterable {
 
   int getLength2();
 
-  @Nonnull
+  
   Iterator<Range> changes();
 
-  @Nonnull
+  
   Iterator<Range> unchanged();
 
-  @Nonnull
+  
   Iterable<Range> iterateChanges();
 
-  @Nonnull
+  
   Iterable<Range> iterateUnchanged();
 }

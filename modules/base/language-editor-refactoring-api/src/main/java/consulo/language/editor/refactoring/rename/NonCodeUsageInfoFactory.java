@@ -21,8 +21,7 @@ import consulo.language.psi.PsiElement;
 import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfoFactory;
 import consulo.usage.UsageInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class NonCodeUsageInfoFactory implements UsageInfoFactory {
   private final PsiElement myElement;
@@ -35,7 +34,7 @@ public class NonCodeUsageInfoFactory implements UsageInfoFactory {
 
   @Override
   @Nullable
-  public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
+  public UsageInfo createUsageInfo(PsiElement usage, int startOffset, int endOffset) {
     PsiElement namedElement = TargetElementUtil.getNamedElement(usage, startOffset);
     if (namedElement != null) {
       return null;

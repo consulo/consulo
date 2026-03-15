@@ -38,7 +38,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -138,7 +137,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
         );
     }
 
-    private static boolean isFileExist(@Nonnull String directory, @Nonnull String fileName) {
+    private static boolean isFileExist(String directory, String fileName) {
         return LocalFileSystem.getInstance().findFileByIoFile(new File(directory, fileName)) != null;
     }
 
@@ -196,7 +195,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
     }

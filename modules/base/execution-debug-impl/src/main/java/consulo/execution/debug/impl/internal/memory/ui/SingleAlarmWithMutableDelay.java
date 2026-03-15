@@ -4,7 +4,6 @@ package consulo.execution.debug.impl.internal.memory.ui;
 import consulo.disposer.Disposable;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 
 public class SingleAlarmWithMutableDelay {
     private final Alarm myAlarm;
@@ -12,7 +11,7 @@ public class SingleAlarmWithMutableDelay {
 
     private volatile int myDelayMillis;
 
-    public SingleAlarmWithMutableDelay(@Nonnull Task task, @Nonnull Disposable parentDisposable) {
+    public SingleAlarmWithMutableDelay(Task task, Disposable parentDisposable) {
         myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, parentDisposable);
         myTask = task;
     }
@@ -21,11 +20,11 @@ public class SingleAlarmWithMutableDelay {
         myDelayMillis = millis;
     }
 
-    public void cancelAndRequest(@Nonnull XSuspendContext suspendContext) {
+    public void cancelAndRequest(XSuspendContext suspendContext) {
         cancelAndAddRequest(suspendContext, myDelayMillis);
     }
 
-    public void cancelAndRequestImmediate(@Nonnull XSuspendContext suspendContext) {
+    public void cancelAndRequestImmediate(XSuspendContext suspendContext) {
         cancelAndAddRequest(suspendContext, 0);
     }
 
@@ -33,7 +32,7 @@ public class SingleAlarmWithMutableDelay {
         myAlarm.cancelAllRequests();
     }
 
-    private void cancelAndAddRequest(@Nonnull XSuspendContext suspendContext, int delayMillis) {
+    private void cancelAndAddRequest(XSuspendContext suspendContext, int delayMillis) {
         if (!myAlarm.isDisposed()) {
             cancelAllRequests();
             myAlarm.addRequest(() -> myTask.run(suspendContext), delayMillis);
@@ -42,6 +41,6 @@ public class SingleAlarmWithMutableDelay {
 
     @FunctionalInterface
     public interface Task {
-        void run(@Nonnull XSuspendContext suspendContext);
+        void run(XSuspendContext suspendContext);
     }
 }

@@ -23,7 +23,7 @@ import consulo.ui.Window;
 import consulo.util.lang.SemVer;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

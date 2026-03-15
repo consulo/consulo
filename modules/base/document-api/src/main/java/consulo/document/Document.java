@@ -8,8 +8,7 @@ import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.Contract;
 
@@ -36,15 +35,15 @@ public interface Document extends UserDataHolder {
      *
      * @return document content.
      */
-    @Nonnull
+    
     @Contract(pure = true)
     default String getText() {
         return getImmutableCharSequence().toString();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
-    default String getText(@Nonnull TextRange range) {
+    default String getText(TextRange range) {
         return range.substring(getText());
     }
 
@@ -58,7 +57,7 @@ public interface Document extends UserDataHolder {
      * @see #getTextLength()
      */
     @Contract(pure = true)
-    @Nonnull
+    
     default CharSequence getCharsSequence() {
         return getImmutableCharSequence();
     }
@@ -67,14 +66,14 @@ public interface Document extends UserDataHolder {
      * @return a char sequence representing document content that's guaranteed to be immutable. No read- or write-action is necessary.
      * @see consulo.util.lang.ImmutableCharSequence
      */
-    @Nonnull
+    
     @Contract(pure = true)
     CharSequence getImmutableCharSequence();
 
     /**
      * @deprecated Use {@link #getCharsSequence()} or {@link #getText()} instead.
      */
-    @Nonnull
+    
     @Deprecated
     default char[] getChars() {
         return CharArrayUtil.fromSequence(getImmutableCharSequence());
@@ -143,7 +142,7 @@ public interface Document extends UserDataHolder {
      * @throws ReadOnlyModificationException         if the document is read-only.
      * @throws ReadOnlyFragmentModificationException if the fragment to be modified is covered by a guarded block.
      */
-    void insertString(int offset, @Nonnull CharSequence s);
+    void insertString(int offset, CharSequence s);
 
     /**
      * Deletes the specified range of text from the document.
@@ -187,7 +186,7 @@ public interface Document extends UserDataHolder {
      * @throws ReadOnlyModificationException         if the document is read-only.
      * @throws ReadOnlyFragmentModificationException if the fragment to be modified is covered by a guarded block.
      */
-    void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s);
+    void replaceString(int startOffset, int endOffset, CharSequence s);
 
     /**
      * Checks if the document text is read-only.
@@ -222,10 +221,10 @@ public interface Document extends UserDataHolder {
      *
      * @param listener the listener instance.
      */
-    default void addDocumentListener(@Nonnull DocumentListener listener) {
+    default void addDocumentListener(DocumentListener listener) {
     }
 
-    default void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
+    default void addDocumentListener(DocumentListener listener, Disposable parentDisposable) {
     }
 
     /**
@@ -234,7 +233,7 @@ public interface Document extends UserDataHolder {
      *
      * @param listener the listener instance.
      */
-    default void removeDocumentListener(@Nonnull DocumentListener listener) {
+    default void removeDocumentListener(DocumentListener listener) {
     }
 
     /**
@@ -246,7 +245,7 @@ public interface Document extends UserDataHolder {
      * @param endOffset   the end offset for the range of text covered by the marker.
      * @return the marker instance.
      */
-    @Nonnull
+    
     default RangeMarker createRangeMarker(int startOffset, int endOffset) {
         return createRangeMarker(startOffset, endOffset, false);
     }
@@ -261,7 +260,7 @@ public interface Document extends UserDataHolder {
      * @param surviveOnExternalChange if true, the marker is not invalidated by external changes.
      * @return the marker instance.
      */
-    @Nonnull
+    
     RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange);
 
     /**
@@ -270,7 +269,7 @@ public interface Document extends UserDataHolder {
      *
      * @param listener the listener instance.
      */
-    default void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    default void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 
     /**
@@ -279,7 +278,7 @@ public interface Document extends UserDataHolder {
      *
      * @param listener the listener instance.
      */
-    default void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    default void removePropertyChangeListener(PropertyChangeListener listener) {
     }
 
     /**
@@ -304,7 +303,7 @@ public interface Document extends UserDataHolder {
      * @see #startGuardedBlockChecking()
      * @see consulo.ide.impl.idea.openapi.editor.actionSystem.EditorActionManager#setReadonlyFragmentModificationHandler(consulo.ide.impl.idea.openapi.editor.actionSystem.ReadonlyFragmentModificationHandler)
      */
-    @Nonnull
+    
     RangeMarker createGuardedBlock(int startOffset, int endOffset);
 
     /**
@@ -313,7 +312,7 @@ public interface Document extends UserDataHolder {
      * @param block the marker to remove.
      * @see #createGuardedBlock(int, int)
      */
-    default void removeGuardedBlock(@Nonnull RangeMarker block) {
+    default void removeGuardedBlock(RangeMarker block) {
     }
 
     /**
@@ -367,10 +366,10 @@ public interface Document extends UserDataHolder {
     default void setCyclicBufferSize(int bufferSize) {
     }
 
-    void setText(@Nonnull CharSequence text);
+    void setText(CharSequence text);
 
-    @Nonnull
-    default RangeMarker createRangeMarker(@Nonnull TextRange textRange) {
+    
+    default RangeMarker createRangeMarker(TextRange textRange) {
         return createRangeMarker(textRange.getStartOffset(), textRange.getEndOffset());
     }
 
@@ -413,7 +412,7 @@ public interface Document extends UserDataHolder {
      * Get all range markers
      * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
      */
-    default boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
+    default boolean processRangeMarkers(Processor<? super RangeMarker> processor) {
         return processRangeMarkersOverlappingWith(0, getTextLength(), processor);
     }
 
@@ -421,7 +420,7 @@ public interface Document extends UserDataHolder {
      * Get range markers which {@link TextRange#intersects(int, int)} the specified range
      * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
      */
-    default boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
+    default boolean processRangeMarkersOverlappingWith(int start, int end, Processor<? super RangeMarker> processor) {
         return true;
     }
 }

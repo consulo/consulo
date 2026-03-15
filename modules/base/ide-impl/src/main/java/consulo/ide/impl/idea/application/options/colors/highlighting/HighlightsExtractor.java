@@ -8,7 +8,7 @@ import consulo.document.util.TextRange;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Stack;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

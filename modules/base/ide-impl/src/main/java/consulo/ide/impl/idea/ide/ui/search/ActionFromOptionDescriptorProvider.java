@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.OptionDescription;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ignatov
@@ -31,5 +30,5 @@ public abstract class ActionFromOptionDescriptorProvider {
   public static final ExtensionPointName<ActionFromOptionDescriptorProvider> EP = ExtensionPointName.create(ActionFromOptionDescriptorProvider.class);
 
   @Nullable
-  public abstract AnAction provide(@Nonnull OptionDescription description);
+  public abstract AnAction provide(OptionDescription description);
 }

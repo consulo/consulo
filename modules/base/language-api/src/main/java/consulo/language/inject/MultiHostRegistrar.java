@@ -23,8 +23,7 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides ability to inject languages inside other PSI elements.<br/>
@@ -53,25 +52,25 @@ public interface MultiHostRegistrar {
    *
    * @return this
    */
-  @Nonnull  default MultiHostRegistrar startInjecting(@Nonnull Language language) {
+  default MultiHostRegistrar startInjecting(Language language) {
     return startInjecting(LanguageVersionUtil.findDefaultVersion(language));
   }
 
-  @Nonnull
-  MultiHostRegistrar startInjecting(@Nonnull LanguageVersion languageVersion);
+  
+  MultiHostRegistrar startInjecting(LanguageVersion languageVersion);
 
   /**
    * The variant of {@link #startInjecting(Language)} with explicitly specified file extension.
    *
    * @param extension the created injected file name will have. Some parsers require specific extension. By default the extension is taken from the host file.
    */
-  @Nonnull
-  default MultiHostRegistrar startInjecting(@Nonnull Language language, @Nullable String extension) {
+  
+  default MultiHostRegistrar startInjecting(Language language, @Nullable String extension) {
     return startInjecting(LanguageVersionUtil.findDefaultVersion(language), extension);
   }
 
   default /*this*/
-  MultiHostRegistrar startInjecting(@Nonnull LanguageVersion language, @Nullable String extension) {
+  MultiHostRegistrar startInjecting(LanguageVersion language, @Nullable String extension) {
     return startInjecting(language);
   }
 
@@ -92,8 +91,8 @@ public interface MultiHostRegistrar {
    *                        the injected file text would consist of five characters '"', 'x', 'y', 'z', '"'.<p/>
    * @see #startInjecting(Language) for the required workflow.
    */
-  @Nonnull /*this*/
-  MultiHostRegistrar addPlace(@Nullable String prefix, @Nullable String suffix, @Nonnull PsiLanguageInjectionHost host, @Nonnull TextRange rangeInsideHost);
+  /*this*/
+  MultiHostRegistrar addPlace(@Nullable String prefix, @Nullable String suffix, PsiLanguageInjectionHost host, TextRange rangeInsideHost);
 
 
   /**

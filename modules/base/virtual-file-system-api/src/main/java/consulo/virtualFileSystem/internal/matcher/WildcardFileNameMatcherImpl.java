@@ -20,7 +20,6 @@ import consulo.util.lang.PatternUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import consulo.virtualFileSystem.fileType.matcher.WildcardFileNameMatcher;
-import jakarta.annotation.Nonnull;
 
 import java.util.regex.Matcher;
 
@@ -93,7 +92,7 @@ public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
   /**
    * Use {@link FileNameMatcherFactory#createMatcher(String)} instead of direct call to constructor
    */
-  public WildcardFileNameMatcherImpl(@Nonnull String pattern) {
+  public WildcardFileNameMatcherImpl(String pattern) {
     myPattern = pattern;
     myMatcher = createMatcher(pattern);
   }
@@ -115,12 +114,12 @@ public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
   }
 
   @Override
-  public boolean acceptsCharSequence(@Nonnull CharSequence fileName) {
+  public boolean acceptsCharSequence(CharSequence fileName) {
     return myMatcher.matches(fileName);
   }
 
   @Override
-  @Nonnull
+  
   public String getPresentableString() {
     return myPattern;
   }

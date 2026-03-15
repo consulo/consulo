@@ -22,7 +22,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.ProjectUndoProvider;
 import consulo.undoRedo.UndoProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -36,12 +35,12 @@ import java.util.function.Consumer;
 @ServiceImpl
 public class ProjectUndoManagerImpl extends UndoManagerImpl implements ProjectUndoManager {
     @Inject
-    public ProjectUndoManagerImpl(@Nonnull Project project, CommandProcessor commandProcessor) {
+    public ProjectUndoManagerImpl(Project project, CommandProcessor commandProcessor) {
         super(project.getApplication(), project, commandProcessor);
     }
 
     @Override
-    protected void forEachProvider(@Nonnull Consumer<? super UndoProvider> consumer) {
+    protected void forEachProvider(Consumer<? super UndoProvider> consumer) {
         myProject.getExtensionPoint(ProjectUndoProvider.class).forEachExtensionSafe(consumer);
     }
 }

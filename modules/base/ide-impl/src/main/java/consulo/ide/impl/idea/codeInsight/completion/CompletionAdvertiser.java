@@ -20,7 +20,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.ActionManager;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Controls the text to display at the bottom of lookup list
@@ -29,11 +29,11 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class CompletionAdvertiser {
 
-  @jakarta.annotation.Nullable
-  public abstract String advertise(@Nonnull CompletionParameters parameters, ProcessingContext context);
+  @Nullable
+  public abstract String advertise(CompletionParameters parameters, ProcessingContext context);
 
-  @jakarta.annotation.Nullable
-  public abstract String handleEmptyLookup(@Nonnull CompletionParameters parameters, ProcessingContext context);
+  @Nullable
+  public abstract String handleEmptyLookup(CompletionParameters parameters, ProcessingContext context);
 
   protected static String getShortcut(String id) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(id));

@@ -23,8 +23,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.Pass;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -81,7 +80,7 @@ public interface TextEditorHighlightingPassFactory {
         }
 
         int registerTextEditorHighlightingPass(
-            @Nonnull TextEditorHighlightingPassFactory factory,
+            TextEditorHighlightingPassFactory factory,
             @Nullable int[] runAfterCompletionOf,
             @Nullable int[] runAfterStartingOf,
             boolean runIntentionsPassAfter,
@@ -91,8 +90,8 @@ public interface TextEditorHighlightingPassFactory {
 
     ExtensionPointName<TextEditorHighlightingPassFactory> EP_NAME = ExtensionPointName.create(TextEditorHighlightingPassFactory.class);
 
-    void register(@Nonnull Registrar registrar);
+    void register(Registrar registrar);
 
     @Nullable
-    TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor);
+    TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor);
 }

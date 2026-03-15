@@ -16,13 +16,12 @@
 package consulo.language.pom.event;
 
 import consulo.language.pom.PomModelAspect;
-import jakarta.annotation.Nonnull;
 
 public interface PomChangeSet {
-  @Nonnull
+  
   PomModelAspect getAspect();
 
-  void merge(@Nonnull PomChangeSet blocked);
+  void merge(PomChangeSet blocked);
 
   default void beforeNestedTransaction() {
   }

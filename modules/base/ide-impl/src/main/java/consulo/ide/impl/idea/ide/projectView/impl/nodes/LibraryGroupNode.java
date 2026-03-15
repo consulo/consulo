@@ -45,7 +45,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,7 +62,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Collection<AbstractTreeNode> getChildren() {
         Module module = getValue().getModule();
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -131,7 +130,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
         //noinspection SimplifiableIfStatement
         if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
@@ -159,8 +158,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         ProjectSettingsService.getInstance(myProject).openModuleLibrarySettings(module);
     }
 
-    @Nonnull
-    static VirtualFile[] getLibraryRoots(@Nonnull LibraryOrderEntry orderEntry) {
+    
+    static VirtualFile[] getLibraryRoots(LibraryOrderEntry orderEntry) {
         Library library = orderEntry.getLibrary();
         if (library == null) {
             return VirtualFile.EMPTY_ARRAY;

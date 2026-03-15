@@ -20,7 +20,6 @@ import consulo.http.impl.internal.ws.local.LocalWebSocketConnectionBuilderImpl;
 import consulo.http.ws.WebSocketConnectionBuilder;
 import consulo.http.ws.WebSocketConnectionBuilderFactory;
 import consulo.platform.Platform;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,7 +30,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class WebSocketConnectionBuilderFactoryImpl implements WebSocketConnectionBuilderFactory {
     @Override
-    public WebSocketConnectionBuilder newBuilder(@Nonnull Platform platform) {
+    public WebSocketConnectionBuilder newBuilder(Platform platform) {
         // TODO platform handling
         return new LocalWebSocketConnectionBuilderImpl();
     }

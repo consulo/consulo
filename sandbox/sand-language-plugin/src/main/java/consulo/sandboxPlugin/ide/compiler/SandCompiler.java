@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
 import consulo.sandboxPlugin.lang.SandFileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -60,19 +59,19 @@ public class SandCompiler implements TranslatingCompiler {
     myAddError = !myAddError;
   }
 
-  @Nonnull
+  
   @Override
   public FileType[] getInputFileTypes() {
     return new FileType[0];
   }
 
-  @Nonnull
+  
   @Override
   public FileType[] getOutputFileTypes() {
     return new FileType[0];
   }
 
-  @Nonnull
+  
   @Override
   public String getDescription() {
     return "test";

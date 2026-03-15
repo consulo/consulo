@@ -24,7 +24,6 @@ import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -43,7 +42,7 @@ public class GeneratedOnRootSourcesFilter implements GeneratedSourcesFilter {
 
   @RequiredReadAction
   @Override
-  public boolean isGeneratedSource(@Nonnull VirtualFile file) {
+  public boolean isGeneratedSource(VirtualFile file) {
     ContentFolder folder = myProjectFileIndex.getContentFolder(file);
     return folder != null && Objects.equals(folder.getPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED), Boolean.TRUE);
   }

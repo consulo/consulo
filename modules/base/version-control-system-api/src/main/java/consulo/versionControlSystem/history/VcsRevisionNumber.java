@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.history;
 
-import jakarta.annotation.Nonnull;
 
 public interface VcsRevisionNumber extends Comparable<VcsRevisionNumber>{
   VcsRevisionNumber NULL = new VcsRevisionNumber() {
@@ -23,7 +22,7 @@ public interface VcsRevisionNumber extends Comparable<VcsRevisionNumber>{
       return "";
     }
 
-    @Override public int compareTo(@Nonnull VcsRevisionNumber vcsRevisionNumber) {
+    @Override public int compareTo(VcsRevisionNumber vcsRevisionNumber) {
       return 0;
     }
 
@@ -100,7 +99,7 @@ public interface VcsRevisionNumber extends Comparable<VcsRevisionNumber>{
     }
 
     @Override
-    public int compareTo(@Nonnull VcsRevisionNumber vcsRevisionNumber) {
+    public int compareTo(VcsRevisionNumber vcsRevisionNumber) {
       if (vcsRevisionNumber instanceof VcsRevisionNumber.Long){
         return java.lang.Long.signum(myValue - ((Long)vcsRevisionNumber).myValue);
       }

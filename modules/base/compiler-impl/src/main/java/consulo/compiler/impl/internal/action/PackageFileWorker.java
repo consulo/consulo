@@ -42,7 +42,6 @@ import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,7 +70,7 @@ public class PackageFileWorker {
         Project project,
         List<VirtualFile> files,
         Artifact[] artifacts,
-        @Nonnull Runnable onFinishedInAwt
+        Runnable onFinishedInAwt
     ) {
         startPackagingFiles(project, files, artifacts).doWhenProcessed(() -> project.getApplication().invokeLater(onFinishedInAwt));
     }
@@ -80,7 +79,7 @@ public class PackageFileWorker {
         final AsyncResult<Void> callback = new AsyncResult<>();
         ProgressManager.getInstance().run(new Task.Backgroundable(project, CompilerLocalize.taskPackagingFilesTitle()) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     for (VirtualFile file : files) {
                         indicator.checkCanceled();
@@ -109,7 +108,7 @@ public class PackageFileWorker {
         return callback;
     }
 
-    public static void packageFile(@Nonnull VirtualFile file, @Nonnull Project project, Artifact[] artifacts) throws IOException {
+    public static void packageFile(VirtualFile file, Project project, Artifact[] artifacts) throws IOException {
         LOG.debug("Start packaging file: " + file.getPath());
         Collection<Trinity<Artifact, PackagingElementPath, String>> items =
             ArtifactUtil.findContainingArtifactsWithOutputPaths(file, project, artifacts);

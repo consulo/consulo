@@ -17,7 +17,6 @@ package consulo.language.psi;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Max Medvedev
@@ -29,6 +28,6 @@ public interface PsiMirrorElement extends PsiElement, SyntheticElement {
   /**
    * @return prototype of this element
    */
-  @Nonnull
+  
   PsiElement getPrototype();
 }

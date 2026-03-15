@@ -18,12 +18,11 @@ package consulo.execution.ui.console;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
  * @since 2007-08-20
  */
 public interface ConsoleFilterProviderEx extends ConsoleFilterProvider {
-  Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull SearchScope scope);
+  Filter[] getDefaultFilters(Project project, SearchScope scope);
 }

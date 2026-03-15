@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventListener;
 
@@ -30,5 +29,5 @@ import java.util.EventListener;
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface NotificationServiceListener extends EventListener {
-  void notify(@Nonnull Notification notification, @Nullable Project project);
+  void notify(Notification notification, @Nullable Project project);
 }

@@ -29,8 +29,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -73,12 +72,12 @@ public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
     }
 
     @Override
-    protected String getTextFor(@Nonnull SeverityState value) {
+    protected String getTextFor(SeverityState value) {
         return SingleInspectionProfilePanel.renderSeverity(value.getSeverity());
     }
 
     @Override
-    protected Image getIconFor(@Nonnull SeverityState value) {
+    protected Image getIconFor(SeverityState value) {
         return HighlightDisplayLevel.find(value.getSeverity()).getIcon();
     }
 

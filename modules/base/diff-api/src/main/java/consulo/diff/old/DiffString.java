@@ -17,8 +17,7 @@ package consulo.diff.old;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,10 +26,10 @@ import java.util.List;
 @Deprecated
 @DeprecationInfo("Old diff-impl")
 public class DiffString implements CharSequence {
-  @Nonnull
+  
   public static final DiffString EMPTY = new DiffString(new char[0], 0, 0);
 
-  @Nonnull
+  
   private final char[] myData;
   private final int myStart;
   private final int myLength;
@@ -42,25 +41,25 @@ public class DiffString implements CharSequence {
     return create(string);
   }
 
-  @Nonnull
-  public static DiffString create(@Nonnull String string) {
+  
+  public static DiffString create(String string) {
     if (string.isEmpty()) return EMPTY;
     return create(string.toCharArray());
   }
 
-  @Nonnull
-  static DiffString create(@Nonnull char[] data) {
+  
+  static DiffString create(char[] data) {
     return create(data, 0, data.length);
   }
 
-  @Nonnull
-  static DiffString create(@Nonnull char[] data, int start, int length) {
+  
+  static DiffString create(char[] data, int start, int length) {
     if (length == 0) return EMPTY;
     checkBounds(start, length, data.length);
     return new DiffString(data, start, length);
   }
 
-  private DiffString(@Nonnull char[] data, int start, int length) {
+  private DiffString(char[] data, int start, int length) {
     myData = data;
     myStart = start;
     myLength = length;
@@ -87,12 +86,12 @@ public class DiffString implements CharSequence {
     return myData[myStart + index];
   }
 
-  @Nonnull
+  
   public DiffString substring(int start) {
     return substring(start, myLength);
   }
 
-  @Nonnull
+  
   public DiffString substring(int start, int end) {
     if (start == 0 && end == myLength) return this;
     checkBounds(start, end - start, myLength);
@@ -104,18 +103,18 @@ public class DiffString implements CharSequence {
     return substring(start, end);
   }
 
-  @Nonnull
+  
   @Override
   public String toString() {
     return new String(myData, myStart, myLength);
   }
 
-  @Nonnull
+  
   public DiffString copy() {
     return create(Arrays.copyOfRange(myData, myStart, myStart + myLength));
   }
 
-  public void copyData(@Nonnull char[] dst, int start) {
+  public void copyData(char[] dst, int start) {
     checkBounds(start, myLength, dst.length);
     System.arraycopy(myData, myStart, dst, start, myLength);
   }
@@ -158,8 +157,8 @@ public class DiffString implements CharSequence {
     return concatenate(s1, s2);
   }
 
-  @Nonnull
-  public static DiffString concatenate(@Nonnull DiffString s1, @Nonnull DiffString s2) {
+  
+  public static DiffString concatenate(DiffString s1, DiffString s2) {
     if (s1.isEmpty()) return s2;
     if (s2.isEmpty()) return s1;
 
@@ -173,7 +172,7 @@ public class DiffString implements CharSequence {
     return create(data);
   }
 
-  public static boolean canInplaceConcatenate(@Nonnull DiffString s1, @Nonnull DiffString s2) {
+  public static boolean canInplaceConcatenate(DiffString s1, DiffString s2) {
     if (s1.isEmpty()) return true;
     if (s2.isEmpty()) return true;
 
@@ -184,13 +183,13 @@ public class DiffString implements CharSequence {
     return false;
   }
 
-  @Nonnull
-  public static DiffString concatenateCopying(@Nonnull DiffString[] strings) {
+  
+  public static DiffString concatenateCopying(DiffString[] strings) {
     return concatenateCopying(strings, 0, strings.length);
   }
 
-  @Nonnull
-  public static DiffString concatenateCopying(@Nonnull DiffString[] strings, int start, int length) {
+  
+  public static DiffString concatenateCopying(DiffString[] strings, int start, int length) {
     checkBounds(start, length, strings.length);
 
     int len = 0;
@@ -212,8 +211,8 @@ public class DiffString implements CharSequence {
     return create(data);
   }
 
-  @Nonnull
-  public static DiffString concatenate(@Nonnull DiffString s, char c) {
+  
+  public static DiffString concatenate(DiffString s, char c) {
     if (s.myStart + s.myLength < s.myData.length && s.data(s.myLength) == c) {
       return create(s.myData, s.myStart, s.myLength + 1);
     }
@@ -224,8 +223,8 @@ public class DiffString implements CharSequence {
     return create(data);
   }
 
-  @Nonnull
-  public static DiffString concatenate(char c, @Nonnull DiffString s) {
+  
+  public static DiffString concatenate(char c, DiffString s) {
     if (s.myStart > 0 && s.data(-1) == c) {
       return create(s.myData, s.myStart - 1, s.myLength + 1);
     }
@@ -236,13 +235,13 @@ public class DiffString implements CharSequence {
     return create(data);
   }
 
-  @Nonnull
-  public static DiffString concatenate(@Nonnull DiffString[] strings) {
+  
+  public static DiffString concatenate(DiffString[] strings) {
     return concatenate(strings, 0, strings.length);
   }
 
-  @Nonnull
-  public static DiffString concatenate(@Nonnull DiffString[] strings, int start, int length) {
+  
+  public static DiffString concatenate(DiffString[] strings, int start, int length) {
     checkBounds(start, length, strings.length);
 
     char[] data = null;
@@ -274,12 +273,12 @@ public class DiffString implements CharSequence {
     return concatenateCopying(strings, start, length);
   }
 
-  @Nonnull
+  
   public DiffString append(char c) {
     return concatenate(this, c);
   }
 
-  @Nonnull
+  
   public DiffString preappend(char c) {
     return concatenate(c, this);
   }
@@ -297,7 +296,7 @@ public class DiffString implements CharSequence {
     return true;
   }
 
-  @Nonnull
+  
   public DiffString trim() {
     int start = 0;
     int end = myLength;
@@ -308,7 +307,7 @@ public class DiffString implements CharSequence {
     return substring(start, end);
   }
 
-  @Nonnull
+  
   public DiffString trimLeading() {
     int i = 0;
 
@@ -317,7 +316,7 @@ public class DiffString implements CharSequence {
     return substring(i, myLength);
   }
 
-  @Nonnull
+  
   public DiffString trimTrailing() {
     int end = myLength;
 
@@ -326,7 +325,7 @@ public class DiffString implements CharSequence {
     return substring(0, end);
   }
 
-  @Nonnull
+  
   public DiffString getLeadingSpaces() {
     int i = 0;
 
@@ -335,7 +334,7 @@ public class DiffString implements CharSequence {
     return substring(0, i);
   }
 
-  @Nonnull
+  
   public DiffString skipSpaces() {
     DiffString s = trim();
     int count = 0;
@@ -375,20 +374,20 @@ public class DiffString implements CharSequence {
     }
   }
 
-  @Nonnull
+  
   public DiffString[] tokenize() {
     return new LineTokenizer(this).execute();
   }
 
   public static class LineTokenizer extends LineTokenizerBase<DiffString> {
-    @Nonnull
+    
     private final DiffString myText;
 
-    public LineTokenizer(@Nonnull DiffString text) {
+    public LineTokenizer(DiffString text) {
       myText = text;
     }
 
-    @Nonnull
+    
     public DiffString[] execute() {
       ArrayList<DiffString> lines = new ArrayList<>();
       doExecute(lines);
@@ -415,7 +414,7 @@ public class DiffString implements CharSequence {
       return myText.length();
     }
 
-    @Nonnull
+    
     @Override
     protected String substring(int start, int end) {
       return myText.substring(start, end).toString();

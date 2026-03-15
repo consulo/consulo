@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.IdeActions;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +29,7 @@ public class TemplateLineStartHandler extends TemplateLineStartEndHandler {
     super(true, false);
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_LINE_START;

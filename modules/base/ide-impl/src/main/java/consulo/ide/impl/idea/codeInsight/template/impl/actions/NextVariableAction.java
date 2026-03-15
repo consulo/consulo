@@ -28,8 +28,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -40,7 +39,7 @@ public class NextVariableAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
-        protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
             assert templateState != null;
             CommandProcessor.getInstance().setCurrentCommandName(CodeInsightLocalize.templateNextVariableCommand());
@@ -48,7 +47,7 @@ public class NextVariableAction extends EditorAction {
         }
 
         @Override
-        protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
             TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
             return templateState != null && !templateState.isFinished() && templateState.isToProcessTab();
         }

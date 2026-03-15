@@ -23,8 +23,7 @@ import consulo.language.codeStyle.Indent;
 import consulo.language.codeStyle.Spacing;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +36,7 @@ class BlockUtil {
   private BlockUtil() {
   }
 
-  public static List<DataLanguageBlockWrapper> buildChildWrappers(@Nonnull Block parent) {
+  public static List<DataLanguageBlockWrapper> buildChildWrappers(Block parent) {
     assert !(parent instanceof DataLanguageBlockWrapper) : parent.getClass();
     List<Block> children = parent.getSubBlocks();
     if (children.size() == 0) return Collections.emptyList();
@@ -54,7 +53,7 @@ class BlockUtil {
     return result;
   }
 
-  public static Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>> splitBlocksByRightBound(@Nonnull Block parent, @Nonnull TextRange bounds) {
+  public static Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>> splitBlocksByRightBound(Block parent, TextRange bounds) {
     List<Block> subBlocks = parent.getSubBlocks();
     if (subBlocks.size() == 0) return new Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>>(Collections.<DataLanguageBlockWrapper>emptyList(), Collections.<DataLanguageBlockWrapper>emptyList());
     ArrayList<DataLanguageBlockWrapper> before = new ArrayList<DataLanguageBlockWrapper>(subBlocks.size() / 2);
@@ -63,10 +62,10 @@ class BlockUtil {
     return new Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>>(before, after);
   }
 
-  private static void splitByRightBoundAndCollectBlocks(@Nonnull List<Block> blocks,
-                                                        @Nonnull List<DataLanguageBlockWrapper> before,
-                                                        @Nonnull List<DataLanguageBlockWrapper> after,
-                                                        @Nonnull TextRange bounds) {
+  private static void splitByRightBoundAndCollectBlocks(List<Block> blocks,
+                                                        List<DataLanguageBlockWrapper> before,
+                                                        List<DataLanguageBlockWrapper> after,
+                                                        TextRange bounds) {
     for (Block block : blocks) {
       TextRange textRange = block.getTextRange();
       if (bounds.contains(textRange)) {
@@ -92,7 +91,7 @@ class BlockUtil {
   }
 
 
-  public static List<Block> mergeBlocks(@Nonnull List<TemplateLanguageBlock> tlBlocks, @Nonnull List<DataLanguageBlockWrapper> foreignBlocks) {
+  public static List<Block> mergeBlocks(List<TemplateLanguageBlock> tlBlocks, List<DataLanguageBlockWrapper> foreignBlocks) {
     ArrayList<Block> result = new ArrayList<Block>(tlBlocks.size() + foreignBlocks.size());
     int vInd = 0;
     int fInd = 0;
@@ -160,8 +159,8 @@ class BlockUtil {
     return result;
   }
 
-  @Nonnull
-  public static List<DataLanguageBlockWrapper> filterBlocksByRange(@Nonnull List<DataLanguageBlockWrapper> list, @Nonnull TextRange textRange) {
+  
+  public static List<DataLanguageBlockWrapper> filterBlocksByRange(List<DataLanguageBlockWrapper> list, TextRange textRange) {
     int i = 0;
     while (i < list.size()) {
       DataLanguageBlockWrapper wrapper = list.get(i);
@@ -180,7 +179,7 @@ class BlockUtil {
     return list;
   }
 
-  static List<Block> splitBlockIntoFragments(@Nonnull Block block, @Nonnull List<TemplateLanguageBlock> subBlocks) {
+  static List<Block> splitBlockIntoFragments(Block block, List<TemplateLanguageBlock> subBlocks) {
     List<Block> children = new ArrayList<Block>(5);
     TextRange range = block.getTextRange();
     int childStartOffset = range.getStartOffset();
@@ -206,7 +205,7 @@ class BlockUtil {
     return children;
   }
 
-  static void printBlocks(@Nullable TextRange textRange, @Nonnull List<Block> list) {
+  static void printBlocks(@Nullable TextRange textRange, List<Block> list) {
     StringBuilder sb = new StringBuilder(String.valueOf(textRange)).append(": ");
     for (Block block : list) {
       ASTNode node = block instanceof ASTBlock ? ((ASTBlock)block).getNode() : null;

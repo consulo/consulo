@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,27 +30,27 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class InvokerFactoryImpl implements InvokerFactory {
-  @Nonnull
+  
   @Override
-  public Invoker forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent) {
+  public Invoker forEventDispatchThread(UIAccess uiAccess, Disposable parent) {
     return InvokerImpl.forEventDispatchThread(uiAccess, parent);
   }
 
-  @Nonnull
+  
   @Override
-  public Invoker forBackgroundPoolWithReadAction(@Nonnull Disposable parent) {
+  public Invoker forBackgroundPoolWithReadAction(Disposable parent) {
     return InvokerImpl.forBackgroundPoolWithReadAction(parent);
   }
 
-  @Nonnull
+  
   @Override
-  public Invoker forBackgroundThreadWithReadAction(@Nonnull Disposable parent) {
+  public Invoker forBackgroundThreadWithReadAction(Disposable parent) {
     return InvokerImpl.forBackgroundThreadWithReadAction(parent);
   }
 
-  @Nonnull
+  
   @Override
-  public Invoker forBackgroundThreadWithoutReadAction(@Nonnull Disposable parent) {
+  public Invoker forBackgroundThreadWithoutReadAction(Disposable parent) {
     return InvokerImpl.forBackgroundThreadWithoutReadAction(parent);
   }
 }

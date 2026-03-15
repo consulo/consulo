@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.reference;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.ref.SoftReference;
 
@@ -35,6 +34,6 @@ public abstract class SoftLazyValue<T> {
     return t;
   }
 
-  @Nonnull
+  
   protected abstract T compute();
 }

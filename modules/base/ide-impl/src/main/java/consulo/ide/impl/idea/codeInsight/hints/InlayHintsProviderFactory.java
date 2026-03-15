@@ -5,8 +5,7 @@ import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.language.Language;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class InlayHintsProviderFactory {
     /**
      * @return list of potentially available providers for a particular language (not filtering enabled ones)
      */
-    @Nonnull
+    
     static List<InlayProviderInfo> findProvidersForLanguage(Language language) {
         List<InlayProviderInfo> result = new ArrayList<>();
         Application application = Application.get();

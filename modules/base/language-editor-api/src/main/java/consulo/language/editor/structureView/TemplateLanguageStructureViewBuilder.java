@@ -22,8 +22,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -33,18 +32,18 @@ import java.util.function.BiFunction;
  */
 public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStructureViewBuilder {
 
-  @Nonnull
-  public static TemplateLanguageStructureViewBuilder create(@Nonnull PsiFile psiFile, @Nullable BiFunction<? super PsiFile, ? super Editor, ? extends StructureViewModel> modelFactory) {
+  
+  public static TemplateLanguageStructureViewBuilder create(PsiFile psiFile, @Nullable BiFunction<? super PsiFile, ? super Editor, ? extends StructureViewModel> modelFactory) {
     return new TemplateLanguageStructureViewBuilder(psiFile) {
       @Override
-      protected TreeBasedStructureViewBuilder createMainBuilder(@Nonnull PsiFile psi) {
+      protected TreeBasedStructureViewBuilder createMainBuilder(PsiFile psi) {
         return modelFactory == null ? null : new TreeBasedStructureViewBuilder() {
           @Override
           public boolean isRootNodeShown() {
             return false;
           }
 
-          @Nonnull
+          
           @Override
           public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
             return modelFactory.apply(psi, editor);
@@ -68,8 +67,8 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
   }
 
   @Override
-  @Nonnull
-  public StructureView createStructureView(FileEditor fileEditor, @Nonnull Project project) {
+  
+  public StructureView createStructureView(FileEditor fileEditor, Project project) {
     List<StructureViewComposite.StructureViewDescriptor> viewDescriptors = new ArrayList<>();
     VirtualFile file = fileEditor == null ? null : fileEditor.getFile();
     PsiFile psiFile = file == null || !file.isValid() ? null : PsiManager.getInstance(project).findFile(file);
@@ -103,7 +102,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
   }
 
   @Override
-  @Nonnull
+  
   public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
     List<StructureViewComposite.StructureViewDescriptor> viewDescriptors = new ArrayList<>();
     PsiFile psiFile = ObjectUtil.notNull(PsiManager.getInstance(myProject).findFile(myVirtualFile));
@@ -118,7 +117,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
     return new StructureViewCompositeModel(psiFile, editor, viewDescriptors);
   }
 
-  @Nonnull
+  
   private static JBIterable<Language> getLanguages(@Nullable PsiFile psiFile) {
     if (psiFile == null) return JBIterable.empty();
     FileViewProvider provider = psiFile.getViewProvider();
@@ -129,7 +128,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
   }
 
   @Nullable
-  private StructureViewBuilder getBuilder(@Nonnull PsiFile psiFile, @Nonnull Language language) {
+  private StructureViewBuilder getBuilder(PsiFile psiFile, Language language) {
     FileViewProvider viewProvider = psiFile.getViewProvider();
     Language baseLanguage = viewProvider.getBaseLanguage();
     PsiFile psi = viewProvider.getPsi(language);
@@ -144,5 +143,5 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
   }
 
   @Nullable
-  protected abstract TreeBasedStructureViewBuilder createMainBuilder(@Nonnull PsiFile psi);
+  protected abstract TreeBasedStructureViewBuilder createMainBuilder(PsiFile psi);
 }

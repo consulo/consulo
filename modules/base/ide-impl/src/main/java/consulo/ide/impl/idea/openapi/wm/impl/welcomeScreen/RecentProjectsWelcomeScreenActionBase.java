@@ -25,8 +25,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,27 +39,27 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
     protected RecentProjectsWelcomeScreenActionBase() {
     }
 
-    protected RecentProjectsWelcomeScreenActionBase(@Nonnull LocalizeValue text) {
+    protected RecentProjectsWelcomeScreenActionBase(LocalizeValue text) {
         super(text);
     }
 
     protected RecentProjectsWelcomeScreenActionBase(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
     @Nullable
-    public static DefaultListModel getDataModel(@Nonnull AnActionEvent e) {
+    public static DefaultListModel getDataModel(AnActionEvent e) {
         JList list = getList(e);
         return list != null && list.getModel() instanceof NameFilteringListModel nameFilteringListModel
             && nameFilteringListModel.getOriginalModel() instanceof DefaultListModel defaultListModel ? defaultListModel : null;
     }
 
-    @Nonnull
-    public static List<AnAction> getSelectedElements(@Nonnull AnActionEvent e) {
+    
+    public static List<AnAction> getSelectedElements(AnActionEvent e) {
         JList list = getList(e);
         List<AnAction> actions = new ArrayList<>();
         if (list != null) {
@@ -74,12 +73,12 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
     }
 
     @Nullable
-    public static JList getList(@Nonnull AnActionEvent e) {
+    public static JList getList(AnActionEvent e) {
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         return component instanceof JList jList ? jList : null;
     }
 
-    public static boolean hasGroupSelected(@Nonnull AnActionEvent e) {
+    public static boolean hasGroupSelected(AnActionEvent e) {
         for (AnAction action : getSelectedElements(e)) {
             if (action instanceof PopupProjectGroupActionGroup) {
                 return true;
@@ -88,14 +87,14 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
         return false;
     }
 
-    public static void rebuildRecentProjectsList(@Nonnull AnActionEvent e) {
+    public static void rebuildRecentProjectsList(AnActionEvent e) {
         DefaultListModel model = getDataModel(e);
         if (model != null) {
             rebuildRecentProjectDataModel(model);
         }
     }
 
-    public static void rebuildRecentProjectDataModel(@Nonnull DefaultListModel model) {
+    public static void rebuildRecentProjectDataModel(DefaultListModel model) {
         model.clear();
         for (AnAction action : RecentProjectsManager.getInstance().getRecentProjectsActions(false, true)) {
             //noinspection unchecked

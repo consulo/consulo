@@ -17,7 +17,7 @@ package consulo.versionControlSystem.history;
 
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

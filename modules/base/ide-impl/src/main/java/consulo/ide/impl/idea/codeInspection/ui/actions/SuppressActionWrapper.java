@@ -32,8 +32,7 @@ import consulo.ui.ex.action.CompactActionGroup;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -52,9 +51,9 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     private static final Logger LOG = Logger.getInstance(SuppressActionWrapper.class);
 
     public SuppressActionWrapper(
-        @Nonnull Project project,
-        @Nonnull InspectionToolWrapper toolWrapper,
-        @Nonnull TreePath[] paths
+        Project project,
+        InspectionToolWrapper toolWrapper,
+        TreePath[] paths
     ) {
         super(InspectionLocalize.suppressInspectionProblem(), false);
         myProject = project;
@@ -76,7 +75,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     }
 
     @Override
-    @Nonnull
+    
     public SuppressTreeAction[] getChildren(@Nullable AnActionEvent e) {
         SuppressIntentionAction[] suppressActions = InspectionManagerImpl.getSuppressActions(myToolWrapper);
         if (suppressActions == null || suppressActions.length == 0) {
@@ -132,7 +131,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(InspectionManagerImpl.getSuppressActions(myToolWrapper) != null);
     }
@@ -169,7 +168,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .name(getTemplatePresentation().getTextValue())
@@ -201,7 +200,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             if (!ReadAction.compute(this::isAvailable)) {
                 e.getPresentation().setVisible(false);

@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.EditorColorSchemeExtender;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.ui.color.RGBColor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public class SandEditorColorSchemeExtender implements EditorColorSchemeExtender 
         builder.add(SandEditorColors.SAND_COLOR, new RGBColor(204, 164, 123));
     }
 
-    @Nonnull
+    
     @Override
     public String getColorSchemeId() {
         return EditorColorsScheme.DEFAULT_SCHEME_NAME;

@@ -6,7 +6,6 @@ import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,8 +49,8 @@ public class ParametersListUtil {
    * @param parameters a list of parameters to join.
    * @return a string with parameters.
    */
-  @Nonnull
-  public static String join(@Nonnull List<? extends CharSequence> parameters) {
+  
+  public static String join(List<? extends CharSequence> parameters) {
     return encode(parameters);
   }
 
@@ -59,12 +58,12 @@ public class ParametersListUtil {
    * @param commandLineArgumentEncoder used to handle (quote or escape) special characters in command line argument
    * @see ParametersListUtil#join(List)
    */
-  @Nonnull
-  public static String join(@Nonnull List<? extends CharSequence> parameters, @Nonnull CommandLineArgumentEncoder commandLineArgumentEncoder) {
+  
+  public static String join(List<? extends CharSequence> parameters, CommandLineArgumentEncoder commandLineArgumentEncoder) {
     return encode(parameters, commandLineArgumentEncoder);
   }
 
-  @Nonnull
+  
   public static String join(String... parameters) {
     return encode(Arrays.asList(parameters));
   }
@@ -72,8 +71,8 @@ public class ParametersListUtil {
   /**
    * @see #parse(String)
    */
-  @Nonnull
-  public static String[] parseToArray(@Nonnull String string) {
+  
+  public static String[] parseToArray(String string) {
     List<String> params = parse(string);
     return ArrayUtil.toStringArray(params);
   }
@@ -103,23 +102,23 @@ public class ParametersListUtil {
    * @param parameterString parameter string to split.
    * @return array of parameters.
    */
-  @Nonnull
-  public static List<String> parse(@Nonnull String parameterString) {
+  
+  public static List<String> parse(String parameterString) {
     return parse(parameterString, false);
   }
 
-  @Nonnull
-  public static List<String> parse(@Nonnull String parameterString, boolean keepQuotes) {
+  
+  public static List<String> parse(String parameterString, boolean keepQuotes) {
     return parse(parameterString, keepQuotes, false);
   }
 
-  @Nonnull
-  public static List<String> parse(@Nonnull String parameterString, boolean keepQuotes, boolean supportSingleQuotes) {
+  
+  public static List<String> parse(String parameterString, boolean keepQuotes, boolean supportSingleQuotes) {
     return parse(parameterString, keepQuotes, supportSingleQuotes, false);
   }
 
-  @Nonnull
-  public static List<String> parse(@Nonnull String parameterString, boolean keepQuotes, boolean supportSingleQuotes, boolean keepEmptyParameters) {
+  
+  public static List<String> parse(String parameterString, boolean keepQuotes, boolean supportSingleQuotes, boolean keepEmptyParameters) {
     if (!keepEmptyParameters) {
       parameterString = parameterString.trim();
     }
@@ -182,13 +181,13 @@ public class ParametersListUtil {
     return params;
   }
 
-  @Nonnull
-  private static String encode(@Nonnull List<? extends CharSequence> parameters) {
+  
+  private static String encode(List<? extends CharSequence> parameters) {
     return encode(parameters, CommandLineArgumentEncoder.DEFAULT_ENCODER);
   }
 
-  @Nonnull
-  private static String encode(@Nonnull List<? extends CharSequence> parameters, @Nonnull CommandLineArgumentEncoder commandLineArgumentEncoder) {
+  
+  private static String encode(List<? extends CharSequence> parameters, CommandLineArgumentEncoder commandLineArgumentEncoder) {
     if (parameters.isEmpty()) {
       return "";
     }

@@ -32,8 +32,7 @@ import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -75,11 +74,11 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      */
     @Nullable
     Pair<E, List<E>> parseWithNew(
-        @Nonnull PsiElement root,
+        PsiElement root,
         @Nullable Document document,
-        @Nonnull Collection<TextRange> ranges,
-        @Nonnull PsiElement element,
-        @Nonnull ArrangementSettings settings
+        Collection<TextRange> ranges,
+        PsiElement element,
+        ArrangementSettings settings
     );
 
     /**
@@ -93,12 +92,12 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      *                 in order to build method dependency graph if no such grouping rule is defined
      * @return given root's children which are subject for further rearrangement
      */
-    @Nonnull
+    
     List<E> parse(
-        @Nonnull PsiElement root,
+        PsiElement root,
         @Nullable Document document,
-        @Nonnull Collection<TextRange> ranges,
-        @Nonnull ArrangementSettings settings
+        Collection<TextRange> ranges,
+        ArrangementSettings settings
     );
 
     /**
@@ -111,7 +110,7 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      * @return number of blank lines to insert before the target entry;
      * negative as an indication that no blank lines adjustment is necessary
      */
-    int getBlankLines(@Nonnull CodeStyleSettings settings, @Nullable E parent, @Nullable E previous, @Nonnull E target);
+    int getBlankLines(CodeStyleSettings settings, @Nullable E parent, @Nullable E previous, E target);
 
 
     /**
@@ -121,6 +120,6 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      * <p/>
      * @see DefaultArrangementSettingsSerializer
      */
-    @Nonnull
+    
     ArrangementSettingsSerializer getSerializer();
 }

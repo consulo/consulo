@@ -10,8 +10,7 @@ import consulo.language.psi.PsiElement;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.RadioButton;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "project_scope", order = "first")
 public final class ProjectScopeItemPresenter implements ModelScopeItemPresenter {
@@ -21,7 +20,7 @@ public final class ProjectScopeItemPresenter implements ModelScopeItemPresenter 
   }
 
   @Override
-  @Nonnull
+  
   public RadioButton getButton(ModelScopeItem m) {
     return RadioButton.create(AnalysisScopeLocalize.scopeOptionWholeProject());
   }
@@ -32,8 +31,8 @@ public final class ProjectScopeItemPresenter implements ModelScopeItemPresenter 
   }
 
   @Override
-  public @Nonnull ModelScopeItem tryCreate(@Nonnull Project project,
-                                           @Nonnull AnalysisScope scope,
+  public ModelScopeItem tryCreate(Project project,
+                                           AnalysisScope scope,
                                            @Nullable Module module,
                                            @Nullable PsiElement context) {
     return new ProjectScopeItem(project);

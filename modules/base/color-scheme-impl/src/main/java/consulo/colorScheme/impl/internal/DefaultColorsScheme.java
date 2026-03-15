@@ -18,8 +18,7 @@ package consulo.colorScheme.impl.internal;
 import consulo.colorScheme.*;
 import consulo.colorScheme.internal.ReadOnlyColorsScheme;
 import consulo.ui.color.ColorValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.awt.*;
@@ -30,7 +29,7 @@ import java.awt.*;
 public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnlyColorsScheme {
   private String myName;
 
-  public DefaultColorsScheme(@Nonnull EditorColorsManager editorColorsManager) {
+  public DefaultColorsScheme(EditorColorsManager editorColorsManager) {
     super(null, editorColorsManager);
   }
 
@@ -80,7 +79,7 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
     myName = parentNode.getAttributeValue(NAME_ATTR);
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myName;

@@ -17,8 +17,7 @@ package consulo.process;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -28,19 +27,19 @@ public final class ProcessInfo {
   public static ProcessInfo[] EMPTY_ARRAY = new ProcessInfo[0];
 
   private final int myPid;
-  @Nonnull
+  
   private final String myCommandLine;
-  @Nonnull
+  
   private final Optional<String> myExecutablePath;
-  @Nonnull
+  
   private final String myExecutableName;
-  @Nonnull
+  
   private final String myArgs;
 
   public ProcessInfo(int pid,
-                     @Nonnull String commandLine,
-                     @Nonnull String executableName,
-                     @Nonnull String args) {
+                     String commandLine,
+                     String executableName,
+                     String args) {
     myPid = pid;
     myCommandLine = commandLine;
     myExecutablePath = Optional.empty();
@@ -49,9 +48,9 @@ public final class ProcessInfo {
   }
 
   public ProcessInfo(int pid,
-                     @Nonnull String commandLine,
-                     @Nonnull String executableName,
-                     @Nonnull String args,
+                     String commandLine,
+                     String executableName,
+                     String args,
                      @Nullable String executablePath) {
     myPid = pid;
     myCommandLine = commandLine;
@@ -64,17 +63,17 @@ public final class ProcessInfo {
     return myPid;
   }
 
-  @Nonnull
+  
   public String getCommandLine() {
     return myCommandLine;
   }
 
-  @Nonnull
+  
   public String getExecutableName() {
     return myExecutableName;
   }
 
-  @Nonnull
+  
   public Optional<String> getExecutableCannonicalPath() {
     return myExecutablePath.map(s -> {
       try {
@@ -86,12 +85,12 @@ public final class ProcessInfo {
     });
   }
 
-  @Nonnull
+  
   public String getExecutableDisplayName() {
     return StringUtil.trimEnd(myExecutableName, ".exe", true);
   }
 
-  @Nonnull
+  
   public String getArgs() {
     return myArgs;
   }

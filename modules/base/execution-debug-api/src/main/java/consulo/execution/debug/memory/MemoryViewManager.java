@@ -11,7 +11,6 @@ import consulo.component.persist.Storage;
 import consulo.disposer.Disposable;
 import consulo.execution.debug.memory.event.MemoryViewManagerListener;
 import consulo.proxy.EventDispatcher;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 @State(name = "MemoryViewSettings", storages = @Storage("memory.view.xml"))
@@ -29,14 +28,14 @@ public class MemoryViewManager implements PersistentStateComponent<MemoryViewMan
         return ApplicationManager.getApplication().getInstance(MemoryViewManager.class);
     }
 
-    @Nonnull
+    
     @Override
     public MemoryViewManagerState getState() {
         return new MemoryViewManagerState(myState);
     }
 
     @Override
-    public void loadState(@Nonnull MemoryViewManagerState state) {
+    public void loadState(MemoryViewManagerState state) {
         myState = state;
         fireStateChanged();
     }
@@ -85,7 +84,7 @@ public class MemoryViewManager implements PersistentStateComponent<MemoryViewMan
         return myState.isAutoUpdateModeOn;
     }
 
-    public void addMemoryViewManagerListener(MemoryViewManagerListener listener, @Nonnull Disposable parentDisposable) {
+    public void addMemoryViewManagerListener(MemoryViewManagerListener listener, Disposable parentDisposable) {
         myDispatcher.addListener(listener, parentDisposable);
     }
 

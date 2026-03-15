@@ -23,8 +23,7 @@ import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.LayoutStyle;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
@@ -122,16 +121,15 @@ public abstract class DesktopSwtLayoutComponent<C extends LayoutConstraint, Layo
         return layoutData;
     }
 
-    @Nullable
-    protected abstract org.eclipse.swt.widgets.Layout createLayout();
+    protected abstract org.eclipse.swt.widgets.@Nullable Layout createLayout();
 
-    public LayoutData convertConstraintsToLayoutData(@Nonnull C constraint) {
+    public LayoutData convertConstraintsToLayoutData(C constraint) {
         return null;
     }
 
-    @Nonnull
+   
     @Override
-    public Layout<C> add(@Nonnull Component component, @Nonnull C constraint) {
+    public Layout<C> add(Component component, C constraint) {
         addImpl(component, convertConstraintsToLayoutData(constraint));
         return this;
     }

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,6 +26,6 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DirectoryChooserFactory {
-  @Nonnull
-  DirectoryChooserDialog create(@Nonnull Project project);
+  
+  DirectoryChooserDialog create(Project project);
 }

@@ -6,7 +6,6 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.action.EnterBetweenBracesDelegate;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated Please, use the {@code EnterBetweenBracesDelegate} language-specific implementation instead.
@@ -14,7 +13,7 @@ import jakarta.annotation.Nonnull;
 @Deprecated
 public class EnterBetweenBracesHandler extends EnterBetweenBracesFinalHandler {
   @Override
-  protected boolean isApplicable(@Nonnull PsiFile file, @Nonnull Editor editor, CharSequence documentText, int caretOffset, EnterBetweenBracesDelegate helper) {
+  protected boolean isApplicable(PsiFile file, Editor editor, CharSequence documentText, int caretOffset, EnterBetweenBracesDelegate helper) {
     int prevCharOffset = CharArrayUtil.shiftBackward(documentText, caretOffset - 1, " \t");
     int nextCharOffset = CharArrayUtil.shiftForward(documentText, caretOffset, " \t");
     return isValidOffset(prevCharOffset, documentText) &&

@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,5 +33,5 @@ public interface SharedLayoutProcessors {
 
     LayoutCodeProcessor createReformatCodeProcessor(PsiFile[] files, String commandName, Runnable postRunnable);
 
-    LayoutCodeProcessor createCodeCleanupProcessor(@Nonnull AnalysisScope scope, @Nullable Runnable postRunnable);
+    LayoutCodeProcessor createCodeCleanupProcessor(AnalysisScope scope, @Nullable Runnable postRunnable);
 }

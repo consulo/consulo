@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,8 +79,8 @@ public class ActionPanel extends NonOpaquePanel {
         // myPaintPanel = visibility;
     }
 
-    @Nonnull
-    public CompletableFuture<Boolean> updateAsync(@Nonnull UIAccess uiAccess) {
+    
+    public CompletableFuture<Boolean> updateAsync(UIAccess uiAccess) {
         List<? extends AnAction> oldVisibleActions = myVisibleActions;
 
         return myActionToolbar.updateActionsAsync().handle((actions, throwable) -> {

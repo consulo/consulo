@@ -17,11 +17,10 @@ package consulo.language.editor.refactoring.postfixTemplate;
 
 import consulo.language.editor.postfixTemplate.PostfixTemplatePsiInfo;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 public abstract class ElseExpressionPostfixTemplateBase extends SurroundPostfixTemplateBase {
-  protected ElseExpressionPostfixTemplateBase(@Nonnull PostfixTemplatePsiInfo psiInfo,
-                                              @Nonnull PostfixTemplateExpressionSelector selector) {
+  protected ElseExpressionPostfixTemplateBase(PostfixTemplatePsiInfo psiInfo,
+                                              PostfixTemplateExpressionSelector selector) {
     super("else", "if (!expr)", psiInfo, selector);
   }
 

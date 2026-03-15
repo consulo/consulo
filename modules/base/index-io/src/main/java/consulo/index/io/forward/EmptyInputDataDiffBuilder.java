@@ -16,7 +16,6 @@
 package consulo.index.io.forward;
 
 import consulo.index.io.StorageException;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -26,14 +25,14 @@ public class EmptyInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<
     }
 
     @Override
-    public boolean differentiate(@Nonnull Map<Key, Value> newData,
-                                 @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
-                                 @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
-                                 @Nonnull RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
+    public boolean differentiate(Map<Key, Value> newData,
+                                 KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
+                                 KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
+                                 RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
         return processKeys(newData, addProcessor, myInputId);
     }
 
-    public static <Key, Value> boolean processKeys(@Nonnull Map<Key, Value> currentData, @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> processor, int inputId)
+    public static <Key, Value> boolean processKeys(Map<Key, Value> currentData, KeyValueUpdateProcessor<? super Key, ? super Value> processor, int inputId)
         throws StorageException {
         for (Map.Entry<Key, Value> entry : currentData.entrySet()) {
             processor.process(entry.getKey(), entry.getValue(), inputId);

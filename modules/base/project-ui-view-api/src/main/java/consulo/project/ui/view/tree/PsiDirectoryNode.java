@@ -41,21 +41,20 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
 public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements NavigatableWithText {
     private final PsiFileSystemItemFilter myFilter;
 
-    public PsiDirectoryNode(Project project, @Nonnull PsiDirectory value, ViewSettings viewSettings) {
+    public PsiDirectoryNode(Project project, PsiDirectory value, ViewSettings viewSettings) {
         this(project, value, viewSettings, null);
     }
 
     public PsiDirectoryNode(
         Project project,
-        @Nonnull PsiDirectory value,
+        PsiDirectory value,
         ViewSettings viewSettings,
         @Nullable PsiFileSystemItemFilter filter
     ) {
@@ -70,7 +69,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
     @Override
     @RequiredReadAction
-    protected void updateImpl(@Nonnull PresentationData data) {
+    protected void updateImpl(PresentationData data) {
         Project project = getProject();
         PsiDirectory psiDirectory = getValue();
         VirtualFile directoryFile = psiDirectory.getVirtualFile();
@@ -143,7 +142,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         PsiDirectory value = getValue();
         if (value == null) {
             return false;
@@ -213,7 +212,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         VirtualFile file = getVirtualFile();

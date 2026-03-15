@@ -23,14 +23,13 @@ import consulo.ui.image.Image;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.LocallyDeletedChange;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<LocallyDeletedChange>
         implements TreeLinkMouseListener.HaveTooltip {
-  public ChangesBrowserLocallyDeletedNode(@Nonnull LocallyDeletedChange userObject) {
+  public ChangesBrowserLocallyDeletedNode(LocallyDeletedChange userObject) {
     super(userObject);
   }
 
@@ -45,7 +44,7 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<Locally
   }
 
   @Override
-  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     // todo would be good to have render code in one place
     FilePath filePath = getUserObject().getPath();
     renderer.appendFileName(filePath.getVirtualFile(), filePath.getName(), TargetAWT.to(FileStatus.NOT_CHANGED.getColor()));

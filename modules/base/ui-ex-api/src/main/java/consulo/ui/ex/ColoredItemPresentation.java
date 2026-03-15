@@ -18,7 +18,7 @@ package consulo.ui.ex;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.navigation.ItemPresentation;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole

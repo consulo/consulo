@@ -26,7 +26,6 @@ import consulo.util.lang.StringUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -45,7 +44,7 @@ public class NewLayerAction extends AnAction {
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     ModifiableRootModel modifiableRootModel = myModuleEditor.getModifiableRootModelProxy();
     String copyName = myCopy ? modifiableRootModel.getCurrentLayerName() : null;
     String newName = Messages.showInputDialog(modifiableRootModel.getProject(), "Name", "Enter Name", Messages.getQuestionIcon(),
@@ -73,7 +72,7 @@ public class NewLayerAction extends AnAction {
     }
   }
 
-  @Nonnull
+  
   private static String createUniqueSdkName(String suggestedName, ModifiableRootModel modifiableRootModel) {
     if (suggestedName == null) {
       suggestedName = ModifiableRootModel.DEFAULT_LAYER_NAME;

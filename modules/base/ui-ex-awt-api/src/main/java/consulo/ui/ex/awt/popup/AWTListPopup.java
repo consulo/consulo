@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.popup;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 

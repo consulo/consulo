@@ -17,25 +17,24 @@ package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.BaseTestMessage;
 
-import jakarta.annotation.Nonnull;
 
 public class TestOutputEvent extends TreeNodeEvent {
     private final String myText;
     private final boolean myStdOut;
 
-    public TestOutputEvent(@Nonnull BaseTestMessage message, @Nonnull String text, boolean stdOut) {
+    public TestOutputEvent(BaseTestMessage message, String text, boolean stdOut) {
         super(message.getTestName(), TreeNodeEvent.getNodeId(message));
         myText = text;
         myStdOut = stdOut;
     }
 
-    public TestOutputEvent(@Nonnull String testName, @Nonnull String text, boolean stdOut) {
+    public TestOutputEvent(String testName, String text, boolean stdOut) {
         super(testName, null);
         myText = text;
         myStdOut = stdOut;
     }
 
-    @Nonnull
+    
     public String getText() {
         return myText;
     }
@@ -45,7 +44,7 @@ public class TestOutputEvent extends TreeNodeEvent {
     }
 
     @Override
-    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+    protected void appendToStringInfo(StringBuilder buf) {
         append(buf, "text", myText);
         append(buf, "stdOut", myStdOut);
     }

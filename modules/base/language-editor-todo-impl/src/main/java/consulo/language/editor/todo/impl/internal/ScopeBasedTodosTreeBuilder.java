@@ -18,7 +18,6 @@ package consulo.language.editor.todo.impl.internal;
 
 import consulo.find.ui.ScopeChooserCombo;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,7 +30,7 @@ public class ScopeBasedTodosTreeBuilder extends TodoTreeBuilder {
   }
 
   @Override
-  @Nonnull
+  
   protected TodoTreeStructure createTreeStructure() {
     return new ScopeBasedTodosTreeStructure(myProject, myScopes);
   }

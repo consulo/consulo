@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.frame;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author traff
@@ -23,7 +22,7 @@ import jakarta.annotation.Nonnull;
 public abstract class XNamedValue extends XValue {
   protected final String myName;
 
-  protected XNamedValue(@Nonnull String name) {
+  protected XNamedValue(String name) {
     myName = name;
   }
 

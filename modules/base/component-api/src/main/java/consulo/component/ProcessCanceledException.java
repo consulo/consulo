@@ -16,7 +16,7 @@
 package consulo.component;
 
 import consulo.util.lang.ControlFlowException;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An exception indicating that the currently running operation was terminated and should finish as soon as possible.

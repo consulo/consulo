@@ -22,7 +22,6 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,24 +31,24 @@ import jakarta.annotation.Nonnull;
 public class ModuleExtensionWithSdkOrderEntryType implements OrderEntryType<ModuleExtensionWithSdkOrderEntryImpl> {
     public static final String ID = "module-extension-sdk";
 
-    @Nonnull
+    
     public static ModuleExtensionWithSdkOrderEntryType getInstance() {
         return EP_NAME.findExtensionOrFail(ModuleExtensionWithSdkOrderEntryType.class);
     }
 
     private static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public ModuleExtensionWithSdkOrderEntryImpl loadOrderEntry(
-        @Nonnull Element element,
-        @Nonnull ModuleRootLayer moduleRootLayer
+        Element element,
+        ModuleRootLayer moduleRootLayer
     ) throws InvalidDataException {
         String moduleExtensionId = element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
         if (moduleExtensionId == null) {
@@ -59,7 +58,7 @@ public class ModuleExtensionWithSdkOrderEntryType implements OrderEntryType<Modu
     }
 
     @Override
-    public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+    public void storeOrderEntry(Element element, ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
         element.setAttribute(EXTENSION_ID_ATTRIBUTE, orderEntry.getModuleExtensionId());
     }
 }

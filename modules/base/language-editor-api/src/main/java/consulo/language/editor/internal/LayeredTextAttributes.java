@@ -4,14 +4,13 @@ package consulo.language.editor.internal;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
-import jakarta.annotation.Nonnull;
 
 /**
  * Attributes created as a result of merging a list of {@link TextAttributesKey}s.
  * Used in combination with {@link consulo.language.editor.highlight.SyntaxHighlighter#getTokenHighlights}
  */
 public final class LayeredTextAttributes extends TextAttributes {
-    public static @Nonnull LayeredTextAttributes create(@Nonnull EditorColorsScheme scheme, @Nonnull TextAttributesKey [] keys) {
+    public static LayeredTextAttributes create(EditorColorsScheme scheme, TextAttributesKey [] keys) {
         TextAttributes result = new TextAttributes();
 
         for (TextAttributesKey key : keys) {
@@ -26,7 +25,7 @@ public final class LayeredTextAttributes extends TextAttributes {
 
     private final TextAttributesKey[] myKeys;
 
-    private LayeredTextAttributes(@Nonnull TextAttributesKey [] keys, @Nonnull TextAttributes attributes) {
+    private LayeredTextAttributes(TextAttributesKey [] keys, TextAttributes attributes) {
         super(attributes.getForegroundColor(),
             attributes.getBackgroundColor(),
             attributes.getEffectColor(),
@@ -35,7 +34,7 @@ public final class LayeredTextAttributes extends TextAttributes {
         myKeys = keys;
     }
 
-    @Nonnull
+    
     public TextAttributesKey [] getKeys() {
         return myKeys;
     }

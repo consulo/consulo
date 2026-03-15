@@ -36,32 +36,31 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UnifiedDiffChange {
-    @Nonnull
+    
     private final UnifiedDiffViewer myViewer;
-    @Nonnull
+    
     private final EditorEx myEditor;
 
     // Boundaries of this change in myEditor. If current state is out-of-date - approximate value.
     private int myLine1;
     private int myLine2;
 
-    @Nonnull
+    
     private final LineFragment myLineFragment;
 
-    @Nonnull
+    
     private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
-    @Nonnull
+    
     private final List<MyGutterOperation> myOperations = new ArrayList<>();
 
     @RequiredUIAccess
-    public UnifiedDiffChange(@Nonnull UnifiedDiffViewer viewer, @Nonnull ChangedBlock block) {
+    public UnifiedDiffChange(UnifiedDiffViewer viewer, ChangedBlock block) {
         myViewer = viewer;
         myEditor = viewer.getEditor();
 
@@ -88,7 +87,7 @@ public class UnifiedDiffChange {
     }
 
     @RequiredUIAccess
-    private void installHighlighter(@Nonnull LineRange deleted, @Nonnull LineRange inserted) {
+    private void installHighlighter(LineRange deleted, LineRange inserted) {
         assert myHighlighters.isEmpty();
 
         doInstallHighlighters(deleted, inserted);
@@ -109,7 +108,7 @@ public class UnifiedDiffChange {
         }
     }
 
-    private void doInstallHighlighters(@Nonnull LineRange deleted, @Nonnull LineRange inserted) {
+    private void doInstallHighlighters(LineRange deleted, LineRange inserted) {
         myHighlighters.addAll(DiffDrawUtil.createUnifiedChunkHighlighters(myEditor, deleted, inserted, myLineFragment.getInnerFragments()));
     }
 
@@ -124,7 +123,7 @@ public class UnifiedDiffChange {
     /*
      * Warning: It does not updated on document change. Check myViewer.isStateInconsistent() before use.
      */
-    @Nonnull
+    
     public LineFragment getLineFragment() {
         return myLineFragment;
     }
@@ -146,9 +145,9 @@ public class UnifiedDiffChange {
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    private MyGutterOperation createOperation(@Nonnull Side sourceSide) {
+    private MyGutterOperation createOperation(Side sourceSide) {
         int offset = myEditor.getDocument().getLineStartOffset(myLine1);
         RangeHighlighter highlighter = myEditor.getMarkupModel()
             .addRangeHighlighter(offset, offset, HighlighterLayer.ADDITIONAL_SYNTAX, null, HighlighterTargetArea.LINES_IN_RANGE);
@@ -156,13 +155,13 @@ public class UnifiedDiffChange {
     }
 
     private class MyGutterOperation {
-        @Nonnull
+        
         private final Side mySide;
-        @Nonnull
+        
         private final RangeHighlighter myHighlighter;
 
         @RequiredUIAccess
-        private MyGutterOperation(@Nonnull Side sourceSide, @Nonnull RangeHighlighter highlighter) {
+        private MyGutterOperation(Side sourceSide, RangeHighlighter highlighter) {
             mySide = sourceSide;
             myHighlighter = highlighter;
 
@@ -200,9 +199,9 @@ public class UnifiedDiffChange {
     }
 
     private GutterIconRenderer createIconRenderer(
-        @Nonnull final Side sourceSide,
-        @Nonnull final LocalizeValue tooltipText,
-        @Nonnull final Image icon
+        final Side sourceSide,
+        final LocalizeValue tooltipText,
+        final Image icon
     ) {
         return new DiffGutterRenderer(icon, tooltipText) {
             @Override

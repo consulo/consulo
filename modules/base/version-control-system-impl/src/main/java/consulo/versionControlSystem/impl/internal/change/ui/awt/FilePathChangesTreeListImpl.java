@@ -17,15 +17,14 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.util.List;
 
 public class FilePathChangesTreeListImpl extends ChangesTreeListImpl<FilePath> {
 
-  public FilePathChangesTreeListImpl(@Nonnull Project project, @Nonnull List<FilePath> originalFiles,
+  public FilePathChangesTreeListImpl(Project project, List<FilePath> originalFiles,
                                      boolean showCheckboxes, boolean highlightProblems,
                                      @Nullable Runnable inclusionListener, @Nullable ChangeNodeDecorator nodeDecorator) {
     super(project, originalFiles, showCheckboxes, highlightProblems, inclusionListener, nodeDecorator);

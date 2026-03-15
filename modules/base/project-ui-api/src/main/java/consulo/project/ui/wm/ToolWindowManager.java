@@ -27,8 +27,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
 import javax.swing.event.HyperlinkListener;
@@ -39,49 +38,49 @@ import javax.swing.event.HyperlinkListener;
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ToolWindowManager {
-    public abstract boolean canShowNotification(@Nonnull String toolWindowId);
+    public abstract boolean canShowNotification(String toolWindowId);
 
-    public static ToolWindowManager getInstance(@Nonnull Project project) {
+    public static ToolWindowManager getInstance(Project project) {
         return project.getInstance(ToolWindowManager.class);
     }
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
-    @Nonnull
+    
     @RequiredUIAccess
-    public abstract ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor);
+    public abstract ToolWindow registerToolWindow(String id, boolean canCloseContent, ToolWindowAnchor anchor);
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
-    @Nonnull
+    
     @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
-        @Nonnull String id,
+        String id,
         boolean canCloseContent,
-        @Nonnull ToolWindowAnchor anchor,
+        ToolWindowAnchor anchor,
         boolean secondary
     );
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
-    @Nonnull
+    
     @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
-        @Nonnull String id,
+        String id,
         boolean canCloseContent,
-        @Nonnull ToolWindowAnchor anchor,
+        ToolWindowAnchor anchor,
         Disposable parentDisposable,
         boolean canWorkInDumbMode
     );
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
     public abstract ToolWindow registerToolWindow(
-        @Nonnull String id,
+        String id,
         boolean canCloseContent,
-        @Nonnull ToolWindowAnchor anchor,
+        ToolWindowAnchor anchor,
         Disposable parentDisposable,
         boolean canWorkInDumbMode,
         boolean secondary
@@ -89,12 +88,12 @@ public abstract class ToolWindowManager {
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
-    @Nonnull
+    
     @RequiredUIAccess
     public ToolWindow registerToolWindow(
-        @Nonnull String id,
+        String id,
         boolean canCloseContent,
-        @Nonnull ToolWindowAnchor anchor,
+        ToolWindowAnchor anchor,
         Disposable parentDisposable
     ) {
         return registerToolWindow(id, canCloseContent, anchor, parentDisposable, false);
@@ -104,7 +103,7 @@ public abstract class ToolWindowManager {
      * does nothing if tool window with specified isn't registered.
      */
     @RequiredUIAccess
-    public abstract void unregisterToolWindow(@Nonnull String id);
+    public abstract void unregisterToolWindow(String id);
 
     public abstract void activateEditorComponent();
 
@@ -116,7 +115,7 @@ public abstract class ToolWindowManager {
     /**
      * @return array of <code>id</code>s of all registered tool windows.
      */
-    @Nonnull
+    
     public abstract String[] getToolWindowIds();
 
     /**
@@ -137,25 +136,25 @@ public abstract class ToolWindowManager {
     /**
      * Puts specified runnable to the tail of current command queue.
      */
-    public abstract void invokeLater(@RequiredUIAccess @Nonnull Runnable runnable);
+    public abstract void invokeLater(@RequiredUIAccess Runnable runnable);
 
     /**
      * Utility method for quick access to the focus manager
      */
-    @Nonnull
+    
     public abstract IdeFocusManager getFocusManager();
 
-    public abstract void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody);
+    public abstract void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody);
 
     @Nullable
     public abstract Balloon getToolWindowBalloon(String id);
 
-    public abstract boolean isMaximized(@Nonnull ToolWindow wnd);
+    public abstract boolean isMaximized(ToolWindow wnd);
 
-    public abstract void setMaximized(@Nonnull ToolWindow wnd, boolean maximized);
+    public abstract void setMaximized(ToolWindow wnd, boolean maximized);
 
-    @Nonnull
-    public Image getLocationIcon(@Nonnull String toolWindowId, @Nonnull Image fallbackImage) {
+    
+    public Image getLocationIcon(String toolWindowId, Image fallbackImage) {
         return fallbackImage;
     }
 
@@ -177,24 +176,24 @@ public abstract class ToolWindowManager {
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
     @Deprecated
-    @Nonnull
+    
     public abstract ToolWindow registerToolWindow(
-        @Nonnull String id,
-        @Nonnull JComponent component,
-        @Nonnull ToolWindowAnchor anchor
+        String id,
+        JComponent component,
+        ToolWindowAnchor anchor
     );
 
     /**
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
     @Deprecated
-    @Nonnull
+    
     @RequiredUIAccess
     public ToolWindow registerToolWindow(
-        @Nonnull String id,
-        @Nonnull JComponent component,
-        @Nonnull ToolWindowAnchor anchor,
-        @Nonnull Disposable parentDisposable
+        String id,
+        JComponent component,
+        ToolWindowAnchor anchor,
+        Disposable parentDisposable
     ) {
         return registerToolWindow(id, component, anchor, parentDisposable, false, false);
     }
@@ -203,12 +202,12 @@ public abstract class ToolWindowManager {
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
     @Deprecated
-    @Nonnull
+    
     @RequiredUIAccess
     public ToolWindow registerToolWindow(
-        @Nonnull String id,
-        @Nonnull JComponent component,
-        @Nonnull ToolWindowAnchor anchor,
+        String id,
+        JComponent component,
+        ToolWindowAnchor anchor,
         Disposable parentDisposable,
         boolean canWorkInDumbMode
     ) {
@@ -219,12 +218,12 @@ public abstract class ToolWindowManager {
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
     @Deprecated
-    @Nonnull
+    
     @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
-        @Nonnull String id,
-        @Nonnull JComponent component,
-        @Nonnull ToolWindowAnchor anchor,
+        String id,
+        JComponent component,
+        ToolWindowAnchor anchor,
         Disposable parentDisposable,
         boolean canWorkInDumbMode,
         boolean canCloseContents
@@ -232,9 +231,9 @@ public abstract class ToolWindowManager {
 
     @Deprecated
     public void notifyByBalloon(
-        @Nonnull String toolWindowId,
-        @Nonnull NotificationType type,
-        @Nonnull String htmlBody,
+        String toolWindowId,
+        NotificationType type,
+        String htmlBody,
         @Nullable Image icon,
         @Nullable HyperlinkListener listener
     ) {

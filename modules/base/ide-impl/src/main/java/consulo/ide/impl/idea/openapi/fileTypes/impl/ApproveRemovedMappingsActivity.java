@@ -17,7 +17,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
@@ -30,7 +29,7 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
     public static final NotificationGroup GROUP = NotificationGroup.balloonGroup("File type recognized");
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         RemovedMappingTracker removedMappings = ((FileTypeManagerImpl) FileTypeManager.getInstance()).getRemovedMappingTracker();
         List<RemovedMappingTracker.RemovedMapping> list = removedMappings.retrieveUnapprovedMappings();
         if (!list.isEmpty()) {
@@ -48,7 +47,7 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
                         .hyperlinkListener(new NotificationListener.Adapter() {
                             @Override
                             @RequiredUIAccess
-                            protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+                            protected void hyperlinkActivated(Notification notification, HyperlinkEvent e) {
                                 Application.get().runWriteAction(() -> {
                                     FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);
                                     removedMappings.add(matcher, fileType.getId(), true);

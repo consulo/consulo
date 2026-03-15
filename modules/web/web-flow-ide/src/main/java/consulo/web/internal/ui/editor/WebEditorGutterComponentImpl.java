@@ -20,8 +20,7 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.ui.ex.action.ActionGroup;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +36,7 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public List<GutterMark> getGutterRenderers(int line) {
     return List.of();
@@ -90,7 +89,7 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   }
 
   @Override
-  public void setLineNumberConverter(@Nonnull LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter) {
+  public void setLineNumberConverter(LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter) {
 
   }
 
@@ -130,12 +129,12 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   }
 
   @Override
-  public void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider) {
+  public void registerTextAnnotation(TextAnnotationGutterProvider provider) {
 
   }
 
   @Override
-  public void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider, @Nonnull EditorGutterAction action) {
+  public void registerTextAnnotation(TextAnnotationGutterProvider provider, EditorGutterAction action) {
 
   }
 
@@ -144,7 +143,7 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public List<TextAnnotationGutterProvider> getTextAnnotations() {
     return null;
@@ -156,7 +155,7 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   }
 
   @Override
-  public void closeTextAnnotations(@Nonnull Collection<? extends TextAnnotationGutterProvider> annotations) {
+  public void closeTextAnnotations(Collection<? extends TextAnnotationGutterProvider> annotations) {
 
   }
 }

@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.task.internal.TaskInternalHelper;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -34,7 +33,7 @@ import jakarta.inject.Singleton;
 public class TaskInternalHelperImpl implements TaskInternalHelper {
   @RequiredUIAccess
   @Override
-  public void openProxySettings(@Nonnull Project project, @Nonnull Runnable afterCallback) {
+  public void openProxySettings(Project project, Runnable afterCallback) {
     ShowSettingsUtil.getInstance().editConfigurable(project, new HttpProxyConfigurable()).doWhenProcessed(afterCallback);
   }
 }

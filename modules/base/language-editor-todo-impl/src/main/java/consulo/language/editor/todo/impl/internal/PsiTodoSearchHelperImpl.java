@@ -24,7 +24,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.search.*;
 import consulo.language.psi.stub.todo.TodoCacheManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -44,20 +43,20 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   }
 
   @Override
-  @Nonnull
+  
   public PsiFile[] findFilesWithTodoItems() {
     return TodoCacheManager.getInstance(myManager.getProject()).getFilesWithTodoItems();
   }
 
   @Override
-  @Nonnull
-  public TodoItem[] findTodoItems(@Nonnull PsiFile file) {
+  
+  public TodoItem[] findTodoItems(PsiFile file) {
     return findTodoItems(file, 0, file.getTextLength());
   }
 
   @Override
-  @Nonnull
-  public TodoItem[] findTodoItems(@Nonnull PsiFile file, int startOffset, int endOffset) {
+  
+  public TodoItem[] findTodoItems(PsiFile file, int startOffset, int endOffset) {
     Collection<IndexPatternOccurrence> occurrences = IndexPatternSearch.search(file, TodoIndexPatternProvider.getInstance()).findAll();
     if (occurrences.isEmpty()) {
       return EMPTY_TODO_ITEMS;
@@ -66,7 +65,7 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
     return processTodoOccurences(startOffset, endOffset, occurrences);
   }
 
-  @Nonnull
+  
   private static TodoItem[] processTodoOccurences(int startOffset, int endOffset, Collection<IndexPatternOccurrence> occurrences) {
     List<TodoItem> items = new ArrayList<>(occurrences.size());
     TextRange textRange = new TextRange(startOffset, endOffset);
@@ -81,15 +80,15 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
     return items.toArray(new TodoItem[items.size()]);
   }
 
-  @Nonnull
+  
   @Override
-  public TodoItem[] findTodoItemsLight(@Nonnull PsiFile file) {
+  public TodoItem[] findTodoItemsLight(PsiFile file) {
     return findTodoItemsLight(file, 0, file.getTextLength());
   }
 
-  @Nonnull
+  
   @Override
-  public TodoItem[] findTodoItemsLight(@Nonnull PsiFile file, int startOffset, int endOffset) {
+  public TodoItem[] findTodoItemsLight(PsiFile file, int startOffset, int endOffset) {
     Collection<IndexPatternOccurrence> occurrences =
             LightIndexPatternSearch.SEARCH.createQuery(new IndexPatternSearch.SearchParameters(file, TodoIndexPatternProvider.getInstance())).findAll();
 
@@ -101,14 +100,14 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   }
 
   @Override
-  public int getTodoItemsCount(@Nonnull PsiFile file) {
+  public int getTodoItemsCount(PsiFile file) {
     int count = TodoCacheManager.getInstance(myManager.getProject()).getTodoCount(file.getVirtualFile(), TodoIndexPatternProvider.getInstance());
     if (count != -1) return count;
     return findTodoItems(file).length;
   }
 
   @Override
-  public int getTodoItemsCount(@Nonnull PsiFile file, @Nonnull TodoPattern pattern) {
+  public int getTodoItemsCount(PsiFile file, TodoPattern pattern) {
     int count = TodoCacheManager.getInstance(myManager.getProject()).getTodoCount(file.getVirtualFile(), pattern.getIndexPattern());
     if (count != -1) return count;
     TodoItem[] items = findTodoItems(file);

@@ -16,7 +16,6 @@
 package consulo.application.util;
 
 import consulo.application.AccessToken;
-import jakarta.annotation.Nonnull;
 
 /**
  * Stub from IDEA - API for CodeWithMe
@@ -54,7 +53,7 @@ public class ClientId {
 
     private static ClientId ourLocal = new ClientId();
 
-    @Nonnull
+    
     public static ClientId getCurrent() {
         return ourLocal;
     }

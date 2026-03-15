@@ -40,8 +40,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -70,9 +69,9 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public Component createUIComponentImpl(@Nonnull Disposable parentUIDisposable) {
+    public Component createUIComponentImpl(Disposable parentUIDisposable) {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
         myInheritCompilerOutput = RadioButton.create(ProjectLocalize.projectInheritCompileOutputPath());
         myPerModuleCompilerOutput = RadioButton.create(ProjectLocalize.projectModuleCompileOutputPath());
@@ -160,7 +159,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         }
     }
 
-    @Nonnull
+    
     public Module getModule() {
         return getModel().getModule();
     }
@@ -266,8 +265,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         }
     }
 
-    @Nonnull
-    private String buildOutputUrl(@Nonnull ContentFolderTypeProvider provider) {
+    
+    private String buildOutputUrl(ContentFolderTypeProvider provider) {
         ModulesConfigurator modulesConfigurator = getState().getModulesConfigurator();
         String relativePathForProvider = modulesConfigurator.getCompilerOutputUrl() + "/" + ModuleCompilerPathsManager.getRelativePathForProvider(provider, getModule());
         return FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(relativePathForProvider));

@@ -35,7 +35,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "QuickJavaDoc")
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
@@ -52,13 +51,13 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         setInjectedContext(true);
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new CodeInsightActionHandler() {
             @RequiredUIAccess
             @Override
-            public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+            public void invoke(Project project, Editor editor, PsiFile file) {
                 DocumentationManager.getInstance(project).showJavaDocInfo(editor, file, LookupManager.getActiveLookup(editor) == null);
             }
 
@@ -75,7 +74,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
 
         Project project = event.getData(Project.KEY);
@@ -126,7 +125,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor editor = e.getData(Editor.KEY);
         PsiElement element = e.getData(PsiElement.KEY);

@@ -42,8 +42,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.internal.EditSourceForDialogAction;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -279,12 +278,12 @@ public class PushLog extends JPanel implements DataProvider {
     private class MyShowCommitInfoAction extends DumbAwareAction {
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myBalloon.showCommitDetails();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(getSelectedCommitNodes().size() == 1);
         }
     }
@@ -329,13 +328,13 @@ public class PushLog extends JPanel implements DataProvider {
         }
     }
 
-    @Nonnull
-    private static List<Change> collectAllChanges(@Nonnull List<CommitNode> commitNodes) {
+    
+    private static List<Change> collectAllChanges(List<CommitNode> commitNodes) {
         return ChangesBrowserUtil.zipChanges(collectChanges(commitNodes));
     }
 
-    @Nonnull
-    private static List<CommitNode> collectSelectedCommitNodes(@Nonnull List<DefaultMutableTreeNode> selectedNodes) {
+    
+    private static List<CommitNode> collectSelectedCommitNodes(List<DefaultMutableTreeNode> selectedNodes) {
         List<CommitNode> nodes = new ArrayList<>();
         for (DefaultMutableTreeNode node : selectedNodes) {
             if (node instanceof RepositoryNode) {
@@ -348,8 +347,8 @@ public class PushLog extends JPanel implements DataProvider {
         return nodes;
     }
 
-    @Nonnull
-    private static List<Change> collectChanges(@Nonnull List<CommitNode> commitNodes) {
+    
+    private static List<Change> collectChanges(List<CommitNode> commitNodes) {
         List<Change> changes = new ArrayList<>();
         for (CommitNode node : commitNodes) {
             changes.addAll(node.getUserObject().getChanges());
@@ -357,8 +356,8 @@ public class PushLog extends JPanel implements DataProvider {
         return changes;
     }
 
-    @Nonnull
-    private static <T> List<T> getChildNodesByType(@Nonnull DefaultMutableTreeNode node, Class<T> type, boolean reverseOrder) {
+    
+    private static <T> List<T> getChildNodesByType(DefaultMutableTreeNode node, Class<T> type, boolean reverseOrder) {
         List<T> nodes = new ArrayList<>();
         if (node.getChildCount() < 1) {
             return nodes;
@@ -380,8 +379,8 @@ public class PushLog extends JPanel implements DataProvider {
         return nodes;
     }
 
-    @Nonnull
-    private static List<Integer> getSortedRows(@Nonnull int[] rows) {
+    
+    private static List<Integer> getSortedRows(int[] rows) {
         List<Integer> sorted = new ArrayList<>();
         for (int row : rows) {
             sorted.add(row);
@@ -408,7 +407,7 @@ public class PushLog extends JPanel implements DataProvider {
     // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (VcsDataKeys.CHANGES == dataId) {
             List<CommitNode> commitNodes = getSelectedCommitNodes();
             return ArrayUtil.toObjectArray(collectAllChanges(commitNodes), Change.class);
@@ -429,7 +428,7 @@ public class PushLog extends JPanel implements DataProvider {
         return null;
     }
 
-    @Nonnull
+    
     private List<CommitNode> getSelectedCommitNodes() {
         int[] rows = myTree.getSelectionRows();
         if (rows != null && rows.length != 0) {
@@ -439,8 +438,8 @@ public class PushLog extends JPanel implements DataProvider {
         return List.of();
     }
 
-    @Nonnull
-    private List<DefaultMutableTreeNode> getNodesForRows(@Nonnull List<Integer> rows) {
+    
+    private List<DefaultMutableTreeNode> getNodesForRows(List<Integer> rows) {
         List<DefaultMutableTreeNode> nodes = new ArrayList<>();
         for (Integer row : rows) {
             TreePath path = myTree.getPathForRow(row);
@@ -498,20 +497,20 @@ public class PushLog extends JPanel implements DataProvider {
         return myTree;
     }
 
-    @Nonnull
+    
     public CheckboxTree getTree() {
         return myTree;
     }
 
-    public void selectIfNothingSelected(@Nonnull TreeNode node) {
+    public void selectIfNothingSelected(TreeNode node) {
         if (myTree.isSelectionEmpty()) {
             myTree.setSelectionPath(TreeUtil.getPathFromRoot(node));
         }
     }
 
     public void setChildren(
-        @Nonnull DefaultMutableTreeNode parentNode,
-        @Nonnull Collection<? extends DefaultMutableTreeNode> childrenNodes
+        DefaultMutableTreeNode parentNode,
+        Collection<? extends DefaultMutableTreeNode> childrenNodes
     ) {
         parentNode.removeAllChildren();
         for (DefaultMutableTreeNode child : childrenNodes) {
@@ -529,7 +528,7 @@ public class PushLog extends JPanel implements DataProvider {
         }
     }
 
-    private void refreshNode(@Nonnull DefaultMutableTreeNode parentNode) {
+    private void refreshNode(DefaultMutableTreeNode parentNode) {
         //todo should be optimized in case of start loading just edited node
         DefaultTreeModel model = ((DefaultTreeModel)myTree.getModel());
         model.nodeStructureChanged(parentNode);
@@ -537,7 +536,7 @@ public class PushLog extends JPanel implements DataProvider {
         myShouldRepaint = false;
     }
 
-    private void expandSelected(@Nonnull DefaultMutableTreeNode node) {
+    private void expandSelected(DefaultMutableTreeNode node) {
         if (node.getChildCount() <= 0) {
             return;
         }
@@ -563,7 +562,7 @@ public class PushLog extends JPanel implements DataProvider {
         mySyncRenderedText = value;
     }
 
-    public void fireEditorUpdated(@Nonnull String currentText) {
+    public void fireEditorUpdated(String currentText) {
         if (mySyncStrategy) {
             //update ui model
             List<RepositoryNode> repositoryNodes =

@@ -20,7 +20,6 @@ import consulo.language.inject.ReferenceInjector;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -29,8 +28,8 @@ import java.util.List;
 public abstract class InjectedReferenceVisitor implements PsiLanguageInjectionHost.InjectedPsiVisitor {
   @RequiredReadAction
   @Override
-  public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
+  public void visit(PsiFile injectedPsi, List<PsiLanguageInjectionHost.Shred> places) {
   }
 
-  public abstract void visitInjectedReference(@Nonnull ReferenceInjector injector, @Nonnull List<? extends PsiLanguageInjectionHost.Shred> places);
+  public abstract void visitInjectedReference(ReferenceInjector injector, List<? extends PsiLanguageInjectionHost.Shred> places);
 }

@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.AnimatedIcon;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
@@ -41,8 +40,8 @@ public class SMPoolOfTestIcons implements PoolOfTestIcons {
     // Test Progress
     public static final Image PAUSED_E_ICON = addErrorMarkTo(PlatformIconGroup.runconfigurationsTestpaused());
 
-    @Nonnull
-    public static Image addErrorMarkTo(@Nonnull Image baseIcon) {
+    
+    public static Image addErrorMarkTo(Image baseIcon) {
         return ImageEffects.layered(baseIcon, ERROR_ICON_MARK);
     }
 }

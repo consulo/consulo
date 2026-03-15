@@ -16,7 +16,6 @@
 package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.execution.debug.impl.internal.ui.XDebuggerEditorBase;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +33,7 @@ public abstract class EvaluationInputComponent {
     return myTitle;
   }
 
-  @Nonnull
+  
   protected abstract XDebuggerEditorBase getInputEditor();
 
   public abstract void addComponent(JPanel contentPanel, JPanel resultPanel);

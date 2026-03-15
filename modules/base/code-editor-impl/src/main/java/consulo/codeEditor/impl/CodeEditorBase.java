@@ -47,8 +47,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -109,8 +108,8 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         private void updatePreferences(
-            @Nonnull FontPreferencesImpl preferences,
-            @Nonnull String fontName,
+            FontPreferencesImpl preferences,
+            String fontName,
             int fontSize,
             @Nullable FontPreferences delegatePreferences
         ) {
@@ -142,7 +141,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
-        public void setAttributes(@Nonnull TextAttributesKey key, TextAttributes attributes) {
+        public void setAttributes(TextAttributesKey key, TextAttributes attributes) {
             myOwnAttributes.put(key, attributes);
         }
 
@@ -188,14 +187,14 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             reinitFontsAndSettings();
         }
 
-        @Nonnull
+        
         @Override
         public FontPreferences getFontPreferences() {
             return myFontPreferences.getEffectiveFontFamilies().isEmpty() ? getDelegate().getFontPreferences() : myFontPreferences;
         }
 
         @Override
-        public void setFontPreferences(@Nonnull FontPreferences preferences) {
+        public void setFontPreferences(FontPreferences preferences) {
             if (Objects.equals(preferences, myFontPreferences)) {
                 return;
             }
@@ -203,7 +202,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             reinitFontsAndSettings();
         }
 
-        @Nonnull
+        
         @Override
         public FontPreferences getConsoleFontPreferences() {
             return myConsoleFontPreferences.getEffectiveFontFamilies().isEmpty()
@@ -212,7 +211,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
-        public void setConsoleFontPreferences(@Nonnull FontPreferences preferences) {
+        public void setConsoleFontPreferences(FontPreferences preferences) {
             if (Objects.equals(preferences, myConsoleFontPreferences)) {
                 return;
             }
@@ -237,7 +236,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             reinitFontsAndSettings();
         }
 
-        @Nonnull
+        
         @Override
         public Font getFont(EditorFontType key) {
             if (myFontsMap != null) {
@@ -269,7 +268,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
-        public void setDelegate(@Nonnull EditorColorsScheme delegate) {
+        public void setDelegate(EditorColorsScheme delegate) {
             super.setDelegate(delegate);
             int globalFontSize = getDelegate().getEditorFontSize();
             myMaxFontSize = Math.max(EditorFontsConstants.getMaxEditorFontSize(), globalFontSize);
@@ -302,7 +301,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     private class DefaultPopupHandler extends ContextMenuPopupHandler.ById {
         @Nullable
         @Override
-        public String getActionGroupId(@Nonnull EditorMouseEvent event) {
+        public String getActionGroupId(EditorMouseEvent event) {
             String contextMenuGroupId = myContextMenuGroupId;
             Inlay inlay = myInlayModel.getElementAt(event.getMouseEvent().getPoint());
             if (inlay != null) {
@@ -318,66 +317,66 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     private class MyEditable implements CutProvider, CopyProvider, PasteProvider, DeleteProvider, DumbAware {
         @Override
         @RequiredUIAccess
-        public void performCopy(@Nonnull DataContext dataContext) {
+        public void performCopy(DataContext dataContext) {
             executeAction(IdeActions.ACTION_EDITOR_COPY, dataContext);
         }
 
         @Override
-        public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+        public boolean isCopyEnabled(DataContext dataContext) {
             return true;
         }
 
         @Override
-        public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+        public boolean isCopyVisible(DataContext dataContext) {
             return getSelectionModel().hasSelection(true);
         }
 
         @Override
         @RequiredUIAccess
-        public void performCut(@Nonnull DataContext dataContext) {
+        public void performCut(DataContext dataContext) {
             executeAction(IdeActions.ACTION_EDITOR_CUT, dataContext);
         }
 
         @Override
-        public boolean isCutEnabled(@Nonnull DataContext dataContext) {
+        public boolean isCutEnabled(DataContext dataContext) {
             return !isViewer();
         }
 
         @Override
-        public boolean isCutVisible(@Nonnull DataContext dataContext) {
+        public boolean isCutVisible(DataContext dataContext) {
             return isCutEnabled(dataContext) && getSelectionModel().hasSelection(true);
         }
 
         @Override
         @RequiredUIAccess
-        public void performPaste(@Nonnull DataContext dataContext) {
+        public void performPaste(DataContext dataContext) {
             executeAction(IdeActions.ACTION_EDITOR_PASTE, dataContext);
         }
 
         @Override
-        public boolean isPastePossible(@Nonnull DataContext dataContext) {
+        public boolean isPastePossible(DataContext dataContext) {
             // Copy of isPasteEnabled. See interface method javadoc.
             return !isViewer();
         }
 
         @Override
-        public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
+        public boolean isPasteEnabled(DataContext dataContext) {
             return !isViewer();
         }
 
         @Override
         @RequiredUIAccess
-        public void deleteElement(@Nonnull DataContext dataContext) {
+        public void deleteElement(DataContext dataContext) {
             executeAction(IdeActions.ACTION_EDITOR_DELETE, dataContext);
         }
 
         @Override
-        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public boolean canDeleteElement(DataContext dataContext) {
             return !isViewer();
         }
 
         @RequiredUIAccess
-        private void executeAction(@Nonnull String actionId, @Nonnull DataContext dataContext) {
+        private void executeAction(String actionId, DataContext dataContext) {
             EditorAction action = (EditorAction) ActionManager.getInstance().getAction(actionId);
             if (action != null) {
                 action.actionPerformed(CodeEditorBase.this, dataContext);
@@ -388,22 +387,22 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     private class EditorDocumentAdapter implements PrioritizedDocumentListener {
         @Override
         @RequiredUIAccess
-        public void beforeDocumentChange(@Nonnull DocumentEvent e) {
+        public void beforeDocumentChange(DocumentEvent e) {
             beforeChangedUpdate(e);
         }
 
         @Override
-        public void documentChanged(@Nonnull DocumentEvent e) {
+        public void documentChanged(DocumentEvent e) {
             changedUpdate(e);
         }
 
         @Override
-        public void bulkUpdateStarting(@Nonnull Document document) {
+        public void bulkUpdateStarting(Document document) {
             bulkUpdateStarted();
         }
 
         @Override
-        public void bulkUpdateFinished(@Nonnull Document document) {
+        public void bulkUpdateFinished(Document document) {
             CodeEditorBase.this.bulkUpdateFinished();
         }
 
@@ -422,7 +421,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     protected Disposable myHighlighterDisposable = Disposable.newDisposable();
     protected boolean isReleased;
     protected final Disposable myDisposable = Disposable.newDisposable();
-    @Nonnull
+    
     protected final DocumentEx myDocument;
     @Nullable
     protected final Project myProject;
@@ -440,17 +439,17 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     protected final List<EditorPopupHandler> myPopupHandlers = new ArrayList<>();
 
-    @Nonnull
+    
     protected final List<EditorMouseListener> myMouseListeners = Lists.newLockFreeCopyOnWriteList();
-    @Nonnull
+    
     protected final List<EditorMouseMotionListener> myMouseMotionListeners = Lists.newLockFreeCopyOnWriteList();
 
-    @Nonnull
+    
     protected EditorColorsScheme myScheme;
 
     protected VirtualFile myVirtualFile;
 
-    @Nonnull
+    
     protected final SettingsImpl mySettings;
 
     protected CodeEditorCaretModelBase<CodeEditorCaretBase> myCaretModel;
@@ -461,7 +460,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     protected CodeEditorSoftWrapModelBase mySoftWrapModel;
     protected MarkupModelImpl myMarkupModel;
 
-    @Nonnull
+    
     protected IndentsModel myIndentsModel;
 
     protected String myContextMenuGroupId = IdeActions.GROUP_BASIC_EDITOR_POPUP;
@@ -470,10 +469,10 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     protected Predicate<RangeHighlighter> myHighlightingFilter;
 
-    @Nonnull
+    
     protected final MarkupModelListener myMarkupModelListener;
 
-    @Nonnull
+    
     protected final EditorFilteringMarkupModelEx myDocumentMarkupModel;
 
     protected final List<IntFunction<Collection<LineExtensionInfo>>> myLineExtensionPainters = new SmartList<>();
@@ -500,7 +499,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     private MyEditable myEditable;
 
     @RequiredUIAccess
-    public CodeEditorBase(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
+    public CodeEditorBase(Document document, boolean viewer, @Nullable Project project, EditorKind kind) {
         assertIsDispatchThread();
 
         myIsViewer = viewer;
@@ -535,7 +534,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
         myMarkupModelListener = new MarkupModelListener() {
             @Override
-            public void afterAdded(@Nonnull RangeHighlighterEx highlighter) {
+            public void afterAdded(RangeHighlighterEx highlighter) {
                 TextAttributes attributes = highlighter.getTextAttributes(getColorsScheme());
                 onHighlighterChanged(highlighter,
                     getGutterComponentEx().canImpactSize(highlighter),
@@ -545,7 +544,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             }
 
             @Override
-            public void afterRemoved(@Nonnull RangeHighlighterEx highlighter) {
+            public void afterRemoved(RangeHighlighterEx highlighter) {
                 TextAttributes attributes = highlighter.getTextAttributes(getColorsScheme());
                 onHighlighterChanged(highlighter,
                     getGutterComponentEx().canImpactSize(highlighter),
@@ -556,7 +555,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
             @Override
             public void attributesChanged(
-                @Nonnull RangeHighlighterEx highlighter,
+                RangeHighlighterEx highlighter,
                 boolean renderersChanged,
                 boolean fontStyleChanged,
                 boolean foregroundColorChanged
@@ -599,17 +598,17 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     protected abstract CodeEditorSoftWrapModelBase createSoftWrapModel();
 
-    @Nonnull
+    
     protected abstract DataContext getComponentContext();
 
     protected abstract void stopDumb();
 
-    protected boolean canImpactGutterSize(@Nonnull RangeHighlighter highlighter) {
+    protected boolean canImpactGutterSize(RangeHighlighter highlighter) {
         return false;
     }
 
     protected void onHighlighterChanged(
-        @Nonnull RangeHighlighterEx highlighter,
+        RangeHighlighterEx highlighter,
         boolean canImpactGutterSize,
         boolean fontStyleChanged,
         boolean foregroundColorChanged
@@ -683,43 +682,43 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
     }
 
-    @Nonnull
+    
     @Override
     public CodeEditorScrollingModelBase getScrollingModel() {
         return myScrollingModel;
     }
 
-    @Nonnull
+    
     @Override
     public CodeEditorFoldingModelBase getFoldingModel() {
         return myFoldingModel;
     }
 
-    @Nonnull
+    
     @Override
     public CodeEditorSelectionModelBase getSelectionModel() {
         return mySelectionModel;
     }
 
-    @Nonnull
+    
     @Override
     public CodeEditorInlayModelBase getInlayModel() {
         return myInlayModel;
     }
 
-    @Nonnull
+    
     @Override
     public CodeEditorSoftWrapModelBase getSoftWrapModel() {
         return mySoftWrapModel;
     }
 
-    @Nonnull
+    
     @Override
     public MarkupModelEx getMarkupModel() {
         return myMarkupModel;
     }
 
-    @Nonnull
+    
     @Override
     public CodeEditorCaretModelBase<? extends CodeEditorCaretBase> getCaretModel() {
         return myCaretModel;
@@ -737,7 +736,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         mySoftWrapModel.recalculate();
     }
 
-    @Nonnull
+    
     @Override
     public IndentsModel getIndentsModel() {
         return myIndentsModel;
@@ -851,29 +850,29 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    @Nonnull
+    
     public Disposable getDisposable() {
         return myDisposable;
     }
 
     @Override
-    public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
+    public void addEditorMouseListener(EditorMouseListener listener) {
         myMouseListeners.add(listener);
     }
 
     @Override
-    public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
+    public void removeEditorMouseListener(EditorMouseListener listener) {
         boolean success = myMouseListeners.remove(listener);
         LOG.assertTrue(success || isReleased);
     }
 
     @Override
-    public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
+    public void addEditorMouseMotionListener(EditorMouseMotionListener listener) {
         myMouseMotionListeners.add(listener);
     }
 
     @Override
-    public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
+    public void removeEditorMouseMotionListener(EditorMouseMotionListener listener) {
         boolean success = myMouseMotionListeners.remove(listener);
         LOG.assertTrue(success || isReleased);
     }
@@ -937,18 +936,18 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    @Nonnull
+    
     public MarkupModelEx getFilteredDocumentMarkupModel() {
         return myDocumentMarkupModel;
     }
 
     @Override
-    public void installPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
+    public void installPopupHandler(EditorPopupHandler popupHandler) {
         myPopupHandlers.add(popupHandler);
     }
 
     @Override
-    public void uninstallPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
+    public void uninstallPopupHandler(EditorPopupHandler popupHandler) {
         myPopupHandlers.remove(popupHandler);
     }
 
@@ -973,13 +972,13 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
     }
 
-    protected boolean hasBlockInlay(@Nonnull Point point) {
+    protected boolean hasBlockInlay(Point point) {
         Inlay<?> inlay = myInlayModel.getElementAt(point);
         return inlay != null && (inlay.getPlacement() == Inlay.Placement.ABOVE_LINE || inlay.getPlacement() == Inlay.Placement.BELOW_LINE);
     }
 
     @Override
-    public boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter) {
+    public boolean isHighlighterAvailable(RangeHighlighter highlighter) {
         return myHighlightingFilter == null || myHighlightingFilter.test(highlighter);
     }
 
@@ -1021,25 +1020,25 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         reinitSettings();
     }
 
-    protected void fireFocusLost(@Nonnull FocusEvent event) {
+    protected void fireFocusLost(FocusEvent event) {
         for (FocusChangeListener listener : myFocusListeners) {
             listener.focusLost(this, event);
         }
     }
 
-    protected void fireFocusGained(@Nonnull FocusEvent event) {
+    protected void fireFocusGained(FocusEvent event) {
         for (FocusChangeListener listener : myFocusListeners) {
             listener.focusGained(this, event);
         }
     }
 
     @Override
-    public void addFocusListener(@Nonnull FocusChangeListener listener) {
+    public void addFocusListener(FocusChangeListener listener) {
         myFocusListeners.add(listener);
     }
 
     @Override
-    public void addFocusListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable) {
+    public void addFocusListener(FocusChangeListener listener, Disposable parentDisposable) {
         DisposerUtil.add(listener, myFocusListeners, parentDisposable);
     }
 
@@ -1066,12 +1065,12 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
      * To be called when editor was not disposed while it should
      */
     @Override
-    public void throwEditorNotDisposedError(@Nonnull String msg) {
+    public void throwEditorNotDisposedError(String msg) {
         myTraceableDisposable.throwObjectNotDisposedError(msg);
     }
 
     @Override
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         VisualPosition visual = getCaretModel().getVisualPosition();
         info.put("caret", visual.getLine() + ":" + visual.getColumn());
     }
@@ -1079,12 +1078,12 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     /**
      * In case of "editor not disposed error" use {@link #throwEditorNotDisposedError(String)}
      */
-    public void throwDisposalError(@Nonnull String msg) {
+    public void throwDisposalError(String msg) {
         myTraceableDisposable.throwDisposalError(msg);
     }
 
     @Override
-    @Nonnull
+    
     public String dumpState() {
         return "allow caret inside tab: " +
             mySettings.isCaretInsideTabs() +
@@ -1107,14 +1106,14 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             myPurePaintingMode;
     }
 
-    @Nonnull
+    
     @Override
     public DataContext getDataContext() {
         return getProjectAwareDataContext(getComponentContext());
     }
 
-    @Nonnull
-    private DataContext getProjectAwareDataContext(@Nonnull DataContext original) {
+    
+    private DataContext getProjectAwareDataContext(DataContext original) {
         if (original.getData(Project.KEY) == myProject) {
             return original;
         }
@@ -1123,7 +1122,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             @Nullable
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T getData(@Nonnull Key<T> dataId) {
+            public <T> T getData(Key<T> dataId) {
                 if (Project.KEY == dataId) {
                     return (T) myProject;
                 }
@@ -1132,14 +1131,14 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         };
     }
 
-    @Nonnull
+    
     @Override
     public EditorKind getEditorKind() {
         return myKind;
     }
 
     @Override
-    @Nonnull
+    
     public EditorSettings getSettings() {
         return mySettings;
     }
@@ -1156,31 +1155,31 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         myPropertyChangeSupport.addPropertyChangeListener(listener);
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
+    public void addPropertyChangeListener(PropertyChangeListener listener, Disposable parentDisposable) {
         addPropertyChangeListener(listener);
         Disposer.register(parentDisposable, () -> removePropertyChangeListener(listener));
     }
 
     @Override
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         myPropertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     @Override
     @RequiredUIAccess
-    public void setColorsScheme(@Nonnull EditorColorsScheme scheme) {
+    public void setColorsScheme(EditorColorsScheme scheme) {
         assertIsDispatchThread();
         myScheme = scheme;
         reinitSettings();
     }
 
     @Override
-    @Nonnull
+    
     public EditorColorsScheme getColorsScheme() {
         return myScheme;
     }
@@ -1195,7 +1194,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         myIsViewer = isViewer;
     }
 
-    @Nonnull
+    
     @Override
     public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
         return new MyColorSchemeDelegate(customGlobalScheme);
@@ -1203,7 +1202,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     @Override
     @RequiredUIAccess
-    public void setHighlighter(@Nonnull EditorHighlighter highlighter) {
+    public void setHighlighter(EditorHighlighter highlighter) {
         if (isReleased) {
             return; // do not set highlighter to the released editor
         }
@@ -1226,12 +1225,12 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    @Nonnull
+    
     public DocumentEx getDocument() {
         return myDocument;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public EditorHighlighter getHighlighter() {
@@ -1249,6 +1248,6 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         Application.get().assertReadAccessAllowed();
     }
 
-    public void setDropHandler(@Nonnull EditorDropHandler dropHandler) {
+    public void setDropHandler(EditorDropHandler dropHandler) {
     }
 }

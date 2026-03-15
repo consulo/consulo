@@ -20,7 +20,6 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurableAdapter;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,13 +27,13 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class GeneralConfigurable extends ConfigurableAdapter implements ApplicationConfigurable {
-  @Nonnull
+  
   @Override
   public String getId() {
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("General");

@@ -25,33 +25,32 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 10-Aug-22
  */
 public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposable {
-  @Nonnull
+  
   String getId();
 
   @Nullable
   String getSubId();
 
-  @Nonnull
+  
   SelectInTarget createSelectInTarget();
 
-  @Nonnull
+  
   ActionCallback updateFromRoot(boolean restoreExpandedPaths);
 
   void select(Object element, VirtualFile file, boolean requestFocus);
 
-  void selectModule(@Nonnull Module module, boolean requestFocus);
+  void selectModule(Module module, boolean requestFocus);
 
-  void selectModuleGroup(@Nonnull ModuleGroup moduleGroup, boolean requestFocus);
+  void selectModuleGroup(ModuleGroup moduleGroup, boolean requestFocus);
 
-  @Nonnull
+  
   default AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
     select(element, file, requestFocus);
     return AsyncResult.resolved();
@@ -60,11 +59,11 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
   @Nullable
   NodeDescriptor getSelectedDescriptor();
 
-  @Nonnull
+  
   String[] getSubIds();
 
-  @Nonnull
-  LocalizeValue getPresentableSubIdName(@Nonnull String subId);
+  
+  LocalizeValue getPresentableSubIdName(String subId);
 
   default void queueUpdate() {
   }

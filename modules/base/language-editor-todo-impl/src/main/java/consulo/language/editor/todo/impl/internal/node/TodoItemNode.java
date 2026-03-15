@@ -20,7 +20,6 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public final class TodoItemNode extends BaseToDoNode<SmartTodoItemPointer> imple
   private final ArrayList<HighlightedRegion> myHighlightedRegions;
   private final List<HighlightedRegionProvider> myAdditionalLines;
 
-  public TodoItemNode(Project project, @Nonnull SmartTodoItemPointer value, TodoTreeBuilder builder) {
+  public TodoItemNode(Project project, SmartTodoItemPointer value, TodoTreeBuilder builder) {
     super(project, value, builder);
     RangeMarker rangeMarker = getValue().getRangeMarker();
     LOG.assertTrue(rangeMarker.isValid());
@@ -72,13 +71,13 @@ public final class TodoItemNode extends BaseToDoNode<SmartTodoItemPointer> imple
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     return Collections.emptyList();
   }
 
   @Override
-  public void update(@Nonnull PresentationData presentation) {
+  public void update(PresentationData presentation) {
     SmartTodoItemPointer todoItemPointer = getValue();
     assert todoItemPointer != null;
     TodoItem todoItem = todoItemPointer.getTodoItem();
@@ -150,7 +149,7 @@ public final class TodoItemNode extends BaseToDoNode<SmartTodoItemPointer> imple
     }
   }
 
-  private static void collectHighlights(@Nonnull List<? super HighlightedRegion> highlights, @Nonnull EditorHighlighter highlighter, int startOffset, int endOffset, int highlightOffsetShift) {
+  private static void collectHighlights(List<? super HighlightedRegion> highlights, EditorHighlighter highlighter, int startOffset, int endOffset, int highlightOffsetShift) {
     HighlighterIterator iterator = highlighter.createIterator(startOffset);
     while (!iterator.atEnd()) {
       int start = Math.max(iterator.getStart(), startOffset);
@@ -183,7 +182,7 @@ public final class TodoItemNode extends BaseToDoNode<SmartTodoItemPointer> imple
     return 5;
   }
 
-  @Nonnull
+  
   public List<HighlightedRegionProvider> getAdditionalLines() {
     return myAdditionalLines;
   }

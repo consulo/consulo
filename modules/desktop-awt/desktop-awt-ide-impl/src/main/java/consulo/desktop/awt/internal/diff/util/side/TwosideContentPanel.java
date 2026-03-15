@@ -22,20 +22,19 @@ import consulo.diff.util.Side;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class TwosideContentPanel extends JPanel {
-  @Nonnull
+ 
   private final DiffSplitter mySplitter;
-  @Nonnull
+ 
   private final List<DiffContentPanel> myPanels;
 
-  public TwosideContentPanel(@Nonnull List<? extends JComponent> contents) {
+  public TwosideContentPanel(List<? extends JComponent> contents) {
     super(new BorderLayout());
     assert contents.size() == 2;
 
@@ -49,7 +48,7 @@ public class TwosideContentPanel extends JPanel {
     add(mySplitter, BorderLayout.CENTER);
   }
 
-  public void setTitles(@Nonnull List<JComponent> titleComponents) {
+  public void setTitles(List<JComponent> titleComponents) {
     for (Side side : Side.values()) {
       DiffContentPanel panel = side.select(myPanels);
       JComponent title = side.select(titleComponents);
@@ -57,7 +56,7 @@ public class TwosideContentPanel extends JPanel {
     }
   }
 
-  //public void setBreadcrumbs(@Nonnull Side side, @Nullable DiffBreadcrumbsPanel breadcrumbs, @Nonnull TextDiffSettings settings) {
+  //public void setBreadcrumbs(Side side, @Nullable DiffBreadcrumbsPanel breadcrumbs, TextDiffSettings settings) {
   //  if (breadcrumbs != null) {
   //    DiffContentPanel panel = side.select(myPanels);
   //    panel.setBreadcrumbs(breadcrumbs);
@@ -81,7 +80,7 @@ public class TwosideContentPanel extends JPanel {
   }
 
   @RequiredUIAccess
-  public void setPainter(@Nullable DiffSplitter.Painter painter) {
+  public void setPainter(DiffSplitter.@Nullable Painter painter) {
     mySplitter.setPainter(painter);
   }
 
@@ -89,13 +88,13 @@ public class TwosideContentPanel extends JPanel {
     mySplitter.repaintDivider();
   }
 
-  @Nonnull
+ 
   public DiffSplitter getSplitter() {
     return mySplitter;
   }
 
-  @Nonnull
-  public static TwosideContentPanel createFromHolders(@Nonnull List<? extends EditorHolder> holders) {
+ 
+  public static TwosideContentPanel createFromHolders(List<? extends EditorHolder> holders) {
     return new TwosideContentPanel(ContainerUtil.map(holders, holder -> holder.getComponent()));
   }
 }

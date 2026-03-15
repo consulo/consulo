@@ -16,15 +16,14 @@
 package consulo.externalService.impl.internal.statistic;
 
 import consulo.externalService.statistic.UsageDescriptor;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
 
 public abstract class SentUsagesPersistence {
-    public abstract void persistPatch(@Nonnull Map<String, Set<PatchedUsage>> patchedDescriptors);
+    public abstract void persistPatch(Map<String, Set<PatchedUsage>> patchedDescriptors);
 
-    @Nonnull
+    
     public abstract Map<String, Set<UsageDescriptor>> getSentUsages();
 
     public abstract boolean isAllowed();

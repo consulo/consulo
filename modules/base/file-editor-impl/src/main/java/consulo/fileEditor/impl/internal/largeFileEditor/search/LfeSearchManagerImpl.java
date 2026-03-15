@@ -33,7 +33,6 @@ import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -74,9 +73,9 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
     private boolean myIsStatusTextHidden;
     private long myLastTimeStatusTextWasChanged;
 
-    public LfeSearchManagerImpl(@Nonnull LargeFileEditor largeFileEditor,
+    public LfeSearchManagerImpl(LargeFileEditor largeFileEditor,
                                 FileDataProviderForSearch fileDataProviderForSearch,
-                                @Nonnull RangeSearchCreator rangeSearchCreator) {
+                                RangeSearchCreator rangeSearchCreator) {
         this.largeFileEditor = largeFileEditor;
         this.fileDataProviderForSearch = fileDataProviderForSearch;
         this.rangeSearchCreator = rangeSearchCreator;
@@ -113,7 +112,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
     }
 
     @Override
-    public @Nonnull LargeFileEditor getLargeFileEditor() {
+    public LargeFileEditor getLargeFileEditor() {
         return largeFileEditor;
     }
 
@@ -505,7 +504,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
         myToggleCaseSensitiveAction = new LargeFileToggleAction(this, FileEditorLocalize.largeFileEditorMatchCaseActionMnemonicText());
         myToggleWholeWordsAction = new LargeFileToggleAction(this, FileEditorLocalize.largeFileEditorWordsActionMnemonicText()) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 boolean enabled = myToggleRegularExpression != null && !myToggleRegularExpression.isSelected(e);
                 boolean visible = mySearchReplaceComponent == null || !mySearchReplaceComponent.isMultiline();
                 e.getPresentation().setEnabled(enabled);
@@ -572,7 +571,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
         }
     }
 
-    private void setNewStatusText(@Nonnull LocalizeValue newStatusText) {
+    private void setNewStatusText(LocalizeValue newStatusText) {
         myStatusText = newStatusText.get();
         myLastTimeStatusTextWasChanged = System.currentTimeMillis();
 

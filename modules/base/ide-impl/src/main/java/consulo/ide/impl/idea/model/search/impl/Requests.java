@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,9 +15,9 @@ public final class Requests<R> {
 
   private Collection<WordRequest<? extends R>> wordRequests;
 
-  public Requests(@Nonnull Collection<ParametersRequest<?, ? extends R>> parametersRequests,
-                  @Nonnull Collection<QueryRequest<?, ? extends R>> queryRequests,
-                  @Nonnull Collection<WordRequest<? extends R>> wordRequests) {
+  public Requests(Collection<ParametersRequest<?, ? extends R>> parametersRequests,
+                  Collection<QueryRequest<?, ? extends R>> queryRequests,
+                  Collection<WordRequest<? extends R>> wordRequests) {
     this.parametersRequests = parametersRequests;
     this.queryRequests = queryRequests;
     this.wordRequests = wordRequests;
@@ -27,14 +26,14 @@ public final class Requests<R> {
   public Requests() {
   }
 
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
   public static <T> Requests<T> empty() {
     return (Requests<T>)empty;
   }
 
-  @Nonnull
-  public static <T> Requests<T> plus(@Nonnull Requests<T> thisPlus, @Nonnull Requests<T> other) {
+  
+  public static <T> Requests<T> plus(Requests<T> thisPlus, Requests<T> other) {
     if (thisPlus == empty) {
       return other;
     }
@@ -51,7 +50,7 @@ public final class Requests<R> {
     }
   }
 
-  @Nonnull
+  
   private static <T> List<T> mergeAll(Collection<T> p1, Collection<T> p2) {
     List<T> list = new ArrayList<>(p1.size() + p2.size());
     list.addAll(p1);
@@ -59,17 +58,17 @@ public final class Requests<R> {
     return list;
   }
 
-  @Nonnull
+  
   public final Collection<ParametersRequest<?, ? extends R>> getParametersRequests() {
     return parametersRequests;
   }
 
-  @Nonnull
+  
   public final Collection<QueryRequest<?, ? extends R>> getQueryRequests() {
     return queryRequests;
   }
 
-  @Nonnull
+  
   public final Collection<WordRequest<? extends R>> getWordRequests() {
     return wordRequests;
   }

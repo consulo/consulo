@@ -4,7 +4,6 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.IdeGlassPane.TopComponent;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -77,7 +76,7 @@ public class JBScrollBar extends JScrollBar implements TopComponent {
      * @return {@code true} if glass pane can process the specified event, {@code false} otherwise
      */
     @Override
-    public boolean canBePreprocessed(@Nonnull MouseEvent event) {
+    public boolean canBePreprocessed(MouseEvent event) {
         return JBScrollPane.canBePreprocessed(event, this);
     }
 }

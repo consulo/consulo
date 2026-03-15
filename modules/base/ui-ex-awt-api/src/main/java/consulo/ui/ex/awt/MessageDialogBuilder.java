@@ -19,24 +19,23 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated
 @DeprecationInfo("Use Alert/Alerts class from ui-api")
 @SuppressWarnings("ALL")
 public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
-    @Nonnull
-    public static OkCancel okCancel(@Nonnull String title, @Nonnull String message) {
+    
+    public static OkCancel okCancel(String title, String message) {
         return new OkCancel(title, message).icon(Messages.getQuestionIcon());
     }
 
-    @Nonnull
-    public static YesNo yesNo(@Nonnull String title, @Nonnull String message) {
+    
+    public static YesNo yesNo(String title, String message) {
         return new YesNo(title, message).icon(Messages.getQuestionIcon());
     }
 
-    public static YesNoCancel yesNoCancel(@Nonnull String title, @Nonnull String message) {
+    public static YesNoCancel yesNoCancel(String title, String message) {
         return new YesNoCancel(title, message).icon(Messages.getQuestionIcon());
     }
 
@@ -50,14 +49,14 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
     protected Image myIcon;
     protected DialogWrapper.DoNotAskOption myDoNotAskOption;
 
-    private MessageDialogBuilder(@Nonnull String title, @Nonnull String message) {
+    private MessageDialogBuilder(String title, String message) {
         myTitle = title;
         myMessage = message;
     }
 
     protected abstract T getThis();
 
-    @Nonnull
+    
     public T project(@Nullable Project project) {
         myProject = project;
         return getThis();
@@ -74,24 +73,24 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
         return getThis();
     }
 
-    @Nonnull
-    public T doNotAsk(@Nonnull DialogWrapper.DoNotAskOption doNotAskOption) {
+    
+    public T doNotAsk(DialogWrapper.DoNotAskOption doNotAskOption) {
         myDoNotAskOption = doNotAskOption;
         return getThis();
     }
 
-    public T yesText(@Nonnull String yesText) {
+    public T yesText(String yesText) {
         myYesText = yesText;
         return getThis();
     }
 
-    public T noText(@Nonnull String noText) {
+    public T noText(String noText) {
         myNoText = noText;
         return getThis();
     }
 
     public static final class OkCancel extends MessageDialogBuilder<OkCancel> {
-        private OkCancel(@Nonnull String title, @Nonnull String message) {
+        private OkCancel(String title, String message) {
             super(title, message);
         }
 
@@ -114,7 +113,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
     }
 
     public static final class YesNo extends MessageDialogBuilder<YesNo> {
-        private YesNo(@Nonnull String title, @Nonnull String message) {
+        private YesNo(String title, String message) {
             super(title, message);
         }
 
@@ -139,11 +138,11 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
     public static final class YesNoCancel extends MessageDialogBuilder<YesNoCancel> {
         private String myCancelText;
 
-        private YesNoCancel(@Nonnull String title, @Nonnull String message) {
+        private YesNoCancel(String title, String message) {
             super(title, message);
         }
 
-        public YesNoCancel cancelText(@Nonnull String cancelText) {
+        public YesNoCancel cancelText(String cancelText) {
             myCancelText = cancelText;
             return getThis();
         }

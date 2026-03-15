@@ -24,7 +24,6 @@ import consulo.process.ProcessHandler;
 import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @see ProcessHandlerBuilder
@@ -40,8 +39,8 @@ public abstract class ProcessHandlerFactory {
   /**
    * Returns a new instance of the {@link ProcessHandler}.
    */
-  @Nonnull
-  public final ProcessHandler createProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  
+  public final ProcessHandler createProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
     return createProcessHandler(commandLine, ProcessConsoleType.BUILTIN);
   }
 
@@ -53,23 +52,23 @@ public abstract class ProcessHandlerFactory {
    *
    * Instance of KillableProcessHandler
    */
-  @Nonnull
-  public abstract ProcessHandler createKillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
+  
+  public abstract ProcessHandler createKillableProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
 
   /**
    * Returns a new instance of the {@link #createKillableProcessHandler(GeneralCommandLine)} which is aware of ANSI coloring output.
    *
    * Instance of KillableProcessHandler
    */
-  @Nonnull
-  public abstract ProcessHandler createKillableColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
+  
+  public abstract ProcessHandler createKillableColoredProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
 
   /**
    * Returns a new instance of the {@link ProcessHandler} which is aware of ANSI coloring output.
    */
-  @Nonnull
-  public abstract ProcessHandler createColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
+  
+  public abstract ProcessHandler createColoredProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
 
-  @Nonnull
-  public abstract ProcessHandler createProcessHandler(@Nonnull GeneralCommandLine commandLine, @Nonnull ProcessConsoleType consoleType) throws ExecutionException;
+  
+  public abstract ProcessHandler createProcessHandler(GeneralCommandLine commandLine, ProcessConsoleType consoleType) throws ExecutionException;
 }

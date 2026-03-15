@@ -28,17 +28,15 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class MoverWrapper {
   protected final boolean myIsDown;
   private final StatementUpDownMover myMover;
   private final StatementUpDownMover.MoveInfo myInfo;
 
-  protected MoverWrapper(@Nonnull StatementUpDownMover mover, @Nonnull StatementUpDownMover.MoveInfo info, boolean isDown) {
+  protected MoverWrapper(StatementUpDownMover mover, StatementUpDownMover.MoveInfo info, boolean isDown) {
     myMover = mover;
     myIsDown = isDown;
 
@@ -165,7 +163,7 @@ class MoverWrapper {
    * @return              <code>true</code> if text range defined by the given range marker completely contains text range
    *                      of the given fold region; <code>false</code> otherwise
    */
-  private static boolean contains(@Nonnull RangeMarker rangeMarker, @Nonnull FoldRegion foldRegion) {
+  private static boolean contains(RangeMarker rangeMarker, FoldRegion foldRegion) {
     return rangeMarker.getStartOffset() <= foldRegion.getStartOffset() && rangeMarker.getEndOffset() >= foldRegion.getEndOffset();
   }
 
@@ -176,7 +174,7 @@ class MoverWrapper {
    * @param region2   'inner' region candidate
    * @return          <code>true</code> if 'region2' is nested to 'region1'; <code>false</code> otherwise
    */
-  private static boolean contains(@Nullable FoldRegion region1, @Nonnull FoldRegion region2) {
+  private static boolean contains(@Nullable FoldRegion region1, FoldRegion region2) {
     if (region1 == null) {
       return false;
     }
@@ -202,7 +200,7 @@ class MoverWrapper {
     }
     int lineStartOffset = document.getLineStartOffset(line);
     int lineEndOffset = document.getLineEndOffset(line);
-    @NonNls String text = document.getCharsSequence().subSequence(lineStartOffset, lineEndOffset).toString();
+    String text = document.getCharsSequence().subSequence(lineStartOffset, lineEndOffset).toString();
     return text.trim().length() != 0;
   }
 

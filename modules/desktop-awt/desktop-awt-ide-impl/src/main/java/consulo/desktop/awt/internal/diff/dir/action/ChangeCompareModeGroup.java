@@ -22,7 +22,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.action.ComboBoxButton;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,18 +52,18 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myButton.showPopup();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         getTemplatePresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
         e.getPresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
     }
 
-    @Nonnull
+    
     @Override
     public JComponent createCustomComponent(Presentation presentation, String place) {
         JPanel panel = new JPanel(new BorderLayout());
@@ -77,7 +76,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
         return panel;
     }
 
-    @Nonnull
+    
     @Override
     public DefaultActionGroup createPopupActionGroup(JComponent button) {
         return myGroup;

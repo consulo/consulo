@@ -20,7 +20,6 @@ import consulo.language.psi.stub.BaseFilterLexerUtil;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.IdAndToDoScannerBasedOnFilterLexer;
 
-import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -29,7 +28,7 @@ import java.util.Map;
  */
 public abstract class LexerBasedTodoIndexer implements VersionedTodoIndexer, IdAndToDoScannerBasedOnFilterLexer {
   @Override
-  @Nonnull
+  
   public Map<TodoIndexEntry, Integer> map(FileContent inputData) {
     return BaseFilterLexerUtil.scanContent(inputData, this).todoMap;
   }

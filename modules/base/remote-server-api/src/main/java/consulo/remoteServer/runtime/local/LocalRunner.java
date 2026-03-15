@@ -8,14 +8,13 @@ import consulo.process.ExecutionException;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18:38/01.10.13
  */
 public interface LocalRunner<D extends DeploymentConfiguration> {
-  ExecutionResult execute(@Nonnull DeploymentSource deploymentSource, D configuration, ExecutionEnvironment environment, @Nonnull Executor executor, @Nonnull ProgramRunner runner)
+  ExecutionResult execute(DeploymentSource deploymentSource, D configuration, ExecutionEnvironment environment, Executor executor, ProgramRunner runner)
           throws ExecutionException;
 
 }

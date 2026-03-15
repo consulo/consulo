@@ -29,7 +29,6 @@ import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.layout.DockLayout;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -56,23 +55,23 @@ public class DesktopSwtToolWindowInternalDecorator implements ToolWindowInternal
     myLayout.center(toolWindow.getUIComponent());
   }
 
-  @Nonnull
+  
   public Component getComponent() {
     return myLayout;
   }
 
-  @Nonnull
+  
   @Override
   public WindowInfo getWindowInfo() {
     return myWindowInfo;
   }
 
   @Override
-  public void apply(@Nonnull WindowInfo windowInfo) {
+  public void apply(WindowInfo windowInfo) {
 
   }
 
-  @Nonnull
+  
   @Override
   public ToolWindow getToolWindow() {
     return myToolWindow;
@@ -103,7 +102,7 @@ public class DesktopSwtToolWindowInternalDecorator implements ToolWindowInternal
     myDispatcher.getMulticaster().hiddenSide(this);
   }
 
-  @Nonnull
+  
   @Override
   public ActionGroup createPopupGroup() {
     return new DefaultActionGroup();

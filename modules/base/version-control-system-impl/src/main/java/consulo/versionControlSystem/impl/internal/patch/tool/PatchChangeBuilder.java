@@ -26,26 +26,26 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch.AppliedSplitPatchHunk;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch.HunkStatus;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 public class PatchChangeBuilder {
-  @Nonnull
+  
   private final StringBuilder myBuilder = new StringBuilder();
-  @Nonnull
+  
   private final List<Hunk> myHunks = new ArrayList<>();
-  @Nonnull
+  
   private final LineNumberConvertor.Builder myConvertor = new LineNumberConvertor.Builder();
-  @Nonnull
+  
   private final IntList myChangedLines = IntLists.newArrayList();
 
   private int totalLines = 0;
 
-  @Nonnull
-  public static CharSequence getPatchedContent(@Nonnull AppliedTextPatch patch, @Nonnull String localContent) {
+  
+  public static CharSequence getPatchedContent(AppliedTextPatch patch, String localContent) {
     PatchChangeBuilder builder = new PatchChangeBuilder();
     builder.exec(patch.getHunks());
 
@@ -64,7 +64,7 @@ public class PatchChangeBuilder {
     return document.getText();
   }
 
-  public void exec(@Nonnull List<AppliedSplitPatchHunk> splitHunks) {
+  public void exec(List<AppliedSplitPatchHunk> splitHunks) {
     int lastBeforeLine = -1;
     for (AppliedSplitPatchHunk hunk : splitHunks) {
       List<String> contextBefore = hunk.getContextBefore();
@@ -108,13 +108,13 @@ public class PatchChangeBuilder {
     }
   }
 
-  private void addContext(@Nonnull List<String> context, int beforeLineNumber, int afterLineNumber) {
+  private void addContext(List<String> context, int beforeLineNumber, int afterLineNumber) {
     myConvertor.put1(totalLines, beforeLineNumber, context.size());
     myConvertor.put2(totalLines, afterLineNumber, context.size());
     appendLines(context);
   }
 
-  private void appendLines(@Nonnull List<String> lines) {
+  private void appendLines(List<String> lines) {
     for (String line : lines) {
       myBuilder.append(line).append("\n");
     }
@@ -131,45 +131,45 @@ public class PatchChangeBuilder {
   // Result
   //
 
-  @Nonnull
+  
   public CharSequence getPatchContent() {
     return myBuilder;
   }
 
-  @Nonnull
+  
   public List<Hunk> getHunks() {
     return myHunks;
   }
 
-  @Nonnull
+  
   public LineNumberConvertor getLineConvertor() {
     return myConvertor.build();
   }
 
-  @Nonnull
+  
   public IntList getSeparatorLines() {
     return myChangedLines;
   }
 
 
   public static class Hunk {
-    @Nonnull
+    
     private final List<String> myInsertedLines;
-    @Nonnull
+    
     private final LineRange myPatchDeletionRange;
-    @Nonnull
+    
     private final LineRange myPatchInsertionRange;
 
-    @jakarta.annotation.Nullable
+    @Nullable
     private final LineRange myAppliedToLines;
-    @Nonnull
+    
     private final HunkStatus myStatus;
 
-    public Hunk(@Nonnull List<String> insertedLines,
-                @Nonnull LineRange patchDeletionRange,
-                @Nonnull LineRange patchInsertionRange,
-                @jakarta.annotation.Nullable LineRange appliedToLines,
-                @Nonnull HunkStatus status) {
+    public Hunk(List<String> insertedLines,
+                LineRange patchDeletionRange,
+                LineRange patchInsertionRange,
+                @Nullable LineRange appliedToLines,
+                HunkStatus status) {
       myInsertedLines = insertedLines;
       myPatchDeletionRange = patchDeletionRange;
       myPatchInsertionRange = patchInsertionRange;
@@ -177,17 +177,17 @@ public class PatchChangeBuilder {
       myStatus = status;
     }
 
-    @Nonnull
+    
     public LineRange getPatchDeletionRange() {
       return myPatchDeletionRange;
     }
 
-    @Nonnull
+    
     public LineRange getPatchInsertionRange() {
       return myPatchInsertionRange;
     }
 
-    @Nonnull
+    
     public HunkStatus getStatus() {
       return myStatus;
     }
@@ -196,7 +196,7 @@ public class PatchChangeBuilder {
       return myAppliedToLines;
     }
 
-    @Nonnull
+    
     private List<String> getInsertedLines() {
       return myInsertedLines;
     }

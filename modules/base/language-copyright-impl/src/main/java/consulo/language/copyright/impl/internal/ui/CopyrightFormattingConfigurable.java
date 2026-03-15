@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -47,12 +46,12 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "template.copyright.formatting";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.ofNullable("Formatting");

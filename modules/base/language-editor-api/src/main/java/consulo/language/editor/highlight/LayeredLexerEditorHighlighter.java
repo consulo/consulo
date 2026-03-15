@@ -27,8 +27,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -36,25 +35,25 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     private static final Logger LOG = Logger.getInstance(LayeredLexerEditorHighlighter.class);
     private final Map<IElementType, LayerDescriptor> myTokensToLayer = new HashMap<>();
 
-    public LayeredLexerEditorHighlighter(@Nonnull SyntaxHighlighter highlighter, @Nonnull EditorColorsScheme scheme) {
+    public LayeredLexerEditorHighlighter(SyntaxHighlighter highlighter, EditorColorsScheme scheme) {
         super(highlighter, scheme);
     }
 
     @Override
-    protected @Nonnull SegmentArrayWithData createSegments() {
+    protected SegmentArrayWithData createSegments() {
         return new MappingSegments(createStorage());
     }
 
-    private @Nonnull MappingSegments getMappingSegments() {
+    private MappingSegments getMappingSegments() {
         return (MappingSegments) getSegments();
     }
 
-    public synchronized void registerLayer(@Nonnull IElementType tokenType, @Nonnull LayerDescriptor layerHighlighter) {
+    public synchronized void registerLayer(IElementType tokenType, LayerDescriptor layerHighlighter) {
         myTokensToLayer.put(tokenType, layerHighlighter);
         getSegments().removeAll();
     }
 
-    protected synchronized void unregisterLayer(@Nonnull IElementType tokenType) {
+    protected synchronized void unregisterLayer(IElementType tokenType) {
         LayerDescriptor layer = myTokensToLayer.remove(tokenType);
         if (layer != null) {
             getMappingSegments().myLayerBuffers.remove(layer);
@@ -71,13 +70,13 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         private final String mySeparator;
         final int insertOffset;
 
-        LightMapper(@Nonnull Mapper mapper, int insertOffset) {
+        LightMapper(Mapper mapper, int insertOffset) {
             this.mapper = mapper;
             mySeparator = mapper.mySeparator;
             this.insertOffset = insertOffset;
         }
 
-        void addToken(@Nonnull CharSequence tokenText, @Nonnull IElementType tokenType, int globalIndex) {
+        void addToken(CharSequence tokenText, IElementType tokenType, int globalIndex) {
             index2Global.put(tokenTypes.size(), globalIndex);
             text.append(mySeparator).append(tokenText);
             lengths.add(tokenText.length());
@@ -101,7 +100,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             }
         }
 
-        private void checkNull(@Nonnull IElementType type, @Nullable MappedRange range) {
+        private void checkNull(IElementType type, @Nullable MappedRange range) {
             if (range != null) {
                 Document mainDocument = getDocument();
                 VirtualFile file = mainDocument == null ? null : FileDocumentManager.getInstance().getFile(mainDocument);
@@ -112,7 +111,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
 
     @Override
-    public void setText(@Nonnull CharSequence text) {
+    public void setText(CharSequence text) {
         if (updateLayers()) {
             resetText(text);
         }
@@ -122,8 +121,8 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
 
     @Override
-    @Nonnull
-    protected TokenProcessor createTokenProcessor(int startIndex, @Nonnull SegmentArrayWithData segments, @Nonnull CharSequence text) {
+    
+    protected TokenProcessor createTokenProcessor(int startIndex, SegmentArrayWithData segments, CharSequence text) {
         MappingSegments mappingSegments = (MappingSegments) segments;
         return new TokenProcessor() {
             final Map<Mapper, LightMapper> docTexts = FactoryMap.create(key -> {
@@ -132,7 +131,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             });
 
             @Override
-            public void addToken(int tokenIndex, int startOffset, int endOffset, int data, @Nonnull IElementType tokenType) {
+            public void addToken(int tokenIndex, int startOffset, int endOffset, int data, IElementType tokenType) {
                 mappingSegments.setElementLight(tokenIndex, startOffset, endOffset, data);
                 Mapper mapper = mappingSegments.getMappingDocument(tokenType);
                 if (mapper != null) {
@@ -154,13 +153,13 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         return false;
     }
 
-    protected boolean updateLayers(@Nonnull DocumentEvent e) {
+    protected boolean updateLayers(DocumentEvent e) {
         return updateLayers();
     }
 
     @SuppressWarnings("NonSynchronizedMethodOverridesSynchronizedMethod")
     @Override
-    public void documentChanged(@Nonnull DocumentEvent e) {
+    public void documentChanged(DocumentEvent e) {
         // do NOT synchronize before updateLayers due to deadlock with PsiLock
         boolean changed = updateLayers(e);
 
@@ -176,14 +175,14 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
 
     @Override
-    public @Nonnull HighlighterIterator createIterator(int startOffset) {
+    public HighlighterIterator createIterator(int startOffset) {
         //noinspection SynchronizeOnThis
         synchronized (this) {
             return new LayeredHighlighterIteratorImpl(startOffset);
         }
     }
 
-    public @Nonnull HighlighterIterator createBaseIterator(int startOffset) {
+    public HighlighterIterator createBaseIterator(int startOffset) {
         return super.createIterator(startOffset);
     }
 
@@ -192,12 +191,12 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         private final Map<LayerDescriptor, Mapper> myLayerBuffers = new HashMap<>();
         private @Nullable Set<LazyLexerEditorHighlighter> myFreezedHighlighters;
 
-        private MappingSegments(@Nonnull DataStorage o) {
+        private MappingSegments(DataStorage o) {
             super(o);
         }
 
         @Nullable
-        Mapper getMappingDocument(@Nonnull IElementType token) {
+        Mapper getMappingDocument(IElementType token) {
             LayerDescriptor descriptor = myTokensToLayer.get(token);
             if (descriptor == null) {
                 return null;
@@ -224,7 +223,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         }
 
         @Override
-        public void replace(int startIndex, int endIndex, @Nonnull SegmentArrayWithData newData) {
+        public void replace(int startIndex, int endIndex, SegmentArrayWithData newData) {
             withFreezedHighlighters(() -> super.replace(startIndex, endIndex, newData));
         }
 
@@ -278,16 +277,16 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         }
 
         @Override
-        protected void replace(int startOffset, @Nonnull SegmentArrayWithData data, int len) {
+        protected void replace(int startOffset, SegmentArrayWithData data, int len) {
             super.replace(startOffset, data, len);
             for (int i = startOffset; i < startOffset + len; i++) {
                 updateMappingForToken(i);
             }
         }
 
-        @Nonnull
-        private MappedRange[] insert(@Nonnull MappedRange[] array,
-                                     @Nonnull MappedRange[] insertArray,
+        
+        private MappedRange[] insert(MappedRange[] array,
+                                     MappedRange[] insertArray,
                                      int startIndex,
                                      int insertLength) {
             MappedRange[] newArray = LayeredLexerEditorHighlighter.reallocateArray(array, mySegmentCount + insertLength);
@@ -298,7 +297,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             return newArray;
         }
 
-        private <T> void removeRange(@Nonnull T[] array, int startIndex, int endIndex) {
+        private <T> void removeRange(T[] array, int startIndex, int endIndex) {
             if (endIndex < mySegmentCount) {
                 System.arraycopy(array, endIndex, array, startIndex, mySegmentCount - endIndex);
             }
@@ -306,7 +305,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         }
 
         @Override
-        public void insert(@Nonnull SegmentArrayWithData segmentArray, int startIndex) {
+        public void insert(SegmentArrayWithData segmentArray, int startIndex) {
             synchronized (LayeredLexerEditorHighlighter.this) {
                 super.insert(segmentArray, startIndex);
 
@@ -357,7 +356,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             }
         }
 
-        private void withFreezedHighlighters(@Nonnull Runnable action) {
+        private void withFreezedHighlighters(Runnable action) {
             if (myFreezedHighlighters != null) {
                 action.run();
                 return;
@@ -383,7 +382,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             }
         }
 
-        private void freezeHighlighter(@Nonnull Mapper mapper) {
+        private void freezeHighlighter(Mapper mapper) {
             if (myFreezedHighlighters != null && myFreezedHighlighters.add(mapper.highlighter)) {
                 mapper.highlighter.beginUpdate();
             }
@@ -396,10 +395,10 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         private final String mySeparator;
         private final Map<IElementType, TextAttributes> myAttributesMap = new HashMap<>();
         private final Map<IElementType, TextAttributesKey[]> myKeysMap = new HashMap<>();
-        private final @Nonnull SyntaxHighlighter mySyntaxHighlighter;
+        private final SyntaxHighlighter mySyntaxHighlighter;
         private final TextAttributesKey myBackground;
 
-        private Mapper(@Nonnull LayerDescriptor descriptor) {
+        private Mapper(LayerDescriptor descriptor) {
             doc = DocumentFactory.getInstance().createDocument("", true);
 
             mySyntaxHighlighter = descriptor.getLayerHighlighter();
@@ -410,7 +409,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             doc.addDocumentListener(highlighter);
         }
 
-        @Nonnull
+        
         TextAttributes getAttributes(IElementType tokenType) {
             TextAttributes attrs = myAttributesMap.get(tokenType);
             if (attrs == null) {
@@ -421,13 +420,13 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             return attrs;
         }
 
-        @Nonnull
+        
         private TextAttributesKey[] getAttributesKeys(IElementType tokenType) {
             return myKeysMap.computeIfAbsent(tokenType, type -> SyntaxHighlighterBase.pack(myBackground, mySyntaxHighlighter.getTokenHighlights(type)));
         }
 
-        @Nonnull
-        HighlighterIterator createIterator(@Nonnull MappedRange mapper, int shift) {
+        
+        HighlighterIterator createIterator(MappedRange mapper, int shift) {
             int rangeStart = mapper.range.getStartOffset();
             int rangeEnd = mapper.range.getEndOffset();
             return new LimitedRangeHighlighterIterator(highlighter.createIterator(rangeStart + shift), rangeStart, rangeEnd);
@@ -453,7 +452,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             myAttributesMap.clear();
         }
 
-        void updateMapping(int tokenIndex, @Nonnull MappedRange oldMapping) {
+        void updateMapping(int tokenIndex, MappedRange oldMapping) {
             CharSequence tokenText = getTokenText(tokenIndex);
 
             int start = oldMapping.range.getStartOffset();
@@ -472,7 +471,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             }
         }
 
-        private @Nonnull MappedRange insertMapping(int tokenIndex, @Nonnull IElementType outerToken) {
+        private MappedRange insertMapping(int tokenIndex, IElementType outerToken) {
             CharSequence tokenText = getTokenText(tokenIndex);
 
             int length = tokenText.length();
@@ -487,12 +486,12 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             return new MappedRange(this, marker, outerToken);
         }
 
-        private @Nonnull CharSequence getTokenText(int tokenIndex) {
+        private CharSequence getTokenText(int tokenIndex) {
             return myText.subSequence(getSegments().getSegmentStart(tokenIndex), getSegments().getSegmentEnd(tokenIndex));
         }
 
         @Nullable
-        MappedRange findPredecessor(int token, @Nonnull MappingSegments segments) {
+        MappedRange findPredecessor(int token, MappingSegments segments) {
             token--;
             while (token >= 0) {
                 MappedRange mappedRange = segments.myRanges[token];
@@ -505,7 +504,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             return null;
         }
 
-        private void removeMapping(@Nonnull MappedRange mapping) {
+        private void removeMapping(MappedRange mapping) {
             RangeMarker rangeMarker = mapping.range;
             if (rangeMarker.isValid()) {
                 int start = rangeMarker.getStartOffset();
@@ -522,7 +521,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         private final Mapper mapper;
         private final IElementType outerToken;
 
-        MappedRange(@Nonnull Mapper mapper, @Nonnull RangeMarker range, @Nonnull IElementType outerToken) {
+        MappedRange(Mapper mapper, RangeMarker range, IElementType outerToken) {
             this.mapper = mapper;
             this.range = range;
             this.outerToken = outerToken;
@@ -536,7 +535,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
 
     @Override
-    public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
+    public void setColorScheme(EditorColorsScheme scheme) {
         super.setColorScheme(scheme);
 
         for (MappedRange mapping : getMappingSegments().myRanges) {
@@ -595,7 +594,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         }
 
         @Override
-        @Nonnull
+        
         public TextAttributesKey[] getTextAttributesKeys() {
             if (myCurrentMapper != null) {
                 return myCurrentMapper.getAttributesKeys(getTokenType());
@@ -605,7 +604,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         }
 
         @Override
-        public @Nonnull SyntaxHighlighter getActiveSyntaxHighlighter() {
+        public SyntaxHighlighter getActiveSyntaxHighlighter() {
             if (myCurrentMapper != null) {
                 return myCurrentMapper.mySyntaxHighlighter;
             }
@@ -670,8 +669,8 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         }
     }
 
-    @Nonnull
-    private static MappedRange[] reallocateArray(@Nonnull MappedRange[] array, int index) {
+    
+    private static MappedRange[] reallocateArray(MappedRange[] array, int index) {
         if (index < array.length) {
             return array;
         }
@@ -689,7 +688,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         private boolean inUpdate;
         private List<DocumentUpdate> updates;
 
-        LazyLexerEditorHighlighter(@Nonnull SyntaxHighlighter highlighter, @Nonnull EditorColorsScheme scheme) {
+        LazyLexerEditorHighlighter(SyntaxHighlighter highlighter, EditorColorsScheme scheme) {
             super(highlighter, scheme);
         }
 
@@ -722,7 +721,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         }
 
         @Override
-        int incrementalUpdate(int eventOffset, int eventOldLength, int eventNewLength, @Nonnull Document document) {
+        int incrementalUpdate(int eventOffset, int eventOldLength, int eventNewLength, Document document) {
             if (inUpdate) {
                 if (!mergeUpdate(updates, eventOffset, eventOldLength, eventNewLength)) {
                     updates.add(new DocumentUpdate(eventOffset, eventOldLength, eventNewLength, document));
@@ -732,7 +731,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             return super.incrementalUpdate(eventOffset, eventOldLength, eventNewLength, document);
         }
 
-        private static boolean mergeUpdate(@Nonnull List<? extends DocumentUpdate> updates, int eventOffset, int eventOldLength, int eventNewLength) {
+        private static boolean mergeUpdate(List<? extends DocumentUpdate> updates, int eventOffset, int eventOldLength, int eventNewLength) {
             if (updates.isEmpty()) {
                 return false;
             }

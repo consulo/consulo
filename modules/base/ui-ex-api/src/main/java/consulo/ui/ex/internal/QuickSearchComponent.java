@@ -2,11 +2,10 @@
 package consulo.ui.ex.internal;
 
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
 
 public interface QuickSearchComponent {
 
-  void registerHint(@Nonnull JBPopup h);
+  void registerHint(JBPopup h);
 
   void unregisterHint();
 }

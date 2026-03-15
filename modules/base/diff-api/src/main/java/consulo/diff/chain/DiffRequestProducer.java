@@ -19,13 +19,12 @@ import consulo.diff.request.DiffRequest;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
 public interface DiffRequestProducer {
-  @Nonnull
+  
   String getName();
 
-  @Nonnull
-  DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
+  
+  DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException;
 }

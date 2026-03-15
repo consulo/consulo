@@ -21,8 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author spleaner
@@ -35,12 +34,12 @@ public interface EditorTabColorProvider {
     ColorValue getEditorTabColor(Project project, VirtualFile file);
 
     @Nullable
-    default ColorValue getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
+    default ColorValue getEditorTabColor(Project project, VirtualFile file, @Nullable FileEditorWindow editorWindow) {
         return getEditorTabColor(project, file);
     }
 
     @Nullable
-    default ColorValue getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    default ColorValue getProjectViewColor(Project project, VirtualFile file) {
         return null;
     }
 }

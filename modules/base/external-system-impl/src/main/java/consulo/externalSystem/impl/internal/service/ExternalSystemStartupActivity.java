@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -39,7 +38,7 @@ import java.util.Objects;
 @ExtensionImpl
 public class ExternalSystemStartupActivity implements BackgroundStartupActivity {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         Application app = project.getApplication();
         app.invokeLater(
             () -> {

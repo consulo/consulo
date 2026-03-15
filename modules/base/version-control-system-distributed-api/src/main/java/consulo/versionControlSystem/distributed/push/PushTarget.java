@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Destination for push action. (Remote  for git or push-path for mercurial).
@@ -30,6 +29,6 @@ public interface PushTarget {
    */
   boolean hasSomethingToPush();
 
-  @Nonnull
+  
   String getPresentation();
 }

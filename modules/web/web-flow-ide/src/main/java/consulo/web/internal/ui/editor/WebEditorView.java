@@ -22,7 +22,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.impl.CodeEditorBase;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,12 +36,12 @@ public class WebEditorView implements Disposable  {
     Disposer.register(this, myLogicalPositionCache);
   }
 
-  @Nonnull
+  
   public LogicalPosition offsetToLogicalPosition(int offset) {
     return myLogicalPositionCache.offsetToLogicalPosition(offset);
   }
 
-  public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+  public int logicalPositionToOffset(LogicalPosition pos) {
     return myLogicalPositionCache.logicalPositionToOffset(pos);
   }
 

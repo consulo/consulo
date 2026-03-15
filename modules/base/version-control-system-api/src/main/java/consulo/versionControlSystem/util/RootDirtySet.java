@@ -11,7 +11,6 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.internal.FilePathHashUtil;
 import it.unimi.dsi.fastutil.ints.*;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -29,18 +28,18 @@ public class RootDirtySet {
     private final Int2IntMap myPathHashCounters = new Int2IntOpenHashMap();
     private boolean myEverythingDirty;
 
-    public RootDirtySet(@Nonnull FilePath root, boolean caseSensitive) {
+    public RootDirtySet(FilePath root, boolean caseSensitive) {
         this(root.getPath(), caseSensitive);
     }
 
-    private RootDirtySet(@Nonnull String root, boolean caseSensitive) {
+    private RootDirtySet(String root, boolean caseSensitive) {
         myRoot = root;
         myCaseSensitive = caseSensitive;
 
         myPaths = caseSensitive ? new HashSet<>() : Sets.newHashSet(HashingStrategy.caseInsensitive());
     }
 
-    public void markDirty(@Nonnull FilePath filePath) {
+    public void markDirty(FilePath filePath) {
         if (myEverythingDirty) {
             return;
         }
@@ -66,7 +65,7 @@ public class RootDirtySet {
         markDirtyRelative(path, startIndex);
     }
 
-    private void markDirtyRelative(@Nonnull String path, int startIndex) {
+    private void markDirtyRelative(String path, int startIndex) {
         if (myPaths.size() > DIRTY_SCOPE_SIZE_THRESHOLD) {
             // Avoid performance issues for specific 'poorly mergeable' dirty path configurations.
             // This should not happen in practice.
@@ -142,7 +141,7 @@ public class RootDirtySet {
         }
     }
 
-    public boolean belongsTo(@Nonnull FilePath filePath) {
+    public boolean belongsTo(FilePath filePath) {
         String path = filePath.getPath();
         int startIndex = getParentPrefixOf(myRoot, path, myCaseSensitive);
         if (startIndex == -1) {
@@ -196,7 +195,7 @@ public class RootDirtySet {
         return myEverythingDirty;
     }
 
-    @Nonnull
+    
     public List<FilePath> collectFilePaths() {
         if (myEverythingDirty) {
             return Collections.singletonList(VcsUtil.getFilePath(myRoot, true));
@@ -205,7 +204,7 @@ public class RootDirtySet {
         return ContainerUtil.map(result, path -> VcsUtil.getFilePath(myRoot + "/" + path, true));
     }
 
-    @Nonnull
+    
     public RootDirtySet copy() {
         RootDirtySet copy = new RootDirtySet(myRoot, myCaseSensitive);
         if (myEverythingDirty) {
@@ -219,7 +218,7 @@ public class RootDirtySet {
         return copy;
     }
 
-    @Nonnull
+    
     public RootDirtySet compact() {
         RootDirtySet copy = new RootDirtySet(myRoot, myCaseSensitive);
         if (myEverythingDirty) {
@@ -233,8 +232,8 @@ public class RootDirtySet {
         return copy;
     }
 
-    @Nonnull
-    private static List<String> removeCommonParents(@Nonnull Collection<String> paths, boolean caseSensitive) {
+    
+    private static List<String> removeCommonParents(Collection<String> paths, boolean caseSensitive) {
         List<String> sortedPaths = new ArrayList<>(paths);
         sortedPaths.sort(null);
 
@@ -253,7 +252,7 @@ public class RootDirtySet {
         return sortedPaths;
     }
 
-    private static int getParentPrefixOf(@Nonnull String ancestor, @Nonnull String path, boolean caseSensitive) {
+    private static int getParentPrefixOf(String ancestor, String path, boolean caseSensitive) {
         if (caseSensitive) {
             if (!path.startsWith(ancestor)) {
                 return -1;

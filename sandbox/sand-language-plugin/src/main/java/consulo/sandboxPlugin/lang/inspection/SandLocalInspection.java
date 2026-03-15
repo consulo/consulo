@@ -26,8 +26,7 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.localize.LocalizeValue;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandClass;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,31 +36,31 @@ import jakarta.annotation.Nullable;
 public class SandLocalInspection extends LocalInspectionTool {
     private static final String SHORT_NAME = getShortName(SandLocalInspection.class);
 
-    @Nonnull
+    
     @Override
     public String getShortName() {
         return SHORT_NAME;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
-    @Nonnull
+    
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new SandLocalInspectionState();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Test Sand Inspection with Settings");
     }
 
-    @Nonnull
+    
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.ERROR;
@@ -73,12 +72,12 @@ public class SandLocalInspection extends LocalInspectionTool {
         return SandLanguage.INSTANCE;
     }
 
-    @Nonnull
+    
     @Override
-    public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder,
+    public PsiElementVisitor buildVisitor(ProblemsHolder holder,
                                           boolean isOnTheFly,
-                                          @Nonnull LocalInspectionToolSession session,
-                                          @Nonnull Object state) {
+                                          LocalInspectionToolSession session,
+                                          Object state) {
         SandLocalInspectionState sandState = (SandLocalInspectionState) state;
         return new PsiElementVisitor() {
             @Override

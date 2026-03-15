@@ -27,21 +27,20 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "FindModal")
 public class FindAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
-        public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getRequiredData(Project.KEY);
             FindUtil.find(project, editor);
         }
 
         @Override
-        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
             return DataManager.getInstance().getDataContext(editor.getComponent()).hasData(Project.KEY);
         }
     }

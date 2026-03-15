@@ -7,7 +7,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -20,7 +19,7 @@ final class ServiceSingleView extends ServiceView {
   private boolean mySelected;
   private final ServiceViewModel.ServiceViewModelListener myListener;
 
-  ServiceSingleView(@Nonnull Project project, @Nonnull ServiceViewModel model, @Nonnull ServiceViewUi ui) {
+  ServiceSingleView(Project project, ServiceViewModel model, ServiceViewUi ui) {
     super(new BorderLayout(), project, model, ui);
     ui.setServiceToolbar(ServiceViewActionProvider.getInstance());
     add(ui.getComponent(), BorderLayout.CENTER);
@@ -29,10 +28,10 @@ final class ServiceSingleView extends ServiceView {
     model.getInvoker().invokeLater(this::updateItem);
   }
 
-  @Nonnull
+  
   @Override
-  Promise<Void> select(@Nonnull Object service,
-                       @Nonnull Class<?> contributorClass) {
+  Promise<Void> select(Object service,
+                       Class<?> contributorClass) {
     ServiceViewItem item = myRef.get();
     if (item == null || !item.getValue().equals(service)) {
       return Promises.rejectedPromise("Service not found");
@@ -43,16 +42,16 @@ final class ServiceSingleView extends ServiceView {
   }
 
   @Override
-  Promise<Void> expand(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+  Promise<Void> expand(Object service, Class<?> contributorClass) {
     return matches(service);
   }
 
   @Override
-  Promise<Void> extract(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+  Promise<Void> extract(Object service, Class<?> contributorClass) {
     return matches(service);
   }
 
-  private Promise<Void> matches(@Nonnull Object service) {
+  private Promise<Void> matches(Object service) {
     ServiceViewItem item = myRef.get();
     return item == null || !item.getValue().equals(service) ? Promises.rejectedPromise("Service not found") : Promises.resolvedPromise();
   }
@@ -71,7 +70,7 @@ final class ServiceSingleView extends ServiceView {
     }
   }
 
-  @Nonnull
+  
   @Override
   List<ServiceViewItem> getSelectedItems() {
     ServiceViewItem item = myRef.get();
@@ -120,7 +119,7 @@ final class ServiceSingleView extends ServiceView {
   }
 
   @Override
-  List<Object> getChildrenSafe(@Nonnull List<Object> valueSubPath, @Nonnull Class<?> contributorClass) {
+  List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass) {
     return Collections.emptyList();
   }
 }

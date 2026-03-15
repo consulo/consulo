@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 
@@ -43,7 +42,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
   private static final int MAX_ALLOWED_TIME = 500;
 
   @Override
-  public void runUnderPerformanceMonitor(@Nullable ComponentManager project, @Nonnull Runnable action) {
+  public void runUnderPerformanceMonitor(@Nullable ComponentManager project, Runnable action) {
     if (!shouldReport() || isUnderDebug() || ApplicationManager.getApplication().isUnitTestMode()) {
       action.run();
       return;
@@ -65,7 +64,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
     return Registry.is("typing.freeze.report.dumps");
   }
 
-  private static void dumpThreads(@Nullable ComponentManager project, @Nonnull IdeaModalityState initialState) {
+  private static void dumpThreads(@Nullable ComponentManager project, IdeaModalityState initialState) {
     ThreadInfo[] infos = ThreadDumper.getThreadInfos();
     String edtTrace = ThreadDumper.dumpEdtStackTrace(infos);
     if (edtTrace.contains("java.lang.ClassLoader.loadClass")) {

@@ -41,8 +41,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,30 +54,30 @@ public abstract class BaseRefactoringAction extends AnAction {
     protected BaseRefactoringAction() {
     }
 
-    protected BaseRefactoringAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected BaseRefactoringAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     protected abstract boolean isAvailableInEditorOnly();
 
-    protected abstract boolean isEnabledOnElements(@Nonnull PsiElement[] elements);
+    protected abstract boolean isEnabledOnElements(PsiElement[] elements);
 
     protected boolean isAvailableOnElementInEditorAndFile(
-        @Nonnull PsiElement element,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull DataContext context
+        PsiElement element,
+        Editor editor,
+        PsiFile file,
+        DataContext context
     ) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }
 
-    public boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
+    public boolean hasAvailableHandler(DataContext dataContext) {
         RefactoringActionHandler handler = getHandler(dataContext);
         if (handler != null) {
             if (handler instanceof ContextAwareActionHandler contextAwareActionHandler) {
@@ -94,11 +93,11 @@ public abstract class BaseRefactoringAction extends AnAction {
     }
 
     @Nullable
-    protected abstract RefactoringActionHandler getHandler(@Nonnull DataContext dataContext);
+    protected abstract RefactoringActionHandler getHandler(DataContext dataContext);
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = e.getRequiredData(Project.KEY);
         PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -164,7 +163,7 @@ public abstract class BaseRefactoringAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true);
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
@@ -254,7 +253,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         return caret;
     }
 
-    private static void disableAction(@Nonnull AnActionEvent e) {
+    private static void disableAction(AnActionEvent e) {
         e.getPresentation().setEnabled(false);
     }
 
@@ -266,7 +265,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         return true;
     }
 
-    @Nonnull
+    
     public static PsiElement[] getPsiElementArray(DataContext dataContext) {
         PsiElement[] psiElements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
         if (psiElements == null || psiElements.length == 0) {

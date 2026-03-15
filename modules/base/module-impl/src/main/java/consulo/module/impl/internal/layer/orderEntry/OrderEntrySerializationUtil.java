@@ -24,8 +24,7 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -40,12 +39,12 @@ public class OrderEntrySerializationUtil {
   public static final String ORDER_ENTRY_TYPE_ATTR = "type";
 
   @Nullable
-  public static OrderEntryType<?> findOrderEntryType(@Nonnull String id) {
+  public static OrderEntryType<?> findOrderEntryType(String id) {
     return Application.get().getExtensionPoint(OrderEntryType.class).getOrBuildCache(ourOrderEntryTypeKey).get(id);
   }
 
   @Nullable
-  public static OrderEntry loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) {
+  public static OrderEntry loadOrderEntry(Element element, ModuleRootLayer moduleRootLayer) {
     String type = element.getAttributeValue(ORDER_ENTRY_TYPE_ATTR);
     if (type == null) {
       return null;
@@ -64,8 +63,8 @@ public class OrderEntrySerializationUtil {
     }
   }
 
-  @Nonnull
-  public static Element storeOrderEntry(@Nonnull OrderEntry entry) {
+  
+  public static Element storeOrderEntry(OrderEntry entry) {
     OrderEntryType provider = entry.getType();
 
     Element element = new Element(ORDER_ENTRY_ELEMENT_NAME);

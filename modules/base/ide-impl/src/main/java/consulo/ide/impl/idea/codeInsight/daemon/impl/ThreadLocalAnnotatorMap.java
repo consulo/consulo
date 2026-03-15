@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.application.ApplicationManager;
 import consulo.component.internal.inject.InjectingContainer;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,8 +28,8 @@ import java.util.List;
  */
 abstract class ThreadLocalAnnotatorMap<K, V> {
   private volatile int version;
-  @Nonnull
-  public abstract Collection<V> initialValue(@Nonnull K key);
+  
+  public abstract Collection<V> initialValue(K key);
 
   private static class VersionedMap<K, V> extends HashMap<K, List<V>> {
     private final int version;
@@ -48,8 +47,8 @@ abstract class ThreadLocalAnnotatorMap<K, V> {
   };
 
   @SuppressWarnings("unchecked")
-  @Nonnull
-  private List<V> cloneTemplates(@Nonnull Collection<V> templates) {
+  
+  private List<V> cloneTemplates(Collection<V> templates) {
     List<V> result = new ArrayList<>(templates.size());
     InjectingContainer container = ApplicationManager.getApplication().getInjectingContainer();
     for (V template : templates) {
@@ -59,8 +58,8 @@ abstract class ThreadLocalAnnotatorMap<K, V> {
     return result;
   }
 
-  @Nonnull
-  public List<V> get(@Nonnull K key) {
+  
+  public List<V> get(K key) {
     VersionedMap<K, V> map = CACHE.get();
     if (version != map.version) {
       CACHE.remove();

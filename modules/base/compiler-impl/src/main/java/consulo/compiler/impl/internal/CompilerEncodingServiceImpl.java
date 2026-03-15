@@ -31,8 +31,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -45,12 +44,12 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 public class CompilerEncodingServiceImpl extends CompilerEncodingService {
-    @Nonnull
+    
     private final Project myProject;
     private final CachedValue<Map<Module, Set<Charset>>> myModuleFileEncodings;
 
     @Inject
-    public CompilerEncodingServiceImpl(@Nonnull Project project) {
+    public CompilerEncodingServiceImpl(Project project) {
         myProject = project;
         myModuleFileEncodings = CachedValuesManager.getManager(project).createCachedValue(
             () -> {
@@ -127,14 +126,14 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
 
     @Nullable
     @Override
-    public Charset getPreferredModuleEncoding(@Nonnull Module module) {
+    public Charset getPreferredModuleEncoding(Module module) {
         Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
         return ContainerUtil.getFirstItem(encodings, EncodingProjectManager.getInstance(myProject).getDefaultCharset());
     }
 
-    @Nonnull
+    
     @Override
-    public Collection<Charset> getAllModuleEncodings(@Nonnull Module module) {
+    public Collection<Charset> getAllModuleEncodings(Module module) {
         Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
         if (encodings != null) {
             return encodings;

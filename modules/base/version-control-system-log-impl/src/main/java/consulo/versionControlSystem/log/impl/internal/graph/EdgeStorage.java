@@ -19,8 +19,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.log.graph.GraphEdgeType;
 import consulo.versionControlSystem.log.impl.internal.util.IntIntMultiMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class EdgeStorage {
 
   public static final int NULL_ID = MIN_NODE_ID;
 
-  @Nonnull
+  
   private final IntIntMultiMap myEdges = new IntIntMultiMap();
 
   public EdgeStorage() {
@@ -81,7 +80,7 @@ public class EdgeStorage {
     return (type << EDGE_BITS_OFFSET) | (COMPRESSED_NODE_ID_MASK & nodeId);
   }
 
-  @Nonnull
+  
   private static GraphEdgeType retrievedType(int compressEdge) {
     int type = compressEdge >>> EDGE_BITS_OFFSET;
     return GraphEdgeType.values()[type];

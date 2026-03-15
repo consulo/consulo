@@ -8,7 +8,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -51,7 +50,7 @@ public class IntToIntBtree {
   private final int myCachedMappingsSize;
   private static final int UNDEFINED_ADDRESS = -1;
 
-  public IntToIntBtree(int pageSize, @Nonnull File file, @Nonnull PagedFileStorage.StorageLockContext storageLockContext, boolean initial) throws IOException {
+  public IntToIntBtree(int pageSize, File file, PagedFileStorage.StorageLockContext storageLockContext, boolean initial) throws IOException {
     this.pageSize = pageSize;
 
     if (initial) {
@@ -107,7 +106,7 @@ public class IntToIntBtree {
   }
 
   // return total number of bytes needed for storing information
-  public int persistVars(@Nonnull BtreeDataStorage storage, boolean toDisk) {
+  public int persistVars(BtreeDataStorage storage, boolean toDisk) {
     int i = storage.persistInt(0, height | (hasZeroKey ? HAS_ZERO_KEY_MASK : 0), toDisk);
     hasZeroKey = (i & HAS_ZERO_KEY_MASK) != 0;
     height = i & ~HAS_ZERO_KEY_MASK;
@@ -174,7 +173,7 @@ public class IntToIntBtree {
   private int myOptimizedInserts;
   private boolean myCanUseLastKey;
 
-  public boolean get(int key, @Nonnull int[] result) {
+  public boolean get(int key, int[] result) {
     if (key == 0) {
       if (hasZeroKey) {
         result[0] = zeroKeyValue;
@@ -1162,7 +1161,7 @@ public class IntToIntBtree {
     public abstract boolean process(int key, int value) throws IOException;
   }
 
-  public boolean processMappings(@Nonnull KeyValueProcessor processor) throws IOException {
+  public boolean processMappings(KeyValueProcessor processor) throws IOException {
     doFlush();
 
     if (hasZeroKey) {
@@ -1175,7 +1174,7 @@ public class IntToIntBtree {
     return processLeafPages(root.getNodeView(), processor);
   }
 
-  private boolean processLeafPages(@Nonnull BtreeIndexNodeView node, @Nonnull KeyValueProcessor processor) throws IOException {
+  private boolean processLeafPages(BtreeIndexNodeView node, KeyValueProcessor processor) throws IOException {
     if (node.isIndexLeaf()) {
       return node.processMappings(processor);
     }

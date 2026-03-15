@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +28,7 @@ import java.util.Iterator;
 public abstract class DistinctRootsCollection<T> implements Collection<T> {
   private final Collection<T> myCollection = new ArrayList<T>();
 
-  protected abstract boolean isAncestor(@Nonnull T ancestor, @Nonnull T t);
+  protected abstract boolean isAncestor(T ancestor, T t);
 
   public DistinctRootsCollection() {
   }

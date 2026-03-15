@@ -20,8 +20,7 @@ import consulo.usage.UsageGroup;
 import consulo.usage.UsageTarget;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,11 +32,11 @@ public abstract class SingleParentUsageGroupingRule implements UsageGroupingRule
      * @return a group a specific usage should be placed into, or null, if this rule doesn't apply to this kind of usages.
      */
     @Nullable
-    protected abstract UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
+    protected abstract UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets);
 
-    @Nonnull
+    
     @Override
-    public final List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+    public final List<UsageGroup> getParentGroupsFor(Usage usage, UsageTarget[] targets) {
         return ContainerUtil.createMaybeSingletonList(getParentGroupFor(usage, targets));
     }
 
@@ -45,7 +44,7 @@ public abstract class SingleParentUsageGroupingRule implements UsageGroupingRule
      * @deprecated override {@link #getParentGroupFor(Usage, UsageTarget[])} instead
      */
     @Override
-    public UsageGroup groupUsage(@Nonnull Usage usage) {
+    public UsageGroup groupUsage(Usage usage) {
         return getParentGroupFor(usage, UsageTarget.EMPTY_ARRAY);
     }
 }

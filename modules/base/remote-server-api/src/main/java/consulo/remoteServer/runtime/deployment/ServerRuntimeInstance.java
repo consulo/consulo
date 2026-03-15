@@ -4,45 +4,43 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.runtime.Deployment;
 import consulo.remoteServer.runtime.RemoteOperationCallback;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class ServerRuntimeInstance<D extends DeploymentConfiguration> {
 
-    public abstract void deploy(@Nonnull DeploymentTask<D> task, @Nonnull DeploymentLogManager logManager,
-                                @Nonnull DeploymentOperationCallback callback);
+    public abstract void deploy(DeploymentTask<D> task, DeploymentLogManager logManager,
+                                DeploymentOperationCallback callback);
 
-    public abstract void computeDeployments(@Nonnull ComputeDeploymentsCallback callback);
+    public abstract void computeDeployments(ComputeDeploymentsCallback callback);
 
-    @Nonnull
-    public String getDeploymentName(@Nonnull DeploymentSource source, @Nonnull D configuration) {
+    
+    public String getDeploymentName(DeploymentSource source, D configuration) {
         return source.getPresentableName().get();
     }
 
-    @Nonnull
-    @Nls
-    public String getRuntimeDeploymentName(@Nonnull DeploymentRuntime deploymentRuntime,
-                                           @Nonnull DeploymentSource source, @Nonnull D configuration) {
+    
+    
+    public String getRuntimeDeploymentName(DeploymentRuntime deploymentRuntime,
+                                           DeploymentSource source, D configuration) {
         return getDeploymentName(source, configuration);
     }
 
     public abstract void disconnect();
 
     public interface DeploymentOperationCallback extends RemoteOperationCallback {
-        default void started(@Nonnull DeploymentRuntime deploymentRuntime) {
+        default void started(DeploymentRuntime deploymentRuntime) {
             //
         }
 
-        Deployment succeeded(@Nonnull DeploymentRuntime deploymentRuntime);
+        Deployment succeeded(DeploymentRuntime deploymentRuntime);
     }
 
     public interface ComputeDeploymentsCallback extends RemoteOperationCallback {
-        void addDeployment(@Nonnull String deploymentName);
+        void addDeployment(String deploymentName);
 
-        void addDeployment(@Nonnull String deploymentName, @Nullable DeploymentRuntime deploymentRuntime);
+        void addDeployment(String deploymentName, @Nullable DeploymentRuntime deploymentRuntime);
 
-        Deployment addDeployment(@Nonnull String deploymentName,
+        Deployment addDeployment(String deploymentName,
                                  @Nullable DeploymentRuntime deploymentRuntime,
                                  @Nullable DeploymentStatus deploymentStatus,
                                  @Nullable String deploymentStatusText);

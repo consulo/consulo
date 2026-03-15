@@ -5,7 +5,6 @@ import consulo.logging.Logger;
 import consulo.remoteServer.runtime.RemoteOperationCallback;
 import consulo.remoteServer.runtime.ServerTaskExecutor;
 import consulo.util.lang.function.ThrowableRunnable;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ExecutorService;
 
@@ -21,17 +20,17 @@ public class ServerTaskExecutorImpl implements ServerTaskExecutor {
     }
 
     @Override
-    public void execute(@Nonnull Runnable command) {
+    public void execute(Runnable command) {
         myTaskExecutor.execute(command);
     }
 
     @Override
-    public void submit(@Nonnull Runnable command) {
+    public void submit(Runnable command) {
         execute(command);
     }
 
     @Override
-    public void submit(@Nonnull ThrowableRunnable<?> command, @Nonnull RemoteOperationCallback callback) {
+    public void submit(ThrowableRunnable<?> command, RemoteOperationCallback callback) {
         execute(() -> {
             try {
                 command.run();

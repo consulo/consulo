@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.collection.Sets;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -63,7 +62,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
     }
 
     @Override
-    public void removeLibrary(@Nonnull Library library) {
+    public void removeLibrary(Library library) {
         if (getLibrariesModifiableModel().getLibraryByName(library.getName()) == null) {
             return;
         }
@@ -86,18 +85,18 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
     }
 
     @Override
-    @Nonnull
+    
     public Iterator<Library> getLibraryIterator() {
         return getLibrariesModifiableModel().getLibraryIterator();
     }
 
     @Override
-    public Library getLibraryByName(@Nonnull String name) {
+    public Library getLibraryByName(String name) {
         return getLibrariesModifiableModel().getLibraryByName(name);
     }
 
     @Override
-    @Nonnull
+    
     public Library[] getLibraries() {
         return getLibrariesModifiableModel().getLibraries();
     }

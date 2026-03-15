@@ -21,7 +21,7 @@ import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.component.persist.scheme.SchemeProcessor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 

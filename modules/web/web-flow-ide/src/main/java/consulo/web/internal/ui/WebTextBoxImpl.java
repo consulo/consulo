@@ -22,8 +22,7 @@ import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -54,7 +53,7 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     }
 
     @Override
-    @Nonnull
+    
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
@@ -86,9 +85,9 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         return true;
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addValidator(@Nonnull Validator<String> validator) {
+    public Disposable addValidator(Validator<String> validator) {
         return () -> {
         };
     }

@@ -39,8 +39,7 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.ThrowableRunnable;
 import gnu.trove.TIntHashSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.*;
@@ -60,15 +59,15 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     private static final ConcurrentIntObjectMap<Boolean> ourInvalidatedSessionIds = IntMaps.newConcurrentIntObjectHashMap();
 
     @TestOnly
-    public VfsAwareMapIndexStorage(@Nonnull File storageFile, @Nonnull KeyDescriptor<Key> keyDescriptor, @Nonnull DataExternalizer<Value> valueExternalizer, int cacheSize, boolean readOnly)
+    public VfsAwareMapIndexStorage(File storageFile, KeyDescriptor<Key> keyDescriptor, DataExternalizer<Value> valueExternalizer, int cacheSize, boolean readOnly)
         throws IOException {
         super(storageFile, keyDescriptor, valueExternalizer, cacheSize, false, true, readOnly, null);
         myBuildKeyHashToVirtualFileMapping = false;
     }
 
-    public VfsAwareMapIndexStorage(@Nonnull File storageFile,
-                                   @Nonnull KeyDescriptor<Key> keyDescriptor,
-                                   @Nonnull DataExternalizer<Value> valueExternalizer,
+    public VfsAwareMapIndexStorage(File storageFile,
+                                   KeyDescriptor<Key> keyDescriptor,
+                                   DataExternalizer<Value> valueExternalizer,
                                    int cacheSize,
                                    boolean keyIsUniqueForIndexedFile,
                                    boolean buildKeyHashToVirtualFileMapping) throws IOException {
@@ -88,7 +87,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         ProgressManager.checkCanceled();
     }
 
-    @Nonnull
+    
     private File getProjectFile() {
         return new File(myBaseStorageFile.getPath() + ".project");
     }
@@ -152,7 +151,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     }
 
     @Override
-    public boolean processKeys(@Nonnull Predicate<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
+    public boolean processKeys(Predicate<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
         l.lock();
         try {
             myCache.clear(); // this will ensure that all new keys are made into the map
@@ -228,8 +227,8 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         }
     }
 
-    @Nonnull
-    private static TIntHashSet loadHashedIds(@Nonnull File fileWithCaches) throws IOException {
+    
+    private static TIntHashSet loadHashedIds(File fileWithCaches) throws IOException {
         try (DataInputStream inputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(fileWithCaches)))) {
             int capacity = DataInputOutputUtil.readINT(inputStream);
             TIntHashSet hashMaskSet = new TIntHashSet(capacity);
@@ -241,7 +240,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         }
     }
 
-    private void saveHashedIds(@Nonnull TIntHashSet hashMaskSet, int largestId, @Nonnull SearchScope scope) {
+    private void saveHashedIds(TIntHashSet hashMaskSet, int largestId, SearchScope scope) {
         File newFileWithCaches = getSavedProjectFileValueIds(largestId, scope);
         assert newFileWithCaches != null;
 
@@ -289,7 +288,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     }
 
     @Nullable
-    private File getSavedProjectFileValueIds(int id, @Nonnull SearchScope scope) {
+    private File getSavedProjectFileValueIds(int id, SearchScope scope) {
         ProjectAwareSearchScope projectAwareSearchScope = (ProjectAwareSearchScope) scope;
         Project project = projectAwareSearchScope.getProject();
         if (project == null) {
@@ -320,13 +319,13 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         private static final IntPairInArrayKeyDescriptor INSTANCE = new IntPairInArrayKeyDescriptor();
 
         @Override
-        public void save(@Nonnull DataOutput out, int[] value) throws IOException {
+        public void save(DataOutput out, int[] value) throws IOException {
             DataInputOutputUtil.writeINT(out, value[0]);
             DataInputOutputUtil.writeINT(out, value[1]);
         }
 
         @Override
-        public int[] read(@Nonnull DataInput in) throws IOException {
+        public int[] read(DataInput in) throws IOException {
             return new int[]{DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in)};
         }
 

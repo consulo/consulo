@@ -20,13 +20,12 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Iterator;
 import java.util.function.Supplier;
 
 public interface Externalizer<T> {
-  @NonNls
+  
   String VALUE_ATTRIBUTE = "value";
   Externalizer<String> STRING = new BaseExternalizer<String>() {
     @Override

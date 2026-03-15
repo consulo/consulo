@@ -74,8 +74,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -95,7 +94,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     private static final Key<Font> CUSTOM_FONT_KEY = Key.create("CustomLookupElementFont");
 
     private final LookupOffsets myOffsets;
-    @Nonnull
+    
     private final Project myProject;
     private final Editor myEditor;
     private final Object myArrangerLock = new Object();
@@ -103,11 +102,11 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     private final JBList myList = new JBList<LookupElement>(new CollectionListModel<>()) {
         // 'myList' is focused when "Screen Reader" mode is enabled
         @Override
-        protected void processKeyEvent(@Nonnull KeyEvent e) {
+        protected void processKeyEvent(KeyEvent e) {
             myEditor.getContentComponent().dispatchEvent(e); // let the editor handle actions properly for the lookup list
         }
 
-        @Nonnull
+        
         @Override
         protected ExpandableItemsHandler<Integer> createExpandableItemsHandler() {
             return new CompletionExtender(this);
@@ -143,7 +142,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     private final EmptyLookupItem myDummyItem = new EmptyLookupItem(CommonLocalize.treeNodeLoading().get(), true);
 
     @RequiredUIAccess
-    public LookupImpl(@Nonnull Project project, Editor editor, @Nonnull LookupArranger arranger) {
+    public LookupImpl(Project project, Editor editor, LookupArranger arranger) {
         super(new JPanel(new BorderLayout()));
         setForceShowAsPopup(true);
         setCancelOnClickOutside(false);
@@ -373,7 +372,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
-    @Nonnull
+    
     public String getAdditionalPrefix() {
         return myOffsets.getAdditionalPrefix();
     }
@@ -561,15 +560,15 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         return p;
     }
 
-    @Nonnull
+    
     @Override
-    public String itemPattern(@Nonnull LookupElement element) {
+    public String itemPattern(LookupElement element) {
         return element instanceof EmptyLookupItem ? "" : myPresentableArranger.itemPattern(element);
     }
 
     @Override
-    @Nonnull
-    public PrefixMatcher itemMatcher(@Nonnull LookupElement item) {
+    
+    public PrefixMatcher itemMatcher(LookupElement item) {
         return item instanceof EmptyLookupItem ? new CamelHumpMatcher("") : myPresentableArranger.itemMatcher(item);
     }
 
@@ -912,9 +911,9 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     private void delegateActionToEditor(
-        @Nonnull String actionID,
+        String actionID,
         @Nullable Supplier<? extends AnAction> delegateActionSupplier,
-        @Nonnull AnActionEvent actionEvent
+        AnActionEvent actionEvent
     ) {
         AnAction action = ActionManager.getInstance().getAction(actionID);
         DumbAwareAction.create(e -> ActionImplUtil.performActionDumbAware(
@@ -969,7 +968,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             new DocumentListener() {
                 @Override
                 @RequiredUIAccess
-                public void documentChanged(@Nonnull DocumentEvent e) {
+                public void documentChanged(DocumentEvent e) {
                     if (myGuardedChanges == 0 && !myFinishing) {
                         hideLookup(false);
                     }
@@ -981,7 +980,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         EditorMouseListener mouseListener = new EditorMouseListener() {
             @Override
             @RequiredUIAccess
-            public void mouseClicked(@Nonnull EditorMouseEvent e) {
+            public void mouseClicked(EditorMouseEvent e) {
                 e.consume();
                 hideLookup(false);
             }
@@ -991,7 +990,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             new CaretListener() {
                 @Override
                 @RequiredUIAccess
-                public void caretPositionChanged(@Nonnull CaretEvent e) {
+                public void caretPositionChanged(CaretEvent e) {
                     if (myGuardedChanges == 0 && !myFinishing) {
                         hideLookup(false);
                     }
@@ -1003,7 +1002,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             new SelectionListener() {
                 @Override
                 @RequiredUIAccess
-                public void selectionChanged(@Nonnull SelectionEvent e) {
+                public void selectionChanged(SelectionEvent e) {
                     if (myGuardedChanges == 0 && !myFinishing) {
                         hideLookup(false);
                     }
@@ -1046,7 +1045,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             private LookupElement oldItem = null;
 
             @Override
-            public void valueChanged(@Nonnull ListSelectionEvent e) {
+            public void valueChanged(ListSelectionEvent e) {
                 if (!myUpdating) {
                     LookupElement item = getCurrentItem();
                     fireCurrentItemChanged(oldItem, item);
@@ -1058,7 +1057,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         new ClickListener() {
             @Override
             @RequiredUIAccess
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 setFocusDegree(LookupFocusDegree.FOCUSED);
                 markSelectionTouched();
 
@@ -1253,7 +1252,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
-    @Nonnull
+    
     public Editor getEditor() {
         DocumentWindow documentWindow = getInjectedDocument(myProject, myEditor, myEditor.getCaretModel().getOffset());
         if (documentWindow != null) {
@@ -1264,12 +1263,12 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
-    @Nonnull
+    
     public Editor getTopLevelEditor() {
         return myEditor;
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return myProject;
@@ -1407,7 +1406,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
 
     @Override
     @RequiredUIAccess
-    public void addAdvertisement(@Nonnull String text, @Nullable Image icon) {
+    public void addAdvertisement(String text, @Nullable Image icon) {
         if (!containsDummyIdentifier(text)) {
             myAdComponent.addAdvertisement(text, icon);
             requestResize();
@@ -1459,9 +1458,9 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
-    @Nonnull
+    
     public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(
-        @Nonnull Iterable<LookupElement> items,
+        Iterable<LookupElement> items,
         boolean hideSingleValued
     ) {
         return withLock(() -> myPresentableArranger.getRelevanceObjects(items, hideSingleValued));

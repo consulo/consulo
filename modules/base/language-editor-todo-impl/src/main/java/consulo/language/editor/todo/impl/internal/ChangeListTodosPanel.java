@@ -27,7 +27,6 @@ import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposer;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -39,7 +38,7 @@ public abstract class ChangeListTodosPanel extends TodoPanel {
     private final Alarm myAlarm;
 
     @RequiredUIAccess
-    public ChangeListTodosPanel(@Nonnull Project project, TodoPanelSettings settings, Content content) {
+    public ChangeListTodosPanel(Project project, TodoPanelSettings settings, Content content) {
         super(project, settings, false, content);
         ChangeListManager changeListManager = ChangeListManager.getInstance(project);
         MyChangeListManagerListener myChangeListManagerListener = new MyChangeListManagerListener();

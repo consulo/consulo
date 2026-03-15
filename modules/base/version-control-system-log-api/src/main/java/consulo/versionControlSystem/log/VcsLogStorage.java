@@ -16,8 +16,7 @@
 package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -36,7 +35,7 @@ public interface VcsLogStorage {
      * @param root root of the repository for the commit
      * @return a commit index
      */
-    int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root);
+    int getCommitIndex(Hash hash, VirtualFile root);
 
     /**
      * Returns a commit for a specified index or null if this index does not correspond to any commit.
@@ -53,7 +52,7 @@ public interface VcsLogStorage {
      * @return matching commit or null if no commit matches the given condition
      */
     @Nullable
-    CommitId findCommitId(@Nonnull Predicate<CommitId> condition);
+    CommitId findCommitId(Predicate<CommitId> condition);
 
     /**
      * Returns an integer index that is a unique identifier for a reference.
@@ -61,7 +60,7 @@ public interface VcsLogStorage {
      * @param ref reference
      * @return a reference index
      */
-    int getRefIndex(@Nonnull VcsRef ref);
+    int getRefIndex(VcsRef ref);
 
     /**
      * Returns a reference for a specified index or null if this index does not correspond to any reference.

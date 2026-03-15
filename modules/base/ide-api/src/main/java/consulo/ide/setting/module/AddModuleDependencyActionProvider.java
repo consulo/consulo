@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,19 +34,19 @@ import jakarta.annotation.Nonnull;
 public interface AddModuleDependencyActionProvider<T, C extends AddModuleDependencyContext<T>> {
   ExtensionList<AddModuleDependencyActionProvider, Application> EP = ExtensionList.of(AddModuleDependencyActionProvider.class);
 
-  C createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull ModulesConfigurator modulesConfigurator, @Nonnull LibrariesConfigurator librariesConfigurator);
+  C createContext(ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator);
 
-  default boolean isAvailable(@Nonnull C context) {
+  default boolean isAvailable(C context) {
     return !context.isEmpty();
   }
 
-  @Nonnull
-  LocalizeValue getActionName(@Nonnull ModuleRootLayer layer);
+  
+  LocalizeValue getActionName(ModuleRootLayer layer);
 
-  @Nonnull
-  Image getIcon(@Nonnull ModuleRootLayer layer);
+  
+  Image getIcon(ModuleRootLayer layer);
 
-  @Nonnull
+  
   @RequiredUIAccess
-  AsyncResult<T> invoke(@Nonnull C context);
+  AsyncResult<T> invoke(C context);
 }

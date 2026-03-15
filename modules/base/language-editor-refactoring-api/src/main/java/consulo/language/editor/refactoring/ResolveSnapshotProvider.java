@@ -26,8 +26,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko
@@ -39,7 +38,7 @@ public abstract class ResolveSnapshotProvider implements LanguageExtension {
           ExtensionPointCacheKey.create("ResolveSnapshotProvider", LanguageOneToOne.build());
 
   @Nullable
-  public static ResolveSnapshotProvider forLanguage(@Nonnull Language language) {
+  public static ResolveSnapshotProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(ResolveSnapshotProvider.class).getOrBuildCache(KEY).get(language);
   }
 

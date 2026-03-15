@@ -17,7 +17,6 @@ package consulo.localHistory.impl.internal.ui.view;
 
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,7 +32,7 @@ public class ExcludingTraversalPolicy extends FocusTraversalPolicy {
     this(KeyboardFocusManager.getCurrentKeyboardFocusManager().getDefaultFocusTraversalPolicy(), excludes);
   }
 
-  public ExcludingTraversalPolicy(@Nonnull FocusTraversalPolicy wrappee, Component... excludes) {
+  public ExcludingTraversalPolicy(FocusTraversalPolicy wrappee, Component... excludes) {
     myWrappee = wrappee;
     Collections.addAll(myExcludes, excludes);
   }

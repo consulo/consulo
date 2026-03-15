@@ -5,8 +5,7 @@ import consulo.util.io.FileAttributes;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.virtualFileSystem.impl.internal.FileNameCache;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ChildInfoImpl implements ChildInfo {
   public static final int UNKNOWN_ID_YET = -1;
@@ -28,7 +27,7 @@ public class ChildInfoImpl implements ChildInfo {
   private final long length;
   private final long lastModified;
 
-  public ChildInfoImpl(int id, @Nonnull String name, @Nullable FileAttributes attributes, @Nullable ChildInfo[] children, @Nullable String symLinkTarget) {
+  public ChildInfoImpl(int id, String name, @Nullable FileAttributes attributes, @Nullable ChildInfo[] children, @Nullable String symLinkTarget) {
     this(id, FileNameCache.storeName(name), attributes, children, symLinkTarget);
   }
 
@@ -57,7 +56,7 @@ public class ChildInfoImpl implements ChildInfo {
     return id;
   }
 
-  @Nonnull
+  
   @Override
   public CharSequence getName() {
     return FileNameCache.getVFileName(nameId);

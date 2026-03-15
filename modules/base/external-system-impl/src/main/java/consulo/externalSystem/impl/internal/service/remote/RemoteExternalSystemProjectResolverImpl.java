@@ -6,8 +6,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.externalSystem.service.project.ProjectData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -23,14 +22,14 @@ public class RemoteExternalSystemProjectResolverImpl<S extends ExternalSystemExe
 
   private final ExternalSystemProjectResolver<S> myDelegate;
 
-  public RemoteExternalSystemProjectResolverImpl(@Nonnull ExternalSystemProjectResolver<S> delegate) {
+  public RemoteExternalSystemProjectResolverImpl(ExternalSystemProjectResolver<S> delegate) {
     myDelegate = delegate;
   }
 
   @Nullable
   @Override
-  public DataNode<ProjectData> resolveProjectInfo(@Nonnull final ExternalSystemTaskId id,
-                                                  @Nonnull final String projectPath,
+  public DataNode<ProjectData> resolveProjectInfo(final ExternalSystemTaskId id,
+                                                  final String projectPath,
                                                   final boolean isPreviewMode,
                                                   ExternalSystemExecutionSettings settings)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException
@@ -45,7 +44,7 @@ public class RemoteExternalSystemProjectResolverImpl<S extends ExternalSystemExe
   }
 
   @Override
-  public boolean cancelTask(@Nonnull ExternalSystemTaskId id)
+  public boolean cancelTask(ExternalSystemTaskId id)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException {
     return myDelegate.cancelTask(id, getNotificationListener());
   }

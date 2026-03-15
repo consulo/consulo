@@ -15,8 +15,7 @@ import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
@@ -27,7 +26,7 @@ public class TemplateDataLanguagePusher implements FileStringPropertyPusher<Lang
 
   public static final Key<Language> KEY = Key.create("TEMPLATE_DATA_LANGUAGE");
 
-  @Nonnull
+  
   @Override
   public Key<Language> getFileDataKey() {
     return KEY;
@@ -38,7 +37,7 @@ public class TemplateDataLanguagePusher implements FileStringPropertyPusher<Lang
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public Language getDefaultValue() {
     return Language.ANY;
@@ -46,41 +45,41 @@ public class TemplateDataLanguagePusher implements FileStringPropertyPusher<Lang
 
   @Nullable
   @Override
-  public Language getImmediateValue(@Nonnull Project project, @Nullable VirtualFile file) {
+  public Language getImmediateValue(Project project, @Nullable VirtualFile file) {
     return TemplateDataLanguageMappings.getInstance(project).getImmediateMapping(file);
   }
 
   @Nullable
   @Override
-  public Language getImmediateValue(@Nonnull Module module) {
+  public Language getImmediateValue(Module module) {
     return null;
   }
 
   @Override
-  public boolean acceptsFile(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public boolean acceptsFile(VirtualFile file, Project project) {
     FileType type = file.getFileType();
     return type instanceof LanguageFileType && ((LanguageFileType)type).getLanguage() instanceof TemplateLanguage;
   }
 
   @Override
-  public boolean acceptsDirectory(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public boolean acceptsDirectory(VirtualFile file, Project project) {
     return true;
   }
 
   private static final FileAttribute PERSISTENCE = new FileAttribute("template_language", 2, true);
 
   @Override
-  @Nonnull
+  
   public FileAttribute getAttribute() {
     return PERSISTENCE;
   }
 
   @Override
-  public String toString(@Nonnull Language property) throws IOException {
+  public String toString(Language property) throws IOException {
     return property.getID();
   }
 
-  @Nonnull
+  
   @Override
   public Language fromString(String val) throws IOException {
     Language language = Language.findLanguageByID(val);
@@ -88,7 +87,7 @@ public class TemplateDataLanguagePusher implements FileStringPropertyPusher<Lang
   }
 
   @Override
-  public void propertyChanged(@Nonnull Project project, @Nonnull VirtualFile fileOrDir, @Nonnull Language actualProperty) {
+  public void propertyChanged(Project project, VirtualFile fileOrDir, Language actualProperty) {
     PushedFilePropertiesUpdater.getInstance(project).filePropertiesChanged(fileOrDir, file -> acceptsFile(file, project));
   }
 }

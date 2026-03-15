@@ -18,8 +18,7 @@ package consulo.ide.impl.idea.openapi.wm.impl;
 import consulo.logging.Logger;
 import consulo.ui.ex.Painter;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +36,7 @@ final class PaintersHelper implements Painter.Listener {
 
     private final JComponent myRootComponent;
 
-    public PaintersHelper(@Nonnull JComponent component) {
+    public PaintersHelper(JComponent component) {
         myRootComponent = component;
     }
 
@@ -54,13 +53,13 @@ final class PaintersHelper implements Painter.Listener {
         return false;
     }
 
-    public void addPainter(@Nonnull Painter painter, @Nullable Component component) {
+    public void addPainter(Painter painter, @Nullable Component component) {
         myPainters.add(painter);
         myPainter2Component.put(painter, component == null ? myRootComponent : component);
         painter.addListener(this);
     }
 
-    public void removePainter(@Nonnull Painter painter) {
+    public void removePainter(Painter painter) {
         painter.removeListener(this);
         myPainters.remove(painter);
         myPainter2Component.remove(painter);
@@ -104,8 +103,8 @@ final class PaintersHelper implements Painter.Listener {
         g.setTransform(orig);
     }
 
-    @Nonnull
-    int[] computeOffsets(Graphics gg, @Nonnull JComponent component) {
+    
+    int[] computeOffsets(Graphics gg, JComponent component) {
         if (myPainters.isEmpty()) {
             return ArrayUtil.EMPTY_INT_ARRAY;
         }

@@ -17,7 +17,7 @@
 package consulo.localHistory.impl.internal;
 
 import consulo.util.collection.primitive.ints.IntSet;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 

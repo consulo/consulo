@@ -56,8 +56,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.accessibility.*;
@@ -79,7 +78,7 @@ public class EditorComponentImpl extends JTextComponent
     implements EditorHolder, Scrollable, DataProvider, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent {
     private final DesktopEditorImpl myEditor;
 
-    public EditorComponentImpl(@Nonnull DesktopEditorImpl editor) {
+    public EditorComponentImpl(DesktopEditorImpl editor) {
         myEditor = editor;
         enableEvents(AWTEvent.KEY_EVENT_MASK | AWTEvent.INPUT_METHOD_EVENT_MASK);
         enableInputMethods(true);
@@ -116,7 +115,7 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-    public void paint(@Nonnull Graphics g) {
+    public void paint(Graphics g) {
         if (!isEnabled()) {
             g = new Grayer((Graphics2D)g, getBackground());
         }
@@ -124,13 +123,13 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-    @Nonnull
+   
     public DesktopEditorImpl getEditor() {
         return myEditor;
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (myEditor.isDisposed() || myEditor.isRendererMode()) {
             return null;
         }
@@ -295,7 +294,7 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         myEditor.putInfo(info);
     }
 
@@ -470,8 +469,7 @@ public class EditorComponentImpl extends JTextComponent
     private class EditorAccessibilityDocument implements javax.swing.text.Document, javax.swing.text.Element {
         private List<javax.swing.event.DocumentListener> myListeners;
 
-        @Nullable
-        public List<javax.swing.event.DocumentListener> getListeners() {
+        public List<javax.swing.event.@Nullable DocumentListener> getListeners() {
             return myListeners;
         }
 
@@ -849,9 +847,8 @@ public class EditorComponentImpl extends JTextComponent
             return myEditor.logicalPositionToOffset(logicalPosition);
         }
 
-        @Nullable
         @Override
-        public Rectangle modelToView(JTextComponent tc, int pos, Position.Bias ignored) throws BadLocationException {
+        public Rectangle modelToView(JTextComponent tc, int pos, Position.@Nullable Bias ignored) throws BadLocationException {
             return modelToView(tc, pos);
         }
 

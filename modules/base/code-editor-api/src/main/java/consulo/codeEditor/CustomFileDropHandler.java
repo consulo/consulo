@@ -20,14 +20,13 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.Transferable;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class CustomFileDropHandler {
   public static final ExtensionPointName<CustomFileDropHandler> CUSTOM_DROP_HANDLER_EP = ExtensionPointName.create(CustomFileDropHandler.class);
 
-  public abstract boolean canHandle(@Nonnull Transferable t, Editor editor);
+  public abstract boolean canHandle(Transferable t, Editor editor);
 
-  public abstract boolean handleDrop(@Nonnull Transferable t, Editor editor, Project project);
+  public abstract boolean handleDrop(Transferable t, Editor editor, Project project);
 }

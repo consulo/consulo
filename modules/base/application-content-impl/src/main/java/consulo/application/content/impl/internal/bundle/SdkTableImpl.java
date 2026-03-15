@@ -38,8 +38,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -67,7 +66,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
         // support external changes to sdk libraries (Endorsed Standards Override)
         connection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
-            public void after(@Nonnull List<? extends VFileEvent> events) {
+            public void after(List<? extends VFileEvent> events) {
                 if (!events.isEmpty()) {
                     Set<Sdk> affected = new SmartHashSet<>();
                     for (VFileEvent event : events) {
@@ -139,14 +138,14 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Sdk[] getAllSdks() {
         return mySdks.toArray(new Sdk[mySdks.size()]);
     }
 
     @Override
-    public void forEachBundle(@Nonnull Consumer<Sdk> sdkConsumer) {
+    public void forEachBundle(Consumer<Sdk> sdkConsumer) {
         for (SdkImpl sdk : mySdks) {
             sdkConsumer.accept(sdk);
         }
@@ -166,7 +165,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
     @Override
     @Nullable
-    public Sdk findPredefinedSdkByType(@Nonnull SdkTypeId sdkType) {
+    public Sdk findPredefinedSdkByType(SdkTypeId sdkType) {
         for (Sdk sdk : mySdks) {
             if (sdk.isPredefined() && sdk.getSdkType() == sdkType) {
                 return sdk;
@@ -178,7 +177,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     /**
      * Add sdks without write access, and without listener notify
      */
-    public void addSdksUnsafe(@Nonnull Collection<? extends Sdk> sdks) {
+    public void addSdksUnsafe(Collection<? extends Sdk> sdks) {
         for (Sdk sdk : sdks) {
             mySdks.add((SdkImpl)sdk);
         }
@@ -186,7 +185,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
     @Override
     @RequiredWriteAction
-    public void addSdk(@Nonnull Sdk sdk) {
+    public void addSdk(Sdk sdk) {
         myApplication.assertWriteAccessAllowed();
         myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkAdded(sdk);
         mySdks.add((SdkImpl)sdk);
@@ -195,7 +194,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
     @Override
     @RequiredWriteAction
-    public void removeSdk(@Nonnull Sdk sdk) {
+    public void removeSdk(Sdk sdk) {
         myApplication.assertWriteAccessAllowed();
         myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkRemoved(sdk);
         mySdks.remove(sdk);
@@ -204,7 +203,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
     @Override
     @RequiredWriteAction
-    public void updateSdk(@Nonnull Sdk originalSdk, @Nonnull Sdk modifiedSdk) {
+    public void updateSdk(Sdk originalSdk, Sdk modifiedSdk) {
         myApplication.assertWriteAccessAllowed();
         String previousName = originalSdk.getName();
         String newName = modifiedSdk.getName();
@@ -236,16 +235,16 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
         return sdkType != null ? sdkType : UnknownSdkType.getInstance(sdkTypeName);
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("deprecation")
     public Sdk createSdk(String name, SdkTypeId sdkType) {
         return new SdkImpl(this, name, sdkType);
     }
 
-    @Nonnull
+    
     @Override
-    public Sdk createSdk(@Nonnull Path homePath, @Nonnull String name, @Nonnull SdkTypeId sdkType) {
+    public Sdk createSdk(Path homePath, String name, SdkTypeId sdkType) {
         return new SdkImpl(this, sdkType, homePath, name);
     }
 

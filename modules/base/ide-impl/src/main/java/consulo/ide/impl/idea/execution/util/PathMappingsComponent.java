@@ -7,8 +7,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -22,7 +21,7 @@ import java.util.List;
 public final class PathMappingsComponent extends LabeledComponent<TextFieldWithBrowseButton> implements UserActivityProviderComponent {
     private final List<ChangeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-    @Nonnull
+    
     private PathMappingSettings myMappingSettings = new PathMappingSettings();
 
     public PathMappingsComponent() {
@@ -39,7 +38,7 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
         new MyPathMappingsDialog(this).show();
     }
 
-    @Nonnull
+    
     public PathMappingSettings getMappingSettings() {
         return myMappingSettings;
     }
@@ -57,7 +56,7 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
         fireStateChanged();
     }
 
-    private void setTextRepresentation(@Nonnull PathMappingSettings mappingSettings) {
+    private void setTextRepresentation(PathMappingSettings mappingSettings) {
         StringBuilder sb = new StringBuilder();
         for (PathMappingSettings.PathMapping mapping : mappingSettings.getPathMappings()) {
             sb.append(mapping.getLocalRoot()).append("=").append(mapping.getRemoteRoot()).append(";");

@@ -8,8 +8,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.TextRangeScalarUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A range marker that has to be manually updated with {@link #getUpdatedRange(DocumentEvent, FrozenDocument)}.
@@ -26,7 +25,7 @@ public class ManualRangeMarker implements Segment {
                              boolean greedyLeft,
                              boolean greedyRight,
                              boolean surviveOnExternalChange,
-                             @Nullable PersistentRangeMarker.LinesCols linesCols) {
+                             PersistentRangeMarker.@Nullable LinesCols linesCols) {
         myRange = TextRangeScalarUtil.toScalarRange(start, end);
         myGreedyLeft = greedyLeft;
         myGreedyRight = greedyRight;
@@ -34,7 +33,7 @@ public class ManualRangeMarker implements Segment {
         myLinesCols = linesCols;
     }
 
-    public @Nullable ManualRangeMarker getUpdatedRange(@Nonnull DocumentEvent event, @Nonnull FrozenDocument documentBefore) {
+    public @Nullable ManualRangeMarker getUpdatedRange(DocumentEvent event, FrozenDocument documentBefore) {
         if (mySurviveOnExternalChange && PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, myRange)) {
             PersistentRangeMarker.LinesCols linesCols = myLinesCols != null ? myLinesCols
                 : PersistentRangeMarker.storeLinesAndCols(documentBefore, myRange);

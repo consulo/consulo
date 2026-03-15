@@ -20,8 +20,7 @@ import consulo.fileEditor.structureView.tree.Sorter;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -31,41 +30,41 @@ public class StructureViewModelBase extends TextEditorBasedStructureViewModel {
   private Sorter[] mySorters = Sorter.EMPTY_ARRAY;
   private Class[] mySuitableClasses = null;
 
-  public StructureViewModelBase(@Nonnull PsiFile psiFile, @Nullable Editor editor, @Nonnull StructureViewTreeElement root) {
+  public StructureViewModelBase(PsiFile psiFile, @Nullable Editor editor, StructureViewTreeElement root) {
     super(editor, psiFile);
 
     myRoot = root;
   }
 
-  public StructureViewModelBase(@Nonnull PsiFile psiFile, @Nonnull StructureViewTreeElement root) {
+  public StructureViewModelBase(PsiFile psiFile, StructureViewTreeElement root) {
     this(psiFile, null, root);
   }
 
   @Override
-  @Nonnull
+  
   public StructureViewTreeElement getRoot() {
     return myRoot;
   }
 
-  @Nonnull
-  public StructureViewModelBase withSorters(@Nonnull Sorter... sorters) {
+  
+  public StructureViewModelBase withSorters(Sorter... sorters) {
     mySorters = sorters;
     return this;
   }
 
-  @Nonnull
-  public StructureViewModelBase withSuitableClasses(@Nonnull Class... suitableClasses) {
+  
+  public StructureViewModelBase withSuitableClasses(Class... suitableClasses) {
     mySuitableClasses = suitableClasses;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public Sorter[] getSorters() {
     return mySorters;
   }
 
-  @Nonnull
+  
   @Override
   protected Class[] getSuitableClasses() {
     if (mySuitableClasses != null) {

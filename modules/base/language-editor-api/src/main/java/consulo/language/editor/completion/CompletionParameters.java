@@ -7,8 +7,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -17,16 +16,16 @@ public final class CompletionParameters {
   private final PsiElement myPosition;
   private final PsiFile myOriginalFile;
   private final CompletionType myCompletionType;
-  @Nonnull
+  
   private final Editor myEditor;
   private final int myOffset;
   private final int myInvocationCount;
   private final CompletionProcess myProcess;
   private boolean isTestingMode = false;
 
-  public CompletionParameters(@Nonnull PsiElement position, @Nonnull PsiFile originalFile,
-                              @Nonnull CompletionType completionType, int offset, int invocationCount, @Nonnull Editor editor,
-                              @Nonnull CompletionProcess process) {
+  public CompletionParameters(PsiElement position, PsiFile originalFile,
+                              CompletionType completionType, int offset, int invocationCount, Editor editor,
+                              CompletionProcess process) {
     PsiUtilCore.ensureValid(position);
     assert position.getTextRange().containsOffset(offset) : position;
     myPosition = position;
@@ -38,17 +37,17 @@ public final class CompletionParameters {
     myProcess = process;
   }
 
-  @Nonnull
+  
   public CompletionParameters delegateToClassName() {
     return withType(CompletionType.CLASS_NAME).withInvocationCount(myInvocationCount - 1);
   }
 
-  @Nonnull
-  public CompletionParameters withType(@Nonnull CompletionType type) {
+  
+  public CompletionParameters withType(CompletionType type) {
     return new CompletionParameters(myPosition, myOriginalFile, type, myOffset, myInvocationCount, myEditor, myProcess);
   }
 
-  @Nonnull
+  
   public CompletionParameters withInvocationCount(int newCount) {
     return new CompletionParameters(myPosition, myOriginalFile, myCompletionType, myOffset, newCount, myEditor, myProcess);
   }
@@ -70,7 +69,7 @@ public final class CompletionParameters {
    * <p>
    * If the dummy identifier is empty, then the file isn't copied and this method returns whatever is at caret in the original file.
    */
-  @Nonnull
+  
   public PsiElement getPosition() {
     return myPosition;
   }
@@ -83,12 +82,12 @@ public final class CompletionParameters {
   /**
    * @return the file being edited, possibly injected, where code completion was invoked.
    */
-  @Nonnull
+  
   public PsiFile getOriginalFile() {
     return myOriginalFile;
   }
 
-  @Nonnull
+  
   public CompletionType getCompletionType() {
     return myCompletionType;
   }
@@ -113,8 +112,8 @@ public final class CompletionParameters {
     return myInvocationCount == 0;
   }
 
-  @Nonnull
-  public CompletionParameters withPosition(@Nonnull PsiElement element, int offset) {
+  
+  public CompletionParameters withPosition(PsiElement element, int offset) {
     return new CompletionParameters(element, myOriginalFile, myCompletionType, offset, myInvocationCount, myEditor, myProcess);
   }
 
@@ -125,12 +124,12 @@ public final class CompletionParameters {
   /**
    * @return the editor where the completion was started
    */
-  @Nonnull
+  
   public Editor getEditor() {
     return myEditor;
   }
 
-  @Nonnull
+  
   public CompletionProcess getProcess() {
     return myProcess;
   }

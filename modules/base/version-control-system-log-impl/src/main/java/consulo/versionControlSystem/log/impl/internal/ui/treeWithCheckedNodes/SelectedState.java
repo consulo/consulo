@@ -16,8 +16,7 @@
 package consulo.versionControlSystem.log.impl.internal.ui.treeWithCheckedNodes;
 
 import consulo.util.collection.SLRUMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -67,8 +66,8 @@ public class SelectedState<T> {
     myCache.remove(node);
   }
 
-  @Nonnull
-  public TreeNodeState putAndPass(T node, @Nonnull TreeNodeState state) {
+  
+  public TreeNodeState putAndPass(T node, TreeNodeState state) {
     if (TreeNodeState.SELECTED.equals(state)) {
       mySelected.add(node);
       myCache.remove(node);

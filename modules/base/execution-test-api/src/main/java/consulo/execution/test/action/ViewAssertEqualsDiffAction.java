@@ -33,9 +33,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (!openDiff(e.getDataContext(), null)) {
             Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
             Messages.showInfoMessage(
@@ -102,7 +101,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         boolean enabled;
         DataContext dataContext = e.getDataContext();

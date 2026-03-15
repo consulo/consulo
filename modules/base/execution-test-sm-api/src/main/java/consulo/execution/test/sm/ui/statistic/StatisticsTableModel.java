@@ -20,8 +20,7 @@ import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -86,7 +85,7 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
         setItems(getItemsForSuite(myCurrentSuite));
     }
 
-    @Nonnull
+    
     private List<SMTestProxy> getItemsForSuite(@Nullable SMTestProxy suite) {
         if (suite == null) {
             return Collections.emptyList();

@@ -21,7 +21,6 @@ import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 
 public class MacroCallNode extends Expression {
@@ -32,7 +31,7 @@ public class MacroCallNode extends Expression {
   private final Macro myMacro;
   private final ArrayList<Expression> myParameters = new ArrayList<Expression>();
 
-  public MacroCallNode(@Nonnull Macro macro) {
+  public MacroCallNode(Macro macro) {
     myMacro = macro;
   }
 

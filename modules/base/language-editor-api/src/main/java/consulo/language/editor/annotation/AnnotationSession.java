@@ -17,7 +17,6 @@ package consulo.language.editor.annotation;
 
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -25,11 +24,11 @@ import jakarta.annotation.Nonnull;
 public class AnnotationSession extends UserDataHolderBase {
   private final PsiFile myFile;
 
-  public AnnotationSession(@Nonnull PsiFile file) {
+  public AnnotationSession(PsiFile file) {
     myFile = file;
   }
 
-  @Nonnull
+  
   public PsiFile getFile() {
     return myFile;
   }

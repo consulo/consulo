@@ -24,10 +24,9 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public class GlobalInspectionContextUtil {
-    public static RefElement retrieveRefElement(@Nonnull PsiElement element, @Nonnull GlobalInspectionContext globalContext) {
+    public static RefElement retrieveRefElement(PsiElement element, GlobalInspectionContext globalContext) {
         PsiFile elementFile = element.getContainingFile();
         RefElement refElement = globalContext.getRefManager().getReference(elementFile);
         if (refElement == null) {
@@ -40,15 +39,15 @@ public class GlobalInspectionContextUtil {
     }
 
     public static boolean isToCheckMember(
-        @Nonnull RefElement owner,
-        @Nonnull InspectionTool tool,
+        RefElement owner,
+        InspectionTool tool,
         Tools tools,
         ProfileManager profileManager
     ) {
         return isToCheckFile(owner.getContainingFile(), tool, tools, profileManager) && !owner.isSuppressed(tool.getShortName());
     }
 
-    public static boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool, Tools tools, ProfileManager profileManager) {
+    public static boolean isToCheckFile(PsiFile file, InspectionTool tool, Tools tools, ProfileManager profileManager) {
         if (tools != null && file != null) {
             for (ScopeToolState state : tools.getTools()) {
                 NamedScope namedScope = state.getScope(file.getProject());
@@ -67,7 +66,7 @@ public class GlobalInspectionContextUtil {
         return false;
     }
 
-    public static boolean canRunInspections(@Nonnull Project project, boolean online) {
+    public static boolean canRunInspections(Project project, boolean online) {
         for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
             if (!factory.isProjectConfiguredToRunInspections(project, online)) {
                 return false;

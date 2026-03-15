@@ -17,7 +17,6 @@ package consulo.execution.configuration;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,7 +24,7 @@ import jakarta.annotation.Nonnull;
 @Deprecated
 @DeprecationInfo("Use ConfigurationFactory as is")
 public abstract class ConfigurationFactoryEx extends ConfigurationFactory {
-  protected ConfigurationFactoryEx(@Nonnull ConfigurationType type) {
+  protected ConfigurationFactoryEx(ConfigurationType type) {
     super(type);
   }
 }

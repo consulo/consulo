@@ -16,8 +16,7 @@
 package consulo.credentialStorage.impl.internal.util.jdom;
 
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
 
 public interface ElementOutputFilter {
-    boolean accept(@Nonnull Element element, int level);
+    boolean accept(Element element, int level);
 }

@@ -3,14 +3,13 @@ package consulo.codeEditor.impl;
 
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.document.impl.RangeMarkerTree;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
 public final class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
     private final MarkupModelImpl myMarkupModel;
 
-    RangeHighlighterTree(@Nonnull MarkupModelImpl markupModel) {
+    RangeHighlighterTree(MarkupModelImpl markupModel) {
         super(markupModel.getDocument());
         myMarkupModel = markupModel;
     }
@@ -20,23 +19,23 @@ public final class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighter
     }
 
     @Override
-    protected boolean keepIntervalOnWeakReference(@Nonnull RangeHighlighterEx interval) {
+    protected boolean keepIntervalOnWeakReference(RangeHighlighterEx interval) {
         return false;
     }
 
-    void updateRenderedFlags(@Nonnull RangeHighlighterEx highlighter) {
+    void updateRenderedFlags(RangeHighlighterEx highlighter) {
         RHNode node = (RHNode) lookupNode(highlighter);
         if (node != null) node.recalculateRenderFlagsUp();
     }
 
     @Override
-    public void correctMax(@Nonnull IntervalNode<RangeHighlighterEx> node, int deltaUpToRoot) {
+    public void correctMax(IntervalNode<RangeHighlighterEx> node, int deltaUpToRoot) {
         super.correctMax(node, deltaUpToRoot);
         ((RHNode) node).recalculateRenderFlags();
     }
 
     @Override
-    protected int compareEqualStartIntervals(@Nonnull IntervalNode<RangeHighlighterEx> i1, @Nonnull IntervalNode<RangeHighlighterEx> i2) {
+    protected int compareEqualStartIntervals(IntervalNode<RangeHighlighterEx> i1, IntervalNode<RangeHighlighterEx> i2) {
         RHNode o1 = (RHNode) i1;
         RHNode o2 = (RHNode) i2;
         int d = o2.myLayer - o1.myLayer;
@@ -54,7 +53,7 @@ public final class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighter
     }
 
     @Override
-    protected @Nonnull RHNode createNewNode(@Nonnull RangeHighlighterEx key, int start, int end,
+    protected RHNode createNewNode(RangeHighlighterEx key, int start, int end,
                                             boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
         return new RHNode(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight, layer);
     }
@@ -65,8 +64,8 @@ public final class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighter
 
         final int myLayer;
 
-        RHNode(@Nonnull RangeHighlighterTree rangeMarkerTree,
-               @Nonnull RangeHighlighterEx key,
+        RHNode(RangeHighlighterTree rangeMarkerTree,
+               RangeHighlighterEx key,
                int start,
                int end,
                boolean greedyToLeft,
@@ -108,7 +107,7 @@ public final class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighter
         }
 
         @Override
-        public void addInterval(@Nonnull RangeHighlighterEx h) {
+        public void addInterval(RangeHighlighterEx h) {
             super.addInterval(h);
             if (!isRenderedInGutter() && h.isRenderedInGutter()) {
                 recalculateRenderFlagsUp();
@@ -129,12 +128,12 @@ public final class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighter
     }
 
     @Override
-    public void fireBeforeRemoved(@Nonnull RangeHighlighterEx marker) {
+    public void fireBeforeRemoved(RangeHighlighterEx marker) {
         myMarkupModel.fireBeforeRemoved(marker);
     }
 
     @Override
-    public void fireAfterRemoved(@Nonnull RangeHighlighterEx marker) {
+    public void fireAfterRemoved(RangeHighlighterEx marker) {
         myMarkupModel.fireAfterRemoved(marker);
     }
 }

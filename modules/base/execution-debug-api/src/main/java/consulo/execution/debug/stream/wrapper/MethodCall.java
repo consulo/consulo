@@ -2,7 +2,6 @@
 package consulo.execution.debug.stream.wrapper;
 
 import consulo.document.util.TextRange;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface MethodCall  {
-  @NotNull
+  
   String getName();
 
   /**
@@ -18,21 +17,21 @@ public interface MethodCall  {
    * collection.Cast&lt;int&gt;()`, so for this call this method should return `&lt;int&gt;`.  This string is necessary for a code generator to recreate
    * a method call for evaluation.
    */
-  @NotNull
+  
  String getGenericArguments();
 
-  @NotNull
+  
   List<CallArgument> getArguments();
 
-  @NotNull
+  
   TextRange getTextRange();
 
-  @NotNull
+  
   default String getTabTitle() {
     return getName().replace(" ", "") + getGenericArguments();
   }
 
-  @NotNull
+  
   default String getTabTooltip() {
     return TraceUtil.formatWithArguments(this);
   }

@@ -18,7 +18,6 @@ package consulo.component.extension.preview;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionExtender;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -35,5 +34,5 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExtensionPreviewRecorder<T> {
-    void analyze(@Nonnull Consumer<ExtensionPreview> recorder);
+    void analyze(Consumer<ExtensionPreview> recorder);
 }

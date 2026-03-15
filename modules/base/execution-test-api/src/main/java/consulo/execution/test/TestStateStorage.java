@@ -32,8 +32,7 @@ import consulo.util.io.FileUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -79,7 +78,7 @@ public class TestStateStorage implements Disposable {
   private PersistentHashMap<String, Record> myMap;
   private volatile ScheduledFuture<?> myMapFlusher;
 
-  public static TestStateStorage getInstance(@Nonnull Project project) {
+  public static TestStateStorage getInstance(Project project) {
     return project.getInstance(TestStateStorage.class);
   }
 
@@ -108,18 +107,18 @@ public class TestStateStorage implements Disposable {
     if (myMap != null && myMap.isDirty()) myMap.force();
   }
 
-  @Nonnull
+  
   private static ThrowableComputable<PersistentHashMap<String, Record>, IOException> getComputable(File file) {
     return () -> new PersistentHashMap<>(file, EnumeratorStringDescriptor.INSTANCE, new DataExternalizer<Record>() {
       @Override
-      public void save(@Nonnull DataOutput out, Record value) throws IOException {
+      public void save(DataOutput out, Record value) throws IOException {
         out.writeInt(value.magnitude);
         out.writeLong(value.date.getTime());
         out.writeLong(value.configurationHash);
       }
 
       @Override
-      public Record read(@Nonnull DataInput in) throws IOException {
+      public Record read(DataInput in) throws IOException {
         return new Record(in.readInt(), new Date(in.readLong()), in.readLong());
       }
     }, 4096, CURRENT_VERSION);
@@ -170,7 +169,7 @@ public class TestStateStorage implements Disposable {
     return result;
   }
 
-  public synchronized void writeState(@Nonnull String testUrl, Record record) {
+  public synchronized void writeState(String testUrl, Record record) {
     if (myMap == null) return;
     try {
       myMap.put(testUrl, record);

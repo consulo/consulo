@@ -27,8 +27,7 @@ import consulo.execution.runner.GenericProgramRunner;
 import consulo.execution.runner.RunContentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.externalSystem.util.ExternalSystemConstants;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -37,20 +36,20 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class ExternalSystemTaskRunner extends GenericProgramRunner {
 
-  @Nonnull
+  
   @Override
   public String getRunnerId() {
     return ExternalSystemConstants.RUNNER_ID;
   }
 
   @Override
-  public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
+  public boolean canRun(String executorId, RunProfile profile) {
     return profile instanceof ExternalSystemRunConfiguration && DefaultRunExecutor.EXECUTOR_ID.equals(executorId);
   }
 
   @Nullable
   @Override
-  protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment env) throws ExecutionException {
+  protected RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment env) throws ExecutionException {
     ExecutionResult executionResult = state.execute(env.getExecutor(), this);
     return executionResult == null ? null : new RunContentBuilder(executionResult, env).showRunContent(env.getContentToReuse());
   }

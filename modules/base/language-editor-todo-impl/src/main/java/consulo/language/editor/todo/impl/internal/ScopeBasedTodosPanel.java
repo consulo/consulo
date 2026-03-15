@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +38,7 @@ public class ScopeBasedTodosPanel extends TodoPanel {
     private ScopeChooserCombo myScopes;
 
     @RequiredUIAccess
-    public ScopeBasedTodosPanel(@Nonnull Project project, TodoPanelSettings settings, Content content) {
+    public ScopeBasedTodosPanel(Project project, TodoPanelSettings settings, Content content) {
         super(project, settings, false, content);
         myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
         myScopes.getChildComponent().addActionListener(e -> {

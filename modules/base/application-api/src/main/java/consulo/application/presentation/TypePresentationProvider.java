@@ -22,8 +22,7 @@ import consulo.component.extension.ByClassGrouper;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 /**
@@ -36,18 +35,18 @@ public abstract class TypePresentationProvider<T> {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  public static <T> TypePresentationProvider<T> getPresentationProvider(@Nonnull T element) {
+  public static <T> TypePresentationProvider<T> getPresentationProvider(T element) {
     return getPresentationProvider(element.getClass());
   }
 
   @Nullable
   @SuppressWarnings("unchecked")
-  public static <T> TypePresentationProvider<T> getPresentationProvider(@Nonnull Class typeClass) {
+  public static <T> TypePresentationProvider<T> getPresentationProvider(Class typeClass) {
     Function<Class, TypePresentationProvider> call = Application.get().getExtensionPoint(TypePresentationProvider.class).getOrBuildCache(KEY);
     return call.apply(typeClass);
   }
 
-  @Nonnull
+  
   public abstract Class<T> getItemClass();
 
   @Nullable

@@ -23,7 +23,6 @@ import consulo.diff.merge.TextMergeRequest;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "text")
 public class TextMergeTool implements MergeTool {
@@ -32,14 +31,14 @@ public class TextMergeTool implements MergeTool {
     public static final Logger LOG = Logger.getInstance(TextMergeTool.class);
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+    public MergeViewer createComponent(MergeContext context, MergeRequest request) {
         return new TextMergeViewer(context, ((TextMergeRequest)request));
     }
 
     @Override
-    public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+    public boolean canShow(MergeContext context, MergeRequest request) {
         return request instanceof TextMergeRequest;
     }
 }

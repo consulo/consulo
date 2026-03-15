@@ -20,7 +20,6 @@ import consulo.execution.debug.breakpoint.XBreakpointProperties;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpointType;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -69,7 +68,7 @@ public class LineBreakpointState<P extends XBreakpointProperties> extends Breakp
   }
 
   @Override
-  public XBreakpointBase<XLineBreakpoint<P>,P, ?> createBreakpoint(@Nonnull XLineBreakpointType<P> type, @Nonnull XBreakpointManagerImpl breakpointManager) {
+  public XBreakpointBase<XLineBreakpoint<P>,P, ?> createBreakpoint(XLineBreakpointType<P> type, XBreakpointManagerImpl breakpointManager) {
     return new XLineBreakpointImpl<>(type, breakpointManager, this);
   }
 }

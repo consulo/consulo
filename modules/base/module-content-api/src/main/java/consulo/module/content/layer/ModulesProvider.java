@@ -19,13 +19,12 @@ import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.internal.DefaultModulesProvider;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ModulesProvider extends RootModelProvider {
   ModulesProvider EMPTY_MODULES_PROVIDER = new ModulesProvider() {
     @Override
-    @Nonnull
+    
     public Module[] getModules() {
       return Module.EMPTY_ARRAY;
     }
@@ -36,12 +35,12 @@ public interface ModulesProvider extends RootModelProvider {
     }
 
     @Override
-    public ModuleRootModel getRootModel(@Nonnull Module module) {
+    public ModuleRootModel getRootModel(Module module) {
       return ModuleRootManager.getInstance(module);
     }
   };
 
-  @Nonnull
+  
   static ModulesProvider of(@Nullable Project project) {
     return project == null ? EMPTY_MODULES_PROVIDER : new DefaultModulesProvider(project);
   }

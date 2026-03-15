@@ -26,8 +26,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -154,7 +153,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
         }
     }
 
-    @Nonnull
+    
     public static String calcPrefix(@Nullable ErrorTreeElement element) {
         if (element instanceof SimpleMessageElement || element instanceof NavigatableMessageElement) {
             String prefix = element.getKind().getPresentableText();

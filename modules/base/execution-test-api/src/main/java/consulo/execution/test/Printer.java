@@ -21,18 +21,17 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 public interface Printer {
   void print(String text, ConsoleViewContentType contentType);
 
-  void onNewAvailable(@Nonnull Printable printable);
+  void onNewAvailable(Printable printable);
 
   void printHyperlink(String text, HyperlinkInfo info);
 
   void mark();
 
-  default void printWithAnsiColoring(@Nonnull String text, @Nonnull Key processOutputType) {
+  default void printWithAnsiColoring(String text, Key processOutputType) {
     AnsiEscapeDecoder decoder = new AnsiEscapeDecoder();
     decoder.escapeText(text, ProcessOutputTypes.STDOUT, (text1, attributes) -> {
       ConsoleViewContentType contentType = ConsoleViewContentType.getConsoleViewType(attributes);
@@ -43,7 +42,7 @@ public interface Printer {
     });
   }
 
-  default void printWithAnsiColoring(@Nonnull String text, @Nonnull ConsoleViewContentType contentType) {
+  default void printWithAnsiColoring(String text, ConsoleViewContentType contentType) {
     AnsiEscapeDecoder decoder = new AnsiEscapeDecoder();
     decoder.escapeText(text, ProcessOutputTypes.STDOUT, (text1, attributes) -> {
       ConsoleViewContentType viewContentType = ConsoleViewContentType.getConsoleViewType(attributes);

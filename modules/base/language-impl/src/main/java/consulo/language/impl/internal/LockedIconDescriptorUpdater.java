@@ -26,7 +26,6 @@ import consulo.virtualFileSystem.WritingAccessProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ import jakarta.annotation.Nonnull;
 public class LockedIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override
-  public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+  public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
     if (BitUtil.isSet(flags, Iconable.ICON_FLAG_READ_STATUS)) {
       VirtualFile file = PsiUtilCore.getVirtualFile(element);
       boolean isLocked = !element.isWritable() || file != null && !WritingAccessProvider.isPotentiallyWritable(file, element.getProject());

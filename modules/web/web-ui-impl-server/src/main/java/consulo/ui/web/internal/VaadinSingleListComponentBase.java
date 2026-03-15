@@ -23,7 +23,7 @@ import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**

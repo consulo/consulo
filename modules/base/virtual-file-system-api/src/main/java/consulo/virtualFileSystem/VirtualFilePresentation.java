@@ -4,14 +4,13 @@ import consulo.application.AllIcons;
 import consulo.application.presentation.TypePresentationService;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class VirtualFilePresentation {
-  @Nonnull
-  public static Image getIcon(@Nonnull VirtualFile vFile) {
+  
+  public static Image getIcon(VirtualFile vFile) {
     Image icon = TypePresentationService.getInstance().getIcon(vFile);
     if (icon != null) {
       return icon;

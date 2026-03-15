@@ -10,23 +10,22 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public interface ChooseByNameContributorEx extends ChooseByNameContributor {
 
-  void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter);
+  void processNames(Processor<String> processor, SearchScope scope, @Nullable IdFilter filter);
 
-  void processElementsWithName(@Nonnull String name, @Nonnull Processor<NavigationItem> processor, @Nonnull FindSymbolParameters parameters);
+  void processElementsWithName(String name, Processor<NavigationItem> processor, FindSymbolParameters parameters);
 
   /**
    * @deprecated Use {@link #processNames(Processor, GlobalSearchScope, IdFilter)} instead
    */
   @Deprecated
   @Override
-  @Nonnull
+  
   default String[] getNames(Project project, boolean includeNonProjectItems) {
     List<String> result = new ArrayList<>();
     processNames(result::add, FindSymbolParameters.searchScopeFor(project, includeNonProjectItems), null);
@@ -38,7 +37,7 @@ public interface ChooseByNameContributorEx extends ChooseByNameContributor {
    */
   @Deprecated
   @Override
-  @Nonnull
+  
   default NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
     List<NavigationItem> result = new ArrayList<>();
     processElementsWithName(name, result::add, FindSymbolParameters.simple(project, includeNonProjectItems));

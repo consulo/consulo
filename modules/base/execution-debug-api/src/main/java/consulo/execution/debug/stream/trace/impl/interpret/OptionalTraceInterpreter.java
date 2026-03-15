@@ -6,8 +6,7 @@ import consulo.execution.debug.stream.trace.impl.TraceElementImpl;
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedValueException;
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedValueTypeException;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class OptionalTraceInterpreter implements CallTraceInterpreter {
   private final CallTraceInterpreter myPeekResolver = new SimplePeekCallTraceInterpreter();
 
   @Override
-  public @Nonnull TraceInfo resolve(@Nonnull StreamCall call, @Nonnull Value value) {
+  public TraceInfo resolve(StreamCall call, Value value) {
     if (value instanceof ArrayReference) {
       final Value peeksResult = ((ArrayReference)value).getValue(0);
       final TraceInfo peekInfo = myPeekResolver.resolve(call, peeksResult);
@@ -38,7 +37,7 @@ public class OptionalTraceInterpreter implements CallTraceInterpreter {
     throw new UnexpectedValueException("trace termination with optional result must be an array value");
   }
 
-  private static @Nullable Value getOptionalValue(@Nonnull Value optionalTrace) {
+  private static @Nullable Value getOptionalValue(Value optionalTrace) {
     if (!(optionalTrace instanceof ArrayReference trace)) {
       throw new UnexpectedValueTypeException("optional trace must be an array value");
     }
@@ -55,7 +54,7 @@ public class OptionalTraceInterpreter implements CallTraceInterpreter {
     throw new UnexpectedValueTypeException("unexpected format for an optional value");
   }
 
-  private static boolean optionalIsPresent(@Nonnull ArrayReference optionalTrace) {
+  private static boolean optionalIsPresent(ArrayReference optionalTrace) {
     final Value isPresentFlag = optionalTrace.getValue(0);
     if (isPresentFlag instanceof ArrayReference) {
       final Value isPresentValue = ((ArrayReference)isPresentFlag).getValue(0);

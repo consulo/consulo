@@ -29,8 +29,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -64,7 +63,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         }
 
         @Override
-        @Nonnull
+        
         public String getRootPath() {
             return FileUtil.toSystemIndependentName(myFSRootPath);
         }
@@ -88,9 +87,9 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
     private Future<?> myWatcherFuture = CompletableFuture.completedFuture(null);
 
     @Inject
-    public LocalFileSystemImpl(@Nonnull Application application,
-                               @Nonnull ApplicationConcurrency applicationConcurrency,
-                               @Nonnull ManagingFS managingFS) {
+    public LocalFileSystemImpl(Application application,
+                               ApplicationConcurrency applicationConcurrency,
+                               ManagingFS managingFS) {
         myManagingFS = managingFS;
         myWatcher = new FileWatcher(application, myManagingFS);
 
@@ -109,7 +108,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         myWatcherFuture = CompletableFuture.completedFuture(null);
     }
 
-    @Nonnull
+    
     public FileWatcher getFileWatcher() {
         return myWatcher;
     }
@@ -177,8 +176,8 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         return result;
     }
 
-    @Nonnull
-    private static List<String> splitPath(@Nonnull String path) {
+    
+    private static List<String> splitPath(String path) {
         if (path.isEmpty()) {
             return Collections.emptyList();
         }
@@ -291,7 +290,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         return dirty;
     }
 
-    public void markSuspiciousFilesDirty(@Nonnull List<VirtualFile> files) {
+    public void markSuspiciousFilesDirty(List<VirtualFile> files) {
         storeRefreshStatusToFiles();
 
         if (myWatcher.isOperational()) {
@@ -311,9 +310,9 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         }
     }
 
-    @Nonnull
+    
     @Override
-    public Set<WatchRequest> replaceWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests,
+    public Set<WatchRequest> replaceWatchedRoots(Collection<WatchRequest> watchRequests,
                                                  @Nullable Collection<String> recursiveRoots,
                                                  @Nullable Collection<String> flatRoots) {
         recursiveRoots = ObjectUtil.notNull(recursiveRoots, Collections.emptyList());
@@ -381,7 +380,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         return new WatchRequestImpl(rootFile.getAbsolutePath(), recursively);
     }
 
-    private boolean doRemoveWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests) {
+    private boolean doRemoveWatchedRoots(Collection<WatchRequest> watchRequests) {
         boolean update = false;
 
         for (WatchRequest watchRequest : watchRequests) {

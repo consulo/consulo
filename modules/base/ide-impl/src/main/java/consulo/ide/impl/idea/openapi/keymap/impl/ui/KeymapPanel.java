@@ -60,8 +60,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -79,7 +78,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     private final PropertyChangeListener myAncestor;
 
     private final DefaultComboBoxModel myKeymapListModel = new DefaultComboBoxModel();
-    @Nonnull
+    
     private final Provider<KeyMapSetting> myKeyMapSettingProvider;
 
     private KeymapImpl mySelectedKeymap;
@@ -107,7 +106,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     private JCheckBox myDoublePressShortcutsBox;
 
     @Inject
-    public KeymapPanel(@Nonnull Provider<KeyMapSetting> keyMapSettingProvider) {
+    public KeymapPanel(Provider<KeyMapSetting> keyMapSettingProvider) {
         myKeyMapSettingProvider = keyMapSettingProvider;
         myAncestor = evt -> {
             if (evt.getPropertyName().equals("ancestor")
@@ -163,7 +162,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         myKeymapList.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(
-                @Nonnull JList<? extends Keymap> list,
+                JList<? extends Keymap> list,
                 Keymap keymap,
                 int index,
                 boolean selected,
@@ -415,14 +414,14 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 String actionId = myActionsTree.getSelectedActionId();
                 e.getPresentation().setEnabled(actionId != null);
             }
 
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 editSelection(e.getInputEvent());
             }
         });
@@ -472,7 +471,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         ) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 myFilterComponent.reset();
                 if (myPopup == null || myPopup.getContent() == null) {
                     myPopup = JBPopupFactory.getInstance()
@@ -493,7 +492,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         ) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 myActionsTree.filter(null, getCurrentQuickListIds()); //clear filtering
                 TreeUtil.collapseAll(myActionsTree.getTree(), 0);
                 myTreeExpansionMonitor.restore();
@@ -606,23 +605,23 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     }
 
     public static void addKeyboardShortcut(
-        @Nonnull String actionId,
-        @Nonnull ShortcutRestrictions restrictions,
-        @Nonnull Keymap keymapSelected,
-        @Nonnull Component parent,
-        @Nonnull QuickList... quickLists
+        String actionId,
+        ShortcutRestrictions restrictions,
+        Keymap keymapSelected,
+        Component parent,
+        QuickList... quickLists
     ) {
         addKeyboardShortcut(actionId, restrictions, keymapSelected, parent, null, null, quickLists);
     }
 
     public static void addKeyboardShortcut(
-        @Nonnull String actionId,
-        @Nonnull ShortcutRestrictions restrictions,
-        @Nonnull Keymap keymapSelected,
-        @Nonnull Component parent,
+        String actionId,
+        ShortcutRestrictions restrictions,
+        Keymap keymapSelected,
+        Component parent,
         @Nullable KeyboardShortcut selectedShortcut,
         @Nullable SystemShortcuts systemShortcuts,
-        @Nonnull QuickList... quickLists
+        QuickList... quickLists
     ) {
         if (!restrictions.allowKeyboardShortcut) {
             return;
@@ -924,7 +923,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "preferences.keymap";
     }
@@ -1088,7 +1087,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return KeyMapLocalize.keymapDisplayName();
@@ -1140,7 +1139,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             group.add(new DumbAwareAction(IdeLocalize.actionAnonymousTextAddKeyboardShortcut()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     Shortcut firstKeyboard = null;
                     for (Shortcut shortcut : shortcuts) {
                         if (shortcut instanceof KeyboardShortcut) {
@@ -1158,7 +1157,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             group.add(new DumbAwareAction(IdeLocalize.actionAnonymousTextAddMouseShortcut()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     Shortcut firstMouse = null;
                     for (Shortcut shortcut : shortcuts) {
                         if (shortcut instanceof MouseShortcut) {
@@ -1175,7 +1174,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             group.add(new DumbAwareAction(IdeLocalize.actionAnonymousTextAddAbbreviation()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     String abbr = Messages.showInputDialog(
                         IdeLocalize.labelEnterNewAbbreviation().get(),
                         IdeLocalize.dialogTitleAbbreviation().get(),
@@ -1190,7 +1189,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
                 @RequiredUIAccess
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     boolean enabled = myActionsTree.getSelectedActionId() != null;
                     e.getPresentation().setEnabledAndVisible(enabled);
                 }
@@ -1203,7 +1202,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             group.add(new DumbAwareAction(IdeLocalize.actionTextRemove0(KeymapUtil.getShortcutText(shortcut))) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     removeShortcut(shortcut);
                 }
             });
@@ -1213,14 +1212,14 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             group.addAction(new DumbAwareAction(IdeLocalize.actionTextRemoveAbbreviation0(abbreviation)) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     AbbreviationManager.getInstance().remove(abbreviation, actionId);
                     repaintLists();
                 }
 
                 @RequiredUIAccess
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     super.update(e);
                 }
             });

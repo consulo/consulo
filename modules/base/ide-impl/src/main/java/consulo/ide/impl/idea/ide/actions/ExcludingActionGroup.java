@@ -19,8 +19,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -41,7 +40,7 @@ public class ExcludingActionGroup extends ActionGroup {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         myDelegate.update(e);
     }
 
@@ -51,7 +50,7 @@ public class ExcludingActionGroup extends ActionGroup {
     }
 
     @Override
-    @Nonnull
+    
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<AnAction> result = new ArrayList<>();
         for (AnAction action : myDelegate.getChildren(e)) {

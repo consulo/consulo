@@ -3,14 +3,13 @@ package consulo.language;
 
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class LanguageMatcher {
 
   LanguageMatcher() {
   }
 
-  public abstract boolean matchesLanguage(@Nonnull Language language);
+  public abstract boolean matchesLanguage(Language language);
 
   /**
    * Given the filter language X returns the matcher which matches language L if one the following is {@code true}:
@@ -20,8 +19,8 @@ public abstract class LanguageMatcher {
    * </ul>
    */
   @Contract(pure = true)
-  @Nonnull
-  public static LanguageMatcher match(@Nonnull Language language) {
+  
+  public static LanguageMatcher match(Language language) {
     if (language instanceof MetaLanguage) {
       return new MetaLanguageMatcher((MetaLanguage)language);
     }
@@ -38,8 +37,8 @@ public abstract class LanguageMatcher {
    * </ul>
    */
   @Contract(pure = true)
-  @Nonnull
-  public static LanguageMatcher matchWithDialects(@Nonnull Language language) {
+  
+  public static LanguageMatcher matchWithDialects(Language language) {
     if (language instanceof MetaLanguage) {
       return new MetaLanguageKindMatcher((MetaLanguage)language);
     }

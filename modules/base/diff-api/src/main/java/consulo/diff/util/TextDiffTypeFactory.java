@@ -22,10 +22,8 @@ import consulo.codeEditor.EditorEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +34,9 @@ public class TextDiffTypeFactory {
   private TextDiffTypeFactory() {
   }
 
-  @Nonnull
-  public synchronized TextDiffType createTextDiffType(@NonNls @Nonnull TextAttributesKey key,
-                                                      @Nonnull String name) {
+  
+  public synchronized TextDiffType createTextDiffType(TextAttributesKey key,
+                                                      String name) {
     TextDiffType type = new TextDiffTypeImpl(key, name);
     myTypes.add(type);
     return type;
@@ -53,24 +51,24 @@ public class TextDiffTypeFactory {
   }
 
   public static class TextDiffTypeImpl implements TextDiffType {
-    @Nonnull
+    
     private final TextAttributesKey myKey;
-    @Nonnull
+    
     private final String myName;
 
     @SuppressWarnings("SpellCheckingInspection")
-    public TextDiffTypeImpl(@Nonnull TextAttributesKey key, @Nonnull String name) {
+    public TextDiffTypeImpl(TextAttributesKey key, String name) {
       myKey = key;
       myName = name;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
       return myName;
     }
 
-    @Nonnull
+    
     public TextAttributes getAttributes(@Nullable Editor editor) {
       if (editor == null) {
         return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(myKey);
@@ -80,13 +78,13 @@ public class TextDiffTypeFactory {
       }
     }
 
-    @Nonnull
+    
     @Override
     public ColorValue getColor(@Nullable Editor editor) {
       return getAttributes(editor).getBackgroundColor();
     }
 
-    @Nonnull
+    
     @Override
     public ColorValue getIgnoredColor(@Nullable Editor editor) {
       TextAttributes attributes = getAttributes(editor);
@@ -116,7 +114,7 @@ public class TextDiffTypeFactory {
       return myName;
     }
 
-    @Nonnull
+    
     public TextAttributesKey getKey() {
       return myKey;
     }
@@ -124,8 +122,8 @@ public class TextDiffTypeFactory {
 
   private static final double MIDDLE_COLOR_FACTOR = 0.6;
 
-  @Nonnull
-  public static ColorValue getMiddleColor(@Nonnull ColorValue fg, @Nonnull ColorValue bg) {
+  
+  public static ColorValue getMiddleColor(ColorValue fg, ColorValue bg) {
     RGBColor f = fg.toRGB();
     RGBColor b = bg.toRGB();
     

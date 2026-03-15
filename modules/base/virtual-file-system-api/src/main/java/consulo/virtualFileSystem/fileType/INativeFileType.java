@@ -18,11 +18,10 @@ package consulo.virtualFileSystem.fileType;
 import consulo.component.ComponentManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface INativeFileType extends FileType {
     @RequiredUIAccess
     void openFileInAssociatedApplication(@Nullable ComponentManager project,
-                                         @Nonnull VirtualFile file);
+                                         VirtualFile file);
 }

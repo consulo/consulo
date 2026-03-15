@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -31,10 +30,10 @@ import java.util.List;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PathReferenceProvider {
 
-  boolean createReferences(@Nonnull PsiElement psiElement, @Nonnull List<PsiReference> references, boolean soft);
+  boolean createReferences(PsiElement psiElement, List<PsiReference> references, boolean soft);
 
   @Nullable
-  PathReference getPathReference(@Nonnull String path, @Nonnull PsiElement element);
+  PathReference getPathReference(String path, PsiElement element);
 
   /**
    * Will move provider to end of providers, and will ignored by {@link PathReferenceManager#getPathReference}

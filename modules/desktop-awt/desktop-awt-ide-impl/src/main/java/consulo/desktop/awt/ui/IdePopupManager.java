@@ -12,7 +12,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.IdePopupEventDispatcher;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +39,7 @@ public final class IdePopupManager implements Predicate<AWTEvent> {
   }
 
   @Override
-  public boolean test(@Nonnull AWTEvent e) {
+  public boolean test(AWTEvent e) {
     LOG.assertTrue(isPopupActive());
 
     if (e.getID() == WindowEvent.WINDOW_LOST_FOCUS || e.getID() == WindowEvent.WINDOW_DEACTIVATED) {

@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awt.tab.UiDecorator;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public class UiDebugger extends JPanel implements Disposable {
         myTabs.getPresentation().setPaintBorder(JBUI.scale(1), 0, 0, 0)
             .setActiveTabFillIn(JBColor.GRAY).setUiDecorator(new UiDecorator() {
                 @Override
-                @Nonnull
+                
                 public UiDecoration getDecoration() {
                     return new UiDecoration(null, JBUI.insets(4, 4, 4, 4));
                 }
@@ -106,7 +105,7 @@ public class UiDebugger extends JPanel implements Disposable {
                 return result;
             }
 
-            @Nonnull
+            
             @Override
             protected Action[] createActions() {
                 return new Action[]{new AbstractAction("Close") {

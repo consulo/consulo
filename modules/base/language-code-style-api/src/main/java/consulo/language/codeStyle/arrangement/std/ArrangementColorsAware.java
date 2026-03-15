@@ -18,8 +18,7 @@ package consulo.language.codeStyle.arrangement.std;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -33,8 +32,8 @@ import java.awt.*;
 public interface ArrangementColorsAware {
   
   @Nullable
-  TextAttributes getTextAttributes(@Nonnull EditorColorsScheme scheme, @Nonnull ArrangementSettingsToken token, boolean selected);
+  TextAttributes getTextAttributes(EditorColorsScheme scheme, ArrangementSettingsToken token, boolean selected);
   
   @Nullable
-  Color getBorderColor(@Nonnull EditorColorsScheme scheme, boolean selected);
+  Color getBorderColor(EditorColorsScheme scheme, boolean selected);
 }

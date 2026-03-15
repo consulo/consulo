@@ -6,7 +6,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ModalityState;
 import consulo.util.collection.WeakList;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,23 +18,23 @@ public class IdeaModalityStateEx extends IdeaModalityState implements ModalitySt
   public IdeaModalityStateEx() {
   }
 
-  IdeaModalityStateEx(@Nonnull Collection<Object> modalEntities) {
+  IdeaModalityStateEx(Collection<Object> modalEntities) {
     myModalEntities.addAll(modalEntities);
   }
 
-  @Nonnull
+  
   List<Object> getModalEntities() {
     return myModalEntities.toStrongList();
   }
 
   @Override
-  @Nonnull
-  public ModalityState appendProgress(@Nonnull ProgressIndicator progress) {
+  
+  public ModalityState appendProgress(ProgressIndicator progress) {
     return appendEntity(progress);
   }
 
-  @Nonnull
-  IdeaModalityStateEx appendEntity(@Nonnull Object anEntity) {
+  
+  IdeaModalityStateEx appendEntity(Object anEntity) {
     List<Object> modalEntities = getModalEntities();
     List<Object> list = new ArrayList<>(modalEntities.size() + 1);
     list.addAll(modalEntities);
@@ -49,7 +48,7 @@ public class IdeaModalityStateEx extends IdeaModalityState implements ModalitySt
   }
 
   @Override
-  public boolean dominates(@Nonnull IdeaModalityState anotherState) {
+  public boolean dominates(IdeaModalityState anotherState) {
     if (anotherState == ModalityState.any()) return false;
     if (myModalEntities.isEmpty()) return false;
 

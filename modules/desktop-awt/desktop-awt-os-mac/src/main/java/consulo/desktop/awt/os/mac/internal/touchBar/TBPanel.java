@@ -7,8 +7,7 @@ import consulo.desktop.awt.os.mac.internal.icon.MacIconGroup;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -19,8 +18,8 @@ public class TBPanel implements NSTLibrary.ItemCreator {
     static final boolean ourCollectStats = Boolean.getBoolean("touchbar.collect.stats");
 
     final @Nullable TouchBarStats myStats;
-    final @Nonnull String myName;
-    final @Nonnull ItemsContainer myItems;
+    final String myName;
+    final ItemsContainer myItems;
     final ItemListener myItemListener;
     final TBItemButton myCustomEsc;
 
@@ -38,11 +37,11 @@ public class TBPanel implements NSTLibrary.ItemCreator {
         myStats = null;
     }
 
-    public TBPanel(@Nonnull String touchbarName) {
+    public TBPanel(String touchbarName) {
         this(touchbarName, null, false);
     }
 
-    TBPanel(@Nonnull String touchbarName,
+    TBPanel(String touchbarName,
             @Nullable CrossEscInfo crossEscInfo,
             boolean closeOnItemEvent) {
         if (closeOnItemEvent) {
@@ -86,7 +85,7 @@ public class TBPanel implements NSTLibrary.ItemCreator {
     }
 
     @Override
-    public ID createItem(@Nonnull String uid) { // called from AppKit (when NSTouchBarDelegate create items)
+    public ID createItem(String uid) { // called from AppKit (when NSTouchBarDelegate create items)
         long startNs = myStats != null ? System.nanoTime() : 0;
         ID result = createItemImpl(uid);
         if (myStats != null) {
@@ -95,7 +94,7 @@ public class TBPanel implements NSTLibrary.ItemCreator {
         return result;
     }
 
-    private ID createItemImpl(@Nonnull String uid) {
+    private ID createItemImpl(String uid) {
         TBItem item;
         if (myCustomEsc != null && uid.equals(myCustomEsc.getUid())) {
             item = myCustomEsc;
@@ -144,25 +143,25 @@ public class TBPanel implements NSTLibrary.ItemCreator {
     //
     // NOTE: must call 'selectVisibleItemsToShow' after touchbar filling
     //
-    public @Nonnull TBItemButton addButton() {
-        @Nonnull TBItemButton butt = new TBItemButton(myItemListener, myStats != null ? myStats.getActionStats("simple_button") : null);
+    public TBItemButton addButton() {
+        TBItemButton butt = new TBItemButton(myItemListener, myStats != null ? myStats.getActionStats("simple_button") : null);
         myItems.addItem(butt);
         return butt;
     }
 
-    public @Nonnull TBItem addItem(@Nonnull TBItem item) {
+    public TBItem addItem(TBItem item) {
         return addItem(item, null);
     }
 
-    @Nonnull
-    TBItem addItem(@Nonnull TBItem item, @Nullable TBItem positionAnchor) {
+    
+    TBItem addItem(TBItem item, @Nullable TBItem positionAnchor) {
         myItems.addItem(item, positionAnchor);
         return item;
     }
 
-    public @Nonnull TBItemScrubber addScrubber() {
+    public TBItemScrubber addScrubber() {
         int defaultScrubberWidth = 500;
-        @Nonnull TBItemScrubber scrub = new TBItemScrubber(myItemListener, myStats, defaultScrubberWidth);
+        TBItemScrubber scrub = new TBItemScrubber(myItemListener, myStats, defaultScrubberWidth);
         myItems.addItem(scrub);
         return scrub;
     }
@@ -197,7 +196,7 @@ public class TBPanel implements NSTLibrary.ItemCreator {
         }
     }
 
-    void setPrincipal(@Nonnull TBItem item) {
+    void setPrincipal(TBItem item) {
         // NOTE: we can cache principal items to avoid unnecessary native calls
         synchronized (this) {
             NST.setPrincipal(myNativePeer, item.getUid());
@@ -208,8 +207,8 @@ public class TBPanel implements NSTLibrary.ItemCreator {
         TouchBarsManager.hideTouchbar(this);
     }
 
-    @Nonnull
-    TBItemAnActionButton createActionButton(@Nonnull AnAction action) {
+    
+    TBItemAnActionButton createActionButton(AnAction action) {
         TouchBarStats.AnActionStats stats;
         if (myStats == null) {
             stats = null;

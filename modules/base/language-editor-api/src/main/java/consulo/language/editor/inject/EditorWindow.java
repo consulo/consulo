@@ -22,30 +22,29 @@ import consulo.document.DocumentWindow;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolderEx;
 
-import jakarta.annotation.Nonnull;
 
 public interface EditorWindow extends UserDataHolderEx, InjectedEditor {
-  @Nonnull
-  static Editor getTopLevelEditor(@Nonnull Editor editor) {
+  
+  static Editor getTopLevelEditor(Editor editor) {
     return editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor;
   }
 
 
   boolean isValid();
 
-  @Nonnull
+  
   PsiFile getInjectedFile();
 
-  @Nonnull
-  LogicalPosition hostToInjected(@Nonnull LogicalPosition hPos);
+  
+  LogicalPosition hostToInjected(LogicalPosition hPos);
 
-  @Nonnull
-  LogicalPosition injectedToHost(@Nonnull LogicalPosition pos);
+  
+  LogicalPosition injectedToHost(LogicalPosition pos);
 
-  @Nonnull
+  
   Editor getDelegate();
 
-  @Nonnull
+  
   @Override
   DocumentWindow getDocument();
 }

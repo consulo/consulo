@@ -11,8 +11,7 @@ import consulo.externalSystem.service.notification.ExternalSystemProgressNotific
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -49,22 +48,22 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
      */
     private static final long TOO_LONG_EXECUTION_MS = TimeUnit.SECONDS.toMillis(10);
 
-    @Nonnull
+    
     private final ConcurrentMap<ExternalSystemTaskId, Long> myTasksInProgress = ContainerUtil.newConcurrentMap();
-    @Nonnull
+    
     private final ConcurrentMap<ExternalSystemTaskId, ExternalSystemTask> myTasksDetails = ContainerUtil.newConcurrentMap();
-    @Nonnull
+    
     private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
 
-    @Nonnull
+    
     private final ExternalSystemFacadeManager myFacadeManager;
-    @Nonnull
+    
     private final ExternalSystemProgressNotificationManager myProgressNotificationManager;
 
     @Inject
     public ExternalSystemProcessingManager(
-        @Nonnull ExternalSystemFacadeManager facadeManager,
-        @Nonnull ExternalSystemProgressNotificationManager notificationManager
+        ExternalSystemFacadeManager facadeManager,
+        ExternalSystemProgressNotificationManager notificationManager
     ) {
         myFacadeManager = facadeManager;
         myProgressNotificationManager = notificationManager;
@@ -88,7 +87,7 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
      * @return <code>true</code> if any task of the given type is being executed at the moment;
      * <code>false</code> otherwise
      */
-    public boolean hasTaskOfTypeInProgress(@Nonnull ExternalSystemTaskType type, @Nonnull Project project) {
+    public boolean hasTaskOfTypeInProgress(ExternalSystemTaskType type, Project project) {
         String projectId = ExternalSystemTaskId.getProjectId(project);
         for (ExternalSystemTaskId id : myTasksInProgress.keySet()) {
             if (type.equals(id.getType()) && projectId.equals(id.getIdeProjectId())) {
@@ -100,9 +99,9 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
 
     @Nullable
     public ExternalSystemTask findTask(
-        @Nonnull ExternalSystemTaskType type,
-        @Nonnull ProjectSystemId projectSystemId,
-        @Nonnull String externalProjectPath
+        ExternalSystemTaskType type,
+        ProjectSystemId projectSystemId,
+        String externalProjectPath
     ) {
         for (ExternalSystemTask task : myTasksDetails.values()) {
             if (task instanceof AbstractExternalSystemTask externalSystemTask
@@ -116,16 +115,16 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
         return null;
     }
 
-    public void add(@Nonnull ExternalSystemTask task) {
+    public void add(ExternalSystemTask task) {
         myTasksDetails.put(task.getId(), task);
     }
 
-    public void release(@Nonnull ExternalSystemTaskId id) {
+    public void release(ExternalSystemTaskId id) {
         myTasksDetails.remove(id);
     }
 
     @Override
-    public void onQueued(@Nonnull ExternalSystemTaskId id) {
+    public void onQueued(ExternalSystemTaskId id) {
         myTasksInProgress.put(id, System.currentTimeMillis() + TOO_LONG_EXECUTION_MS);
         if (myAlarm.getActiveRequestCount() <= 0) {
             myAlarm.addRequest(this::update, TOO_LONG_EXECUTION_MS);
@@ -133,22 +132,22 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
     }
 
     @Override
-    public void onStart(@Nonnull ExternalSystemTaskId id) {
+    public void onStart(ExternalSystemTaskId id) {
         myTasksInProgress.put(id, System.currentTimeMillis() + TOO_LONG_EXECUTION_MS);
     }
 
     @Override
-    public void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) {
+    public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
         myTasksInProgress.put(event.getId(), System.currentTimeMillis() + TOO_LONG_EXECUTION_MS);
     }
 
     @Override
-    public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
+    public void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut) {
         myTasksInProgress.put(id, System.currentTimeMillis() + TOO_LONG_EXECUTION_MS);
     }
 
     @Override
-    public void onEnd(@Nonnull ExternalSystemTaskId id) {
+    public void onEnd(ExternalSystemTaskId id) {
         myTasksInProgress.remove(id);
         if (myTasksInProgress.isEmpty()) {
             myAlarm.cancelAllRequests();
@@ -156,11 +155,11 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
     }
 
     @Override
-    public void onSuccess(@Nonnull ExternalSystemTaskId id) {
+    public void onSuccess(ExternalSystemTaskId id) {
     }
 
     @Override
-    public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) {
+    public void onFailure(ExternalSystemTaskId id, Exception e) {
     }
 
     public void update() {

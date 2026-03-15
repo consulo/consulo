@@ -17,8 +17,7 @@ import consulo.ui.ex.awt.tree.TreeModelAdapter;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -49,14 +48,14 @@ public final class ServiceViewActionProvider {
     return ourInstance;
   }
 
-  ActionToolbar createServiceToolbar(@Nonnull JComponent component, boolean horizontal) {
+  ActionToolbar createServiceToolbar(JComponent component, boolean horizontal) {
     ActionGroup actions = (ActionGroup)ActionManager.getInstance().getAction(SERVICE_VIEW_ITEM_TOOLBAR);
     ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.SERVICES_TOOLBAR, actions, horizontal);
     toolbar.setTargetComponent(component);
     return toolbar;
   }
 
-  JComponent wrapServiceToolbar(@Nonnull JComponent toolbarComponent, boolean horizontal) {
+  JComponent wrapServiceToolbar(JComponent toolbarComponent, boolean horizontal) {
     JPanel wrapper = new JPanel(new BorderLayout());
     wrapper.add(toolbarComponent, BorderLayout.CENTER);
     toolbarComponent.addComponentListener(new ComponentListener() {
@@ -82,11 +81,11 @@ public final class ServiceViewActionProvider {
     return wrapper;
   }
 
-  void installPopupHandler(@Nonnull JComponent component) {
+  void installPopupHandler(JComponent component) {
     PopupHandler.installPopupHandler(component, SERVICE_VIEW_ITEM_POPUP, ActionPlaces.SERVICES_POPUP);
   }
 
-  ActionToolbar createMasterComponentToolbar(@Nonnull JComponent component) {
+  ActionToolbar createMasterComponentToolbar(JComponent component) {
     DefaultActionGroup group = new DefaultActionGroup();
 
     if (component instanceof JTree) {
@@ -122,21 +121,21 @@ public final class ServiceViewActionProvider {
   }
 
   @Nullable
-  public static ServiceView getSelectedView(@Nonnull AnActionEvent e) {
+  public static ServiceView getSelectedView(AnActionEvent e) {
     return getSelectedView(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
   }
 
   @Nullable
-  public static ServiceView getSelectedView(@Nonnull DataProvider provider) {
+  public static ServiceView getSelectedView(DataProvider provider) {
     return getSelectedView(ObjectUtil.tryCast(provider.getData(UIExAWTDataKey.CONTEXT_COMPONENT), Component.class));
   }
 
-  static @Nonnull List<ServiceViewItem> getSelectedItems(@Nonnull AnActionEvent e) {
+  static List<ServiceViewItem> getSelectedItems(AnActionEvent e) {
     List<ServiceViewItem> items = e.getData(SERVICES_SELECTED_ITEMS);
     return items != null ? items : Collections.emptyList();
   }
 
-  static @Nonnull List<ServiceViewItem> getSelectedItems(@Nonnull DataContext dataContext) {
+  static List<ServiceViewItem> getSelectedItems(DataContext dataContext) {
     List<ServiceViewItem> items = dataContext.getData(SERVICES_SELECTED_ITEMS);
     return items != null ? items : Collections.emptyList();
   }
@@ -182,7 +181,7 @@ public final class ServiceViewActionProvider {
       super(tree);
       TreeModelListener listener = new TreeModelAdapter() {
         @Override
-        protected void process(@Nonnull TreeModelEvent event, @Nonnull EventType type) {
+        protected void process(TreeModelEvent event, EventType type) {
           myFlat = isFlat(tree.getModel());
         }
       };
@@ -228,7 +227,7 @@ public final class ServiceViewActionProvider {
     }
   }
 
-  @Nonnull
+  
   public static AnAction[] doGetActions(@Nullable AnActionEvent e, boolean toolbar) {
     if (e == null) return AnAction.EMPTY_ARRAY;
 

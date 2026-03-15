@@ -24,8 +24,7 @@ import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +36,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
   private final EditorEx myEditor;
   private final SoftWrapsStorage myStorage;
 
-  public CachingSoftWrapDataMapper(@Nonnull EditorEx editor, @Nonnull SoftWrapsStorage storage) {
+  public CachingSoftWrapDataMapper(EditorEx editor, SoftWrapsStorage storage) {
     myEditor = editor;
     myStorage = storage;
   }
@@ -66,7 +65,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
   }
 
   @Override
-  public void onCacheUpdateStart(@Nonnull IncrementalCacheUpdateEvent event) {
+  public void onCacheUpdateStart(IncrementalCacheUpdateEvent event) {
     int startOffset = event.getStartOffset();
 
     myAffectedByUpdateSoftWraps.clear();
@@ -74,7 +73,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
   }
 
   @Override
-  public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event) {
+  public void onRecalculationEnd(IncrementalCacheUpdateEvent event) {
     advanceSoftWrapOffsets(event);
   }
 
@@ -86,7 +85,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
   /**
    * Determines which soft wraps were not affected by recalculation, and shifts them to their new offsets.
    */
-  private void advanceSoftWrapOffsets(@Nonnull IncrementalCacheUpdateEvent event) {
+  private void advanceSoftWrapOffsets(IncrementalCacheUpdateEvent event) {
     int lengthDiff = event.getLengthDiff();
     int recalcEndOffsetTranslated = event.getActualEndOffset() - lengthDiff;
 
@@ -131,7 +130,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
     return softWraps.isEmpty() ? null : softWraps.get(softWraps.size() - 1);
   }
 
-  @Nonnull
+  
   @Override
   public String dumpState() {
     return "Soft wraps affected by current update: " + myAffectedByUpdateSoftWraps;

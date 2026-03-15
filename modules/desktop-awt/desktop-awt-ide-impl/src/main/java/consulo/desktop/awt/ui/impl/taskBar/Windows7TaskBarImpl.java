@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.Window;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -36,7 +35,7 @@ public class Windows7TaskBarImpl extends DefaultJava9TaskBarImpl {
   private static Color errorBadgeTextBackgroundColor = new Color(0, 0, 0, 39);
 
   @Override
-  protected void setTextBadgeUnsupported(@Nonnull Window window, String text) {
+  protected void setTextBadgeUnsupported(Window window, String text) {
     if (myTaskbar.isSupported(Taskbar.Feature.ICON_BADGE_IMAGE_WINDOW)) {
       BufferedImage image = null;
       if (text != null) {

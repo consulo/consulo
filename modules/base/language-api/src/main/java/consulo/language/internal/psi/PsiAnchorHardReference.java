@@ -19,12 +19,11 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 public class PsiAnchorHardReference implements PsiAnchor {
     private final PsiElement myElement;
 
-    public PsiAnchorHardReference(@Nonnull PsiElement element) {
+    public PsiAnchorHardReference(PsiElement element) {
         myElement = element;
     }
 

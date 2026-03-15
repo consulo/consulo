@@ -24,8 +24,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.parser.ParserDefinition;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,7 +37,7 @@ public class ParserDefinitionExtensionPoint {
         ExtensionPointCacheKey.create("ParserDefinition", LanguageOneToOne.build());
 
     @Nullable
-    public static ParserDefinition forLanguage(@Nonnull Application application, @Nonnull Language language) {
+    public static ParserDefinition forLanguage(Application application, Language language) {
         ExtensionValueCache<ParserDefinition> cache = language.getUserData(VALUE_KEY);
         if (cache != null) {
             return cache.get();

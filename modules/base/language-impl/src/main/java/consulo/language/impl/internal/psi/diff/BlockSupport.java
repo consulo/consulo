@@ -31,9 +31,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class BlockSupport {
@@ -41,17 +39,17 @@ public abstract class BlockSupport {
     return project.getInstance(BlockSupport.class);
   }
 
-  public void reparseRange(@Nonnull PsiFile file, int startOffset, int endOffset, @NonNls @Nonnull CharSequence newText) throws IncorrectOperationException {
+  public void reparseRange(PsiFile file, int startOffset, int endOffset, CharSequence newText) throws IncorrectOperationException {
     ReparseRangeUtil.reparseRange(file, startOffset, endOffset, newText);
   }
 
-  @Nonnull
-  public abstract DiffLog reparseRange(@Nonnull PsiFile file,
-                                       @Nonnull FileASTNode oldFileNode,
-                                       @Nonnull TextRange changedPsiRange,
-                                       @Nonnull CharSequence newText,
-                                       @Nonnull ProgressIndicator progressIndicator,
-                                       @Nonnull CharSequence lastCommittedText) throws IncorrectOperationException;
+  
+  public abstract DiffLog reparseRange(PsiFile file,
+                                       FileASTNode oldFileNode,
+                                       TextRange changedPsiRange,
+                                       CharSequence newText,
+                                       ProgressIndicator progressIndicator,
+                                       CharSequence lastCommittedText) throws IncorrectOperationException;
 
   public static final Key<Boolean> DO_NOT_REPARSE_INCREMENTALLY = Key.create("DO_NOT_REPARSE_INCREMENTALLY");
   public static final Key<Pair<ASTNode, CharSequence>> TREE_TO_BE_REPARSED = Key.create("TREE_TO_BE_REPARSED");
@@ -59,16 +57,16 @@ public abstract class BlockSupport {
   public static class ReparsedSuccessfullyException extends RuntimeException implements ControlFlowException {
     private final DiffLog myDiffLog;
 
-    public ReparsedSuccessfullyException(@Nonnull DiffLog diffLog) {
+    public ReparsedSuccessfullyException(DiffLog diffLog) {
       myDiffLog = diffLog;
     }
 
-    @Nonnull
+    
     public DiffLog getDiffLog() {
       return myDiffLog;
     }
 
-    @Nonnull
+    
     @Override
     public synchronized Throwable fillInStackTrace() {
       return this;

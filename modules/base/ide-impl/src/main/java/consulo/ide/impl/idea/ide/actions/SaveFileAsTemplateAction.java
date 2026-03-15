@@ -27,7 +27,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "SaveFileAsTemplate")
 public class SaveFileAsTemplateAction extends AnAction {
@@ -37,7 +36,7 @@ public class SaveFileAsTemplateAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         String fileText = e.getRequiredData(PlatformDataKeys.FILE_TEXT);
         VirtualFile file = e.getRequiredData(VirtualFile.KEY);
@@ -55,7 +54,7 @@ public class SaveFileAsTemplateAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(PlatformDataKeys.FILE_TEXT) && e.hasData(VirtualFile.KEY));
     }
 }

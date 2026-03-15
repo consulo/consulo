@@ -17,14 +17,13 @@ package consulo.execution.debug.impl.internal.action.handler;
 
 import consulo.execution.debug.XDebugSession;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class XDebuggerSuspendedActionHandler extends XDebuggerActionHandler {
 
-  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
     return session.isSuspended();
   }
 }

@@ -5,8 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,8 +17,8 @@ public interface SearchScopeProvider {
         return null;
     }
 
-    @Nonnull
-    default List<SearchScope> getSearchScopes(@Nonnull Project project) {
+    
+    default List<SearchScope> getSearchScopes(Project project) {
         return Collections.emptyList();
     }
 
@@ -29,7 +28,7 @@ public interface SearchScopeProvider {
      * @param project
      * @see PredefinedSearchScopeProvider
      */
-    default List<SearchScope> getGeneralSearchScopes(@Nonnull Project project) {
+    default List<SearchScope> getGeneralSearchScopes(Project project) {
         return Collections.emptyList();
     }
 }

@@ -22,7 +22,6 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.ui.color.RGBColor;
 import consulo.usage.UsageTreeColors;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -65,7 +64,7 @@ public class UsagesLightEditorColorSchemeExtender implements EditorColorSchemeEx
             .build());
     }
 
-    @Nonnull
+    
     @Override
     public String getColorSchemeId() {
         return EditorColorsScheme.DEFAULT_SCHEME_NAME;

@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author egor
@@ -40,7 +39,7 @@ public class DebuggerCopyPastePreprocessor implements CopyPastePreProcessor {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
     if (editor.getUserData(REMOVE_NEWLINES_ON_PASTE) != null) {

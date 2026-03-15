@@ -7,20 +7,19 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 public final class StopRangeSearchAction extends AnAction implements DumbAware {
 
     private final RangeSearch myRangeSearch;
 
-    public StopRangeSearchAction(@Nonnull RangeSearch rangeSearch) {
+    public StopRangeSearchAction(RangeSearch rangeSearch) {
         this.myRangeSearch = rangeSearch;
         getTemplatePresentation().setTextValue(FileEditorLocalize.largeFileEditorStopSearchingActionText());
         getTemplatePresentation().setIcon(PlatformIconGroup.actionsSuspend());
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         RangeSearchTask task = myRangeSearch.getLastExecutedRangeSearchTask();
         e.getPresentation().setEnabled(
             task != null && !task.isFinished() && !task.isShouldStop()
@@ -28,12 +27,12 @@ public final class StopRangeSearchAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
+    public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.EDT;
     }
 
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         RangeSearchTask task = myRangeSearch.getLastExecutedRangeSearchTask();
         if (task != null) {
             task.shouldStop();

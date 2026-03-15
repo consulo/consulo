@@ -25,8 +25,7 @@ import consulo.container.util.StatCollector;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.internal.WebApplicationImpl;
 import consulo.web.internal.WebStartupProgressImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *
@@ -34,7 +33,7 @@ import jakarta.annotation.Nullable;
  * @since 15-May-16
  */
 public class WebApplicationStarter extends ApplicationStarter {
-  public WebApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
+  public WebApplicationStarter(CommandLineArgs args, StatCollector stat) {
     super(args, stat);
   }
 
@@ -44,14 +43,14 @@ public class WebApplicationStarter extends ApplicationStarter {
     return new WebStartupProgressImpl();
   }
 
-  @Nonnull
+  
   @Override
   protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
     return new WebApplicationImpl(componentBinding, splashRef);
   }
 
   @Override
-  public void main(StatCollector stat, Runnable appInitalizeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(StatCollector stat, Runnable appInitalizeMark, ApplicationEx app, boolean newConfigFolder, CommandLineArgs args) {
     StartupProgress startupProgress = mySplashRef.get();
     if (startupProgress != null) {
       startupProgress.dispose();

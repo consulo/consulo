@@ -21,13 +21,12 @@ import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public class UnionPackageSet extends PackageSetBase {
   private final PackageSet myFirstSet;
   private final PackageSet mySecondSet;
 
-  public UnionPackageSet(@Nonnull PackageSet set1, @Nonnull PackageSet set2) {
+  public UnionPackageSet(PackageSet set1, PackageSet set2) {
     myFirstSet = set1;
     mySecondSet = set2;
   }
@@ -38,7 +37,7 @@ public class UnionPackageSet extends PackageSetBase {
   }
 
   @Override
-  @Nonnull
+  
   public PackageSet createCopy() {
     return new UnionPackageSet(myFirstSet.createCopy(), mySecondSet.createCopy());
   }
@@ -49,7 +48,7 @@ public class UnionPackageSet extends PackageSetBase {
   }
 
   @Override
-  @Nonnull
+  
   public String getText() {
     return myFirstSet.getText() + "||" + mySecondSet.getText();
   }

@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -30,19 +29,19 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface EditorHistoryManager {
-  public static EditorHistoryManager getInstance(@Nonnull Project project) {
+  public static EditorHistoryManager getInstance(Project project) {
     return project.getInstance(EditorHistoryManager.class);
   }
 
-  boolean hasBeenOpen(@Nonnull VirtualFile f);
+  boolean hasBeenOpen(VirtualFile f);
 
-  @Nonnull
+  
   List<VirtualFile> getFileList();
 
   @Nullable
-  FileEditorState getState(@Nonnull VirtualFile file, FileEditorProvider provider);
+  FileEditorState getState(VirtualFile file, FileEditorProvider provider);
 
-  void removeFile(@Nonnull VirtualFile file);
+  void removeFile(VirtualFile file);
 
   @Nullable
   FileEditorProvider getSelectedProvider(VirtualFile file);

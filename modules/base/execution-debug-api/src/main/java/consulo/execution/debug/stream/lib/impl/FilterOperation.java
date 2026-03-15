@@ -16,10 +16,9 @@
 package consulo.execution.debug.stream.lib.impl;
 
 import consulo.execution.debug.stream.resolve.FilterResolver;
-import jakarta.annotation.Nonnull;
 
 public class FilterOperation extends OrderBasedOperation {
-  public FilterOperation(@Nonnull String name) {
+  public FilterOperation(String name) {
     super(name, new FilterResolver());
   }
 }

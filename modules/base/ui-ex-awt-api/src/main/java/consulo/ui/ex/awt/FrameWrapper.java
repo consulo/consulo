@@ -40,9 +40,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,11 +74,11 @@ public class FrameWrapper implements Disposable, DataProvider {
     this(project, null);
   }
 
-  public FrameWrapper(Project project, @Nullable @NonNls String dimensionServiceKey) {
+  public FrameWrapper(Project project, @Nullable String dimensionServiceKey) {
     this(project, dimensionServiceKey, false);
   }
 
-  public FrameWrapper(Project project, @Nullable @NonNls String dimensionServiceKey, boolean isDialog) {
+  public FrameWrapper(Project project, @Nullable String dimensionServiceKey, boolean isDialog) {
     myDimensionKey = dimensionServiceKey;
     myIsDialog = isDialog;
     if (project != null) {
@@ -96,7 +94,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     myDataMap.put(dataId, data);
   }
 
-  public void setProject(@Nonnull Project project) {
+  public void setProject(Project project) {
     myProject = project;
     setData(Project.KEY, project);
     ProjectManager.getInstance().addProjectManagerListener(project, myProjectListener);
@@ -262,12 +260,12 @@ public class FrameWrapper implements Disposable, DataProvider {
     return getPeerFactory().createJDialog(this, parent);
   }
 
-  public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+  public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass) {
     return null;
   }
 
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     if (Project.KEY == dataId) {
       return myProject;
     }
@@ -322,7 +320,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     myTitle = title;
   }
 
-  public void addDisposable(@Nonnull Disposable disposable) {
+  public void addDisposable(Disposable disposable) {
     Disposer.register(this, disposable);
   }
 
@@ -341,7 +339,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     getFrame().setSize(size);
   }
 
-  @Nonnull
+  
   private static WindowStateService getWindowStateService(@Nullable Project project) {
     return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
   }

@@ -19,7 +19,6 @@ import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,29 +32,29 @@ public class StopWatch {
   private static final String MSEC_FORMAT = "%03d";
 
   private final long myStartTime;
-  @Nonnull
+  
   private final String myOperation;
-  @Nonnull
+  
   private final Map<VirtualFile, Long> myDurationPerRoot;
 
-  private StopWatch(@Nonnull String operation) {
+  private StopWatch(String operation) {
     myOperation = operation;
     myStartTime = System.currentTimeMillis();
     myDurationPerRoot = new HashMap<>();
   }
 
-  @Nonnull
-  public static StopWatch start(@Nonnull String operation) {
+  
+  public static StopWatch start(String operation) {
     return new StopWatch(operation);
   }
 
-  public void rootCompleted(@Nonnull VirtualFile root) {
+  public void rootCompleted(VirtualFile root) {
     long totalDuration = System.currentTimeMillis() - myStartTime;
     long duration = totalDuration - sum(myDurationPerRoot.values());
     myDurationPerRoot.put(root, duration);
   }
 
-  private static long sum(@Nonnull Collection<Long> durations) {
+  private static long sum(Collection<Long> durations) {
     long sum = 0;
     for (Long duration : durations) {
       sum += duration;
@@ -75,7 +74,7 @@ public class StopWatch {
   /**
    * 1h 1m 1.001s
    */
-  @Nonnull
+  
   public static String formatTime(long time) {
     if (time < 1000 * UNITS[0]) {
       return time + "ms";

@@ -17,7 +17,6 @@ package consulo.index.io;
 
 import consulo.index.io.data.DataInputOutputUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -43,14 +42,14 @@ public abstract class InlineKeyDescriptor<T> implements KeyDescriptor<T> {
   }
 
   @Override
-  public final void save(@Nonnull DataOutput out, T value) throws IOException {
+  public final void save(DataOutput out, T value) throws IOException {
     int v = toInt(value);
     if (myCompactFormat) DataInputOutputUtil.writeINT(out, v);
     else out.writeInt(v);
   }
 
   @Override
-  public final T read(@Nonnull DataInput in) throws IOException {
+  public final T read(DataInput in) throws IOException {
     int n;
     if (myCompactFormat) n = DataInputOutputUtil.readINT(in);
     else n = in.readInt();

@@ -34,8 +34,7 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Consumer;
@@ -60,12 +59,12 @@ public abstract class LightToolWindowManager implements Disposable {
   private MessageBusConnection myConnection;
   private final FileEditorManagerListener myListener = new FileEditorManagerListener() {
     @Override
-    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileOpened(FileEditorManager source, VirtualFile file) {
       bindToDesigner(getActiveDesigner());
     }
 
     @Override
-    public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileClosed(FileEditorManager source, VirtualFile file) {
       ApplicationManager.getApplication().invokeLater(new Runnable() {
         @Override
         public void run() {
@@ -75,7 +74,7 @@ public abstract class LightToolWindowManager implements Disposable {
     }
 
     @Override
-    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+    public void selectionChanged(FileEditorManagerEvent event) {
       bindToDesigner(getDesigner(event.getNewEditor()));
     }
   };
@@ -187,31 +186,31 @@ public abstract class LightToolWindowManager implements Disposable {
 
   protected abstract ToggleEditorModeAction createToggleAction(ToolWindowAnchor anchor);
 
-  public final void bind(@Nonnull DesignerEditorPanelFacade designer) {
+  public final void bind(DesignerEditorPanelFacade designer) {
     if (isEditorMode()) {
       myCreateAction.accept(designer);
     }
   }
 
-  public final void dispose(@Nonnull DesignerEditorPanelFacade designer) {
+  public final void dispose(DesignerEditorPanelFacade designer) {
     if (isEditorMode()) {
       disposeContent(designer);
     }
   }
 
-  protected final Object getContent(@Nonnull DesignerEditorPanelFacade designer) {
+  protected final Object getContent(DesignerEditorPanelFacade designer) {
     LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getClientPropertyName());
     return toolWindow.getContent();
   }
 
-  protected abstract LightToolWindow createContent(@Nonnull DesignerEditorPanelFacade designer);
+  protected abstract LightToolWindow createContent(DesignerEditorPanelFacade designer);
 
-  protected final LightToolWindow createContent(@Nonnull DesignerEditorPanelFacade designer,
-                                                @Nonnull LightToolWindowContent content,
-                                                @Nonnull String title,
-                                                @Nonnull Icon icon,
-                                                @Nonnull JComponent component,
-                                                @Nonnull JComponent focusedComponent,
+  protected final LightToolWindow createContent(DesignerEditorPanelFacade designer,
+                                                LightToolWindowContent content,
+                                                String title,
+                                                Icon icon,
+                                                JComponent component,
+                                                JComponent focusedComponent,
                                                 int defaultWidth,
                                                 @Nullable AnAction[] actions) {
     return new LightToolWindow(content, title, icon, component, focusedComponent, designer.getContentSplitter(), getEditorMode(), this,
@@ -257,7 +256,7 @@ public abstract class LightToolWindowManager implements Disposable {
     return value.equals("ToolWindow") ? null : ToolWindowAnchor.fromText(value);
   }
 
-  @Nonnull
+  
   protected String getClientPropertyName() {
     return getClass().getSimpleName();
   }

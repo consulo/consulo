@@ -37,7 +37,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -53,14 +52,14 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
 
   private static final Logger LOG = Logger.getInstance(ModuleDependencyDataService.class);
 
-  @Nonnull
+  
   @Override
   public Key<ModuleDependencyData> getTargetDataKey() {
     return ProjectKeys.MODULE_DEPENDENCY;
   }
 
   @Override
-  public void importData(@Nonnull Collection<DataNode<ModuleDependencyData>> toImport, @Nonnull Project project, boolean synchronous) {
+  public void importData(Collection<DataNode<ModuleDependencyData>> toImport, Project project, boolean synchronous) {
     Map<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> byModule = ExternalSystemApiUtil.groupBy(toImport, MODULE);
     for (Map.Entry<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> entry : byModule.entrySet()) {
       Module ideModule = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
@@ -79,8 +78,8 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
     }
   }
 
-  public void importData(@Nonnull final Collection<DataNode<ModuleDependencyData>> toImport,
-                         @Nonnull final Module module,
+  public void importData(final Collection<DataNode<ModuleDependencyData>> toImport,
+                         final Module module,
                          final boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
       @RequiredUIAccess

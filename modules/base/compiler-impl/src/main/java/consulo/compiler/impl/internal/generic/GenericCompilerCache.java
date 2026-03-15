@@ -22,7 +22,6 @@ import consulo.index.io.PersistentHashMap;
 import consulo.index.io.data.DataExternalizer;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -96,9 +95,9 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
 
     public void putState(
         int targetId,
-        @Nonnull Key key,
-        @Nonnull SourceState sourceState,
-        @Nonnull OutputState outputState
+        Key key,
+        SourceState sourceState,
+        OutputState outputState
     ) throws IOException {
         myPersistentMap.put(getKeyAndTargetData(key, targetId), new PersistentStateData<>(sourceState, outputState));
     }
@@ -118,7 +117,7 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
         public final SourceState mySourceState;
         public final OutputState myOutputState;
 
-        private PersistentStateData(@Nonnull SourceState sourceState, @Nonnull OutputState outputState) {
+        private PersistentStateData(SourceState sourceState, OutputState outputState) {
             mySourceState = sourceState;
             myOutputState = outputState;
         }

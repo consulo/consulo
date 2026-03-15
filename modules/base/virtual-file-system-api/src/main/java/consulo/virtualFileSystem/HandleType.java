@@ -20,8 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -56,7 +55,7 @@ public abstract class HandleType {
         myUseVcs = useVcs;
     }
 
-    @Nonnull
+    
     public LocalizeValue getName() {
         return myName;
     }

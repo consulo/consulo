@@ -24,7 +24,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Keep {@link ScreenReader#isActive} in sync with {@link GeneralSettings#isSupportScreenReaders}
@@ -37,7 +36,7 @@ public class ScreenReaderSupportHandler implements Disposable {
   private final PropertyChangeListener myGeneralSettingsListener;
 
   @Inject
-  public ScreenReaderSupportHandler(@Nonnull GeneralSettings generalSettings) {
+  public ScreenReaderSupportHandler(GeneralSettings generalSettings) {
     mySettings = generalSettings;
     myGeneralSettingsListener = e -> {
       if (GeneralSettings.PROP_SUPPORT_SCREEN_READERS.equals(e.getPropertyName())) {

@@ -7,15 +7,14 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
 
 public final class ViewLayoutModeActionGroup extends DefaultActionGroup implements DumbAware, ViewLayoutModificationAction {
 
-    private final @Nonnull Content myContent;
+    private final Content myContent;
 
     public ViewLayoutModeActionGroup(
-        @Nonnull Content content,
-        @Nonnull CustomContentLayoutOptions customContentLayoutOptions) {
+        Content content,
+        CustomContentLayoutOptions customContentLayoutOptions) {
         super(customContentLayoutOptions.getDisplayName(), true);
 
         add(new ViewLayoutModeAction(new HideContentLayoutModeOption(content, customContentLayoutOptions)));
@@ -32,7 +31,7 @@ public final class ViewLayoutModeActionGroup extends DefaultActionGroup implemen
     }
 
     @Override
-    public @Nonnull Content getContent() {
+    public Content getContent() {
         return myContent;
     }
 
@@ -41,7 +40,7 @@ public final class ViewLayoutModeActionGroup extends DefaultActionGroup implemen
         private final CustomContentLayoutOption myOption;
 
         public ViewLayoutModeAction(
-            @Nonnull CustomContentLayoutOption option) {
+            CustomContentLayoutOption option) {
 
             myOption = option;
         }
@@ -52,22 +51,22 @@ public final class ViewLayoutModeActionGroup extends DefaultActionGroup implemen
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myOption.isSelected();
         }
 
         @Override
-        public @Nonnull ActionUpdateThread getActionUpdateThread() {
+        public ActionUpdateThread getActionUpdateThread() {
             return ActionUpdateThread.EDT;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myOption.select();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(myOption.isEnabled());
             e.getPresentation().setText(myOption.getDisplayName());
@@ -100,7 +99,7 @@ public final class ViewLayoutModeActionGroup extends DefaultActionGroup implemen
         }
 
         @Override
-        public @Nonnull String getDisplayName() {
+        public String getDisplayName() {
             return ExecutionBundle.message("run.layout.do.not.show.view.option.message");
         }
     }

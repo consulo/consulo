@@ -26,7 +26,6 @@ import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointsDialogFact
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +35,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
   protected abstract void doShowPopup(Project project, JComponent component, Point whereToShow, Object breakpoint);
 
   @Override
-  public void perform(@Nonnull Project project, @Nonnull AnActionEvent event) {
+  public void perform(Project project, AnActionEvent event) {
     Editor editor = event.getData(Editor.KEY);
     if (editor == null) return;
 
@@ -49,7 +48,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
     editBreakpoint(project, editor, breakpoint, breakpointGutterRenderer);
   }
 
-  public void editBreakpoint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Object breakpoint, @Nonnull GutterIconRenderer breakpointGutterRenderer) {
+  public void editBreakpoint(Project project, Editor editor, Object breakpoint, GutterIconRenderer breakpointGutterRenderer) {
     if (BreakpointsDialogFactory.getInstance(project).isBreakpointPopupShowing()) return;
     EditorGutterComponentEx gutterComponent = ((EditorEx)editor).getGutterComponentEx();
     Point point = gutterComponent.getCenterPoint(breakpointGutterRenderer);
@@ -58,7 +57,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
     }
   }
 
-  public void editBreakpoint(@Nonnull Project project, @Nonnull JComponent parent, @Nonnull Point whereToShow, @Nonnull BreakpointItem breakpoint) {
+  public void editBreakpoint(Project project, JComponent parent, Point whereToShow, BreakpointItem breakpoint) {
     doShowPopup(project, parent, whereToShow, breakpoint.getBreakpoint());
   }
 }

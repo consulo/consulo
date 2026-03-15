@@ -20,7 +20,6 @@ import com.github.weisj.jsvg.attributes.ViewBox;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.GraphicsUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -44,8 +43,8 @@ public class DesktopAWTSVGImageReference extends DesktopAWTImageReference {
   }
 
   @Override
-  public void draw(@Nonnull JBUI.ScaleContext ctx,
-                   @Nonnull Graphics2D graphics,
+  public void draw(JBUI.ScaleContext ctx,
+                   Graphics2D graphics,
                    int x,
                    int y,
                    int width,

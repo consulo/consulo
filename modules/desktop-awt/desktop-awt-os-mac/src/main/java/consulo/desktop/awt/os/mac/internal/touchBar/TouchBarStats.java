@@ -3,7 +3,6 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -24,17 +23,17 @@ final class TouchBarStats {
         Arrays.setAll(myCounters, i -> new AtomicLong(0));
     }
 
-    static @Nonnull TouchBarStats getStats(@Nonnull String touchbarName) {
+    static TouchBarStats getStats(String touchbarName) {
         return ourStats.computeIfAbsent(touchbarName, s -> new TouchBarStats(touchbarName));
     }
 
-    static void printAll(@Nonnull PrintStream out) {
+    static void printAll(PrintStream out) {
         for (TouchBarStats tbs : ourStats.values()) {
             tbs.print(out);
         }
     }
 
-    void print(@Nonnull PrintStream out) {
+    void print(PrintStream out) {
         out.printf("========================= %s =========================", name);
         out.println();
         for (StatsCounters sc : StatsCounters.values()) {
@@ -59,27 +58,27 @@ final class TouchBarStats {
         }
     }
 
-    void incrementCounter(@Nonnull StatsCounters cnt) {
+    void incrementCounter(StatsCounters cnt) {
         myCounters[cnt.ordinal()].incrementAndGet();
     }
 
-    void incrementCounter(@Nonnull StatsCounters cnt, long value) {
+    void incrementCounter(StatsCounters cnt, long value) {
         myCounters[cnt.ordinal()].addAndGet(value);
     }
 
-    @Nonnull
-    AnActionStats getActionStats(@Nonnull String actionId) {
+    
+    AnActionStats getActionStats(String actionId) {
         return actionStats.computeIfAbsent(actionId, s -> new AnActionStats(s));
     }
 
-    @Nonnull
-    AnActionStats getActionStats(@Nonnull AnAction action) {
+    
+    AnActionStats getActionStats(AnAction action) {
         String actId = Helpers.getActionId(action);
         return actionStats.computeIfAbsent(actId, s -> new AnActionStats(s));
     }
 
     static final class AnActionStats {
-        final @Nonnull String actionId;
+        final String actionId;
 
         long totalUpdateDurationNs;
         long maxUpdateDurationNs;
@@ -95,7 +94,7 @@ final class TouchBarStats {
         long iconRenderingDurationNs; // time spent in NST._getRaster
         long iconLoadingDurationNs;   // time spent in IconLoader.getIcon
 
-        AnActionStats(@Nonnull String actionId) {
+        AnActionStats(String actionId) {
             this.actionId = actionId;
         }
 
@@ -120,7 +119,7 @@ final class TouchBarStats {
             this.iconLoadingDurationNs += other.iconLoadingDurationNs; // time spent in IconLoader.getIcon
         }
 
-        void print(@Nonnull PrintStream out) {
+        void print(PrintStream out) {
             out.printf("act '%s':\n", actionId);
 
             printSignificantValue(out, "iconUpdateIconRasterCount", iconUpdateIconRasterCount);
@@ -131,7 +130,7 @@ final class TouchBarStats {
             printSignificantValue(out, "iconRenderingDurationNs", iconRenderingDurationNs);
         }
 
-        private static void printSignificantValue(@Nonnull PrintStream out, @Nonnull String name, long val) {
+        private static void printSignificantValue(PrintStream out, String name, long val) {
             if (val == 0) // skip non-informative counters
                 return;
             if (name.endsWith("DurationNs") || name.endsWith("Ns")) {

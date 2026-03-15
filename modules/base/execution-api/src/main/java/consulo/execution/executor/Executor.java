@@ -20,23 +20,22 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author spleaner
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class Executor {
-    @Nonnull
+    
     public abstract String getId();
 
-    @Nonnull
+    
     public abstract String getToolWindowId();
 
     public abstract Image getToolWindowIcon();
 
-    @Nonnull
+    
     public abstract Image getIcon();
 
     @Nullable
@@ -44,20 +43,20 @@ public abstract class Executor {
         return null;
     }
 
-    @Nonnull
+    
     public abstract LocalizeValue getDescription();
 
-    @Nonnull
+    
     public abstract LocalizeValue getActionName();
 
 
-    @Nonnull
+    
     public abstract LocalizeValue getStartActionText();
 
-    @Nonnull
-    public abstract LocalizeValue getStartActiveText(@Nonnull String configurationName);
+    
+    public abstract LocalizeValue getStartActiveText(String configurationName);
 
-    @Nonnull
+    
     public String getContextActionId() {
         return "Context" + getId();
     }
@@ -70,7 +69,7 @@ public abstract class Executor {
     /**
      * Override this method and return {@code false} to hide executor from panel
      */
-    public boolean isApplicable(@Nonnull Project project) {
+    public boolean isApplicable(Project project) {
         return true;
     }
 }

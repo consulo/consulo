@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.ReplacePathToMacroMap;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 
@@ -44,7 +43,7 @@ public interface PathMacros {
    * @param name
    * @param value
    */
-  void addLegacyMacro(@Nonnull String name, @Nonnull String value);
+  void addLegacyMacro(String name, String value);
 
   void removeMacro(String name);
 
@@ -54,11 +53,11 @@ public interface PathMacros {
 
   Collection<String> getIgnoredMacroNames();
 
-  void setIgnoredMacroNames(@Nonnull Collection<String> names);
+  void setIgnoredMacroNames(Collection<String> names);
 
-  void addIgnoredMacro(@Nonnull String name);
+  void addIgnoredMacro(String name);
 
-  boolean isIgnoredMacroName(@Nonnull String macro);
+  boolean isIgnoredMacroName(String macro);
 
   void removeAllMacros();
 

@@ -25,8 +25,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ClassLoaderUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringHash;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.script.ScriptEngine;
@@ -59,13 +58,13 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
         }
     });
 
-    @Nonnull
+    
     @Override
     public List<String> getLanguages() {
         return ContainerUtil.map(getScriptEngineManager().getEngineFactories(), ScriptEngineFactory::getLanguageName);
     }
 
-    @Nonnull
+    
     @Override
     public List<String> getFileExtensions(@Nullable String language) {
         List<String> extensions = new ArrayList<>();
@@ -80,7 +79,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
 
     @Nullable
     @Override
-    public IdeScriptEngine getEngineForLanguage(@Nonnull String language, @Nullable ClassLoader loader) {
+    public IdeScriptEngine getEngineForLanguage(String language, @Nullable ClassLoader loader) {
         ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
         return ClassLoaderUtil.runWithClassLoader(
             l,
@@ -90,7 +89,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
 
     @Nullable
     @Override
-    public IdeScriptEngine getEngineForFileExtension(@Nonnull String extension, @Nullable ClassLoader loader) {
+    public IdeScriptEngine getEngineForFileExtension(String extension, @Nullable ClassLoader loader) {
         ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
         return ClassLoaderUtil.runWithClassLoader(
             l,
@@ -103,7 +102,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
         return myManagerFuture.isDone();
     }
 
-    @Nonnull
+    
     private ScriptEngineManager getScriptEngineManager() {
         ScriptEngineManager manager = null;
         try {
@@ -146,62 +145,62 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
         }
 
         @Override
-        public Object getBinding(@Nonnull String name) {
+        public Object getBinding(String name) {
             return myEngine.get(name);
         }
 
         @Override
-        public void setBinding(@Nonnull String name, Object value) {
+        public void setBinding(String name, Object value) {
             myEngine.put(name, value);
         }
 
-        @Nonnull
+        
         @Override
         public Writer getStdOut() {
             return myEngine.getContext().getWriter();
         }
 
         @Override
-        public void setStdOut(@Nonnull Writer writer) {
+        public void setStdOut(Writer writer) {
             myEngine.getContext().setWriter(writer);
         }
 
-        @Nonnull
+        
         @Override
         public Writer getStdErr() {
             return myEngine.getContext().getErrorWriter();
         }
 
         @Override
-        public void setStdErr(@Nonnull Writer writer) {
+        public void setStdErr(Writer writer) {
             myEngine.getContext().setErrorWriter(writer);
         }
 
-        @Nonnull
+        
         @Override
         public Reader getStdIn() {
             return myEngine.getContext().getReader();
         }
 
         @Override
-        public void setStdIn(@Nonnull Reader reader) {
+        public void setStdIn(Reader reader) {
             myEngine.getContext().setReader(reader);
         }
 
-        @Nonnull
+        
         @Override
         public String getLanguage() {
             return myEngine.getFactory().getLanguageName();
         }
 
-        @Nonnull
+        
         @Override
         public List<String> getFileExtensions() {
             return myEngine.getFactory().getExtensions();
         }
 
         @Override
-        public Object eval(@Nonnull String script) throws IdeScriptException {
+        public Object eval(String script) throws IdeScriptException {
             return ClassLoaderUtil.runWithClassLoader(myLoader, (ThrowableComputable<Object, IdeScriptException>) () -> {
                 try {
                     return myEngine.eval(script);

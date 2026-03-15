@@ -16,22 +16,21 @@
 package consulo.virtualFileSystem.pointer;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface VirtualFilePointer {
   VirtualFilePointer[] EMPTY_ARRAY = new VirtualFilePointer[0];
 
-  @Nonnull
+  
   String getFileName();
 
   @Nullable
   VirtualFile getFile();
 
-  @Nonnull
+  
   String getUrl();
 
-  @Nonnull
+  
   String getPresentableUrl();
 
   boolean isValid();

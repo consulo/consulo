@@ -21,7 +21,6 @@ import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleColorValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,21 +61,21 @@ public class WebStyleImpl implements Style {
         return myIsDark;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myId;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myName;
     }
 
-    @Nonnull
+    
     @Override
-    public ColorValue getColorValue(@Nonnull StyleColorValue colorKey) {
+    public ColorValue getColorValue(StyleColorValue colorKey) {
         ColorValue colorValue = myColors.get(colorKey);
         if (colorValue == null) {
             return StandardColors.RED.getStaticValue();

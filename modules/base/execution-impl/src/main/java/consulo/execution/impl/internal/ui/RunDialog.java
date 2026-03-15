@@ -27,8 +27,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -65,7 +64,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), new ApplyAction(), getHelpAction()};
     }
@@ -118,7 +117,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
         return editConfiguration(project, configuration, title, null);
     }
 
-    public static boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
+    public static boolean editConfiguration(ExecutionEnvironment environment, String title) {
         return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
     }
 

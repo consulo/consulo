@@ -18,7 +18,6 @@ package consulo.ide.tipOfDay;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -28,5 +27,5 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TipOfDayContributor {
-    void contribute(@Nonnull Consumer<LocalizeValue> consumer);
+    void contribute(Consumer<LocalizeValue> consumer);
 }

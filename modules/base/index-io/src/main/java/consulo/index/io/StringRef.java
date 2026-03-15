@@ -18,8 +18,7 @@ package consulo.index.io;
 import consulo.index.io.data.DataInputOutputUtil;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -34,13 +33,13 @@ public class StringRef {
   private String name;
   private final AbstractStringEnumerator store;
 
-  private StringRef(@Nonnull String name) {
+  private StringRef(String name) {
     this.name = name;
     id = -1;
     store = null;
   }
 
-  private StringRef(int id, @Nonnull AbstractStringEnumerator store) {
+  private StringRef(int id, AbstractStringEnumerator store) {
     this.id = id;
     this.store = store;
   }
@@ -59,13 +58,13 @@ public class StringRef {
     return name;
   }
 
-  public void writeTo(@Nonnull DataOutput out, @Nonnull AbstractStringEnumerator store) throws IOException {
+  public void writeTo(DataOutput out, AbstractStringEnumerator store) throws IOException {
     int nameId = getId(store);
     out.writeByte(nameId & 0xFF);
     DataInputOutputUtil.writeINT(out, nameId >> 8);
   }
 
-  public int getId(@Nonnull AbstractStringEnumerator store) {
+  public int getId(AbstractStringEnumerator store) {
     if (id == -1) {
       try {
         id = store.enumerate(name);
@@ -106,25 +105,25 @@ public class StringRef {
     return source == null ? null : new StringRef(source);
   }
 
-  @Nonnull
+  
   public static StringRef fromNullableString(@Nullable String source) {
     return new StringRef(source == null ? "" : source);
   }
 
   @Nullable
-  public static StringRef fromStream(@Nonnull DataInput in, @Nonnull AbstractStringEnumerator store) throws IOException {
+  public static StringRef fromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
     int nameId = DataInputOutputUtil.readINT(in);
 
     return nameId != 0 ? new StringRef(nameId, store) : null;
   }
 
   @Nullable
-  public static String stringFromStream(@Nonnull DataInput in, @Nonnull AbstractStringEnumerator store) throws IOException {
+  public static String stringFromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
     int nameId = DataInputOutputUtil.readINT(in);
     return nameId != 0 ? store.valueOf(nameId) : null;
   }
 
-  @Nonnull
+  
   public static StringRef[] createArray(int count) {
     return count == 0 ? EMPTY_ARRAY : new StringRef[count];
   }

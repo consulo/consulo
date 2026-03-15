@@ -6,7 +6,6 @@ import consulo.execution.debug.stream.trace.impl.TraceElementImpl;
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedArrayLengthException;
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedValueTypeException;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -22,7 +21,7 @@ public abstract class MatchInterpreterBase implements CallTraceInterpreter {
   private final CallTraceInterpreter myPeekResolver = new SimplePeekCallTraceInterpreter();
 
   @Override
-  public @Nonnull TraceInfo resolve(@Nonnull StreamCall call, @Nonnull Value value) {
+  public TraceInfo resolve(StreamCall call, Value value) {
     if (value instanceof ArrayReference array) {
       if (array.length() != 2) {
         throw new UnexpectedArrayLengthException("trace array for *match call should contain two items. Actual = " + array.length());
@@ -50,24 +49,24 @@ public abstract class MatchInterpreterBase implements CallTraceInterpreter {
     throw new UnexpectedValueTypeException("value should be array reference, but given " + value.typeName());
   }
 
-  protected abstract boolean getResult(@Nonnull Collection<TraceElement> traceBeforeFilter,
-                                       @Nonnull Collection<TraceElement> traceAfterFilter);
+  protected abstract boolean getResult(Collection<TraceElement> traceBeforeFilter,
+                                       Collection<TraceElement> traceAfterFilter);
 
-  protected abstract @Nonnull Action getAction(boolean result);
+  protected abstract Action getAction(boolean result);
 
   protected enum Action {
     CONNECT_FILTERED, CONNECT_DIFFERENCE
   }
 
-  private static @Nonnull Map<Integer, TraceElement> onlyFiltered(@Nonnull Collection<TraceElement> afterFilter) {
+  private static Map<Integer, TraceElement> onlyFiltered(Collection<TraceElement> afterFilter) {
     return makeIndexByTime(afterFilter.stream());
   }
 
-  private static @Nonnull Map<Integer, TraceElement> difference(@Nonnull Collection<TraceElement> before, @Nonnull Set<Integer> timesAfter) {
+  private static Map<Integer, TraceElement> difference(Collection<TraceElement> before, Set<Integer> timesAfter) {
     return makeIndexByTime(before.stream().filter(x -> !timesAfter.contains(x.getTime())));
   }
 
-  private static @Nonnull Map<Integer, TraceElement> makeIndexByTime(@Nonnull Stream<TraceElement> elementStream) {
+  private static Map<Integer, TraceElement> makeIndexByTime(Stream<TraceElement> elementStream) {
     return elementStream.collect(Collectors.toMap(TraceElement::getTime, Function.identity()));
   }
 }

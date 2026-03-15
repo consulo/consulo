@@ -31,8 +31,7 @@ import consulo.virtualFileSystem.http.event.FileDownloadingAdapter;
 import consulo.virtualFileSystem.http.event.FileDownloadingListener;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,18 +57,18 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     private final AtomicBoolean myCancelled = new AtomicBoolean();
     private final List<FileDownloadingListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-    public RemoteFileInfoImpl(@Nonnull String url, @Nonnull RemoteFileManagerImpl manager) {
+    public RemoteFileInfoImpl(String url, RemoteFileManagerImpl manager) {
         myUrl = url;
         myManager = manager;
     }
 
     @Override
-    public void addDownloadingListener(@Nonnull FileDownloadingListener listener) {
+    public void addDownloadingListener(FileDownloadingListener listener) {
         myListeners.add(listener);
     }
 
     @Override
-    public void removeDownloadingListener(@Nonnull FileDownloadingListener listener) {
+    public void removeDownloadingListener(FileDownloadingListener listener) {
         myListeners.remove(listener);
     }
 
@@ -177,7 +176,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
         return myCancelled.get();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getErrorMessage() {
         synchronized (myLock) {
@@ -186,7 +185,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     }
 
     @Override
-    public void errorOccurred(@Nonnull LocalizeValue errorMessage, boolean cancelled) {
+    public void errorOccurred(LocalizeValue errorMessage, boolean cancelled) {
         LOG.debug("Error: " + errorMessage);
         synchronized (myLock) {
             myLocalVirtualFile = null;
@@ -209,7 +208,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     }
 
     @Override
-    public void setProgressText(@Nonnull LocalizeValue text, boolean indeterminate) {
+    public void setProgressText(LocalizeValue text, boolean indeterminate) {
         for (FileDownloadingListener listener : myListeners) {
             listener.progressMessageChanged(indeterminate, text);
         }
@@ -290,7 +289,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
         }
 
         @Override
-        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+        public void errorOccurred(LocalizeValue errorMessage) {
             removeDownloadingListener(this);
             if (myPostRunnable != null) {
                 myPostRunnable.run();

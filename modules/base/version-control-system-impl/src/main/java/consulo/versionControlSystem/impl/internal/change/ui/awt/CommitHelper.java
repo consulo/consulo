@@ -46,8 +46,7 @@ import consulo.versionControlSystem.impl.internal.ui.awt.ConfirmationDialog;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,7 +59,7 @@ public class CommitHelper {
     public static final Key<Object> DOCUMENT_BEING_COMMITTED_KEY = new Key<>("DOCUMENT_BEING_COMMITTED");
 
     private final static Logger LOG = Logger.getInstance(CommitHelper.class);
-    @Nonnull
+    
     private final Project myProject;
 
     private final ChangeList myChangeList;
@@ -81,10 +80,10 @@ public class CommitHelper {
     private final HashSet<String> myFeedback;
 
     public CommitHelper(
-        @Nonnull Project project,
+        Project project,
         ChangeList changeList,
         List<Change> includedChanges,
-        @Nonnull LocalizeValue actionName,
+        LocalizeValue actionName,
         String commitMessage,
         List<CheckinHandler> handlers,
         boolean allOfDefaultChangeListChangesIncluded,
@@ -108,7 +107,7 @@ public class CommitHelper {
     }
 
     public CommitHelper(
-        @Nonnull Project project,
+        Project project,
         ChangeList changeList,
         List<Change> includedChanges,
         String actionName,
@@ -160,7 +159,7 @@ public class CommitHelper {
         else {
             Task.Backgroundable task = new Task.Backgroundable(myProject, myActionName, true, myConfiguration.getCommitOption()) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance((Project)myProject);
                     vcsManager.startBackgroundVcsOperation();
                     try {
@@ -236,7 +235,7 @@ public class CommitHelper {
         return text;
     }
 
-    private static NotificationType resolveNotificationType(@Nonnull GeneralCommitProcessor processor) {
+    private static NotificationType resolveNotificationType(GeneralCommitProcessor processor) {
         boolean hasExceptions = !processor.getVcsExceptions().isEmpty();
         boolean hasOnlyWarnings = doesntContainErrors(processor.getVcsExceptions());
 
@@ -318,7 +317,7 @@ public class CommitHelper {
         }
 
         @Override
-        public void process(AbstractVcs vcs, @Nonnull List<Change> items) {
+        public void process(AbstractVcs vcs, List<Change> items) {
             if (myVcs.getName().equals(vcs.getName())) {
                 CheckinEnvironment environment = vcs.getCheckinEnvironment();
                 if (environment != null) {
@@ -439,7 +438,7 @@ public class CommitHelper {
         }
 
         @Override
-        public void process(AbstractVcs vcs, @Nonnull List<Change> items) {
+        public void process(AbstractVcs vcs, List<Change> items) {
             CheckinEnvironment environment = vcs.getCheckinEnvironment();
             if (environment != null) {
                 Collection<FilePath> paths = ChangesUtil.getPaths(items);
@@ -577,8 +576,8 @@ public class CommitHelper {
      * @see #unmarkCommittingDocuments(Collection)
      * @see VetoSavingCommittingDocumentsAdapter
      */
-    @Nonnull
-    public static Collection<Document> markCommittingDocuments(@Nonnull Project project, @Nonnull List<Change> changes) {
+    
+    public static Collection<Document> markCommittingDocuments(Project project, List<Change> changes) {
         Collection<Document> committingDocs = new ArrayList<>();
         for (Change change : changes) {
             Document doc = ChangesUtil.getFilePath(change).getDocument();
@@ -596,7 +595,7 @@ public class CommitHelper {
      * @see #markCommittingDocuments(Project, List)
      * @see VetoSavingCommittingDocumentsAdapter
      */
-    public static void unmarkCommittingDocuments(@Nonnull Collection<Document> committingDocs) {
+    public static void unmarkCommittingDocuments(Collection<Document> committingDocs) {
         for (Document doc : committingDocs) {
             doc.putUserData(DOCUMENT_BEING_COMMITTED_KEY, null);
         }
@@ -641,7 +640,7 @@ public class CommitHelper {
         GeneralCommitProcessor processor,
         int errorsSize,
         int warningsSize,
-        @Nonnull List<VcsException> errors
+        List<VcsException> errors
     ) {
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(
             () -> {

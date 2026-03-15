@@ -18,7 +18,6 @@ package consulo.diagram;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface GraphBuilderFactory {
-    @Nonnull
+    
     public static GraphBuilderFactory getInstance() {
         return Application.get().getInstance(GraphBuilderFactory.class);
     }

@@ -16,12 +16,11 @@
 package consulo.remoteServer.runtime.ui;
 
 import consulo.remoteServer.runtime.ServerConnection;
-import jakarta.annotation.Nonnull;
 
 public interface ServersTreeNodeSelector {
-    void select(@Nonnull ServerConnection<?> connection);
+    void select(ServerConnection<?> connection);
 
-    void select(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName);
+    void select(ServerConnection<?> connection, String deploymentName);
 
-    void select(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName, @Nonnull String logName);
+    void select(ServerConnection<?> connection, String deploymentName, String logName);
 }

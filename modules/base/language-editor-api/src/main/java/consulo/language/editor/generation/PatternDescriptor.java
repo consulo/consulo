@@ -2,8 +2,7 @@ package consulo.language.editor.generation;
 
 import consulo.language.editor.template.Template;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -19,10 +18,10 @@ public abstract class PatternDescriptor {
     return null;
   }
 
-  @Nonnull
+  
   public abstract String getParentId();
 
-  @Nonnull
+  
   public abstract String getName();
 
   @Nullable

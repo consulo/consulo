@@ -5,8 +5,7 @@ import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -18,13 +17,13 @@ import java.util.function.Predicate;
  * @author Konstantin Bulenkov
  */
 public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
-    @Nonnull
+    
     String getSearchProviderId();
 
-    @Nonnull
+    
     String getGroupName();
 
-    @Nonnull
+    
     default String getFullGroupName() {
         return getGroupName();
     }
@@ -43,11 +42,11 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
      * this elements
      */
     @Deprecated
-    default int getElementPriority(@Nonnull Item element, @Nonnull String searchPattern) {
+    default int getElementPriority(Item element, String searchPattern) {
         return 0;
     }
 
-    @Nonnull
+    
     default List<SearchEverywhereCommandInfo> getSupportedCommands() {
         return Collections.emptyList();
     }
@@ -57,15 +56,15 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
         return null;
     }
 
-    @Nonnull
-    default List<AnAction> getActions(@Nonnull Runnable onChanged) {
+    
+    default List<AnAction> getActions(Runnable onChanged) {
         return Collections.emptyList();
     }
 
-    void fetchElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Predicate<? super Item> predicate);
+    void fetchElements(String pattern, ProgressIndicator progressIndicator, Predicate<? super Item> predicate);
 
-    @Nonnull
-    default ContributorSearchResult<Item> search(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, int elementsLimit) {
+    
+    default ContributorSearchResult<Item> search(String pattern, ProgressIndicator progressIndicator, int elementsLimit) {
         ContributorSearchResult.Builder<Item> builder = ContributorSearchResult.builder();
         fetchElements(pattern, progressIndicator, element -> {
             if (elementsLimit < 0 || builder.itemsCount() < elementsLimit) {
@@ -81,23 +80,23 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
         return builder.build();
     }
 
-    @Nonnull
-    default List<Item> search(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator) {
+    
+    default List<Item> search(String pattern, ProgressIndicator progressIndicator) {
         List<Item> res = new ArrayList<>();
         fetchElements(pattern, progressIndicator, res::add);
         return res;
     }
 
-    boolean processSelectedItem(@Nonnull Item selected, int modifiers, @Nonnull String searchText);
+    boolean processSelectedItem(Item selected, int modifiers, String searchText);
 
-    @Nonnull
+    
     ListCellRenderer<? super Item> getElementsRenderer();
 
     @Nullable
-    Object getDataForItem(@Nonnull Item element, @Nonnull Key dataId);
+    Object getDataForItem(Item element, Key dataId);
 
-    @Nonnull
-    default String filterControlSymbols(@Nonnull String pattern) {
+    
+    default String filterControlSymbols(String pattern) {
         return pattern;
     }
 

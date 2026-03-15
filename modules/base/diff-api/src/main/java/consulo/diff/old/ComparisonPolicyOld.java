@@ -20,8 +20,7 @@ import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.document.util.TextRange;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 @Deprecated
@@ -41,8 +40,8 @@ public abstract class ComparisonPolicyOld {
     return myName;
   }
 
-  @Nonnull
-  public DiffFragmentOld[] buildFragments(@Nonnull DiffString[] strings1, @Nonnull DiffString[] strings2) throws FilesTooBigForDiffException {
+  
+  public DiffFragmentOld[] buildFragments(DiffString[] strings1, DiffString[] strings2) throws FilesTooBigForDiffException {
     DiffFragmentBuilder builder = new DiffFragmentBuilder(strings1, strings2);
     Object[] wrappers1 = getWrappers(strings1);
     Object[] wrappers2 = getWrappers(strings2);
@@ -50,8 +49,8 @@ public abstract class ComparisonPolicyOld {
     return builder.buildFragments(Util.concatEquals(change, wrappers1, wrappers2));
   }
 
-  @Nonnull
-  public DiffFragmentOld[] buildDiffFragmentsFromLines(@Nonnull DiffString[] lines1, @Nonnull DiffString[] lines2)
+  
+  public DiffFragmentOld[] buildDiffFragmentsFromLines(DiffString[] lines1, DiffString[] lines2)
           throws FilesTooBigForDiffException {
     DiffFragmentBuilder builder = new DiffFragmentBuilder(lines1, lines2);
     Object[] wrappers1 = getLineWrappers(lines1);
@@ -60,7 +59,7 @@ public abstract class ComparisonPolicyOld {
     return builder.buildFragments(change);
   }
 
-  @Nonnull
+  
   public DiffFragmentOld createFragment(@Nullable DiffString text1, @Nullable DiffString text2) {
     text1 = toNull(text1);
     text2 = toNull(text2);
@@ -72,17 +71,17 @@ public abstract class ComparisonPolicyOld {
     return result;
   }
 
-  @Nonnull
-  public abstract DiffFragmentOld createFragment(@Nonnull Word word1, @Nonnull Word word2);
+  
+  public abstract DiffFragmentOld createFragment(Word word1, Word word2);
 
-  @Nonnull
-  protected abstract Object[] getWrappers(@Nonnull DiffString[] strings);
+  
+  protected abstract Object[] getWrappers(DiffString[] strings);
 
-  @Nonnull
-  protected abstract Object[] getLineWrappers(@Nonnull DiffString[] lines);
+  
+  protected abstract Object[] getLineWrappers(DiffString[] lines);
 
-  @Nonnull
-  private Object getWrapper(@Nonnull DiffString text) {
+  
+  private Object getWrapper(DiffString text) {
     return getWrappers(new DiffString[]{text})[0];
   }
 
@@ -91,21 +90,21 @@ public abstract class ComparisonPolicyOld {
       super(CommonLocalize.comparisonPolicyDefaultName().get());
     }
 
-    @Nonnull
+    
     @Override
-    protected Object[] getWrappers(@Nonnull DiffString[] strings) {
+    protected Object[] getWrappers(DiffString[] strings) {
       return strings;
     }
 
-    @Nonnull
+    
     @Override
-    protected Object[] getLineWrappers(@Nonnull DiffString[] lines) {
+    protected Object[] getLineWrappers(DiffString[] lines) {
       return lines;
     }
 
-    @Nonnull
+    
     @Override
-    public DiffFragmentOld createFragment(@Nonnull Word word1, @Nonnull Word word2) {
+    public DiffFragmentOld createFragment(Word word1, Word word2) {
       return createFragment(word1.getText(), word2.getText());
     }
 
@@ -120,15 +119,15 @@ public abstract class ComparisonPolicyOld {
       super(CommonLocalize.comparisonPolicyTrimSpaceName().get());
     }
 
-    @Nonnull
+    
     @Override
-    protected Object[] getLineWrappers(@Nonnull DiffString[] lines) {
+    protected Object[] getLineWrappers(DiffString[] lines) {
       return trimStrings(lines);
     }
 
-    @Nonnull
+    
     @Override
-    public DiffFragmentOld createFragment(@Nonnull Word word1, @Nonnull Word word2) {
+    public DiffFragmentOld createFragment(Word word1, Word word2) {
       DiffString text1 = word1.getText();
       DiffString text2 = word2.getText();
       if (word1.isWhitespace() && word2.isWhitespace() &&
@@ -138,9 +137,9 @@ public abstract class ComparisonPolicyOld {
       return createFragment(text1, text2);
     }
 
-    @Nonnull
+    
     @Override
-    protected Object[] getWrappers(@Nonnull DiffString[] strings) {
+    protected Object[] getWrappers(DiffString[] strings) {
       Object[] result = new Object[strings.length];
       boolean atBeginning = true;
       for (int i = 0; i < strings.length; i++) {
@@ -170,9 +169,9 @@ public abstract class ComparisonPolicyOld {
       super(CommonLocalize.comparisonPolicyIgnoreSpacesName().get());
     }
 
-    @Nonnull
+    
     @Override
-    protected Object[] getLineWrappers(@Nonnull DiffString[] lines) {
+    protected Object[] getLineWrappers(DiffString[] lines) {
       Object[] result = new Object[lines.length];
       for (int i = 0; i < lines.length; i++) {
         DiffString line = lines[i];
@@ -181,9 +180,9 @@ public abstract class ComparisonPolicyOld {
       return result;
     }
 
-    @Nonnull
+    
     @Override
-    public DiffFragmentOld[] buildFragments(@Nonnull DiffString[] strings1, @Nonnull DiffString[] strings2)
+    public DiffFragmentOld[] buildFragments(DiffString[] strings1, DiffString[] strings2)
             throws FilesTooBigForDiffException {
       DiffFragmentOld[] fragments = super.buildFragments(strings1, strings2);
       DiffCorrectionOld.FragmentsCollector collector = new DiffCorrectionOld.FragmentsCollector();
@@ -191,20 +190,20 @@ public abstract class ComparisonPolicyOld {
       return collector.toArray();
     }
 
-    @Nonnull
-    private static Object getWrapper(@Nonnull DiffString line) {
+    
+    private static Object getWrapper(DiffString line) {
       return line.skipSpaces();
     }
 
-    @Nonnull
+    
     @Override
-    public DiffFragmentOld createFragment(@Nonnull Word word1, @Nonnull Word word2) {
+    public DiffFragmentOld createFragment(Word word1, Word word2) {
       DiffString text1 = word1.getText();
       DiffString text2 = word2.getText();
       return word1.isWhitespace() && word2.isWhitespace() ? DiffFragmentOld.unchanged(text1, text2) : createFragment(text1, text2);
     }
 
-    @Nonnull
+    
     @Override
     public DiffFragmentOld createFragment(DiffString text1, DiffString text2) {
       DiffString toCompare1 = toNotNull(text1);
@@ -215,9 +214,9 @@ public abstract class ComparisonPolicyOld {
       return new DiffFragmentOld(text1, text2);
     }
 
-    @Nonnull
+    
     @Override
-    protected Object[] getWrappers(@Nonnull DiffString[] strings) {
+    protected Object[] getWrappers(DiffString[] strings) {
       return trimStrings(strings);
     }
 
@@ -227,7 +226,7 @@ public abstract class ComparisonPolicyOld {
     }
 
     @Override
-    public void process(@Nonnull DiffFragmentOld fragment, @Nonnull DiffCorrectionOld.FragmentsCollector collector) {
+    public void process(DiffFragmentOld fragment, DiffCorrectionOld.FragmentsCollector collector) {
       if (fragment.isEqual()) {
         collector.add(fragment);
         return;
@@ -250,13 +249,13 @@ public abstract class ComparisonPolicyOld {
     return text1 == null || text1.isEmpty() ? null : text1;
   }
 
-  @Nonnull
+  
   private static DiffString toNotNull(@Nullable DiffString text) {
     return text == null ? DiffString.EMPTY : text;
   }
 
-  @Nonnull
-  protected Object[] trimStrings(@Nonnull DiffString[] strings) {
+  
+  protected Object[] trimStrings(DiffString[] strings) {
     Object[] result = new Object[strings.length];
     for (int i = 0; i < strings.length; i++) {
       DiffString string = strings[i];
@@ -265,14 +264,14 @@ public abstract class ComparisonPolicyOld {
     return result;
   }
 
-  public boolean isEqual(@Nonnull DiffFragmentOld fragment) {
+  public boolean isEqual(DiffFragmentOld fragment) {
     if (fragment.isOneSide()) return false;
     Object[] wrappers = getLineWrappers(new DiffString[]{fragment.getText1(), fragment.getText2()});
     return Comparing.equal(wrappers[0], wrappers[1]);
   }
 
-  @Nonnull
-  public Word createFormatting(@Nonnull DiffString text, @Nonnull TextRange textRange) {
+  
+  public Word createFormatting(DiffString text, TextRange textRange) {
     return new FormattingOld(text, textRange);
   }
 
@@ -280,9 +279,9 @@ public abstract class ComparisonPolicyOld {
     return COMPARISON_POLICIES;
   }
 
-  @Nonnull
+  
   @TestOnly
-  protected Object[] getWrappers(@Nonnull String[] lines) {
+  protected Object[] getWrappers(String[] lines) {
     DiffString[] unsafeStrings = new DiffString[lines.length];
     for (int i = 0; i < lines.length; i++) {
       unsafeStrings[i] = DiffString.createNullable(lines[i]);
@@ -290,9 +289,9 @@ public abstract class ComparisonPolicyOld {
     return getWrappers(unsafeStrings);
   }
 
-  @Nonnull
+  
   @TestOnly
-  protected Object[] getLineWrappers(@Nonnull String[] lines) {
+  protected Object[] getLineWrappers(String[] lines) {
     DiffString[] unsafeStrings = new DiffString[lines.length];
     for (int i = 0; i < lines.length; i++) {
       unsafeStrings[i] = DiffString.createNullable(lines[i]);

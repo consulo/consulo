@@ -26,11 +26,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
 
 abstract class CurrentFileTodosPanel extends TodoPanel {
     @RequiredUIAccess
-    CurrentFileTodosPanel(@Nonnull Project project, TodoPanelSettings settings, Content content) {
+    CurrentFileTodosPanel(Project project, TodoPanelSettings settings, Content content) {
         super(project, settings, true, content);
 
         VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
@@ -38,7 +37,7 @@ abstract class CurrentFileTodosPanel extends TodoPanel {
         // It's important to remove this listener. It prevents invocation of setFile method after the tree builder is disposed
         project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
-            public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
+            public void selectionChanged(FileEditorManagerEvent e) {
                 VirtualFile file = e.getNewFile();
                 PsiFile psiFile = file != null && file.isValid() ? PsiManager.getInstance(myProject).findFile(file) : null;
                 // This invokeLater is required. The problem is setFile does a commit to PSI, but setFile is

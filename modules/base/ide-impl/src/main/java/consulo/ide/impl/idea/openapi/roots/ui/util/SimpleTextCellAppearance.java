@@ -20,8 +20,7 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 // todo: move to lang-impl ?
 public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
@@ -29,28 +28,28 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
   private final SimpleTextAttributes myTextAttributes;
   private final String myText;
 
-  public static SimpleTextCellAppearance regular(@Nonnull String text, @Nullable Image icon) {
+  public static SimpleTextCellAppearance regular(String text, @Nullable Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
-  public static SimpleTextCellAppearance invalid(@Nonnull String text, @Nullable Image icon) {
+  public static SimpleTextCellAppearance invalid(String text, @Nullable Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
-  public static SimpleTextCellAppearance synthetic(@Nonnull String text, @Nullable Image icon) {
+  public static SimpleTextCellAppearance synthetic(String text, @Nullable Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
   }
 
-  public SimpleTextCellAppearance(@Nonnull String text,
+  public SimpleTextCellAppearance(String text,
                                   @Nullable Image icon,
-                                  @Nonnull SimpleTextAttributes textAttributes) {
+                                  SimpleTextAttributes textAttributes) {
     myIcon = icon;
     myTextAttributes = textAttributes;
     myText = text;
   }
 
   @Override
-  public void customize(@Nonnull ColoredTextContainer component) {
+  public void customize(ColoredTextContainer component) {
     component.setIcon(myIcon);
     component.append(myText, myTextAttributes);
   }
@@ -62,12 +61,12 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  @Nonnull
+  
   public String getText() {
     return myText;
   }
 
-  @Nonnull
+  
   public SimpleTextAttributes getTextAttributes() {
     return myTextAttributes;
   }

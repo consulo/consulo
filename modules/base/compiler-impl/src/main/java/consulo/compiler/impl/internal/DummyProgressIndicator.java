@@ -22,8 +22,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,15 +30,15 @@ import jakarta.annotation.Nullable;
  */
 public class DummyProgressIndicator implements ProgressIndicatorEx {
     @Override
-    public void addStateDelegate(@Nonnull ProgressIndicatorEx delegate) {
+    public void addStateDelegate(ProgressIndicatorEx delegate) {
     }
 
     @Override
-    public void finish(@Nonnull TaskInfo task) {
+    public void finish(TaskInfo task) {
     }
 
     @Override
-    public boolean isFinished(@Nonnull TaskInfo task) {
+    public boolean isFinished(TaskInfo task) {
         return false;
     }
 
@@ -53,7 +52,7 @@ public class DummyProgressIndicator implements ProgressIndicatorEx {
     }
 
     @Override
-    public void initStateFrom(@Nonnull ProgressIndicator indicator) {
+    public void initStateFrom(ProgressIndicator indicator) {
     }
 
     @Override
@@ -79,20 +78,20 @@ public class DummyProgressIndicator implements ProgressIndicatorEx {
     }
 
     @Override
-    public void setTextValue(@Nonnull LocalizeValue textValue) {
+    public void setTextValue(LocalizeValue textValue) {
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTextValue() {
         return LocalizeValue.empty();
     }
 
     @Override
-    public void setText2Value(@Nonnull LocalizeValue text) {
+    public void setText2Value(LocalizeValue text) {
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText2Value() {
         return LocalizeValue.empty();
@@ -120,7 +119,7 @@ public class DummyProgressIndicator implements ProgressIndicatorEx {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public ModalityState getModalityState() {
         return Application.get().getDefaultModalityState();

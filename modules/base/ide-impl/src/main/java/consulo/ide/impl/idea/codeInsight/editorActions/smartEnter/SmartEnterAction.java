@@ -35,7 +35,6 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class SmartEnterAction extends EditorAction {
         }
 
         @Override
-        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
             return getEnterHandler().isEnabled(editor, caret, dataContext);
         }
 

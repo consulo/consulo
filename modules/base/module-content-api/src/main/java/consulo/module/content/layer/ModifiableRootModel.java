@@ -18,8 +18,7 @@ package consulo.module.content.layer;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.module.content.ModuleRootManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Model of roots that should be used by clients to modify module roots.
@@ -30,15 +29,15 @@ import jakarta.annotation.Nullable;
 public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRootLayer {
   String DEFAULT_LAYER_NAME = "Default";
 
-  @Nonnull
-  ModifiableModuleRootLayer addLayer(@Nonnull String name, @Nullable String nameForCopy, boolean activate);
+  
+  ModifiableModuleRootLayer addLayer(String name, @Nullable String nameForCopy, boolean activate);
 
-  boolean removeLayer(@Nonnull String name, boolean initDefault);
+  boolean removeLayer(String name, boolean initDefault);
 
   void removeAllLayers(boolean initDefault);
 
   @Nullable()
-  ModifiableModuleRootLayer setCurrentLayer(@Nonnull String name);
+  ModifiableModuleRootLayer setCurrentLayer(String name);
 
   void clear();
 

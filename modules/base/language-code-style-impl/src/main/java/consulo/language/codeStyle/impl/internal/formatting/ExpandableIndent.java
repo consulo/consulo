@@ -16,16 +16,15 @@
 package consulo.language.codeStyle.impl.internal.formatting;
 
 import consulo.language.codeStyle.internal.IndentImpl;
-import jakarta.annotation.Nonnull;
 
 public class ExpandableIndent extends IndentImpl {
     private boolean myEnforceIndent;
 
-    public ExpandableIndent(@Nonnull Type type) {
+    public ExpandableIndent(Type type) {
         this(type, false);
     }
 
-    public ExpandableIndent(@Nonnull Type type, boolean relativeToDirectParent) {
+    public ExpandableIndent(Type type, boolean relativeToDirectParent) {
         super(type, false, 0, relativeToDirectParent, true);
         myEnforceIndent = false;
     }

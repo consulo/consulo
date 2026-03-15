@@ -20,9 +20,7 @@ import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.Wrapper;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,33 +29,33 @@ import java.util.List;
 
 public abstract class DiffPanelBase extends JPanel implements DataProvider {
   @Nullable protected final Project myProject;
-  @Nonnull
+  
   private final DataProvider myDataProvider;
-  @Nonnull
+  
   protected final DiffContext myContext;
 
-  @Nonnull
+  
   private final List<JComponent> myPersistentNotifications = new ArrayList<JComponent>();
 
-  @Nonnull
+  
   protected final JPanel myContentPanel;
-  @Nonnull
+  
   protected final JPanel myNotificationsPanel;
 
-  @Nonnull
+  
   private final Wrapper myNorthPanel;
-  @Nonnull
+  
   private final Wrapper mySouthPanel;
 
-  @Nonnull
+  
   protected final CardLayout myCardLayout;
 
-  @Nonnull
+  
   protected String myCurrentCard;
 
   public DiffPanelBase(@Nullable Project project,
-                       @Nonnull DataProvider provider,
-                       @Nonnull DiffContext context) {
+                       DataProvider provider,
+                       DiffContext context) {
     super(new BorderLayout());
     myProject = project;
     myDataProvider = provider;
@@ -77,7 +75,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     add(mySouthPanel, BorderLayout.SOUTH);
   }
 
-  public void setTopPanel(@jakarta.annotation.Nullable JComponent component) {
+  public void setTopPanel(@Nullable JComponent component) {
     myNorthPanel.setContent(component);
   }
 
@@ -85,11 +83,11 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     mySouthPanel.setContent(component);
   }
 
-  protected void setCurrentCard(@Nonnull String card) {
+  protected void setCurrentCard(String card) {
     setCurrentCard(card, true);
   }
 
-  protected void setCurrentCard(@Nonnull String card, boolean keepFocus) {
+  protected void setCurrentCard(String card, boolean keepFocus) {
     boolean restoreFocus = keepFocus && myContext.isFocused();
 
     myCardLayout.show(myContentPanel, card);
@@ -101,7 +99,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
 
   @Nullable
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     return myDataProvider.getData(dataId);
   }
 
@@ -109,7 +107,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
   // Notifications
   //
 
-  public void setPersistentNotifications(@Nonnull List<JComponent> components) {
+  public void setPersistentNotifications(List<JComponent> components) {
     for (JComponent notification : myPersistentNotifications) {
       myNotificationsPanel.remove(notification);
     }
@@ -131,7 +129,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     myNotificationsPanel.revalidate();
   }
 
-  public void addNotification(@Nonnull JComponent notification) {
+  public void addNotification(JComponent notification) {
     myNotificationsPanel.add(notification);
     myNotificationsPanel.revalidate();
   }

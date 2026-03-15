@@ -18,9 +18,7 @@ package consulo.ui.ex.awt;
 
 import consulo.application.AllIcons;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -30,11 +28,11 @@ public class AsyncProcessIcon extends AnimatedIconComponent {
   public static final int COUNT = SMALL_ICONS.length;
   public static final int CYCLE_LENGTH = AnimatedIcon.Default.DELAY * SMALL_ICONS.length;
 
-  public AsyncProcessIcon(@NonNls String name) {
+  public AsyncProcessIcon(String name) {
     this(name, SMALL_ICONS, AllIcons.Process.Step_passive);
   }
 
-  public AsyncProcessIcon(@NonNls String name, Image[] icons, Image passive) {
+  public AsyncProcessIcon(String name, Image[] icons, Image passive) {
     super(name, icons, passive, CYCLE_LENGTH);
   }
 
@@ -58,8 +56,8 @@ public class AsyncProcessIcon extends AnimatedIconComponent {
     }
   }
 
-  @Nonnull
-  protected Rectangle calculateBounds(@Nonnull JComponent container) {
+  
+  protected Rectangle calculateBounds(JComponent container) {
     Rectangle rec = container.getVisibleRect();
     Dimension iconSize = getPreferredSize();
     return new Rectangle(rec.x + rec.width - iconSize.width, rec.y, iconSize.width, iconSize.height);
@@ -68,7 +66,7 @@ public class AsyncProcessIcon extends AnimatedIconComponent {
   public static class Big extends AsyncProcessIcon {
     private static final Image[] BIG_ICONS = AnimatedIcon.Big.ICONS.toArray(new Image[0]);
 
-    public Big(@NonNls String name) {
+    public Big(String name) {
       super(name, BIG_ICONS, AllIcons.Process.Big.Step_passive);
     }
   }

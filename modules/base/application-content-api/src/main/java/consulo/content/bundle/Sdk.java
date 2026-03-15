@@ -22,8 +22,7 @@ import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 
 /**
@@ -35,12 +34,12 @@ public interface Sdk extends UserDataHolder, Named {
 
   public static ArrayFactory<Sdk> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Sdk[count];
 
-  @Nonnull
+  
   SdkTypeId getSdkType();
 
   boolean isPredefined();
 
-  @Nonnull
+  
   @Override
   String getName();
 
@@ -50,24 +49,24 @@ public interface Sdk extends UserDataHolder, Named {
   @Nullable
   String getHomePath();
 
-  @Nonnull
+  
   Path getHomeNioPath();
 
-  @Nonnull
+  
   Platform getPlatform();
 
   @Nullable
   VirtualFile getHomeDirectory();
 
-  @Nonnull
+  
   RootProvider getRootProvider();
 
-  @Nonnull
+  
   SdkModificator getSdkModificator();
 
   @Nullable
   SdkAdditionalData getSdkAdditionalData();
 
-  @Nonnull
+  
   Object clone() throws CloneNotSupportedException;
 }

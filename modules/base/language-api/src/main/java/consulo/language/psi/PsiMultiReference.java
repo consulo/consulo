@@ -22,7 +22,6 @@ import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -60,7 +59,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   private final PsiElement myElement;
   private boolean mySorted;
 
-  public PsiMultiReference(@Nonnull PsiReference[] references, PsiElement element){
+  public PsiMultiReference(PsiReference[] references, PsiElement element){
     assert references.length > 0;
     myReferences = references;
     myElement = element;
@@ -84,7 +83,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
     return myElement;
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   @Override
   public TextRange getRangeInElement(){
@@ -116,7 +115,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public String getCanonicalText(){
     return chooseReference().getCanonicalText();
   }
@@ -129,7 +128,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
 
   @RequiredWriteAction
   @Override
-  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException{
+  public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException{
     return chooseReference().bindToElement(element);
   }
 
@@ -144,7 +143,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Object[] getVariants() {
     Set<Object> variants = new HashSet<Object>();
     for(PsiReference ref: myReferences) {
@@ -167,7 +166,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public ResolveResult[] multiResolve(boolean incompleteCode) {
     PsiReference[] refs = getReferences();
     Collection<ResolveResult> result = new LinkedHashSet<ResolveResult>(refs.length);

@@ -35,8 +35,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -319,7 +318,7 @@ public final class IdeMouseEventDispatcher {
         return root;
     }
 
-    public static void requestFocusInNonFocusedWindow(@Nonnull MouseEvent event) {
+    public static void requestFocusInNonFocusedWindow(MouseEvent event) {
         if (event.getID() == MOUSE_PRESSED) {
             // request focus by mouse pressed before focus settles down
             requestFocusInNonFocusedWindow(event.getComponent());

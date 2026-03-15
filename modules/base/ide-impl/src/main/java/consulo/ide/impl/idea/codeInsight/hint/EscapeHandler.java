@@ -24,15 +24,14 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.hint.HintManager;
 import consulo.ui.ex.action.IdeActions;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "hide-hints")
 public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
   private EditorActionHandler myOriginalHandler;
 
   @Override
-  public void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
+  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
     if (HintManagerImpl.getInstanceImpl().hideHints(HintManager.HIDE_BY_ESCAPE | HintManager.HIDE_BY_ANY_KEY, true, false)) {
       return;
     }
@@ -40,7 +39,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
   }
 
   @Override
-  public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
     return hintManager.isEscapeHandlerEnabled() || myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
@@ -50,7 +49,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_ESCAPE;

@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.impl.image.reference;
 
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.impl.image.ImageReference;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -29,8 +28,8 @@ public abstract class DesktopAWTImageReference implements ImageReference {
   protected DesktopAWTImageReference() {
   }
 
-  public abstract void draw(@Nonnull JBUI.ScaleContext ctx,
-                            @Nonnull Graphics2D graphics,
+  public abstract void draw(JBUI.ScaleContext ctx,
+                            Graphics2D graphics,
                             int x,
                             int y,
                             int width,

@@ -26,11 +26,10 @@ import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EditorHelper {
-  public static <T extends PsiElement> void openFilesInEditor(@Nonnull T[] elements) {
+  public static <T extends PsiElement> void openFilesInEditor(T[] elements) {
     int limit = UISettings.getInstance().getEditorTabLimit();
     int max = Math.min(limit, elements.length);
     for (int i = 0; i < max; i++) {
@@ -38,13 +37,13 @@ public class EditorHelper {
     }
   }
 
-  public static Editor openInEditor(@Nonnull PsiElement element) {
+  public static Editor openInEditor(PsiElement element) {
     FileEditor editor = openInEditor(element, true);
     return editor instanceof TextEditor ? ((TextEditor)editor).getEditor() : null;
   }
 
   @Nullable
-  public static FileEditor openInEditor(@Nonnull PsiElement element, boolean switchToText) {
+  public static FileEditor openInEditor(PsiElement element, boolean switchToText) {
     PsiFile file;
     int offset;
     if (element instanceof PsiFile) {

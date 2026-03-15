@@ -19,7 +19,6 @@ import consulo.annotation.UsedInPlugin;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,9 +26,9 @@ import jakarta.annotation.Nonnull;
  */
 @UsedInPlugin
 public class HighlightTypeUtil {
-  @Nonnull
+  
   @SuppressWarnings("deprecation")
-  public static HighlightInfoType convertSeverity(@Nonnull HighlightSeverity severity) {
+  public static HighlightInfoType convertSeverity(HighlightSeverity severity) {
     if (severity == HighlightSeverity.ERROR) return HighlightInfoType.ERROR;
     else if (severity == HighlightSeverity.WARNING) return HighlightInfoType.WARNING;
     else if (severity == HighlightSeverity.INFO) return HighlightInfoType.INFO;
@@ -38,9 +37,9 @@ public class HighlightTypeUtil {
     else return HighlightInfoType.INFORMATION;
   }
 
-  @Nonnull
+  
   @SuppressWarnings("deprecation")
-  public static ProblemHighlightType convertSeverityToProblemHighlight(@Nonnull HighlightSeverity severity) {
+  public static ProblemHighlightType convertSeverityToProblemHighlight(HighlightSeverity severity) {
     if (severity == HighlightSeverity.ERROR) return ProblemHighlightType.ERROR;
     else if (severity == HighlightSeverity.WARNING) return ProblemHighlightType.WARNING;
     else if (severity == HighlightSeverity.INFO) return ProblemHighlightType.INFO;

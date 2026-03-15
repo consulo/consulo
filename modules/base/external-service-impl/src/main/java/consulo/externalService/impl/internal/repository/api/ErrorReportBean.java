@@ -19,7 +19,6 @@ import consulo.container.plugin.PluginId;
 import consulo.externalService.update.UpdateChannel;
 import consulo.logging.attachment.Attachment;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -47,7 +46,7 @@ public class ErrorReportBean extends InformationBean {
         }
 
         @Override
-        public int compareTo(@Nonnull AffectedPlugin o) {
+        public int compareTo(AffectedPlugin o) {
             return pluginId.compareToIgnoreCase(o.pluginId);
         }
     }
@@ -74,7 +73,7 @@ public class ErrorReportBean extends InformationBean {
         this.lastAction = lastAction;
     }
 
-    public void addAffectedPlugin(@Nonnull PluginId pluginId, @Nonnull String version) {
+    public void addAffectedPlugin(PluginId pluginId, String version) {
         affectedPlugins.add(new AffectedPlugin(pluginId.toString(), version));
     }
 

@@ -16,8 +16,7 @@ import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -56,36 +55,36 @@ public class HintUtil {
     private HintUtil() {
     }
 
-    @Nonnull
+    
     @Deprecated
     public static ColorValue getInformationColor() {
         return HintColorUtil.getInformationColor();
     }
 
-    @Nonnull
+    
     @Deprecated
     public static ColorValue getQuestionColor() {
         return HintColorUtil.getQuestionColor();
     }
 
-    @Nonnull
+    
     @Deprecated
     public static ColorValue getErrorColor() {
         return HintColorUtil.getErrorColor();
     }
 
-    @Nonnull
+    
     @Deprecated
     public static ColorValue getRecentLocationsSelectionColor(EditorColorsScheme colorsScheme) {
         return HintColorUtil.getRecentLocationsSelectionColor(colorsScheme);
     }
 
-    public static JComponent createInformationLabel(@Nonnull String text) {
+    public static JComponent createInformationLabel(String text) {
         return createInformationLabel(text, null, null, null);
     }
 
     public static JComponent createInformationLabel(
-        @Nonnull String text,
+        String text,
         @Nullable HyperlinkListener hyperlinkListener,
         @Nullable MouseListener mouseListener,
         @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
@@ -96,7 +95,7 @@ public class HintUtil {
         return label;
     }
 
-    @Nonnull
+    
     public static HintHint getInformationHint() {
         return new HintHint().setFont(getBoldFont()).setAwtTooltip(true);
     }
@@ -106,7 +105,7 @@ public class HintUtil {
         return BorderFactory.createCompoundBorder(new ColoredSideBorder(Color.white, Color.white, Color.gray, Color.gray, 1), BorderFactory.createEmptyBorder(2, 2, 2, 2));
     }
 
-    @Nonnull
+    
     public static JComponent createInformationLabel(SimpleColoredText text) {
         return createInformationLabel(text, null);
     }
@@ -138,7 +137,7 @@ public class HintUtil {
         return null;
     }
 
-    @Nonnull
+    
     public static SimpleColoredComponent createInformationComponent() {
         SimpleColoredComponent component = new SimpleColoredComponent();
         component.setBackground(TargetAWT.to(getInformationColor()));
@@ -147,8 +146,8 @@ public class HintUtil {
         return component;
     }
 
-    @Nonnull
-    public static JComponent createInformationLabel(@Nonnull SimpleColoredText text, @Nullable Image icon) {
+    
+    public static JComponent createInformationLabel(SimpleColoredText text, @Nullable Image icon) {
         SimpleColoredComponent component = createInformationComponent();
         component.setIcon(icon);
         text.appendToComponent(component);
@@ -156,7 +155,7 @@ public class HintUtil {
     }
 
     public static JComponent createErrorLabel(
-        @Nonnull String text,
+        String text,
         @Nullable HyperlinkListener hyperlinkListener,
         @Nullable MouseListener mouseListener,
         @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
@@ -169,13 +168,13 @@ public class HintUtil {
         return label;
     }
 
-    @Nonnull
-    public static JComponent createErrorLabel(@Nonnull String text) {
+    
+    public static JComponent createErrorLabel(String text) {
         return createErrorLabel(text, null, null, null);
     }
 
-    @Nonnull
-    private static HintLabel createLabel(String text, @Nullable Image icon, @Nonnull Color color, @Nonnull HintHint hintHint) {
+    
+    private static HintLabel createLabel(String text, @Nullable Image icon, Color color, HintHint hintHint) {
         HintLabel label = new HintLabel();
         label.setText(text, hintHint);
         label.setIcon(TargetAWT.to(icon));
@@ -194,7 +193,7 @@ public class HintUtil {
         return UIUtil.getLabelFont().deriveFont(Font.BOLD);
     }
 
-    @Nonnull
+    
     public static JLabel createAdComponent(String bottomText, Border border, @JdkConstants.HorizontalAlignment int alignment) {
         JLabel label = new JLabel();
         label.setText(bottomText);
@@ -207,19 +206,19 @@ public class HintUtil {
         return label;
     }
 
-    @Nonnull
-    public static String prepareHintText(@Nonnull String text, @Nonnull HintHint hintHint) {
+    
+    public static String prepareHintText(String text, HintHint hintHint) {
         return prepareHintText(new Html(text), hintHint);
     }
 
-    public static String prepareHintText(@Nonnull Html text, @Nonnull HintHint hintHint) {
+    public static String prepareHintText(Html text, HintHint hintHint) {
         String htmlBody = UIUtil.getHtmlBody(text);
         return String.format("<html><head>%s</head><body>%s</body></html>",
             UIUtil.getCssFontDeclaration(hintHint.getTextFont(), hintHint.getTextForeground(), hintHint.getLinkForeground(), hintHint.getUlImg()), htmlBody);
     }
 
     private static void configureLabel(
-        @Nonnull HintLabel label,
+        HintLabel label,
         @Nullable HyperlinkListener hyperlinkListener,
         @Nullable MouseListener mouseListener,
         @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
@@ -251,7 +250,7 @@ public class HintUtil {
             setLayout(new BorderLayout());
         }
 
-        private HintLabel(@Nonnull SimpleColoredComponent component) {
+        private HintLabel(SimpleColoredComponent component) {
             this();
             setText(component);
         }
@@ -276,7 +275,7 @@ public class HintUtil {
             return super.requestFocusInWindow();
         }
 
-        public void setText(@Nonnull SimpleColoredComponent colored) {
+        public void setText(SimpleColoredComponent colored) {
             clearText();
 
             myColored = colored;

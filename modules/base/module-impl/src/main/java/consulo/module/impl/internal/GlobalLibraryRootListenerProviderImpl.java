@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -35,7 +34,7 @@ import jakarta.inject.Singleton;
 public class GlobalLibraryRootListenerProviderImpl implements GlobalLibraryRootListenerProvider {
   private  final VirtualFilePointerListener tellAllProjectsTheirRootsAreGoingToChange = new VirtualFilePointerListener() {
     @Override
-    public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
+    public void beforeValidityChanged(VirtualFilePointer[] pointers) {
       //todo check if this sdk is really used in the project
       for (Project project : ProjectManager.getInstance().getOpenProjects()) {
         VirtualFilePointerListener listener = ((ProjectRootManagerImpl)ProjectRootManager.getInstance(project)).getRootsValidityChangedListener();
@@ -44,7 +43,7 @@ public class GlobalLibraryRootListenerProviderImpl implements GlobalLibraryRootL
     }
 
     @Override
-    public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
+    public void validityChanged(VirtualFilePointer[] pointers) {
       //todo check if this sdk is really used in the project
       for (Project project : ProjectManager.getInstance().getOpenProjects()) {
         VirtualFilePointerListener listener = ((ProjectRootManagerImpl)ProjectRootManager.getInstance(project)).getRootsValidityChangedListener();
@@ -53,7 +52,7 @@ public class GlobalLibraryRootListenerProviderImpl implements GlobalLibraryRootL
     }
   };
 
-  @Nonnull
+  
   @Override
   public VirtualFilePointerListener getListener() {
     return tellAllProjectsTheirRootsAreGoingToChange;

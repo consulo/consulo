@@ -15,8 +15,7 @@ import consulo.ui.ex.tree.TreeHelper;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public abstract class PsiTreeElementBase<T extends PsiElement> implements StructureViewTreeElement, ItemPresentation, NodeDescriptorProvidingKey {
@@ -27,13 +26,13 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   }
 
   @Override
-  @Nonnull
+  
   public ItemPresentation getPresentation() {
     return this;
   }
 
   @Override
-  @Nonnull
+  
   public Object getKey() {
     return String.valueOf(getElement());
   }
@@ -80,18 +79,18 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   }
 
   @Override
-  @Nonnull
+  
   public final StructureViewTreeElement[] getChildren() {
     List<StructureViewTreeElement> list = TreeHelper.calculateYieldingToWriteAction(() -> doGetChildren(true));
     return list.isEmpty() ? EMPTY_ARRAY : list.toArray(EMPTY_ARRAY);
   }
 
-  @Nonnull
+  
   public final List<StructureViewTreeElement> getChildrenWithoutCustomRegions() {
     return TreeHelper.calculateYieldingToWriteAction(() -> doGetChildren(false));
   }
 
-  @Nonnull
+  
   private List<StructureViewTreeElement> doGetChildren(boolean withCustomRegions) {
     T element = getElement();
     return element == null ? Collections.emptyList() : mergeWithExtensions(element, getChildrenBase(), withCustomRegions);
@@ -116,7 +115,7 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
     return canNavigate();
   }
 
-  @Nonnull
+  
   public abstract Collection<StructureViewTreeElement> getChildrenBase();
 
   public boolean equals(Object o) {
@@ -141,8 +140,8 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   /**
    * @return element base children merged with children provided by extensions
    */
-  @Nonnull
-  public static List<StructureViewTreeElement> mergeWithExtensions(@Nonnull PsiElement element, @Nonnull Collection<StructureViewTreeElement> baseChildren, boolean withCustomRegions) {
+  
+  public static List<StructureViewTreeElement> mergeWithExtensions(PsiElement element, Collection<StructureViewTreeElement> baseChildren, boolean withCustomRegions) {
     List<StructureViewTreeElement> result = new ArrayList<>(withCustomRegions ? CustomRegionStructureUtil.groupByCustomRegions(element, baseChildren) : baseChildren);
     StructureViewFactoryEx structureViewFactory = StructureViewFactoryEx.getInstanceEx(element.getProject());
     Class<? extends PsiElement> aClass = element.getClass();

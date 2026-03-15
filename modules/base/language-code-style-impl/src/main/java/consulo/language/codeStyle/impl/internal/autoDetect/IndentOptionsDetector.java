@@ -16,15 +16,14 @@
 package consulo.language.codeStyle.impl.internal.autoDetect;
 
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface IndentOptionsDetector {
 
   @Nullable
   IndentOptionsAdjuster getIndentOptionsAdjuster();
 
-  @Nonnull
+  
   CommonCodeStyleSettings.IndentOptions getIndentOptions();
 
 }

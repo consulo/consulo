@@ -31,8 +31,7 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -41,8 +40,8 @@ import java.util.function.Predicate;
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class DaemonCodeAnalyzer {
-    @Nonnull
-    public static DaemonCodeAnalyzer getInstance(@Nonnull Project project) {
+    
+    public static DaemonCodeAnalyzer getInstance(Project project) {
         return project.getComponent(DaemonCodeAnalyzer.class);
     }
 
@@ -50,21 +49,21 @@ public abstract class DaemonCodeAnalyzer {
 
     public abstract void setUpdateByTimerEnabled(boolean value);
 
-    public abstract void disableUpdateByTimer(@Nonnull Disposable parentDisposable);
+    public abstract void disableUpdateByTimer(Disposable parentDisposable);
 
     public abstract boolean isHighlightingAvailable(@Nullable PsiFile file);
 
-    public abstract void setImportHintsEnabled(@Nonnull PsiFile file, boolean value);
+    public abstract void setImportHintsEnabled(PsiFile file, boolean value);
 
     public abstract void resetImportHintsEnabledForProject();
 
-    public abstract void setHighlightingEnabled(@Nonnull PsiFile file, boolean value);
+    public abstract void setHighlightingEnabled(PsiFile file, boolean value);
 
-    public abstract boolean isImportHintsEnabled(@Nonnull PsiFile file);
+    public abstract boolean isImportHintsEnabled(PsiFile file);
 
     public abstract boolean isAutohintsAvailable(@Nullable PsiFile file);
 
-    @Nonnull
+    
     public abstract ProgressIndicator createDaemonProgressIndicator();
 
     /**
@@ -85,14 +84,14 @@ public abstract class DaemonCodeAnalyzer {
      *
      * @param file the file to re-highlight.
      */
-    public abstract void restart(@Nonnull PsiFile file);
+    public abstract void restart(PsiFile file);
 
-    public abstract void autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
+    public abstract void autoImportReferenceAtCursor(Editor editor, PsiFile file);
 
-    @Nonnull
+    
     public abstract FileStatusMap getFileStatusMap();
 
-    public abstract boolean isErrorAnalyzingFinished(@Nonnull PsiFile file);
+    public abstract boolean isErrorAnalyzingFinished(PsiFile file);
 
     /**
      * @param document
@@ -105,12 +104,12 @@ public abstract class DaemonCodeAnalyzer {
      */
     @RequiredReadAction
     public static boolean processHighlights(
-        @Nonnull Document document,
-        @Nonnull Project project,
+        Document document,
+        Project project,
         @Nullable HighlightSeverity minSeverity,
         int startOffset,
         int endOffset,
-        @Nonnull Predicate<HighlightInfo> processor
+        Predicate<HighlightInfo> processor
     ) {
         Application.get().assertReadAccessAllowed();
 
@@ -142,12 +141,12 @@ public abstract class DaemonCodeAnalyzer {
      */
     @RequiredReadAction
     public static boolean processHighlightsOverlappingOutside(
-        @Nonnull Document document,
-        @Nonnull Project project,
+        Document document,
+        Project project,
         @Nullable HighlightSeverity minSeverity,
         int startOffset,
         int endOffset,
-        @Nonnull Predicate<HighlightInfo> processor
+        Predicate<HighlightInfo> processor
     ) {
         Application.get().assertReadAccessAllowed();
 
@@ -169,7 +168,7 @@ public abstract class DaemonCodeAnalyzer {
     }
 
     @RequiredReadAction
-    public static boolean hasErrors(@Nonnull Project project, @Nonnull Document document) {
+    public static boolean hasErrors(Project project, Document document) {
         return !processHighlights(document, project, HighlightSeverity.ERROR, 0, document.getTextLength(), (i) -> false);
     }
 }

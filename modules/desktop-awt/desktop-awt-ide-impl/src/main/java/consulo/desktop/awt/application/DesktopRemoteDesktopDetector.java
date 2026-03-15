@@ -23,7 +23,6 @@ import consulo.application.ui.RemoteDesktopService;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.*;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -37,16 +36,16 @@ public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
   private static final Logger LOG = Logger.getInstance(DesktopRemoteDesktopDetector.class);
   public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Remote Desktop", NotificationDisplayType.BALLOON, false);
 
-  @Nonnull
+  
   private final Application myApplication;
-  @Nonnull
+  
   private final NotificationService myNotificationService;
 
   private volatile boolean myFailureDetected;
   private volatile boolean myRemoteDesktopConnected;
 
   @Inject
-  DesktopRemoteDesktopDetector(@Nonnull Application application, @Nonnull NotificationService notificationService) {
+  DesktopRemoteDesktopDetector(Application application, NotificationService notificationService) {
     myApplication = application;
     myNotificationService = notificationService;
     if (Platform.current().os().isWindows()) {

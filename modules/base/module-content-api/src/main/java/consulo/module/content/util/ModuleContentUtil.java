@@ -31,8 +31,7 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +43,7 @@ import java.util.Set;
  */
 public class ModuleContentUtil {
   @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> E getExtension(Project project, VirtualFile virtualFile, Class<E> extensionClass) {
     Module moduleForFile = findModuleForFile(virtualFile, project);
     if (moduleForFile == null) {
       return null;
@@ -53,7 +52,7 @@ public class ModuleContentUtil {
   }
 
   @Nullable
-  public static Sdk getSdk(@Nonnull Module module, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static Sdk getSdk(Module module, Class<? extends ModuleExtensionWithSdk> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
     ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
@@ -66,8 +65,8 @@ public class ModuleContentUtil {
   }
 
   @RequiredReadAction
-  @Nonnull
-  public static List<ContentFolder> getContentFolders(@Nonnull Project project) {
+  
+  public static List<ContentFolder> getContentFolders(Project project) {
     ModuleManager moduleManager = ModuleManager.getInstance(project);
     List<ContentFolder> contentFolders = new ArrayList<>();
     for (Module module : moduleManager.getModules()) {
@@ -81,7 +80,7 @@ public class ModuleContentUtil {
   }
 
   @Nullable
-  public static Module findModuleForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public static Module findModuleForFile(VirtualFile file, Project project) {
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return fileIndex.getModuleForFile(file);
   }
@@ -93,7 +92,7 @@ public class ModuleContentUtil {
    * @param result resulted set
    */
   @RequiredReadAction
-  public static void collectModulesDependsOn(@Nonnull Module module, Set<Module> result) {
+  public static void collectModulesDependsOn(Module module, Set<Module> result) {
     if (result.contains(module)) return;
     result.add(module);
     ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());

@@ -31,8 +31,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.style.StandardColors;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -49,10 +48,10 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
     private final String myId;
     private final String myIconPath;
     private final Supplier<Presentation> myTemplatePresentation;
-    @Nonnull
+    
     private final PluginDescriptor myPluginDescriptor;
 
-    public XmlActionStub(@Nonnull String actionClass, @Nonnull String id, @Nonnull PluginDescriptor pluginDescriptor, String iconPath, @Nonnull Supplier<Presentation> templatePresentation) {
+    public XmlActionStub(String actionClass, String id, PluginDescriptor pluginDescriptor, String iconPath, Supplier<Presentation> templatePresentation) {
         LOG.assertTrue(id.length() > 0);
         myPluginDescriptor = pluginDescriptor;
         myClassName = actionClass;
@@ -61,7 +60,7 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
         myTemplatePresentation = templatePresentation;
     }
 
-    @Nonnull
+    
     @Override
     protected Presentation createTemplatePresentation() {
         return myTemplatePresentation.get();
@@ -92,18 +91,18 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
 
     @Nullable
     @Override
-    public AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager) {
+    public AnAction initialize(Application application, ActionManager manager) {
         return convertStub(application, this);
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         throw new UnsupportedOperationException();
     }
 
     @Nullable
-    static AnAction convertStub(@Nonnull Application application, @Nonnull XmlActionStub stub) {
+    static AnAction convertStub(Application application, XmlActionStub stub) {
         AnAction anAction = instantiate(application, stub.getClassName(), stub.getLoader(), stub.getPluginId(), AnAction.class);
         if (anAction == null) {
             return null;
@@ -116,7 +115,7 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    static <T> T instantiate(@Nonnull Application application,
+    static <T> T instantiate(Application application,
                              String stubClassName,
                              ClassLoader classLoader,
                              PluginId pluginId,
@@ -142,7 +141,7 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
         return (T) obj;
     }
 
-    static void updateIconFromStub(@Nonnull ActionStubBase stub, AnAction anAction) {
+    static void updateIconFromStub(ActionStubBase stub, AnAction anAction) {
         String iconPath = stub.getIconPath();
         if (iconPath != null) {
             ImageKey imageKey = ImageKey.fromString(iconPath, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
@@ -156,7 +155,7 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
         }
     }
 
-    public final void initAction(@Nonnull AnAction targetAction) {
+    public final void initAction(AnAction targetAction) {
         copyTemplatePresentation(getTemplatePresentation(), targetAction.getTemplatePresentation());
 
         targetAction.setShortcutSet(getShortcutSet());
@@ -167,7 +166,7 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
      *
      * @param targetAction cannot be <code>null</code>
      */
-    public static void copyTemplatePresentation(@Nonnull Presentation sourcePresentation, @Nonnull Presentation targetPresentation) {
+    public static void copyTemplatePresentation(Presentation sourcePresentation, Presentation targetPresentation) {
         if (targetPresentation.getIcon() == null && sourcePresentation.getIcon() != null) {
             targetPresentation.setIcon(sourcePresentation.getIcon());
         }

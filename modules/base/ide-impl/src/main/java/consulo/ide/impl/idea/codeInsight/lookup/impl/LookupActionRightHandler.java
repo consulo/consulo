@@ -25,7 +25,6 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LookupActionRightHandler extends LookupActionHandler {
@@ -73,7 +72,7 @@ public class LookupActionRightHandler extends LookupActionHandler {
     }
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_CARET_RIGHT;

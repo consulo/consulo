@@ -17,45 +17,44 @@ package consulo.language.editor.inlay;
 
 import consulo.language.editor.internal.ParameterNameHintsSettings;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents a configurable option for hints.
  */
 public class Option {
-    @Nonnull
+    
     private final String id;
     private final LocalizeValue nameSupplier;
     private final boolean defaultValue;
     private final LocalizeValue extendedDescription;
 
-    public Option(@Nonnull String id,
+    public Option(String id,
                   LocalizeValue nameSupplier,
                   boolean defaultValue) {
         this(id, nameSupplier, defaultValue, LocalizeValue.empty());
     }
 
-    public Option(@Nonnull String id,
+    public Option(String id,
                   LocalizeValue nameSupplier,
                   boolean defaultValue,
-                  @Nonnull LocalizeValue extendedDescription) {
+                  LocalizeValue extendedDescription) {
         this.id = id;
         this.nameSupplier = nameSupplier;
         this.defaultValue = defaultValue;
         this.extendedDescription = extendedDescription;
     }
 
-    @Nonnull
+    
     public LocalizeValue getExtendedDescription() {
         return extendedDescription;
     }
 
-    @Nonnull
+    
     public String getId() {
         return id;
     }
 
-    @Nonnull
+    
     public LocalizeValue getName() {
         return nameSupplier;
     }

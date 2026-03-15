@@ -3,7 +3,6 @@ package consulo.application.constraint;
 
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Expiration backed by a [Job] instance.
@@ -23,7 +22,7 @@ public abstract class AbstractExpiration implements Expiration {
     return getJob().isCompleted();
   }
 
-  @Nonnull
+  
   @Override
   public Handle invokeOnExpiration(Runnable handler) {
     Disposable disposable = getJob().invokeOnCompletion(true, throwable -> {

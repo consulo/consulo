@@ -8,14 +8,13 @@ import consulo.language.lexer.TokenList;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TokenSequence implements TokenList {
     private static final Logger LOG = Logger.getInstance(TokenSequence.class);
 
-    @Nonnull
-    public static TokenSequence performLexing(@Nonnull CharSequence text, @Nonnull Lexer lexer) {
+    
+    public static TokenSequence performLexing(CharSequence text, Lexer lexer) {
         if (lexer instanceof WrappingLexer) {
             TokenList existing = ((WrappingLexer) lexer).getTokens();
             if (existing instanceof TokenSequence && Comparing.equal(text, ((TokenSequence) existing).myText)) {
@@ -43,7 +42,7 @@ public class TokenSequence implements TokenList {
         assert lexemeCount < lexTypes.length;
     }
 
-    public void assertMatches(@Nonnull CharSequence text, @Nonnull Lexer lexer) {
+    public void assertMatches(CharSequence text, Lexer lexer) {
         TokenSequence sequence = new Builder(text, lexer).performLexing();
         assert lexemeCount == sequence.lexemeCount;
         for (int j = 0; j <= lexemeCount; ++j) {
@@ -78,7 +77,7 @@ public class TokenSequence implements TokenList {
     }
 
     @Override
-    public @Nonnull CharSequence getTokenizedText() {
+    public CharSequence getTokenizedText() {
         return myText;
     }
 
@@ -88,7 +87,7 @@ public class TokenSequence implements TokenList {
         private int[] myLexStarts;
         private IElementType[] myLexTypes;
 
-        Builder(@Nonnull CharSequence text, @Nonnull Lexer lexer) {
+        Builder(CharSequence text, Lexer lexer) {
             myText = text;
             myLexer = lexer;
 
@@ -98,7 +97,7 @@ public class TokenSequence implements TokenList {
             myLexTypes = new IElementType[approxLexCount];
         }
 
-        @Nonnull
+        
         TokenSequence performLexing() {
             myLexer.start(myText);
             int i = 0;

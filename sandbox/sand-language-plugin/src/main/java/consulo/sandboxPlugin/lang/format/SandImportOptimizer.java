@@ -22,8 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,13 +35,13 @@ public class SandImportOptimizer implements ImportOptimizer {
     return file instanceof SandFile;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionName() {
     return "Optimize 'using'";
   }
 
-  @Nonnull
+  
   @Override
   public Runnable processFile(PsiFile file) {
     return new CollectingInfoRunnable() {
@@ -59,7 +58,7 @@ public class SandImportOptimizer implements ImportOptimizer {
     };
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return SandLanguage.INSTANCE;

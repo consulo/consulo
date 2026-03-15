@@ -7,7 +7,6 @@ import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -16,38 +15,38 @@ public final class RestoreViewAction extends DumbAwareToggleAction implements Vi
     private final Content myContent;
     private final ContentLayoutStateSettings myLayoutSettings;
 
-    public RestoreViewAction(@Nonnull RunnerContentUi ui, @Nonnull Content content) {
+    public RestoreViewAction(RunnerContentUi ui, Content content) {
         this(content, new DefaultContentStateSettings(ui, content));
     }
 
-    public RestoreViewAction(@Nonnull Content content, ContentLayoutStateSettings layoutSettings) {
+    public RestoreViewAction(Content content, ContentLayoutStateSettings layoutSettings) {
         myContent = content;
         myLayoutSettings = layoutSettings;
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return myLayoutSettings.isSelected();
     }
 
     @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
+    public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.EDT;
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         myLayoutSettings.setSelected(state);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setText(myLayoutSettings.getDisplayName(), false);
         e.getPresentation().setEnabled(myLayoutSettings.isEnabled());
     }
 
-    public @Nonnull Content getContent() {
+    public Content getContent() {
         return myContent;
     }
 
@@ -56,8 +55,8 @@ public final class RestoreViewAction extends DumbAwareToggleAction implements Vi
         private final RunnerContentUi myUi;
         private final Content myContent;
 
-        public DefaultContentStateSettings(@Nonnull RunnerContentUi ui,
-                                           @Nonnull Content content) {
+        public DefaultContentStateSettings(RunnerContentUi ui,
+                                           Content content) {
             myUi = ui;
             myContent = content;
         }
@@ -84,7 +83,7 @@ public final class RestoreViewAction extends DumbAwareToggleAction implements Vi
         }
 
         @Override
-        public @Nonnull String getDisplayName() {
+        public String getDisplayName() {
             return myContent.getDisplayName();
         }
 

@@ -23,8 +23,7 @@ import consulo.codeEditor.action.EditorLastActionTracker;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class CloneCaretActionHandler extends EditorActionHandler {
     }
 
     @Override
-    protected void doExecute(@Nonnull Editor editor, @Nullable Caret targetCaret, DataContext dataContext) {
+    protected void doExecute(Editor editor, @Nullable Caret targetCaret, DataContext dataContext) {
         if (targetCaret != null) {
             targetCaret.clone(myCloneAbove);
             return;

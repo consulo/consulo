@@ -8,7 +8,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import jakarta.annotation.Nonnull;
 
 class RangeMarkerWindow implements RangeMarkerEx {
   private final DocumentWindow myDocumentWindow;
@@ -31,7 +30,7 @@ class RangeMarkerWindow implements RangeMarkerEx {
    * @param endShift       similar to the 'startShift' argument but specifies difference between the target injected host end offset
    *                       and end offset of the given host range marker at the injected text
    */
-  RangeMarkerWindow(@Nonnull DocumentWindow documentWindow, RangeMarkerEx hostMarker, int startShift, int endShift) {
+  RangeMarkerWindow(DocumentWindow documentWindow, RangeMarkerEx hostMarker, int startShift, int endShift) {
     myDocumentWindow = documentWindow;
     myHostMarker = hostMarker;
     myStartShift = startShift;
@@ -39,7 +38,7 @@ class RangeMarkerWindow implements RangeMarkerEx {
   }
 
   @Override
-  @Nonnull
+  
   public Document getDocument() {
     return myDocumentWindow;
   }
@@ -76,17 +75,17 @@ class RangeMarkerWindow implements RangeMarkerEx {
   }
 
   @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
+  public <T> T getUserData(Key<T> key) {
     return myHostMarker.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, T value) {
+  public <T> void putUserData(Key<T> key, T value) {
     myHostMarker.putUserData(key, value);
   }
 
   @Override
-  public void documentChanged(@Nonnull DocumentEvent e) {
+  public void documentChanged(DocumentEvent e) {
     myHostMarker.documentChanged(e);
   }
 

@@ -19,7 +19,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public class TestDialogWithValidationAction extends AnAction {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project != null) {
       new ValidationTest(project).show();

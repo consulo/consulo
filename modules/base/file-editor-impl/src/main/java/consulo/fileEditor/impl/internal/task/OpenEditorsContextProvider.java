@@ -28,7 +28,6 @@ import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -46,13 +45,13 @@ public class OpenEditorsContextProvider extends WorkingContextProvider {
     myFileEditorManager = fileEditorManager instanceof FileEditorManagerImpl ? (FileEditorManagerImpl)fileEditorManager : null;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "editors";
   }
 
-  @Nonnull
+  
   @Override
   public String getDescription() {
     return "Open editors and positions";

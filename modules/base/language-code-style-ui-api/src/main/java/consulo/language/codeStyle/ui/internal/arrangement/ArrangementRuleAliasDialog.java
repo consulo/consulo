@@ -23,8 +23,7 @@ import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,10 +38,10 @@ public class ArrangementRuleAliasDialog extends DialogWrapper {
   private boolean myModified;
 
   public ArrangementRuleAliasDialog(@Nullable Project project,
-                                    @Nonnull ArrangementStandardSettingsManager settingsManager,
-                                    @Nonnull ArrangementColorsProvider colorsProvider,
-                                    @Nonnull Collection<StdArrangementRuleAliasToken> tokens,
-                                    @Nonnull Set<String> tokensInUse) {
+                                    ArrangementStandardSettingsManager settingsManager,
+                                    ArrangementColorsProvider colorsProvider,
+                                    Collection<StdArrangementRuleAliasToken> tokens,
+                                    Set<String> tokensInUse) {
     super(project, false);
 
     List<StdArrangementRuleAliasToken> tokenList = new ArrayList<>(tokens);

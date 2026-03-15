@@ -15,30 +15,29 @@
  */
 package consulo.ui.ex.toolWindow;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
  * @author Vladimir Kondratyev
  */
 public interface InternalDecoratorListener extends EventListener {
-  void anchorChanged(@Nonnull ToolWindowInternalDecorator source, @Nonnull ToolWindowAnchor anchor);
+  void anchorChanged(ToolWindowInternalDecorator source, ToolWindowAnchor anchor);
 
-  void autoHideChanged(@Nonnull ToolWindowInternalDecorator source, boolean autoHide);
+  void autoHideChanged(ToolWindowInternalDecorator source, boolean autoHide);
 
-  void hidden(@Nonnull ToolWindowInternalDecorator source);
+  void hidden(ToolWindowInternalDecorator source);
 
-  void hiddenSide(@Nonnull ToolWindowInternalDecorator source);
+  void hiddenSide(ToolWindowInternalDecorator source);
 
-  void resized(@Nonnull ToolWindowInternalDecorator source);
+  void resized(ToolWindowInternalDecorator source);
 
-  void activated(@Nonnull ToolWindowInternalDecorator source);
+  void activated(ToolWindowInternalDecorator source);
 
-  void typeChanged(@Nonnull ToolWindowInternalDecorator source, @Nonnull ToolWindowType type);
+  void typeChanged(ToolWindowInternalDecorator source, ToolWindowType type);
 
-  void sideStatusChanged(@Nonnull ToolWindowInternalDecorator source, boolean isSideTool);
+  void sideStatusChanged(ToolWindowInternalDecorator source, boolean isSideTool);
 
-  void contentUiTypeChanges(@Nonnull ToolWindowInternalDecorator sources, @Nonnull ToolWindowContentUiType type);
+  void contentUiTypeChanges(ToolWindowInternalDecorator sources, ToolWindowContentUiType type);
 
-  void visibleStripeButtonChanged(@Nonnull ToolWindowInternalDecorator source, boolean visible);
+  void visibleStripeButtonChanged(ToolWindowInternalDecorator source, boolean visible);
 }

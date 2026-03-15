@@ -19,7 +19,6 @@ package consulo.language.parser;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ASTNode;
 import consulo.language.version.LanguageVersion;
-import jakarta.annotation.Nonnull;
 
 /**
  * The plugin side of a custom language parser. Receives tokens returned from
@@ -39,6 +38,6 @@ public interface PsiParser {
      * @param languageVersion
      * @return the root of the resulting AST tree.
      */
-    @Nonnull
-    ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion);
+    
+    ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion);
 }

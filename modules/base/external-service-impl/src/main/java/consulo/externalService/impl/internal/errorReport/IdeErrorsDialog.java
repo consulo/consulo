@@ -59,8 +59,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -134,7 +133,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             private final Collection[] myDevelopers = new Collection[]{Collections.emptyList()};
 
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
                 }
@@ -195,7 +194,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     public void entryWasRead() {
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>(3);
@@ -312,12 +311,12 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             goForward();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myIndex < myMergedMessages.size() - 1);
         }
@@ -334,12 +333,12 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             goBack();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myIndex > 0);
         }
@@ -829,7 +828,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
 
     @Nullable
-    public static PluginId findFirstPluginId(@Nonnull Throwable t) {
+    public static PluginId findFirstPluginId(Throwable t) {
         return PluginExceptionUtil.findFirstPluginId(t);
     }
 

@@ -37,8 +37,7 @@ import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -75,31 +74,31 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     private JTextField myDirectoryName;
     private JLabel myRepositoryUrlLabel;
 
-    @Nonnull
+    
     private String myTestURL; // the repository URL at the time of the last test
     @Nullable
     private Boolean myTestResult; // the test result of the last test or null if not tested
-    @Nonnull
+    
     private String myDefaultDirectoryName = "";
-    @Nonnull
+    
     protected final Project myProject;
-    @Nonnull
+    
     protected final String myVcsDirectoryName;
     @Nullable
     private final String myDefaultRepoUrl;
 
     public CloneDvcsDialog(
-        @Nonnull Project project,
-        @Nonnull LocalizeValue displayName,
-        @Nonnull String vcsDirectoryName
+        Project project,
+        LocalizeValue displayName,
+        String vcsDirectoryName
     ) {
         this(project, displayName, vcsDirectoryName, null);
     }
 
     public CloneDvcsDialog(
-        @Nonnull Project project,
-        @Nonnull LocalizeValue displayName,
-        @Nonnull String vcsDirectoryName,
+        Project project,
+        LocalizeValue displayName,
+        String vcsDirectoryName,
         @Nullable String defaultUrl
     ) {
         super(project, true);
@@ -136,7 +135,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         setOKActionEnabled(false);
     }
 
-    @Nonnull
+    
     public String getSourceRepositoryURL() {
         return getCurrentUrlText();
     }
@@ -232,10 +231,10 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         updateButtons();
     }
 
-    @Nonnull
-    protected abstract TestResult test(@Nonnull String url);
+    
+    protected abstract TestResult test(String url);
 
-    @Nonnull
+    
     protected abstract DvcsRememberedInputs getRememberedInputs();
 
     /**
@@ -324,7 +323,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         return false;
     }
 
-    @Nonnull
+    
     private String getCurrentUrlText() {
         return UserHomeFileUtil.expandUserHome(myRepositoryURL.getText().trim());
     }
@@ -353,7 +352,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         });
     }
 
-    public void prependToHistory(@Nonnull String item) {
+    public void prependToHistory(String item) {
         myRepositoryURL.prependItem(item);
     }
 
@@ -369,8 +368,8 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
      * @param url an URL to checkout
      * @return a default repository name
      */
-    @Nonnull
-    private static String defaultDirectoryName(@Nonnull String url, @Nonnull String vcsDirName) {
+    
+    private static String defaultDirectoryName(String url, String vcsDirName) {
         String nonSystemName;
         if (url.endsWith("/" + vcsDirName) || url.endsWith(File.separator + vcsDirName)) {
             nonSystemName = url.substring(0, url.length() - vcsDirName.length() - 1);
@@ -669,7 +668,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     }
 
     protected static class TestResult {
-        @Nonnull
+        
         public static final TestResult SUCCESS = new TestResult(null);
         @Nullable
         private final String myErrorMessage;

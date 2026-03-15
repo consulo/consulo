@@ -21,7 +21,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public abstract class FileIndexCompileScope extends ExportableUserDataHolderBase
     protected abstract FileIndex[] getFileIndices();
 
     @Override
-    @Nonnull
+    
     public VirtualFile[] getFiles(FileType fileType) {
         List<VirtualFile> files = new ArrayList<>();
         FileIndex[] fileIndices = getFileIndices();

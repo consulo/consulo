@@ -29,7 +29,6 @@ import consulo.project.event.DumbModeListener;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ public class FileBasedIndexProjectHandlerActivity implements PostStartupActivity
     private static final Logger LOG = Logger.getInstance(FileBasedIndexProjectHandlerActivity.class);
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         PushedFilePropertiesUpdater.getInstance(project).initializeProperties();
         FileBasedIndex index = FileBasedIndex.getInstance();
 
@@ -66,7 +65,7 @@ public class FileBasedIndexProjectHandlerActivity implements PostStartupActivity
             private boolean removed;
 
             @Override
-            public void projectClosing(@Nonnull Project eventProject) {
+            public void projectClosing(Project eventProject) {
                 if (eventProject == project && !removed) {
                     removed = true;
                     index.removeIndexableSet(set);

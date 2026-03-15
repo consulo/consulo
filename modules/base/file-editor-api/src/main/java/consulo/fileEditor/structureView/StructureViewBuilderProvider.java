@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -39,5 +38,5 @@ public interface StructureViewBuilderProvider {
    */
   @Nullable
   @RequiredReadAction
-  StructureViewBuilder getStructureViewBuilder(@Nonnull FileType fileType, @Nonnull VirtualFile file, @Nonnull Project project);
+  StructureViewBuilder getStructureViewBuilder(FileType fileType, VirtualFile file, Project project);
 }

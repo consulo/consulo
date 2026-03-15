@@ -25,8 +25,7 @@ import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.internal.VcsContextWrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -35,52 +34,52 @@ public abstract class AbstractVcsAction extends DumbAwareAction {
     protected AbstractVcsAction() {
     }
 
-    protected AbstractVcsAction(@Nonnull LocalizeValue text) {
+    protected AbstractVcsAction(LocalizeValue text) {
         super(text);
     }
 
-    protected AbstractVcsAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected AbstractVcsAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
     protected AbstractVcsAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
     @SuppressWarnings("unused") // Required for compatibility with external plugins.
-    public static Collection<AbstractVcs> getActiveVcses(@Nonnull VcsContext dataContext) {
+    public static Collection<AbstractVcs> getActiveVcses(VcsContext dataContext) {
         Project project = dataContext.getProject();
 
         return project != null ? Set.of(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()) : Set.of();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         //noinspection deprecation - required for compatibility with external plugins.
         performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         actionPerformed(VcsContextWrapper.createCachedInstanceOn(e));
     }
 
-    protected abstract void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation);
+    protected abstract void update(VcsContext vcsContext, Presentation presentation);
 
     @RequiredUIAccess
-    protected abstract void actionPerformed(@Nonnull VcsContext e);
+    protected abstract void actionPerformed(VcsContext e);
 
     /**
      * @deprecated Only sync update is currently supported by {@link AbstractVcsAction}.
      */
     @SuppressWarnings("unused") // Required for compatibility with external plugins.
     @Deprecated
-    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
+    protected boolean forceSyncUpdate(AnActionEvent e) {
         return true;
     }
 
@@ -89,7 +88,7 @@ public abstract class AbstractVcsAction extends DumbAwareAction {
      * @deprecated Use {@link AbstractVcsAction#update(VcsContext, Presentation)}.
      */
     @Deprecated
-    protected void performUpdate(@Nonnull Presentation presentation, @Nonnull VcsContext vcsContext) {
+    protected void performUpdate(Presentation presentation, VcsContext vcsContext) {
         update(vcsContext, presentation);
     }
 }

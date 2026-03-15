@@ -16,25 +16,24 @@
 package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public class CommitId {
-  @Nonnull
+  
   private final Hash myHash;
-  @Nonnull
+  
   private final VirtualFile myRoot;
 
-  public CommitId(@Nonnull Hash hash, @Nonnull VirtualFile root) {
+  public CommitId(Hash hash, VirtualFile root) {
     myHash = hash;
     myRoot = root;
   }
 
-  @Nonnull
+  
   public Hash getHash() {
     return myHash;
   }
 
-  @Nonnull
+  
   public VirtualFile getRoot() {
     return myRoot;
   }

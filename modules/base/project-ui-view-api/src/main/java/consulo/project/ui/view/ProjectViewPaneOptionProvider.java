@@ -21,8 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.dataholder.KeyWithDefaultValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -35,9 +34,9 @@ public interface ProjectViewPaneOptionProvider<T> {
   ExtensionPointName<ProjectViewPaneOptionProvider> EX_NAME = ExtensionPointName.create(ProjectViewPaneOptionProvider.class);
 
   abstract class BoolValue implements ProjectViewPaneOptionProvider<Boolean> {
-    @Nonnull
+    
     @Override
-    public Boolean parseValue(@Nonnull String value) {
+    public Boolean parseValue(String value) {
       return Boolean.parseBoolean(value);
     }
 
@@ -51,13 +50,13 @@ public interface ProjectViewPaneOptionProvider<T> {
     }
   }
 
-  @Nonnull
+  
   KeyWithDefaultValue<T> getKey();
 
-  void addToolbarActions(@Nonnull ProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup);
+  void addToolbarActions(ProjectViewPane pane, DefaultActionGroup actionGroup);
 
-  @Nonnull
-  T parseValue(@Nonnull String value);
+  
+  T parseValue(String value);
 
   @Nullable
   String toString(@Nullable T value);

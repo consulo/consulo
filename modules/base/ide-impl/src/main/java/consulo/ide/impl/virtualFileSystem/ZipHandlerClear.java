@@ -22,7 +22,6 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
 @TopicImpl(ComponentScope.APPLICATION)
 public class ZipHandlerClear implements ProjectManagerListener {
     @Override
-    public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void projectClosed(Project project, UIAccess uiAccess) {
         PersistentFS fs = (PersistentFS) ManagingFS.getInstance();
 
         fs.clearFileAccessorCache();

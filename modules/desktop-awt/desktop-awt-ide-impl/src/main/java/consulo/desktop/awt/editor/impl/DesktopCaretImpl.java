@@ -7,13 +7,12 @@ import consulo.codeEditor.impl.CodeEditorCaretBase;
 import consulo.desktop.awt.editor.impl.view.EditorPainter;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class DesktopCaretImpl extends CodeEditorCaretBase {
   private static final Logger LOG = Logger.getInstance(DesktopCaretImpl.class);
 
-  DesktopCaretImpl(@Nonnull DesktopEditorImpl editor, @Nonnull DesktopCaretModelImpl caretModel) {
+  DesktopCaretImpl(DesktopEditorImpl editor, DesktopCaretModelImpl caretModel) {
     super(editor, caretModel);
   }
 

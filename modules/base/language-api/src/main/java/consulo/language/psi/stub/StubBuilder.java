@@ -19,14 +19,13 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface StubBuilder {
   @RequiredReadAction
-  StubElement buildStubTree(@Nonnull PsiFile file);
+  StubElement buildStubTree(PsiFile file);
 
-  boolean skipChildProcessingWhenBuildingStubs(@Nonnull ASTNode parent, @Nonnull ASTNode node);
+  boolean skipChildProcessingWhenBuildingStubs(ASTNode parent, ASTNode node);
 }

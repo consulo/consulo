@@ -5,12 +5,11 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public class FsRoot extends VirtualDirectoryImpl {
   private final String myPathWithOneSlash;
 
-  public FsRoot(int id, int nameId, @Nonnull VfsData vfsData, @Nonnull NewVirtualFileSystem fs, @Nonnull String pathBeforeSlash) throws VfsData.FileAlreadyCreatedException {
+  public FsRoot(int id, int nameId, VfsData vfsData, NewVirtualFileSystem fs, String pathBeforeSlash) throws VfsData.FileAlreadyCreatedException {
     super(id, vfsData.getSegment(id, true), new VfsData.DirectoryData(), null, fs);
     if (!looksCanonical(pathBeforeSlash)) {
       throw new IllegalArgumentException("path must be canonical but got: '" + pathBeforeSlash + "'");
@@ -19,7 +18,7 @@ public class FsRoot extends VirtualDirectoryImpl {
     VfsData.initFile(id, mySegment, nameId, myData);
   }
 
-  @Nonnull
+  
   @Override
   protected char[] appendPathOnFileSystem(int pathLength, int[] position) {
     int myLength = myPathWithOneSlash.length() - 1;
@@ -30,28 +29,28 @@ public class FsRoot extends VirtualDirectoryImpl {
   }
 
   @Override
-  public void setNewName(@Nonnull String newName) {
+  public void setNewName(String newName) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public final void setParent(@Nonnull VirtualFile newParent) {
+  public final void setParent(VirtualFile newParent) {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     return myPathWithOneSlash;
   }
 
-  @Nonnull
+  
   @Override
   public String getUrl() {
     return getFileSystem().getProtocol() + URLUtil.SCHEME_SEPARATOR + getPath();
   }
 
-  private static boolean looksCanonical(@Nonnull String pathBeforeSlash) {
+  private static boolean looksCanonical(String pathBeforeSlash) {
     if (pathBeforeSlash.endsWith("/")) {
       return false;
     }

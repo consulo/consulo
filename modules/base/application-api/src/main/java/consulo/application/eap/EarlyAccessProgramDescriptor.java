@@ -18,7 +18,6 @@ package consulo.application.eap;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EarlyAccessProgramDescriptor {
-    @Nonnull
+    
     public abstract LocalizeValue getName();
 
     public boolean getDefaultState() {
@@ -41,7 +40,7 @@ public abstract class EarlyAccessProgramDescriptor {
         return false;
     }
 
-    @Nonnull
+    
     public LocalizeValue getDescription() {
         return LocalizeValue.empty();
     }

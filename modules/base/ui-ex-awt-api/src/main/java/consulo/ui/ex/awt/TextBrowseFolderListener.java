@@ -19,16 +19,15 @@ import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
-  public TextBrowseFolderListener(@Nonnull FileChooserDescriptor fileChooserDescriptor) {
+  public TextBrowseFolderListener(FileChooserDescriptor fileChooserDescriptor) {
     this(fileChooserDescriptor, null);
   }
 
-  public TextBrowseFolderListener(@Nonnull FileChooserDescriptor fileChooserDescriptor, @Nullable ComponentManager project) {
+  public TextBrowseFolderListener(FileChooserDescriptor fileChooserDescriptor, @Nullable ComponentManager project) {
     super(
       LocalizeValue.empty(),
       LocalizeValue.empty(),
@@ -39,7 +38,7 @@ public class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFo
     );
   }
 
-  void setOwnerComponent(@Nonnull TextFieldWithBrowseButton component) {
+  void setOwnerComponent(TextFieldWithBrowseButton component) {
     myTextComponent = component;
   }
 

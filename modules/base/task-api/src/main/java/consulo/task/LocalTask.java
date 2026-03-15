@@ -19,7 +19,6 @@ package consulo.task;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 
-import jakarta.annotation.Nonnull;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public abstract class LocalTask extends Task {
 
   // VCS interface
 
-  @Nonnull
+  
   public abstract List<ChangeListInfo> getChangeLists();
 
   public abstract void addChangelist(ChangeListInfo info);
@@ -59,10 +58,10 @@ public abstract class LocalTask extends Task {
    * @return two branches per repository: feature-branch itself and original branch to merge into
    * @see #getBranches(boolean)
    */
-  @Nonnull
+  
   public abstract List<BranchInfo> getBranches();
 
-  @Nonnull
+  
   public List<BranchInfo> getBranches(boolean original) {
     return ContainerUtil.filter(getBranches(), info -> info.original == original);
   }

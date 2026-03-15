@@ -17,8 +17,7 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 
@@ -141,7 +140,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
      *
      * @return instance of SSLContext with described behavior or default SSL context in case of error
      */
-    @Nonnull
+    
     public synchronized SSLContext getSslContext() {
         if (mySslContext == null) {
             SSLContext context = getSystemSslContext();
@@ -170,14 +169,14 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
         return mySslContext;
     }
 
-    @Nonnull
+    
     @Override
     public HostnameVerifier getHostnameVerifier() {
         return HOSTNAME_VERIFIER;
     }
 
     @Override
-    @Nonnull
+    
     public SSLContext getSystemSslContext() {
         // NOTE: SSLContext.getDefault() should not be called because it automatically creates
         // default context which can't be initialized twice
@@ -197,7 +196,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
         }
     }
 
-    @Nonnull
+    
     private SSLContext getDefaultSslContext() {
         try {
             return SSLContext.getDefault();
@@ -263,28 +262,28 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
         return null;
     }
 
-    @Nonnull
+    
     public String getCacertsPath() {
         return myCacertsPath;
     }
 
-    @Nonnull
+    
     public String getPassword() {
         return myPassword;
     }
 
     @Override
-    @Nonnull
+    
     public HttpConfirmingTrustManagerImplHttp getTrustManager() {
         return myTrustManager;
     }
 
-    @Nonnull
+    
     public HttpConfirmingTrustManagerImplHttp.MutableTrustManagerHttp getCustomTrustManager() {
         return myTrustManager.getCustomManager();
     }
 
-    public static boolean showAcceptDialog(@Nonnull Callable<? extends DialogWrapper> dialogFactory) {
+    public static boolean showAcceptDialog(Callable<? extends DialogWrapper> dialogFactory) {
         CountDownLatch proceeded = new CountDownLatch(1);
         AtomicBoolean accepted = new AtomicBoolean();
         AtomicReference<DialogWrapper> dialogRef = new AtomicReference<DialogWrapper>();
@@ -337,7 +336,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
         return accepted.get();
     }
 
-    @Nonnull
+    
     @Override
     public Config getState() {
         return myConfig;

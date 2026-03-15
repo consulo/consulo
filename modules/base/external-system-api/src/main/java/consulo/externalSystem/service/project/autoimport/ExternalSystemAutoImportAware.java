@@ -18,8 +18,7 @@ package consulo.externalSystem.service.project.autoimport;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * External system integration provides 'auto-import' feature, i.e. it listens for external system config files changes
@@ -51,5 +50,5 @@ public interface ExternalSystemAutoImportAware {
    *                              path to config file of an external project which should be refreshed
    */
   @Nullable
-  String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project);
+  String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project);
 }

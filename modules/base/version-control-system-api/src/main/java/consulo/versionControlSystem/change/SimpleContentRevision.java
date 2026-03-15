@@ -3,8 +3,7 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -25,12 +24,12 @@ public class SimpleContentRevision implements ContentRevision {
     return myContent;
   }
 
-  @Nonnull
+  
   public FilePath getFile() {
     return myNewFilePath;
   }
 
-  @Nonnull
+  
   public VcsRevisionNumber getRevisionNumber() {
     return new VcsRevisionNumber() {
       public String asString() {

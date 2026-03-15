@@ -35,8 +35,7 @@ import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,14 +47,14 @@ import java.util.stream.Collectors;
  * @author peter
  */
 class DirectoryPathMatcher {
-    @Nonnull
+    
     private final GotoFileModel myModel;
     @Nullable
     private final List<Pair<VirtualFile, String>> myFiles;
-    @Nonnull
+    
     final String dirPattern;
 
-    private DirectoryPathMatcher(@Nonnull GotoFileModel model, @Nullable List<Pair<VirtualFile, String>> files, @Nonnull String pattern) {
+    private DirectoryPathMatcher(GotoFileModel model, @Nullable List<Pair<VirtualFile, String>> files, String pattern) {
         myModel = model;
         myFiles = files;
         dirPattern = pattern;
@@ -63,7 +62,7 @@ class DirectoryPathMatcher {
 
     @Nullable
     @RequiredReadAction
-    static DirectoryPathMatcher root(@Nonnull GotoFileModel model, @Nonnull String pattern) {
+    static DirectoryPathMatcher root(GotoFileModel model, String pattern) {
         DirectoryPathMatcher matcher = new DirectoryPathMatcher(model, null, "");
         for (int i = 0; i < pattern.length(); i++) {
             matcher = matcher.appendChar(pattern.charAt(i));
@@ -152,14 +151,14 @@ class DirectoryPathMatcher {
         return tooMany.getAsBoolean() ? null : names;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private List<Pair<VirtualFile, String>> getMatchingRoots() {
         return myFiles != null ? myFiles : getProjectRoots(myModel);
     }
 
-    @Nonnull
-    GlobalSearchScope narrowDown(@Nonnull GlobalSearchScope fileSearchScope) {
+    
+    GlobalSearchScope narrowDown(GlobalSearchScope fileSearchScope) {
         if (myFiles == null) {
             return fileSearchScope;
         }
@@ -175,13 +174,13 @@ class DirectoryPathMatcher {
         for (VirtualFile root : roots) {
             VirtualFileUtil.visitChildrenRecursively(root, new VirtualFileVisitor<Void>() {
                 @Override
-                public boolean visitFile(@Nonnull VirtualFile file) {
+                public boolean visitFile(VirtualFile file) {
                     return visited.add(file) && scope.contains(file) && predicate.test(file);
                 }
 
                 @Nullable
                 @Override
-                public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
+                public Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
                     return file instanceof NewVirtualFile newVirtualFile ? newVirtualFile.getCachedChildren() : null;
                 }
             });
@@ -192,7 +191,7 @@ class DirectoryPathMatcher {
         return StringUtil.indexOf(name, c, 0, name.length(), false) >= 0;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private static List<Pair<VirtualFile, String>> getProjectRoots(GotoFileModel model) {
         Set<VirtualFile> roots = new HashSet<>();

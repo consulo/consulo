@@ -29,8 +29,7 @@ import consulo.externalService.impl.internal.repository.RepositoryHelper;
 import consulo.externalService.update.UpdateSettings;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -56,12 +55,12 @@ public class PluginAdvertiserRequester {
         myApplicationConcurrency = applicationConcurrency;
     }
 
-    @Nonnull
+    
     public List<PluginDescriptor> getLoadedPluginDescriptors() {
         return myLoadedPluginDescriptors == null ? List.of() : myLoadedPluginDescriptors;
     }
 
-    @Nonnull
+    
     public CompletableFuture<List<PluginDescriptor>> doRequest() {
         UpdateSettings updateSettings = UpdateSettings.getInstance();
         if (!updateSettings.isEnable()) {

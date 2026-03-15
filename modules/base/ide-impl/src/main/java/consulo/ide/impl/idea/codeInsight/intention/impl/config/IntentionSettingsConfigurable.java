@@ -25,8 +25,7 @@ import consulo.disposer.Disposable;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -36,7 +35,7 @@ public class IntentionSettingsConfigurable implements ApplicationConfigurable, S
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     if (myPanel == null) {
       myPanel = new IntentionSettingsPanel();
     }
@@ -55,7 +54,7 @@ public class IntentionSettingsConfigurable implements ApplicationConfigurable, S
     return myPanel != null && myPanel.isModified();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return CodeInsightLocalize.intentionSettings();
@@ -94,7 +93,7 @@ public class IntentionSettingsConfigurable implements ApplicationConfigurable, S
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "editor.code.intentions";
   }

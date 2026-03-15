@@ -18,21 +18,20 @@ package consulo.web.internal.ui.image;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2020-10-03
  */
 public class WebIconLibrary extends BaseIconLibraryImpl {
-  public WebIconLibrary(@Nonnull String id, @Nonnull BaseIconLibraryManager baseIconLibraryManager) {
+  public WebIconLibrary(String id, BaseIconLibraryManager baseIconLibraryManager) {
     super(id, baseIconLibraryManager);
   }
 
-  @Nonnull
+  
   @Override
-  protected ImageReference createImageReference(@Nonnull byte[] _1xData,
+  protected ImageReference createImageReference(byte[] _1xData,
                                                 @Nullable byte[] _2xdata,
                                                 boolean isSVG,
                                                 String groupId,

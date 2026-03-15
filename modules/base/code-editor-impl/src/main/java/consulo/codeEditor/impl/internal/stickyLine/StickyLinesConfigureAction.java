@@ -22,7 +22,6 @@ import consulo.configurable.internal.ShowConfigurableService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -32,18 +31,18 @@ import jakarta.inject.Provider;
  */
 @ActionImpl(id = "StickyLinesConfigureAction")
 public class StickyLinesConfigureAction extends StickyLinesAbstractAction {
-    @Nonnull
+    
     private final Provider<ShowConfigurableService> myShowConfigurableService;
 
     @Inject
-    public StickyLinesConfigureAction(@Nonnull Provider<ShowConfigurableService> showConfigurableService) {
+    public StickyLinesConfigureAction(Provider<ShowConfigurableService> showConfigurableService) {
         super(CodeEditorLocalize.actionEditorstickyconfigureText(), CodeEditorLocalize.actionEditorstickyconfigureDescription());
         myShowConfigurableService = showConfigurableService;
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         myShowConfigurableService.get().showAndSelect(project, EditorAppearanceConfigurable.class);

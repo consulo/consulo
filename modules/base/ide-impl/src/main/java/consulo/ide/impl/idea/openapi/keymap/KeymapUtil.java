@@ -25,8 +25,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.xml.serializer.InvalidDataException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -52,7 +51,7 @@ public class KeymapUtil {
     private KeymapUtil() {
     }
 
-    public static String getShortcutText(@Nonnull Shortcut shortcut) {
+    public static String getShortcutText(Shortcut shortcut) {
         return consulo.ui.ex.keymap.util.KeymapUtil.getShortcutText(shortcut);
     }
 
@@ -66,7 +65,7 @@ public class KeymapUtil {
         return consulo.ui.ex.keymap.util.KeymapUtil.getMouseShortcutText(button, modifiers, clickCount).get();
     }
 
-    @Nonnull
+    
     public static ShortcutSet getActiveKeymapShortcuts(@Nullable String actionId) {
         return consulo.ui.ex.keymap.util.KeymapUtil.getActiveKeymapShortcuts(actionId);
     }
@@ -74,7 +73,7 @@ public class KeymapUtil {
     /**
      * Creates shortcut corresponding to a single-click event
      */
-    public static MouseShortcut createMouseShortcut(@Nonnull MouseEvent e) {
+    public static MouseShortcut createMouseShortcut(MouseEvent e) {
         int button = MouseShortcut.getButton(e);
         int modifiers = e.getModifiersEx();
         if (button == MouseEvent.NOBUTTON && e.getID() == MouseEvent.MOUSE_DRAGGED) {
@@ -103,32 +102,32 @@ public class KeymapUtil {
         return consulo.ui.ex.keymap.util.KeymapUtil.getPrimaryShortcut(actionId);
     }
 
-    @Nonnull
-    public static String getFirstKeyboardShortcutText(@Nonnull String actionId) {
+    
+    public static String getFirstKeyboardShortcutText(String actionId) {
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
         return shortcut == null ? "" : getShortcutText(shortcut);
     }
 
-    @Nonnull
-    public static String getFirstKeyboardShortcutText(@Nonnull ShortcutSet set) {
+    
+    public static String getFirstKeyboardShortcutText(ShortcutSet set) {
         Shortcut[] shortcuts = set.getShortcuts();
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
         return shortcut == null ? "" : getShortcutText(shortcut);
     }
 
-    @Nonnull
-    public static String getPreferredShortcutText(@Nonnull Shortcut[] shortcuts) {
+    
+    public static String getPreferredShortcutText(Shortcut[] shortcuts) {
         return consulo.ui.ex.keymap.util.KeymapUtil.getPreferredShortcutText(shortcuts);
     }
 
-    @Nonnull
-    public static String getFirstKeyboardShortcutText(@Nonnull AnAction action) {
+    
+    public static String getFirstKeyboardShortcutText(AnAction action) {
         return consulo.ui.ex.keymap.util.KeymapUtil.getFirstKeyboardShortcutText(action);
     }
 
 
-    public static boolean isEventForAction(@Nonnull KeyEvent keyEvent, @Nonnull String actionId) {
+    public static boolean isEventForAction(KeyEvent keyEvent, String actionId) {
         return consulo.ui.ex.keymap.util.KeymapUtil.isEventForAction(keyEvent, actionId);
     }
 
@@ -282,17 +281,17 @@ public class KeymapUtil {
     }
 
     @Nullable
-    public static KeyStroke getKeyStroke(@Nonnull ShortcutSet shortcutSet) {
+    public static KeyStroke getKeyStroke(ShortcutSet shortcutSet) {
         return ShortcutUtil.getKeyStroke(shortcutSet);
     }
 
-    @Nonnull
-    public static String createTooltipText(@Nonnull String tooltipText, @Nonnull String actionId) {
+    
+    public static String createTooltipText(String tooltipText, String actionId) {
         return consulo.ui.ex.keymap.util.KeymapUtil.createTooltipText(tooltipText, actionId);
     }
 
-    @Nonnull
-    public static String createTooltipText(@Nullable String name, @Nonnull AnAction action) {
+    
+    public static String createTooltipText(@Nullable String name, AnAction action) {
         return consulo.ui.ex.keymap.util.KeymapUtil.createTooltipText(name, action);
     }
 
@@ -320,7 +319,7 @@ public class KeymapUtil {
      * Checks whether mouse event's button and modifiers match a shortcut configured in active keymap for given action id.
      * Only shortcuts having click count of 1 can be matched, mouse event's click count is ignored.
      */
-    public static boolean isMouseActionEvent(@Nonnull MouseEvent e, @Nonnull String actionId) {
+    public static boolean isMouseActionEvent(MouseEvent e, String actionId) {
         KeymapManager keymapManager = KeymapManager.getInstance();
         Keymap keymap = keymapManager.getActiveKeymap();
         if (keymap == null) {
@@ -363,8 +362,8 @@ public class KeymapUtil {
      * @return <code>true</code> if the action is reassigned successfully
      */
     public static boolean reassignAction(
-        @Nonnull JComponent component,
-        @Nonnull KeyStroke oldKeyStroke,
+        JComponent component,
+        KeyStroke oldKeyStroke,
         @Nullable KeyStroke newKeyStroke,
         int condition
     ) {
@@ -386,8 +385,8 @@ public class KeymapUtil {
      * @return <code>true</code> if the action is reassigned successfully
      */
     public static boolean reassignAction(
-        @Nonnull JComponent component,
-        @Nonnull KeyStroke oldKeyStroke,
+        JComponent component,
+        KeyStroke oldKeyStroke,
         @Nullable KeyStroke newKeyStroke,
         int condition,
         boolean muteOldKeystroke

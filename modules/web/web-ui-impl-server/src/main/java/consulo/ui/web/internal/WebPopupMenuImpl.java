@@ -23,8 +23,7 @@ import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.contextmenu.ContextMenu;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
     myParent = parent;
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     throw new UnsupportedOperationException();
@@ -73,14 +72,14 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public Menu add(@Nonnull MenuItem menuItem) {
+  public Menu add(MenuItem menuItem) {
     myItems.add(menuItem);
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public String getText() {
     throw new UnsupportedOperationException();

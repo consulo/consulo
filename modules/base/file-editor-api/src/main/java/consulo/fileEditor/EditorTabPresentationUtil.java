@@ -6,12 +6,11 @@ import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EditorTabPresentationUtil {
-    @Nonnull
-    public static String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+    
+    public static String getEditorTabTitle(Project project, VirtualFile file) {
         for (EditorTabTitleProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabTitleProvider.EP_NAME)) {
             String result = provider.getEditorTabTitle(project, file);
             if (StringUtil.isNotEmpty(result)) {
@@ -22,8 +21,8 @@ public class EditorTabPresentationUtil {
         return file.getPresentableName();
     }
 
-    @Nonnull
-    public static String getUniqueEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+    
+    public static String getUniqueEditorTabTitle(Project project, VirtualFile file) {
         String name = getEditorTabTitle(project, file);
         if (name.equals(file.getPresentableName())) {
             return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file);
@@ -33,8 +32,8 @@ public class EditorTabPresentationUtil {
 
     @Nullable
     public static ColorValue getEditorTabBackgroundColor(
-        @Nonnull Project project,
-        @Nonnull VirtualFile file,
+        Project project,
+        VirtualFile file,
         @Nullable FileEditorWindow editorWindow
     ) {
         for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, project.getExtensionPoint(EditorTabColorProvider.class))) {
@@ -47,7 +46,7 @@ public class EditorTabPresentationUtil {
     }
 
     @Nullable
-    public static ColorValue getFileBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public static ColorValue getFileBackgroundColor(Project project, VirtualFile file) {
         for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, project.getExtensionPoint(EditorTabColorProvider.class))) {
             ColorValue result = provider.getProjectViewColor(project, file);
             if (result != null) {

@@ -23,8 +23,7 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,19 +34,19 @@ import java.util.List;
 public class GlobalInspectionUtil {
   private static final String LOC_MARKER = " #loc";
 
-  @Nonnull
-  public static String createInspectionMessage(@Nonnull String message) {
+  
+  public static String createInspectionMessage(String message) {
     //TODO: FIXME!
     return message + LOC_MARKER;
   }
 
-  public static void createProblem(@Nonnull PsiElement elt,
-                                   @Nonnull HighlightInfo info,
+  public static void createProblem(PsiElement elt,
+                                   HighlightInfo info,
                                    TextRange range,
                                    @Nullable ProblemGroup problemGroup,
-                                   @Nonnull InspectionManager manager,
-                                   @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
-                                   @Nonnull GlobalInspectionContext globalContext) {
+                                   InspectionManager manager,
+                                   ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                                   GlobalInspectionContext globalContext) {
     List<LocalQuickFix> fixes = new ArrayList<>();
     info.forEachQuickFix((action, textRange) -> {
       if (action instanceof LocalQuickFix) {

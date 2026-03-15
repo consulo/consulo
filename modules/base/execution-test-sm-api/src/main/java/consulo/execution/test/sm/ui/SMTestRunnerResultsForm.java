@@ -55,8 +55,7 @@ import consulo.util.collection.Lists;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionListener;
@@ -113,12 +112,12 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     private Set<Update> myRequests = Collections.synchronizedSet(new HashSet<Update>());
     private boolean myDisposed = false;
 
-    public SMTestRunnerResultsForm(@Nonnull JComponent console, TestConsoleProperties consoleProperties) {
+    public SMTestRunnerResultsForm(JComponent console, TestConsoleProperties consoleProperties) {
         this(console, AnAction.EMPTY_ARRAY, consoleProperties, null);
     }
 
     public SMTestRunnerResultsForm(
-        @Nonnull JComponent console,
+        JComponent console,
         AnAction[] consoleActions,
         TestConsoleProperties consoleProperties,
         @Nullable String splitterPropertyName
@@ -246,7 +245,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
      */
     @Override
     @RequiredUIAccess
-    public void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
+    public void onTestingStarted(SMTestProxy.SMRootTestProxy testsRoot) {
         myTreeBuilder.updateFromRoot();
 
         // Status line
@@ -273,7 +272,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
 
     @Override
     @RequiredUIAccess
-    public void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
+    public void onTestingFinished(SMTestProxy.SMRootTestProxy testsRoot) {
         myEndTime = System.currentTimeMillis();
 
         if (myTotalTestCount == 0) {
@@ -356,7 +355,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
      */
     @Override
     @RequiredUIAccess
-    public void onTestStarted(@Nonnull SMTestProxy testProxy) {
+    public void onTestStarted(SMTestProxy testProxy) {
         if (!testProxy.isConfig()) {
             updateOnTestStarted(false);
         }
@@ -374,7 +373,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
 
     @Override
-    public void onTestFailed(@Nonnull SMTestProxy test) {
+    public void onTestFailed(SMTestProxy test) {
         updateOnTestFailed(false);
         if (test.isConfig()) {
             myStartedTestCount++;
@@ -391,7 +390,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
 
     @Override
-    public void onTestIgnored(@Nonnull SMTestProxy test) {
+    public void onTestIgnored(SMTestProxy test) {
         updateOnTestIgnored();
     }
 
@@ -404,7 +403,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
      */
     @Override
     @RequiredUIAccess
-    public void onSuiteStarted(@Nonnull SMTestProxy newSuite) {
+    public void onSuiteStarted(SMTestProxy newSuite) {
         _addTestOrSuite(newSuite);
     }
 
@@ -430,7 +429,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
 
     @Override
-    public void onTestFinished(@Nonnull SMTestProxy test) {
+    public void onTestFinished(SMTestProxy test) {
         if (!test.isConfig()) {
             updateOnTestFinished(false);
         }
@@ -438,7 +437,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
 
     @Override
-    public void onSuiteFinished(@Nonnull SMTestProxy suite) {
+    public void onSuiteFinished(SMTestProxy suite) {
         //Do nothing
     }
 
@@ -486,7 +485,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
 
     @Override
-    @Nonnull
+    
     public AbstractTestProxy getRoot() {
         return myTestsRootNode;
     }
@@ -585,7 +584,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
 
     @RequiredUIAccess
-    private void _addTestOrSuite(@Nonnull SMTestProxy newTestOrSuite) {
+    private void _addTestOrSuite(SMTestProxy newTestOrSuite) {
         final SMTestProxy parentSuite = newTestOrSuite.getParent();
         assert parentSuite != null;
 
@@ -814,7 +813,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         }
 
         @Override
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
             writeState();
             DaemonCodeAnalyzer.getInstance((Project) getProject()).restart();
             try {

@@ -17,7 +17,6 @@ package consulo.usage;
 
 import consulo.language.psi.*;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

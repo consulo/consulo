@@ -21,8 +21,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,8 +36,8 @@ public interface SMTestLocator {
     /**
      * Creates the <code>Location</code> list from <code>protocol</code> and <code>path</code> in <code>scope</code>.
      */
-    @Nonnull
-    List<Location> getLocation(@Nonnull String protocol, @Nonnull String path, @Nonnull Project project, @Nonnull GlobalSearchScope scope);
+    
+    List<Location> getLocation(String protocol, String path, Project project, GlobalSearchScope scope);
 
     /**
      * Creates the <code>Location</code> list from <code>protocol</code>, <code>path</code>, and <code>metaInfo</code> in <code>scope</code>.
@@ -47,13 +46,13 @@ public interface SMTestLocator {
      * A good example for code>metaInfo</code> is the line number of the beginning of the test. It can speed up the search procedure,
      * but it changes when editing.
      */
-    @Nonnull
+    
     default List<Location> getLocation(
-        @Nonnull String protocol,
-        @Nonnull String path,
+        String protocol,
+        String path,
         @Nullable String metaInfo,
-        @Nonnull Project project,
-        @Nonnull GlobalSearchScope scope
+        Project project,
+        GlobalSearchScope scope
     ) {
         return getLocation(protocol, path, project, scope);
     }
@@ -65,7 +64,7 @@ public interface SMTestLocator {
         private final Map<String, SMTestLocator> myLocators;
 
         @SafeVarargs
-        public Composite(@Nonnull Pair<String, ? extends SMTestLocator> first, @Nonnull Pair<String, ? extends SMTestLocator>... rest) {
+        public Composite(Pair<String, ? extends SMTestLocator> first, Pair<String, ? extends SMTestLocator>... rest) {
             myLocators = new HashMap<>();
             myLocators.put(first.getFirst(), first.getSecond());
             for (Pair<String, ? extends SMTestLocator> pair : rest) {
@@ -73,17 +72,17 @@ public interface SMTestLocator {
             }
         }
 
-        public Composite(@Nonnull Map<String, ? extends SMTestLocator> locators) {
+        public Composite(Map<String, ? extends SMTestLocator> locators) {
             myLocators = new HashMap<>(locators);
         }
 
-        @Nonnull
+        
         @Override
         public List<Location> getLocation(
-            @Nonnull String protocol,
-            @Nonnull String path,
-            @Nonnull Project project,
-            @Nonnull GlobalSearchScope scope
+            String protocol,
+            String path,
+            Project project,
+            GlobalSearchScope scope
         ) {
             SMTestLocator locator = myLocators.get(protocol);
 

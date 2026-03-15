@@ -28,7 +28,6 @@ import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,7 +95,7 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
   }
 
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     return HelpManager.HELP_ID == dataId ? myHelpId : null;
   }
 
@@ -106,14 +105,14 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
 
   private class MyCloseAction extends CloseTabToolbarAction {
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
       super.update(e);
       e.getPresentation().setVisible(myCloseEnabled);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       if (myContentManager != null) {
         Content content = myContentManager.getContent(PanelWithActionsAndCloseButton.this);
         if (content != null) {

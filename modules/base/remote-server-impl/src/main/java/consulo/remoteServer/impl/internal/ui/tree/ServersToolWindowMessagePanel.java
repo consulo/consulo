@@ -7,7 +7,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.util.LafProperty;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,7 +25,7 @@ public class ServersToolWindowMessagePanel implements RemoteServersDeploymentMan
   }
 
   @Override
-  public void setEmptyText(@Nonnull String text) {
+  public void setEmptyText(String text) {
     if (text.equals(myCurrentText)) {
       return;
     }
@@ -37,7 +36,7 @@ public class ServersToolWindowMessagePanel implements RemoteServersDeploymentMan
   }
 
   @Override
-  public @Nonnull JComponent getComponent() {
+  public JComponent getComponent() {
     return myPanel;
   }
 }

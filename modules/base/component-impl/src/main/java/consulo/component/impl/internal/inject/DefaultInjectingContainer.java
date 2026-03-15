@@ -21,8 +21,7 @@ import consulo.component.internal.inject.InjectingKey;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,16 +52,16 @@ public class DefaultInjectingContainer implements InjectingContainer {
     myContainer.registerComponent(point.getAdapter());
   }
 
-  @Nonnull
+  
   @Override
   public List<InjectingKey<?>> getKeys() {
     return Collections.unmodifiableList(myKeys);
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getInstance(@Nonnull Class<T> clazz) {
+  public <T> T getInstance(Class<T> clazz) {
     Class<?> insideObjectCreation = GetInstanceValidator.insideObjectCreation();
     if (LOG_INJECTING_PROBLEMS && insideObjectCreation != null && myGetInstanceWarningSet.add(Pair.create(clazz, insideObjectCreation))) {
       LOG.warn("Calling #getInstance(" + clazz + ".class) inside object initialization. Use constructor injection instead. MainInjecting: " + insideObjectCreation);
@@ -78,7 +77,7 @@ public class DefaultInjectingContainer implements InjectingContainer {
   @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
+  public <T> T getInstanceIfCreated(Class<T> clazz) {
     Class<?> insideObjectCreation = GetInstanceValidator.insideObjectCreation();
     if (LOG_INJECTING_PROBLEMS && insideObjectCreation != null && myGetInstanceWarningSet.add(Pair.create(clazz, insideObjectCreation))) {
       LOG.warn("Calling #getInstance(" + clazz.getName() + ".class) inside object initialization. Use constructor injection instead. MainInjecting: " + insideObjectCreation);
@@ -87,21 +86,21 @@ public class DefaultInjectingContainer implements InjectingContainer {
     return (T)myContainer.getComponentInstanceIfCreated(clazz);
   }
 
-  @Nonnull
+  
   @Override
-  public <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
+  public <T> T getUnbindedInstance(Class<T> clazz) {
     ConstructorInjectionComponentAdapter<T> adapter = new ConstructorInjectionComponentAdapter<>(clazz, clazz);
     return adapter.getComponentInstance(myContainer);
   }
 
-  @Nonnull
+  
   @Override
-  public <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor) {
+  public <T> T getUnbindedInstance(Class<T> clazz, Type[] constructorTypes, Function<Object[], T> constructor) {
     NewConstructorInjectionComponentAdapter<T> adapter = new NewConstructorInjectionComponentAdapter<>(clazz, clazz, constructorTypes, constructor);
     return adapter.getComponentInstance(myContainer);
   }
 
-  @Nonnull
+  
   @Override
   public InjectingContainerBuilder childBuilder() {
     return new DefaultInjectingContainerBuilder(this);

@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -32,5 +31,5 @@ import javax.swing.*;
 public interface SwingMutableModuleExtension {
   @Nullable
   @RequiredUIAccess
-  JComponent createConfigurablePanel(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck);
+  JComponent createConfigurablePanel(Disposable uiDisposable, Runnable updateOnCheck);
 }

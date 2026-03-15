@@ -18,8 +18,7 @@ package consulo.ide.newModule;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ public class NewModuleContextItem extends NewModuleContextNode implements Compar
 
   private int myWeight;
 
-  public NewModuleContextItem(@Nonnull LocalizeValue name, @Nullable Image image, int weight, NewModuleBuilderProcessor<?> processor) {
+  public NewModuleContextItem(LocalizeValue name, @Nullable Image image, int weight, NewModuleBuilderProcessor<?> processor) {
     super(name, image);
     myProcessor = processor;
     myWeight = weight;
@@ -41,7 +40,7 @@ public class NewModuleContextItem extends NewModuleContextNode implements Compar
   }
 
   @Override
-  public int compareTo(@Nonnull NewModuleContextItem o) {
+  public int compareTo(NewModuleContextItem o) {
     if (myWeight == o.myWeight) {
       return getName().getValue().compareToIgnoreCase(o.getName().getValue());
     }

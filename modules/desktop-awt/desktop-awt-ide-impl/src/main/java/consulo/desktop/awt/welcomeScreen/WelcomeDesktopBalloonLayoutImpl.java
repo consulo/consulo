@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.popup.Balloon;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,10 +58,10 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   private final BalloonPanel myBalloonPanel = new BalloonPanel();
   private boolean myVisible;
 
-  public WelcomeDesktopBalloonLayoutImpl(@Nonnull JRootPane parent,
-                                         @Nonnull Insets insets,
-                                         @Nonnull Consumer<List<NotificationType>> listener,
-                                         @Nonnull Supplier<Point> buttonLocation) {
+  public WelcomeDesktopBalloonLayoutImpl(JRootPane parent,
+                                         Insets insets,
+                                         Consumer<List<NotificationType>> listener,
+                                         Supplier<Point> buttonLocation) {
     super(parent, insets);
     myListener = listener;
     myButtonLocation = buttonLocation;
@@ -83,7 +82,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   }
 
   @Override
-  public void add(@Nonnull Balloon balloon, @Nullable Object layoutData) {
+  public void add(Balloon balloon, @Nullable Object layoutData) {
     if (layoutData instanceof BalloonLayoutData && ((BalloonLayoutData)layoutData).welcomeScreen) {
       addToPopup((BalloonImpl)balloon, (BalloonLayoutData)layoutData);
     }
@@ -92,7 +91,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
     }
   }
 
-  private void addToPopup(@Nonnull BalloonImpl balloon, @Nonnull BalloonLayoutData layoutData) {
+  private void addToPopup(BalloonImpl balloon, BalloonLayoutData layoutData) {
     layoutData.doLayout = this::layoutPopup;
     layoutData.configuration = layoutData.configuration.replace(JBUI.scale(myPopupBalloon == null ? 7 : 5), JBUI.scale(12));
 
@@ -123,7 +122,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
       myPopupBalloon.setActionProvider(new BalloonImpl.ActionProvider() {
         private BalloonImpl.ActionButton myAction;
 
-        @Nonnull
+        
         @Override
         public List<BalloonImpl.ActionButton> createActions() {
           myAction = myPopupBalloon.new ActionButton(PlatformIconGroup.ideNotificationClose(), null, LocalizeValue.empty(), event -> {});
@@ -131,7 +130,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
         }
 
         @Override
-        public void layout(@Nonnull Rectangle2D bounds) {
+        public void layout(Rectangle2D bounds) {
           myAction.setBounds(0, 0, 0, 0);
         }
       });

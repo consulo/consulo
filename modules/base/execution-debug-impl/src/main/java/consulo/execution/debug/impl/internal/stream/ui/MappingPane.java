@@ -7,8 +7,6 @@ import consulo.execution.debug.stream.ui.ValueWithPosition;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.GraphicsUtil;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,11 +34,11 @@ public class MappingPane extends JPanel {
     private final LinkedValuesMapping mapping;
     private final TraceController controller;
 
-    public MappingPane(@Nls @Nonnull String name,
-                       @Nls @Nonnull String fullCallExpression,
-                       @Nonnull List<? extends ValueWithPosition> beforeValues,
-                       @Nonnull LinkedValuesMapping mapping,
-                       @Nonnull TraceController controller) {
+    public MappingPane(String name,
+                       String fullCallExpression,
+                       List<? extends ValueWithPosition> beforeValues,
+                       LinkedValuesMapping mapping,
+                       TraceController controller) {
         super(new BorderLayout());
         this.beforeValues = beforeValues;
         this.mapping = mapping;

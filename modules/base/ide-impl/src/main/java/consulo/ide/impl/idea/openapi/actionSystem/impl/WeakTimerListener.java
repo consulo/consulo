@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.action.TimerListener;
 import consulo.ui.ex.internal.ActionManagerEx;
-import jakarta.annotation.Nonnull;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -12,7 +11,7 @@ import java.lang.ref.WeakReference;
 public class WeakTimerListener implements TimerListener {
   private final Reference<TimerListener> myRef;
 
-  public WeakTimerListener(@Nonnull TimerListener delegate) {
+  public WeakTimerListener(TimerListener delegate) {
     myRef = new WeakReference<>(delegate);
   }
 

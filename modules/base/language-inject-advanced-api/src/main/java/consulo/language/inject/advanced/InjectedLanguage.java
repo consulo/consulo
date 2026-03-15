@@ -18,8 +18,7 @@ package consulo.language.inject.advanced;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -32,14 +31,14 @@ public final class InjectedLanguage {
   private final String mySuffix;
   private final boolean myDynamic;
 
-  private InjectedLanguage(@Nonnull String id, @Nonnull String prefix, @Nonnull String suffix, boolean dynamic) {
+  private InjectedLanguage(String id, String prefix, String suffix, boolean dynamic) {
     myID = id;
     myPrefix = prefix;
     mySuffix = suffix;
     myDynamic = dynamic;
   }
 
-  @Nonnull
+  
   public String getID() {
     return myID;
   }
@@ -49,12 +48,12 @@ public final class InjectedLanguage {
     return findLanguageById(myID);
   }
 
-  @Nonnull
+  
   public String getPrefix() {
     return myPrefix;
   }
 
-  @Nonnull
+  
   public String getSuffix() {
     return mySuffix;
   }
@@ -79,7 +78,7 @@ public final class InjectedLanguage {
     }
   }
 
-  @Nonnull
+  
   public static String[] getAvailableLanguageIDs() {
     synchronized (InjectedLanguage.class) {
       if (ourLanguageCache == null || ourLanguageCount != Language.getRegisteredLanguages().size()) {
@@ -90,7 +89,7 @@ public final class InjectedLanguage {
     }
   }
 
-  @Nonnull
+  
   public static Language[] getAvailableLanguages() {
     synchronized (InjectedLanguage.class) {
       if (ourLanguageCache == null || ourLanguageCount != Language.getRegisteredLanguages().size()) {

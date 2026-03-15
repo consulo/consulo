@@ -2,20 +2,19 @@
 
 package consulo.language;
 
-import jakarta.annotation.Nonnull;
 
 final class MetaLanguageMatcher extends LanguageMatcher {
 
   private final
-  @Nonnull
+  
   MetaLanguage myLanguage;
 
-  MetaLanguageMatcher(@Nonnull MetaLanguage language) {
+  MetaLanguageMatcher(MetaLanguage language) {
     myLanguage = language;
   }
 
   @Override
-  public boolean matchesLanguage(@Nonnull Language language) {
+  public boolean matchesLanguage(Language language) {
     return myLanguage.matchesLanguage(language);
   }
 

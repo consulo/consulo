@@ -19,7 +19,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
 
-import jakarta.annotation.Nonnull;
 
 public interface HighlightingPass {
   HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];
@@ -32,7 +31,7 @@ public interface HighlightingPass {
    * throw {@link ProcessCanceledException} if <code>true</code> is returned.
    */
   @RequiredReadAction
-  void collectInformation(@Nonnull ProgressIndicator progress);
+  void collectInformation(ProgressIndicator progress);
 
   /**
    * Called to apply information collected by {@linkplain #collectInformation(ProgressIndicator)} to the editor.

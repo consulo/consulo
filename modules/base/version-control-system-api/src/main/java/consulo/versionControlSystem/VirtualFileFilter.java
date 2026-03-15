@@ -17,15 +17,14 @@ package consulo.versionControlSystem;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Irina.Chernushina
  * @since 2012-07-19
  */
 public abstract class VirtualFileFilter {
-  public abstract boolean shouldGoIntoDirectory(@Nonnull VirtualFile file);
+  public abstract boolean shouldGoIntoDirectory(VirtualFile file);
 
-  public void afterChildrenVisited(@Nonnull VirtualFile file) {
+  public void afterChildrenVisited(VirtualFile file) {
   }
 }

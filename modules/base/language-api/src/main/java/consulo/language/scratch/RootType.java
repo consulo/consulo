@@ -27,8 +27,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,7 +42,7 @@ public abstract class RootType {
 
   public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create(RootType.class);
 
-  @Nonnull
+  
   public static List<RootType> getAllRootTypes() {
     return ROOT_EP.getExtensionList();
   }
@@ -53,7 +52,7 @@ public abstract class RootType {
     return ScratchFileService.getInstance().getRootType(file);
   }
 
-  @Nonnull
+  
   public static <T extends RootType> T findByClass(Class<T> aClass) {
     return ROOT_EP.findExtensionOrFail(aClass);
   }
@@ -61,12 +60,12 @@ public abstract class RootType {
   private final String myId;
   private final String myDisplayName;
 
-  protected RootType(@Nonnull String id, @Nullable String displayName) {
+  protected RootType(String id, @Nullable String displayName) {
     myId = id;
     myDisplayName = displayName;
   }
 
-  @Nonnull
+  
   public final String getId() {
     return myId;
   }
@@ -87,12 +86,12 @@ public abstract class RootType {
   }
 
   @Nullable
-  public Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public Language substituteLanguage(Project project, VirtualFile file) {
     return null;
   }
 
   @Nullable
-  public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public Image substituteIcon(Project project, VirtualFile file) {
     if (file.isDirectory()) return null;
     Language language = substituteLanguage(project, file);
     FileType fileType = LanguageUtil.getLanguageFileType(language);
@@ -104,18 +103,18 @@ public abstract class RootType {
   }
 
   @Nullable
-  public String substituteName(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public String substituteName(Project project, VirtualFile file) {
     return null;
   }
 
-  public VirtualFile findFile(@Nullable Project project, @Nonnull String pathName, ScratchFileService.Option option) throws IOException {
+  public VirtualFile findFile(@Nullable Project project, String pathName, ScratchFileService.Option option) throws IOException {
     return ScratchFileService.getInstance().findFile(this, pathName, option);
   }
 
-  public boolean isIgnored(@Nonnull Project project, @Nonnull VirtualFile element) {
+  public boolean isIgnored(Project project, VirtualFile element) {
     return false;
   }
 
-  public void registerTreeUpdater(@Nonnull Project project, @Nonnull Disposable disposable, @Nonnull Runnable onUpdate) {
+  public void registerTreeUpdater(Project project, Disposable disposable, Runnable onUpdate) {
   }
 }
