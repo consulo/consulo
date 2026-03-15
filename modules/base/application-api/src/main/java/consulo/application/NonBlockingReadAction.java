@@ -7,11 +7,11 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
-import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -106,10 +106,10 @@ public interface NonBlockingReadAction<T> {
    *                                 {@link AppExecutorUtil#getAppExecutorService()} or
    *                                 {@link BoundedTaskExecutor} on top of that.
    */
-  CancellablePromise<T> submit(@Nonnull Executor backgroundThreadExecutor);
+  CompletableFuture<T> submit(@Nonnull Executor backgroundThreadExecutor);
 
   @Nonnull
-  default CancellablePromise<T> submitDefault() {
+  default CompletableFuture<T> submitDefault() {
       return submit(NonUrgentExecutor.getInstance());
   }
 

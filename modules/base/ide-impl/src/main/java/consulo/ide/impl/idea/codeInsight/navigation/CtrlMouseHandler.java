@@ -62,7 +62,6 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.usage.UsageViewShortNameLocation;
 import consulo.usage.UsageViewTypeLocation;
 import consulo.usage.UsageViewUtil;
-import consulo.util.concurrent.CancellablePromise;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
@@ -85,6 +84,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
@@ -689,7 +689,7 @@ public final class CtrlMouseHandler {
         private final int myHostOffset;
         private BrowseMode myBrowseMode;
         private boolean myDisposed;
-        private CancellablePromise<?> myExecutionProgress;
+        private CompletableFuture<?> myExecutionProgress;
 
         TooltipProvider(@Nonnull EditorEx hostEditor, @Nonnull LogicalPosition hostPos) {
             myHostEditor = hostEditor;
@@ -705,7 +705,7 @@ public final class CtrlMouseHandler {
         void dispose() {
             myDisposed = true;
             if (myExecutionProgress != null) {
-                myExecutionProgress.cancel();
+                myExecutionProgress.cancel(false);
             }
         }
 

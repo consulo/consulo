@@ -19,15 +19,10 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import consulo.util.concurrent.Promise;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -57,23 +52,23 @@ class AsyncFilterRunner {
       return;
     }
 
-    Promise<?> promise = ReadAction.nonBlocking(this::runTasks).submit(ourExecutor);
+    CompletableFuture<?> promise = ReadAction.nonBlocking(this::runTasks).submit(ourExecutor);
 
     if (isQuick(promise)) {
       highlightAvailableResults();
     }
     else {
-      promise.onSuccess(__ -> {
-        if (hasResults()) {
+      promise.whenComplete((result, error) -> {
+        if (error == null && hasResults()) {
           ApplicationManager.getApplication().invokeLater(this::highlightAvailableResults, ModalityState.any());
         }
       });
     }
   }
 
-  private static boolean isQuick(Promise<?> future) {
+  private static boolean isQuick(CompletableFuture<?> future) {
     try {
-      future.blockingGet(5, TimeUnit.MILLISECONDS);
+      future.get(5, TimeUnit.MILLISECONDS);
       return true;
     }
     catch (TimeoutException ignored) {

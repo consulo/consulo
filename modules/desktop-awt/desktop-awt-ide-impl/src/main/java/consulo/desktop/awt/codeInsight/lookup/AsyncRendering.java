@@ -7,17 +7,17 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.language.editor.completion.lookup.LookupElementRenderer;
 import consulo.language.psi.stub.DumbModeAccessType;
-import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public final class AsyncRendering {
   private static final Key<LookupElementPresentation> LAST_COMPUTED_PRESENTATION = Key.create("LAST_COMPUTED_PRESENTATION");
-  private static final Key<CancellablePromise<?>> LAST_COMPUTATION = Key.create("LAST_COMPUTATION");
+  private static final Key<CompletableFuture<?>> LAST_COMPUTATION = Key.create("LAST_COMPUTATION");
   private static final Executor ourExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ExpensiveRendering");
   private final LookupImpl myLookup;
 
@@ -38,8 +38,8 @@ public final class AsyncRendering {
     synchronized (LAST_COMPUTATION) {
       cancelRendering(element);
 
-      Ref<CancellablePromise<?>> promiseRef = Ref.create();
-      CancellablePromise<Void> promise = ReadAction
+      Ref<CompletableFuture<?>> promiseRef = Ref.create();
+      CompletableFuture<Void> promise = ReadAction
         .nonBlocking(() -> {
           if (element.isValid()) {
             renderInBackground(element, renderer);
@@ -69,9 +69,9 @@ public final class AsyncRendering {
 
   public static void cancelRendering(@Nonnull LookupElement item) {
     synchronized (LAST_COMPUTATION) {
-      CancellablePromise<?> promise = item.getUserData(LAST_COMPUTATION);
+      CompletableFuture<?> promise = item.getUserData(LAST_COMPUTATION);
       if (promise != null) {
-        promise.cancel();
+        promise.cancel(false);
         item.putUserData(LAST_COMPUTATION, null);
       }
     }

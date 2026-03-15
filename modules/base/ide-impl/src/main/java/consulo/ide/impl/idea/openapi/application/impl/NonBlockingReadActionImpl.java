@@ -7,10 +7,10 @@ import consulo.application.NonBlockingReadAction;
 import consulo.application.constraint.BaseConstrainedExecution;
 import consulo.application.constraint.ConstrainedExecution;
 import consulo.application.impl.internal.RunnableAsCallable;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.NonUrgentExecutor;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.internal.SensitiveProgressWrapper;
-import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -30,15 +30,13 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.AsyncPromise;
-import consulo.util.concurrent.CancellablePromise;
-import consulo.util.concurrent.Promises;
+import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -213,9 +211,8 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
   }
 
   @Override
-  public
   @Nonnull
-  CancellablePromise<T> submit(@Nonnull Executor backgroundThreadExecutor) {
+  public CompletableFuture<T> submit(@Nonnull Executor backgroundThreadExecutor) {
     Submission<T> submission = new Submission<>(this, backgroundThreadExecutor, myProgressIndicator);
     if (myCoalesceEquality == null) {
       submission.transferToBgThread();
@@ -223,10 +220,12 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
     else {
       submission.submitOrScheduleCoalesced(myCoalesceEquality);
     }
-    return submission;
+    return submission.myFuture;
   }
 
-  private static final class Submission<T> extends AsyncPromise<T> {
+  private static final class Submission<T> {
+    final CompletableFuture<T> myFuture = new CompletableFuture<>();
+
     @Nonnull
     private final Executor backendExecutor;
     private
@@ -256,6 +255,9 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
         acquire();
       }
       myProgressIndicator = outerIndicator;
+
+      // ensure external cancellation of myFuture triggers cleanup
+      myFuture.whenComplete((r, e) -> cleanupIfNeeded());
 
       if (LOG.isTraceEnabled()) {
         LOG.trace("Creating " + this);
@@ -302,29 +304,22 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
       return backendExecutor == AppExecutorUtil.getAppExecutorService() || backendExecutor == NonUrgentExecutor.getInstance();
     }
 
-    @Override
-    public boolean cancel(boolean mayInterruptIfRunning) {
-      boolean result = super.cancel(mayInterruptIfRunning);
-      cleanupIfNeeded();
-      return result;
-    }
-
-    @Override
-    public void setResult(@Nullable T t) {
-      super.setResult(t);
+    void cancel() {
+      myFuture.cancel(false);
       cleanupIfNeeded();
     }
 
-    @Override
-    public boolean setError(@Nonnull Throwable error) {
-      boolean result = super.setError(error);
+    void setResult(@Nullable T t) {
+      myFuture.complete(t);
       cleanupIfNeeded();
-      return result;
     }
 
-    @Override
-    protected boolean shouldLogErrors() {
-      return backendExecutor != SYNC_DUMMY_EXECUTOR;
+    void setError(@Nonnull Throwable error) {
+      myFuture.completeExceptionally(error);
+      if (backendExecutor != SYNC_DUMMY_EXECUTOR && !(error instanceof ControlFlowException) && !(error instanceof CancellationException)) {
+        LOG.error(error.getMessage(), error);
+      }
+      cleanupIfNeeded();
     }
 
     private void cleanupIfNeeded() {
@@ -372,7 +367,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
     }
 
     private void scheduleReplacementIfAny() {
-      if (myReplacement == null || myReplacement.isDone()) {
+      if (myReplacement == null || myReplacement.myFuture.isDone()) {
         ourTasksByEquality.remove(builder.myCoalesceEquality, this);
       }
       else {
@@ -383,7 +378,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
 
     void submitOrScheduleCoalesced(@Nonnull List<?> coalesceEquality) {
       synchronized (ourTasksByEquality) {
-        if (isDone()) return;
+        if (myFuture.isDone()) return;
 
         Submission<?> current = ourTasksByEquality.putIfAbsent(coalesceEquality, this);
         if (current == null) {
@@ -460,12 +455,18 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
         while (true) {
           attemptComputation();
 
-          if (isDone()) {
-            if (isCancelled()) {
+          if (myFuture.isDone()) {
+            if (myFuture.isCancelled()) {
               throw new ProcessCanceledException();
             }
             try {
-              return blockingGet(0, TimeUnit.MILLISECONDS);
+              return myFuture.get(0, TimeUnit.MILLISECONDS);
+            }
+            catch (CancellationException e) {
+              throw new ProcessCanceledException();
+            }
+            catch (InterruptedException e) {
+              throw new ProcessCanceledException();
             }
             catch (TimeoutException | ExecutionException e) {
               throw new RuntimeException(e);
@@ -483,7 +484,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
               BaseConstrainedExecution.scheduleWithinConstraints(semaphore::up, null, constraints);
             }
             ProgressIndicatorUtils.awaitWithCheckCanceled(semaphore, myProgressIndicator);
-            if (isCancelled()) {
+            if (myFuture.isCancelled()) {
               throw new ProcessCanceledException();
             }
           }
@@ -539,7 +540,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
     }
 
     private void rescheduleLater() {
-      if (Promises.isPending(this)) {
+      if (!myFuture.isDone()) {
         AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> reschedule(), 10, TimeUnit.MILLISECONDS);
       }
     }
@@ -593,7 +594,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
     }
 
     private boolean checkObsolete() {
-      if (Promises.isRejected(this)) return true;
+      if (myFuture.isCompletedExceptionally()) return true;
       for (BooleanSupplier condition : builder.myCancellationConditions) {
         if (condition.getAsBoolean()) {
           cancel();
@@ -608,7 +609,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
     }
 
     private void safeTransferToEdt(T result) {
-      if (Promises.isRejected(this)) return;
+      if (myFuture.isCompletedExceptionally()) return;
 
       long stamp = AsyncExecutionServiceImpl.getWriteActionCounter();
 
@@ -624,15 +625,25 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
 
         setResult(result);
 
-        if (isSucceeded()) { // in case another thread managed to cancel it just before `setResult`
+        if (myFuture.isDone() && !myFuture.isCompletedExceptionally()) { // in case another thread managed to cancel it just before `setResult`
           builder.myUiThreadAction.accept(result);
         }
-      }, this::isCancelled);
+      }, myFuture::isCancelled);
     }
 
     @Override
     public String toString() {
-      return "Submission{" + builder.myComputation + ", " + getState() + "}";
+      String state;
+      if (!myFuture.isDone()) {
+        state = "PENDING";
+      }
+      else if (myFuture.isCompletedExceptionally()) {
+        state = "REJECTED";
+      }
+      else {
+        state = "SUCCEEDED";
+      }
+      return "Submission{" + builder.myComputation + ", " + state + "}";
     }
   }
 

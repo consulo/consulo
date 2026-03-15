@@ -143,11 +143,15 @@ public abstract class CompletionPhase implements Disposable {
         else if (phase == CompletionServiceImpl.getCompletionPhase()) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
-      }).submit(ourExecutor).onError(__ -> AppUIUtil.invokeOnEdt(() -> {
-        if (phase == CompletionServiceImpl.getCompletionPhase()) {
-          CompletionServiceImpl.setCompletionPhase(NoCompletion);
+      }).submit(ourExecutor).whenComplete((result, error) -> {
+        if (error != null) {
+          AppUIUtil.invokeOnEdt(() -> {
+            if (phase == CompletionServiceImpl.getCompletionPhase()) {
+              CompletionServiceImpl.setCompletionPhase(NoCompletion);
+            }
+          });
         }
-      }));
+      });
     }
 
     private static void loadContributorsOutsideEdt(Editor editor, PsiFile file) {

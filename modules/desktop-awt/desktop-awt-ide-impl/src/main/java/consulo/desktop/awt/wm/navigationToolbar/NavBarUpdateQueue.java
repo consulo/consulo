@@ -14,12 +14,12 @@ import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.util.concurrent.CancellablePromise;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -38,7 +38,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     private final NavBarPanel myPanel;
 
     // Async pipeline: background task tracking and pre-computed item data cache
-    private volatile CancellablePromise<?> myBackgroundTask;
+    private volatile CompletableFuture<?> myBackgroundTask;
     private volatile List<NavBarItemData> myItemDataCache;
 
     public NavBarUpdateQueue(NavBarPanel panel) {
@@ -56,9 +56,9 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         cancelAllUpdates();
 
         // Cancel in-flight background task from previous request
-        CancellablePromise<?> prev = myBackgroundTask;
+        CompletableFuture<?> prev = myBackgroundTask;
         if (prev != null) {
-            prev.cancel();
+            prev.cancel(false);
             myBackgroundTask = null;
         }
 
@@ -121,7 +121,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         NavBarModel.ContextResult finalCtx = ctx;
         Object finalObject = object;
 
-        CancellablePromise<?> promise = ReadAction.nonBlocking(() -> {
+        CompletableFuture<?> promise = ReadAction.nonBlocking(() -> {
                 List<NavBarItemData> items;
                 if (finalCtx != null) {
                     items = model.buildModelAndPresentation(finalCtx.element(), finalCtx.ownerExtension(), finalCtx.root(), presentation);
@@ -141,7 +141,11 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         myBackgroundTask = promise;
 
         // If background task fails (not cancelled), clear the updating flag
-        promise.onError(e -> myModelUpdating.set(false));
+        promise.whenComplete((result, error) -> {
+            if (error != null) {
+                myModelUpdating.set(false);
+            }
+        });
         // Note: myModelUpdating stays true until Phase C completes,
         // so AfterModelUpdate for UI/REVALIDATE will re-queue themselves until then
     }
