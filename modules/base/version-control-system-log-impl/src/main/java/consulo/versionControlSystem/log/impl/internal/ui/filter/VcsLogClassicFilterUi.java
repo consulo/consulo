@@ -15,12 +15,14 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui.filter;
 
-import consulo.application.util.function.Computable;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.SearchTextFieldWithStoredHistory;
 import consulo.ui.ex.awt.action.CustomComponentAction;
@@ -217,17 +219,16 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     }
 
     private static class FilterActionComponent extends DumbAwareAction implements CustomComponentAction {
-        
-        private final Computable<JComponent> myComponentCreator;
+        private final Supplier<JComponent> myComponentCreator;
 
-        public FilterActionComponent(Computable<JComponent> componentCreator) {
+        public FilterActionComponent(Supplier<JComponent> componentCreator) {
             myComponentCreator = componentCreator;
         }
 
         
         @Override
         public JComponent createCustomComponent(Presentation presentation, String place) {
-            return myComponentCreator.compute();
+            return myComponentCreator.get();
         }
 
         @Override

@@ -17,7 +17,6 @@ package consulo.versionControlSystem.impl.internal.patch.apply;
 
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Computable;
 import consulo.localHistory.Label;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryException;
@@ -49,6 +48,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * for patches. for shelve.
@@ -449,7 +449,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     
     @RequiredUIAccess
     private ApplyPatchStatus createFiles() {
-        Boolean isSuccess = myProject.getApplication().runWriteAction((Computable<Boolean>)() -> {
+        Boolean isSuccess = myProject.getApplication().runWriteAction((Supplier<Boolean>)() -> {
             List<FilePatch> filePatches = myVerifier.execute();
             myFailedPatches.addAll(filePatches);
             myPatches.removeAll(filePatches);

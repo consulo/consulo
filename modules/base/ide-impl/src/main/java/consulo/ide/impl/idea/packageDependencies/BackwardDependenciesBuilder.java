@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies;
 
+import consulo.application.ReadAction;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.application.util.function.Computable;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiRecursiveElementVisitor;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nullable;
 
-import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -49,12 +47,7 @@ public class BackwardDependenciesBuilder extends DependenciesBuilder {
 
   public BackwardDependenciesBuilder(Project project, AnalysisScope scope, @Nullable AnalysisScope scopeOfInterest) {
     super(project, scope, scopeOfInterest);
-    myForwardScope = ApplicationManager.getApplication().runReadAction(new Computable<AnalysisScope>() {
-      @Override
-      public AnalysisScope compute() {
-        return getScope().getNarrowedComplementaryScope(getProject());
-      }
-    });
+    myForwardScope = ReadAction.compute(() -> getScope().getNarrowedComplementaryScope(getProject()));
     myFileCount = myForwardScope.getFileCount();
     myTotalFileCount = myFileCount + scope.getFileCount();
   }

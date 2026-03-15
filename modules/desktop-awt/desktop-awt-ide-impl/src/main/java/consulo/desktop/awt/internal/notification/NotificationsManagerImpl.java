@@ -505,7 +505,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
                 super.paintChildren(g);
                 Component title = layout.getTitle();
 
-                if (title != null && layoutData.showActions != null && layoutData.showActions.compute()) {
+                if (title != null && layoutData.showActions != null && layoutData.showActions.get()) {
                     int width = layoutData.configuration.allActionsOffset;
                     int x = getWidth() - width - JBUI.scale(5);
                     int y = layoutData.configuration.topSpaceHeight;

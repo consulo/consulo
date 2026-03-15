@@ -23,7 +23,6 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.action.ActionGroup;
@@ -117,7 +116,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
         return myIsToolWindowContextMenu;
     }
 
-    public void setDataContextProvider(@Nullable Getter<DataContext> dataContextProvider) {
+    public void setDataContextProvider(@Nullable Supplier<DataContext> dataContextProvider) {
         myDataContextProvider = dataContextProvider;
     }
 

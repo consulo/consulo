@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.application.util.function.Computable;
 import consulo.diff.content.DiffContent;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
@@ -67,6 +66,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameWrapper {
     private static final int UPDATE_DIFFS = 1;
@@ -250,7 +250,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         });
     }
 
-    private void doScheduleUpdate(int id, final Computable<Runnable> update) {
+    private void doScheduleUpdate(int id, final Supplier<Runnable> update) {
         myUpdateQueue.queue(new Update(HistoryDialog.this, id) {
             @Override
             public boolean canEat(Update update1) {
@@ -275,7 +275,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
                 Runnable apply = null;
                 try {
-                    apply = update.compute();
+                    apply = update.get();
                 }
                 catch (Exception e) {
                     LocalHistoryLog.LOG.error(e);

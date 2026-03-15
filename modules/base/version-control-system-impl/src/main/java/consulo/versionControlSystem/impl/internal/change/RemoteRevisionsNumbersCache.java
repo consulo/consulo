@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -36,6 +35,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -275,7 +276,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  private class MyShouldUpdateChecker implements Computable<Boolean> {
+  private class MyShouldUpdateChecker implements Supplier<Boolean> {
     private final VcsRoot myVcsRoot;
 
     public MyShouldUpdateChecker(VcsRoot vcsRoot) {
@@ -284,7 +285,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
 
     // Check if currently cached vcs root latest revision is less than latest vcs root revision
     // => update should be performed in this case
-    public Boolean compute() {
+    public Boolean get() {
       AbstractVcs vcs = myVcsRoot.getVcs();
       // won't be called in parallel for same vcs -> just synchronized map is ok
       String vcsName = vcs.getName();

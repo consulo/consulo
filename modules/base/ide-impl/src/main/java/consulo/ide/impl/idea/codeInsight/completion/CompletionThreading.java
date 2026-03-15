@@ -7,7 +7,6 @@ import consulo.application.internal.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.Semaphore;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.language.editor.completion.CompletionResult;
 import consulo.logging.Logger;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author peter
@@ -81,7 +81,7 @@ class SyncCompletion extends CompletionThreadingBase {
 class AsyncCompletion extends CompletionThreadingBase {
     private static final Logger LOG = Logger.getInstance(AsyncCompletion.class);
     private final ArrayList<CompletionResult> myBatchList = new ArrayList<>();
-    private final LinkedBlockingQueue<Computable<Boolean>> myQueue = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Supplier<Boolean>> myQueue = new LinkedBlockingQueue<>();
 
     @Override
     public Future<?> startThread(ProgressIndicator progressIndicator, Runnable runnable) {
@@ -108,8 +108,8 @@ class AsyncCompletion extends CompletionThreadingBase {
             public void run() {
                 try {
                     while (true) {
-                        Computable<Boolean> next = myQueue.poll(30, TimeUnit.MILLISECONDS);
-                        if (next != null && !next.compute()) {
+                        Supplier<Boolean> next = myQueue.poll(30, TimeUnit.MILLISECONDS);
+                        if (next != null && !next.get()) {
                             tryReadOrCancel(indicator, () -> indicator.addDelayedMiddleMatches());
                             return;
                         }
@@ -126,7 +126,7 @@ class AsyncCompletion extends CompletionThreadingBase {
         return new WeighingDelegate() {
             @Override
             public void waitFor() {
-                myQueue.offer(new Computable.PredefinedValueComputable<>(false));
+                myQueue.offer(() -> false);
                 try {
                     future.get();
                 }

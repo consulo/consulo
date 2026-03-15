@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -44,6 +43,7 @@ import consulo.util.lang.Pair;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Dennis.Ushakov
@@ -71,7 +71,7 @@ public class ExtractMethodHelper {
                     return;
                 }
                 List<SimpleMatch> duplicates = project.getApplication()
-                    .runReadAction((Computable<List<SimpleMatch>>)() -> finder.findDuplicates(scope, generatedMethod));
+                    .runReadAction((Supplier<List<SimpleMatch>>) () -> finder.findDuplicates(scope, generatedMethod));
 
                 project.getApplication().invokeLater(() -> replaceDuplicates(callElement, editor, replacer, duplicates));
             }

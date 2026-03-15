@@ -3,7 +3,6 @@
 package consulo.ide.impl.ui.impl;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.ui.popup.PopupListAdapter;
 import consulo.ide.impl.idea.ui.popup.PopupTableAdapter;
@@ -49,7 +48,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     private boolean myForceResizable;
     private boolean myForceMovable;
     private String myDimensionServiceKey;
-    private Computable<Boolean> myCancelCallback;
+    private Supplier<Boolean> myCancelCallback;
     private boolean myAutoselect = true;
     private float myAlpha;
     private Component[] myFocusOwners = new Component[0];

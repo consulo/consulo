@@ -11,8 +11,6 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.Setter;
 import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.language.LangBundle;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -101,7 +99,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     private VirtualFile myFileToSelect;
     private final Trinity<String, Supplier<T>, Consumer<T>> myProjectMapping;
 
-    protected interface Value<T> extends Setter<T>, Getter<T> {
+    protected interface Value<T> extends Consumer<T>, Supplier<T> {
         void commit();
     }
 
@@ -229,7 +227,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
         for (Trinity<String, Supplier<T>, Consumer<T>> prop : myDefaultProps) {
             myDefaultVals.put(prop.first, prop.second.get());
-            JPanel p = createActionPanel(null, new Value<T>() {
+            JPanel p = createActionPanel(null, new Value<>() {
                 @Override
                 public void commit() {
                     myModel.fireTableDataChanged();
@@ -241,7 +239,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                 }
 
                 @Override
-                public void set(T value) {
+                public void accept(T value) {
                     myDefaultVals.put(prop.first, adjustChosenValue(null, value));
                 }
             });
@@ -617,7 +615,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                         }
 
                         @Override
-                        public void set(T value) {
+                        public void accept(T value) {
                             editorValue = adjustChosenValue(target, value);
                         }
 
@@ -814,7 +812,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                 Runnable onDispose
             ) {
                 JBPopup popup = createValueEditorPopup(target, value.get(), onDispose, context, o -> {
-                    value.set(o);
+                    value.accept(o);
                     updateText(presentation);
                 }, value::commit);
                 return popup;

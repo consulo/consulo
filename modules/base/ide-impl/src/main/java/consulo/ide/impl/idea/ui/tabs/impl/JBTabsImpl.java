@@ -24,8 +24,6 @@ import consulo.component.util.ActiveRunnable;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.action.ShadowAction;
-import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowPassInfo;
@@ -41,6 +39,7 @@ import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ui.ex.awt.tab.*;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -101,7 +100,7 @@ public abstract class JBTabsImpl extends JComponent
     private final List<TabsListener> myTabListeners = Lists.newLockFreeCopyOnWriteList();
     private boolean myFocused;
 
-    private Getter<ActionGroup> myPopupGroup;
+    private Supplier<ActionGroup> myPopupGroup;
     private String myPopupPlace;
 
     TabInfo myPopupInfo;
@@ -765,8 +764,7 @@ public abstract class JBTabsImpl extends JComponent
         return setPopupGroup(() -> popupGroup, place, addNavigationGroup);
     }
 
-    
-    public JBTabs setPopupGroup(Getter<ActionGroup> popupGroup, String place, boolean addNavigationGroup) {
+    public JBTabs setPopupGroup(Supplier<ActionGroup> popupGroup, String place, boolean addNavigationGroup) {
         myPopupGroup = popupGroup;
         myPopupPlace = place;
         myAddNavigationGroup = addNavigationGroup;

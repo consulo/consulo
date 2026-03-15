@@ -18,12 +18,12 @@ package consulo.ide.impl.idea.usages;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewPresentation;
+import consulo.util.lang.StringUtil;
 
+import java.util.function.Supplier;
 
 /**
  * @author cdr
@@ -66,10 +66,10 @@ public class UsageLimitUtil {
     return result == Messages.OK ? Result.CONTINUE : Result.ABORT;
   }
 
-  private static int runOrInvokeAndWait(Computable<Integer> f) {
+  private static int runOrInvokeAndWait(Supplier<Integer> f) {
     int[] answer = new int[1];
     try {
-      GuiUtils.runOrInvokeAndWait(() -> answer[0] = f.compute());
+      GuiUtils.runOrInvokeAndWait(() -> answer[0] = f.get());
     }
     catch (Exception e) {
       answer[0] = 0;

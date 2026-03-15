@@ -1,6 +1,5 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
-import consulo.application.util.function.Computable;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
@@ -12,6 +11,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Fake {@link VcsCommitMetadataImpl} implementation that is used to indicate that details are not ready for the moment,
@@ -23,20 +23,18 @@ public class LoadingDetails implements VcsFullCommitDetails {
   private static final VcsUserImpl STUB_USER = new VcsUserImpl("", "");
   private static final String LOADING = "Loading...";
 
-  
-  private final Computable<CommitId> myCommitIdComputable;
+  private final Supplier<CommitId> myCommitIdSupplier;
   private final long myLoadingTaskIndex;
   @Nullable private volatile CommitId myCommitId;
 
-  public LoadingDetails(Computable<CommitId> commitIdComputable, long loadingTaskIndex) {
-    myCommitIdComputable = commitIdComputable;
+  public LoadingDetails(Supplier<CommitId> commitIdSupplier, long loadingTaskIndex) {
+    myCommitIdSupplier = commitIdSupplier;
     myLoadingTaskIndex = loadingTaskIndex;
   }
 
-
   protected CommitId getCommitId() {
     if (myCommitId == null) {
-      myCommitId = myCommitIdComputable.compute();
+      myCommitId = myCommitIdSupplier.get();
     }
     return myCommitId;
   }
@@ -45,37 +43,31 @@ public class LoadingDetails implements VcsFullCommitDetails {
     return myLoadingTaskIndex;
   }
 
-  
   @Override
   public Collection<Change> getChanges() {
     return List.of();
   }
 
-  
   @Override
   public String getFullMessage() {
     return "";
   }
 
-  
   @Override
   public VirtualFile getRoot() {
     return getCommitId().getRoot();
   }
 
-  
   @Override
   public String getSubject() {
     return LOADING;
   }
 
-  
   @Override
   public VcsUser getAuthor() {
     return STUB_USER;
   }
 
-  
   @Override
   public VcsUser getCommitter() {
     return STUB_USER;
@@ -91,13 +83,11 @@ public class LoadingDetails implements VcsFullCommitDetails {
     return -1;
   }
 
-  
   @Override
   public Hash getId() {
     return getCommitId().getHash();
   }
 
-  
   @Override
   public List<Hash> getParents() {
     return List.of();

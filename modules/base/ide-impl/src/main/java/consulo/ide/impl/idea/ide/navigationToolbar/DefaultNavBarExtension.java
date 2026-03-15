@@ -16,8 +16,7 @@
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
+import consulo.application.ReadAction;
 import consulo.ide.navigationToolbar.AbstractNavBarModelExtension;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.psi.*;
@@ -34,8 +33,8 @@ import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.function.Predicate;
 
 /**
@@ -89,14 +88,12 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
     else if (object instanceof Module) {
       return processChildren((Module)object, processor);
     }
-    else if (object instanceof PsiDirectoryContainer) {
-      final PsiDirectoryContainer psiPackage = (PsiDirectoryContainer)object;
-      PsiDirectory[] psiDirectories = ApplicationManager.getApplication().runReadAction(new Computable<PsiDirectory[]>() {
-        @Override
-        public PsiDirectory[] compute() {
-          return rootElement instanceof Module ? psiPackage.getDirectories(GlobalSearchScope.moduleScope((Module)rootElement)) : psiPackage.getDirectories();
-        }
-      });
+    else if (object instanceof PsiDirectoryContainer psiPackage) {
+      PsiDirectory[] psiDirectories = ReadAction.compute(
+        () -> rootElement instanceof Module module
+          ? psiPackage.getDirectories(GlobalSearchScope.moduleScope(module))
+          : psiPackage.getDirectories()
+      );
       for (PsiDirectory psiDirectory : psiDirectories) {
         if (!processChildren(psiDirectory, rootElement, processor)) return false;
       }
@@ -116,7 +113,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
       return true;
     }
 
-    return ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> {
+    return ReadAction.compute(() -> {
       for (Module module : ModuleManager.getInstance(object).getModules()) {
         if (!processor.test(module)) return false;
       }
@@ -129,12 +126,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     VirtualFile[] roots = moduleRootManager.getContentRoots();
     for (final VirtualFile root : roots) {
-      PsiDirectory psiDirectory = ApplicationManager.getApplication().runReadAction(new Computable<PsiDirectory>() {
-        @Override
-        public PsiDirectory compute() {
-          return psiManager.findDirectory(root);
-        }
-      });
+      PsiDirectory psiDirectory = ReadAction.compute(() -> psiManager.findDirectory(root));
       if (psiDirectory != null) {
         if (!processor.test(psiDirectory)) return false;
       }
@@ -142,10 +134,8 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
     return true;
   }
 
-  private static boolean processChildren(final PsiDirectory object, final Object rootElement, final Predicate<Object> processor) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-      @Override
-      public Boolean compute() {
+  private static boolean processChildren(PsiDirectory object, Object rootElement, Predicate<Object> processor) {
+    return ReadAction.compute(() -> {
         ModuleFileIndex moduleFileIndex = rootElement instanceof Module ? ModuleRootManager.getInstance((Module)rootElement).getFileIndex() : null;
         PsiElement[] children = object.getChildren();
         for (PsiElement child : children) {
@@ -158,27 +148,21 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
           }
         }
         return true;
-      }
     });
   }
 
-  private static boolean processChildren(final PsiFileSystemItem object, final Predicate<Object> processor) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
+  private static boolean processChildren(PsiFileSystemItem object, final Predicate<Object> processor) {
+    return ReadAction.compute(() -> object.processChildren(new PsiFileSystemItemProcessor() {
       @Override
-      public Boolean compute() {
-        return object.processChildren(new PsiFileSystemItemProcessor() {
-          @Override
-          public boolean acceptItem(String name, boolean isDirectory) {
-            return true;
-          }
+        public boolean acceptItem(String name, boolean isDirectory) {
+          return true;
+        }
 
-          @Override
-          public boolean execute(PsiFileSystemItem element) {
-            return processor.test(element);
-          }
-        });
-      }
-    });
+        @Override
+        public boolean execute(PsiFileSystemItem element) {
+          return processor.test(element);
+        }
+    }));
   }
 
   @Nullable
