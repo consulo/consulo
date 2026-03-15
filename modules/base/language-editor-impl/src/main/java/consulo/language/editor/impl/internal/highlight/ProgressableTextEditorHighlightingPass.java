@@ -20,12 +20,11 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.HighlightingSession;
-import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.DaemonProgressIndicator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
@@ -106,8 +105,14 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   public final void doApplyInformationToEditor() {
     myFinished = true;
     applyInformationWithProgress();
-    DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
-    daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void markUpToDateIfStillValid(@Nonnull DaemonProgressIndicator progress) {
+    if (myHighlightingSession != null && myHighlightingSession.getProgressIndicator() == progress) {
+      super.markUpToDateIfStillValid(progress);
+    }
   }
 
   protected abstract void applyInformationWithProgress();
@@ -180,8 +185,6 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
 
     @Override
     public void doApplyInformationToEditor() {
-      FileStatusMap statusMap = DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap();
-      statusMap.markFileUpToDate(getDocument(), getId());
     }
   }
 }

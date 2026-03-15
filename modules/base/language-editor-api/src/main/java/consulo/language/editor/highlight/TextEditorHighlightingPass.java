@@ -24,6 +24,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public abstract class TextEditorHighlightingPass implements HighlightingPass {
     public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
@@ -91,7 +92,27 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         return myDumb;
     }
 
+    @Nonnull
+    @Override
+    public BooleanSupplier getExpiredCondition() {
+        return () -> {
+            SimpleReference<Boolean> ref = new SimpleReference<>(Boolean.TRUE);
+            myProject.getApplication().tryRunReadAction(ref, () -> !isValid());
+            return Boolean.TRUE.equals(ref.get());
+        };
+    }
+
+    @RequiredUIAccess
+    public void markUpToDateIfStillValid(@Nonnull DaemonProgressIndicator updateProgress) {
+        if (myDocument != null && isValid()) {
+            DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap().markFileUpToDate(myDocument, getId());
+        }
+    }
+
     protected boolean isValid() {
+        if (myProject.isDisposed()) {
+            return false;
+        }
         if (isDumbMode() && !DumbService.isDumbAware(this)) {
             return false;
         }
@@ -124,11 +145,6 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
             return; // Document has changed.
         }
         if (DumbService.getInstance(myProject).isDumb() && !DumbService.isDumbAware(this)) {
-            Document document = getDocument();
-            PsiFile file = document == null ? null : PsiDocumentManager.getInstance(myProject).getPsiFile(document);
-            if (file != null) {
-                DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap().markFileUpToDate(getDocument(), getId());
-            }
             return;
         }
         doApplyInformationToEditor();

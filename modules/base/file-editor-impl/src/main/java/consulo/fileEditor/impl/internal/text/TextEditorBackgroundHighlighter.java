@@ -55,7 +55,6 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
         myProject = project;
         myEditor = editor;
         myDocument = myEditor.getDocument();
-        renewFile();
     }
 
     private void renewFile() {

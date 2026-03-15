@@ -22,6 +22,8 @@ import consulo.component.ProcessCanceledException;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+import java.util.function.BooleanSupplier;
+
 public interface HighlightingPass {
   HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];
   /**
@@ -41,4 +43,14 @@ public interface HighlightingPass {
    */
   @RequiredUIAccess
   void applyInformationToEditor();
+
+  /**
+   * @return a condition which, when becomes true, means the pass results are no longer valid
+   * and should not be applied to the editor. Used by {@code PassExecutorService} as the expired
+   * condition for {@code Application.invokeLater()}.
+   */
+  @Nonnull
+  default BooleanSupplier getExpiredCondition() {
+    return () -> false;
+  }
 }

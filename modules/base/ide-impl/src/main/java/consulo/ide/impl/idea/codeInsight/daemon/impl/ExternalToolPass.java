@@ -110,9 +110,6 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   @Override
   public void doApplyInformationToEditor() {
-    DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
-    daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
-
     myDocumentListener = new DocumentListener() {
       @Override
       public void beforeDocumentChange(DocumentEvent event) {

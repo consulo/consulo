@@ -21,13 +21,11 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.internal.DaemonProgressIndicator;
@@ -593,49 +591,51 @@ final class PassExecutorService implements Disposable {
         @Nonnull AtomicInteger threadsToStartCountdown,
         @Nonnull Runnable callbackOnApplied
     ) {
-        Application.get().invokeLater(() -> {
-            if (isDisposed() || !fileEditor.isValid()) {
-                updateProgress.cancel();
-            }
-            if (updateProgress.isCanceled()) {
-                log(updateProgress, pass, " is canceled during apply, sorry");
-                return;
-            }
-            Document document = pass.getDocument();
-            try {
-                if (Application.get().isUnifiedApplication()
-                    || fileEditor.getComponent().isDisplayable()
-                    || Application.get().isHeadlessEnvironment()) {
-                    pass.applyInformationToEditor();
-                    repaintErrorStripeAndIcon(fileEditor);
-                    FileStatusMap fileStatusMap = DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap();
-                    if (document != null) {
-                        fileStatusMap.markFileUpToDate(document, pass.getId());
-                    }
-                    log(updateProgress, pass, " Applied");
+        try {
+            Application.get().invokeLater(() -> {
+                if (isDisposed() || !fileEditor.isValid()) {
+                    updateProgress.cancel();
                 }
-            }
-            catch (ProcessCanceledException e) {
-                log(updateProgress, pass, "Error " + e);
-                throw e;
-            }
-            catch (RuntimeException e) {
-                VirtualFile file = document == null ? null : FileDocumentManager.getInstance().getFile(document);
-                FileType fileType = file == null ? null : file.getFileType();
-                String message = "Exception while applying information to " + fileEditor + "(" + fileType + ")";
-                log(updateProgress, pass, message + e);
-                throw new RuntimeException(message, e);
-            }
-            if (threadsToStartCountdown.decrementAndGet() == 0) {
-                HighlightingSessionImpl.waitForAllSessionsHighlightInfosApplied(updateProgress);
-                log(updateProgress, pass, "Stopping ");
-                updateProgress.stopIfRunning();
-            }
-            else {
-                log(updateProgress, pass, "Finished but there are passes in the queue: " + threadsToStartCountdown.get());
-            }
-            callbackOnApplied.run();
-        }, updateProgress.getModalityState());
+                if (updateProgress.isCanceled()) {
+                    log(updateProgress, pass, " is canceled during apply, sorry");
+                    return;
+                }
+                Document document = pass.getDocument();
+                try {
+                    if (Application.get().isUnifiedApplication()
+                        || fileEditor.getComponent().isDisplayable()
+                        || Application.get().isHeadlessEnvironment()) {
+                        pass.applyInformationToEditor();
+                        repaintErrorStripeAndIcon(fileEditor);
+                        pass.markUpToDateIfStillValid(updateProgress);
+                        log(updateProgress, pass, " Applied");
+                    }
+                }
+                catch (ProcessCanceledException e) {
+                    log(updateProgress, pass, "Error " + e);
+                    throw e;
+                }
+                catch (RuntimeException e) {
+                    VirtualFile file = document == null ? null : FileDocumentManager.getInstance().getFile(document);
+                    FileType fileType = file == null ? null : file.getFileType();
+                    String message = "Exception while applying information to " + fileEditor + "(" + fileType + ")";
+                    log(updateProgress, pass, message + e);
+                    throw new RuntimeException(message, e);
+                }
+                if (threadsToStartCountdown.decrementAndGet() == 0) {
+                    HighlightingSessionImpl.waitForAllSessionsHighlightInfosApplied(updateProgress);
+                    log(updateProgress, pass, "Stopping ");
+                    updateProgress.stopIfRunning();
+                }
+                else {
+                    log(updateProgress, pass, "Finished but there are passes in the queue: " + threadsToStartCountdown.get());
+                }
+                callbackOnApplied.run();
+            }, updateProgress.getModalityState(), pass.getExpiredCondition());
+        }
+        catch (ProcessCanceledException ignored) {
+            // pass.getExpiredCondition() computation could throw PCE
+        }
     }
 
     @RequiredUIAccess
