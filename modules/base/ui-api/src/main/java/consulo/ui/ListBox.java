@@ -46,7 +46,7 @@ public interface ListBox<E> extends ValueComponent<E> {
     @Nonnull
     ListModel<E> getListModel();
 
-    void setRenderer(@Nonnull TextItemRenderer<E> renderer);
+    void setRenderer(@Nonnull ItemRenderer<E> renderer);
 
     void setValueByIndex(int index);
 }

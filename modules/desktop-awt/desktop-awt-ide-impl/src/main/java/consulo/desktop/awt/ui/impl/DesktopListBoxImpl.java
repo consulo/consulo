@@ -26,6 +26,8 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.model.ListModel;
 import jakarta.annotation.Nonnull;
 
+import java.util.function.Function;
+
 /**
  * @author VISTALL
  * @since 2017-09-12
@@ -43,8 +45,6 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         }
     }
 
-    private TextItemRenderer<E> myRenderer = ListItemRenderers.defaultRenderer();
-
     private ListModel<E> myModel;
 
     public DesktopListBoxImpl(ListModel<E> model) {
@@ -52,12 +52,13 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected JBList<E> createComponent() {
         DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(myModel);
 
         MyJBList<E> component = new MyJBList<>(wrapper);
-        component.setCellRenderer(new DesktopListRender<>(() -> myRenderer));
-        return  component;
+        component.setCellRenderer(new DesktopListRender<>(ListItemRenderers::defaultRenderer));
+        return component;
     }
 
     @Nonnull
@@ -67,8 +68,11 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
-        myRenderer = renderer;
+    @SuppressWarnings("unchecked")
+    public void setRenderer(@Nonnull ItemRenderer<E> renderer) {
+        if (renderer instanceof TextItemRenderer textItemRenderer) {
+            toAWTComponent().setCellRenderer(new DesktopListRender<>(() -> textItemRenderer));
+        }
     }
 
     @Override

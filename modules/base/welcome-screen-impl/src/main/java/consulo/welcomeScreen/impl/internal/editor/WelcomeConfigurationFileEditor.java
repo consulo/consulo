@@ -23,15 +23,9 @@ import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.layout.DockLayout;
+import consulo.ui.ex.action.*;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -70,7 +64,8 @@ public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor {
 
     @RequiredUIAccess
     private Component createComponent() {
-        DockLayout layout = DockLayout.create();
+        TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+        layout.setProportion(50);
 
         // Left pane: recent projects
         VerticalLayout recentProjectsLayout = VerticalLayout.create();
@@ -98,7 +93,7 @@ public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor {
             }
         }
 
-        layout.left(recentProjectsLayout);
+        layout.setFirstComponent(recentProjectsLayout);
 
         // Right pane: quick start actions
         VerticalLayout actionsLayout = VerticalLayout.create();
@@ -127,7 +122,7 @@ public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor {
             }
         }
 
-        layout.center(actionsLayout);
+        layout.setSecondComponent(actionsLayout);
 
         return layout;
     }

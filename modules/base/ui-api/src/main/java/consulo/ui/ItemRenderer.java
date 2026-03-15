@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,9 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 /**
  * @author VISTALL
- * @since 2016-06-12
+ * @since 2026-03-14
  */
-public interface TextItemRenderer<E> extends ItemRenderer<E> {
-    @Nonnull
-    static <V> TextItemRenderer<V> defaultRenderer() {
-        return (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
-    }
-
-    void render(@Nonnull TextItemPresentation render, int index, @Nullable E item);
+public interface ItemRenderer<E> {
 }

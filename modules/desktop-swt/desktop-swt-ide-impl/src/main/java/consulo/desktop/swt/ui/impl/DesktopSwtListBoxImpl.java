@@ -15,16 +15,18 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.ui.ItemRenderer;
 import consulo.ui.ListBox;
-import consulo.ui.TextItemRenderer;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -54,7 +56,7 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
+    public void setRenderer(@Nonnull ItemRenderer<E> renderer) {
     }
 
     @Override
