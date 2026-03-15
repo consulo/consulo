@@ -135,7 +135,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return null;
     }
 
-    public static final ActionWithPluginClassLoader<Class, Void> LOAD_CLASS_IN_PLUGIN_CL = new ActionWithPluginClassLoader<>() {
+    public static final ActionWithPluginClassLoader<Class, Void> LOAD_CLASS_IN_PLUGIN_CL = new ActionWithPluginClassLoader<Class, Void>() {
         @Nullable
         @Override
         public Class execute(

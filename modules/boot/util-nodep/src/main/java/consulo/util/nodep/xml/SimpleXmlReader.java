@@ -35,7 +35,7 @@ import java.util.*;
  * @since 2019-07-17
  */
 public class SimpleXmlReader {
-  private static ThreadLocal<DocumentBuilder> ourDocumentBuilder = new ThreadLocal<>() {
+  private static ThreadLocal<DocumentBuilder> ourDocumentBuilder = new ThreadLocal<DocumentBuilder>() {
     @Override
     protected DocumentBuilder initialValue() {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

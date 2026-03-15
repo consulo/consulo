@@ -74,7 +74,7 @@ public abstract class ContainerPathManager {
     Path[] svgIcon = new Path[1];
     Path[] pngIcon = new Path[1];
     try {
-      Files.walkFileTree(appHomeDirectory.toPath(), Set.of(), 1, new SimpleFileVisitor<>() {
+      Files.walkFileTree(appHomeDirectory.toPath(), Set.of(), 1, new SimpleFileVisitor<Path>() {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
           String fileName = file.getFileName().toString();

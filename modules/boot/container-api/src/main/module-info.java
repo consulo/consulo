@@ -1,6 +1,4 @@
-import org.jspecify.annotations.NullMarked;
-
-@NullMarked
+@org.jspecify.annotations.NullMarked
 module consulo.container.api {
     requires static org.jspecify;
 

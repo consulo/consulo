@@ -42,18 +42,20 @@
           <source>${java.level}</source>
           <target>${java.level}</target>
           <release combine.self="override"></release>
+          <useModulePath>false</useModulePath>
+          <useModuleVersion>false</useModuleVersion>
           <compilerId>eclipse</compilerId>
         </configuration>
         <dependencies>
           <dependency>
             <groupId>org.eclipse.jdt</groupId>
             <artifactId>ecj</artifactId>
-            <version>3.39.0</version>
+            <version>3.45.0</version>
           </dependency>
           <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-compiler-eclipse</artifactId>
-            <version>2.13.0</version>
+            <version>2.16.2</version>
           </dependency>
         </dependencies>
       </plugin>
