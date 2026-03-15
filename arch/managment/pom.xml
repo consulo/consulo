@@ -48,7 +48,7 @@
         <swt.version>3.120.0</swt.version>
         <flatlaf.version>3.7</flatlaf.version>
 
-        <vaadin.flow.version>24.7.3</vaadin.flow.version>
+        <vaadin.flow.version>24.9.13</vaadin.flow.version>
 
         <jackson.version>2.19.0</jackson.version>
 
