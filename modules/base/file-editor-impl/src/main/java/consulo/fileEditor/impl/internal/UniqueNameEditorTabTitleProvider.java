@@ -38,13 +38,13 @@ public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider 
 
     UniqueVFilePathBuilder uniqueVFilePathBuilder = myUniqueVFilePathBuilder.get();
     // Even though this is a 'tab title provider' it is used also when tabs are not shown, namely for building IDE frame title.
-    return ReadAction.compute(() -> {
-      String uniqueName = uiSettings.getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE
+    String uniqueName = ReadAction.compute(() -> {
+      return uiSettings.getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE
         ? uniqueVFilePathBuilder.getUniqueVirtualFilePath(project, file)
         : uniqueVFilePathBuilder.getUniqueVirtualFilePathWithinOpenedFileEditors(project, file);
-      uniqueName = getEditorTabText(uniqueName, File.separator, uiSettings.getHideKnownExtensionInTabs());
-      return uniqueName.equals(file.getName()) ? null : uniqueName;
     });
+    uniqueName = getEditorTabText(uniqueName, File.separator, uiSettings.getHideKnownExtensionInTabs());
+    return uniqueName.equals(file.getName()) ? null : uniqueName;
   }
 
   public static String getEditorTabText(String result, String separator, boolean hideKnownExtensionInTabs) {

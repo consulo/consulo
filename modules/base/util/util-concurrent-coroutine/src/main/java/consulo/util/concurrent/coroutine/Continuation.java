@@ -670,7 +670,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @param result The result value to finish with
      */
-    public void finishEarly(T result) {
+    public void finishEarly(@Nullable T result) {
         finish(result);
     }
 

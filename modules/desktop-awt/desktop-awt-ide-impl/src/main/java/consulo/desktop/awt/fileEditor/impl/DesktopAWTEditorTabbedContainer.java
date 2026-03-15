@@ -16,6 +16,7 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.application.HelpManager;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.Queryable;
@@ -53,6 +54,8 @@ import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -68,6 +71,8 @@ import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -388,11 +393,10 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             return;
         }
 
-        tab = new TabInfo(comp).setText(EditorTabPresentationUtil.getEditorTabTitle(myProject, file))
+        tab = new TabInfo(comp).setText(file.getPresentableName())
             .setIcon(icon)
             .setTooltipText(tooltip)
             .setObject(file)
-            .setTabColor(TargetAWT.to(EditorTabPresentationUtil.getEditorTabBackgroundColor(myProject, file, window)))
             .setDragOutDelegate(myDragOutDelegate);
         tab.setTestableUi(new MyQueryable(tab));
 
@@ -401,6 +405,29 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
         tab.setTabLabelActions(tabActions.build(), ActionPlaces.EDITOR_TAB);
         myTabs.addTabSilently(tab, indexToInsert);
+
+        final TabInfo finalTab = tab;
+        CoroutineScope.launchAsync(myProject.coroutineContext(), () -> {
+            return Coroutine
+                .first(ReadLock.<Void, String>apply(ignored -> {
+                    return EditorTabPresentationUtil.getEditorTabTitle(myProject, file);
+                }))
+                .then(UIAction.<String, Void>apply(title -> {
+                    finalTab.setText(title);
+                    return null;
+                }));
+        });
+
+        CoroutineScope.launchAsync(myProject.coroutineContext(), () -> {
+            return Coroutine
+                .first(ReadLock.<Void, ColorValue>apply(ignored -> {
+                    return EditorTabPresentationUtil.getEditorTabBackgroundColor(myProject, file, window);
+                }))
+                .then(UIAction.<ColorValue, Void>apply(color -> {
+                    finalTab.setTabColor(TargetAWT.to(color));
+                    return null;
+                }));
+        });
     }
 
     boolean isEmptyVisible() {
