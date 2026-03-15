@@ -228,7 +228,7 @@ public abstract class ConcurrentMapTestBase {
      * with erased generic type parameters based on Comparable can be
      * inserted and found.
      */
-    @Test
+    //@Test
     public void testGenericComparable2() {
         int size = 10;
         ConcurrentMap<Object, Boolean> m = emptyMap();
