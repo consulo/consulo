@@ -15,7 +15,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -32,7 +31,7 @@ public class AddBomAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VirtualFile file = e.getData(VirtualFile.KEY);
         // support adding BOM to a single file only for the time being
         boolean enabled = file != null && file.getBOM() == null && CharsetToolkit.getPossibleBom(file.getCharset()) != null;
@@ -46,12 +45,12 @@ public class AddBomAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VirtualFile file = e.getRequiredData(VirtualFile.KEY);
         doAddBOM(file);
     }
 
-    private static void doAddBOM(@Nonnull VirtualFile virtualFile) {
+    private static void doAddBOM(VirtualFile virtualFile) {
         byte[] bom = virtualFile.getBOM();
         if (bom != null) {
             return;

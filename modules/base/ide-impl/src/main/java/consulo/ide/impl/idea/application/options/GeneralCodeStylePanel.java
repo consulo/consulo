@@ -51,8 +51,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -74,17 +73,17 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         WINDOWS(ApplicationLocalize.comboboxCrlfWindows(), "\r\n"),
         CLASSIC_MAC(ApplicationLocalize.comboboxCrlfMac(), "\r");
 
-        @Nonnull
+        
         private final LocalizeValue myName;
         @Nullable
         private final String myLineSeparator;
 
-        LineBreak(@Nonnull LocalizeValue name, @Nullable String lineSeparator) {
+        LineBreak(LocalizeValue name, @Nullable String lineSeparator) {
             myName = name;
             myLineSeparator = lineSeparator;
         }
 
-        @Nonnull
+        
         public LocalizeValue getName() {
             return myName;
         }
@@ -179,7 +178,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
     }
 
     @Override
-    @Nonnull
+    
     protected FileType getFileType() {
         return PlainTextFileType.INSTANCE;
     }
@@ -753,7 +752,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         myFormatterOnLabel.setTarget(myFormatterOnTagField);
     }
 
-    private void $$$loadLabelText$$$(JLabel component, @Nonnull LocalizeValue text0) {
+    private void $$$loadLabelText$$$(JLabel component, LocalizeValue text0) {
         StringBuilder result = new StringBuilder();
         boolean haveMnemonic = false;
         char mnemonic = '\0';
@@ -909,7 +908,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         return null;
     }
 
-    private static void showError(Component field, @Nonnull LocalizeValue message) {
+    private static void showError(Component field, LocalizeValue message) {
         BalloonBuilder balloonBuilder =
             JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message.get(), NotificationType.ERROR, null);
         balloonBuilder.setFadeoutTime(1500);
@@ -922,7 +921,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
     }
 
     @Override
-    public void setModel(@Nonnull CodeStyleSchemesModel model) {
+    public void setModel(CodeStyleSchemesModel model) {
         super.setModel(model);
         myExcludedFilesList.setSchemesModel(model);
     }

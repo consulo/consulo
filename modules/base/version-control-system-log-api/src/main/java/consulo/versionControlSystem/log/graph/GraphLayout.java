@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,6 +28,6 @@ public interface GraphLayout {
 
   int getOneOfHeadNodeIndex(int nodeIndex);
 
-  @Nonnull
+  
   List<Integer> getHeadNodeIndex();
 }

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.ide.impl.idea.ui.ListExpandableItemsHandler;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -26,7 +25,7 @@ import java.awt.event.*;
  */
 public class CompletionExtender extends ListExpandableItemsHandler {
 
-  public CompletionExtender(@Nonnull final JList list) {
+  public CompletionExtender(final JList list) {
     super(list);
     list.addComponentListener(new ComponentAdapter() {
       @Override

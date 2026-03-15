@@ -24,8 +24,7 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a value in debugger tree.
@@ -41,7 +40,7 @@ public abstract class XValue extends XValueContainer {
    * @param node node
    * @param place where the node will be shown.
    */
-  public abstract void computePresentation(@Nonnull XValueNode node, @Nonnull XValuePlace place);
+  public abstract void computePresentation(XValueNode node, XValuePlace place);
 
   /**
    * @return expression which evaluates to the current value
@@ -54,7 +53,7 @@ public abstract class XValue extends XValueContainer {
   /**
    * Asynchronously calculates expression which evaluates to the current value
    */
-  @Nonnull
+  
   public AsyncResult<XExpression> calculateEvaluationExpression() {
     String expression = getEvaluationExpression();
     XExpression res =
@@ -84,7 +83,7 @@ public abstract class XValue extends XValueContainer {
    * Note that this method is called from the Event Dispatch thread so it should return quickly.
    * @param navigatable navigatable
    */
-  public void computeSourcePosition(@Nonnull XNavigatable navigatable) {
+  public void computeSourcePosition(XNavigatable navigatable) {
     navigatable.setSourcePosition(null);
   }
 
@@ -94,8 +93,8 @@ public abstract class XValue extends XValueContainer {
    * {@link ThreeState#YES} if applicable
    * {@link ThreeState#NO} if not applicable
    */
-  @Nonnull
-  public ThreeState computeInlineDebuggerData(@Nonnull XInlineDebuggerDataCallback callback) {
+  
+  public ThreeState computeInlineDebuggerData(XInlineDebuggerDataCallback callback) {
     return ThreeState.UNSURE;
   }
 
@@ -123,7 +122,7 @@ public abstract class XValue extends XValueContainer {
    * when computation is finished.
    * Note that this method is called from the Event Dispatch thread so it should return quickly.
    */
-  public void computeTypeSourcePosition(@Nonnull XNavigatable navigatable) {
+  public void computeTypeSourcePosition(XNavigatable navigatable) {
     navigatable.setSourcePosition(null);
   }
 

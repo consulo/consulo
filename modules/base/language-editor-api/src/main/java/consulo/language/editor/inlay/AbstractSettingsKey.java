@@ -16,13 +16,12 @@
 package consulo.language.editor.inlay;
 
 import consulo.language.Language;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-05-28
  */
 public interface AbstractSettingsKey<T> {
-    @Nonnull
+    
     String getFullId(Language language);
 }

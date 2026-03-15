@@ -13,6 +13,7 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author michael.golubev
@@ -33,7 +34,7 @@ public class ThreadInvocationHandler implements InvocationHandler {
   }
 
   public ThreadInvocationHandler(SequentialTaskExecutor taskExecutor, ClassLoader callerClassLoader, Object target,
-                                 @jakarta.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
+                                 @Nullable ChildWrapperCreator preWrapperCreator) {
     myTaskExecutor = taskExecutor;
     myCallerClassLoader = callerClassLoader;
     myTarget = target;

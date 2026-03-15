@@ -29,8 +29,7 @@ import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class InvokeQuickFixAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (!myView.isSingleToolInSelection()) {
             e.getPresentation().setEnabled(false);
             return;
@@ -78,7 +77,7 @@ public class InvokeQuickFixAction extends AnAction {
     private static ActionGroup getFixes(final QuickFixAction[] quickFixes) {
         return new ActionGroup() {
             @Override
-            @Nonnull
+            
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 List<QuickFixAction> children = new ArrayList<QuickFixAction>();
                 for (QuickFixAction fix : quickFixes) {
@@ -93,7 +92,7 @@ public class InvokeQuickFixAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
         assert toolWrapper != null;
         QuickFixAction[] quickFixes = myView.getProvider().getQuickFixes(toolWrapper, myView.getTree());

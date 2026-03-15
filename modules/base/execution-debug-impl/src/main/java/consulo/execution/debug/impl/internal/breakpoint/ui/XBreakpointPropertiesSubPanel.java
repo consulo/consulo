@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
-import jakarta.annotation.Nonnull;
 
 public abstract class XBreakpointPropertiesSubPanel {
   protected Project myProject;
@@ -27,7 +26,7 @@ public abstract class XBreakpointPropertiesSubPanel {
   protected XBreakpointBase myBreakpoint;
   protected XBreakpointType myBreakpointType;
 
-  public void init(Project project, XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
+  public void init(Project project, XBreakpointManager breakpointManager, XBreakpointBase breakpoint) {
     myProject = project;
     myBreakpointManager = breakpointManager;
     myBreakpoint = breakpoint;

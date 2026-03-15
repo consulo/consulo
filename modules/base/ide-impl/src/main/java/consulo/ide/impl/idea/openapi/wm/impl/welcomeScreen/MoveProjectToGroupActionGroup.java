@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.dumb.DumbAware;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +39,7 @@ public class MoveProjectToGroupActionGroup extends DefaultActionGroup implements
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         removeAll();
         List<ProjectGroup> groups = new ArrayList<>(RecentProjectsManager.getInstance().getGroups());
         Collections.sort(groups, (o1, o2) -> StringUtil.naturalCompare(o1.getName(), o2.getName()));

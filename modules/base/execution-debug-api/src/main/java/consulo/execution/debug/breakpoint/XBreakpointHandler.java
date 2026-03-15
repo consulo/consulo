@@ -16,7 +16,6 @@
 
 package consulo.execution.debug.breakpoint;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,7 +24,7 @@ public abstract class XBreakpointHandler<B extends XBreakpoint<?>> {
   public static final XBreakpointHandler<?>[] EMPTY_ARRAY = new XBreakpointHandler<?>[0];
   private final Class<? extends XBreakpointType<B, ?>> myBreakpointTypeClass;
 
-  protected XBreakpointHandler(@Nonnull Class<? extends XBreakpointType<B, ?>> breakpointTypeClass) {
+  protected XBreakpointHandler(Class<? extends XBreakpointType<B, ?>> breakpointTypeClass) {
     myBreakpointTypeClass = breakpointTypeClass;
   }
 
@@ -37,7 +36,7 @@ public abstract class XBreakpointHandler<B extends XBreakpoint<?>> {
    * Called when a breakpoint need to be registered in the debugging engine
    * @param breakpoint breakpoint to register
    */
-  public abstract void registerBreakpoint(@Nonnull B breakpoint);
+  public abstract void registerBreakpoint(B breakpoint);
 
   /**
    * Called when a breakpoint need to be unregistered from the debugging engine
@@ -46,6 +45,6 @@ public abstract class XBreakpointHandler<B extends XBreakpoint<?>> {
    * be used for performance purposes. For example the breakpoint may be disabled rather than removed in the debugging engine if
    * <code>temporary</code> is <code>true</code>
    */
-  public abstract void unregisterBreakpoint(@Nonnull B breakpoint, boolean temporary);
+  public abstract void unregisterBreakpoint(B breakpoint, boolean temporary);
 
 }

@@ -22,8 +22,7 @@ import consulo.ui.ex.action.QuickActionProvider;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerAdapter;
@@ -100,7 +99,7 @@ public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements Quick
 
   @Override
   @Nullable
-  public Object getData(@Nonnull Key<?> dataId) {
+  public Object getData(Key<?> dataId) {
     return QuickActionProvider.KEY == dataId && myProvideQuickActions ? this : null;
   }
 

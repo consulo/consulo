@@ -11,26 +11,25 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class PrevNextOccurrenceAction extends DumbAwareAction implements ContextAwareShortcutProvider {
     protected final boolean mySearch;
 
-    PrevNextOccurrenceAction(@Nonnull String templateActionId, boolean search) {
+    PrevNextOccurrenceAction(String templateActionId, boolean search) {
         mySearch = search;
         ActionImplUtil.copyFrom(this, templateActionId);
     }
 
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         SearchSession search = e.getData(SearchSession.KEY);
         e.getPresentation().setEnabled(search != null && !search.isSearchInProgress() && search.hasMatches());
     }
 
     @Override
-    public final ShortcutSet getShortcut(@Nonnull DataContext context) {
+    public final ShortcutSet getShortcut(DataContext context) {
         SearchSession search = context.getData(SearchSession.KEY);
         boolean singleLine = search != null && !search.getFindModel().isMultiline();
         return SearchUtils.shortcutSetOf(
@@ -38,9 +37,9 @@ public abstract class PrevNextOccurrenceAction extends DumbAwareAction implement
         );
     }
 
-    @Nonnull
+    
     protected abstract List<Shortcut> getDefaultShortcuts();
 
-    @Nonnull
+    
     protected abstract List<Shortcut> getSingleLineShortcuts();
 }

@@ -25,7 +25,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_CLOSE_EDITOR)
 public class CloseEditorAction extends AnAction implements DumbAware {
@@ -60,7 +59,7 @@ public class CloseEditorAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);
         if (project == null) {

@@ -58,8 +58,7 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.project.ui.wm.IdeFrameUtil;
 
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -174,7 +173,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
         myVfsListener = new VirtualFileAdapter() {
             @Override
-            public void contentsChanged(@Nonnull VirtualFileEvent event) {
+            public void contentsChanged(VirtualFileEvent event) {
                 VirtualFile file = pathToFile();
                 if (file != null && file.equals(event.getFile())) {
                     loadFrom(event.getFile());
@@ -190,13 +189,13 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myChanged);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (pathToFile() == null) {
                 VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e.getData(Project.KEY), null);
                 if (selectedFile != null) {
@@ -236,7 +235,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e.getData(Project.KEY), pathToFile());
             if (selectedFile != null) {
                 myState.currentScript = selectedFile.getPresentableUrl();
@@ -253,7 +252,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myState.currentScript = "";
             myCurrentScript.setText(myState.currentScript);
             fillDocument("");
@@ -290,7 +289,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         }
     }
 
-    private void loadFrom(@Nonnull VirtualFile file) {
+    private void loadFrom(VirtualFile file) {
         try {
             String text =
                 CharsetToolkit.bytesToString(file.contentsToByteArray(), EncodingRegistry.getInstance().getDefaultCharset());
@@ -318,13 +317,13 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myRunner != null);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (myRunner != null) {
                 myRunner.stop();
                 SwingUtilities.invokeLater(() -> myRunner = null);
@@ -339,12 +338,12 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             activateAndRun();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myRunner == null);
         }
     }
@@ -356,13 +355,13 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myRunner == null);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             runOnFrame();
         }
     }

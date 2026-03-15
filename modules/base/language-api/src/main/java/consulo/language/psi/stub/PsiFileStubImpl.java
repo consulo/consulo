@@ -22,8 +22,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +47,11 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   }
 
   @Override
-  public void setPsi(@Nonnull T psi) {
+  public void setPsi(T psi) {
     myFile = psi;
   }
 
-  public void clearPsi(@Nonnull String reason) {
+  public void clearPsi(String reason) {
     myInvalidationReason = reason;
     myFile = null;
   }
@@ -68,7 +67,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public IStubFileElementType getType() {
     return TYPE;
@@ -77,7 +76,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   /**
    * Don't call this method, it's public for implementation reasons
    */
-  @Nonnull
+  
   public PsiFileStub[] getStubRoots() {
     if (myStubRoots != null) return myStubRoots;
 
@@ -125,7 +124,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
     return result;
   }
 
-  public void setStubRoots(@Nonnull PsiFileStub[] roots) {
+  public void setStubRoots(PsiFileStub[] roots) {
     if (roots.length == 0) {
       Logger.getInstance(getClass()).error("Incorrect psi file stub roots count" + this + "," + getStubType());
     }

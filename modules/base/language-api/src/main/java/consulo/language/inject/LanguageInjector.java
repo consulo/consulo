@@ -23,7 +23,6 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Describes logic for injecting language inside hosting PSI element.
@@ -42,5 +41,5 @@ public interface LanguageInjector {
    *        For example, to inject your language in string literal inside quotes, you might want to <br>
    *        <code>injectionPlacesRegistrar.addPlace(myLanguage, new TextRange(1,host.getTextLength()-1))</code>
    */
-  void injectLanguages(@Nonnull PsiLanguageInjectionHost host, @Nonnull InjectedLanguagePlaces injectionPlacesRegistrar);
+  void injectLanguages(PsiLanguageInjectionHost host, InjectedLanguagePlaces injectionPlacesRegistrar);
 }

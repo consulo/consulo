@@ -42,8 +42,7 @@ import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -69,18 +68,18 @@ public class DesktopAwtDialogService implements DialogService {
             myDialogWrapper = new DialogWrapperImpl(descriptor, this);
         }
 
-        public DialogImpl(@Nonnull Project project, DialogDescriptor descriptor) {
+        public DialogImpl(Project project, DialogDescriptor descriptor) {
             myDescriptor = descriptor;
             myDialogWrapper = new DialogWrapperImpl(project, descriptor, this);
         }
 
-        public DialogImpl(@Nonnull java.awt.Component component, DialogDescriptor descriptor) {
+        public DialogImpl(java.awt.Component component, DialogDescriptor descriptor) {
             myDescriptor = descriptor;
             myDialogWrapper = new DialogWrapperImpl(component, descriptor, this);
         }
 
         @RequiredUIAccess
-        @Nonnull
+        
         @Override
         public CompletableFuture<DialogValue> showAsync() {
             CompletableFuture<DialogValue> result = new CompletableFuture<>();
@@ -92,7 +91,7 @@ public class DesktopAwtDialogService implements DialogService {
         }
 
         @Override
-        public void doOkAction(@Nonnull DialogValue value) {
+        public void doOkAction(DialogValue value) {
             myValue = value;
 
             myDialogWrapper.close(DialogWrapper.OK_EXIT_CODE);
@@ -103,13 +102,13 @@ public class DesktopAwtDialogService implements DialogService {
             myDialogWrapper.close(DialogWrapper.CANCEL_EXIT_CODE);
         }
 
-        @Nonnull
+        
         @Override
         public DialogDescriptor getDescriptor() {
             return myDescriptor;
         }
 
-        @Nonnull
+        
         @Override
         public Window getWindow() {
             return TargetAWT.from(myDialogWrapper.getWindow());
@@ -159,7 +158,7 @@ public class DesktopAwtDialogService implements DialogService {
             }
         }
 
-        @Nonnull
+        
         @Override
         protected Action[] createActions() {
             throw new UnsupportedOperationException();
@@ -208,7 +207,7 @@ public class DesktopAwtDialogService implements DialogService {
                 ActionManager.getInstance(),
                 DataManager.getInstance()) {
                 @Override
-                protected void tweakActionComponentUI(@Nonnull AnAction action, java.awt.Component component) {
+                protected void tweakActionComponentUI(AnAction action, java.awt.Component component) {
                     super.tweakActionComponentUI(action, component);
 
                     if (myDescriptor.isDefaultAction(action)) {
@@ -257,21 +256,21 @@ public class DesktopAwtDialogService implements DialogService {
         }
     }
 
-    @Nonnull
+    
     @Override
-    public Dialog build(@Nonnull DialogDescriptor descriptor) {
+    public Dialog build(DialogDescriptor descriptor) {
         return new DialogImpl(descriptor);
     }
 
-    @Nonnull
+    
     @Override
-    public Dialog build(@Nonnull Component parent, @Nonnull DialogDescriptor descriptor) {
+    public Dialog build(Component parent, DialogDescriptor descriptor) {
         return new DialogImpl(TargetAWT.to(parent), descriptor);
     }
 
-    @Nonnull
+    
     @Override
-    public Dialog build(@Nonnull WindowOwner windowOwner, @Nonnull DialogDescriptor descriptor) {
+    public Dialog build(WindowOwner windowOwner, DialogDescriptor descriptor) {
         if (!(windowOwner instanceof Project project)) {
             throw new IllegalArgumentException("Expecte instance of Project");
         }

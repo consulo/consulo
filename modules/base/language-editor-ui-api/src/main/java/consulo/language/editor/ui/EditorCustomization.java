@@ -18,7 +18,6 @@ package consulo.language.editor.ui;
 import consulo.language.Language;
 import consulo.codeEditor.EditorEx;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -38,7 +37,7 @@ public interface EditorCustomization extends Consumer<EditorEx> {
    *
    * @param editor The editor to customize
    */
-  void customize(@Nonnull EditorEx editor);
+  void customize(EditorEx editor);
 
   @Override
   default void accept(EditorEx editorEx) {

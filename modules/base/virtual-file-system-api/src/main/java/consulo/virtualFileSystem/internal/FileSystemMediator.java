@@ -17,16 +17,15 @@ package consulo.virtualFileSystem.internal;
 
 import consulo.util.io.FileAttributes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 public interface FileSystemMediator {
   @Nullable
-  FileAttributes getAttributes(@Nonnull String path) throws IOException;
+  FileAttributes getAttributes(String path) throws IOException;
 
   @Nullable
-  String resolveSymLink(@Nonnull String path) throws IOException;
+  String resolveSymLink(String path) throws IOException;
 
-  boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean execOnly) throws IOException;
+  boolean clonePermissions(String source, String target, boolean execOnly) throws IOException;
 }

@@ -17,16 +17,15 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ModelDiff {
   @Nullable
-  public static List<Cmd> createDiffCmds(@Nonnull Model<Object> listModel, @Nonnull Object[] oldElements, @Nonnull Object[] newElements) {
+  public static List<Cmd> createDiffCmds(Model<Object> listModel, Object[] oldElements, Object[] newElements) {
     Diff.Change change = null;
     try {
       change = Diff.buildChanges(oldElements, newElements);
@@ -83,7 +82,7 @@ public class ModelDiff {
     private final int start;
     private final int end;
 
-    private RemoveCmd(@Nonnull Model<T> model, int start, int end) {
+    private RemoveCmd(Model<T> model, int start, int end) {
       myListModel = model;
       this.start = start;
       this.end = end;
@@ -112,7 +111,7 @@ public class ModelDiff {
     private final int idx;
     private final List<? extends T> elements;
 
-    private InsertCmd(@Nonnull Model<T> model, int idx, @Nonnull List<? extends T> elements) {
+    private InsertCmd(Model<T> model, int idx, List<? extends T> elements) {
       myListModel = model;
       this.idx = idx;
       this.elements = elements;

@@ -26,8 +26,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +34,7 @@ import java.util.List;
 
 public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
     public static final List<Block> EMPTY = Collections.emptyList();
-    @Nonnull
+    
     protected final ASTNode myNode;
     @Nullable
     protected final Wrap myWrap;
@@ -46,20 +45,20 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
     private Boolean myIncomplete;
     private boolean myBuildIndentsOnly = false;
 
-    protected AbstractBlock(@Nonnull ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment) {
+    protected AbstractBlock(ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment) {
         myNode = node;
         myWrap = wrap;
         myAlignment = alignment;
     }
 
     @Override
-    @Nonnull
+    
     public TextRange getTextRange() {
         return myNode.getTextRange();
     }
 
     @Override
-    @Nonnull
+    
     public List<Block> getSubBlocks() {
         if (mySubBlocks == null) {
             List<Block> list = buildChildren();
@@ -83,7 +82,7 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
         return myBuildIndentsOnly;
     }
 
-    @Nonnull
+    
     private List<Block> buildInjectedBlocks() {
         if (myBuildIndentsOnly) {
             return EMPTY;
@@ -143,14 +142,14 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
         return myAlignment;
     }
 
-    @Nonnull
+    
     @Override
     public ASTNode getNode() {
         return myNode;
     }
 
     @Override
-    @Nonnull
+    
     public ChildAttributes getChildAttributes(int newChildIndex) {
         return new ChildAttributes(getChildIndent(), getFirstChildAlignment());
     }
@@ -191,7 +190,7 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
     @Nullable
     @Override
     @RequiredReadAction
-    public List<TextRange> getExtraRangesToFormat(@Nonnull FormattingRangesInfo info) {
+    public List<TextRange> getExtraRangesToFormat(FormattingRangesInfo info) {
         int startOffset = getTextRange().getStartOffset();
         if (info.isOnInsertedLine(startOffset) && myNode.textContains('\n')) {
             return new NodeIndentRangesCalculator(myNode).calculateExtraRanges();

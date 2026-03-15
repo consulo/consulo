@@ -17,7 +17,7 @@ package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.versionControlSystem.change.FilePathsHelper;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class StaticFilePath {
   private final String myKey;

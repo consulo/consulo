@@ -18,18 +18,17 @@ package consulo.project.ui.notification;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.event.NotificationListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 public final class NotificationGroup {
-    @Nonnull
+    
     private final String myId;
-    @Nonnull
+    
     private final LocalizeValue myDisplayName;
-    @Nonnull
+    
     private final NotificationDisplayType myDisplayType;
     private final boolean myLogByDefault;
     @Nullable
@@ -37,14 +36,14 @@ public final class NotificationGroup {
 
     @Deprecated
     @DeprecationInfo("Use constructor with LocalizeValue parameter")
-    public NotificationGroup(@Nonnull String id, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault) {
+    public NotificationGroup(String id, NotificationDisplayType defaultDisplayType, boolean logByDefault) {
         this(id, LocalizeValue.of(id), defaultDisplayType, logByDefault, null);
     }
 
     public NotificationGroup(
-        @Nonnull String id,
-        @Nonnull LocalizeValue displayName,
-        @Nonnull NotificationDisplayType defaultDisplayType,
+        String id,
+        LocalizeValue displayName,
+        NotificationDisplayType defaultDisplayType,
         boolean logByDefault
     ) {
         this(id, displayName, defaultDisplayType, logByDefault, null);
@@ -53,8 +52,8 @@ public final class NotificationGroup {
     @Deprecated
     @DeprecationInfo("Use constructor with LocalizeValue parameter")
     public NotificationGroup(
-        @Nonnull String id,
-        @Nonnull NotificationDisplayType defaultDisplayType,
+        String id,
+        NotificationDisplayType defaultDisplayType,
         boolean logByDefault,
         @Nullable String toolWindowId
     ) {
@@ -62,9 +61,9 @@ public final class NotificationGroup {
     }
 
     public NotificationGroup(
-        @Nonnull String id,
-        @Nonnull LocalizeValue displayName,
-        @Nonnull NotificationDisplayType defaultDisplayType,
+        String id,
+        LocalizeValue displayName,
+        NotificationDisplayType defaultDisplayType,
         boolean logByDefault,
         @Nullable String toolWindowId
     ) {
@@ -75,69 +74,69 @@ public final class NotificationGroup {
         myDisplayName = displayName;
     }
 
-    @Nonnull
+    
     @Deprecated
-    public static NotificationGroup balloonGroup(@Nonnull String id) {
+    public static NotificationGroup balloonGroup(String id) {
         return new NotificationGroup(id, NotificationDisplayType.BALLOON, true);
     }
 
-    @Nonnull
-    public static NotificationGroup balloonGroup(@Nonnull String id, @Nonnull LocalizeValue displayName) {
+    
+    public static NotificationGroup balloonGroup(String id, LocalizeValue displayName) {
         return new NotificationGroup(id, displayName, NotificationDisplayType.BALLOON, true);
     }
 
-    @Nonnull
+    
     @Deprecated
-    public static NotificationGroup logOnlyGroup(@Nonnull String displayId) {
+    public static NotificationGroup logOnlyGroup(String displayId) {
         return new NotificationGroup(displayId, NotificationDisplayType.NONE, true);
     }
 
-    @Nonnull
-    public static NotificationGroup logOnlyGroup(@Nonnull String id, @Nonnull LocalizeValue displayName) {
+    
+    public static NotificationGroup logOnlyGroup(String id, LocalizeValue displayName) {
         return new NotificationGroup(id, displayName, NotificationDisplayType.NONE, true);
     }
 
-    @Nonnull
+    
     @Deprecated
-    public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId, boolean logByDefault) {
+    public static NotificationGroup toolWindowGroup(String id, String toolWindowId, boolean logByDefault) {
         return new NotificationGroup(id, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
     }
 
-    @Nonnull
+    
     public static NotificationGroup toolWindowGroup(
-        @Nonnull String id,
-        @Nonnull LocalizeValue displayName,
-        @Nonnull String toolWindowId,
+        String id,
+        LocalizeValue displayName,
+        String toolWindowId,
         boolean logByDefault
     ) {
         return new NotificationGroup(id, displayName, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
     }
 
-    @Nonnull
+    
     @Deprecated
-    public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId) {
+    public static NotificationGroup toolWindowGroup(String id, String toolWindowId) {
         return toolWindowGroup(id, toolWindowId, true);
     }
 
-    @Nonnull
-    public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull String toolWindowId) {
+    
+    public static NotificationGroup toolWindowGroup(String id, LocalizeValue displayName, String toolWindowId) {
         return toolWindowGroup(id, displayName, toolWindowId, true);
     }
 
-    @Nonnull
+    
     public String getId() {
         return myId;
     }
 
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         return myDisplayName;
     }
 
     @Deprecated
     @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
-    @Nonnull
-    public Notification createNotification(@Nonnull String content, @Nonnull NotificationType type) {
+    
+    public Notification createNotification(String content, NotificationType type) {
         return NotificationService.getInstance()
             .newOfType(this, type)
             .content(LocalizeValue.of(content))
@@ -146,11 +145,11 @@ public final class NotificationGroup {
 
     @Deprecated
     @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
-    @Nonnull
+    
     public Notification createNotification(
-        @Nonnull String title,
-        @Nonnull String content,
-        @Nonnull NotificationType type,
+        String title,
+        String content,
+        NotificationType type,
         @Nullable NotificationListener listener
     ) {
         return NotificationService.getInstance()
@@ -163,26 +162,26 @@ public final class NotificationGroup {
 
     @Deprecated
     @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
-    @Nonnull
+    
     public Notification createNotification() {
         return NotificationService.getInstance().newInfo(this).create();
     }
 
     @Deprecated
     @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
-    @Nonnull
-    public Notification createNotification(@Nonnull NotificationType type) {
+    
+    public Notification createNotification(NotificationType type) {
         return NotificationService.getInstance().newOfType(this, type).create();
     }
 
     @Deprecated
     @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
-    @Nonnull
+    
     public Notification createNotification(
         @Nullable String title,
         @Nullable String subtitle,
         @Nullable String content,
-        @Nonnull NotificationType type
+        NotificationType type
     ) {
         return NotificationService.getInstance().newOfType(this, type)
             .title(LocalizeValue.ofNullable(title))
@@ -193,12 +192,12 @@ public final class NotificationGroup {
 
     @Deprecated
     @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
-    @Nonnull
+    
     public Notification createNotification(
         @Nullable String title,
         @Nullable String subtitle,
         @Nullable String content,
-        @Nonnull NotificationType type,
+        NotificationType type,
         @Nullable NotificationListener listener
     ) {
         return NotificationService.getInstance().newOfType(this, type)
@@ -209,7 +208,7 @@ public final class NotificationGroup {
             .create();
     }
 
-    @Nonnull
+    
     public NotificationDisplayType getDisplayType() {
         return myDisplayType;
     }

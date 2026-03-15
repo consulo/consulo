@@ -52,8 +52,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,7 +106,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         myScopeDescriptor = getInitialSelectedScope();
     }
 
-    @Nonnull
+    
     @Override
     public String getSearchProviderId() {
         return getClass().getSimpleName();
@@ -118,7 +117,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return true;
     }
 
-    private static void processScopes(@Nonnull DataContext dataContext, @Nonnull Predicate<? super ScopeDescriptor> processor) {
+    private static void processScopes(DataContext dataContext, Predicate<? super ScopeDescriptor> processor) {
         ScopeChooserCombo.processScopes(
             dataContext.getRequiredData(Project.KEY),
             dataContext,
@@ -127,11 +126,11 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         );
     }
 
-    @Nonnull
+    
     protected List<AnAction> doGetActions(
-        @Nonnull LocalizeValue everywhereText,
+        LocalizeValue everywhereText,
         @Nullable PersistentSearchEverywhereContributorFilter<?> filter,
-        @Nonnull Runnable onChanged
+        Runnable onChanged
     ) {
         if (myProject == null || filter == null) {
             return Collections.emptyList();
@@ -141,12 +140,12 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             boolean canToggleEverywhere = !myEverywhereScope.equals(myProjectScope);
 
             @Override
-            void onScopeSelected(@Nonnull ScopeDescriptor o) {
+            void onScopeSelected(ScopeDescriptor o) {
                 setSelectedScope(o);
                 onChanged.run();
             }
 
-            @Nonnull
+            
             @Override
             ScopeDescriptor getSelectedScope() {
                 return myScopeDescriptor;
@@ -173,7 +172,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return result;
     }
 
-    @Nonnull
+    
     private ScopeDescriptor getInitialSelectedScope() {
         String selectedScope = myProject == null ? null : getSelectedScopes(myProject).get(getClass().getSimpleName());
         if (StringUtil.isNotEmpty(selectedScope)) {
@@ -192,7 +191,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         }
     }
 
-    private void setSelectedScope(@Nonnull ScopeDescriptor o) {
+    private void setSelectedScope(ScopeDescriptor o) {
         myScopeDescriptor = o;
         getSelectedScopes(myProject).put(
             getClass().getSimpleName(),
@@ -200,8 +199,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         );
     }
 
-    @Nonnull
-    private static Map<String, String> getSelectedScopes(@Nonnull Project project) {
+    
+    private static Map<String, String> getSelectedScopes(Project project) {
         Map<String, String> map = SE_SELECTED_SCOPES.get(project);
         if (map == null) {
             SE_SELECTED_SCOPES.set(project, map = new HashMap<>(3));
@@ -211,9 +210,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
     @Override
     public void fetchWeightedElements(
-        @Nonnull String pattern,
-        @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Predicate<? super FoundItemDescriptor<Object>> predicate
+        String pattern,
+        ProgressIndicator progressIndicator,
+        Predicate<? super FoundItemDescriptor<Object>> predicate
     ) {
         if (myProject == null) {
             return; //nowhere to search
@@ -278,8 +277,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     private boolean processElement(
-        @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Predicate<? super FoundItemDescriptor<Object>> predicate,
+        ProgressIndicator progressIndicator,
+        Predicate<? super FoundItemDescriptor<Object>> predicate,
         FilteringGotoByModel<?> model,
         Object element,
         int degree
@@ -296,12 +295,12 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return predicate.test(new FoundItemDescriptor<>(element, degree));
     }
 
-    @Nonnull
-    protected abstract FilteringGotoByModel<?> createModel(@Nonnull Project project);
+    
+    protected abstract FilteringGotoByModel<?> createModel(Project project);
 
-    @Nonnull
+    
     @Override
-    public String filterControlSymbols(@Nonnull String pattern) {
+    public String filterControlSymbols(String pattern) {
         if (StringUtil.containsAnyChar(pattern, ":,;@[( #") || pattern.contains(" line ") || pattern.contains("?l=")) {
             // quick test if reg exp should be used
             return applyPatternFilter(pattern, ourPatternToDetectLinesAndColumns);
@@ -325,7 +324,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     @Override
-    public boolean processSelectedItem(@Nonnull Object selected, int modifiers, @Nonnull String searchText) {
+    public boolean processSelectedItem(Object selected, int modifiers, String searchText) {
         if (selected instanceof PsiElement element) {
             if (!element.isValid()) {
                 LOG.warn("Cannot navigate to invalid PsiElement");
@@ -349,7 +348,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     @Override
-    public Object getDataForItem(@Nonnull Object element, @Nonnull Key dataId) {
+    public Object getDataForItem(Object element, Key dataId) {
         if (PsiElement.KEY == dataId) {
             if (element instanceof PsiElement) {
                 return element;
@@ -376,7 +375,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return DumbService.isDumbAware(createModel(myProject));
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
     public ListCellRenderer<Object> getElementsRenderer() {
@@ -384,7 +383,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     @Override
-    public int getElementPriority(@Nonnull Object element, @Nonnull String searchPattern) {
+    public int getElementPriority(Object element, String searchPattern) {
         return 50;
     }
 
@@ -455,12 +454,12 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         static final char CHOOSE = 'O';
         static final char TOGGLE = 'P';
 
-        abstract void onScopeSelected(@Nonnull ScopeDescriptor o);
+        abstract void onScopeSelected(ScopeDescriptor o);
 
-        @Nonnull
+        
         abstract ScopeDescriptor getSelectedScope();
 
-        @Nonnull
+        
         @Override
         protected ComboBoxButton createComboBoxButton(Presentation presentation) {
             ComboBoxButtonImpl button = (ComboBoxButtonImpl)super.createComboBoxButton(presentation);
@@ -476,7 +475,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
         @Override
         @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             ScopeDescriptor selection = getSelectedScope();
             String name = StringUtil.trimMiddle(selection.getDisplayName(), 30);
             String text = StringUtil.escapeMnemonics(name).replaceFirst("(?i)([" + TOGGLE + CHOOSE + "])", "_$1");
@@ -493,13 +492,13 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             }
         }
 
-        @Nonnull
+        
         @Override
         public JBPopup createPopup(
-            @Nonnull JComponent component,
-            @Nonnull DataContext context,
-            @Nonnull Presentation presentation,
-            @Nonnull Runnable onDispose
+            JComponent component,
+            DataContext context,
+            Presentation presentation,
+            Runnable onDispose
         ) {
             JList<ScopeDescriptor> fakeList = new JBList<>();
             ListCellRenderer<ScopeDescriptor> renderer = new ListCellRenderer<>() {
@@ -550,7 +549,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
                     return true;
                 }
 
-                @Nonnull
+                
                 @Override
                 public String getTextFor(ScopeDescriptor value) {
                     return value.getScope() instanceof GlobalSearchScope ? value.getDisplayName() : "";
@@ -570,7 +569,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             return popup;
         }
 
-        @Nonnull
+        
         @Override
         protected ActionGroup createPopupActionGroup(JComponent button) {
             throw new UnsupportedOperationException();

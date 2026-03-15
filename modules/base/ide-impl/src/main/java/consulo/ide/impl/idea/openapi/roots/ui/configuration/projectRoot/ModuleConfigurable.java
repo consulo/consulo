@@ -41,8 +41,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -95,8 +94,8 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
         return createLayerConfigurationPanel(getModuleEditor());
     }
 
-    @Nonnull
-    private static JPanel createLayerConfigurationPanel(@Nonnull ModuleEditor moduleEditor) {
+    
+    private static JPanel createLayerConfigurationPanel(ModuleEditor moduleEditor) {
         BorderLayoutPanel panel = JBUI.Panels.simplePanel();
 
         ModifiableRootModel moduleRootModel = moduleEditor.getModifiableRootModelProxy();
@@ -175,7 +174,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
 
     @RequiredUIAccess
     @Override
-    public JComponent createOptionsPanel(@Nonnull Disposable parentUIDisposable) {
+    public JComponent createOptionsPanel(Disposable parentUIDisposable) {
         return getModuleEditor().getPanel(parentUIDisposable);
     }
 

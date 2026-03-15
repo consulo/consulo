@@ -31,7 +31,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -70,7 +69,7 @@ public interface CreateFromTemplateHandler {
         return file;
     }
 
-    @Nonnull
+    
     default String checkAppendExtension(String fileName, FileTemplate template) {
         String suggestedFileNameEnd = "." + template.getExtension();
 
@@ -95,8 +94,8 @@ public interface CreateFromTemplateHandler {
     default void prepareProperties(Map<String, Object> props) {
     }
 
-    @Nonnull
-    default LocalizeValue commandName(@Nonnull FileTemplate template) {
+    
+    default LocalizeValue commandName(FileTemplate template) {
         return FileTemplateLocalize.commandCreateFileFromTemplate();
     }
 }

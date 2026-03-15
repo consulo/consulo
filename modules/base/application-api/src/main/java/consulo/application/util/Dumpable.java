@@ -15,7 +15,6 @@
  */
 package consulo.application.util;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -23,6 +22,6 @@ import jakarta.annotation.Nonnull;
  */
 public interface Dumpable {
 
-  @Nonnull
+  
   String dumpState();
 }

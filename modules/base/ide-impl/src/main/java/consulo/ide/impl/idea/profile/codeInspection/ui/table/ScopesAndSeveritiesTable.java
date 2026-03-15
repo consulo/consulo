@@ -39,8 +39,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -151,12 +150,12 @@ public class ScopesAndSeveritiesTable extends JBTable {
 
         protected abstract void onScopeRemoved(int scopesCount);
 
-        protected abstract void onScopeChosen(@Nonnull ScopeToolState scopeToolState);
+        protected abstract void onScopeChosen(ScopeToolState scopeToolState);
 
         protected abstract void onSettingsChanged();
     }
 
-    @Nonnull
+    
     public static HighlightSeverity getSeverity(List<ScopeToolState> scopeToolStates) {
         HighlightSeverity previousValue = null;
         for (ScopeToolState scopeToolState : scopeToolStates) {
@@ -270,7 +269,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
             return getScopeToolState(rowIndex).getExistedStates().get(0).getScopeId();
         }
 
-        @Nonnull
+        
         private SeverityState getSeverityState(int rowIndex) {
             boolean disabled = Boolean.FALSE.equals(isEnabled(rowIndex));
             ExistedScopesStatesAndNonExistNames existedScopesStatesAndNonExistNames = getScopeToolState(rowIndex);

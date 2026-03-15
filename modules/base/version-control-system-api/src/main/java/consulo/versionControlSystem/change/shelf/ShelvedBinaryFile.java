@@ -18,8 +18,7 @@ package consulo.versionControlSystem.change.shelf;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,9 +34,9 @@ public interface ShelvedBinaryFile {
     @Nullable
     String getShelvedPath();
 
-    @Nonnull
+    
     FileStatus getFileStatus();
 
-    @Nonnull
+    
     Change createChange(Project project);
 }

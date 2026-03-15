@@ -15,8 +15,7 @@ import consulo.document.util.DocumentUtil;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "delete.in.column.mode")
 public class DeleteInColumnModeHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
@@ -48,7 +47,7 @@ public class DeleteInColumnModeHandler extends EditorWriteActionHandler implemen
         myOriginalHandler = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_DELETE;

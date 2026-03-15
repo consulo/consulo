@@ -6,13 +6,12 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import jakarta.annotation.Nonnull;
 
 public class FilteredNamedScope extends NamedScope {
-    public FilteredNamedScope(@Nonnull String name, LocalizeValue presentableName, @Nonnull Image icon, int priority, @Nonnull VirtualFileFilter filter) {
+    public FilteredNamedScope(String name, LocalizeValue presentableName, Image icon, int priority, VirtualFileFilter filter) {
         super(name, presentableName, icon, new FilteredPackageSet(name, priority) {
             @Override
-            public boolean contains(@Nonnull VirtualFile file, @Nonnull Project project) {
+            public boolean contains(VirtualFile file, Project project) {
                 return filter.accept(file);
             }
         });

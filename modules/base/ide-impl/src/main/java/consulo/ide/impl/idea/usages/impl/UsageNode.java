@@ -19,7 +19,6 @@ import consulo.util.lang.StringUtil;
 import consulo.navigation.Navigatable;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -29,11 +28,11 @@ import java.util.Arrays;
 public class UsageNode extends Node implements Comparable<UsageNode>, Navigatable {
   @Deprecated
   // todo remove in 2018.1
-  public UsageNode(@Nonnull Usage usage, UsageViewTreeModelBuilder model) {
+  public UsageNode(Usage usage, UsageViewTreeModelBuilder model) {
     this(null, usage);
   }
 
-  public UsageNode(Node parent, @Nonnull Usage usage) {
+  public UsageNode(Node parent, Usage usage) {
     setUserObject(usage);
     setParent(parent);
   }
@@ -51,11 +50,11 @@ public class UsageNode extends Node implements Comparable<UsageNode>, Navigatabl
   }
 
   @Override
-  public int compareTo(@Nonnull UsageNode usageNode) {
+  public int compareTo(UsageNode usageNode) {
     return UsageViewImpl.USAGE_COMPARATOR.compare(getUsage(), usageNode.getUsage());
   }
 
-  @Nonnull
+  
   public Usage getUsage() {
     return (Usage)getUserObject();
   }
@@ -90,9 +89,9 @@ public class UsageNode extends Node implements Comparable<UsageNode>, Navigatabl
     return isExcluded();
   }
 
-  @Nonnull
+  
   @Override
-  protected String getText(@Nonnull UsageView view) {
+  protected String getText(UsageView view) {
     try {
       return getUsage().getPresentation().getPlainText();
     }

@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class ReloadProjectAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project != null) {
       ProjectManager.getInstance().reloadProject(project, UIAccess.current());

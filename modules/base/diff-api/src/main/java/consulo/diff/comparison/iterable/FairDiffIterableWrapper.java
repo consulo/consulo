@@ -16,16 +16,15 @@
 package consulo.diff.comparison.iterable;
 
 import consulo.diff.util.Range;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 
 @SuppressWarnings("ConstantConditions")
 class FairDiffIterableWrapper extends DiffIterableBase implements FairDiffIterable {
-  @Nonnull
+  
   private final DiffIterable myIterable;
 
-  public FairDiffIterableWrapper(@Nonnull DiffIterable iterable) {
+  public FairDiffIterableWrapper(DiffIterable iterable) {
     myIterable = iterable;
   }
 
@@ -40,13 +39,13 @@ class FairDiffIterableWrapper extends DiffIterableBase implements FairDiffIterab
   }
 
   @Override
-  @Nonnull
+  
   public Iterator<Range> changes() {
     return myIterable.changes();
   }
 
   @Override
-  @Nonnull
+  
   public Iterator<Range> unchanged() {
     return myIterable.unchanged();
   }

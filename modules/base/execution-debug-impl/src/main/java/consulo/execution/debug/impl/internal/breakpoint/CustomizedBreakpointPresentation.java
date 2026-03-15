@@ -17,7 +17,7 @@ package consulo.execution.debug.impl.internal.breakpoint;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik

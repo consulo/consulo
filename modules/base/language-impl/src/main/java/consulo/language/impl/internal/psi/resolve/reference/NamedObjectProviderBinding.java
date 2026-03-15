@@ -24,8 +24,7 @@ import consulo.language.psi.PsiReferenceService;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Maps;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +39,10 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
   private final ConcurrentMap<String, List<ProviderInfo<Provider, ElementPattern>>> myNamesToProvidersMapInsensitive =
     new ConcurrentHashMap<>(5);
 
-  public void registerProvider(@Nonnull String[] names,
-                               @Nonnull ElementPattern filter,
+  public void registerProvider(String[] names,
+                               ElementPattern filter,
                                boolean caseSensitive,
-                               @Nonnull Provider provider,
+                               Provider provider,
                                double priority) {
     ConcurrentMap<String, List<ProviderInfo<Provider, ElementPattern>>> map =
       caseSensitive ? myNamesToProvidersMap : myNamesToProvidersMapInsensitive;
@@ -61,9 +60,9 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
   }
 
   @Override
-  public void addAcceptableReferenceProviders(@Nonnull PsiElement position,
-                                              @Nonnull List<ProviderInfo<Provider, ProcessingContext>> list,
-                                              @Nonnull PsiReferenceService.Hints hints) {
+  public void addAcceptableReferenceProviders(PsiElement position,
+                                              List<ProviderInfo<Provider, ProcessingContext>> list,
+                                              PsiReferenceService.Hints hints) {
     String name = getName(position);
     if (name != null) {
       addMatchingProviders(position, myNamesToProvidersMap.get(name), list, hints);
@@ -72,7 +71,7 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
   }
 
   @Override
-  public void unregisterProvider(@Nonnull Provider provider) {
+  public void unregisterProvider(Provider provider) {
     for (List<ProviderInfo<Provider, ElementPattern>> list : myNamesToProvidersMap.values()) {
       for (ProviderInfo<Provider, ElementPattern> trinity : new ArrayList<>(list)) {
         if (trinity.provider.equals(provider)) {
@@ -94,7 +93,7 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
 
   private void addMatchingProviders(PsiElement position,
                                     @Nullable List<ProviderInfo<Provider, ElementPattern>> providerList,
-                                    @Nonnull List<ProviderInfo<Provider, ProcessingContext>> ret,
+                                    List<ProviderInfo<Provider, ProcessingContext>> ret,
                                     PsiReferenceService.Hints hints) {
     if (providerList == null) return;
 

@@ -34,8 +34,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -63,15 +62,15 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         myConfiguration = canHideInfosOrWarnings ? ErrorTreeViewConfiguration.getInstance(project) : null;
     }
 
-    @Nonnull
+    
     @Override
     public Object getRootElement() {
         return myRoot;
     }
 
-    @Nonnull
+    
     @Override
-    public ErrorTreeElement[] getChildElements(@Nonnull Object element) {
+    public ErrorTreeElement[] getChildElements(Object element) {
         if (element == myRoot) {
             List<ErrorTreeElement> children = new ArrayList<>();
             // simple messages
@@ -138,7 +137,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         if (element instanceof GroupingElement || element instanceof SimpleMessageElement) {
             return myRoot;
         }
@@ -150,8 +149,8 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     }
 
     @Override
-    @Nonnull
-    public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+    
+    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         return new ErrorTreeNodeDescriptor(myProject, parentDescriptor, (ErrorTreeElement) element);
     }
 
@@ -165,8 +164,8 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     }
 
     public void addMessage(
-        @Nonnull ErrorTreeElementKind kind,
-        @Nonnull String[] text,
+        ErrorTreeElementKind kind,
+        String[] text,
         @Nullable VirtualFile underFileGroup,
         @Nullable VirtualFile file,
         int line,
@@ -251,14 +250,14 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         }
     }
 
-    public void addMessage(@Nonnull ErrorTreeElementKind kind, String[] text, Object data) {
+    public void addMessage(ErrorTreeElementKind kind, String[] text, Object data) {
         addSimpleMessage(kind, text, data);
     }
 
     public void addNavigatableMessage(
         @Nullable String groupName,
         Navigatable navigatable,
-        @Nonnull ErrorTreeElementKind kind,
+        ErrorTreeElementKind kind,
         String[] message,
         Object data,
         String exportText,
@@ -287,7 +286,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         }
     }
 
-    public void addNavigatableMessage(@Nonnull String groupName, @Nonnull NavigatableMessageElement navigatableMessageElement) {
+    public void addNavigatableMessage(String groupName, NavigatableMessageElement navigatableMessageElement) {
         synchronized (myLock) {
             List<NavigatableMessageElement> elements = myGroupNameToMessagesMap.get(groupName);
             if (elements == null) {
@@ -302,7 +301,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         }
     }
 
-    private void addSimpleMessage(@Nonnull ErrorTreeElementKind kind, String[] text, Object data) {
+    private void addSimpleMessage(ErrorTreeElementKind kind, String[] text, Object data) {
         addSimpleMessageElement(new SimpleMessageElement(kind, text, data));
     }
 
@@ -354,7 +353,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     }
 
     @Nullable
-    public ErrorTreeElement getFirstMessage(@Nonnull ErrorTreeElementKind kind) {
+    public ErrorTreeElement getFirstMessage(ErrorTreeElementKind kind) {
         if (!canShowKind(kind)) {
             return null; // no warnings are available
         }
@@ -377,7 +376,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         return null;
     }
 
-    private boolean canShowKind(@Nonnull ErrorTreeElementKind kind) {
+    private boolean canShowKind(ErrorTreeElementKind kind) {
         if (myConfiguration == null) {
             return true;
         }
@@ -460,10 +459,10 @@ public class ErrorViewStructure extends AbstractTreeStructure {
 
         private MyNavigatableWithDataElement(
             Project project,
-            @Nonnull ErrorTreeElementKind kind,
+            ErrorTreeElementKind kind,
             GroupingElement parent,
             String[] message,
-            @Nonnull final VirtualFile vf,
+            final VirtualFile vf,
             String exportText,
             String rendererTextPrefix
         ) {

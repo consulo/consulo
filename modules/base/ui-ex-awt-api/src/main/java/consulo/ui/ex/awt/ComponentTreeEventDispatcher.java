@@ -4,8 +4,7 @@ package consulo.ui.ex.awt;
 import consulo.proxy.EventDispatcher;
 import consulo.util.collection.JBTreeTraverser;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.EventListener;
@@ -22,15 +21,15 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
   private final Class<T> myListenerClass;
   private final T myMulticaster;
 
-  public static <T extends EventListener> ComponentTreeEventDispatcher<T> create(@Nonnull Class<T> listenerClass) {
+  public static <T extends EventListener> ComponentTreeEventDispatcher<T> create(Class<T> listenerClass) {
     return create(null, listenerClass);
   }
 
-  public static <T extends EventListener> ComponentTreeEventDispatcher<T> create(@Nullable Component root, @Nonnull Class<T> listenerClass) {
+  public static <T extends EventListener> ComponentTreeEventDispatcher<T> create(@Nullable Component root, Class<T> listenerClass) {
     return new ComponentTreeEventDispatcher<>(root, listenerClass);
   }
 
-  private ComponentTreeEventDispatcher(@Nullable Component root, @Nonnull Class<T> listenerClass) {
+  private ComponentTreeEventDispatcher(@Nullable Component root, Class<T> listenerClass) {
     myListenerClass = listenerClass;
     myMulticaster = EventDispatcher.createMulticaster(listenerClass, null, () -> {
       JBTreeTraverser<Component> traverser = uiTraverser(root);
@@ -39,7 +38,7 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
     });
   }
 
-  @Nonnull
+  
   public T getMulticaster() {
     return myMulticaster;
   }

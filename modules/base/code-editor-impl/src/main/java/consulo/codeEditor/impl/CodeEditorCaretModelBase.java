@@ -23,8 +23,7 @@ import consulo.ui.ex.awt.EmptyClipboardOwner;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -52,7 +51,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     final RangeMarkerTree<CodeEditorCaretBase.SelectionMarker> mySelectionMarkerTree;
 
     private final LinkedList<CARET> myCarets = new LinkedList<>();
-    @Nonnull
+    
     private volatile CARET myPrimaryCaret;
     private final ThreadLocal<CARET> myCurrentCaret = new ThreadLocal<>(); // active caret in the context of 'runForEachCaret' call
     private boolean myPerformCaretMergingAfterCurrentOperation;
@@ -61,7 +60,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     int myDocumentUpdateCounter;
 
-    public CodeEditorCaretModelBase(@Nonnull CodeEditorBase editor) {
+    public CodeEditorCaretModelBase(CodeEditorBase editor) {
         myEditor = editor;
         myEditor.addPropertyChangeListener(evt -> {
             if (EditorEx.PROP_COLUMN_MODE.equals(evt.getPropertyName()) && !myEditor.isColumnMode()) {
@@ -77,7 +76,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         myCarets.add(myPrimaryCaret);
     }
 
-    @Nonnull
+    
     protected abstract CARET createCaret(CodeEditorBase editor, CodeEditorCaretModelBase<CARET> model);
 
     public void onBulkDocumentUpdateStarted() {
@@ -91,7 +90,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredUIAccess
-    public void documentChanged(@Nonnull DocumentEvent e) {
+    public void documentChanged(DocumentEvent e) {
         myIsInUpdate = false;
         myDocumentUpdateCounter++;
         if (!myEditor.getDocument().isInBulkUpdate()) {
@@ -105,7 +104,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredReadAction
-    public void beforeDocumentChange(@Nonnull DocumentEvent e) {
+    public void beforeDocumentChange(DocumentEvent e) {
         if (!myEditor.getDocument().isInBulkUpdate() && e.isWholeTextReplaced()) {
             for (CARET caret : myCarets) {
                 caret.updateCachedStateIfNeeded(); // logical position will be needed to restore caret position via diff
@@ -144,13 +143,13 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredUIAccess
-    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
+    public void moveToLogicalPosition(LogicalPosition pos) {
         getCurrentCaret().moveToLogicalPosition(pos);
     }
 
     @Override
     @RequiredUIAccess
-    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
+    public void moveToVisualPosition(VisualPosition pos) {
         getCurrentCaret().moveToVisualPosition(pos);
     }
 
@@ -171,14 +170,14 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         return getCurrentCaret().isUpToDate();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public LogicalPosition getLogicalPosition() {
         return getCurrentCaret().getLogicalPosition();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public VisualPosition getVisualPosition() {
@@ -214,17 +213,17 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
-    public void addCaretListener(@Nonnull CaretListener listener) {
+    public void addCaretListener(CaretListener listener) {
         myCaretListeners.addListener(listener);
     }
 
     @Override
-    public void removeCaretListener(@Nonnull CaretListener listener) {
+    public void removeCaretListener(CaretListener listener) {
         myCaretListeners.removeListener(listener);
     }
 
     @Override
-    @Nonnull
+    
     public TextAttributes getTextAttributes() {
         TextAttributes textAttributes = myTextAttributes;
         if (textAttributes == null) {
@@ -251,14 +250,14 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         return MAX_CARET_COUNT;
     }
 
-    @Nonnull
+    
     @Override
     public CodeEditorCaretBase getCurrentCaret() {
         CodeEditorCaretBase currentCaret = myCurrentCaret.get();
         return UIAccess.isUIThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
     }
 
-    @Nonnull
+    
     @Override
     public CARET getPrimaryCaret() {
         return myPrimaryCaret;
@@ -271,7 +270,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         }
     }
 
-    @Nonnull
+    
     @Override
     public List<Caret> getAllCarets() {
         List<Caret> carets;
@@ -285,7 +284,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     @Nullable
     @Override
     @RequiredReadAction
-    public Caret getCaretAt(@Nonnull VisualPosition pos) {
+    public Caret getCaretAt(VisualPosition pos) {
         synchronized (myCarets) {
             for (CodeEditorCaretBase caret : myCarets) {
                 if (caret.getVisualPosition().equals(pos)) {
@@ -299,14 +298,14 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     @Nullable
     @Override
     @RequiredUIAccess
-    public Caret addCaret(@Nonnull VisualPosition pos) {
+    public Caret addCaret(VisualPosition pos) {
         return addCaret(pos, true);
     }
 
     @Nullable
     @Override
     @RequiredUIAccess
-    public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
+    public Caret addCaret(VisualPosition pos, boolean makePrimary) {
         UIAccess.assertIsUIThread();
         CARET caret = createCaret(myEditor, this);
         caret.doMoveToVisualPosition(pos, false);
@@ -318,7 +317,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @RequiredUIAccess
-    boolean addCaret(@Nonnull CARET caretToAdd, boolean makePrimary) {
+    boolean addCaret(CARET caretToAdd, boolean makePrimary) {
         UIAccess.assertIsUIThread();
         for (CARET caret : myCarets) {
             if (caretsOverlap(caret, caretToAdd)) {
@@ -340,7 +339,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredUIAccess
-    public boolean removeCaret(@Nonnull Caret caret) {
+    public boolean removeCaret(Caret caret) {
         UIAccess.assertIsUIThread();
         if (myCarets.size() <= 1 || !(caret instanceof CodeEditorCaretBase)) {
             return false;
@@ -373,13 +372,13 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredUIAccess
-    public void runForEachCaret(@Nonnull CaretAction action) {
+    public void runForEachCaret(CaretAction action) {
         runForEachCaret(action, false);
     }
 
     @Override
     @RequiredUIAccess
-    public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
+    public void runForEachCaret(CaretAction action, boolean reverseOrder) {
         UIAccess.assertIsUIThread();
         if (myCurrentCaret.get() != null) {
             throw new IllegalStateException("Recursive runForEachCaret invocations are not allowed");
@@ -404,13 +403,13 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
-    public void addCaretActionListener(@Nonnull CaretActionListener listener, @Nonnull Disposable disposable) {
+    public void addCaretActionListener(CaretActionListener listener, Disposable disposable) {
         myCaretActionListeners.addListener(listener, disposable);
     }
 
     @Override
     @RequiredUIAccess
-    public void runBatchCaretOperation(@Nonnull Runnable runnable) {
+    public void runBatchCaretOperation(Runnable runnable) {
         UIAccess.assertIsUIThread();
         doWithCaretMerging(runnable);
     }
@@ -472,7 +471,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @RequiredReadAction
-    private boolean caretsOverlap(@Nonnull CARET firstCaret, @Nonnull CARET secondCaret) {
+    private boolean caretsOverlap(CARET firstCaret, CARET secondCaret) {
         if (firstCaret.getVisualPosition().equals(secondCaret.getVisualPosition())) {
             return true;
         }
@@ -488,12 +487,12 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @RequiredReadAction
-    private boolean hasPureVirtualSelection(@Nonnull CARET firstCaret) {
+    private boolean hasPureVirtualSelection(CARET firstCaret) {
         return firstCaret.getSelectionStart() == firstCaret.getSelectionEnd() && firstCaret.hasVirtualSelection();
     }
 
     @RequiredUIAccess
-    public void doWithCaretMerging(@Nonnull @RequiredUIAccess Runnable runnable) {
+    public void doWithCaretMerging(@RequiredUIAccess Runnable runnable) {
         CodeEditorBase.assertIsDispatchThread();
         if (myPerformCaretMergingAfterCurrentOperation) {
             runnable.run();
@@ -512,13 +511,13 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredUIAccess
-    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates) {
+    public void setCaretsAndSelections(List<? extends CaretState> caretStates) {
         setCaretsAndSelections(caretStates, true);
     }
 
     @Override
     @RequiredUIAccess
-    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection) {
+    public void setCaretsAndSelections(List<? extends CaretState> caretStates, boolean updateSystemSelection) {
         UIAccess.assertIsUIThread();
         if (caretStates.isEmpty()) {
             throw new IllegalArgumentException("At least one caret should exist");
@@ -590,7 +589,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         });
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public List<CaretState> getCaretsAndSelections() {
@@ -619,7 +618,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         }
     }
 
-    void fireCaretPositionChanged(@Nonnull CaretEvent caretEvent) {
+    void fireCaretPositionChanged(CaretEvent caretEvent) {
         myCaretListeners.getMulticaster().caretPositionChanged(caretEvent);
     }
 
@@ -634,11 +633,11 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         }
     }
 
-    private void fireCaretAdded(@Nonnull Caret caret) {
+    private void fireCaretAdded(Caret caret) {
         myCaretListeners.getMulticaster().caretAdded(new CaretEvent(caret, caret.getLogicalPosition(), caret.getLogicalPosition()));
     }
 
-    private void fireCaretRemoved(@Nonnull Caret caret) {
+    private void fireCaretRemoved(Caret caret) {
         myCaretListeners.getMulticaster().caretRemoved(new CaretEvent(caret, caret.getLogicalPosition(), caret.getLogicalPosition()));
     }
 
@@ -647,7 +646,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         return myCurrentCaret.get() != null;
     }
 
-    @Nonnull
+    
     @Override
     public String dumpState() {
         return "[in update: " +
@@ -665,7 +664,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredUIAccess
-    public void onAdded(@Nonnull Inlay inlay) {
+    public void onAdded(Inlay inlay) {
         if (myEditor.getDocument().isInBulkUpdate()) {
             return;
         }
@@ -683,7 +682,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredUIAccess
-    public void onRemoved(@Nonnull Inlay inlay) {
+    public void onRemoved(Inlay inlay) {
         if (myEditor.getDocument().isInBulkUpdate()) {
             return;
         }
@@ -708,7 +707,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
     @Override
     @RequiredReadAction
-    public void onUpdated(@Nonnull Inlay inlay) {
+    public void onUpdated(Inlay inlay) {
         if (myEditor.getDocument().isInBulkUpdate()) {
             return;
         }

@@ -21,7 +21,6 @@ import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.file.LanguageFileType;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author lesya
@@ -29,13 +28,13 @@ import jakarta.annotation.Nonnull;
 public abstract class FileTypeBasedContextType extends BaseTemplateContextType {
   private final LanguageFileType myFileType;
 
-  protected FileTypeBasedContextType(@Nonnull String id, @Nonnull LocalizeValue presentableName, @Nonnull LanguageFileType fileType) {
+  protected FileTypeBasedContextType(String id, LocalizeValue presentableName, LanguageFileType fileType) {
     super(id, presentableName);
     myFileType = fileType;
   }
 
   @Override
-  public boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
+  public boolean isInContext(TemplateActionContext templateActionContext) {
     return myFileType == templateActionContext.getFile().getFileType();
   }
 

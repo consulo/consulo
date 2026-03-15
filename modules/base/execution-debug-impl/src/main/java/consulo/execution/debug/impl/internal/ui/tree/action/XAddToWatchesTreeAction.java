@@ -30,8 +30,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 /**
@@ -46,19 +45,19 @@ public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
         super(XDebuggerLocalize.actionTreeAddToWatchesText(), LocalizeValue.empty(), ExecutionDebugIconGroup.actionAddtowatch());
     }
 
-    protected XAddToWatchesTreeAction(@Nonnull LocalizeValue text) {
+    protected XAddToWatchesTreeAction(LocalizeValue text) {
         super(text);
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(XValueNodeImpl node, AnActionEvent e) {
         return super.isEnabled(node, e)
             && DebuggerUIImplUtil.hasEvaluationExpression(node.getValueContainer())
             && getWatchesView(e) != null;
     }
 
     @Override
-    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+    protected void perform(XValueNodeImpl node, String nodeName, AnActionEvent e) {
         XWatchesView watchesView = getWatchesView(e);
         if (watchesView != null) {
             node.getValueContainer().calculateEvaluationExpression().doWhenDone(expression -> {
@@ -69,7 +68,7 @@ public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
         }
     }
 
-    private static XWatchesView getWatchesView(@Nonnull AnActionEvent e) {
+    private static XWatchesView getWatchesView(AnActionEvent e) {
         XWatchesView view = e.getData(XWatchesView.DATA_KEY);
         Project project = e.getData(Project.KEY);
         if (view == null && project != null) {

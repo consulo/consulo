@@ -23,20 +23,19 @@ import consulo.language.file.LanguageFileType;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FileTypeUtil {
 
-  @Nonnull
-  public static String buildComment(@Nonnull FileType type, @Nonnull String template, @Nonnull CopyrightFileConfig options) {
+  
+  public static String buildComment(FileType type, String template, CopyrightFileConfig options) {
     Commenter commenter = getCommenter(type);
     UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(type);
     return buildComment(commenter, updateCopyrightsProvider.isAllowSeparator(), template, options);
   }
 
-  @Nonnull
-  public static String buildComment(@Nullable Commenter commenter, boolean allowSeparator, @Nonnull String template, @Nonnull CopyrightFileConfig options) {
+  
+  public static String buildComment(@Nullable Commenter commenter, boolean allowSeparator, String template, CopyrightFileConfig options) {
     if (commenter == null) {
       return "<No comments>";
     }

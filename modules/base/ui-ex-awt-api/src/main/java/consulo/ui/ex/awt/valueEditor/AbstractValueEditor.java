@@ -15,22 +15,21 @@
  */
 package consulo.ui.ex.awt.valueEditor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractValueEditor<T> implements ValueEditor<T> {
 
   private
-  @Nonnull
+  
   T myDefaultValue;
   private
   @Nullable
   String myValueName;
   private final List<Listener<T>> myListeners = new ArrayList<>();
 
-  protected AbstractValueEditor(@Nullable String valueName, @Nonnull T defaultValue) {
+  protected AbstractValueEditor(@Nullable String valueName, T defaultValue) {
     myDefaultValue = defaultValue;
     myValueName = valueName;
   }
@@ -41,7 +40,7 @@ public abstract class AbstractValueEditor<T> implements ValueEditor<T> {
    * @return The parsed value as returned by {@link #parseValue(String)} method or the default value.
    */
   @Override
-  @Nonnull
+  
   public T getValue() {
     try {
       return parseValue(getValueText());
@@ -68,7 +67,7 @@ public abstract class AbstractValueEditor<T> implements ValueEditor<T> {
    *                 {@link #isValid(Object)} method, otherwise the default value will be used.
    */
   @Override
-  public void setValue(@Nonnull T newValue) {
+  public void setValue(T newValue) {
     if (!newValue.equals(getDefaultValue()) && !isValid(newValue)) {
       newValue = getDefaultValue();
     }
@@ -93,22 +92,22 @@ public abstract class AbstractValueEditor<T> implements ValueEditor<T> {
   }
 
   @Override
-  public void setDefaultValue(@Nonnull T defaultValue) {
+  public void setDefaultValue(T defaultValue) {
     myDefaultValue = defaultValue;
   }
 
-  @Nonnull
+  
   @Override
   public T getDefaultValue() {
     return myDefaultValue;
   }
 
   @Override
-  public void addListener(@Nonnull Listener<T> editorListener) {
+  public void addListener(Listener<T> editorListener) {
     myListeners.add(editorListener);
   }
 
-  public void fireValueChanged(@Nonnull T newValue) {
+  public void fireValueChanged(T newValue) {
     for (Listener<T> listener : myListeners) listener.valueChanged(newValue);
   }
 }

@@ -27,8 +27,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ModalityState;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.function.BooleanSupplier;
@@ -42,18 +41,18 @@ import static consulo.application.util.concurrent.QueueProcessor.ThreadToUse;
  * BackgroundTaskQueue may have a title - this title will be used if the task which is currently running doesn't have a title.
  */
 public class BackgroundTaskQueue {
-  @Nonnull
+  
   private final Application myApplication;
-  @Nonnull
+  
   protected final String myTitle;
-  @Nonnull
+  
   protected final QueueProcessor<TaskData> myProcessor;
 
-  @Nonnull
+  
   private final Object TEST_TASK_LOCK = new Object();
   private volatile boolean myForceAsyncInTests = false;
 
-  public BackgroundTaskQueue(@Nonnull Application application, @Nullable ComponentManager targetComponentManager, @Nonnull String title) {
+  public BackgroundTaskQueue(Application application, @Nullable ComponentManager targetComponentManager, String title) {
     myApplication = application;
     myTitle = title;
 
@@ -73,11 +72,11 @@ public class BackgroundTaskQueue {
     myProcessor.waitFor();
   }
 
-  public void run(@Nonnull Task.Backgroundable task) {
+  public void run(Task.Backgroundable task) {
     run(task, null, null);
   }
 
-  public void run(@Nonnull Task.Backgroundable task, @Nullable ModalityState modalityState, @Nullable ProgressIndicator indicator) {
+  public void run(Task.Backgroundable task, @Nullable ModalityState modalityState, @Nullable ProgressIndicator indicator) {
     BackgroundableTaskData taskData = new BackgroundableTaskData(task, modalityState, indicator);
     if (!myForceAsyncInTests && myApplication.isUnitTestMode()) {
       runTaskInCurrentThread(taskData);
@@ -95,7 +94,7 @@ public class BackgroundTaskQueue {
     }
   }
 
-  private void runTaskInCurrentThread(@Nonnull BackgroundableTaskData data) {
+  private void runTaskInCurrentThread(BackgroundableTaskData data) {
     Task.Backgroundable task = data.myTask;
 
     ProgressIndicator indicator = data.myIndicator;
@@ -116,14 +115,14 @@ public class BackgroundTaskQueue {
   }
 
   protected class BackgroundableTaskData implements TaskData {
-    @Nonnull
+    
     private final Task.Backgroundable myTask;
     @Nullable
     private final ModalityState myModalityState;
     @Nullable
     private final ProgressIndicator myIndicator;
 
-    public BackgroundableTaskData(@Nonnull Task.Backgroundable task,
+    public BackgroundableTaskData(Task.Backgroundable task,
                                   @Nullable ModalityState modalityState,
                                   @Nullable ProgressIndicator indicator) {
       myTask = task;
@@ -132,7 +131,7 @@ public class BackgroundTaskQueue {
     }
 
     @Override
-    public void accept(@Nonnull Runnable continuation) {
+    public void accept(Runnable continuation) {
       ProgressManagerEx pm = (ProgressManagerEx)myApplication.getProgressManager();
 
       Task.Backgroundable task = myTask;

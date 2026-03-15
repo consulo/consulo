@@ -4,27 +4,26 @@ package consulo.ide.runAnything;
 import consulo.application.util.matcher.Matcher;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.awt.CollectionListModel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
 public abstract class RunAnythingGroupBase extends RunAnythingGroup {
-    @Nonnull
-    public abstract Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern);
+    
+    public abstract Collection<RunAnythingItem> getGroupItems(DataContext dataContext, String pattern);
 
     @Nullable
-    protected Matcher getMatcher(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    protected Matcher getMatcher(DataContext dataContext, String pattern) {
         return null;
     }
 
     @Override
     public SearchResult getItems(
-        @Nonnull DataContext dataContext,
-        @Nonnull CollectionListModel<Object> model,
-        @Nonnull String pattern,
+        DataContext dataContext,
+        CollectionListModel<Object> model,
+        String pattern,
         boolean isInsertionMode,
-        @Nonnull Runnable cancellationChecker
+        Runnable cancellationChecker
     ) {
         cancellationChecker.run();
         SearchResult result = new SearchResult();
@@ -53,12 +52,12 @@ public abstract class RunAnythingGroupBase extends RunAnythingGroup {
      * @return true if limit exceeded
      */
     private boolean addToList(
-        @Nonnull CollectionListModel<Object> model,
-        @Nonnull SearchResult result,
-        @Nonnull String textToMatch,
+        CollectionListModel<Object> model,
+        SearchResult result,
+        String textToMatch,
         boolean isInsertionMode,
-        @Nonnull RunAnythingItem item,
-        @Nonnull Matcher matcher
+        RunAnythingItem item,
+        Matcher matcher
     ) {
         if (!model.contains(item) && matcher.matches(textToMatch)) {
             if (result.size() == (isInsertionMode ? getMaxItemsToInsert() : getMaxInitialItems())) {

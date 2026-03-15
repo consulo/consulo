@@ -27,10 +27,8 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -44,14 +42,14 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Language getLanguage() {
         return Language.ANY;
     }
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public PsiElement[] getChildren() {
         return PsiElement.EMPTY_ARRAY;
     }
@@ -84,7 +82,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -118,14 +116,14 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
     @RequiredReadAction
     @Override
     @Nullable
-    @NonNls
+    
     public String getText() {
         return null;
     }
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public char[] textToCharArray() {
         return new char[0];
     }
@@ -161,11 +159,11 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public PsiManager getManager() {
         PsiElement parent = getParent();

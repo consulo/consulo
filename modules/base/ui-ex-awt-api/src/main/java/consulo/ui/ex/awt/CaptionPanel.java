@@ -17,7 +17,6 @@
 package consulo.ui.ex.awt;
 
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +36,7 @@ public class CaptionPanel extends JPanel {
         super(new BorderLayout());
     }
 
-    public void setLeftComponent(@Nonnull JComponent component) {
+    public void setLeftComponent(JComponent component) {
         BorderLayout layout = (BorderLayout) getLayout();
 
         Component prev = layout.getLayoutComponent(BorderLayout.WEST);
@@ -48,7 +47,7 @@ public class CaptionPanel extends JPanel {
         add(component, BorderLayout.WEST);
     }
 
-    public void setRightComponent(@Nonnull JComponent component) {
+    public void setRightComponent(JComponent component) {
         BorderLayout layout = (BorderLayout) getLayout();
 
         Component prev = layout.getLayoutComponent(BorderLayout.EAST);

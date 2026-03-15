@@ -18,24 +18,23 @@ package consulo.execution.impl.internal.action;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public record RunCurrentFileActionStatus(
     boolean enabled,
-    @Nonnull LocalizeValue tooltip,
-    @Nonnull Image icon,
-    @Nonnull List<RunnerAndConfigurationSettings> runConfigs) {
+    LocalizeValue tooltip,
+    Image icon,
+    List<RunnerAndConfigurationSettings> runConfigs) {
 
-    static @Nonnull RunCurrentFileActionStatus createDisabled(@Nonnull LocalizeValue tooltip,
-                                                              @Nonnull Image icon) {
+    static RunCurrentFileActionStatus createDisabled(LocalizeValue tooltip,
+                                                              Image icon) {
         return new RunCurrentFileActionStatus(false, tooltip, icon, List.of());
     }
 
-    static @Nonnull RunCurrentFileActionStatus createEnabled(@Nonnull LocalizeValue tooltip,
-                                                             @Nonnull Image icon,
-                                                             @Nonnull List<RunnerAndConfigurationSettings> runConfigs) {
+    static RunCurrentFileActionStatus createEnabled(LocalizeValue tooltip,
+                                                             Image icon,
+                                                             List<RunnerAndConfigurationSettings> runConfigs) {
         return new RunCurrentFileActionStatus(true, tooltip, icon, runConfigs);
     }
 }

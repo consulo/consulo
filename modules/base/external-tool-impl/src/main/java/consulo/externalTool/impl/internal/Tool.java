@@ -37,16 +37,14 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Tool implements SchemeElement {
-    @NonNls
+    
     public final static String ACTION_ID_PREFIX = "Tool_";
     public static final String DEFAULT_GROUP_NAME = "External Tools";
 
@@ -81,7 +79,7 @@ public class Tool implements SchemeElement {
         return myDescription;
     }
 
-    @Nonnull
+    
     public String getGroup() {
         return myGroup;
     }

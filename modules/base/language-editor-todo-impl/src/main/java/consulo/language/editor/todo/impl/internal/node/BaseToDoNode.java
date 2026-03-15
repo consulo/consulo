@@ -22,13 +22,12 @@ import consulo.language.editor.todo.impl.internal.TodoTreeStructure;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public abstract class BaseToDoNode<Value> extends AbstractTreeNode<Value> {
   protected final ToDoSettings myToDoSettings;
   protected final TodoTreeBuilder myBuilder;
 
-  protected BaseToDoNode(Project project, @Nonnull Value value, TodoTreeBuilder builder) {
+  protected BaseToDoNode(Project project, Value value, TodoTreeBuilder builder) {
     super(project, value);
     myBuilder = builder;
     myToDoSettings = myBuilder.getTodoTreeStructure();

@@ -16,7 +16,6 @@
 package consulo.language.util;
 
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ik
@@ -24,9 +23,9 @@ import jakarta.annotation.Nonnull;
 public interface CharTable {
   Key<CharTable> CHAR_TABLE_KEY = Key.create("Char table");
 
-  @Nonnull
-  CharSequence intern(@Nonnull CharSequence text);
+  
+  CharSequence intern(CharSequence text);
 
-  @Nonnull
-  CharSequence intern(@Nonnull CharSequence baseText, int startOffset, int endOffset);
+  
+  CharSequence intern(CharSequence baseText, int startOffset, int endOffset);
 }

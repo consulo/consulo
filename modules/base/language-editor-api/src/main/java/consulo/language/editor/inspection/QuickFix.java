@@ -17,7 +17,6 @@ package consulo.language.editor.inspection;
 
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * Common base interface for quick fixes provided by local and global inspections.
@@ -34,7 +33,7 @@ public interface QuickFix<D extends CommonProblemDescriptor> extends WriteAction
      *
      * @return the name of the quick fix.
      */
-    @Nonnull
+    
     LocalizeValue getName();
 
     /**
@@ -43,5 +42,5 @@ public interface QuickFix<D extends CommonProblemDescriptor> extends WriteAction
      * @param project    {@link Project}
      * @param descriptor problem reported by the tool which provided this quick fix action
      */
-    void applyFix(@Nonnull Project project, @Nonnull D descriptor);
+    void applyFix(Project project, D descriptor);
 }

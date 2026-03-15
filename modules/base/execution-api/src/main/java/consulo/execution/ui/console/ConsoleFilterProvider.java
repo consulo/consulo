@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @see ConsoleFilterProviderEx for additional API
@@ -31,6 +30,6 @@ import jakarta.annotation.Nonnull;
 public interface ConsoleFilterProvider {
   ExtensionPointName<ConsoleFilterProvider> FILTER_PROVIDERS = ExtensionPointName.create(ConsoleFilterProvider.class);
 
-  @Nonnull
-  Filter[] getDefaultFilters(@Nonnull Project project);
+  
+  Filter[] getDefaultFilters(Project project);
 }

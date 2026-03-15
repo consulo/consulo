@@ -28,8 +28,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -65,7 +64,7 @@ public class ChangeListsIndexes {
     return myFileToStatus.get(VcsUtil.getFilePath(file));
   }
 
-  public FileStatus getStatus(@Nonnull FilePath file) {
+  public FileStatus getStatus(FilePath file) {
     return myFileToStatus.get(file);
   }
 
@@ -86,14 +85,13 @@ public class ChangeListsIndexes {
   }
 
   @Nullable
-  public VcsKey getVcsFor(@Nonnull Change change) {
+  public VcsKey getVcsFor(Change change) {
     VcsKey key = getVcsForRevision(change.getAfterRevision());
     if (key != null) return key;
     return getVcsForRevision(change.getBeforeRevision());
   }
 
-  @Nullable
-  private VcsKey getVcsForRevision(@jakarta.annotation.Nullable ContentRevision revision) {
+  private VcsKey getVcsForRevision(@Nullable ContentRevision revision) {
     if (revision != null) {
       Pair<VcsKey, VcsRevisionNumber> pair = myFileToVcs.get(revision.getFile());
       return pair == null ? null : pair.getFirst();
@@ -170,7 +168,7 @@ public class ChangeListsIndexes {
     return result;
   }
 
-  @Nonnull
+ 
   public NavigableSet<FilePath> getAffectedPaths() {
     return Collections.unmodifiableNavigableSet(myFileToStatus.navigableKeySet());
   }

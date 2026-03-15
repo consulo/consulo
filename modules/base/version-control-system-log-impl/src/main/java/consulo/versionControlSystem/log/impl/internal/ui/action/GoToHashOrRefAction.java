@@ -30,7 +30,6 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -46,7 +45,7 @@ public class GoToHashOrRefAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VcsLogUtil.triggerUsage(e);
 
         Project project = e.getRequiredData(Project.KEY);
@@ -67,7 +66,7 @@ public class GoToHashOrRefAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(VcsLog.KEY) && e.hasData(VcsLogUi.KEY));
     }
 }

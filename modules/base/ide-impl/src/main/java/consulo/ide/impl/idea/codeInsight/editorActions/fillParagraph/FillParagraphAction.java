@@ -11,7 +11,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * Action to re-flow paragraph to fit right margin.
@@ -26,7 +25,7 @@ public class FillParagraphAction extends BaseCodeInsightAction {
     private static class Handler implements CodeInsightActionHandler {
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        public void invoke(Project project, Editor editor, PsiFile file) {
             ParagraphFillHandler paragraphFillHandler = ParagraphFillHandler.forLanguage(file.getLanguage());
 
             int offset = editor.getCaretModel().getOffset();
@@ -46,7 +45,7 @@ public class FillParagraphAction extends BaseCodeInsightAction {
         super(CodeEditorLocalize.actionFillParagraphText(), CodeEditorLocalize.actionFillParagraphDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new Handler();
@@ -54,7 +53,7 @@ public class FillParagraphAction extends BaseCodeInsightAction {
 
     @Override
     @RequiredReadAction
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         ParagraphFillHandler handler = ParagraphFillHandler.forLanguage(file.getLanguage());
         return handler.isAvailableForFile(file);
     }

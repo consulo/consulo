@@ -25,27 +25,26 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
 
 public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
   private final SuppressQuickFix myFix;
 
-  private SuppressIntentionActionFromFix(@Nonnull SuppressQuickFix fix) {
+  private SuppressIntentionActionFromFix(SuppressQuickFix fix) {
     myFix = fix;
   }
 
-  @Nonnull
-  public static SuppressIntentionAction convertBatchToSuppressIntentionAction(@Nonnull SuppressQuickFix fix) {
+  
+  public static SuppressIntentionAction convertBatchToSuppressIntentionAction(SuppressQuickFix fix) {
     return new SuppressIntentionActionFromFix(fix);
   }
 
-  @Nonnull
-  public static SuppressIntentionAction[] convertBatchToSuppressIntentionActions(@Nonnull SuppressQuickFix[] actions) {
+  
+  public static SuppressIntentionAction[] convertBatchToSuppressIntentionActions(SuppressQuickFix[] actions) {
     return ContainerUtil.map2Array(actions, SuppressIntentionAction.class, fix -> convertBatchToSuppressIntentionAction(fix));
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiElement element) throws IncorrectOperationException {
     PsiElement container = getContainer(element);
     boolean caretWasBeforeStatement = editor != null && container != null && editor.getCaretModel().getOffset() == container.getTextRange().getStartOffset();
     InspectionManager inspectionManager = InspectionManager.getInstance(project);
@@ -69,11 +68,11 @@ public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
+  public boolean isAvailable(Project project, Editor editor, PsiElement element) {
     return myFix.isAvailable(project, element);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return myFix.getName();

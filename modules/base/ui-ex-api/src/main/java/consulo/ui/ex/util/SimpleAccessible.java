@@ -3,8 +3,7 @@ package consulo.ui.ex.util;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides a minimal accessible information about the object.
@@ -14,7 +13,7 @@ public interface SimpleAccessible {
      * Returns a human-readable string that designates the purpose of the object.
      */
     //TODO: rename into getAccessibleName() after deprecation deletion
-    @Nonnull
+    
     default LocalizeValue getAccessibleNameValue() {
         return LocalizeValue.of(getAccessibleName());
     }
@@ -24,7 +23,7 @@ public interface SimpleAccessible {
      */
     @Deprecated
     @DeprecationInfo("Use getAccessibleNameValue(int)")
-    @Nonnull
+    
     default String getAccessibleName() {
         return getAccessibleNameValue().get();
     }
@@ -33,7 +32,7 @@ public interface SimpleAccessible {
      * Returns the tooltip text or null when the tooltip is not available
      */
     //TODO: rename into getAccessibleTooltipText() after deprecation deletion
-    @Nonnull
+    
     default LocalizeValue getAccessibleTooltipValue() {
         return LocalizeValue.ofNullable(getAccessibleTooltipText());
     }

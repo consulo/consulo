@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;

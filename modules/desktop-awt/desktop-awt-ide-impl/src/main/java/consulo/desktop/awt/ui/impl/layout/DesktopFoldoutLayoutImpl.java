@@ -24,8 +24,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.FoldoutLayout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.event.FoldoutLayoutOpenedEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,19 +89,19 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
             myDecorator.setEnabled(enabled);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return myFoldoutLayout;
         }
     }
 
-    @Nonnull
+    
     private LocalizeValue myTitleValue = LocalizeValue.empty();
     private final Component myComponent;
     private final boolean myState;
 
-    public DesktopFoldoutLayoutImpl(@Nonnull LocalizeValue titleValue, Component component, boolean state) {
+    public DesktopFoldoutLayoutImpl(LocalizeValue titleValue, Component component, boolean state) {
         myTitleValue = titleValue;
         myComponent = component;
         myState = state;
@@ -121,7 +120,7 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public FoldoutLayout setState(boolean showing) {
         toAWTComponent().setOn(showing);
@@ -129,9 +128,9 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public FoldoutLayout setTitle(@Nonnull LocalizeValue title) {
+    public FoldoutLayout setTitle(LocalizeValue title) {
         myTitleValue = title;
         toAWTComponent().updateTitle();
         return this;

@@ -17,12 +17,11 @@
 package consulo.language.editor.refactoring;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public interface TitledHandler {
-    @Nonnull
+    
     LocalizeValue getActionTitleValue();
 }

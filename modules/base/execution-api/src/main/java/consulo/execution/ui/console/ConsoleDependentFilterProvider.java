@@ -18,15 +18,14 @@ package consulo.execution.ui.console;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class ConsoleDependentFilterProvider implements ConsoleFilterProvider {
-  @Nonnull
-  public abstract Filter[] getDefaultFilters(@Nonnull ConsoleView consoleView, @Nonnull Project project, @Nonnull SearchScope scope);
+  
+  public abstract Filter[] getDefaultFilters(ConsoleView consoleView, Project project, SearchScope scope);
 
-  @Nonnull
+  
   @Override
-  public Filter[] getDefaultFilters(@Nonnull Project project) {
+  public Filter[] getDefaultFilters(Project project) {
     return Filter.EMPTY_ARRAY;
   }
 }

@@ -17,15 +17,14 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ide.impl.idea.util.LineSeparator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class LineSeparatorPanel extends EditorBasedStatusBarPopup {
-    public LineSeparatorPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    public LineSeparatorPanel(Project project, StatusBarWidgetFactory factory) {
         super(project, factory, true);
     }
 
-    @Nonnull
+    
     @Override
     protected WidgetState getWidgetState(@Nullable VirtualFile file) {
         if (file == null) {
@@ -52,9 +51,9 @@ public final class LineSeparatorPanel extends EditorBasedStatusBarPopup {
             .createActionGroupPopup(UILocalize.statusBarLineSeparatorWidgetName().get(), actionGroup, context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     }
 
-    @Nonnull
+    
     @Override
-    protected StatusBarWidget createInstance(@Nonnull Project project) {
+    protected StatusBarWidget createInstance(Project project) {
         return new LineSeparatorPanel(project, myFactory);
     }
 }

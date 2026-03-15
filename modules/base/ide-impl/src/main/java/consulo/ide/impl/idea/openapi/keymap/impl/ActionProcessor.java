@@ -21,16 +21,15 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.InputEvent;
 
 public interface ActionProcessor {
-  @Nonnull
-  AnActionEvent createEvent(InputEvent inputEvent, @Nonnull DataContext context, @Nonnull String place, @Nonnull Presentation presentation, ActionManager manager);
+  
+  AnActionEvent createEvent(InputEvent inputEvent, DataContext context, String place, Presentation presentation, ActionManager manager);
 
-  void onUpdatePassed(InputEvent inputEvent, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent);
+  void onUpdatePassed(InputEvent inputEvent, AnAction action, AnActionEvent actionEvent);
 
-  void performAction(InputEvent e, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent);
+  void performAction(InputEvent e, AnAction action, AnActionEvent actionEvent);
 
 }

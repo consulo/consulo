@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,7 +30,7 @@ import java.util.regex.Pattern;
  * Instances of this class are not safe for use by multiple concurrent threads, just as {@link Matcher} instances are.
  */
 public class RegExReplacementBuilder {
-  @Nonnull
+  
   private final MatchGroupContainer myMatcher;
 
   private String myTemplate;
@@ -39,7 +38,7 @@ public class RegExReplacementBuilder {
   private StringBuilder myReplacement;
   private List<CaseConversionRegion> myConversionRegions;
 
-  public RegExReplacementBuilder(@Nonnull Matcher matcher) {
+  public RegExReplacementBuilder(Matcher matcher) {
     myMatcher = new MatchGroupContainer() {
       @Override
       public String group(String name) {
@@ -58,7 +57,7 @@ public class RegExReplacementBuilder {
     };
   }
 
-  private RegExReplacementBuilder(@Nonnull Pattern pattern) {
+  private RegExReplacementBuilder(Pattern pattern) {
     myMatcher = new MatchGroupContainer() {
       @Override
       public String group(String name) {

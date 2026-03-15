@@ -17,12 +17,11 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use consulo.util.lang.lazy.ClearableLazyValue")
 public abstract class AtomicClearableLazyValue<T> extends ClearableLazyValue<T> {
-  @Nonnull
+  
   @Override
   public final synchronized T getValue() {
     return super.getValue();

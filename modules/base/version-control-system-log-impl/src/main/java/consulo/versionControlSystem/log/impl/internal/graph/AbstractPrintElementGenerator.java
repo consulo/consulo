@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.log.impl.internal.graph;
 
 import consulo.versionControlSystem.log.graph.*;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,17 +24,17 @@ import java.util.Map;
 
 public abstract class AbstractPrintElementGenerator implements PrintElementGenerator {
 
-  @Nonnull
+  
   protected final LinearGraph myLinearGraph;
-  @Nonnull
+  
   protected final PrintElementManager myPrintElementManager;
 
-  protected AbstractPrintElementGenerator(@Nonnull LinearGraph linearGraph, @Nonnull PrintElementManager printElementManager) {
+  protected AbstractPrintElementGenerator(LinearGraph linearGraph, PrintElementManager printElementManager) {
     myLinearGraph = linearGraph;
     myPrintElementManager = printElementManager;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<PrintElementWithGraphElement> getPrintElements(int rowIndex) {
     Collection<PrintElementWithGraphElement> result = new ArrayList<>();
@@ -86,15 +85,15 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
     return result;
   }
 
-  @Nonnull
-  private SimplePrintElementImpl createSimplePrintElement(int rowIndex, @Nonnull SimpleRowElement rowElement) {
+  
+  private SimplePrintElementImpl createSimplePrintElement(int rowIndex, SimpleRowElement rowElement) {
     return new SimplePrintElementImpl(rowIndex, rowElement.myPosition, rowElement.myElement, myPrintElementManager);
   }
 
-  @Nonnull
+  
   private EdgePrintElementImpl createEdgePrintElement(int rowIndex,
-                                                      @Nonnull ShortEdge shortEdge,
-                                                      @Nonnull EdgePrintElement.Type type,
+                                                      ShortEdge shortEdge,
+                                                      EdgePrintElement.Type type,
                                                       boolean hasArrow) {
     int positionInCurrentRow, positionInOtherRow;
     if (type == EdgePrintElement.Type.DOWN) {
@@ -109,9 +108,9 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
                                     myPrintElementManager);
   }
 
-  @Nonnull
+  
   @Override
-  public PrintElementWithGraphElement withGraphElement(@Nonnull PrintElement printElement) {
+  public PrintElementWithGraphElement withGraphElement(PrintElement printElement) {
     if (printElement instanceof PrintElementWithGraphElement graphElement) {
       return graphElement;
     }
@@ -124,19 +123,19 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
   }
 
   // rowIndex in [0, getCountVisibleRow() - 2]
-  @Nonnull
+  
   protected abstract Collection<ShortEdge> getDownShortEdges(int rowIndex);
 
-  @Nonnull
+  
   protected abstract Collection<SimpleRowElement> getSimpleRowElements(int rowIndex);
 
   protected static class ShortEdge {
-    @Nonnull
+    
     public final GraphEdge myEdge;
     public final int myUpPosition;
     public final int myDownPosition;
 
-    public ShortEdge(@Nonnull GraphEdge edge, int upPosition, int downPosition) {
+    public ShortEdge(GraphEdge edge, int upPosition, int downPosition) {
       myEdge = edge;
       myUpPosition = upPosition;
       myDownPosition = downPosition;
@@ -144,13 +143,13 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
   }
 
   protected static class SimpleRowElement {
-    @Nonnull
+    
     public final GraphElement myElement;
-    @Nonnull
+    
     public final RowElementType myType;
     public final int myPosition;
 
-    public SimpleRowElement(@Nonnull GraphElement element, @Nonnull RowElementType type, int position) {
+    public SimpleRowElement(GraphElement element, RowElementType type, int position) {
       myElement = element;
       myPosition = position;
       myType = type;

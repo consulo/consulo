@@ -11,14 +11,13 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 public class EditIntentionSettingsAction extends AbstractEditIntentionSettingsAction implements HighPriorityAction {
   public EditIntentionSettingsAction(IntentionAction action) {
     super(action);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return LocalizeValue.localizeTODO("Edit intention settings");
@@ -26,7 +25,7 @@ public class EditIntentionSettingsAction extends AbstractEditIntentionSettingsAc
 
   @Override
   @RequiredUIAccess
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     ShowSettingsUtil.getInstance().showAndSelect(project, IntentionSettingsConfigurable.class, configurable -> {
       configurable.selectIntention(myText.get());
     });

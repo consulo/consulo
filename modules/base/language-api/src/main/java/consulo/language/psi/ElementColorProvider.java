@@ -21,8 +21,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.extension.LanguageExtension;
 import consulo.ui.color.ColorValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -31,8 +30,8 @@ import jakarta.annotation.Nullable;
 public interface ElementColorProvider extends LanguageExtension {
   @Nullable
   @RequiredReadAction
-  ColorValue getColorFrom(@Nonnull PsiElement element);
+  ColorValue getColorFrom(PsiElement element);
 
   @RequiredWriteAction
-  void setColorTo(@Nonnull PsiElement element, @Nonnull ColorValue color);
+  void setColorTo(PsiElement element, ColorValue color);
 }

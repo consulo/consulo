@@ -26,10 +26,8 @@ import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.util.TableUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -86,9 +84,9 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
     myTable.setPreferredScrollableViewportSize(new Dimension(250, myTable.getRowHeight() * 5));
     myTable.setShowGrid(false);
     myTable.setIntercellSpacing(new Dimension(0, 0));
-    @NonNls InputMap inputMap = myTable.getInputMap();
+    InputMap inputMap = myTable.getInputMap();
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "enable_disable");
-    @NonNls ActionMap actionMap = myTable.getActionMap();
+    ActionMap actionMap = myTable.getActionMap();
     actionMap.put("enable_disable", new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         if (myTable.isEditing()) return;
@@ -211,7 +209,7 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
   }
 
   private class MyTableModel extends ListTableModel<AbstractVariableData> implements EditableModel {
-    public MyTableModel(@Nonnull ColumnInfo... columnInfos) {
+    public MyTableModel(ColumnInfo... columnInfos) {
       super(columnInfos);
     }
 

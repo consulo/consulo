@@ -39,8 +39,7 @@ import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -84,7 +83,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    @Nonnull
+    
     @Override
     public Window getWindow() {
       return toUIWindow();
@@ -125,7 +124,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
     }
 
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
       return myOwner.getNorthExtension(extensionClass);
     }
 
@@ -155,7 +154,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       setMenuBar((MenuBar)null);
     }
 
-    private Object getData(@Nonnull Key<?> dataId) {
+    private Object getData(Key<?> dataId) {
       if (IdeFrame.KEY == dataId) {
         return this;
       }
@@ -190,14 +189,14 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       toUIWindow().addUserDataProvider(this::getData);
     }
 
-    private Object getData(@Nonnull Key<?> dataId) {
+    private Object getData(Key<?> dataId) {
       if (IdeFrame.KEY == dataId) {
         return this;
       }
       return myOwner == null ? null : myOwner.getDataInner(dataId);
     }
 
-    @Nonnull
+    
     @Override
     public consulo.ui.Window getWindow() {
       return toUIWindow();
@@ -240,7 +239,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
     }
 
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
       return null;
     }
 
@@ -278,7 +277,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
   }
 
   @Override
-  public void updateWindowIcon(@Nonnull java.awt.Window window, boolean dark) {
+  public void updateWindowIcon(java.awt.Window window, boolean dark) {
     AppIconUtil.updateWindowIcon(window);
   }
 }

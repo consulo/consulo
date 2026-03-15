@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ import jakarta.annotation.Nonnull;
 public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override
-  public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+  public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
     if (element instanceof PsiFile) {
       if (iconDescriptor.getMainIcon() == null) {
         FileType fileType = ((PsiFile)element).getFileType();

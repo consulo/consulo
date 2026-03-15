@@ -12,7 +12,6 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class RunAnythingCacheImpl implements RunAnythingCache, PersistentStateCo
      * @return true is group is visible; false if it's hidden
      */
     @Override
-    public boolean isGroupVisible(@Nonnull String key) {
+    public boolean isGroupVisible(String key) {
         return mySettings.myKeys.getOrDefault(key, true);
     }
 
@@ -45,32 +44,32 @@ public class RunAnythingCacheImpl implements RunAnythingCache, PersistentStateCo
      * @param visible true if group should be shown
      */
     @Override
-    public void saveGroupVisibilityKey(@Nonnull String key, boolean visible) {
+    public void saveGroupVisibilityKey(String key, boolean visible) {
         mySettings.myKeys.put(key, visible);
     }
 
-    @Nonnull
+    
     @Override
     public State getState() {
         return mySettings;
     }
 
     @Override
-    public void loadState(@Nonnull State state) {
+    public void loadState(State state) {
         XmlSerializerUtil.copyBean(state, mySettings);
     }
 
     public static class State {
-        @Nonnull
+        
         @MapAnnotation(entryTagName = "visibility", keyAttributeName = "group", valueAttributeName = "flag")
         public final Map<String, Boolean> myKeys = new HashMap<>();
 
-        @Nonnull
+        
         @Tag("commands")
         @AbstractCollection(surroundWithTag = false, elementTag = "command")
         public final List<String> myCommands = new ArrayList<>();
 
-        @Nonnull
+        
         public List<String> getCommands() {
             return myCommands;
         }

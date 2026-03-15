@@ -9,8 +9,7 @@ import consulo.ui.ex.content.Content;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -21,21 +20,21 @@ import javax.swing.*;
 public interface BuildContentManager {
   String TOOL_WINDOW_ID = "Build";
 
-  @Nonnull
-  static BuildContentManager getInstance(@Nonnull Project project) {
+  
+  static BuildContentManager getInstance(Project project) {
     return project.getInstance(BuildContentManager.class);
   }
 
   void addContent(Content content);
 
-  @Nonnull
+  
   ToolWindow getOrCreateToolWindow();
 
   void removeContent(Content content);
 
-  Content addTabbedContent(@Nonnull JComponent contentComponent,
-                           @Nonnull String groupPrefix,
-                           @Nonnull String tabName,
+  Content addTabbedContent(JComponent contentComponent,
+                           String groupPrefix,
+                           String tabName,
                            @Nullable Image icon,
                            @Nullable Disposable childDisposable);
 

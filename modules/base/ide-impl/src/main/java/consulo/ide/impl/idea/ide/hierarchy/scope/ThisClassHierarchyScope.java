@@ -21,7 +21,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
@@ -30,18 +29,18 @@ import jakarta.annotation.Nonnull;
 public class ThisClassHierarchyScope extends HierarchyScopeBase {
     public static final ThisClassHierarchyScope INSTANCE = new ThisClassHierarchyScope();
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getPresentableName() {
         return IdeLocalize.hierarchyScopeThisClass();
     }
 
     @Override
-    public boolean isInScope(PsiElement baseClass, @Nonnull PsiElement srcElement) {
+    public boolean isInScope(PsiElement baseClass, PsiElement srcElement) {
         return PsiTreeUtil.isAncestor(baseClass, srcElement, true);
     }
 
-    @Nonnull
+    
     @Override
     public SearchScope getSearchScope(PsiElement thisClass) {
         return new LocalSearchScope(thisClass);

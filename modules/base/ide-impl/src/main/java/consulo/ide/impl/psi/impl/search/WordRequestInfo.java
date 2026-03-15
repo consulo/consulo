@@ -3,15 +3,14 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.search.SearchSession;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 interface WordRequestInfo {
 
-  @Nonnull
+  
   String getWord();
 
-  @Nonnull
+  
   SearchScope getSearchScope();
 
   @Nullable
@@ -21,6 +20,6 @@ interface WordRequestInfo {
 
   boolean isCaseSensitive();
 
-  @Nonnull
+  
   SearchSession getSearchSession();
 }

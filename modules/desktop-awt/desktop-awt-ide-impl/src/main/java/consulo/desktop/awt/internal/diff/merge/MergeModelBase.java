@@ -34,8 +34,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -46,17 +45,17 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
 
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final Document myDocument;
     @Nullable
     private final UndoManager myUndoManager;
 
-    @Nonnull
+    
     private IntList myStartLines = IntLists.newArrayList();
-    @Nonnull
+    
     private IntList myEndLines = IntLists.newArrayList();
 
-    @Nonnull
+    
     private final IntSet myChangesToUpdate = IntSets.newHashSet();
     private int myBulkChangeUpdateDepth;
 
@@ -64,7 +63,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
 
     private boolean myDisposed;
 
-    public MergeModelBase(@Nullable Project project, @Nonnull Document document) {
+    public MergeModelBase(@Nullable Project project, Document document) {
         myProject = project;
         myDocument = document;
         myUndoManager = myProject != null ? ProjectUndoManager.getInstance(myProject) : ApplicationUndoManager.getInstance();
@@ -102,7 +101,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         return myEndLines.get(index);
     }
 
-    public void setChanges(@Nonnull List<LineRange> changes) {
+    public void setChanges(List<LineRange> changes) {
         myStartLines.clear();
         myEndLines.clear();
 
@@ -162,12 +161,12 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     // Undo
     //
 
-    @Nonnull
+    
     @RequiredUIAccess
     protected abstract S storeChangeState(int index);
 
     @RequiredUIAccess
-    protected void restoreChangeState(@Nonnull S state) {
+    protected void restoreChangeState(S state) {
         setLineStart(state.myIndex, state.myStartLine);
         setLineEnd(state.myIndex, state.myEndLine);
     }
@@ -271,10 +270,10 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     public void executeMergeCommand(
         @Nullable String commandName,
         @Nullable String commandGroupId,
-        @Nonnull UndoConfirmationPolicy confirmationPolicy,
+        UndoConfirmationPolicy confirmationPolicy,
         boolean underBulkUpdate,
         @Nullable IntList affectedChanges,
-        @Nonnull @RequiredUIAccess Runnable task
+        @RequiredUIAccess Runnable task
     ) {
         newMergeCommand(affectedChanges)
             .name(LocalizeValue.ofNullable(commandName))
@@ -306,13 +305,13 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
 
     private static class MyUndoableAction extends BasicUndoableAction {
-        @Nonnull
+        
         private final WeakReference<MergeModelBase> myModelRef;
-        @Nonnull
+        
         private final List<? extends State> myStates;
         private final boolean myUndo;
 
-        public MyUndoableAction(@Nonnull MergeModelBase model, @Nonnull List<? extends State> states, boolean undo) {
+        public MyUndoableAction(MergeModelBase model, List<? extends State> states, boolean undo) {
             super(model.myDocument);
             myModelRef = new WeakReference<>(model);
 
@@ -339,7 +338,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         }
 
         @RequiredUIAccess
-        private void restoreStates(@Nonnull MergeModelBase model) {
+        private void restoreStates(MergeModelBase model) {
             if (model.isDisposed()) {
                 return;
             }
@@ -366,7 +365,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     //
 
     @RequiredWriteAction
-    public void replaceChange(int index, @Nonnull List<? extends CharSequence> newContent) {
+    public void replaceChange(int index, List<? extends CharSequence> newContent) {
         LOG.assertTrue(isInsideCommand());
         int outputStartLine = getLineStart(index);
         int outputEndLine = getLineEnd(index);
@@ -380,7 +379,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
 
     @RequiredWriteAction
-    public void appendChange(int index, @Nonnull List<? extends CharSequence> newContent) {
+    public void appendChange(int index, List<? extends CharSequence> newContent) {
         LOG.assertTrue(isInsideCommand());
         int outputStartLine = getLineStart(index);
         int outputEndLine = getLineEnd(index);
@@ -437,9 +436,9 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
      *
      * null means all changes could be affected
      */
-    @Nonnull
+    
     @RequiredUIAccess
-    private IntList collectAffectedChanges(@Nonnull IntList directChanges) {
+    private IntList collectAffectedChanges(IntList directChanges) {
         IntList result = IntLists.newArrayList(directChanges.size());
 
         int directArrayIndex = 0;

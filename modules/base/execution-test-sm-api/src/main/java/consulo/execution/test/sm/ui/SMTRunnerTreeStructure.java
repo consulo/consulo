@@ -20,7 +20,6 @@ import consulo.execution.test.TestTreeViewStructure;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.project.Project;
 import consulo.ui.ex.tree.NodeDescriptor;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -45,27 +44,27 @@ public class SMTRunnerTreeStructure extends TestTreeViewStructure<SMTestProxy> {
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public SMTRunnerNodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDesc) {
+    public SMTRunnerNodeDescriptor createDescriptor(Object element, NodeDescriptor parentDesc) {
         //noinspection unchecked
         return new SMTRunnerNodeDescriptor(myProject, (SMTestProxy) element, (NodeDescriptor<SMTestProxy>) parentDesc);
     }
 
-    @Nonnull
+    
     @Override
-    public Object[] getChildElements(@Nonnull Object element) {
+    public Object[] getChildElements(Object element) {
         List<? extends SMTestProxy> results = ((SMTestProxy) element).getChildren(getFilter());
 
         return results.toArray(new AbstractTestProxy[results.size()]);
     }
 
     @Override
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         return ((AbstractTestProxy) element).getParent();
     }
 
-    @Nonnull
+    
     @Override
     public Object getRootElement() {
         return myRootNode;

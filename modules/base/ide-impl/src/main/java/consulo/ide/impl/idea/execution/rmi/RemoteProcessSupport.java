@@ -40,8 +40,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.rmi.RemoteDeadHand;
 import consulo.util.rmi.RemoteServer;
 import consulo.util.rmi.RemoteUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
@@ -95,7 +94,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
         }
     }
 
-    public List<Parameters> getActiveConfigurations(@Nonnull Target target) {
+    public List<Parameters> getActiveConfigurations(Target target) {
         List<Parameters> result = new ArrayList<>();
         synchronized (myProcMap) {
             for (Pair<Target, Parameters> pair : myProcMap.keySet()) {
@@ -107,7 +106,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
         return result;
     }
 
-    public EntryPoint acquire(@Nonnull Target target, @Nonnull Parameters configuration) throws Exception {
+    public EntryPoint acquire(Target target, Parameters configuration) throws Exception {
         ApplicationManagerEx.getApplicationEx().assertTimeConsuming();
 
         SimpleReference<RunningInfo> ref = SimpleReference.create(null);
@@ -143,7 +142,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
         return acquire(info);
     }
 
-    public void release(@Nonnull Target target, @Nullable Parameters configuration) {
+    public void release(Target target, @Nullable Parameters configuration) {
         List<ProcessHandler> handlers = new ArrayList<>();
         synchronized (myProcMap) {
             for (Pair<Target, Parameters> pair : myProcMap.keySet()) {
@@ -161,13 +160,13 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     private void startProcess(Target target, Parameters configuration, Pair<Target, Parameters> key) {
         ProgramRunner runner = new DefaultProgramRunner() {
             @Override
-            @Nonnull
+            
             public String getRunnerId() {
                 return "MyRunner";
             }
 
             @Override
-            public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
+            public boolean canRun(String executorId, RunProfile profile) {
                 return true;
             }
         };
@@ -369,7 +368,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
         final SimpleReference<RunningInfo> ref;
         final StringBuilder stderr = new StringBuilder();
 
-        PendingInfo(@Nonnull SimpleReference<RunningInfo> ref, ProcessHandler handler) {
+        PendingInfo(SimpleReference<RunningInfo> ref, ProcessHandler handler) {
             super(handler);
             this.ref = ref;
         }

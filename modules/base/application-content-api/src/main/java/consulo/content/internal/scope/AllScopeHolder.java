@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.content.scope.NamedScope;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,11 +27,11 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AllScopeHolder {
-  @Nonnull
+  
   static AllScopeHolder getInstance() {
     return Application.get().getInstance(AllScopeHolder.class);
   }
 
-  @Nonnull
+  
   NamedScope getAllScope();
 }

@@ -37,8 +37,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.File;
@@ -55,7 +54,7 @@ public class RefManagerImpl implements RefManagerInternal {
 
     private long myLastUsedMask = 0x0800_0000; // guarded by this
 
-    @Nonnull
+    
     private final Project myProject;
     private AnalysisScope myScope;
     private RefProject myRefProject;
@@ -83,7 +82,7 @@ public class RefManagerImpl implements RefManagerInternal {
     private final Interner<String> myNameInterner = Interner.createStringInterner();
 
     @RequiredReadAction
-    public RefManagerImpl(@Nonnull Project project, @Nullable AnalysisScope scope, @Nonnull GlobalInspectionContext context) {
+    public RefManagerImpl(Project project, @Nullable AnalysisScope scope, GlobalInspectionContext context) {
         myProject = project;
         myScope = scope;
         myContext = context;
@@ -105,19 +104,19 @@ public class RefManagerImpl implements RefManagerInternal {
         }
     }
 
-    String internName(@Nonnull String name) {
+    String internName(String name) {
         synchronized (myNameInterner) {
             return myNameInterner.intern(name);
         }
     }
 
-    @Nonnull
+    
     public GlobalInspectionContext getContext() {
         return myContext;
     }
 
     @Override
-    public void iterate(@Nonnull RefVisitor visitor) {
+    public void iterate(RefVisitor visitor) {
         for (RefElement refElement : getSortedElements()) {
             refElement.accept(visitor);
         }
@@ -198,7 +197,7 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     @Override
-    public void registerGraphAnnotator(@Nonnull RefGraphAnnotator annotator) {
+    public void registerGraphAnnotator(RefGraphAnnotator annotator) {
         if (myGraphAnnotators.add(annotator) && annotator instanceof RefGraphAnnotatorEx refGraphAnnotatorEx) {
             refGraphAnnotatorEx.initialize(this);
         }
@@ -214,14 +213,14 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     @Override
-    public <T> T getExtension(@Nonnull Key<T> key) {
+    public <T> T getExtension(Key<T> key) {
         //noinspection unchecked
         return (T) myExtensions.get(key);
     }
 
     @Override
     @Nullable
-    public String getType(@Nonnull RefEntity ref) {
+    public String getType(RefEntity ref) {
         for (RefManagerExtension extension : myExtensions.values()) {
             String type = extension.getType(ref);
             if (type != null) {
@@ -243,9 +242,9 @@ public class RefManagerImpl implements RefManagerInternal {
         return null;
     }
 
-    @Nonnull
+    
     @Override
-    public RefEntity getRefinedElement(@Nonnull RefEntity ref) {
+    public RefEntity getRefinedElement(RefEntity ref) {
         for (RefManagerExtension extension : myExtensions.values()) {
             ref = extension.getRefinedElement(ref);
         }
@@ -255,7 +254,7 @@ public class RefManagerImpl implements RefManagerInternal {
     @Nullable
     @Override
     @RequiredReadAction
-    public Element export(@Nonnull RefEntity refEntity, int actualLine) {
+    public Element export(RefEntity refEntity, int actualLine) {
         refEntity = getRefinedElement(refEntity);
 
         Element problem = new Element("problem");
@@ -312,7 +311,7 @@ public class RefManagerImpl implements RefManagerInternal {
 
     @Override
     @Nullable
-    public String getGroupName(@Nonnull RefElement entity) {
+    public String getGroupName(RefElement entity) {
         for (RefManagerExtension extension : myExtensions.values()) {
             String groupName = extension.getGroupName(entity);
             if (groupName != null) {
@@ -381,19 +380,19 @@ public class RefManagerImpl implements RefManagerInternal {
         return myIsInProcess;
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return myProject;
     }
 
-    @Nonnull
+    
     @Override
     public RefProject getRefProject() {
         return myRefProject;
     }
 
-    @Nonnull
+    
     public List<RefElement> getSortedElements() {
         List<RefElement> answer = myCachedSortedRefs;
         if (answer != null) {
@@ -414,7 +413,7 @@ public class RefManagerImpl implements RefManagerInternal {
         return answer;
     }
 
-    @Nonnull
+    
     @Override
     public PsiManager getPsiManager() {
         return myPsiManager;
@@ -428,7 +427,7 @@ public class RefManagerImpl implements RefManagerInternal {
     @Nullable
     @Override
     @RequiredReadAction
-    public PsiNamedElement getContainerElement(@Nonnull PsiElement element) {
+    public PsiNamedElement getContainerElement(PsiElement element) {
         Language language = element.getLanguage();
         RefManagerExtension extension = myLanguageExtensions.get(language);
         if (extension == null) {
@@ -442,7 +441,7 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     @RequiredReadAction
-    public void removeReference(@Nonnull RefElement refElem) {
+    public void removeReference(RefElement refElem) {
         PsiElement element = refElem.getPsiElement();
         RefManagerExtension extension = element != null ? getExtension(element.getLanguage()) : null;
         if (extension != null) {
@@ -465,8 +464,8 @@ public class RefManagerImpl implements RefManagerInternal {
         myCachedSortedRefs = null;
     }
 
-    @Nonnull
-    private static PsiAnchor createAnchor(@Nonnull PsiElement element) {
+    
+    private static PsiAnchor createAnchor(PsiElement element) {
         return ReadAction.compute(() -> PsiAnchor.create(element));
     }
 
@@ -645,14 +644,14 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     @Nullable
-    public <T extends RefElement> T getFromRefTableOrCache(PsiElement element, @Nonnull Supplier<? extends T> factory) {
+    public <T extends RefElement> T getFromRefTableOrCache(PsiElement element, Supplier<? extends T> factory) {
         return getFromRefTableOrCache(element, factory, null);
     }
 
     @Nullable
     private <T extends RefElement> T getFromRefTableOrCache(
-        @Nonnull PsiElement element,
-        @Nonnull Supplier<? extends T> factory,
+        PsiElement element,
+        Supplier<? extends T> factory,
         @Nullable Consumer<? super T> whenCached
     ) {
 
@@ -737,7 +736,7 @@ public class RefManagerImpl implements RefManagerInternal {
 
     @Override
     @RequiredReadAction
-    public void removeRefElement(@Nonnull RefElement refElement, @Nonnull List<RefElement> deletedRefs) {
+    public void removeRefElement(RefElement refElement, List<RefElement> deletedRefs) {
         List<RefEntity> children = refElement.getChildren();
         RefElement[] refElements = children.toArray(new RefElement[0]);
         for (RefElement refChild : refElements) {

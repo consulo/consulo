@@ -21,8 +21,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Gregory.Shrago
@@ -31,7 +30,7 @@ import jakarta.annotation.Nullable;
 public class CustomErrorElementFilter extends HighlightErrorFilter {
 
   @Override
-  public boolean shouldHighlightErrorElement(@Nonnull PsiErrorElement element) {
+  public boolean shouldHighlightErrorElement(PsiErrorElement element) {
     return !isFrankenstein(element.getContainingFile());
   }
 

@@ -16,7 +16,6 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "SurroundWith")
 public class SurroundWithAction extends BaseCodeInsightAction {
@@ -25,7 +24,7 @@ public class SurroundWithAction extends BaseCodeInsightAction {
         setEnabledInModalContext(true);
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new SurroundWithHandler();
@@ -33,7 +32,7 @@ public class SurroundWithAction extends BaseCodeInsightAction {
 
     @Override
     @RequiredReadAction
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         Language language = file.getLanguage();
         if (!SurroundDescriptor.forLanguage(language).isEmpty()) {
             return true;

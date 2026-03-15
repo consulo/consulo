@@ -29,7 +29,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,7 +42,7 @@ public class ReadMeOpenActivity implements PostStartupActivity, DumbAware {
     private static final String SHOW_TIME_KEY = "ReadMeOpenActivity.showTime";
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         PropertiesComponent component = ProjectPropertiesComponent.getInstance(project);
 
         long time = component.getLong(SHOW_TIME_KEY, 0);

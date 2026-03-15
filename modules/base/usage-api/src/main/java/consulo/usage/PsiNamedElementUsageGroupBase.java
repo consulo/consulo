@@ -20,18 +20,17 @@ import consulo.navigation.NavigationItem;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
  */
 public class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> extends PsiElementUsageGroupBase<T> {
-    public PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon) {
+    public PsiNamedElementUsageGroupBase(T element, Image icon) {
         super(element, icon);
     }
 
     @RequiredReadAction
-    public PsiNamedElementUsageGroupBase(@Nonnull T element) {
+    public PsiNamedElementUsageGroupBase(T element) {
         super(element);
     }
 }

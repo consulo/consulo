@@ -20,8 +20,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.Variable;
 import consulo.language.editor.template.macro.MacroParser;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -67,7 +66,7 @@ public class TemplateImplUtil {
     }
   }
 
-  public static Expression parseTemplate(@NonNls String text) {
+  public static Expression parseTemplate(String text) {
     return MacroParser.parse(text);
   }
 }

@@ -23,8 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,23 +31,23 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface DocumentationManager {
-  static DocumentationManager getInstance(@Nonnull Project project) {
+  static DocumentationManager getInstance(Project project) {
     return project.getInstance(DocumentationManager.class);
   }
 
-  default void showJavaDocInfo(@Nonnull PsiElement element, PsiElement original) {
+  default void showJavaDocInfo(PsiElement element, PsiElement original) {
     showJavaDocInfo(element, original, null);
   }
 
-  default void showJavaDocInfo(@Nonnull PsiElement element, PsiElement original, @Nullable Runnable closeCallback) {
+  default void showJavaDocInfo(PsiElement element, PsiElement original, @Nullable Runnable closeCallback) {
     showJavaDocInfo(element, original, false, closeCallback);
   }
 
-  default void showJavaDocInfo(@Nonnull PsiElement element, PsiElement original, boolean requestFocus, @Nullable Runnable closeCallback) {
+  default void showJavaDocInfo(PsiElement element, PsiElement original, boolean requestFocus, @Nullable Runnable closeCallback) {
     showJavaDocInfo(element, original, requestFocus, closeCallback, null, true);
   }
 
-  void showJavaDocInfo(@Nonnull PsiElement element, PsiElement original, boolean requestFocus, @Nullable Runnable closeCallback, @Nullable String documentation, boolean useStoredPopupSize);
+  void showJavaDocInfo(PsiElement element, PsiElement original, boolean requestFocus, @Nullable Runnable closeCallback, @Nullable String documentation, boolean useStoredPopupSize);
 
   /**
    * Asks to show quick doc for the target element.
@@ -66,15 +65,15 @@ public interface DocumentationManager {
    *                           at the first situation but don't want to do that at the second
    * @param useStoredPopupSize whether popup size previously set by user (via mouse-dragging) should be used, or default one should be used
    */
-  void showJavaDocInfo(@Nonnull Editor editor,
-                       @Nonnull PsiElement element,
-                       @Nonnull PsiElement original,
+  void showJavaDocInfo(Editor editor,
+                       PsiElement element,
+                       PsiElement original,
                        @Nullable Runnable closeCallback,
                        @Nullable String documentation,
                        boolean closeOnSneeze,
                        boolean useStoredPopupSize);
 
-  void showJavaDocInfoAtToolWindow(@Nonnull PsiElement element, @Nonnull PsiElement original);
+  void showJavaDocInfoAtToolWindow(PsiElement element, PsiElement original);
 
   default void showJavaDocInfo(Editor editor, @Nullable PsiFile file, boolean requestFocus) {
     showJavaDocInfo(editor, file, requestFocus, null);
@@ -101,20 +100,20 @@ public interface DocumentationManager {
    */
   boolean isCloseOnSneeze();
 
-  @Nonnull
+  
   Project getProject(@Nullable PsiElement element);
 
   Editor getEditor();
 
   @Nullable
-  default PsiElement findTargetElement(@Nonnull Editor editor, @Nullable PsiFile file, PsiElement contextElement) {
+  default PsiElement findTargetElement(Editor editor, @Nullable PsiFile file, PsiElement contextElement) {
     return findTargetElement(editor, editor.getCaretModel().getOffset(), file, contextElement);
   }
 
   @Nullable
   PsiElement findTargetElement(Editor editor, int offset, @Nullable PsiFile file, PsiElement contextElement);
 
-  String generateDocumentation(@Nonnull PsiElement element, @Nullable PsiElement originalElement, boolean onHover);
+  String generateDocumentation(PsiElement element, @Nullable PsiElement originalElement, boolean onHover);
 
   void createToolWindow(PsiElement element, PsiElement originalElement);
 }

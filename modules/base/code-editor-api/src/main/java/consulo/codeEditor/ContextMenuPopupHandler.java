@@ -6,8 +6,7 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -18,10 +17,10 @@ import java.awt.event.MouseEvent;
  */
 public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
   @Nullable
-  public abstract ActionGroup getActionGroup(@Nonnull EditorMouseEvent event);
+  public abstract ActionGroup getActionGroup(EditorMouseEvent event);
 
   @Override
-  public boolean handlePopup(@Nonnull EditorMouseEvent event) {
+  public boolean handlePopup(EditorMouseEvent event) {
     ActionGroup group = getActionGroup(event);
     if (group != null) {
       ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.EDITOR_POPUP, group);
@@ -57,12 +56,12 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
   public abstract static class ById extends ContextMenuPopupHandler {
     @Nullable
     @Override
-    public ActionGroup getActionGroup(@Nonnull EditorMouseEvent event) {
+    public ActionGroup getActionGroup(EditorMouseEvent event) {
       return ContextMenuPopupHandler.getGroupForId(getActionGroupId(event));
     }
 
     @Nullable
-    public abstract String getActionGroupId(@Nonnull EditorMouseEvent event);
+    public abstract String getActionGroupId(EditorMouseEvent event);
   }
 
   /**
@@ -81,7 +80,7 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
 
     @Nullable
     @Override
-    public ActionGroup getActionGroup(@Nonnull EditorMouseEvent event) {
+    public ActionGroup getActionGroup(EditorMouseEvent event) {
       return myActionGroup;
     }
   }

@@ -19,8 +19,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,22 +27,22 @@ import java.util.List;
  * @author nik
  */
 public abstract class CompositePackagingElementType<E extends CompositePackagingElement<?>> extends PackagingElementType<E> {
-  protected CompositePackagingElementType(@Nonnull String id, @Nonnull LocalizeValue presentableName) {
+  protected CompositePackagingElementType(String id, LocalizeValue presentableName) {
     super(id, presentableName);
   }
 
   @Override
-  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
+  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
     return true;
   }
 
 
   @Nullable
-  public abstract CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent, @Nullable String baseName, @Nonnull ArtifactEditorContext context);
+  public abstract CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent, @Nullable String baseName, ArtifactEditorContext context);
 
   @Override
-  @Nonnull
-  public List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
+  
+  public List<? extends PackagingElement<?>> chooseAndCreate(ArtifactEditorContext context, Artifact artifact, CompositePackagingElement<?> parent) {
     PackagingElement<?> composite = createComposite(parent, null, context);
     return composite != null ? Collections.singletonList(composite) : Collections.<E>emptyList();
   }

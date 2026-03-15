@@ -22,8 +22,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -46,6 +45,6 @@ public interface VirtualFileViewProviderFactory extends FileViewProviderFactory 
         return map.get(fileType);
     }
 
-    @Nonnull
+    
     FileType getFileType();
 }

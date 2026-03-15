@@ -9,7 +9,6 @@ import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Default {@link SoftWrapModelEx} implementation.
@@ -22,14 +21,14 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  */
 public class SoftWrapModelImpl extends CodeEditorSoftWrapModelBase {
-  SoftWrapModelImpl(@Nonnull CodeEditorBase editor) {
+  SoftWrapModelImpl(CodeEditorBase editor) {
     super(editor);
   }
 
   @Override
-  protected SoftWrapApplianceManager createSoftWrapApplianceManager(@Nonnull SoftWrapsStorage storage,
-                                                                    @Nonnull CodeEditorBase editor,
-                                                                    @Nonnull SoftWrapPainter painter,
+  protected SoftWrapApplianceManager createSoftWrapApplianceManager(SoftWrapsStorage storage,
+                                                                    CodeEditorBase editor,
+                                                                    SoftWrapPainter painter,
                                                                     CachingSoftWrapDataMapper dataMapper) {
     return new DesktopSoftWrapApplianceManager(storage, editor, painter, dataMapper);
   }

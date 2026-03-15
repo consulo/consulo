@@ -21,8 +21,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -57,7 +56,7 @@ public class SandRunConfigurationsSettings implements RunConfigurationsSettings 
     }
   }
 
-  @Nonnull
+  
   @Override
   public UnnamedConfigurable createConfigurable() {
     return new TestConfiguration();

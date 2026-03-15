@@ -21,8 +21,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.localize.DiffLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -43,20 +42,20 @@ public enum HighlightingLevel {
         rangeHighlighter -> rangeHighlighter.getLayer() <= HighlighterLayer.SYNTAX
     );
 
-    @Nonnull
+    
     private final LocalizeValue myText;
     @Nullable
     private final Image myIcon;
-    @Nonnull
+    
     private final Predicate<RangeHighlighter> myCondition;
 
-    HighlightingLevel(@Nonnull LocalizeValue text, @Nullable Image icon, @Nonnull Predicate<RangeHighlighter> condition) {
+    HighlightingLevel(LocalizeValue text, @Nullable Image icon, Predicate<RangeHighlighter> condition) {
         myText = text;
         myIcon = icon;
         myCondition = condition;
     }
 
-    @Nonnull
+    
     public LocalizeValue getText() {
         return myText;
     }
@@ -66,7 +65,7 @@ public enum HighlightingLevel {
         return myIcon;
     }
 
-    @Nonnull
+    
     public Predicate<RangeHighlighter> getCondition() {
         return myCondition;
     }

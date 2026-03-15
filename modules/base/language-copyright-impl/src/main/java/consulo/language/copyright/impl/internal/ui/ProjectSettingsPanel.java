@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -86,7 +85,7 @@ public class ProjectSettingsPanel {
         myProfilesComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(
-                @Nonnull JList list,
+                JList list,
                 CopyrightProfile value,
                 int index,
                 boolean selected,
@@ -247,7 +246,7 @@ public class ProjectSettingsPanel {
             return myProfile;
         }
 
-        public void setProfile(@Nonnull CopyrightProfile profile) {
+        public void setProfile(CopyrightProfile profile) {
             myProfile = profile;
             myProfileName = profile.getName();
         }

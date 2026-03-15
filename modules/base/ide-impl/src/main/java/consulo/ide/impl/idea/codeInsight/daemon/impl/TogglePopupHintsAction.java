@@ -31,7 +31,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "TogglePopupHints")
 public class TogglePopupHintsAction extends AnAction {
@@ -42,7 +41,7 @@ public class TogglePopupHintsAction extends AnAction {
     }
 
     @RequiredReadAction
-    private static PsiFile getTargetFile(@Nonnull DataContext dataContext) {
+    private static PsiFile getTargetFile(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         if (project == null) {
             return null;
@@ -57,14 +56,14 @@ public class TogglePopupHintsAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         PsiFile psiFile = ReadAction.compute(() -> getTargetFile(e.getDataContext()));
         e.getPresentation().setEnabled(psiFile != null);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         PsiFile psiFile = getTargetFile(e.getDataContext());
         LOG.assertTrue(psiFile != null);
         Project project = e.getRequiredData(Project.KEY);

@@ -31,7 +31,7 @@ import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.VcsRevisionDescription;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

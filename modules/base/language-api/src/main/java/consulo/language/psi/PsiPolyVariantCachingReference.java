@@ -17,15 +17,14 @@ package consulo.language.psi;
 
 import consulo.language.psi.resolve.ResolveCache;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantReference {
   @Override
-  @Nonnull
+  
   public final ResolveResult[] multiResolve(boolean incompleteCode) {
     PsiElement element = getElement();
     PsiFile file = element.getContainingFile();
@@ -38,8 +37,8 @@ public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantRe
     return results.length == 1 ? results[0].getElement() : null;
   }
 
-  @Nonnull
-  protected abstract ResolveResult[] resolveInner(boolean incompleteCode, @Nonnull PsiFile containingFile);
+  
+  protected abstract ResolveResult[] resolveInner(boolean incompleteCode, PsiFile containingFile);
 
   @Override
   public boolean isReferenceTo(PsiElement element) {
@@ -59,9 +58,9 @@ public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantRe
   private static class MyResolver implements ResolveCache.PolyVariantContextResolver<PsiPolyVariantReference> {
     private static final MyResolver INSTANCE = new MyResolver();
 
-    @Nonnull
+    
     @Override
-    public ResolveResult[] resolve(@Nonnull PsiPolyVariantReference ref, @Nonnull PsiFile containingFile, boolean incompleteCode) {
+    public ResolveResult[] resolve(PsiPolyVariantReference ref, PsiFile containingFile, boolean incompleteCode) {
       return ((PsiPolyVariantCachingReference)ref).resolveInner(incompleteCode, containingFile);
     }
   }

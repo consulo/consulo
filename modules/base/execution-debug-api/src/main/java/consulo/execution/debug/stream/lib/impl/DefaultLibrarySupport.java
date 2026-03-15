@@ -18,46 +18,45 @@ import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.StreamCallType;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
 
-import jakarta.annotation.Nonnull;
 
 public class DefaultLibrarySupport implements LibrarySupport {
-  @Nonnull
+  
   @Override
-  public HandlerFactory createHandlerFactory(@Nonnull Dsl dsl) {
+  public HandlerFactory createHandlerFactory(Dsl dsl) {
     return new HandlerFactory() {
-      @Nonnull
+      
       @Override
-      public IntermediateCallHandler getForIntermediate(int number, @Nonnull IntermediateStreamCall call) {
+      public IntermediateCallHandler getForIntermediate(int number, IntermediateStreamCall call) {
         return new PeekTraceHandler(number, call.getName(), call.getTypeBefore(), call.getTypeAfter(), dsl);
       }
 
-      @Nonnull
+      
       @Override
-      public TerminatorCallHandler getForTermination(@Nonnull TerminatorStreamCall call, @Nonnull String resultExpression) {
+      public TerminatorCallHandler getForTermination(TerminatorStreamCall call, String resultExpression) {
         return new TerminatorTraceHandler(call, dsl);
       }
     };
   }
 
-  @Nonnull
+  
   @Override
   public InterpreterFactory getInterpreterFactory() {
     return new InterpreterFactory() {
-      @Nonnull
+      
       @Override
-      public CallTraceInterpreter getInterpreter(@Nonnull String callName, @Nonnull StreamCallType callType) {
+      public CallTraceInterpreter getInterpreter(String callName, StreamCallType callType) {
         return new SimplePeekCallTraceInterpreter();
       }
     };
   }
 
-  @Nonnull
+  
   @Override
   public ResolverFactory getResolverFactory() {
     return new ResolverFactory() {
-      @Nonnull
+      
       @Override
-      public ValuesOrderResolver getResolver(@Nonnull String callName, @Nonnull StreamCallType callType) {
+      public ValuesOrderResolver getResolver(String callName, StreamCallType callType) {
         return new EmptyResolver();
       }
     };

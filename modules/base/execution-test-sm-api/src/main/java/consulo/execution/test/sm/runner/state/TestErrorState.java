@@ -15,7 +15,7 @@
  */
 package consulo.execution.test.sm.runner.state;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik

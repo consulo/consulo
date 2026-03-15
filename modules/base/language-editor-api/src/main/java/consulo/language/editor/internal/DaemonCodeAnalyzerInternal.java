@@ -23,7 +23,6 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -33,25 +32,25 @@ public abstract class DaemonCodeAnalyzerInternal extends DaemonCodeAnalyzer {
         return (DaemonCodeAnalyzerInternal) DaemonCodeAnalyzer.getInstance(project);
     }
 
-    @Nonnull
-    public abstract List<HighlightInfo> runMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull ProgressIndicator progress);
+    
+    public abstract List<HighlightInfo> runMainPasses(PsiFile psiFile, Document document, ProgressIndicator progress);
 
-    public abstract boolean isErrorAnalyzingFinished(@Nonnull PsiFile file);
+    public abstract boolean isErrorAnalyzingFinished(PsiFile file);
 
-    @Nonnull
+    
     public abstract FileStatusMap getFileStatusMap();
 
     public abstract boolean isRunning();
 
-    @Nonnull
+    
     @TestOnly
-    public abstract List<HighlightInfo> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file);
+    public abstract List<HighlightInfo> getFileLevelHighlights(Project project, PsiFile file);
 
-    public abstract void cleanFileLevelHighlights(@Nonnull Project project, int group, PsiFile psiFile);
+    public abstract void cleanFileLevelHighlights(Project project, int group, PsiFile psiFile);
 
-    public abstract void addFileLevelHighlight(@Nonnull Project project, int group, @Nonnull HighlightInfo info, @Nonnull PsiFile psiFile);
+    public abstract void addFileLevelHighlight(Project project, int group, HighlightInfo info, PsiFile psiFile);
 
     public abstract boolean doRestart();
 
-    public abstract boolean stopProcess(boolean toRestartAlarm, @Nonnull String reason);
+    public abstract boolean stopProcess(boolean toRestartAlarm, String reason);
 }

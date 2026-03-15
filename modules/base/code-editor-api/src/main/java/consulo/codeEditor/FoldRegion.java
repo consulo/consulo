@@ -3,8 +3,7 @@ package consulo.codeEditor;
 
 import consulo.document.RangeMarker;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a region of text in the editor which can be folded.
@@ -34,7 +33,7 @@ public interface FoldRegion extends RangeMarker {
    *
    * @return the placeholder text.
    */
-  @Nonnull
+  
   String getPlaceholderText();
 
   Editor getEditor();
@@ -81,6 +80,6 @@ public interface FoldRegion extends RangeMarker {
    * Updates region's placeholder text. Should be called inside {@link FoldingModel#runBatchFoldingOperation(Runnable)}, like any other
    * operations with fold regions.
    */
-  default void setPlaceholderText(@Nonnull String text) {
+  default void setPlaceholderText(String text) {
   }
 }

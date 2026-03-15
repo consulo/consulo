@@ -21,7 +21,6 @@ import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -87,7 +86,7 @@ public class DeleteUtil {
         return MessageFormat.format(messageTemplate, buffer.toString());
     }
 
-    @Nonnull
+    
     public static LocalizeValue generateWarningMessage(Function<Object, LocalizeValue> messageTemplate, PsiElement[] elements) {
         if (elements.length == 1) {
             String name = ElementDescriptionUtil.getElementDescription(elements[0], DeleteNameDescriptionLocation.INSTANCE);

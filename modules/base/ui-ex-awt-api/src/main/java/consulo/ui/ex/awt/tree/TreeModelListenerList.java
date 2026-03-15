@@ -17,7 +17,6 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import java.util.List;
@@ -34,7 +33,7 @@ public final class TreeModelListenerList implements TreeModelListener {
    *
    * @param listener a listener to add
    */
-  public void add(@Nonnull TreeModelListener listener) {
+  public void add(TreeModelListener listener) {
     // in this weird swing world it's customary to fire listeners in the reverse order of their addition
     myListeners.add(0, listener);
   }
@@ -45,7 +44,7 @@ public final class TreeModelListenerList implements TreeModelListener {
    *
    * @param listener a listener to remove
    */
-  public void remove(@Nonnull TreeModelListener listener) {
+  public void remove(TreeModelListener listener) {
     myListeners.remove(listener);
   }
 
@@ -73,7 +72,7 @@ public final class TreeModelListenerList implements TreeModelListener {
    * @param event the event object specifying a node with changed hierarchy
    */
   @Override
-  public void treeStructureChanged(@Nonnull TreeModelEvent event) {
+  public void treeStructureChanged(TreeModelEvent event) {
     for (TreeModelListener listener : myListeners) {
       listener.treeStructureChanged(event);
     }
@@ -85,7 +84,7 @@ public final class TreeModelListenerList implements TreeModelListener {
    * @param event the event object specifying changed nodes
    */
   @Override
-  public void treeNodesChanged(@Nonnull TreeModelEvent event) {
+  public void treeNodesChanged(TreeModelEvent event) {
     for (TreeModelListener listener : myListeners) {
       listener.treeNodesChanged(event);
     }
@@ -97,7 +96,7 @@ public final class TreeModelListenerList implements TreeModelListener {
    * @param event the event object specifying inserted nodes
    */
   @Override
-  public void treeNodesInserted(@Nonnull TreeModelEvent event) {
+  public void treeNodesInserted(TreeModelEvent event) {
     for (TreeModelListener listener : myListeners) {
       listener.treeNodesInserted(event);
     }
@@ -109,7 +108,7 @@ public final class TreeModelListenerList implements TreeModelListener {
    * @param event the event object specifying removed nodes
    */
   @Override
-  public void treeNodesRemoved(@Nonnull TreeModelEvent event) {
+  public void treeNodesRemoved(TreeModelEvent event) {
     for (TreeModelListener listener : myListeners) {
       listener.treeNodesRemoved(event);
     }

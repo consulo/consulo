@@ -35,8 +35,7 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -53,20 +52,20 @@ public class StatisticsSendManager implements Disposable {
 
     private static final int DELAY_IN_MIN = 10;
 
-    @Nonnull
+    
     private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsComponent;
-    @Nonnull
+    
     private final Application myApplication;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
     private Future<?> myFuture;
 
     @Inject
     StatisticsSendManager(
-        @Nonnull Application application,
-        @Nonnull Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent,
-        @Nonnull NotificationService notificationService
+        Application application,
+        Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent,
+        NotificationService notificationService
     ) {
         myApplication = application;
         myUsageStatisticsComponent = usageStatisticsComponent;
@@ -74,7 +73,7 @@ public class StatisticsSendManager implements Disposable {
 
         application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectOpened(Project project, UIAccess uiAccess) {
                 runStatisticsService();
             }
         });
@@ -158,7 +157,7 @@ public class StatisticsSendManager implements Disposable {
     }
 
     // FIXME [VISTALL] at current moment we not show this notification
-    public Notification createNotification(@Nonnull NotificationGroup group, @Nullable NotificationListener listener) {
+    public Notification createNotification(NotificationGroup group, @Nullable NotificationListener listener) {
         LocalizeValue fullProductName = myApplication.getName();
         String companyName = ApplicationInfo.getInstance().getCompanyName();
 

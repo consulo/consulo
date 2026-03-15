@@ -20,7 +20,6 @@ import consulo.language.codeStyle.arrangement.ModifierAwareArrangementEntry;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,19 +29,19 @@ import java.util.Set;
  * @since 8/26/12 11:21 PM
  */
 public class ByModifierArrangementEntryMatcher implements ArrangementEntryMatcher {
-  @Nonnull
+  
   private final Set<ArrangementAtomMatchCondition> myModifiers = new HashSet<>();
 
-  public ByModifierArrangementEntryMatcher(@Nonnull ArrangementAtomMatchCondition interestedModifier) {
+  public ByModifierArrangementEntryMatcher(ArrangementAtomMatchCondition interestedModifier) {
     myModifiers.add(interestedModifier);
   }
 
-  public ByModifierArrangementEntryMatcher(@Nonnull Collection<ArrangementAtomMatchCondition> interestedModifiers) {
+  public ByModifierArrangementEntryMatcher(Collection<ArrangementAtomMatchCondition> interestedModifiers) {
     myModifiers.addAll(interestedModifiers);
   }
 
   @Override
-  public boolean isMatched(@Nonnull ArrangementEntry entry) {
+  public boolean isMatched(ArrangementEntry entry) {
     if (entry instanceof ModifierAwareArrangementEntry) {
       Set<ArrangementSettingsToken> modifiers = ((ModifierAwareArrangementEntry)entry).getModifiers();
       for (ArrangementAtomMatchCondition condition : myModifiers) {

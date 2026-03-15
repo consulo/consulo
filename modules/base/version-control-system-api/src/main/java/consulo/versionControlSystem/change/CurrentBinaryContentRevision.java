@@ -19,9 +19,8 @@ package consulo.versionControlSystem.change;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
@@ -46,7 +45,7 @@ public class CurrentBinaryContentRevision extends CurrentContentRevision impleme
   }
 
   @Override
-  @NonNls
+  
   public String toString() {
     return "CurrentBinaryContentRevision:" + myFile;
   }

@@ -24,7 +24,6 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 import java.util.function.Function;
@@ -58,7 +57,7 @@ public class PathsList {
     addAllLast(chooseFirstTimeItems(path), myPath);
   }
 
-  public void remove(@Nonnull String path) {
+  public void remove(String path) {
     myPath.remove(path);
     myPathTail.remove(path);
     myPathSet.remove(path);
@@ -106,12 +105,12 @@ public class PathsList {
     }
   }
 
-  @Nonnull
+  
   public String getPathsString() {
     return StringUtil.join(getPathList(), File.pathSeparator);
   }
 
-  @Nonnull
+  
   public List<String> getPathList() {
     List<String> result = new ArrayList<>();
     result.addAll(myPath);

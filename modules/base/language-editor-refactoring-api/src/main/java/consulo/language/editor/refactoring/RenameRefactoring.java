@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring;
 
 import consulo.language.editor.refactoring.rename.AutomaticRenamerFactory;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -48,7 +47,7 @@ public interface RenameRefactoring extends Refactoring {
 
     boolean isSearchInNonJavaFiles();
 
-    void addRenamerFactory(@Nonnull AutomaticRenamerFactory factory);
+    void addRenamerFactory(AutomaticRenamerFactory factory);
 
-    void removeRenamerFactory(@Nonnull AutomaticRenamerFactory factory);
+    void removeRenamerFactory(AutomaticRenamerFactory factory);
 }

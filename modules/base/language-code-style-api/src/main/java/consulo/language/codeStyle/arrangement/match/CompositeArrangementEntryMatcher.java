@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -27,15 +26,15 @@ import java.util.*;
  */
 public class CompositeArrangementEntryMatcher implements ArrangementEntryMatcher {
 
-  @Nonnull
+  
   private final Set<ArrangementEntryMatcher> myMatchers = new HashSet<ArrangementEntryMatcher>();
 
-  public CompositeArrangementEntryMatcher(@Nonnull ArrangementEntryMatcher... matchers) {
+  public CompositeArrangementEntryMatcher(ArrangementEntryMatcher... matchers) {
     myMatchers.addAll(Arrays.asList(matchers));
   }
 
   @Override
-  public boolean isMatched(@Nonnull ArrangementEntry entry) {
+  public boolean isMatched(ArrangementEntry entry) {
     for (ArrangementEntryMatcher matcher : myMatchers) {
       if (!matcher.isMatched(entry)) {
         return false;
@@ -44,7 +43,7 @@ public class CompositeArrangementEntryMatcher implements ArrangementEntryMatcher
     return true;
   }
 
-  public void addMatcher(@Nonnull ArrangementEntryMatcher rule) {
+  public void addMatcher(ArrangementEntryMatcher rule) {
     myMatchers.add(rule);
   }
 

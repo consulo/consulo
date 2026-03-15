@@ -23,8 +23,7 @@ import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -58,7 +57,7 @@ public class DefaultTokenSeparatorGenerator implements TokenSeparatorGenerator {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

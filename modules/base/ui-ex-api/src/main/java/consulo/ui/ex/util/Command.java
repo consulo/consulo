@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -28,7 +27,7 @@ public interface Command<T> extends Supplier<T>, Consumer<T> {
     public final Invoker foreground;
     public final Invoker background;
 
-    public Processor(@Nonnull Invoker foreground, @Nonnull Invoker background) {
+    public Processor(Invoker foreground, Invoker background) {
       this.foreground = foreground;
       this.background = background;
     }

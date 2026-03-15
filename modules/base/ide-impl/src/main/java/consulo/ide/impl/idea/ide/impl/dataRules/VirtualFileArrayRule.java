@@ -36,7 +36,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,14 +43,14 @@ import java.util.List;
 
 @ExtensionImpl
 public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
-    @Nonnull
+    
     @Override
     public Key<VirtualFile[]> getKey() {
         return VirtualFile.KEY_OF_ARRAY;
     }
 
     @Override
-    public VirtualFile[] getData(@Nonnull DataProvider dataProvider) {
+    public VirtualFile[] getData(DataProvider dataProvider) {
         // Try to detect multi-selection.
 
         Project project = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_CONTEXT);

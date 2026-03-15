@@ -2,8 +2,7 @@
 package consulo.virtualFileSystem.internal;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -14,7 +13,7 @@ public class CachedFileType {
   @Nullable
   private FileType fileType;
 
-  private CachedFileType(@Nonnull FileType fileType) {
+  private CachedFileType(FileType fileType) {
     this.fileType = fileType;
   }
 
@@ -23,7 +22,7 @@ public class CachedFileType {
     return fileType;
   }
 
-  public static CachedFileType forType(@Nonnull FileType fileType) {
+  public static CachedFileType forType(FileType fileType) {
     CachedFileType cached = ourInterner.get(fileType);
     return cached != null ? cached : computeSynchronized(fileType);
   }

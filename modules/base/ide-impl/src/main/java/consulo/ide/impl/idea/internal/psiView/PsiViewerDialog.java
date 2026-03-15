@@ -82,8 +82,7 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -200,7 +199,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         }
 
         @Override
-        public int compareTo(@Nonnull SourceWrapper o) {
+        public int compareTo(SourceWrapper o) {
             return o == null ? -1 : getText().compareToIgnoreCase(o.getText());
         }
     }
@@ -639,7 +638,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     protected Action[] createActions() {
@@ -754,7 +753,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
     @Nullable
     @RequiredReadAction
-    private static Block buildBlocks(@Nonnull PsiElement rootElement) {
+    private static Block buildBlocks(PsiElement rootElement) {
         FormattingModelBuilder formattingModelBuilder = FormattingModelBuilder.forContext(rootElement);
         CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(rootElement.getProject());
         if (formattingModelBuilder != null) {
@@ -797,7 +796,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (Navigatable.KEY == dataId) {
             String fqn = null;
             if (myPsiTree.hasFocus()) {
@@ -1257,7 +1256,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
         @Override
         @RequiredUIAccess
-        public void selectionChanged(@Nonnull SelectionEvent e) {
+        public void selectionChanged(SelectionEvent e) {
             if (!available() || !myEditor.getSelectionModel().hasSelection()) {
                 return;
             }

@@ -22,8 +22,7 @@ import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Alexey
@@ -33,13 +32,13 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class ShowIntentionsPassFactory implements TextEditorHighlightingPassFactory {
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL,}, null, false, Pass.POPUP_HINTS);
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     return new ShowIntentionsPass(file.getProject(), editor, true);
   }
 }

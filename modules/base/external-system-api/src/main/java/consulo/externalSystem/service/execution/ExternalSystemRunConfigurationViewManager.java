@@ -13,7 +13,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.util.DisposableList;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -28,7 +27,7 @@ public final class ExternalSystemRunConfigurationViewManager
     private final DisposableList<BuildProgressListener> myListeners = DisposableList.create();
 
     @Inject
-    public ExternalSystemRunConfigurationViewManager(@Nonnull Project project) {
+    public ExternalSystemRunConfigurationViewManager(Project project) {
         BuildProgressObservableListener.listen(project, this);
     }
 
@@ -43,12 +42,12 @@ public final class ExternalSystemRunConfigurationViewManager
     }
 
     @Override
-    public void addListener(@Nonnull BuildProgressListener listener, @Nonnull Disposable disposable) {
+    public void addListener(BuildProgressListener listener, Disposable disposable) {
         myListeners.add(listener, disposable);
     }
 
     @Override
-    public void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
+    public void onEvent(Object buildId, BuildEvent event) {
         for (BuildProgressListener listener : myListeners) {
             try {
                 listener.onEvent(buildId, event);

@@ -20,7 +20,6 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
@@ -60,7 +59,7 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
@@ -100,13 +99,13 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
   }
 
   @Override
-  @Nonnull
+  
   public abstract byte[] contentsToByteArray() throws IOException;
 
   @Override

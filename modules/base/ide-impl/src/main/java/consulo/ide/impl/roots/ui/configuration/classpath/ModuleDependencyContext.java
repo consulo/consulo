@@ -26,7 +26,6 @@ import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -71,9 +70,9 @@ public class ModuleDependencyContext extends AddModuleDependencyContext<List<Mod
         return myNotAddedModules.isEmpty();
     }
 
-    @Nonnull
+    
     @Override
-    public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull List<Module> value) {
+    public List<OrderEntry> createOrderEntries(ModifiableModuleRootLayer layer, List<Module> value) {
         List<OrderEntry> orderEntries = new ArrayList<>();
         for (Module selectedValue : value) {
             orderEntries.add(layer.addModuleOrderEntry(selectedValue));

@@ -22,8 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ import jakarta.annotation.Nullable;
  */
 public abstract class EditorSearchToggleAction extends ToggleAction implements Embeddable, DumbAware {
     protected EditorSearchToggleAction(
-        @Nonnull LocalizeValue text,
+        LocalizeValue text,
         @Nullable Image icon,
         @Nullable Image hoveredIcon,
         @Nullable Image selectedIcon
@@ -43,21 +42,21 @@ public abstract class EditorSearchToggleAction extends ToggleAction implements E
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         SearchSession search = e.getData(SearchSession.KEY);
         return search != null && isSelected(search);
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean selected) {
+    public void setSelected(AnActionEvent e, boolean selected) {
         SearchSession search = e.getData(SearchSession.KEY);
         if (search != null) {
             setSelected(search, selected);
         }
     }
 
-    protected abstract boolean isSelected(@Nonnull SearchSession session);
+    protected abstract boolean isSelected(SearchSession session);
 
-    protected abstract void setSelected(@Nonnull SearchSession session, boolean selected);
+    protected abstract void setSelected(SearchSession session, boolean selected);
 }

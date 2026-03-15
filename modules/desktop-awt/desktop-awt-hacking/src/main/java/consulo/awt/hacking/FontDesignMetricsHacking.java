@@ -18,8 +18,7 @@ package consulo.awt.hacking;
 import consulo.logging.Logger;
 import sun.font.FontDesignMetrics;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.lang.reflect.Method;
@@ -32,7 +31,7 @@ import java.util.function.BiFunction;
 public class FontDesignMetricsHacking {
   private static final Logger LOG = Logger.getInstance(FontDesignMetricsHacking.class);
 
-  public static FontMetrics getMetrics(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext) {
+  public static FontMetrics getMetrics(Font font, FontRenderContext fontRenderContext) {
     try {
       return FontDesignMetrics.getMetrics(font, fontRenderContext);
     }

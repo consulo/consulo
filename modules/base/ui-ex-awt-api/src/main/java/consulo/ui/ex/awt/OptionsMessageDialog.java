@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +28,7 @@ public abstract class OptionsMessageDialog extends OptionsDialog {
     private final LocalizeValue myMessage;
     private final Image myIcon;
 
-    protected OptionsMessageDialog(Project project, @Nonnull LocalizeValue message, @Nonnull LocalizeValue title, Image icon) {
+    protected OptionsMessageDialog(Project project, LocalizeValue message, LocalizeValue title, Image icon) {
         super(project);
         myMessage = message;
         myIcon = icon;
@@ -43,7 +42,7 @@ public abstract class OptionsMessageDialog extends OptionsDialog {
         this(project, LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title), icon);
     }
 
-    @Nonnull
+    
     //TODO: rename to getOkActionName() after deprecation removal and make abstract
     protected LocalizeValue getOkActionValue() {
         return LocalizeValue.ofNullable(getOkActionName());
@@ -67,7 +66,7 @@ public abstract class OptionsMessageDialog extends OptionsDialog {
     }
 
     @Override
-    @Nonnull
+    
     protected LocalizeAction[] createActions() {
         LocalizeAction okAction = getOKAction();
         LocalizeAction cancelAction = getCancelAction();

@@ -27,7 +27,6 @@ import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiPropertie
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -49,7 +48,7 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
 
         VcsLogUi ui = e.getData(VcsLogUi.KEY);

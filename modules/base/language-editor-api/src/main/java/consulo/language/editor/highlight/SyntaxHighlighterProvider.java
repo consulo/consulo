@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Syntax highlight provider for per file. For highlight per language use {@link SyntaxHighlighterFactory}

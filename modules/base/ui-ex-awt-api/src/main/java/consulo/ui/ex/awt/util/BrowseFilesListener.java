@@ -22,8 +22,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,7 +63,7 @@ public class BrowseFilesListener implements ActionListener {
     return null;
   }
 
-  protected void doSetText(@Nonnull String path) {
+  protected void doSetText(String path) {
     myTextField.setText(path);
   }
 

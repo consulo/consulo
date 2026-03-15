@@ -24,8 +24,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.ScrollableLayoutOptions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -41,7 +40,7 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
             super(view);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopScrollableLayoutImpl.this;

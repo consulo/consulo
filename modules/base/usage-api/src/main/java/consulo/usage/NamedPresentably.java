@@ -15,12 +15,11 @@
  */
 package consulo.usage;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author traff
  */
 public interface NamedPresentably {
-    @Nonnull
+    
     String getPresentableName();
 }

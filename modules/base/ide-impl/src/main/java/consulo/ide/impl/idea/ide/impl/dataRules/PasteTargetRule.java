@@ -22,18 +22,17 @@ import consulo.language.editor.LangDataKeys;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class PasteTargetRule implements GetDataRule<PsiElement> {
-  @Nonnull
+  
   @Override
   public Key<PsiElement> getKey() {
     return LangDataKeys.PASTE_TARGET_PSI_ELEMENT;
   }
 
   @Override
-  public PsiElement getData(@Nonnull DataProvider dataProvider) {
+  public PsiElement getData(DataProvider dataProvider) {
     return dataProvider.getDataUnchecked(PsiElement.KEY);
   }
 }

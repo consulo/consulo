@@ -21,7 +21,6 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.editor.highlight.LanguageBraceMatcher;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -31,13 +30,13 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class LanguageBraceMatcherExtender implements ExtensionExtender<LanguageBraceMatcher> {
   @Override
-  public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<LanguageBraceMatcher> consumer) {
+  public void extend(ComponentManager componentManager, Consumer<LanguageBraceMatcher> consumer) {
     for (PairedBraceMatcher matcher : componentManager.getExtensionList(PairedBraceMatcher.class)) {
       consumer.accept(new PairedBraceMatcherAdapter(matcher, matcher.getLanguage()));
     }
   }
 
-  @Nonnull
+  
   @Override
   public Class<LanguageBraceMatcher> getExtensionClass() {
     return LanguageBraceMatcher.class;

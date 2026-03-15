@@ -21,8 +21,7 @@ import consulo.util.collection.primitive.ints.IntSets;
 import consulo.versionControlSystem.log.graph.*;
 import consulo.versionControlSystem.log.impl.internal.graph.PrintElementGeneratorImpl;
 import consulo.versionControlSystem.log.impl.internal.util.IntIntMultiMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -31,11 +30,11 @@ class LinearBekGraphBuilder {
   private static final int MAX_BLOCK_SIZE = 200;
   private static final int MAGIC_SET_SIZE = PrintElementGeneratorImpl.LONG_EDGE_SIZE;
   private static final GraphEdgeToDownNode GRAPH_EDGE_TO_DOWN_NODE = new GraphEdgeToDownNode();
-  @Nonnull
+  
   private final GraphLayout myGraphLayout;
   private final LinearBekGraph myLinearBekGraph;
 
-  public LinearBekGraphBuilder(@Nonnull LinearBekGraph bekGraph, @Nonnull GraphLayout graphLayout) {
+  public LinearBekGraphBuilder(LinearBekGraph bekGraph, GraphLayout graphLayout) {
     myLinearBekGraph = bekGraph;
     myGraphLayout = graphLayout;
   }
@@ -169,7 +168,7 @@ class LinearBekGraphBuilder {
     return fragment;
   }
 
-  @Nonnull
+  
   private Set<Integer> calculateMagicSet(int node) {
     Set<Integer> magicSet;
     magicSet = new HashSet<>(MAGIC_SET_SIZE);
@@ -191,11 +190,11 @@ class LinearBekGraphBuilder {
     private final int myRightChild;
 
     private boolean myMergeWithOldCommit = false;
-    @Nonnull
+    
     private final IntIntMultiMap myTailEdges = new IntIntMultiMap();
-    @Nonnull
+    
     private final IntSet myBlockBody = IntSets.newHashSet();
-    @Nonnull
+    
     private final IntSet myTails = IntSets.newHashSet();
 
     private MergeFragment(int parent, int leftChild, int rightChild) {
@@ -229,7 +228,7 @@ class LinearBekGraphBuilder {
       myBlockBody.add(body);
     }
 
-    @Nonnull
+    
     public IntSet getTails() {
       return myTails;
     }
@@ -316,7 +315,7 @@ class LinearBekGraphBuilder {
 
   private static class GraphEdgeComparator implements Comparator<GraphEdge> {
     @Override
-    public int compare(@Nonnull GraphEdge e1, @Nonnull GraphEdge e2) {
+    public int compare(GraphEdge e1, GraphEdge e2) {
       Integer d1 = e1.getDownNodeIndex();
       Integer d2 = e2.getDownNodeIndex();
 

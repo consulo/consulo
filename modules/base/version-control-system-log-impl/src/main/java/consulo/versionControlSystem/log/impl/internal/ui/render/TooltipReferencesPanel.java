@@ -27,8 +27,7 @@ import consulo.versionControlSystem.log.VcsRefType;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.impl.internal.ui.ReferencesPanel;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,13 +36,13 @@ import java.util.Map;
 
 class TooltipReferencesPanel extends ReferencesPanel {
   private static final int REFS_LIMIT = 10;
-  @Nonnull
+  
   private final LabelPainter myReferencePainter;
   private boolean myHasGroupWithMultipleRefs;
 
-  public TooltipReferencesPanel(@Nonnull VcsLogDataImpl logData,
-                                @Nonnull LabelPainter referencePainter,
-                                @Nonnull Collection<VcsRef> refs) {
+  public TooltipReferencesPanel(VcsLogDataImpl logData,
+                                LabelPainter referencePainter,
+                                Collection<VcsRef> refs) {
     super(new VerticalFlowLayout(JBUI.scale(ReferencesPanel.H_GAP), JBUI.scale(ReferencesPanel.V_GAP)), REFS_LIMIT);
     myReferencePainter = referencePainter;
 
@@ -62,7 +61,7 @@ class TooltipReferencesPanel extends ReferencesPanel {
     super.update();
   }
 
-  @Nonnull
+  
   @Override
   protected Font getLabelsFont() {
     return myReferencePainter.getReferenceFont();
@@ -70,7 +69,7 @@ class TooltipReferencesPanel extends ReferencesPanel {
 
   @Nullable
   @Override
-  protected Image createIcon(@Nonnull VcsRefType type, @Nonnull Collection<VcsRef> refs, int refIndex, int height) {
+  protected Image createIcon(VcsRefType type, Collection<VcsRef> refs, int refIndex, int height) {
     if (refIndex == 0) {
       Color color = type.getBackgroundColor();
       return new LabelIcon(height, getBackground(),
@@ -84,12 +83,12 @@ class TooltipReferencesPanel extends ReferencesPanel {
     return createEmptyIcon(height);
   }
 
-  @Nonnull
+  
   private static consulo.ui.image.Image createEmptyIcon(int height) {
     return consulo.ui.image.Image.empty(LabelIcon.getWidth(height, 2), height);
   }
 
-  @Nonnull
+  
   @Override
   protected JBLabel createRestLabel(int restSize) {
     String gray = ColorUtil.toHex(UIManager.getColor("Button.disabledText"));

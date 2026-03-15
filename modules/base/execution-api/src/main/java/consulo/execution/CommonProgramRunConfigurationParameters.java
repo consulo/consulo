@@ -16,8 +16,7 @@
 package consulo.execution;
 
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -35,9 +34,9 @@ public interface CommonProgramRunConfigurationParameters {
   @Nullable
   String getWorkingDirectory();
 
-  void setEnvs(@Nonnull Map<String, String> envs);
+  void setEnvs(Map<String, String> envs);
 
-  @Nonnull
+  
   Map<String, String> getEnvs();
 
   void setPassParentEnvs(boolean passParentEnvs);

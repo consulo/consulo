@@ -31,7 +31,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +42,7 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement> 
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
         //noinspection SimplifiableIfStatement
         if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
@@ -53,7 +52,7 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement> 
         return someChildContainsFile(file, false);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {

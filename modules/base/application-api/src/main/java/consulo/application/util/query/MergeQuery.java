@@ -2,7 +2,6 @@
 package consulo.application.util.query;
 
 import consulo.util.concurrent.*;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -13,19 +12,19 @@ public class MergeQuery<T> extends AbstractQuery<T> {
     private final Query<? extends T> myQuery1;
     private final Query<? extends T> myQuery2;
 
-    public MergeQuery(@Nonnull Query<? extends T> query1, @Nonnull Query<? extends T> query2) {
+    public MergeQuery(Query<? extends T> query1, Query<? extends T> query2) {
         myQuery1 = query1;
         myQuery2 = query2;
     }
 
     @Override
-    protected boolean processResults(@Nonnull Predicate<? super T> consumer) {
+    protected boolean processResults(Predicate<? super T> consumer) {
         return delegateProcessResults(myQuery1, consumer) && delegateProcessResults(myQuery2, consumer);
     }
 
-    @Nonnull
+    
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(Predicate<? super T> consumer) {
         AsyncFutureResult<Boolean> result = AsyncFutureFactory.getInstance().createAsyncFutureResult();
 
         AsyncFuture<Boolean> fq = myQuery1.forEachAsync(consumer);

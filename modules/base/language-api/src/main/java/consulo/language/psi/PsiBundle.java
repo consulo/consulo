@@ -18,7 +18,6 @@ package consulo.language.psi;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -38,8 +37,8 @@ public class PsiBundle extends AbstractBundle{
     return ourInstance.getMessage(key, params);
   }
 
-  @Nonnull
-  public static String visibilityPresentation(@Nonnull String modifier) {
+  
+  public static String visibilityPresentation(String modifier) {
     return message(modifier + ".visibility.presentation");
   }
 }

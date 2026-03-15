@@ -21,8 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -34,12 +33,12 @@ public interface MergeTool {
      * Creates viewer for the given request. Clients should call {@link #canShow(MergeContext, MergeRequest)} first.
      */
     @RequiredUIAccess
-    @Nonnull
-    MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request);
+    
+    MergeViewer createComponent(MergeContext context, MergeRequest request);
 
-    boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request);
+    boolean canShow(MergeContext context, MergeRequest request);
 
-    record ActionRecord(@Nonnull LocalizeValue title, @Nonnull Runnable onActionPerformed) {
+    record ActionRecord(LocalizeValue title, Runnable onActionPerformed) {
     }
 
     /**
@@ -48,7 +47,7 @@ public interface MergeTool {
      * {@link MergeRequest#applyResult(MergeResult)} will be performed by the caller, so it shouldn't be called by MergeViewer directly.
      */
     interface MergeViewer extends Disposable {
-        @Nonnull
+        
         JComponent getComponent();
 
         @Nullable
@@ -62,12 +61,12 @@ public interface MergeTool {
          * return null if action is not available
          */
         @Nullable
-        ActionRecord getResolveAction(@Nonnull MergeResult result);
+        ActionRecord getResolveAction(MergeResult result);
 
         /**
          * Should be called after adding {@link #getComponent()} to the components hierarchy.
          */
-        @Nonnull
+        
         @RequiredUIAccess
         ToolbarComponents init();
 

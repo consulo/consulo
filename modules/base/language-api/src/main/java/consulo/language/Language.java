@@ -28,8 +28,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -102,15 +101,15 @@ public abstract class Language extends UserDataHolderBase {
 
     private LocalizeValue myDisplayNameFromId = LocalizeValue.empty();
 
-    protected Language(@Nonnull String id) {
+    protected Language(String id) {
         this(id, ArrayUtil.EMPTY_STRING_ARRAY);
     }
 
-    protected Language(@Nonnull String ID, @Nonnull String... mimeTypes) {
+    protected Language(String ID, String... mimeTypes) {
         this(null, ID, mimeTypes);
     }
 
-    protected Language(@Nullable Language baseLanguage, @Nonnull String ID, @Nonnull String... mimeTypes) {
+    protected Language(@Nullable Language baseLanguage, String ID, String... mimeTypes) {
         myBaseLanguage = baseLanguage;
         myID = ID;
         myMimeTypes = mimeTypes;
@@ -138,7 +137,7 @@ public abstract class Language extends UserDataHolderBase {
     /**
      * @return collection of all languages registered so far.
      */
-    @Nonnull
+    
     public static Collection<Language> getRegisteredLanguages() {
         return Collections.unmodifiableCollection(ourRegisteredLanguages.values());
     }
@@ -157,7 +156,7 @@ public abstract class Language extends UserDataHolderBase {
      * @param mimeType of the particular language.
      * @return collection of all languages for the given <code>mimeType</code>.
      */
-    @Nonnull
+    
     @UsedInPlugin
     public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
         if (mimeType == null) {
@@ -172,14 +171,14 @@ public abstract class Language extends UserDataHolderBase {
         return languages;
     }
 
-    @Nonnull
+    
     @UsedInPlugin
     public static Collection<LanguageVersion> findVersionsByMimeType(@Nullable String mimeType) {
         MultiMap<String, LanguageVersion> map = ourRegisteredMimeTypesValue.get();
         return Collections.unmodifiableCollection(map.get(mimeType));
     }
 
-    @Nonnull
+    
     protected LanguageVersion[] findVersions() {
         List<LanguageVersion> languageVersions = Application.get().getExtensionPoint(LanguageVersion.class).getExtensionList().stream().filter(it -> it.getLanguage() == this).toList();
         if (languageVersions.isEmpty()) {
@@ -219,7 +218,7 @@ public abstract class Language extends UserDataHolderBase {
      *
      * @return The list of MIME types.
      */
-    @Nonnull
+    
     public String[] getMimeTypes() {
         return myMimeTypes;
     }
@@ -229,7 +228,7 @@ public abstract class Language extends UserDataHolderBase {
      *
      * @return the name of the language.
      */
-    @Nonnull
+    
     public String getID() {
         return myID;
     }
@@ -276,7 +275,7 @@ public abstract class Language extends UserDataHolderBase {
         return myBaseLanguage;
     }
 
-    @Nonnull
+    
     public final LanguageVersion[] getVersions() {
         return myVersions.get();
     }
@@ -284,7 +283,7 @@ public abstract class Language extends UserDataHolderBase {
     @Nullable
     @SuppressWarnings("unchecked")
     @UsedInPlugin
-    public <T extends LanguageVersion> T findVersionByClass(@Nonnull Class<T> clazz) {
+    public <T extends LanguageVersion> T findVersionByClass(Class<T> clazz) {
         for (LanguageVersion languageVersion : getVersions()) {
             if (languageVersion.getClass() == clazz) {
                 return (T) languageVersion;
@@ -293,7 +292,7 @@ public abstract class Language extends UserDataHolderBase {
         return null;
     }
 
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         LocalizeValue value = myDisplayNameFromId;
         if (value.isEmpty()) {

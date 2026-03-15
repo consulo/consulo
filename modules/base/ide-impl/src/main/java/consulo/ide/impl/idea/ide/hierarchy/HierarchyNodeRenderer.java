@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -43,7 +42,7 @@ public final class HierarchyNodeRenderer extends NodeRenderer {
     @Override
     @RequiredUIAccess
     public void customizeCellRenderer(
-        @Nonnull JTree tree,
+        JTree tree,
         Object value,
         boolean selected,
         boolean expanded,

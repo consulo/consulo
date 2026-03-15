@@ -4,10 +4,8 @@ package consulo.execution;
 
 import consulo.execution.configuration.RunConfiguration;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Execution targets allow running same run configuration on various targets such as devices, simulators etc.<br>
@@ -29,11 +27,11 @@ public abstract class ExecutionTarget {
   /**
    * Id is used to save selected target between restarts
    */
-  @Nonnull
+  
   public abstract String getId();
 
-  @Nonnull
-  @Nls
+  
+  
   public abstract String getDisplayName();
 
   @Nullable
@@ -42,7 +40,7 @@ public abstract class ExecutionTarget {
   /**
    * Implementation-specific logic should decide whether to suggest this target for the given configuration.
    */
-  public abstract boolean canRun(@Nonnull RunConfiguration configuration);
+  public abstract boolean canRun(RunConfiguration configuration);
 
   /**
    * Checks if the target is ready to be selected as a default choice in the Run Configurations popup

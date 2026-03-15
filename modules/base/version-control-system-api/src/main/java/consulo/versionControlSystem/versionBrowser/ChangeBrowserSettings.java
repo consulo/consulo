@@ -22,7 +22,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
   public String DATE_BEFORE = "";
   public String DATE_AFTER = "";
 
-  @NonNls
+  
   public String CHANGE_BEFORE = "";
   public String CHANGE_AFTER = "";
 

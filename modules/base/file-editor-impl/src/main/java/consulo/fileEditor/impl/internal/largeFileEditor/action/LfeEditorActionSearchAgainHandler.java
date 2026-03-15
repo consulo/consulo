@@ -9,8 +9,7 @@ import consulo.fileEditor.LargeFileEditor;
 import consulo.fileEditor.impl.internal.largeFileEditor.search.CloseSearchTask;
 import consulo.fileEditor.internal.largeFileEditor.LfeSearchManager;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class LfeEditorActionSearchAgainHandler extends LfeBaseEditorActionHandler {
@@ -18,8 +17,8 @@ public class LfeEditorActionSearchAgainHandler extends LfeBaseEditorActionHandle
     private final boolean isForwardDirection = isForwardDirection();
 
     @Override
-    protected void doExecuteInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                  @Nonnull Editor editor,
+    protected void doExecuteInLfe(LargeFileEditor largeFileEditor,
+                                  Editor editor,
                                   @Nullable Caret caret,
                                   DataContext dataContext) {
         LfeSearchManager searchManager = largeFileEditor.getSearchManager();
@@ -27,9 +26,9 @@ public class LfeEditorActionSearchAgainHandler extends LfeBaseEditorActionHandle
     }
 
     @Override
-    protected boolean isEnabledInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                     @Nonnull Editor editor,
-                                     @Nonnull Caret caret,
+    protected boolean isEnabledInLfe(LargeFileEditor largeFileEditor,
+                                     Editor editor,
+                                     Caret caret,
                                      DataContext dataContext) {
         LfeSearchManager searchManager = largeFileEditor.getSearchManager();
         CloseSearchTask task = (CloseSearchTask) searchManager.getLastExecutedCloseSearchTask();
@@ -40,7 +39,7 @@ public class LfeEditorActionSearchAgainHandler extends LfeBaseEditorActionHandle
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_FIND_NEXT;

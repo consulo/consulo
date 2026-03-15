@@ -17,7 +17,6 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.WebSearchEngine;
 import consulo.webBrowser.WebSearchOptions;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.awt.datatransfer.DataFlavor;
@@ -37,7 +36,7 @@ public class SearchWebAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         CopyProvider provider = e.getRequiredData(CopyProvider.KEY);
         provider.performCopy(e.getDataContext());
         String content = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
@@ -48,7 +47,7 @@ public class SearchWebAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         DataContext dataContext = e.getDataContext();
         CopyProvider provider = e.getData(CopyProvider.KEY);

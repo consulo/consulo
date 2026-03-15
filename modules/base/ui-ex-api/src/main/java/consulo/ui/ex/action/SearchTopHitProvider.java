@@ -5,8 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -17,7 +16,7 @@ import java.util.function.Consumer;
 public interface SearchTopHitProvider {
     ExtensionPointName<SearchTopHitProvider> EP_NAME = ExtensionPointName.create(SearchTopHitProvider.class);
 
-    void consumeTopHits(@Nonnull String pattern, @Nonnull Consumer<Object> collector, @Nullable ComponentManager project);
+    void consumeTopHits(String pattern, Consumer<Object> collector, @Nullable ComponentManager project);
 
     static String getTopHitAccelerator() {
         return "/";

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.popup;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -25,6 +24,6 @@ public interface MnemonicNavigationFilter<T> {
 
   String getTextFor(T value);
 
-  @Nonnull
+  
   List<T> getValues();
 }

@@ -20,7 +20,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +29,7 @@ import java.util.LinkedHashSet;
  * @author peter
  */
 public class FileContentUtil extends FileContentUtilCore {
-  public static void reparseFiles(@Nonnull Project project, @Nonnull Collection<? extends VirtualFile> files, boolean includeOpenFiles) {
+  public static void reparseFiles(Project project, Collection<? extends VirtualFile> files, boolean includeOpenFiles) {
     LinkedHashSet<VirtualFile> fileSet = new LinkedHashSet<VirtualFile>(files);
     if (includeOpenFiles) {
       for (VirtualFile open : FileEditorManager.getInstance(project).getOpenFiles()) {

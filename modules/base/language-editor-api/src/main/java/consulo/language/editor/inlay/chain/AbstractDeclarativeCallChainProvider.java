@@ -10,7 +10,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +122,7 @@ public abstract class AbstractDeclarativeCallChainProvider<DotQualifiedExpressio
         return new HintFormat(HintColorKind.Default, HintFontSize.ABitSmallerThanInEditor, HintMarginPadding.MarginAndSmallerPadding);
     }
 
-    protected boolean isAvailable(@Nonnull PsiFile file, @Nonnull Editor editor) {
+    protected boolean isAvailable(PsiFile file, Editor editor) {
         return true;
     }
 

@@ -19,7 +19,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +27,17 @@ import java.util.List;
  * @author nik
  */
 public class ModuleProjectStructureElement extends ProjectStructureElement {
-    @Nonnull
+    
     private final ModulesConfigurator myModulesConfigurator;
-    @Nonnull
+    
     private final Module myModule;
 
-    public ModuleProjectStructureElement(@Nonnull ModulesConfigurator modulesConfigurator, @Nonnull Module module) {
+    public ModuleProjectStructureElement(ModulesConfigurator modulesConfigurator, Module module) {
         myModulesConfigurator = modulesConfigurator;
         myModule = module;
     }
 
-    @Nonnull
+    
     public Module getModule() {
         return myModule;
     }
@@ -65,7 +64,7 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
     }
 
     @Override
-    public void check(@Nonnull Project project, ProjectStructureProblemsHolder problemsHolder) {
+    public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
         checkModulesNames(project, problemsHolder);
 
         ModuleRootModel rootModel = myModulesConfigurator.getRootModel(myModule);

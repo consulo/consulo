@@ -20,8 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -30,7 +29,7 @@ import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.*;
 public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase<String> {
     @Override
     @RequiredUIAccess
-    public void execute(@Nonnull DataContext dataContext, @Nonnull String value) {
+    public void execute(DataContext dataContext, String value) {
         VirtualFile workDirectory = dataContext.getData(VirtualFile.KEY);
         Executor executor = dataContext.getData(RunAnythingAction.EXECUTOR_KEY);
         LOG.assertTrue(workDirectory != null);
@@ -41,10 +40,10 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
 
     @RequiredUIAccess
     public static void runCommand(
-        @Nonnull VirtualFile workDirectory,
-        @Nonnull String commandString,
-        @Nonnull Executor executor,
-        @Nonnull DataContext dataContext
+        VirtualFile workDirectory,
+        String commandString,
+        Executor executor,
+        DataContext dataContext
     ) {
         Project project = dataContext.getData(Project.KEY);
         LOG.assertTrue(project != null);
@@ -78,15 +77,15 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
             IdeLocalize.runAnythingAdCommandDelete(SHIFT_BACK_SPACE);
     }
 
-    @Nonnull
+    
     @Override
-    public String getCommand(@Nonnull String value) {
+    public String getCommand(String value) {
         return value;
     }
 
     @Nullable
     @Override
-    public Image getIcon(@Nonnull String value) {
+    public Image getIcon(String value) {
         return PlatformIconGroup.actionsRun_anything();
     }
 }

@@ -27,8 +27,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.internal.BackgroundFromStartOption;
 import consulo.versionControlSystem.internal.BackgroundableActionEnabledHandler;
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -64,7 +63,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     myActionParameter = actionParameter;
   }
 
-  public static <T> void createAndRunSilent(Project project, @jakarta.annotation.Nullable VcsBackgroundableActions actionKey,
+  public static <T> void createAndRunSilent(Project project, @Nullable VcsBackgroundableActions actionKey,
                                             @Nullable Object actionParameter, String title,
                                             ThrowableComputable<T, VcsException> backgroundable,
                                             @Nullable Consumer<T> awtSuccessContinuation) {
@@ -79,7 +78,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, null, null);
   }
 
-  public static <T> void createAndRun(Project project, @jakarta.annotation.Nullable VcsBackgroundableActions actionKey,
+  public static <T> void createAndRun(Project project, @Nullable VcsBackgroundableActions actionKey,
                                       @Nullable Object actionParameter,
                                       String title,
                                       String errorTitle,
@@ -89,12 +88,12 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, awtSuccessContinuation, awtErrorContinuation, false);
   }
 
-  private static <T> void createAndRun(Project project, @jakarta.annotation.Nullable VcsBackgroundableActions actionKey,
-                                       @jakarta.annotation.Nullable Object actionParameter,
+  private static <T> void createAndRun(Project project, @Nullable VcsBackgroundableActions actionKey,
+                                       @Nullable Object actionParameter,
                                        String title,
                                        String errorTitle,
                                        ThrowableComputable<T, VcsException> backgroundable,
-                                       @jakarta.annotation.Nullable Consumer<T> awtSuccessContinuation,
+                                       @Nullable Consumer<T> awtSuccessContinuation,
                                        @Nullable Runnable awtErrorContinuation, boolean silent) {
     ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
     BackgroundableActionEnabledHandler handler;
@@ -116,7 +115,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     ProgressManager.getInstance().run(backgroundableComputable);
   }
 
-  public void run(@Nonnull ProgressIndicator indicator) {
+  public void run(ProgressIndicator indicator) {
     try {
       myResult = myBackgroundable.compute();
     }

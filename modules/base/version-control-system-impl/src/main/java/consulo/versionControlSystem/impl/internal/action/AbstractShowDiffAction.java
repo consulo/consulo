@@ -32,24 +32,23 @@ import consulo.versionControlSystem.impl.internal.ProjectLevelVcsManagerImpl;
 import consulo.versionControlSystem.internal.BackgroundableActionEnabledHandler;
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class AbstractShowDiffAction extends AbstractVcsAction {
-    protected AbstractShowDiffAction(@Nonnull LocalizeValue text) {
+    protected AbstractShowDiffAction(LocalizeValue text) {
         super(text);
     }
 
     protected AbstractShowDiffAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
     @Override
-    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(VcsContext vcsContext, Presentation presentation) {
         updateDiffAction(presentation, vcsContext, getKey());
     }
 
@@ -59,7 +58,7 @@ public abstract class AbstractShowDiffAction extends AbstractVcsAction {
     }
 
     @Override
-    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
+    protected boolean forceSyncUpdate(AnActionEvent e) {
         return true;
     }
 
@@ -128,7 +127,7 @@ public abstract class AbstractShowDiffAction extends AbstractVcsAction {
 
     @Override
     @RequiredUIAccess
-    protected void actionPerformed(@Nonnull VcsContext vcsContext) {
+    protected void actionPerformed(VcsContext vcsContext) {
         Project project = vcsContext.getProject();
         if (project == null) {
             return;

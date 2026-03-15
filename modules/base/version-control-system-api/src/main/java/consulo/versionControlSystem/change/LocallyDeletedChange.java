@@ -18,14 +18,13 @@ package consulo.versionControlSystem.change;
 import consulo.versionControlSystem.FilePath;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class LocallyDeletedChange {
   private final String myPresentableUrl;
   private final FilePath myPath;
 
-  public LocallyDeletedChange(@Nonnull FilePath path) {
+  public LocallyDeletedChange(FilePath path) {
     myPath = path;
     myPresentableUrl = myPath.getPresentableUrl();
   }

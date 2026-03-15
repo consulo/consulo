@@ -17,24 +17,23 @@ package consulo.compiler.artifact.element;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface IncrementalCompilerInstructionCreator {
 
-  void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName);
+  void addFileCopyInstruction(VirtualFile file, String outputFileName);
 
-  void addDirectoryCopyInstructions(@Nonnull VirtualFile directory);
+  void addDirectoryCopyInstructions(VirtualFile directory);
 
-  void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @Nullable PackagingFileFilter filter);
+  void addDirectoryCopyInstructions(VirtualFile directory, @Nullable PackagingFileFilter filter);
 
-  IncrementalCompilerInstructionCreator subFolder(@Nonnull String directoryName);
+  IncrementalCompilerInstructionCreator subFolder(String directoryName);
 
-  @Nonnull
-  IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter);
+  
+  IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter);
 
-  IncrementalCompilerInstructionCreator subFolderByRelativePath(@Nonnull String relativeDirectoryPath);
+  IncrementalCompilerInstructionCreator subFolderByRelativePath(String relativeDirectoryPath);
 }

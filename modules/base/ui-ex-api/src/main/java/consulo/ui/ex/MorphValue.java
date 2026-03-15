@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -25,8 +24,8 @@ import java.util.function.Supplier;
 public class MorphValue<V> {
   private static final UIModificationTracker ourTracker = UIModificationTracker.getInstance();
 
-  @Nonnull
-  public static <K> MorphValue<K> of(@Nonnull Supplier<K> func) {
+  
+  public static <K> MorphValue<K> of(Supplier<K> func) {
     return new MorphValue<>(func);
   }
 
@@ -42,7 +41,7 @@ public class MorphValue<V> {
     myLastComputedValue = valueProducer.get();
   }
 
-  @Nonnull
+  
   public V getValue() {
     long modificationCount = ourTracker.getModificationCount();
     if (myLastModificationCount == modificationCount) {

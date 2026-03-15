@@ -26,7 +26,6 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -50,7 +49,7 @@ public class ExtractedDirectoryPackagingElement extends FileOrDirectoryCopyPacka
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(ArtifactEditorContext context) {
     return new ExtractedDirectoryPresentation(this);
   }
 
@@ -70,10 +69,10 @@ public class ExtractedDirectoryPackagingElement extends FileOrDirectoryCopyPacka
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext,
-                                                     @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext,
+                                                     ArtifactType artifactType) {
     VirtualFile file = findFile();
     if (file != null && file.isValid() && file.isDirectory()) {
       creator.addDirectoryCopyInstructions(file);
@@ -81,7 +80,7 @@ public class ExtractedDirectoryPackagingElement extends FileOrDirectoryCopyPacka
   }
 
   @Override
-  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
+  public boolean isEqualTo(PackagingElement<?> element) {
     return element instanceof ExtractedDirectoryPackagingElement && super.isEqualTo(element)
            && Comparing.equal(myPathInJar, ((ExtractedDirectoryPackagingElement)element).getPathInJar());
   }

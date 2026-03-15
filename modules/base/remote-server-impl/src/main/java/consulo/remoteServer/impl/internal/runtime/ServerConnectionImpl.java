@@ -24,9 +24,7 @@ import consulo.remoteServer.runtime.deployment.debug.DebugConnectionData;
 import consulo.remoteServer.runtime.deployment.debug.DebugConnectionDataNotAvailableException;
 import consulo.remoteServer.runtime.deployment.debug.DebugConnector;
 import consulo.util.lang.EmptyRunnable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +39,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     private MessageBusConnection myMessageBusConnection;
 
     private volatile ConnectionStatus myStatus = ConnectionStatus.DISCONNECTED;
-    private volatile @Nls String myStatusText;
+    private volatile String myStatusText;
     private volatile ServerRuntimeInstance<D> myRuntimeInstance;
     private final Map<Project, LogManagersForProject> myPerProjectLogManagers = new ConcurrentHashMap<>();
     private final MyDeployments myAllDeployments;
@@ -58,31 +56,31 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     }
 
     @Override
-    public @Nonnull RemoteServer<?> getServer() {
+    public RemoteServer<?> getServer() {
         return myServer;
     }
 
     @Override
-    public @Nonnull ConnectionStatus getStatus() {
+    public ConnectionStatus getStatus() {
         return myStatus;
     }
 
     @Override
-    public @Nls @Nonnull String getStatusText() {
+    public String getStatusText() {
         return myStatusText != null ? myStatusText : myStatus.getPresentableText();
     }
 
     @Override
-    public void connect(final @Nonnull Runnable onFinished) {
+    public void connect(final Runnable onFinished) {
         doDisconnect();
         connectIfNeeded(new ServerConnector.ConnectionCallback<>() {
             @Override
-            public void connected(@Nonnull ServerRuntimeInstance<D> serverRuntimeInstance) {
+            public void connected(ServerRuntimeInstance<D> serverRuntimeInstance) {
                 onFinished.run();
             }
 
             @Override
-            public void errorOccurred(@Nonnull String errorMessage) {
+            public void errorOccurred(String errorMessage) {
                 onFinished.run();
             }
         });
@@ -114,10 +112,10 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     }
 
     @Override
-    public void deploy(final @Nonnull DeploymentTask<D> task, final Consumer<? super String> onDeploymentStarted) {
+    public void deploy(final DeploymentTask<D> task, final Consumer<? super String> onDeploymentStarted) {
         connectIfNeeded(new ConnectionCallbackBase<>() {
             @Override
-            public void connected(@Nonnull ServerRuntimeInstance<D> instance) {
+            public void connected(ServerRuntimeInstance<D> instance) {
                 LocalDeploymentImpl<?> deployment = new LocalDeploymentImpl<>(instance,
                     ServerConnectionImpl.this,
                     DeploymentStatus.DEPLOYING,
@@ -141,21 +139,21 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     }
 
     @Override
-    public @Nullable DeploymentLogManager getLogManager(@Nonnull Project project, @Nonnull Deployment deployment) {
+    public @Nullable DeploymentLogManager getLogManager(Project project, Deployment deployment) {
         LogManagersForProject forProject = myPerProjectLogManagers.get(project);
         return forProject == null ? null : forProject.findManager(deployment);
     }
 
-    public @Nonnull DeploymentLogManager getOrCreateLogManager(@Nonnull Project project, @Nonnull Deployment deployment) {
+    public DeploymentLogManager getOrCreateLogManager(Project project, Deployment deployment) {
         LogManagersForProject forProject = myPerProjectLogManagers.computeIfAbsent(project, LogManagersForProject::new);
         return forProject.findOrCreateManager(deployment);
     }
 
     @Override
-    public void computeDeployments(final @Nonnull Runnable onFinished) {
+    public void computeDeployments(final Runnable onFinished) {
         connectIfNeeded(new ConnectionCallbackBase<>() {
             @Override
-            public void connected(@Nonnull ServerRuntimeInstance<D> instance) {
+            public void connected(ServerRuntimeInstance<D> instance) {
                 computeDeployments(instance, onFinished);
             }
         });
@@ -166,20 +164,20 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             private final List<DeploymentImpl<?>> myCollectedDeployments = Collections.synchronizedList(new ArrayList<>());
 
             @Override
-            public void addDeployment(@Nonnull String deploymentName) {
+            public void addDeployment(String deploymentName) {
                 addDeployment(deploymentName, null);
             }
 
             @Override
-            public void addDeployment(@Nonnull String deploymentName, @Nullable DeploymentRuntime deploymentRuntime) {
+            public void addDeployment(String deploymentName, @Nullable DeploymentRuntime deploymentRuntime) {
                 addDeployment(deploymentName, deploymentRuntime, null, null);
             }
 
             @Override
-            public Deployment addDeployment(@Nonnull String name,
+            public Deployment addDeployment(String name,
                                             @Nullable DeploymentRuntime runtime,
                                             @Nullable DeploymentStatus status,
-                                            @Nullable @Nls String statusText) {
+                                            @Nullable String statusText) {
                 if (status == null) {
                     status = DeploymentStatus.DEPLOYED;
                 }
@@ -207,7 +205,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
 
             @Override
-            public void errorOccurred(@Nonnull String errorMessage) {
+            public void errorOccurred(String errorMessage) {
                 myAllDeployments.replaceRemotesWith(Collections.emptyList());
 
                 myStatusText = CloudBundle.message("ServerConnectionImpl.error.cannot.obtain.deployments", errorMessage);
@@ -219,7 +217,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     }
 
     @Override
-    public void undeploy(@Nonnull Deployment deployment, @Nullable DeploymentRuntime runtime) {
+    public void undeploy(Deployment deployment, @Nullable DeploymentRuntime runtime) {
         String deploymentName = deployment.getName();
         final MyDeployments.UndeployTransition undeployInProgress = myAllDeployments.startUndeploy(deploymentName);
 
@@ -262,7 +260,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
 
             @Override
-            public void errorOccurred(@Nonnull String errorMessage) {
+            public void errorOccurred(String errorMessage) {
                 logConsumer.accept("Failed to undeploy '" + deploymentName + "': " + errorMessage);
 
                 if (undeployInProgress != null) {
@@ -281,16 +279,16 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         }
     }
 
-    public void disposeAllLogs(@Nonnull DeploymentImpl deployment) {
+    public void disposeAllLogs(DeploymentImpl deployment) {
         disposeAllLogs(deployment.getName());
     }
 
-    public void disposeAllLogs(@Nonnull String deploymentName) {
+    public void disposeAllLogs(String deploymentName) {
         myPerProjectLogManagers.values().forEach(nextForProject -> nextForProject.disposeManager(deploymentName));
     }
 
     @Override
-    public @Nonnull Collection<Deployment> getDeployments() {
+    public Collection<Deployment> getDeployments() {
         return myAllDeployments.listDeployments();
     }
 
@@ -299,7 +297,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             myMessageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
             myMessageBusConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
                 @Override
-                public void projectClosed(@Nonnull Project project) {
+                public void projectClosed(Project project) {
                     onProjectClosed(project);
                 }
             });
@@ -317,7 +315,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         setStatus(ConnectionStatus.CONNECTING);
         myConnector.connect(new ServerConnector.ConnectionCallback<>() {
             @Override
-            public void connected(@Nonnull ServerRuntimeInstance<D> instance) {
+            public void connected(ServerRuntimeInstance<D> instance) {
                 setStatus(ConnectionStatus.CONNECTED);
                 myRuntimeInstance = instance;
                 setupProjectListener();
@@ -325,7 +323,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
 
             @Override
-            public void errorOccurred(@Nonnull @Nls String errorMessage) {
+            public void errorOccurred(String errorMessage) {
                 setStatus(ConnectionStatus.DISCONNECTED, errorMessage);
                 myRuntimeInstance = null;
                 callback.errorOccurred(errorMessage);
@@ -337,23 +335,23 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         setStatus(status, null);
     }
 
-    private void setStatus(ConnectionStatus status, @Nls String statusText) {
+    private void setStatus(ConnectionStatus status, String statusText) {
         myStatus = status;
         myStatusText = statusText;
         myEventDispatcher.queueConnectionStatusChanged(this);
     }
 
-    public void changeDeploymentState(@Nonnull DeploymentImpl deployment,
+    public void changeDeploymentState(DeploymentImpl deployment,
                                       @Nullable DeploymentRuntime deploymentRuntime,
-                                      @Nonnull DeploymentStatus oldStatus, @Nonnull DeploymentStatus newStatus,
-                                      @Nullable @Nls String statusText) {
+                                      DeploymentStatus oldStatus, DeploymentStatus newStatus,
+                                      @Nullable String statusText) {
 
         if (myAllDeployments.updateAnyState(deployment, deploymentRuntime, oldStatus, newStatus, statusText)) {
             myEventDispatcher.queueDeploymentsChanged(this);
         }
     }
 
-    private void onProjectClosed(@Nonnull Project project) {
+    private void onProjectClosed(Project project) {
         myPerProjectLogManagers.remove(project);
         boolean hasChanged = myAllDeployments.removeAllLocalForProject(project);
         if (hasChanged) {
@@ -365,15 +363,15 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         private final Project myProject;
         private final Map<String, DeploymentLogManagerImpl> myLogManagers = new ConcurrentHashMap<>();
 
-        LogManagersForProject(@Nonnull Project project) {
+        LogManagersForProject(Project project) {
             myProject = project;
         }
 
-        public @Nullable DeploymentLogManagerImpl findManager(@Nonnull Deployment deployment) {
+        public @Nullable DeploymentLogManagerImpl findManager(Deployment deployment) {
             return myLogManagers.get(deployment.getName());
         }
 
-        public DeploymentLogManagerImpl findOrCreateManager(@Nonnull Deployment deployment) {
+        public DeploymentLogManagerImpl findOrCreateManager(Deployment deployment) {
             return myLogManagers.computeIfAbsent(deployment.getName(), this::newDeploymentLogManager);
         }
 
@@ -381,7 +379,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             return new DeploymentLogManagerImpl(myProject, new ChangeListener());
         }
 
-        public void disposeManager(@Nonnull String deploymentName) {
+        public void disposeManager(String deploymentName) {
             DeploymentLogManagerImpl manager = myLogManagers.remove(deploymentName);
             if (manager != null) {
                 manager.disposeLogs();
@@ -397,7 +395,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
 
     private abstract static class ConnectionCallbackBase<D extends DeploymentConfiguration> implements ServerConnector.ConnectionCallback<D> {
         @Override
-        public void errorOccurred(@Nonnull String errorMessage) {
+        public void errorOccurred(String errorMessage) {
         }
     }
 
@@ -418,12 +416,12 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         }
 
         @Override
-        public void started(@Nonnull DeploymentRuntime deploymentRuntime) {
+        public void started(DeploymentRuntime deploymentRuntime) {
             myDeployment.changeState(myDeployment.getStatus(), DeploymentStatus.DEPLOYING, null, deploymentRuntime);
         }
 
         @Override
-        public Deployment succeeded(@Nonnull DeploymentRuntime deploymentRuntime) {
+        public Deployment succeeded(DeploymentRuntime deploymentRuntime) {
             myLoggingHandler.printlnSystemMessage("'" + myDeploymentName + "' has been deployed successfully.");
             myDeployment.changeState(DeploymentStatus.DEPLOYING, DeploymentStatus.DEPLOYED, null, deploymentRuntime);
             myEventDispatcher.queueDeploymentsChanged(ServerConnectionImpl.this);
@@ -434,8 +432,8 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             return myDeployment;
         }
 
-        private <D extends DebugConnectionData, R extends DeploymentRuntime> void launchDebugger(@Nonnull DebugConnector<D, R> debugConnector,
-                                                                                                 @Nonnull DeploymentRuntime runtime) {
+        private <D extends DebugConnectionData, R extends DeploymentRuntime> void launchDebugger(DebugConnector<D, R> debugConnector,
+                                                                                                 DeploymentRuntime runtime) {
             try {
                 D debugInfo = debugConnector.getConnectionData((R) runtime);
                 ApplicationManager.getApplication().invokeLater(() -> {
@@ -455,7 +453,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         }
 
         @Override
-        public void errorOccurred(@Nonnull @Nls String errorMessage) {
+        public void errorOccurred(String errorMessage) {
             myLoggingHandler.printlnSystemMessage("Failed to deploy '" + myDeploymentName + "': " + errorMessage);
             myAllDeployments.updateAnyState(myDeployment, null,
                 DeploymentStatus.DEPLOYING, DeploymentStatus.NOT_DEPLOYED, errorMessage);
@@ -463,8 +461,8 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         }
 
         @Override
-        public void errorOccurred(@Nonnull @Nls String errorMessage,
-                                  @Nonnull DeploymentRuntime failedDeployment) {
+        public void errorOccurred(String errorMessage,
+                                  DeploymentRuntime failedDeployment) {
             myLoggingHandler.printlnSystemMessage("Failed to deploy '" + myDeploymentName + "': " + errorMessage);
             myDeployment.changeState(DeploymentStatus.DEPLOYING, DeploymentStatus.NOT_DEPLOYED, errorMessage, failedDeployment);
             myEventDispatcher.queueDeploymentsChanged(ServerConnectionImpl.this);
@@ -491,14 +489,14 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             myDeploymentComparator = deploymentComparator;
         }
 
-        public void addLocal(@Nonnull LocalDeploymentImpl<?> deployment) {
+        public void addLocal(LocalDeploymentImpl<?> deployment) {
             synchronized (myLock) {
                 myLocalDeployments.put(deployment.getName(), deployment);
                 myCachedAllDeployments = null;
             }
         }
 
-        public void replaceRemotesWith(@Nonnull Collection<? extends DeploymentImpl> newDeployments) {
+        public void replaceRemotesWith(Collection<? extends DeploymentImpl> newDeployments) {
             synchronized (myLock) {
                 myRemoteDeployments.clear();
                 myCachedAllDeployments = null;
@@ -508,10 +506,10 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
         }
 
-        public @Nullable DeploymentImpl updateRemoteState(@Nonnull String deploymentName,
+        public @Nullable DeploymentImpl updateRemoteState(String deploymentName,
                                                           @Nullable DeploymentRuntime deploymentRuntime,
-                                                          @Nonnull DeploymentStatus deploymentStatus,
-                                                          @Nullable @Nls String deploymentStatusText) {
+                                                          DeploymentStatus deploymentStatus,
+                                                          @Nullable String deploymentStatusText) {
 
             synchronized (myLock) {
                 DeploymentImpl<?> result = myRemoteDeployments.get(deploymentName);
@@ -522,18 +520,18 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
         }
 
-        public boolean updateAnyState(@Nonnull DeploymentImpl deployment,
+        public boolean updateAnyState(DeploymentImpl deployment,
                                       @Nullable DeploymentRuntime deploymentRuntime,
-                                      @Nonnull DeploymentStatus oldStatus,
-                                      @Nonnull DeploymentStatus newStatus,
-                                      @Nullable @Nls String statusText) {
+                                      DeploymentStatus oldStatus,
+                                      DeploymentStatus newStatus,
+                                      @Nullable String statusText) {
 
             synchronized (myLock) {
                 return deployment.changeState(oldStatus, newStatus, statusText, deploymentRuntime);
             }
         }
 
-        public @Nonnull Collection<Deployment> listDeployments() {
+        public Collection<Deployment> listDeployments() {
             synchronized (myLock) {
                 if (myCachedAllDeployments == null) {
                     Collection<Deployment> result = doListDeployments();
@@ -581,7 +579,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             return result;
         }
 
-        public boolean removeAllLocalForProject(@Nonnull Project project) {
+        public boolean removeAllLocalForProject(Project project) {
             synchronized (myLock) {
                 boolean hasChanged = false;
                 for (Iterator<LocalDeploymentImpl<?>> it = myLocalDeployments.values().iterator(); it.hasNext(); ) {
@@ -598,7 +596,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
         }
 
-        public @Nullable UndeployTransition startUndeploy(@Nonnull String deploymentName) {
+        public @Nullable UndeployTransition startUndeploy(String deploymentName) {
             synchronized (myLock) {
                 DeploymentImpl<?> deployment = myLocalDeployments.get(deploymentName);
                 if (deployment == null) {
@@ -608,7 +606,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
         }
 
-        private @Nonnull List<Deployment> collectDeepChildren(@Nonnull Deployment root) {
+        private List<Deployment> collectDeepChildren(Deployment root) {
             DeepChildrenCollector collector = new DeepChildrenCollector(root.getRuntime());
             synchronized (myLock) {
                 for (LocalDeploymentImpl<?> nextLocal : myLocalDeployments.values()) {
@@ -625,7 +623,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             private final DeploymentImpl<?> myDeployment;
             private final List<Deployment> mySubDeployments;
 
-            UndeployTransition(@Nonnull DeploymentImpl<?> deployment, @Nonnull List<Deployment> subDeployments) {
+            UndeployTransition(DeploymentImpl<?> deployment, List<Deployment> subDeployments) {
                 myDeployment = deployment;
                 mySubDeployments = new ArrayList<>(subDeployments);
 
@@ -654,7 +652,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
                 }
             }
 
-            public @Nonnull Iterable<Deployment> getSubDeployments() {
+            public Iterable<Deployment> getSubDeployments() {
                 return mySubDeployments;
             }
 
@@ -664,7 +662,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
                 return myDeployment.changeState(DeploymentStatus.DEPLOYING, terminalState, null, targetRuntime);
             }
 
-            private void forgetDeployment(@Nonnull Deployment deployment) {
+            private void forgetDeployment(Deployment deployment) {
                 synchronized (myLock) {
                     String deploymentName = deployment.getName();
                     myLocalDeployments.remove(deploymentName);
@@ -682,7 +680,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
                 myRootRuntime = rootRuntime;
             }
 
-            public void visitDeployment(@Nonnull Deployment deployment) {
+            public void visitDeployment(Deployment deployment) {
                 if (isUnderRootRuntime(deployment.getRuntime())) {
                     myCollectedChildren.add(deployment);
                 }

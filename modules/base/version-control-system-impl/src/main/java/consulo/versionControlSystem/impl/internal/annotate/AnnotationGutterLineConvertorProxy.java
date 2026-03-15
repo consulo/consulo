@@ -24,7 +24,6 @@ import consulo.versionControlSystem.UpToDateLineNumberProvider;
 import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.ui.color.ColorValue;
 import consulo.versionControlSystem.internal.ActiveAnnotationGutter;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -48,7 +47,7 @@ public class AnnotationGutterLineConvertorProxy implements ActiveAnnotationGutte
         return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER ? "" : myDelegate.getLineText(currentLine, editor);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(line);

@@ -31,7 +31,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -54,7 +53,7 @@ public class ConsoleGutterComponent extends JComponent implements MouseMotionLis
 
   private final boolean atLineStart;
 
-  public ConsoleGutterComponent(@Nonnull Editor editor, @Nonnull GutterContentProvider gutterContentProvider, boolean atLineStart) {
+  public ConsoleGutterComponent(Editor editor, GutterContentProvider gutterContentProvider, boolean atLineStart) {
     this.editor = (DesktopEditorImpl)editor;
     this.gutterContentProvider = gutterContentProvider;
     this.atLineStart = atLineStart;

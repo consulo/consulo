@@ -29,7 +29,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
@@ -41,12 +40,12 @@ public class XCopyWatchAction extends XWatchesTreeActionBase {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
+    protected boolean isEnabled(AnActionEvent e, XDebuggerTree tree) {
         return !getSelectedNodes(tree, XValueNodeImpl.class).isEmpty();
     }
 
     @Override
-    protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
+    protected void perform(AnActionEvent e, XDebuggerTree tree, XWatchesView watchesView) {
         XDebuggerTreeNode root = tree.getRoot();
         for (XValueNodeImpl node : getSelectedNodes(tree, XValueNodeImpl.class)) {
             node.getValueContainer().calculateEvaluationExpression().doWhenDone(expr -> {

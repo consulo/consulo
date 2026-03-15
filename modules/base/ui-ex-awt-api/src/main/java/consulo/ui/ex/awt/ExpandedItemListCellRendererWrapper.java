@@ -19,17 +19,16 @@ import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
 public class ExpandedItemListCellRendererWrapper<T> implements ListCellRenderer<T> {
-  @Nonnull
+  
   private final ListCellRenderer<? super T> myWrappee;
-  @Nonnull
+  
   private final ExpandableItemsHandler<Integer> myHandler;
 
-  public ExpandedItemListCellRendererWrapper(@Nonnull ListCellRenderer<? super T> wrappee, @Nonnull ExpandableItemsHandler<Integer> handler) {
+  public ExpandedItemListCellRendererWrapper(ListCellRenderer<? super T> wrappee, ExpandableItemsHandler<Integer> handler) {
     myWrappee = wrappee;
     myHandler = handler;
   }
@@ -56,7 +55,7 @@ public class ExpandedItemListCellRendererWrapper<T> implements ListCellRenderer<
     return "ExpandedItemListCellRendererWrapper[" + getWrappee().getClass().getName() + "]";
   }
 
-  @Nonnull
+  
   public ListCellRenderer getWrappee() {
     return myWrappee;
   }

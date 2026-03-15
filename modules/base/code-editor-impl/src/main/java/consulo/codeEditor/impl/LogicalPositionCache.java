@@ -10,7 +10,6 @@ import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.document.util.DocumentUtil;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,13 +46,13 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
     }
 
     @Override
-    public void beforeDocumentChange(@Nonnull DocumentEvent event) {
+    public void beforeDocumentChange(DocumentEvent event) {
         myUpdateInProgress = true;
         myDocumentChangeOldEndLine = getAdjustedLineNumber(event.getOffset() + event.getOldLength());
     }
 
     @Override
-    public void documentChanged(@Nonnull DocumentEvent event) {
+    public void documentChanged(DocumentEvent event) {
         try {
             int startLine = myDocument.getLineNumber(event.getOffset());
             int newEndLine = getAdjustedLineNumber(event.getOffset() + event.getNewLength());
@@ -65,7 +64,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
     }
 
     // text for which offset<->logicalColumn conversion is trivial
-    private static boolean isSimpleText(@Nonnull CharSequence text) {
+    private static boolean isSimpleText(CharSequence text) {
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (c == '\t' || c >= Character.MIN_SURROGATE && c <= Character.MAX_SURROGATE) return false;
@@ -82,7 +81,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
         }
     }
 
-    public synchronized @Nonnull LogicalPosition offsetToLogicalPosition(int offset) {
+    public synchronized LogicalPosition offsetToLogicalPosition(int offset) {
         resetIfOutdated();
         if (myUpdateInProgress) throw new IllegalStateException();
         int textLength = myDocument.getTextLength();
@@ -103,7 +102,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
         return lineData.offsetToLogicalColumn(myDocument, line, myTabSize, myDocument.getLineStartOffset(line) + intraLineOffset);
     }
 
-    public synchronized int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+    public synchronized int logicalPositionToOffset(LogicalPosition pos) {
         resetIfOutdated();
         int line = pos.line;
         int column = pos.column;
@@ -119,7 +118,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
         return lineData.logicalColumnToOffset(myDocument, line, myTabSize, column);
     }
 
-    public static int calcOffset(@Nonnull CharSequence text, int column, int startColumn, int startOffset, int endOffset, int tabSize) {
+    public static int calcOffset(CharSequence text, int column, int startColumn, int startOffset, int endOffset, int tabSize) {
         int currentColumn = startColumn;
         for (int i = startOffset; i < endOffset; i++) {
             char c = text.charAt(i);
@@ -137,7 +136,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
         return endOffset;
     }
 
-    public static int calcColumn(@Nonnull CharSequence text, int startOffset, int startColumn, int offset, int tabSize) {
+    public static int calcColumn(CharSequence text, int startOffset, int startColumn, int offset, int tabSize) {
         int column = startColumn;
         for (int i = startOffset; i < offset; i++) {
             char c = text.charAt(i);
@@ -180,7 +179,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
         }
     }
 
-    private @Nonnull LineData getLineInfo(int line) {
+    private LineData getLineInfo(int line) {
         checkDisposed();
         LineData result = myLines.get(line);
         if (result == null) {
@@ -214,7 +213,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
     }
 
     @Override
-    public @Nonnull String dumpState() {
+    public String dumpState() {
         try {
             validateState();
             return "valid";
@@ -241,7 +240,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
             columnCache = columnData;
         }
 
-        private static LineData create(@Nonnull Document document, int line, int tabSize) {
+        private static LineData create(Document document, int line, int tabSize) {
             int start = document.getLineStartOffset(line);
             int end = document.getLineEndOffset(line);
             int cacheSize = (end - start) / CACHE_FREQUENCY;
@@ -273,7 +272,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
             return hasTabsOrSurrogates ? new LineData(cache) : TRIVIAL;
         }
 
-        private int offsetToLogicalColumn(@Nonnull Document document, int line, int tabSize, int offset) {
+        private int offsetToLogicalColumn(Document document, int line, int tabSize, int offset) {
             offset = Math.min(offset, document.getLineEndOffset(line));
             int lineStartOffset = document.getLineStartOffset(line);
             int relOffset = offset - lineStartOffset;
@@ -284,7 +283,7 @@ public final class LogicalPositionCache implements PrioritizedDocumentListener, 
             return calcColumn(document.getImmutableCharSequence(), startOffset, startColumn, offset, tabSize);
         }
 
-        private int logicalColumnToOffset(@Nonnull Document document, int line, int tabSize, int logicalColumn) {
+        private int logicalColumnToOffset(Document document, int line, int tabSize, int logicalColumn) {
             int lineStartOffset = document.getLineStartOffset(line);
             int lineEndOffset = document.getLineEndOffset(line);
             if (columnCache == null) {

@@ -23,7 +23,6 @@ import consulo.util.lang.StringUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -33,15 +32,15 @@ import java.awt.event.MouseEvent;
  * @author Konstantin Bulenkov
  */
 public class GotItMessage {
-  @Nonnull
+  
   private final String myTitle;
-  @Nonnull
+  
   private final String myMessage;
   private Runnable myCallback;
   private Disposable myDisposable;
   private boolean myShowCallout = true;
 
-  private GotItMessage(@Nonnull String title, @Nonnull String message) {
+  private GotItMessage(String title, String message) {
     myTitle = title;
 
     StringBuilder builder = new StringBuilder();
@@ -56,7 +55,7 @@ public class GotItMessage {
     myMessage = builder.toString();
   }
 
-  public static GotItMessage createMessage(@Nonnull String title, @Nonnull String message) {
+  public static GotItMessage createMessage(String title, String message) {
     return new GotItMessage(title, message);
   }
 

@@ -24,21 +24,20 @@ import consulo.versionControlSystem.log.VcsLogRefresher;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogFilterer;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class PostponableLogRefresher implements VcsLogRefresher {
-  @Nonnull
+  
   protected final VcsLogDataImpl myLogData;
-  @Nonnull
+  
   private final Set<VirtualFile> myRootsToRefresh = new HashSet<>();
-  @Nonnull
+  
   private final Set<VcsLogWindow> myLogWindows = new HashSet<>();
 
-  public PostponableLogRefresher(@Nonnull VcsLogDataImpl logData) {
+  public PostponableLogRefresher(VcsLogDataImpl logData) {
     myLogData = logData;
     myLogData.addDataPackChangeListener(dataPack -> {
       for (VcsLogWindow window : myLogWindows) {
@@ -47,15 +46,15 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     });
   }
 
-  @Nonnull
-  public Disposable addLogWindow(@Nonnull VcsLogWindow window) {
+  
+  public Disposable addLogWindow(VcsLogWindow window) {
     myLogWindows.add(window);
     filtererActivated(window.getFilterer(), true);
     return () -> myLogWindows.remove(window);
   }
 
-  @Nonnull
-  public Disposable addLogWindow(@Nonnull VcsLogFilterer filterer) {
+  
+  public Disposable addLogWindow(VcsLogFilterer filterer) {
     return addLogWindow(new VcsLogWindow(filterer));
   }
 
@@ -74,7 +73,7 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     return false;
   }
 
-  public void filtererActivated(@Nonnull VcsLogFilterer filterer, boolean firstTime) {
+  public void filtererActivated(VcsLogFilterer filterer, boolean firstTime) {
     if (!myRootsToRefresh.isEmpty()) {
       refreshPostponedRoots();
     }
@@ -86,7 +85,7 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     }
   }
 
-  private static void dataPackArrived(@Nonnull VcsLogFilterer filterer, boolean visible) {
+  private static void dataPackArrived(VcsLogFilterer filterer, boolean visible) {
     if (!visible) {
       filterer.setValid(false);
     }
@@ -94,7 +93,7 @@ public class PostponableLogRefresher implements VcsLogRefresher {
   }
 
   @Override
-  public void refresh(@Nonnull VirtualFile root) {
+  public void refresh(VirtualFile root) {
     Application.get().invokeLater(
       () -> {
         if (canRefreshNow()) {
@@ -114,20 +113,20 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     myLogData.refresh(toRefresh);
   }
 
-  @Nonnull
+  
   public Set<VcsLogWindow> getLogWindows() {
     return myLogWindows;
   }
 
   public static class VcsLogWindow {
-    @Nonnull
+    
     private final VcsLogFilterer myFilterer;
 
-    public VcsLogWindow(@Nonnull VcsLogFilterer filterer) {
+    public VcsLogWindow(VcsLogFilterer filterer) {
       myFilterer = filterer;
     }
 
-    @Nonnull
+    
     public VcsLogFilterer getFilterer() {
       return myFilterer;
     }

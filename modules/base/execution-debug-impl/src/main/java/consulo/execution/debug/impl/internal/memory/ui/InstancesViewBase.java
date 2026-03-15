@@ -11,21 +11,20 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreeState;
 import consulo.execution.debug.memory.InstancesProvider;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.JBPanel;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public abstract class InstancesViewBase extends JBPanel implements Disposable {
     private final InstancesProvider myInstancesProvider;
 
-    public InstancesViewBase(@Nonnull LayoutManager layout, @Nonnull XDebugSession session, InstancesProvider instancesProvider) {
+    public InstancesViewBase(LayoutManager layout, XDebugSession session, InstancesProvider instancesProvider) {
         super(layout);
 
         myInstancesProvider = instancesProvider;
         session.addSessionListener(new MySessionListener(), this);
     }
 
-    protected XValueMarkers<?, ?> getValueMarkers(@Nonnull XDebugSession session) {
+    protected XValueMarkers<?, ?> getValueMarkers(XDebugSession session) {
         return session instanceof XDebugSessionImpl
             ? ((XDebugSessionImpl) session).getValueMarkers()
             : null;

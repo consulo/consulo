@@ -18,7 +18,6 @@ package consulo.remoteServer.runtime;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -27,9 +26,9 @@ import java.util.EventListener;
 @TopicAPI(ComponentScope.APPLICATION)
 public interface ServerConnectionListener extends EventListener {
 
-  void onConnectionCreated(@Nonnull ServerConnection<?> connection);
+  void onConnectionCreated(ServerConnection<?> connection);
 
-  void onConnectionStatusChanged(@Nonnull ServerConnection<?> connection);
+  void onConnectionStatusChanged(ServerConnection<?> connection);
 
-  void onDeploymentsChanged(@Nonnull ServerConnection<?> connection);
+  void onDeploymentsChanged(ServerConnection<?> connection);
 }

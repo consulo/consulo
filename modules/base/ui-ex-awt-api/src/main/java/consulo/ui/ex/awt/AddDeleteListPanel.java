@@ -16,8 +16,7 @@
 
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ public abstract class AddDeleteListPanel<T> extends JPanel implements ComponentW
   protected void customizeDecorator(ToolbarDecorator decorator) {
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myList.getEmptyText();

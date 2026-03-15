@@ -24,8 +24,7 @@ import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
     private final String myId;
     private final LocalizeValue myPresentableName;
 
-    protected PackagingElementType(@Nonnull String id, @Nonnull LocalizeValue presentableName) {
+    protected PackagingElementType(String id, LocalizeValue presentableName) {
         myId = id;
         myPresentableName = presentableName;
     }
@@ -46,34 +45,34 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
         return myId;
     }
 
-    @Nonnull
+    
     public LocalizeValue getPresentableName() {
         return myPresentableName;
     }
 
-    @Nonnull
+    
     public abstract Image getIcon();
 
-    public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
+    public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
         return true;
     }
 
-    @Nonnull
+    
     public abstract List<? extends PackagingElement<?>> chooseAndCreate(
-        @Nonnull ArtifactEditorContext context,
-        @Nonnull Artifact artifact,
-        @Nonnull CompositePackagingElement<?> parent
+        ArtifactEditorContext context,
+        Artifact artifact,
+        CompositePackagingElement<?> parent
     );
 
-    @Nonnull
-    public abstract E createEmpty(@Nonnull Project project);
+    
+    public abstract E createEmpty(Project project);
 
     protected static <T extends PackagingElementType<?>> T getInstance(Class<T> aClass) {
         return Application.get().getExtensionPoint(PackagingElementType.class).findExtensionOrFail(aClass);
     }
 
     @Nullable
-    public PackagingElementPropertiesPanel createElementPropertiesPanel(@Nonnull E element, @Nonnull ArtifactEditorContext context) {
+    public PackagingElementPropertiesPanel createElementPropertiesPanel(E element, ArtifactEditorContext context) {
         return null;
     }
 }

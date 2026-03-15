@@ -9,14 +9,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ShowBreakpointsOverLineNumbersAction extends ToggleAction implements DumbAware {
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return isSelected();
     }
 
@@ -25,13 +24,13 @@ public class ShowBreakpointsOverLineNumbersAction extends ToggleAction implement
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         UISettings.getInstance().setShowBreakpointsOverLineNumbers(state);
         EditorFactory.getInstance().refreshAllEditors();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabledAndVisible(true);
         if (!PersistentEditorSettings.getInstance().isLineNumbersShown()) {
@@ -40,7 +39,7 @@ public class ShowBreakpointsOverLineNumbersAction extends ToggleAction implement
     }
 
     @Override
-    @Nonnull
+    
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }

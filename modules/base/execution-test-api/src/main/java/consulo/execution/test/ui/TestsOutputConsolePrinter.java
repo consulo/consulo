@@ -21,7 +21,6 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 
 public class TestsOutputConsolePrinter implements Printer, Disposable {
   private final ConsoleView myConsole;
@@ -42,7 +41,7 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
         }
       };
 
-  public TestsOutputConsolePrinter(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView, TestConsoleProperties properties, AbstractTestProxy unboundOutputRoot) {
+  public TestsOutputConsolePrinter(BaseTestsOutputConsoleView testsOutputConsoleView, TestConsoleProperties properties, AbstractTestProxy unboundOutputRoot) {
     this(testsOutputConsoleView.getConsole(), properties, unboundOutputRoot);
   }
 
@@ -76,7 +75,7 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
     myConsole.print(text, contentType);
   }
 
-  public void onNewAvailable(@Nonnull Printable printable) {
+  public void onNewAvailable(Printable printable) {
     if (myPaused) {
       printable.printOn(myPausedPrinter);
     } else {

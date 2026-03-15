@@ -27,8 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -41,7 +40,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     private static final Key<Object> CALL_HIERARCHY_BROWSER_DATA_KEY =
         Key.create("consulo.ide.impl.idea.ide.hierarchy.CallHierarchyBrowserBase");
 
-    public CallHierarchyBrowserBase(@Nonnull Project project, @Nonnull PsiElement method) {
+    public CallHierarchyBrowserBase(Project project, PsiElement method) {
         super(project, method);
     }
 
@@ -51,14 +50,14 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     protected Key<Object> getBrowserDataKey() {
         return CALL_HIERARCHY_BROWSER_DATA_KEY;
     }
 
     @Override
-    protected void prependActions(@Nonnull DefaultActionGroup actionGroup) {
+    protected void prependActions(DefaultActionGroup actionGroup) {
         actionGroup.add(new ChangeViewTypeActionBase(
             IdeLocalize.actionCallerMethodsHierarchy(),
             IdeLocalize.actionCallerMethodsHierarchy(),
@@ -76,18 +75,18 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    @Nonnull
+    
     protected String getActionPlace() {
         return ActionPlaces.CALL_HIERARCHY_VIEW_TOOLBAR;
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getPrevOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyCallPrevOccurenceName();
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getNextOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyCallNextOccurenceName();
@@ -97,8 +96,8 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         private final String myTypeName;
 
         private ChangeViewTypeActionBase(
-            @Nonnull LocalizeValue shortDescription,
-            @Nonnull LocalizeValue longDescription,
+            LocalizeValue shortDescription,
+            LocalizeValue longDescription,
             Image icon,
             String typeName
         ) {
@@ -107,13 +106,13 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         }
 
         @Override
-        public final boolean isSelected(@Nonnull AnActionEvent event) {
+        public final boolean isSelected(AnActionEvent event) {
             return myTypeName.equals(myCurrentViewType);
         }
 
         @Override
         @RequiredUIAccess
-        public final void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public final void setSelected(AnActionEvent event, boolean flag) {
             if (flag) {
 //              setWaitCursor();
                 // invokeLater is called to update state of button before long tree building operation
@@ -123,7 +122,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
         @Override
         @RequiredUIAccess
-        public final void update(@Nonnull AnActionEvent event) {
+        public final void update(AnActionEvent event) {
             super.update(event);
             setEnabled(isValidBase());
         }

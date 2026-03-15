@@ -24,7 +24,6 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -39,24 +38,24 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
   private static final Logger LOG = Logger.getInstance(ConstructorInjectionComponentAdapter.class);
 
   private static final ThreadLocal<Set<ConstructorInjectionComponentAdapter>> ourGuard = new ThreadLocal<>();
-  @Nonnull
+  
   private final Class<? super T> myComponentKey;
-  @Nonnull
+  
   private final Class<T> myComponentImplementation;
 
-  public ConstructorInjectionComponentAdapter(@Nonnull Class<? super T> componentKey, @Nonnull Class<T> componentImplementation) {
+  public ConstructorInjectionComponentAdapter(Class<? super T> componentKey, Class<T> componentImplementation) {
     myComponentKey = componentKey;
     myComponentImplementation = componentImplementation;
   }
 
   @Override
-  @Nonnull
+  
   public Class<? super T> getComponentClass() {
     return myComponentKey;
   }
 
   @Override
-  @Nonnull
+  
   public Class<T> getComponentImplClass() {
     return myComponentImplementation;
   }
@@ -89,7 +88,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     }
   }
 
-  @Nonnull
+  
   protected T doGetComponentInstance(InstanceContainer guardedContainer) {
     Constructor<T> constructor = getGreediestSatisfiableConstructor(guardedContainer);
 
@@ -112,7 +111,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     }
   }
 
-  @Nonnull
+  
   private T newInstance(Constructor<T> constructor, Object[] parameters) throws InstantiationException, IllegalAccessException, InvocationTargetException {
     constructor.setAccessible(true);
     return constructor.newInstance(parameters);
@@ -161,7 +160,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     return parameters;
   }
 
-  private static boolean isDefaultConstructor(@Nonnull Constructor<?> constructor) {
+  private static boolean isDefaultConstructor(Constructor<?> constructor) {
     return Modifier.isPublic(constructor.getModifiers()) && constructor.getParameterCount() == 0 && constructor.getExceptionTypes().length == 0;
   }
 
@@ -245,7 +244,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     return greediestConstructor;
   }
 
-  @Nonnull
+  
   private Constructor[] getConstructors() {
     return getComponentImplClass().getDeclaredConstructors();
   }

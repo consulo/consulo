@@ -24,8 +24,7 @@ import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -48,7 +47,7 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         RunConfigurable configurable = getConfigurable();

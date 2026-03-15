@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -66,7 +65,7 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
 
     @RequiredUIAccess
     @Override
-    public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
+    public JComponent createOptionsPanel(Disposable parentDisposable) {
         return getEditor().createMainComponent();
     }
 

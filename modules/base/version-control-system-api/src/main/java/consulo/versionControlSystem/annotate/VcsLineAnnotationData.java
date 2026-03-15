@@ -17,7 +17,7 @@ package consulo.versionControlSystem.annotate;
 
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Common for all vcs annotation presentation

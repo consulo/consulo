@@ -19,7 +19,6 @@ import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines interface of text/color descriptors operated by color schemes.
@@ -36,7 +35,7 @@ public interface ColorAndFontDescriptors {
      *
      * @return the list of attribute descriptors.
      */
-    @Nonnull
+    
     AttributesDescriptor[] getAttributeDescriptors();
 
     /**
@@ -46,7 +45,7 @@ public interface ColorAndFontDescriptors {
      *
      * @return the list of color descriptors.
      */
-    @Nonnull
+    
     default ColorDescriptor[] getColorDescriptors() {
         return ColorDescriptor.EMPTY_ARRAY;
     }
@@ -56,6 +55,6 @@ public interface ColorAndFontDescriptors {
      *
      * @return the title of the custom page.
      */
-    @Nonnull
+    
     LocalizeValue getDisplayName();
 }

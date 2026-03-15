@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -79,9 +78,9 @@ public abstract class SyntaxHighlighterBase implements SyntaxHighlighter {
    * Throws error if the map already contains different mapping for one of given keys.
    */
   protected static void safeMap(
-    @Nonnull Map<IElementType, TextAttributesKey> map,
-    @Nonnull TokenSet keys,
-    @Nonnull TextAttributesKey value)
+    Map<IElementType, TextAttributesKey> map,
+    TokenSet keys,
+    TextAttributesKey value)
   {
     for (IElementType type : keys.getTypes()) {
       safeMap(map, type, value);
@@ -93,9 +92,9 @@ public abstract class SyntaxHighlighterBase implements SyntaxHighlighter {
    * Throws error if the map already contains different mapping for given key.
    */
   protected static void safeMap(
-    @Nonnull Map<IElementType, TextAttributesKey> map,
-    @Nonnull IElementType type,
-    @Nonnull TextAttributesKey value)
+    Map<IElementType, TextAttributesKey> map,
+    IElementType type,
+    TextAttributesKey value)
   {
     TextAttributesKey oldVal = map.put(type, value);
     if (oldVal != null && !oldVal.equals(value)) {

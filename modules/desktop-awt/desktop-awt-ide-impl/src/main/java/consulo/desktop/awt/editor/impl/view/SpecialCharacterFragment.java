@@ -7,15 +7,13 @@ import consulo.colorScheme.EditorFontType;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.function.Consumer;
 
 final class SpecialCharacterFragment implements LineFragment {
-    private static final @NonNls Int2ObjectMap<String> SPECIAL_CHAR_CODES = new Int2ObjectOpenHashMap<>(
+    private static final Int2ObjectMap<String> SPECIAL_CHAR_CODES = new Int2ObjectOpenHashMap<>(
         // @formatter:off
         new int[] {
             0x00,   0x01,   0x02,   0x03,   0x04,   0x05,   0x06,   0x07,   0x08,                   0x0B,   0x0C,           0x0E,   0x0F,
@@ -50,7 +48,7 @@ final class SpecialCharacterFragment implements LineFragment {
     private static final int BRACKETS_SIZE = 2;
     private static final int BRACKETS_THICKNESS = 1;
 
-    static @Nullable SpecialCharacterFragment create(@Nonnull EditorViewImpl view, int c, @Nullable char [] text, int pos) {
+    static @Nullable SpecialCharacterFragment create(EditorViewImpl view, int c, @Nullable char [] text, int pos) {
         String code = SPECIAL_CHAR_CODES.get(c);
         if (code == null) return null;
         if (text != null) {
@@ -82,7 +80,7 @@ final class SpecialCharacterFragment implements LineFragment {
     private final String myCode;
     private final float myWidth;
 
-    SpecialCharacterFragment(@Nonnull EditorViewImpl view, @Nonnull String code) {
+    SpecialCharacterFragment(EditorViewImpl view, String code) {
         myView = view;
         myCode = code;
         FontMetrics fontMetrics = FontInfo.getFontMetrics(getFont(), view.getFontRenderContext());
@@ -157,7 +155,7 @@ final class SpecialCharacterFragment implements LineFragment {
     }
 
     @Override
-    public @Nonnull LineFragment subFragment(int startOffset, int endOffset) {
+    public LineFragment subFragment(int startOffset, int endOffset) {
         return this;
     }
 

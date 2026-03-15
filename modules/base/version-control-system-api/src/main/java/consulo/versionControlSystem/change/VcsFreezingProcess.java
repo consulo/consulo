@@ -22,7 +22,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
-import jakarta.annotation.Nonnull;
 
 /**
  * Executes an action surrounding it with freezing-unfreezing of the ChangeListManager
@@ -32,19 +31,19 @@ public class VcsFreezingProcess {
 
   private static final Logger LOG = Logger.getInstance(VcsFreezingProcess.class);
 
-  @Nonnull
+  
   private final String myReason;
-  @Nonnull
+  
   private final Runnable myRunnable;
 
-  @Nonnull
+  
   private final ChangeListManagerEx myChangeListManager;
-  @Nonnull
+  
   private final SaveAndSyncHandler mySaveAndSyncHandler;
-  @Nonnull
+  
   private final StoreReloadManager myStoreReloadManager;
 
-  public VcsFreezingProcess(@Nonnull Project project, @Nonnull String operationTitle, @Nonnull Runnable runnable) {
+  public VcsFreezingProcess(Project project, String operationTitle, Runnable runnable) {
     myReason = operationTitle;
     myRunnable = runnable;
 

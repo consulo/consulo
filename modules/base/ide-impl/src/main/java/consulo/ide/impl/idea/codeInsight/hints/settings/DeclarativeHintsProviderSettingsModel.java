@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -85,7 +84,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
         return providerDescription.getGroup();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return providerDescription.getName();
@@ -243,7 +242,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
             return false;
         }
 
-        @Nonnull
+        
         @Override
         public Language getLanguage() {
             return null;

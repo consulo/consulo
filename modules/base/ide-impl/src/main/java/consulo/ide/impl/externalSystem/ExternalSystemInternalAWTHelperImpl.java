@@ -21,8 +21,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.ide.actions.ImportModuleAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -34,7 +33,7 @@ import jakarta.inject.Singleton;
 public class ExternalSystemInternalAWTHelperImpl implements ExternalSystemInternalAWTHelper {
     @RequiredUIAccess
     @Override
-    public void executeImportAction(@Nonnull Project project, @Nullable FileChooserDescriptor descriptor) {
+    public void executeImportAction(Project project, @Nullable FileChooserDescriptor descriptor) {
         ImportModuleAction.executeImportAction(project, descriptor);
     }
 }

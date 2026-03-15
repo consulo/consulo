@@ -5,14 +5,13 @@ import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import consulo.execution.debug.setting.XDebuggerSettings;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
 
 public class XDebuggerConfigurableProvider {
-  @Nonnull
-  public static Collection<Configurable> getConfigurables(@Nonnull DebuggerSettingsCategory category) {
+  
+  public static Collection<Configurable> getConfigurables(DebuggerSettingsCategory category) {
     List<Configurable> list;
     if (category == DebuggerSettingsCategory.GENERAL) {
       list = new SmartList<>(new XDebuggerGeneralConfigurable());
@@ -33,7 +32,7 @@ public class XDebuggerConfigurableProvider {
     return Lists.notNullize(list);
   }
 
-  public static void generalApplied(@Nonnull DebuggerSettingsCategory category) {
+  public static void generalApplied(DebuggerSettingsCategory category) {
     for (XDebuggerSettings<?> settings : XDebuggerSettingManagerImpl.getInstanceImpl().getSettingsList()) {
       settings.generalApplied(category);
     }

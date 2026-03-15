@@ -25,8 +25,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.GraphTableModel;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogGraphTable;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -35,36 +34,36 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class VcsLogImpl implements VcsLog {
-  @Nonnull
+  
   private final VcsLogDataImpl myLogData;
-  @Nonnull
+  
   private final VcsLogUiImpl myUi;
 
-  public VcsLogImpl(@Nonnull VcsLogDataImpl manager, @Nonnull VcsLogUiImpl ui) {
+  public VcsLogImpl(VcsLogDataImpl manager, VcsLogUiImpl ui) {
     myLogData = manager;
     myUi = ui;
   }
 
   @Override
-  @Nonnull
+  
   public List<CommitId> getSelectedCommits() {
     return getSelectedDataFromTable(GraphTableModel::getCommitIdAtRow);
   }
 
-  @Nonnull
+  
   @Override
   public List<VcsShortCommitDetails> getSelectedShortDetails() {
     return getSelectedDataFromTable(GraphTableModel::getShortDetails);
   }
 
-  @Nonnull
+  
   @Override
   public List<VcsFullCommitDetails> getSelectedDetails() {
     return getSelectedDataFromTable(GraphTableModel::getFullDetails);
   }
 
   @Override
-  public void requestSelectedDetails(@Nonnull Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator) {
+  public void requestSelectedDetails(Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator) {
     List<Integer> rowsList = Ints.asList(myUi.getTable().getSelectedRows());
     myLogData.getCommitDetailsGetter()
       .loadCommitsData(getTable().getModel().convertToCommitIds(rowsList), consumer, indicator);
@@ -72,11 +71,11 @@ public class VcsLogImpl implements VcsLog {
 
   @Nullable
   @Override
-  public Collection<String> getContainingBranches(@Nonnull Hash commitHash, @Nonnull VirtualFile root) {
+  public Collection<String> getContainingBranches(Hash commitHash, VirtualFile root) {
     return myLogData.getContainingBranchesGetter().getContainingBranchesFromCache(root, commitHash);
   }
 
-  @Nonnull
+  
   @Override
   public Future<Boolean> jumpToReference(String reference) {
     SettableFuture<Boolean> future = SettableFuture.create();
@@ -96,22 +95,22 @@ public class VcsLogImpl implements VcsLog {
     return future;
   }
 
-  @Nonnull
+  
   @Override
   public Map<VirtualFile, VcsLogProvider> getLogProviders() {
     return myLogData.getLogProviders();
   }
 
-  @Nonnull
+  
   private VcsLogGraphTable getTable() {
     return myUi.getTable();
   }
 
-  @Nonnull
-  private <T> List<T> getSelectedDataFromTable(@Nonnull BiFunction<GraphTableModel, Integer, T> dataGetter) {
+  
+  private <T> List<T> getSelectedDataFromTable(BiFunction<GraphTableModel, Integer, T> dataGetter) {
     final int[] rows = myUi.getTable().getSelectedRows();
     return new AbstractList<T>() {
-      @Nonnull
+      
       @Override
       public T get(int index) {
         return dataGetter.apply(getTable().getModel(), rows[index]);

@@ -17,12 +17,11 @@
 package consulo.language.codeStyle;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 public interface DelegatingFormattingModelBuilder extends FormattingModelBuilder {
     boolean dontFormatMyModel();
 
-    default boolean dontFormatMyModel(@Nonnull PsiElement element) {
+    default boolean dontFormatMyModel(PsiElement element) {
         return dontFormatMyModel();
     }
 }

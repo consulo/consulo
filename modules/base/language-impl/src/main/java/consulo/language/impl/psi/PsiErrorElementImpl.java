@@ -21,24 +21,23 @@ import consulo.language.ast.TokenType;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 public class PsiErrorElementImpl extends CompositePsiElement implements PsiErrorElement {
     private final LocalizeValue myErrorDescription;
 
-    public PsiErrorElementImpl(@Nonnull LocalizeValue errorDescription) {
+    public PsiErrorElementImpl(LocalizeValue errorDescription) {
         super(TokenType.ERROR_ELEMENT);
         myErrorDescription = errorDescription;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getErrorDescriptionValue() {
         return myErrorDescription;
     }
 
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) {
+    public void accept(PsiElementVisitor visitor) {
         visitor.visitErrorElement(this);
     }
 
@@ -48,7 +47,7 @@ public class PsiErrorElementImpl extends CompositePsiElement implements PsiError
     }
 
     @Override
-    @Nonnull
+    
     @RequiredReadAction
     public Language getLanguage() {
         PsiElement master = this;

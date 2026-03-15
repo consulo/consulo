@@ -17,8 +17,7 @@ package consulo.versionControlSystem.log.impl.internal.data.index;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -28,14 +27,14 @@ public interface VcsLogIndex {
 
   boolean isIndexed(int commit);
 
-  boolean isIndexed(@Nonnull VirtualFile root);
+  boolean isIndexed(VirtualFile root);
 
-  void markForIndexing(int commit, @Nonnull VirtualFile root);
+  void markForIndexing(int commit, VirtualFile root);
 
-  boolean canFilter(@Nonnull List<VcsLogDetailsFilter> filters);
+  boolean canFilter(List<VcsLogDetailsFilter> filters);
 
-  @Nonnull
-  Set<Integer> filter(@Nonnull List<VcsLogDetailsFilter> detailsFilters);
+  
+  Set<Integer> filter(List<VcsLogDetailsFilter> detailsFilters);
 
   @Nullable
   String getFullMessage(int index);

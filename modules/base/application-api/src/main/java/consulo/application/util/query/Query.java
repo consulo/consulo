@@ -3,8 +3,7 @@ package consulo.application.util.query;
 
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
@@ -19,7 +18,7 @@ public interface Query<Result> extends Iterable<Result> {
      *
      * @return results in a collection or empty collection if no results found.
      */
-    @Nonnull
+    
     Collection<Result> findAll();
 
     /**
@@ -40,15 +39,15 @@ public interface Query<Result> extends Iterable<Result> {
      * @return {@code true} if the search was completed normally,
      * {@code false} if the occurrence processing was cancelled by the processor.
      */
-    boolean forEach(@Nonnull Predicate<? super Result> consumer);
+    boolean forEach(Predicate<? super Result> consumer);
 
-    @Nonnull
-    default AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super Result> consumer) {
+    
+    default AsyncFuture<Boolean> forEachAsync(Predicate<? super Result> consumer) {
         return AsyncUtil.wrapBoolean(forEach(consumer));
     }
 
-    @Nonnull
-    default Result[] toArray(@Nonnull Result[] a) {
+    
+    default Result[] toArray(Result[] a) {
         return findAll().toArray(a);
     }
 
@@ -62,7 +61,7 @@ public interface Query<Result> extends Iterable<Result> {
      * @return true if given predicate is satisfied for all query results.
      */
     @Contract(pure = true)
-    default boolean allMatch(@Nonnull Predicate<? super Result> predicate) {
+    default boolean allMatch(Predicate<? super Result> predicate) {
         return forEach(predicate::test);
     }
 
@@ -75,52 +74,52 @@ public interface Query<Result> extends Iterable<Result> {
      * @return true if given predicate is satisfied for at least one query result.
      */
     @Contract(pure = true)
-    default boolean anyMatch(@Nonnull Predicate<? super Result> predicate) {
+    default boolean anyMatch(Predicate<? super Result> predicate) {
         return !forEach(t -> !predicate.test(t));
     }
 
     /**
      * @param transformation pure function
      */
-    @Nonnull
-    default <R> Query<R> transforming(@Nonnull Function<? super Result, ? extends Collection<? extends R>> transformation) {
+    
+    default <R> Query<R> transforming(Function<? super Result, ? extends Collection<? extends R>> transformation) {
         return Queries.getInstance().transforming(this, transformation);
     }
 
     /**
      * @param mapper pure function
      */
-    @Nonnull
-    default <R> Query<R> mapping(@Nonnull Function<? super Result, ? extends R> mapper) {
+    
+    default <R> Query<R> mapping(Function<? super Result, ? extends R> mapper) {
         return transforming(value -> Collections.singletonList(mapper.apply(value)));
     }
 
     /**
      * @param predicate pure function
      */
-    @Nonnull
-    default Query<Result> filtering(@Nonnull Predicate<? super Result> predicate) {
+    
+    default Query<Result> filtering(Predicate<? super Result> predicate) {
         return transforming(value -> predicate.test(value) ? Collections.singletonList(value) : Collections.emptyList());
     }
 
     /**
      * @param mapper pure function
      */
-    @Nonnull
-    default <R> Query<R> flatMapping(@Nonnull Function<? super Result, ? extends Query<? extends R>> mapper) {
+    
+    default <R> Query<R> flatMapping(Function<? super Result, ? extends Query<? extends R>> mapper) {
         return Queries.getInstance().flatMapping(this, mapper);
     }
 
     /**
      * @return an equivalent query whose {@link #forEach} accepts thread-safe consumers, so it may call the consumer in parallel.
      */
-    @Nonnull
+    
     @Contract(pure = true)
     default Query<Result> allowParallelProcessing() {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     default Iterator<Result> iterator() {
         return findAll().iterator();

@@ -22,8 +22,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.*;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +36,7 @@ public class PreferredProducerFind {
     }
 
     @Nullable
-    public static RunnerAndConfigurationSettings createConfiguration(@Nonnull Location location, ConfigurationContext context) {
+    public static RunnerAndConfigurationSettings createConfiguration(Location location, ConfigurationContext context) {
         ConfigurationFromContext fromContext = findConfigurationFromContext(location, context);
         return fromContext != null ? fromContext.getConfigurationSettings() : null;
     }

@@ -20,8 +20,7 @@ import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.Wrap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -29,9 +28,9 @@ import java.util.List;
  * @since 2009-10-22
  */
 public interface TemplateLanguageBlockFactory {
-  TemplateLanguageBlock createTemplateLanguageBlock(@Nonnull ASTNode node,
+  TemplateLanguageBlock createTemplateLanguageBlock(ASTNode node,
                                                     @Nullable Wrap wrap,
                                                     @Nullable Alignment alignment,
                                                     @Nullable List<DataLanguageBlockWrapper> foreignChildren,
-                                                    @Nonnull CodeStyleSettings codeStyleSettings);
+                                                    CodeStyleSettings codeStyleSettings);
 }

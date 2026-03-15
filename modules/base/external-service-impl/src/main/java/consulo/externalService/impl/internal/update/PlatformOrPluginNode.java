@@ -3,15 +3,14 @@ package consulo.externalService.impl.internal.update;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginDescriptor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2018-07-08
  */
 public class PlatformOrPluginNode {
-    @Nonnull
+    
     private final PluginId myPluginId;
     @Nullable
     private final PluginDescriptor myCurrentDescriptor;
@@ -19,7 +18,7 @@ public class PlatformOrPluginNode {
     private final PluginDescriptor myFutureDescriptor;
 
     public PlatformOrPluginNode(
-        @Nonnull PluginId pluginId,
+        PluginId pluginId,
         @Nullable PluginDescriptor currentDescriptor,
         @Nullable PluginDescriptor futureDescriptor
     ) {
@@ -32,7 +31,7 @@ public class PlatformOrPluginNode {
         }
     }
 
-    @Nonnull
+    
     public PluginId getPluginId() {
         return myPluginId;
     }

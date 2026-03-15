@@ -18,7 +18,6 @@ package consulo.ui.impl;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.*;
@@ -34,25 +33,25 @@ public abstract class BaseUIAccessScheduler extends AbstractExecutorService impl
     myScheduledExecutorService = scheduledExecutorService;
   }
 
-  @Nonnull
+  
   @Override
-  public ScheduledFuture<?> schedule(@Nonnull Runnable command, @Nonnull ModalityState modalityState, long delay, TimeUnit unit) {
+  public ScheduledFuture<?> schedule(Runnable command, ModalityState modalityState, long delay, TimeUnit unit) {
     return myScheduledExecutorService.schedule(() -> runWithModalityState(command, modalityState), delay, unit);
   }
 
-  public abstract void runWithModalityState(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState);
+  public abstract void runWithModalityState(Runnable runnable, ModalityState modalityState);
 
-  @Nonnull
+  
   @Override
-  public ScheduledFuture<?> schedule(@Nonnull Runnable command, long delay, @Nonnull TimeUnit unit) {
+  public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
     return myScheduledExecutorService.schedule(wrap(command), delay, unit);
   }
 
-  @Nonnull
+  
   @Override
-  public <V> ScheduledFuture<V> schedule(@Nonnull Callable<V> callable,
+  public <V> ScheduledFuture<V> schedule(Callable<V> callable,
                                          long delay,
-                                         @Nonnull TimeUnit unit) {
+                                         TimeUnit unit) {
     return myScheduledExecutorService.schedule(() -> uiAccess().<V>giveAndWaitIfNeed(() -> {
       try {
         return callable.call();
@@ -63,21 +62,21 @@ public abstract class BaseUIAccessScheduler extends AbstractExecutorService impl
     }), delay, unit);
   }
 
-  @Nonnull
+  
   @Override
-  public ScheduledFuture<?> scheduleAtFixedRate(@Nonnull Runnable command,
+  public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
                                                 long initialDelay,
                                                 long period,
-                                                @Nonnull TimeUnit unit) {
+                                                TimeUnit unit) {
     return myScheduledExecutorService.scheduleAtFixedRate(wrap(command), initialDelay, period, unit);
   }
 
-  @Nonnull
+  
   @Override
-  public ScheduledFuture<?> scheduleWithFixedDelay(@Nonnull Runnable command,
+  public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
                                                    long initialDelay,
                                                    long delay,
-                                                   @Nonnull TimeUnit unit) {
+                                                   TimeUnit unit) {
     return myScheduledExecutorService.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
   }
 
@@ -86,7 +85,7 @@ public abstract class BaseUIAccessScheduler extends AbstractExecutorService impl
   }
 
   @Override
-  public void execute(@Nonnull Runnable command) {
+  public void execute(Runnable command) {
     uiAccess().execute(command);
   }
 
@@ -111,10 +110,10 @@ public abstract class BaseUIAccessScheduler extends AbstractExecutorService impl
   }
 
   @Override
-  public boolean awaitTermination(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
+  public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   protected abstract UIAccess uiAccess();
 }

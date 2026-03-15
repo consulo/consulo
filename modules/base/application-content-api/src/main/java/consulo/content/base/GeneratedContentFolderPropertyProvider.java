@@ -23,8 +23,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -36,7 +35,7 @@ import java.util.Objects;
 public class GeneratedContentFolderPropertyProvider extends ContentFolderPropertyProvider<Boolean> {
     public static final Key<Boolean> IS_GENERATED = Key.create("is-generated-root");
 
-    @Nonnull
+    
     @Override
     public Key<Boolean> getKey() {
         return IS_GENERATED;
@@ -49,7 +48,7 @@ public class GeneratedContentFolderPropertyProvider extends ContentFolderPropert
 
     @Nullable
     @Override
-    public Image getIcon(@Nonnull Boolean value, @Nonnull ContentFolderTypeProvider typeProvider) {
+    public Image getIcon(Boolean value, ContentFolderTypeProvider typeProvider) {
         if (!Objects.equals(value, Boolean.TRUE)) {
             return null;
         }
@@ -62,16 +61,16 @@ public class GeneratedContentFolderPropertyProvider extends ContentFolderPropert
     }
 
     @Override
-    public Boolean fromString(@Nonnull String value) {
+    public Boolean fromString(String value) {
         return Boolean.valueOf(value);
     }
 
     @Override
-    public String toString(@Nonnull Boolean value) {
+    public String toString(Boolean value) {
         return value.toString();
     }
 
-    @Nonnull
+    
     @Override
     public Boolean[] getValues() {
         return new Boolean[]{Boolean.TRUE, Boolean.FALSE};

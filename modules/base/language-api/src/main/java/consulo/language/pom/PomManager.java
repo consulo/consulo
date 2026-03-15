@@ -18,7 +18,6 @@ package consulo.language.pom;
 
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -27,7 +26,7 @@ public class PomManager {
   private PomManager() {
   }
 
-  @Nonnull
+  
   public static PomModel getModel(Project project) {
     return project.getInstance(PomModel.class);
   }

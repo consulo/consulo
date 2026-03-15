@@ -11,7 +11,6 @@ import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.bytes.ByteList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -39,7 +38,7 @@ public final class LineSet {
         return createLineSet(text, false);
     }
 
-    private static @Nonnull LineSet createLineSet(@Nonnull CharSequence text, boolean markModified) {
+    private static LineSet createLineSet(CharSequence text, boolean markModified) {
         IntList starts = new IntArrayList();
         ByteList flags = new ByteArrayList();
 
@@ -52,7 +51,7 @@ public final class LineSet {
         return new LineSet(starts.toIntArray(), flags.toByteArray(), text.length());
     }
 
-    public @Nonnull LineSet update(@Nonnull CharSequence prevText, int start, int end, @Nonnull CharSequence replacement, boolean wholeTextReplaced) {
+    public LineSet update(CharSequence prevText, int start, int end, CharSequence replacement, boolean wholeTextReplaced) {
         if (myLength == 0) {
             return createLineSet(replacement, !wholeTextReplaced);
         }
@@ -82,7 +81,7 @@ public final class LineSet {
         return index >= 0 && index < s.length() && s.charAt(index) == c;
     }
 
-    private boolean isSingleLineChange(int start, int end, @Nonnull CharSequence replacement) {
+    private boolean isSingleLineChange(int start, int end, CharSequence replacement) {
         if (start == 0 && end == myLength && replacement.length() == 0) {
             return false;
         }
@@ -91,7 +90,7 @@ public final class LineSet {
         return startLine == findLineIndex(end) && !CharArrayUtil.containLineBreaks(replacement) && !isLastEmptyLine(startLine);
     }
 
-    private @Nonnull LineSet updateInsideOneLine(int line, int lengthDelta) {
+    private LineSet updateInsideOneLine(int line, int lengthDelta) {
         int[] starts = myStarts.clone();
         for (int i = line + 1; i < starts.length; i++) {
             starts[i] += lengthDelta;
@@ -177,7 +176,7 @@ public final class LineSet {
         return bsResult >= 0 ? bsResult : -bsResult - 2;
     }
 
-    public @Nonnull LineIterator createIterator() {
+    public LineIterator createIterator() {
         return new LineIteratorImpl(this);
     }
 
@@ -210,8 +209,8 @@ public final class LineSet {
         return !isLastEmptyLine(index) && BitUtil.isSet(myFlags[index], MODIFIED_MASK);
     }
 
-    @Nonnull
-    public LineSet setModified(@Nonnull IntList indices) {
+    
+    public LineSet setModified(IntList indices) {
         if (indices.isEmpty()) {
             return this;
         }
@@ -230,7 +229,7 @@ public final class LineSet {
         return new LineSet(myStarts, flags, myLength);
     }
 
-    @Nonnull
+    
     public LineSet clearModificationFlags(int startLine, int endLine) {
         if (startLine > endLine) {
             throw new IllegalArgumentException("endLine < startLine: " + endLine + " < " + startLine + "; lineCount: " + getLineCount());
@@ -252,7 +251,7 @@ public final class LineSet {
         return new LineSet(myStarts, flags, myLength);
     }
 
-    @Nonnull
+    
     public LineSet clearModificationFlags() {
         return getLineCount() == 0 ? this : clearModificationFlags(0, getLineCount());
     }

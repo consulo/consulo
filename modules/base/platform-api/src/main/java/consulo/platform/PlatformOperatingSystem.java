@@ -16,8 +16,7 @@
 package consulo.platform;
 
 import consulo.platform.os.UnixOperationSystem;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -27,7 +26,7 @@ import java.util.Map;
  * @since 25/04/2023
  */
 public interface PlatformOperatingSystem {
-    @Nonnull
+    
     Collection<ProcessInfo> processes();
 
     boolean isWindows();
@@ -45,31 +44,31 @@ public interface PlatformOperatingSystem {
         return this instanceof UnixOperationSystem linux && linux.isXWindow();
     }
 
-    @Nonnull
+    
     default LineSeparator lineSeparator() {
         return LineSeparator.LF;
     }
 
-    @Nonnull
+    
     String name();
 
-    @Nonnull
+    
     String version();
 
-    @Nonnull
+    
     String arch();
 
-    @Nonnull
+    
     Map<String, String> environmentVariables();
 
     @Nullable
-    String getEnvironmentVariable(@Nonnull String key);
+    String getEnvironmentVariable(String key);
 
-    @Nonnull
+    
     String fileNamePrefix();
 
     @Nullable
-    default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
+    default String getEnvironmentVariable(String key, String defaultValue) {
         String environmentVariable = getEnvironmentVariable(key);
         return environmentVariable == null ? defaultValue : environmentVariable;
     }

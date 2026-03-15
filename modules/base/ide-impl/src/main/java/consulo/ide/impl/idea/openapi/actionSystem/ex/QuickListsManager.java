@@ -31,7 +31,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.io.PathUtil;
 import consulo.util.jdom.JDOMUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -57,23 +56,23 @@ public class QuickListsManager {
     private final SchemeManager<QuickList, QuickList> mySchemeManager;
 
     @Inject
-    public QuickListsManager(@Nonnull Application application, @Nonnull ActionManager actionManager, @Nonnull SchemeManagerFactory schemeManagerFactory) {
+    public QuickListsManager(Application application, ActionManager actionManager, SchemeManagerFactory schemeManagerFactory) {
         myActionManager = actionManager;
         mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<QuickList, QuickList>() {
-            @Nonnull
+            
             @Override
-            public QuickList readScheme(@Nonnull Element element) {
+            public QuickList readScheme(Element element) {
                 return createItem(element);
             }
 
-            @Nonnull
+            
             @Override
-            public String getName(@Nonnull QuickList immutableElement) {
+            public String getName(QuickList immutableElement) {
                 return immutableElement.getName();
             }
 
             @Override
-            public Element writeScheme(@Nonnull QuickList scheme) {
+            public Element writeScheme(QuickList scheme) {
                 Element element = new Element(LIST_TAG);
                 scheme.writeExternal(element);
                 return element;
@@ -100,14 +99,14 @@ public class QuickListsManager {
         registerActions();
     }
 
-    @Nonnull
-    private static QuickList createItem(@Nonnull Element element) {
+    
+    private static QuickList createItem(Element element) {
         QuickList item = new QuickList();
         item.readExternal(element);
         return item;
     }
 
-    @Nonnull
+    
     public QuickList[] getAllQuickLists() {
         Collection<QuickList> lists = mySchemeManager.getAllSchemes();
         return lists.toArray(new QuickList[lists.size()]);
@@ -130,7 +129,7 @@ public class QuickListsManager {
         }
     }
 
-    public void setQuickLists(@Nonnull QuickList[] quickLists) {
+    public void setQuickLists(QuickList[] quickLists) {
         mySchemeManager.clearAllSchemes();
         unregisterActions();
         for (QuickList quickList : quickLists) {
@@ -142,7 +141,7 @@ public class QuickListsManager {
     private static class InvokeQuickListAction extends QuickSwitchSchemeAction {
         private final QuickList myQuickList;
 
-        public InvokeQuickListAction(@Nonnull QuickList quickList) {
+        public InvokeQuickListAction(QuickList quickList) {
             myQuickList = quickList;
             myActionPlace = ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION;
             getTemplatePresentation().setDescription(myQuickList.getDescription());
@@ -151,8 +150,8 @@ public class QuickListsManager {
 
         @Override
         protected void fillActions(Project project,
-                                   @Nonnull ActionGroup.Builder group,
-                                   @Nonnull DataContext dataContext) {
+                                   ActionGroup.Builder group,
+                                   DataContext dataContext) {
             ActionManager actionManager = ActionManager.getInstance();
             for (String actionId : myQuickList.getActionIds()) {
                 if (QuickList.SEPARATOR_ID.equals(actionId)) {

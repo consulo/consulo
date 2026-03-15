@@ -20,7 +20,6 @@ import consulo.application.ApplicationProperties;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ public enum ExternalService {
   ERROR_REPORTING(LocalizeValue.localizeTODO("Error Reporting"), ThreeState.UNSURE, ThreeState.YES, ThreeState.UNSURE, ThreeState.NO),
   DEVELOPER_LIST(LocalizeValue.localizeTODO("Developer List (Error Reporting)"), ThreeState.NO, ThreeState.YES, ThreeState.NO),
   STATISTICS(LocalizeValue.localizeTODO("Statistics"), ThreeState.UNSURE, ThreeState.YES, ThreeState.UNSURE, ThreeState.NO) {
-    @Nonnull
+    
     @Override
     public ThreeState getDefaultState() {
       // disable fully statistics for sandbox/internal mode
@@ -65,7 +64,7 @@ public enum ExternalService {
     return myName;
   }
 
-  @Nonnull
+  
   public ThreeState getDefaultState() {
     return myDefaultState;
   }

@@ -17,7 +17,6 @@
 package consulo.application.impl.internal.graph;
 
 import consulo.component.util.graph.Graph;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -32,7 +31,7 @@ public class CycleFinder<Node> {
     myGraph = graph;
   }
 
-  @Nonnull
+  
   public Set<List<Node>> getNodeCycles(final Node node){
     Set<List<Node>> result = new HashSet<List<Node>>();
 

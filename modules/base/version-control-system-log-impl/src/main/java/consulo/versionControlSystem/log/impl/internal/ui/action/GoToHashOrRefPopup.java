@@ -40,8 +40,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogGraphTable;
 import consulo.versionControlSystem.log.ui.VcsLogColorManager;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -56,15 +55,15 @@ import java.util.stream.Stream;
 public class GoToHashOrRefPopup {
     private static final Logger LOG = Logger.getInstance(GoToHashOrRefPopup.class);
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final TextFieldWithProgress myTextField;
-    @Nonnull
+    
     private final Function<String, Future> myOnSelectedHash;
-    @Nonnull
+    
     private final Function<VcsRef, Future> myOnSelectedRef;
-    @Nonnull
+    
     private final JBPopup myPopup;
     @Nullable
     private Future myFuture;
@@ -72,13 +71,13 @@ public class GoToHashOrRefPopup {
     private VcsRef mySelectedRef;
 
     public GoToHashOrRefPopup(
-        @Nonnull Project project,
-        @Nonnull VcsLogRefs variants,
+        Project project,
+        VcsLogRefs variants,
         Collection<VirtualFile> roots,
-        @Nonnull Function<String, Future> onSelectedHash,
-        @Nonnull Function<VcsRef, Future> onSelectedRef,
-        @Nonnull VcsLogColorManager colorManager,
-        @Nonnull Comparator<VcsRef> comparator
+        Function<String, Future> onSelectedHash,
+        Function<VcsRef, Future> onSelectedRef,
+        VcsLogColorManager colorManager,
+        Comparator<VcsRef> comparator
     ) {
         myProject = project;
         myOnSelectedHash = onSelectedHash;
@@ -133,7 +132,7 @@ public class GoToHashOrRefPopup {
             .createPopup();
         myPopup.addListener(new JBPopupListener() {
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 if (!event.isOk() && myFuture != null) {
                     myFuture.cancel(true);
                 }
@@ -151,23 +150,23 @@ public class GoToHashOrRefPopup {
         myProject.getApplication().invokeLater(() -> myPopup.closeOk(null));
     }
 
-    public void show(@Nonnull JComponent anchor) {
+    public void show(JComponent anchor) {
         myPopup.showInCenterOf(anchor);
     }
 
     private class VcsRefCompletionProvider extends ValuesCompletionProvider<VcsRef> {
         private static final int TIMEOUT = 100;
-        @Nonnull
+        
         private final VcsLogRefs myRefs;
-        @Nonnull
+        
         private final Collection<VirtualFile> myRoots;
 
         public VcsRefCompletionProvider(
-            @Nonnull Project project,
-            @Nonnull VcsLogRefs refs,
-            @Nonnull Collection<VirtualFile> roots,
-            @Nonnull VcsLogColorManager colorManager,
-            @Nonnull Comparator<VcsRef> comparator
+            Project project,
+            VcsLogRefs refs,
+            Collection<VirtualFile> roots,
+            VcsLogColorManager colorManager,
+            Comparator<VcsRef> comparator
         ) {
             super(new VcsRefDescriptor(project, colorManager, comparator, roots), List.of());
             myRefs = refs;
@@ -176,9 +175,9 @@ public class GoToHashOrRefPopup {
 
         @Override
         public void fillCompletionVariants(
-            @Nonnull CompletionParameters parameters,
-            @Nonnull String prefix,
-            @Nonnull CompletionResultSet result
+            CompletionParameters parameters,
+            String prefix,
+            CompletionResultSet result
         ) {
             addValues(result, filterAndSort(result, myRefs.getBranches().stream()));
 
@@ -206,34 +205,34 @@ public class GoToHashOrRefPopup {
             result.stopHere();
         }
 
-        public void addValues(@Nonnull CompletionResultSet result, @Nonnull Collection<? extends VcsRef> values) {
+        public void addValues(CompletionResultSet result, Collection<? extends VcsRef> values) {
             for (VcsRef completionVariant : values) {
                 result.addElement(installInsertHandler(myDescriptor.createLookupBuilder(completionVariant)));
             }
         }
 
-        @Nonnull
-        private List<VcsRef> filterAndSort(@Nonnull CompletionResultSet result, @Nonnull Stream<VcsRef> stream) {
+        
+        private List<VcsRef> filterAndSort(CompletionResultSet result, Stream<VcsRef> stream) {
             return ContainerUtil.sorted(stream.filter(ref -> myRoots.contains(ref.getRoot())
                 && result.getPrefixMatcher().prefixMatches(ref.getName())).collect(Collectors.toList()), myDescriptor);
         }
     }
 
     private class VcsRefDescriptor extends DefaultTextCompletionValueDescriptor<VcsRef> {
-        @Nonnull
+        
         private final Project myProject;
-        @Nonnull
+        
         private final VcsLogColorManager myColorManager;
-        @Nonnull
+        
         private final Comparator<VcsRef> myReferenceComparator;
-        @Nonnull
+        
         private final Map<VirtualFile, String> myCachedRootNames = new HashMap<>();
 
         private VcsRefDescriptor(
-            @Nonnull Project project,
-            @Nonnull VcsLogColorManager manager,
-            @Nonnull Comparator<VcsRef> comparator,
-            @Nonnull Collection<VirtualFile> roots
+            Project project,
+            VcsLogColorManager manager,
+            Comparator<VcsRef> comparator,
+            Collection<VirtualFile> roots
         ) {
             myProject = project;
             myColorManager = manager;
@@ -245,9 +244,9 @@ public class GoToHashOrRefPopup {
             }
         }
 
-        @Nonnull
+        
         @Override
-        public LookupElementBuilder createLookupBuilder(@Nonnull VcsRef item) {
+        public LookupElementBuilder createLookupBuilder(VcsRef item) {
             LookupElementBuilder lookupBuilder = super.createLookupBuilder(item);
             if (myColorManager.isMultipleRoots()) {
                 lookupBuilder = lookupBuilder.withTypeText(
@@ -263,15 +262,15 @@ public class GoToHashOrRefPopup {
             return lookupBuilder;
         }
 
-        @Nonnull
+        
         @Override
-        public String getLookupString(@Nonnull VcsRef item) {
+        public String getLookupString(VcsRef item) {
             return item.getName();
         }
 
         @Nullable
         @Override
-        protected String getTailText(@Nonnull VcsRef item) {
+        protected String getTailText(VcsRef item) {
             if (!myColorManager.isMultipleRoots()) {
                 return null;
             }
@@ -280,7 +279,7 @@ public class GoToHashOrRefPopup {
 
         @Nullable
         @Override
-        protected String getTypeText(@Nonnull VcsRef item) {
+        protected String getTypeText(VcsRef item) {
             if (!myColorManager.isMultipleRoots()) {
                 return null;
             }
@@ -298,7 +297,7 @@ public class GoToHashOrRefPopup {
 
         @Nullable
         @Override
-        protected InsertHandler<LookupElement> createInsertHandler(@Nonnull VcsRef item) {
+        protected InsertHandler<LookupElement> createInsertHandler(VcsRef item) {
             return (context, item1) -> {
                 mySelectedRef = (VcsRef) item1.getObject();
                 // handleInsert is called in the middle of some other code that works with editor

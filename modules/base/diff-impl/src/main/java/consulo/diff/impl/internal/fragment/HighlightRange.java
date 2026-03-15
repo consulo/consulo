@@ -17,33 +17,32 @@ package consulo.diff.impl.internal.fragment;
 
 import consulo.diff.util.Side;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 public class HighlightRange {
-  @Nonnull
+  
   private final TextRange myBase;
-  @Nonnull
+  
   private final TextRange myChanged;
-  @Nonnull
+  
   private final Side mySide;
 
-  public HighlightRange(@Nonnull Side side, @Nonnull TextRange base, @Nonnull TextRange changed) {
+  public HighlightRange(Side side, TextRange base, TextRange changed) {
     mySide = side;
     myBase = base;
     myChanged = changed;
   }
 
-  @Nonnull
+  
   public Side getSide() {
     return mySide;
   }
 
-  @Nonnull
+  
   public TextRange getBase() {
     return myBase;
   }
 
-  @Nonnull
+  
   public TextRange getChanged() {
     return myChanged;
   }

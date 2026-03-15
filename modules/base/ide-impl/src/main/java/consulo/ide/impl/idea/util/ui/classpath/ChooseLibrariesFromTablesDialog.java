@@ -22,8 +22,7 @@ import consulo.content.library.LibraryTable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -37,14 +36,14 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     @Nullable
     private final Project myProject;
 
-    protected ChooseLibrariesFromTablesDialog(@Nonnull LocalizeValue title, @Nonnull Project project) {
+    protected ChooseLibrariesFromTablesDialog(LocalizeValue title, Project project) {
         super(project, title);
         myProject = project;
     }
 
     protected ChooseLibrariesFromTablesDialog(
-        @Nonnull JComponent parentComponent,
-        @Nonnull LocalizeValue title,
+        JComponent parentComponent,
+        LocalizeValue title,
         @Nullable Project project
     ) {
         super(parentComponent, title);
@@ -52,15 +51,15 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     }
 
     public static ChooseLibrariesFromTablesDialog createDialog(
-        @Nonnull LocalizeValue title,
-        @Nonnull Project project
+        LocalizeValue title,
+        Project project
     ) {
         ChooseLibrariesFromTablesDialog dialog = new ChooseLibrariesFromTablesDialog(title, project);
         dialog.init();
         return dialog;
     }
 
-    @Nonnull
+    
     @Override
     protected Project getProject() {
         if (myProject != null) {
@@ -107,7 +106,7 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     }
 
     @Override
-    protected int getLibraryTableWeight(@Nonnull LibraryTable libraryTable) {
+    protected int getLibraryTableWeight(LibraryTable libraryTable) {
         if (libraryTable.getTableLevel().equals(LibraryEx.MODULE_LEVEL)) {
             return 0;
         }
@@ -122,12 +121,12 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     }
 
     @Override
-    protected boolean isAutoExpandLibraryTable(@Nonnull LibraryTable libraryTable) {
+    protected boolean isAutoExpandLibraryTable(LibraryTable libraryTable) {
         return isProjectLibraryTable(libraryTable);
     }
 
-    @Nonnull
-    protected Library[] getLibraries(@Nonnull LibraryTable table) {
+    
+    protected Library[] getLibraries(LibraryTable table) {
         return table.getLibraries();
     }
 }

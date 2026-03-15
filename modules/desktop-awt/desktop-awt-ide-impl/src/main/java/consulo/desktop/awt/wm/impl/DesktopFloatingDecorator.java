@@ -34,7 +34,6 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -209,7 +208,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     return Math.min(1.0f, Math.max(.0f, ratio));
   }
 
-  @Nonnull
+  
   @Override
   public Rectangle2D getDecoratorBounds() {
     return TargetAWT.from(getBounds());

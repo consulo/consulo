@@ -18,15 +18,14 @@ package consulo.language.editor.completion;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public abstract class CompletionSorter {
-  public abstract CompletionSorter weighBefore(@Nonnull String beforeId, LookupElementWeigher... weighers);
+  public abstract CompletionSorter weighBefore(String beforeId, LookupElementWeigher... weighers);
 
-  public abstract CompletionSorter weighAfter(@Nonnull String afterId, LookupElementWeigher... weighers);
+  public abstract CompletionSorter weighAfter(String afterId, LookupElementWeigher... weighers);
 
   public abstract CompletionSorter weigh(LookupElementWeigher weigher);
 

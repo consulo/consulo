@@ -20,8 +20,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -32,14 +31,14 @@ public class BuilderDataContext implements DataContext {
   private final Map<Key, Object> myDataId2Data;
   private final DataContext myParent;
 
-  public BuilderDataContext(@Nonnull Map<Key, Object> dataId2data, @Nullable DataContext parent) {
+  public BuilderDataContext(Map<Key, Object> dataId2data, @Nullable DataContext parent) {
     myDataId2Data = dataId2data;
     myParent = parent;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getData(@Nonnull Key<T> dataId) {
+  public <T> T getData(Key<T> dataId) {
     Object result = getDataFromSelfOrParent(dataId);
 
     if (result == null) {
@@ -52,7 +51,7 @@ public class BuilderDataContext implements DataContext {
     return (T)result;
   }
 
-  private Object getDataFromSelfOrParent(@Nonnull Key dataId) {
+  private Object getDataFromSelfOrParent(Key dataId) {
     return myDataId2Data.containsKey(dataId) ? myDataId2Data.get(dataId) : myParent == null ? null : myParent.getData(dataId);
   }
 }

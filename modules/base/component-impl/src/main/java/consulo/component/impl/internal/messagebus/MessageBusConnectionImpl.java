@@ -9,7 +9,6 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartFMap;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +23,12 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
 
   private volatile SmartFMap<Class<?>, Object> mySubscriptions = SmartFMap.emptyMap();
 
-  MessageBusConnectionImpl(@Nonnull MessageBusImpl bus) {
+  MessageBusConnectionImpl(MessageBusImpl bus) {
     myBus = bus;
   }
 
   @Override
-  public <L> void subscribe(@Nonnull Class<L> topicClass, @Nonnull L handler) {
+  public <L> void subscribe(Class<L> topicClass, L handler) {
     if (!topicClass.isAnnotationPresent(TopicAPI.class)) {
       LOG.error("Registering listener for topic which is not annotated by @TopicAPI " + topicClass);
     }
@@ -59,7 +58,7 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
   }
 
   // avoid notifyOnSubscription and map modification for each handler
-  <L> void subscribe(@Nonnull Class<L> topic, @Nonnull List<Object> handlers) {
+  <L> void subscribe(Class<L> topic, List<Object> handlers) {
     boolean notifyBusAboutTopic = false;
     synchronized (myPendingMessages) {
       Object currentHandler = mySubscriptions.get(topic);
@@ -104,7 +103,7 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
     }
   }
 
-  void deliverMessage(@Nonnull Message message) {
+  void deliverMessage(Message message) {
     Message messageOnLocalQueue = myPendingMessages.get().poll();
     assert messageOnLocalQueue == message;
 
@@ -137,11 +136,11 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
     }
   }
 
-  void scheduleMessageDelivery(@Nonnull Message message) {
+  void scheduleMessageDelivery(Message message) {
     myPendingMessages.get().offer(message);
   }
 
-  boolean containsMessage(@Nonnull Class<?> topic) {
+  boolean containsMessage(Class<?> topic) {
     Queue<Message> pendingMessages = myPendingMessages.get();
     if (pendingMessages.isEmpty()) return false;
 
@@ -158,7 +157,7 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
     return mySubscriptions.toString();
   }
 
-  @Nonnull
+  
   MessageBusImpl getBus() {
     return myBus;
   }

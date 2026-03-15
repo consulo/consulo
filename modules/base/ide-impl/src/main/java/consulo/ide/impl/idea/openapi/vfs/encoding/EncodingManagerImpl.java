@@ -34,10 +34,8 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.*;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -57,28 +55,28 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     private static final Logger LOG = Logger.getInstance(EncodingManagerImpl.class);
 
     static final class State {
-        @Nonnull
+        
         private EncodingReference myDefaultEncoding = new EncodingReference(StandardCharsets.UTF_8);
-        @Nonnull
+        
         private EncodingReference myDefaultConsoleEncoding = EncodingReference.DEFAULT;
 
         @Attribute("default_encoding")
-        @Nonnull
+        
         public String getDefaultCharsetName() {
             return myDefaultEncoding.getCharset() == null ? "" : myDefaultEncoding.getCharset().name();
         }
 
-        public void setDefaultCharsetName(@Nonnull String name) {
+        public void setDefaultCharsetName(String name) {
             myDefaultEncoding = new EncodingReference(StringUtil.nullize(name));
         }
 
         @Attribute("default_console_encoding")
-        @Nonnull
+        
         public String getDefaultConsoleEncodingName() {
             return myDefaultConsoleEncoding.getCharset() == null ? "" : myDefaultConsoleEncoding.getCharset().name();
         }
 
-        public void setDefaultConsoleEncodingName(@Nonnull String name) {
+        public void setDefaultConsoleEncodingName(String name) {
             myDefaultConsoleEncoding = new EncodingReference(StringUtil.nullize(name));
         }
     }
@@ -109,7 +107,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         EditorFactory editorFactory = EditorFactory.getInstance();
         editorFactory.getEventMulticaster().addDocumentListener(new DocumentListener() {
             @Override
-            public void documentChanged(@Nonnull DocumentEvent e) {
+            public void documentChanged(DocumentEvent e) {
                 Document document = e.getDocument();
                 if (isEditorOpenedFor(document)) {
                     queueUpdateEncodingFromContent(document);
@@ -118,13 +116,13 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         }, this);
         editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
             @Override
-            public void editorCreated(@Nonnull EditorFactoryEvent event) {
+            public void editorCreated(EditorFactoryEvent event) {
                 queueUpdateEncodingFromContent(event.getEditor().getDocument());
             }
         }, this);
     }
 
-    private static boolean isEditorOpenedFor(@Nonnull Document document) {
+    private static boolean isEditorOpenedFor(Document document) {
         VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
         if (virtualFile == null) {
             return false;
@@ -133,10 +131,10 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         return project != null && !project.isDisposed() && FileEditorManager.getInstance(project).isFileOpen(virtualFile);
     }
 
-    @NonNls
+    
     public static final String PROP_CACHED_ENCODING_CHANGED = "cachedEncoding";
 
-    private void handleDocument(@Nonnull Document document) {
+    private void handleDocument(Document document) {
         VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
         if (virtualFile == null) {
             return;
@@ -158,7 +156,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         }
     }
 
-    private static void setCachedCharsetFromContent(Charset charset, Charset oldCached, @Nonnull Document document) {
+    private static void setCachedCharsetFromContent(Charset charset, Charset oldCached, Document document) {
         document.putUserData(CACHED_CHARSET_FROM_CONTENT, charset);
         firePropertyChange(document, PROP_CACHED_ENCODING_CHANGED, oldCached, charset, null);
     }
@@ -168,7 +166,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
      * @return returns null if charset set cannot be determined from content
      */
     @Nullable
-    static Charset computeCharsetFromContent(@Nonnull VirtualFile virtualFile) {
+    static Charset computeCharsetFromContent(VirtualFile virtualFile) {
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
         if (document == null) {
             return null;
@@ -196,7 +194,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     // stores number of re-detection requests for this document
     private static final Key<AtomicInteger> RUNNING_REDETECTS_KEY = Key.create("DETECTING_ENCODING_KEY");
 
-    private static int addNumberOfRequestedRedetects(@Nonnull Document document, int delta) {
+    private static int addNumberOfRequestedRedetects(Document document, int delta) {
         AtomicInteger oldData = document.getUserData(RUNNING_REDETECTS_KEY);
         if (oldData == null) {
             oldData = ((UserDataHolderEx) document).putUserDataIfAbsent(RUNNING_REDETECTS_KEY, new AtomicInteger());
@@ -204,7 +202,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         return oldData.addAndGet(delta);
     }
 
-    void queueUpdateEncodingFromContent(@Nonnull Document document) {
+    void queueUpdateEncodingFromContent(Document document) {
         if (myDisposed.get()) {
             return; // ignore re-detect requests on app close
         }
@@ -215,10 +213,10 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
 
     private static final class DocumentEncodingDetectRequest implements Runnable {
         private final Reference<Document> ref;
-        @Nonnull
+        
         private final AtomicBoolean myDisposed;
 
-        private DocumentEncodingDetectRequest(@Nonnull Document document, @Nonnull AtomicBoolean disposed) {
+        private DocumentEncodingDetectRequest(Document document, AtomicBoolean disposed) {
             ref = new WeakReference<>(document);
             myDisposed = disposed;
         }
@@ -237,23 +235,23 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Nullable
-    public Charset getCachedCharsetFromContent(@Nonnull Document document) {
+    public Charset getCachedCharsetFromContent(Document document) {
         return document.getUserData(CACHED_CHARSET_FROM_CONTENT);
     }
 
     @Override
-    @Nonnull
+    
     public State getState() {
         return myState;
     }
 
     @Override
-    public void loadState(@Nonnull State state) {
+    public void loadState(State state) {
         myState = state;
     }
 
     @Override
-    @Nonnull
+    
     public Collection<Charset> getFavorites() {
         Collection<Charset> result = new HashSet<>();
         Project[] projects = ProjectManager.getInstance().getOpenProjects();
@@ -288,7 +286,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         waitAllTasksExecuted(1, TimeUnit.MINUTES);
     }
 
-    void waitAllTasksExecuted(long timeout, @Nonnull TimeUnit unit) {
+    void waitAllTasksExecuted(long timeout, TimeUnit unit) {
         try {
             ((BoundedTaskExecutor) changedDocumentExecutor).waitAllTasksExecuted(timeout, unit);
         }
@@ -311,7 +309,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    public boolean isNative2Ascii(@Nonnull VirtualFile virtualFile) {
+    public boolean isNative2Ascii(VirtualFile virtualFile) {
         Project project = guessProject(virtualFile);
         return project != null && EncodingProjectManager.getInstance(project).isNative2Ascii(virtualFile);
     }
@@ -332,19 +330,19 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    @Nonnull
+    
     public Charset getDefaultCharset() {
         return myState.myDefaultEncoding.dereference();
     }
 
     @Override
-    @Nonnull
+    
     public String getDefaultCharsetName() {
         return myState.getDefaultCharsetName();
     }
 
     @Override
-    public void setDefaultCharsetName(@Nonnull String name) {
+    public void setDefaultCharsetName(String name) {
         myState.setDefaultCharsetName(name);
     }
 
@@ -368,7 +366,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    @Nonnull
+    
     public Charset getDefaultConsoleEncoding() {
         return myState.myDefaultConsoleEncoding.dereference();
     }
@@ -377,7 +375,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
      * @return default console encoding reference
      */
     @Override
-    @Nonnull
+    
     public EncodingReference getDefaultConsoleEncodingReference() {
         return myState.myDefaultConsoleEncoding;
     }
@@ -386,12 +384,12 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
      * @param encodingReference default console encoding reference
      */
     @Override
-    public void setDefaultConsoleEncodingReference(@Nonnull EncodingReference encodingReference) {
+    public void setDefaultConsoleEncodingReference(EncodingReference encodingReference) {
         myState.myDefaultConsoleEncoding = encodingReference;
     }
 
     static void firePropertyChange(@Nullable Document document,
-                                   @Nonnull String propertyName,
+                                   String propertyName,
                                    Object oldValue,
                                    Object newValue,
                                    @Nullable Project project) {

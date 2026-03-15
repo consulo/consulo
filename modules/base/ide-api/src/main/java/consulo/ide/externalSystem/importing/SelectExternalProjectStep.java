@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.ex.wizard.WizardStepValidationException;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -59,27 +58,27 @@ import java.awt.*;
 public class SelectExternalProjectStep<C extends AbstractImportFromExternalSystemControl> implements WizardStep<ExternalModuleImportContext<C>> {
     private PaintAwarePanel myComponent;
 
-    @Nonnull
+    
     private AbstractImportFromExternalSystemControl myControl;
 
-    @Nonnull
+    
     private TextFieldWithBrowseButton myLinkedProjectPathField;
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public Component getComponent(@Nonnull ExternalModuleImportContext<C> context, @Nonnull Disposable uiDisposable) {
+    public Component getComponent(ExternalModuleImportContext<C> context, Disposable uiDisposable) {
         throw new UnsupportedOperationException("desktop only");
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public JComponent getSwingComponent(@Nonnull ExternalModuleImportContext<C> context, @Nonnull Disposable uiDisposable) {
+    public JComponent getSwingComponent(ExternalModuleImportContext<C> context, Disposable uiDisposable) {
         return createComponent(context, uiDisposable);
     }
 
-    public JComponent createComponent(@Nonnull ExternalModuleImportContext<C> context, @Nonnull Disposable uiDisposable) {
+    public JComponent createComponent(ExternalModuleImportContext<C> context, Disposable uiDisposable) {
         if (myComponent != null) {
             return myComponent;
         }
@@ -149,7 +148,7 @@ public class SelectExternalProjectStep<C extends AbstractImportFromExternalSyste
     }
 
     @Override
-    public void validateStep(@Nonnull ExternalModuleImportContext<C> context) throws WizardStepValidationException {
+    public void validateStep(ExternalModuleImportContext<C> context) throws WizardStepValidationException {
         try {
             AbstractExternalModuleImportProvider<C> provider = context.getImportProvider();
             ProjectSystemId externalSystemId = provider.getExternalSystemId();

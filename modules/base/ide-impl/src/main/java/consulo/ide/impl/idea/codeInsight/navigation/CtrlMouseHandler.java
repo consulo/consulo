@@ -67,8 +67,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
@@ -156,7 +155,7 @@ public final class CtrlMouseHandler {
 
     private final EditorMouseListener myEditorMouseAdapter = new EditorMouseListener() {
         @Override
-        public void mouseReleased(@Nonnull EditorMouseEvent e) {
+        public void mouseReleased(EditorMouseEvent e) {
             disposeHighlighter();
             cancelPreviousTooltip();
         }
@@ -165,7 +164,7 @@ public final class CtrlMouseHandler {
     private final EditorMouseMotionListener myEditorMouseMotionListener = new EditorMouseMotionListener() {
         @RequiredUIAccess
         @Override
-        public void mouseMoved(@Nonnull EditorMouseEvent e) {
+        public void mouseMoved(EditorMouseEvent e) {
             if (e.isConsumed() || !myProject.isInitialized() || myProject.isDisposed()) {
                 return;
             }
@@ -201,7 +200,7 @@ public final class CtrlMouseHandler {
     };
 
     @Inject
-    public CtrlMouseHandler(@Nonnull Project project) {
+    public CtrlMouseHandler(Project project) {
         myProject = project;
     }
 
@@ -226,7 +225,7 @@ public final class CtrlMouseHandler {
         }
     }
 
-    private boolean isMouseOverTooltip(@Nonnull Point mouseLocationOnScreen) {
+    private boolean isMouseOverTooltip(Point mouseLocationOnScreen) {
         Rectangle bounds = getHintBounds();
         return bounds != null && bounds.contains(mouseLocationOnScreen);
     }
@@ -244,7 +243,7 @@ public final class CtrlMouseHandler {
         return new Rectangle(hintComponent.getLocationOnScreen(), hintComponent.getSize());
     }
 
-    @Nonnull
+    
     private static BrowseMode getBrowseMode(@JdkConstants.InputEventMask int modifiers) {
         if (modifiers != 0) {
             Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
@@ -269,7 +268,7 @@ public final class CtrlMouseHandler {
 
     @Nullable
     @TestOnly
-    public static String getInfo(@Nonnull Editor editor, BrowseMode browseMode) {
+    public static String getInfo(Editor editor, BrowseMode browseMode) {
         Project project = editor.getProject();
         if (project == null) {
             return null;
@@ -282,7 +281,7 @@ public final class CtrlMouseHandler {
         return info == null ? null : info.getInfo().text;
     }
 
-    @Nonnull
+    
     private static DocInfo generateInfo(PsiElement element, PsiElement atPointer, boolean fallbackToBasicInfo) {
         DocumentationProvider documentationProvider = DocumentationManagerHelper.getProviderFromElement(element, atPointer);
         String result = documentationProvider.getQuickNavigateInfo(element, atPointer);
@@ -293,7 +292,7 @@ public final class CtrlMouseHandler {
     }
 
     @Nullable
-    private static String doGenerateInfo(@Nonnull PsiElement element) {
+    private static String doGenerateInfo(PsiElement element) {
         if (element instanceof PsiFile) {
             VirtualFile virtualFile = ((PsiFile) element).getVirtualFile();
             if (virtualFile != null) {
@@ -336,22 +335,22 @@ public final class CtrlMouseHandler {
     }
 
     public abstract static class Info {
-        @Nonnull
+        
         final PsiElement myElementAtPointer;
-        @Nonnull
+        
         private final List<TextRange> myRanges;
 
-        public Info(@Nonnull PsiElement elementAtPointer, @Nonnull List<TextRange> ranges) {
+        public Info(PsiElement elementAtPointer, List<TextRange> ranges) {
             myElementAtPointer = elementAtPointer;
             myRanges = ranges;
         }
 
-        public Info(@Nonnull PsiElement elementAtPointer) {
+        public Info(PsiElement elementAtPointer) {
             this(elementAtPointer, getReferenceRanges(elementAtPointer));
         }
 
-        @Nonnull
-        private static List<TextRange> getReferenceRanges(@Nonnull PsiElement elementAtPointer) {
+        
+        private static List<TextRange> getReferenceRanges(PsiElement elementAtPointer) {
             if (!elementAtPointer.isPhysical()) {
                 return Collections.emptyList();
             }
@@ -367,23 +366,23 @@ public final class CtrlMouseHandler {
             return Collections.singletonList(new TextRange(textOffset, range.getEndOffset()));
         }
 
-        boolean isSimilarTo(@Nonnull Info that) {
+        boolean isSimilarTo(Info that) {
             return Comparing.equal(myElementAtPointer, that.myElementAtPointer) && myRanges.equals(that.myRanges);
         }
 
-        @Nonnull
+        
         public List<TextRange> getRanges() {
             return myRanges;
         }
 
-        @Nonnull
+        
         public abstract DocInfo getInfo();
 
-        public abstract boolean isValid(@Nonnull Document document);
+        public abstract boolean isValid(Document document);
 
         public abstract boolean isNavigatable();
 
-        boolean rangesAreCorrect(@Nonnull Document document) {
+        boolean rangesAreCorrect(Document document) {
             TextRange docRange = new TextRange(0, document.getTextLength());
             for (TextRange range : getRanges()) {
                 if (!docRange.contains(range)) {
@@ -395,26 +394,26 @@ public final class CtrlMouseHandler {
         }
     }
 
-    private static void showDumbModeNotification(@Nonnull Project project) {
+    private static void showDumbModeNotification(Project project) {
         DumbService.getInstance(project).showDumbModeNotification("Element information is not available during index update");
     }
 
     private static class InfoSingle extends Info {
-        @Nonnull
+        
         private final PsiElement myTargetElement;
 
-        InfoSingle(@Nonnull PsiElement elementAtPointer, @Nonnull PsiElement targetElement) {
+        InfoSingle(PsiElement elementAtPointer, PsiElement targetElement) {
             super(elementAtPointer);
             myTargetElement = targetElement;
         }
 
-        InfoSingle(@Nonnull PsiReference ref, @Nonnull PsiElement targetElement) {
+        InfoSingle(PsiReference ref, PsiElement targetElement) {
             super(ref.getElement(), ReferenceRange.getAbsoluteRanges(ref));
             myTargetElement = targetElement;
         }
 
         @Override
-        @Nonnull
+        
         public DocInfo getInfo() {
             return areElementsValid() ? generateInfo(myTargetElement, myElementAtPointer, isNavigatable()) : DocInfo.EMPTY;
         }
@@ -424,7 +423,7 @@ public final class CtrlMouseHandler {
         }
 
         @Override
-        public boolean isValid(@Nonnull Document document) {
+        public boolean isValid(Document document) {
             return areElementsValid() && rangesAreCorrect(document);
         }
 
@@ -435,22 +434,22 @@ public final class CtrlMouseHandler {
     }
 
     private static class InfoMultiple extends Info {
-        InfoMultiple(@Nonnull PsiElement elementAtPointer) {
+        InfoMultiple(PsiElement elementAtPointer) {
             super(elementAtPointer);
         }
 
-        InfoMultiple(@Nonnull PsiElement elementAtPointer, @Nonnull PsiReference ref) {
+        InfoMultiple(PsiElement elementAtPointer, PsiReference ref) {
             super(elementAtPointer, ReferenceRange.getAbsoluteRanges(ref));
         }
 
         @Override
-        @Nonnull
+        
         public DocInfo getInfo() {
             return new DocInfo(CodeInsightBundle.message("multiple.implementations.tooltip"), null);
         }
 
         @Override
-        public boolean isValid(@Nonnull Document document) {
+        public boolean isValid(Document document) {
             return rangesAreCorrect(document);
         }
 
@@ -461,13 +460,13 @@ public final class CtrlMouseHandler {
     }
 
     @Nullable
-    private Info getInfoAt(@Nonnull Editor editor, @Nonnull PsiFile file, int offset, @Nonnull BrowseMode browseMode) {
+    private Info getInfoAt(Editor editor, PsiFile file, int offset, BrowseMode browseMode) {
         return getInfoAt(myProject, editor, file, offset, browseMode);
     }
 
     @Nullable
     @RequiredReadAction
-    public static Info getInfoAt(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, int offset, @Nonnull BrowseMode browseMode) {
+    public static Info getInfoAt(Project project, Editor editor, PsiFile file, int offset, BrowseMode browseMode) {
         PsiElement targetElement = null;
 
         if (browseMode == BrowseMode.TypeDeclaration) {
@@ -511,7 +510,7 @@ public final class CtrlMouseHandler {
             PsiElement element = TargetElementUtil.findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
             PsiElement[] targetElements = new ImplementationSearcher() {
                 @Override
-                @Nonnull
+                
                 protected PsiElement[] searchDefinitions(PsiElement element, Editor editor) {
                     List<PsiElement> found = new ArrayList<>(2);
                     DefinitionsScopedSearch.search(element, getSearchScope(element, editor)).forEach(psiElement -> {
@@ -555,7 +554,7 @@ public final class CtrlMouseHandler {
 
                 if (baseDocInfo != DocInfo.EMPTY && !StringUtil.isEmptyOrSpaces(baseDocInfo.text)) {
                     return new Info(identifier) {
-                        @Nonnull
+                        
                         @Override
                         public DocInfo getInfo() {
                             StringBuilder builder = new StringBuilder("<small>Show usages of </small><br>");
@@ -564,7 +563,7 @@ public final class CtrlMouseHandler {
                         }
 
                         @Override
-                        public boolean isValid(@Nonnull Document document) {
+                        public boolean isValid(Document document) {
                             return true;
                         }
 
@@ -576,7 +575,7 @@ public final class CtrlMouseHandler {
                 }
                 else {
                     return new Info(identifier) {
-                        @Nonnull
+                        
                         @Override
                         public DocInfo getInfo() {
                             String name = UsageViewUtil.getType(element) + " '" + UsageViewUtil.getShortName(element) + "'";
@@ -584,7 +583,7 @@ public final class CtrlMouseHandler {
                         }
 
                         @Override
-                        public boolean isValid(@Nonnull Document document) {
+                        public boolean isValid(Document document) {
                             return element.isValid();
                         }
 
@@ -599,9 +598,9 @@ public final class CtrlMouseHandler {
         return null;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static List<PsiElement> resolve(@Nonnull PsiReference ref) {
+    private static List<PsiElement> resolve(PsiReference ref) {
         // IDEA-56727 try resolve first as in GotoDeclarationAction
         PsiElement resolvedElement = ref.resolve();
 
@@ -627,7 +626,7 @@ public final class CtrlMouseHandler {
         }
     }
 
-    private void updateText(@Nonnull String updatedText, @Nonnull Consumer<? super String> newTextConsumer, @Nonnull LightweightHintImpl hint, @Nonnull Editor editor) {
+    private void updateText(String updatedText, Consumer<? super String> newTextConsumer, LightweightHintImpl hint, Editor editor) {
         UIUtil.invokeLaterIfNeeded(() -> {
             // There is a possible case that quick doc control width is changed, e.g. it contained text
             // like 'public final class String implements java.io.Serializable, java.lang.Comparable<java.lang.String>' and
@@ -684,20 +683,20 @@ public final class CtrlMouseHandler {
 
 
     private final class TooltipProvider {
-        @Nonnull
+        
         private final EditorEx myHostEditor;
         private final int myHostOffset;
         private BrowseMode myBrowseMode;
         private boolean myDisposed;
         private CancellablePromise<?> myExecutionProgress;
 
-        TooltipProvider(@Nonnull EditorEx hostEditor, @Nonnull LogicalPosition hostPos) {
+        TooltipProvider(EditorEx hostEditor, LogicalPosition hostPos) {
             myHostEditor = hostEditor;
             myHostOffset = hostEditor.logicalPositionToOffset(hostPos);
         }
 
         @SuppressWarnings("CopyConstructorMissesField")
-        TooltipProvider(@Nonnull TooltipProvider source) {
+        TooltipProvider(TooltipProvider source) {
             myHostEditor = source.myHostEditor;
             myHostOffset = source.myHostOffset;
         }
@@ -713,7 +712,7 @@ public final class CtrlMouseHandler {
             return myBrowseMode;
         }
 
-        void execute(@Nonnull BrowseMode browseMode) {
+        void execute(BrowseMode browseMode) {
             myBrowseMode = browseMode;
 
             if (PsiDocumentManager.getInstance(myProject).getPsiFile(myHostEditor.getDocument()) == null) {
@@ -739,7 +738,7 @@ public final class CtrlMouseHandler {
             return CtrlMouseHandler.this::disposeHighlighter;
         }
 
-        @Nonnull
+        
         private Runnable doExecute() {
             EditorEx editor = getPossiblyInjectedEditor();
             int offset = getOffset(editor);
@@ -767,7 +766,7 @@ public final class CtrlMouseHandler {
             return () -> addHighlighterAndShowHint(info, docInfo, editor);
         }
 
-        @Nonnull
+        
         private EditorEx getPossiblyInjectedEditor() {
             Document document = myHostEditor.getDocument();
             if (PsiDocumentManager.getInstance(myProject).isCommitted(document)) {
@@ -777,15 +776,15 @@ public final class CtrlMouseHandler {
             return myHostEditor;
         }
 
-        private boolean isTaskOutdated(@Nonnull Editor editor) {
+        private boolean isTaskOutdated(Editor editor) {
             return myDisposed || myProject.isDisposed() || editor.isDisposed() || !ApplicationManager.getApplication().isUnitTestMode() && !editor.getComponent().isShowing();
         }
 
-        private int getOffset(@Nonnull Editor editor) {
+        private int getOffset(Editor editor) {
             return editor instanceof EditorWindow ? ((EditorWindow) editor).getDocument().hostToInjected(myHostOffset) : myHostOffset;
         }
 
-        private void addHighlighterAndShowHint(@Nonnull Info info, @Nonnull DocInfo docInfo, @Nonnull EditorEx editor) {
+        private void addHighlighterAndShowHint(Info info, DocInfo docInfo, EditorEx editor) {
             if (myDisposed || editor.isDisposed()) {
                 return;
             }
@@ -832,8 +831,8 @@ public final class CtrlMouseHandler {
             }
         }
 
-        @Nonnull
-        private JComponent wrapInScrollPaneIfNeeded(@Nonnull JComponent component, @Nonnull Editor editor) {
+        
+        private JComponent wrapInScrollPaneIfNeeded(JComponent component, Editor editor) {
             if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
                 Dimension preferredSize = component.getPreferredSize();
                 Dimension maxSize = getMaxPopupSize(editor);
@@ -848,13 +847,13 @@ public final class CtrlMouseHandler {
             return component;
         }
 
-        @Nonnull
-        private Dimension getMaxPopupSize(@Nonnull Editor editor) {
+        
+        private Dimension getMaxPopupSize(Editor editor) {
             Rectangle rectangle = ScreenUtil.getScreenRectangle(editor.getContentComponent());
             return new Dimension((int) (0.9 * Math.max(640, rectangle.width)), (int) (0.33 * Math.max(480, rectangle.height)));
         }
 
-        private void updateOnPsiChanges(@Nonnull LightweightHintImpl hint, @Nonnull Info info, @Nonnull Consumer<? super String> textConsumer, @Nonnull String oldText, @Nonnull Editor editor) {
+        private void updateOnPsiChanges(LightweightHintImpl hint, Info info, Consumer<? super String> textConsumer, String oldText, Editor editor) {
             if (!hint.isVisible()) {
                 return;
             }
@@ -878,7 +877,7 @@ public final class CtrlMouseHandler {
         }
 
         @RequiredUIAccess
-        public void showHint(@Nonnull LightweightHintImpl hint, @Nonnull Editor editor) {
+        public void showHint(LightweightHintImpl hint, Editor editor) {
             if ( editor.isDisposed()) {
                 return;
             }
@@ -895,8 +894,8 @@ public final class CtrlMouseHandler {
         }
     }
 
-    @Nonnull
-    private HighlightersSet installHighlighterSet(@Nonnull Info info, @Nonnull EditorEx editor, boolean highlighterOnly) {
+    
+    private HighlightersSet installHighlighterSet(Info info, EditorEx editor, boolean highlighterOnly) {
         editor.getContentComponent().addKeyListener(myEditorKeyListener);
         editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
         if (info.isNavigatable()) {
@@ -934,14 +933,14 @@ public final class CtrlMouseHandler {
     }
 
     private final class HighlightersSet {
-        @Nonnull
+        
         private final List<? extends RangeHighlighter> myHighlighters;
-        @Nonnull
+        
         private final EditorEx myHighlighterView;
-        @Nonnull
+        
         private final Info myStoredInfo;
 
-        private HighlightersSet(@Nonnull List<? extends RangeHighlighter> highlighters, @Nonnull EditorEx highlighterView, @Nonnull Info storedInfo) {
+        private HighlightersSet(List<? extends RangeHighlighter> highlighters, EditorEx highlighterView, Info storedInfo) {
             myHighlighters = highlighters;
             myHighlighterView = highlighterView;
             myStoredInfo = storedInfo;
@@ -957,7 +956,7 @@ public final class CtrlMouseHandler {
             myHighlighterView.getScrollingModel().removeVisibleAreaListener(myVisibleAreaListener);
         }
 
-        @Nonnull
+        
         Info getStoredInfo() {
             return myStoredInfo;
         }
@@ -978,18 +977,18 @@ public final class CtrlMouseHandler {
     }
 
     private final class QuickDocHyperlinkListener implements HyperlinkListener {
-        @Nonnull
+        
         private final DocumentationProvider myProvider;
-        @Nonnull
+        
         private final PsiElement myContext;
 
-        QuickDocHyperlinkListener(@Nonnull DocumentationProvider provider, @Nonnull PsiElement context) {
+        QuickDocHyperlinkListener(DocumentationProvider provider, PsiElement context) {
             myProvider = provider;
             myContext = context;
         }
 
         @Override
-        public void hyperlinkUpdate(@Nonnull HyperlinkEvent e) {
+        public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
                 return;
             }

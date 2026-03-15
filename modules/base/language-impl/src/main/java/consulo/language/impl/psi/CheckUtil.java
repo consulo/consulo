@@ -26,12 +26,11 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
-import jakarta.annotation.Nonnull;
 
 public class CheckUtil {
   private CheckUtil() { }
 
-  public static void checkWritable(@Nonnull PsiElement element) throws IncorrectOperationException {
+  public static void checkWritable(PsiElement element) throws IncorrectOperationException {
     if (!element.isWritable()) {
       if (element instanceof PsiDirectory) {
         throw new IncorrectOperationException(
@@ -51,10 +50,10 @@ public class CheckUtil {
     }
   }
 
-  public static void checkDelete(@Nonnull VirtualFile file) throws IncorrectOperationException {
+  public static void checkDelete(VirtualFile file) throws IncorrectOperationException {
     VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
       @Override
-      public boolean visitFile(@Nonnull VirtualFile file) {
+      public boolean visitFile(VirtualFile file) {
         if (FileTypeRegistry.getInstance().isFileIgnored(file)) {
           return false;
         }

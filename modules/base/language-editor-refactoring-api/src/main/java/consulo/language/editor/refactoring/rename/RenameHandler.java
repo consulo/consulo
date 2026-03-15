@@ -22,7 +22,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -37,6 +36,6 @@ public interface RenameHandler extends RefactoringActionHandler {
     // called on rename actionPerformed. Can obtain additional info from user
     boolean isRenaming(DataContext dataContext);
 
-    @Nonnull
+    
     LocalizeValue getActionTitleValue();
 }

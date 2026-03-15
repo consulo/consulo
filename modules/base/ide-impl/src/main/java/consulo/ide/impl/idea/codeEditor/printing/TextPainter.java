@@ -37,9 +37,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -76,15 +74,15 @@ public class TextPainter implements Printable {
   private final CodeStyleSettings myCodeStyleSettings;
   private final FileType myFileType;
   private ProgressIndicator myProgress;
-  @NonNls private static final String DEFAULT_MEASURE_HEIGHT_TEXT = "A";
-  @NonNls private static final String DEFAULT_MEASURE_WIDTH_TEXT = "w";
-  @NonNls private static final String HEADER_TOKEN_PAGE = "PAGE";
-  @NonNls private static final String HEADER_TOKEN_FILE = "FILE";
+  private static final String DEFAULT_MEASURE_HEIGHT_TEXT = "A";
+  private static final String DEFAULT_MEASURE_WIDTH_TEXT = "w";
+  private static final String HEADER_TOKEN_PAGE = "PAGE";
+  private static final String HEADER_TOKEN_FILE = "FILE";
 
   public TextPainter(DocumentEx editorDocument,
                      EditorHighlighter highlighter,
                      String fileName,
-                     @Nonnull PsiFile psiFile,
+                     PsiFile psiFile,
                      FileType fileType, Editor editor) {
     this(editorDocument, highlighter, fileName, psiFile.getProject(), fileType, FileSeparatorUtil.getFileSeparators(psiFile, editorDocument));
   }

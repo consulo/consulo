@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.function.BiFunction;
  * @since 2012-12-14
  */
 public class MultipleTraitsListSpeedSearch extends MultipleTraitsSpeedSearch<JList> {
-    public MultipleTraitsListSpeedSearch(JList component, @Nonnull List<BiFunction<Object, String, Boolean>> converters) {
+    public MultipleTraitsListSpeedSearch(JList component, List<BiFunction<Object, String, Boolean>> converters) {
         super(component, converters);
     }
 
@@ -37,7 +36,7 @@ public class MultipleTraitsListSpeedSearch extends MultipleTraitsSpeedSearch<JLi
         return myComponent.getSelectedIndex();
     }
 
-    @Nonnull
+    
     @Override
     protected Object[] getAllElements() {
         return ListSpeedSearch.getAllListElements(myComponent);

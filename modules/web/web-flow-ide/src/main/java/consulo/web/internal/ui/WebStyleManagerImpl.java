@@ -18,7 +18,6 @@ package consulo.web.internal.ui;
 import com.vaadin.flow.theme.lumo.Lumo;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -36,20 +35,20 @@ public class WebStyleManagerImpl extends StyleManagerImpl {
 
     private Style myCurrentStyle = LIGHT;
 
-    @Nonnull
+    
     @Override
     public List<Style> getStyles() {
         return myStyles;
     }
 
-    @Nonnull
+    
     @Override
     public Style getCurrentStyle() {
         return myCurrentStyle;
     }
 
     @Override
-    public void setCurrentStyle(@Nonnull Style style) {
+    public void setCurrentStyle(Style style) {
         Style oldStyle = myCurrentStyle;
         myCurrentStyle = style;
         fireStyleChanged(oldStyle, style);

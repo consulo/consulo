@@ -8,16 +8,15 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 public final class ChangeListScope extends FilteredNamedScope implements WeighedItem {
   static final String ALL_CHANGED_FILES_SCOPE_NAME = "All Changed Files";
 
-  public ChangeListScope(@Nonnull ChangeListManager manager) {
+  public ChangeListScope(ChangeListManager manager) {
     super(ALL_CHANGED_FILES_SCOPE_NAME, VcsLocalize.scopeNameChangelistAllChangedFiles(), PlatformIconGroup.scopeChangedfilesall(), 0, manager::isFileAffected);
   }
 
-  public ChangeListScope(@Nonnull ChangeListManager manager, @Nonnull String scopeId, @Nonnull LocalizeValue presentableName) {
+  public ChangeListScope(ChangeListManager manager, String scopeId, LocalizeValue presentableName) {
     super(scopeId, presentableName, PlatformIconGroup.scopeChangedfiles(), 0, file -> manager.getChangeLists(file).stream().anyMatch(list -> list.getName().equals(scopeId)));
   }
 

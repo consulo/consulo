@@ -23,7 +23,6 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,7 +35,7 @@ public class XInspectAction extends XDebuggerTreeActionBase {
 
     @Override
     @RequiredUIAccess
-    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+    protected void perform(XValueNodeImpl node, String nodeName, AnActionEvent e) {
         XDebuggerTree tree = node.getTree();
         XValue value = node.getValueContainer();
         XInspectDialog dialog = new XInspectDialog(

@@ -29,7 +29,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "FindPrevious")
 public class SearchBackAction extends AnAction implements DumbAware {
@@ -57,7 +56,7 @@ public class SearchBackAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.getData(FileEditor.KEY) instanceof TextEditor);
     }
 }

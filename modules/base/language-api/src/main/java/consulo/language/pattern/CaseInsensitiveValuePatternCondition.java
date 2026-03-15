@@ -17,7 +17,6 @@ package consulo.language.pattern;
 
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -34,7 +33,7 @@ public class CaseInsensitiveValuePatternCondition extends PatternCondition<Strin
     return myValues;
   }
 
-  public boolean accepts(@Nonnull String str, ProcessingContext context) {
+  public boolean accepts(String str, ProcessingContext context) {
     for (String value : myValues) {
       if (str.equalsIgnoreCase(value)) return true;
     }

@@ -24,8 +24,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.OptionsTopHitProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -94,7 +93,7 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
     editorTabs(IdeLocalize.labelOptionTabs(ApplicationLocalize.radioCloseNonModifiedFilesFirst()), "CLOSE_NON_MODIFIED_FILES_FIRST")
   );
 
-  @Nonnull
+  
   @Override
   public Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project) {
     return ourOptions;

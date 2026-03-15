@@ -27,8 +27,7 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeModelAdapter;
 import consulo.ui.ex.awt.util.Alarm;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeModelEvent;
@@ -48,7 +47,7 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
 
   private static final int COLLAPSE_STATE_PROCESSING_DELAY_MILLIS = 200;
 
-  @Nonnull
+  
   private static final Comparator<TreePath> PATH_COMPARATOR = new Comparator<TreePath>() {
     @Override
     public int compare(TreePath o1, TreePath o2) {
@@ -56,24 +55,24 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
     }
   };
 
-  @Nonnull
+  
   private final Alarm myCollapseStateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
   /**
    * Holds list of paths which 'expand/collapse' state should be restored.
    */
-  @Nonnull
+  
   private final Set<TreePath> myPathsToProcessCollapseState = new HashSet<>();
 
-  @Nonnull
+  
   private final Map<String/*tree path*/, Boolean/*expanded*/> myExpandedStateHolder;
 
   private boolean mySuppressCollapseTracking;
 
-  public ExternalSystemTasksTree(@Nonnull ExternalSystemTasksTreeModel model,
-                                 @Nonnull Map<String/*tree path*/, Boolean/*expanded*/> expandedStateHolder,
-                                 @Nonnull final Project project,
-                                 @Nonnull final ProjectSystemId externalSystemId)
+  public ExternalSystemTasksTree(ExternalSystemTasksTreeModel model,
+                                 Map<String/*tree path*/, Boolean/*expanded*/> expandedStateHolder,
+                                 final Project project,
+                                 final ProjectSystemId externalSystemId)
   {
     super(model);
     myExpandedStateHolder = expandedStateHolder;
@@ -128,7 +127,7 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
    *
    * @param path  target path
    */
-  private void scheduleCollapseStateAppliance(@Nonnull TreePath path) {
+  private void scheduleCollapseStateAppliance(TreePath path) {
     myPathsToProcessCollapseState.add(path);
     myCollapseStateAlarm.cancelAllRequests();
     myCollapseStateAlarm.addRequest(new Runnable() {
@@ -157,7 +156,7 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
    *
    * @param path  target path
    */
-  private void applyCollapseState(@Nonnull TreePath path) {
+  private void applyCollapseState(TreePath path) {
     String key = getPath(path);
     Boolean expanded = myExpandedStateHolder.get(key);
     if (expanded == null) {
@@ -178,8 +177,8 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
     }
   }
 
-  @Nonnull
-  private static String getPath(@Nonnull TreePath path) {
+  
+  private static String getPath(TreePath path) {
     StringBuilder buffer = new StringBuilder();
     for (TreePath current = path; current != null; current = current.getParentPath()) {
       buffer.append(current.getLastPathComponent().toString()).append('/');

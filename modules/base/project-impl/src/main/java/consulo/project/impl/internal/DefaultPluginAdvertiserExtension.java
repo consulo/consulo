@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.project.PluginAdvertiserExtension;
 import consulo.project.internal.UnknownFeaturesCollector;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.Set;
@@ -39,11 +38,11 @@ public class DefaultPluginAdvertiserExtension implements PluginAdvertiserExtensi
     }
 
     @Override
-    public void extend(@Nonnull Consumer<ExtensionPreview> consumer) {
+    public void extend(Consumer<ExtensionPreview> consumer) {
         myUnknownFeaturesCollector.getUnknownExtensions().forEach(consumer);
     }
 
-    @Nonnull
+    
     @Override
     public Set<Class<?>> acceptExtensionAPIs() {
         return Set.of();

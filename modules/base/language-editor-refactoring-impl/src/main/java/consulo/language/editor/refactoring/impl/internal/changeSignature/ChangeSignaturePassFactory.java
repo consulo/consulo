@@ -35,7 +35,6 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collections;
@@ -43,13 +42,13 @@ import java.util.Collections;
 @ExtensionImpl
 public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFactory {
     @Override
-    public void register(@Nonnull Registrar registrar) {
+    public void register(Registrar registrar) {
         registrar.registerTextEditorHighlightingPass(this, null, null, true, -1);
     }
 
     @Override
     @RequiredReadAction
-    public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+    public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
         LanguageChangeSignatureDetector<ChangeInfo> detector =
             LanguageChangeSignatureDetector.forLanguage(file.getLanguage());
         if (detector == null) {
@@ -75,7 +74,7 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
 
         @Override
         @RequiredReadAction
-        public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+        public void doCollectInformation(ProgressIndicator progress) {
         }
 
         @Override

@@ -20,7 +20,6 @@ import consulo.language.editor.template.LiveTemplateContributor;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -97,58 +96,58 @@ public abstract class LiveTemplateContributorBuilder implements LiveTemplateCont
         return myDescription;
     }
 
-    @Nonnull
+    
     @Override
     public LiveTemplateContributor.Builder withContext(Class<? extends TemplateContextType> context, boolean enabled) {
         myStrictContextTypes.put(context, enabled);
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public LiveTemplateContributor.Builder withContextsOf(Class<? extends TemplateContextType> context, boolean enabled) {
         myContextTypes.put(context, enabled);
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public LiveTemplateContributor.Builder withVariable(String name, String expression, String defaultValue, boolean alwaysStopAt) {
         myVariables.add(new Variable(name, expression, defaultValue, alwaysStopAt));
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public LiveTemplateContributor.Builder withReformat() {
         myWantReformat = true;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public LiveTemplateContributor.Builder withTabShortcut() {
         myShortcut = TemplateConstants.TAB_CHAR;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public LiveTemplateContributor.Builder withEnterShortcut() {
         myShortcut = TemplateConstants.ENTER_CHAR;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public LiveTemplateContributor.Builder withSpaceShortcut() {
         myShortcut = TemplateConstants.SPACE_CHAR;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public LiveTemplateContributor.Builder withOption(@Nonnull KeyWithDefaultValue<Boolean> key, boolean value) {
+    public LiveTemplateContributor.Builder withOption(KeyWithDefaultValue<Boolean> key, boolean value) {
         myOptions.put(key.toString(), value);
         return this;
     }

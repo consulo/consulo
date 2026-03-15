@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.*;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -40,9 +39,9 @@ public class PsiReferenceServiceImpl extends PsiReferenceService {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
-  public List<PsiReference> getReferences(@Nonnull PsiElement element, @Nonnull Hints hints) {
+  public List<PsiReference> getReferences(PsiElement element, Hints hints) {
     if (element instanceof ContributedReferenceHost) {
       return Arrays.asList(getReferencesFromProviders(element, hints));
     }
@@ -52,7 +51,7 @@ public class PsiReferenceServiceImpl extends PsiReferenceService {
     return Arrays.asList(element.getReferences());
   }
 
-  private PsiReference[] getReferencesFromProviders(PsiElement context, @Nonnull PsiReferenceService.Hints hints) {
+  private PsiReference[] getReferencesFromProviders(PsiElement context, PsiReferenceService.Hints hints) {
     ProgressIndicatorProvider.checkCanceled();
     assert context.isValid() : "Invalid context: " + context;
     return myReferenceProvidersRegistry.doGetReferencesFromProviders(context, hints);

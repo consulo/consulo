@@ -28,7 +28,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.Lists;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -54,23 +53,23 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   public InspectionProfileManager() {
   }
 
-  @Nonnull
+  
   public abstract Collection<InspectionProfile> getProfiles();
 
-  public abstract Profile loadProfile(@Nonnull String path) throws IOException, JDOMException;
+  public abstract Profile loadProfile(String path) throws IOException, JDOMException;
 
   @Override
-  public void addProfileChangeListener(@Nonnull ProfileChangeAdapter listener) {
+  public void addProfileChangeListener(ProfileChangeAdapter listener) {
     myProfileChangeAdapters.add(listener);
   }
 
   @Override
-  public void addProfileChangeListener(@Nonnull ProfileChangeAdapter listener, @Nonnull Disposable parentDisposable) {
+  public void addProfileChangeListener(ProfileChangeAdapter listener, Disposable parentDisposable) {
     DisposerUtil.add(listener, myProfileChangeAdapters, parentDisposable);
   }
 
   @Override
-  public void removeProfileChangeListener(@Nonnull ProfileChangeAdapter listener) {
+  public void removeProfileChangeListener(ProfileChangeAdapter listener) {
     myProfileChangeAdapters.remove(listener);
   }
 
@@ -92,7 +91,7 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   }
 
   @Override
-  public Profile getProfile(@Nonnull String name) {
+  public Profile getProfile(String name) {
     return getProfile(name, true);
   }
 }

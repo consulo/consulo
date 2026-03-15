@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -162,7 +161,7 @@ public class MasterDetailPopupBuilder implements MasterController {
                 new DumbAwareAction(LocalizeValue.localizeTODO("Close"), LocalizeValue.empty(), PlatformIconGroup.actionsClose()) {
                     @RequiredUIAccess
                     @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         myDoneRunnable.run();
                     }
                 }
@@ -320,7 +319,7 @@ public class MasterDetailPopupBuilder implements MasterController {
         }
     }
 
-    public MasterDetailPopupBuilder setActionsGroup(@Nonnull List<AnAction> actionsGroup) {
+    public MasterDetailPopupBuilder setActionsGroup(List<AnAction> actionsGroup) {
         myActions = new ArrayList<>(actionsGroup);
         return this;
     }
@@ -431,11 +430,11 @@ public class MasterDetailPopupBuilder implements MasterController {
     }
 
     private class MyPopupChooserBuilder extends PopupChooserBuilder {
-        public MyPopupChooserBuilder(@Nonnull JList list) {
+        public MyPopupChooserBuilder(JList list) {
             super(list);
         }
 
-        private MyPopupChooserBuilder(@Nonnull JTree tree) {
+        private MyPopupChooserBuilder(JTree tree) {
             super(tree);
         }
 

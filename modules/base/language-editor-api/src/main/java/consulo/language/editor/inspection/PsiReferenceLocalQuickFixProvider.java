@@ -21,7 +21,6 @@ import consulo.component.extension.ExtensionList;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -32,5 +31,5 @@ import java.util.function.Consumer;
 public interface PsiReferenceLocalQuickFixProvider {
   ExtensionList<PsiReferenceLocalQuickFixProvider, Project> EP = ExtensionList.of(PsiReferenceLocalQuickFixProvider.class);
 
-  void addQuickFixes(@Nonnull PsiReference reference, @Nonnull Consumer<LocalQuickFix> consumer);
+  void addQuickFixes(PsiReference reference, Consumer<LocalQuickFix> consumer);
 }

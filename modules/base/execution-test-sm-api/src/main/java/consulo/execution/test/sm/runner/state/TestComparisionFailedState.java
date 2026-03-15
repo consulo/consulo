@@ -22,8 +22,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -40,8 +39,8 @@ public class TestComparisionFailedState extends TestFailedState {
     public TestComparisionFailedState(
         @Nullable String localizedMessage,
         @Nullable String stackTrace,
-        @Nonnull String actualText,
-        @Nonnull String expectedText
+        String actualText,
+        String expectedText
     ) {
         this(localizedMessage, stackTrace, actualText, expectedText, null);
     }
@@ -49,8 +48,8 @@ public class TestComparisionFailedState extends TestFailedState {
     public TestComparisionFailedState(
         @Nullable String localizedMessage,
         @Nullable String stackTrace,
-        @Nonnull String actualText,
-        @Nonnull String expectedText,
+        String actualText,
+        String expectedText,
         @Nullable String filePath
     ) {
         this(localizedMessage, stackTrace, actualText, expectedText, filePath, null);
@@ -59,8 +58,8 @@ public class TestComparisionFailedState extends TestFailedState {
     public TestComparisionFailedState(
         @Nullable String localizedMessage,
         @Nullable String stackTrace,
-        @Nonnull String actualText,
-        @Nonnull String expectedText,
+        String actualText,
+        String expectedText,
         @Nullable String expectedFilePath,
         @Nullable String actualFilePath
     ) {

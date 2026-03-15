@@ -28,9 +28,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -50,9 +48,9 @@ public class PatternPackageSet extends PatternBasedPackageSet {
     private final String myScope;
     private final String myModulePatternText;
 
-    public PatternPackageSet(@NonNls @Nullable String aspectPattern,
-                             @Nonnull String scope,
-                             @NonNls String modulePattern) {
+    public PatternPackageSet(@Nullable String aspectPattern,
+                             String scope,
+                             String modulePattern) {
         myAspectJSyntaxPattern = aspectPattern;
         myScope = scope;
         myModulePatternText = modulePattern;
@@ -113,7 +111,7 @@ public class PatternPackageSet extends PatternBasedPackageSet {
         return StringUtil.getQualifiedName(fileIndex.getPackageNameByDirectory(file.isDirectory() ? file : file.getParent()), file.getNameWithoutExtension());
     }
 
-    @Nonnull
+    
     @Override
     public PackageSet createCopy() {
         return new PatternPackageSet(myAspectJSyntaxPattern, myScope, myModulePatternText);
@@ -124,7 +122,7 @@ public class PatternPackageSet extends PatternBasedPackageSet {
         return 0;
     }
 
-    @Nonnull
+    
     @Override
     public String getText() {
         StringBuilder buf = new StringBuilder();

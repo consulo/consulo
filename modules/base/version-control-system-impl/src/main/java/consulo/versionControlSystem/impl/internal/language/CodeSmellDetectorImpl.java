@@ -56,7 +56,6 @@ import consulo.versionControlSystem.CodeSmellInfo;
 import consulo.versionControlSystem.impl.internal.AbstractVcsHelperImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -71,17 +70,17 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class CodeSmellDetectorImpl extends CodeSmellDetector {
-    @Nonnull
+    
     private final Project myProject;
     private static final Logger LOG = Logger.getInstance(CodeSmellDetectorImpl.class);
 
     @Inject
-    public CodeSmellDetectorImpl(@Nonnull Project project) {
+    public CodeSmellDetectorImpl(Project project) {
         myProject = project;
     }
 
     @Override
-    public void showCodeSmellErrors(@Nonnull List<CodeSmellInfo> smellList) {
+    public void showCodeSmellErrors(List<CodeSmellInfo> smellList) {
         Collections.sort(smellList, (o1, o2) -> o1.getTextRange().getStartOffset() - o2.getTextRange().getStartOffset());
 
         myProject.getApplication().invokeLater(() -> {
@@ -135,10 +134,10 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
 
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public List<CodeSmellInfo> findCodeSmells(@Nonnull final List<VirtualFile> filesToCheck) throws ProcessCanceledException {
+    public List<CodeSmellInfo> findCodeSmells(final List<VirtualFile> filesToCheck) throws ProcessCanceledException {
         UIAccess.assertIsUIThread();
         final List<CodeSmellInfo> result = new ArrayList<>();
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
@@ -149,7 +148,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
         final SimpleReference<Exception> exception = SimpleReference.create();
         ProgressManager.getInstance().run(new Task.Modal(myProject, VcsLocalize.checkingCodeSmellsProgressTitle(), true) {
             @Override
-            public void run(@Nonnull ProgressIndicator progress) {
+            public void run(ProgressIndicator progress) {
                 try {
                     for (int i = 0; i < filesToCheck.size(); i++) {
                         if (progress.isCanceled()) {
@@ -180,8 +179,8 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
         return result;
     }
 
-    @Nonnull
-    private List<CodeSmellInfo> findCodeSmells(@Nonnull VirtualFile file, @Nonnull ProgressIndicator progress) {
+    
+    private List<CodeSmellInfo> findCodeSmells(VirtualFile file, ProgressIndicator progress) {
         List<CodeSmellInfo> result = Collections.synchronizedList(new ArrayList<CodeSmellInfo>());
 
         DaemonCodeAnalyzerInternal codeAnalyzer = (DaemonCodeAnalyzerInternal) DaemonCodeAnalyzer.getInstance(myProject);
@@ -210,9 +209,9 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     }
 
     private void convertErrorsAndWarnings(
-        @Nonnull Collection<HighlightInfo> highlights,
-        @Nonnull List<CodeSmellInfo> result,
-        @Nonnull Document document
+        Collection<HighlightInfo> highlights,
+        List<CodeSmellInfo> result,
+        Document document
     ) {
         for (HighlightInfo highlightInfo : highlights) {
             HighlightSeverity severity = highlightInfo.getSeverity();
@@ -227,8 +226,8 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
         }
     }
 
-    @Nonnull
-    private static LocalizeValue getDescription(@Nonnull HighlightInfo highlightInfo) {
+    
+    private static LocalizeValue getDescription(HighlightInfo highlightInfo) {
         LocalizeValue description = highlightInfo.getDescription();
         HighlightInfoType type = highlightInfo.getType();
         if (type instanceof HighlightInfoTypeSeverityByKey highlightInfoTypeSeverityByKey) {

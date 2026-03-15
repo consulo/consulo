@@ -19,7 +19,6 @@ import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -34,15 +33,15 @@ public class ActionUtil {
     public static final Key<List<AnAction>> INLINE_ACTIONS = Key.create("INLINE_ACTIONS");
     public static final Key<Boolean> ALWAYS_VISIBLE_INLINE_ACTION = Key.create("ALWAYS_VISIBLE_INLINE_ACTION");
 
-    public static List<AnAction> getActions(@Nonnull JComponent component) {
+    public static List<AnAction> getActions(JComponent component) {
         return ObjectUtil.notNull((List<AnAction>) component.getClientProperty(AnAction.ACTIONS_KEY), Collections.emptyList());
     }
 
-    public static void clearActions(@Nonnull JComponent component) {
+    public static void clearActions(JComponent component) {
         component.putClientProperty(AnAction.ACTIONS_KEY, null);
     }
 
-    public static void copyRegisteredShortcuts(@Nonnull JComponent to, @Nonnull JComponent from) {
+    public static void copyRegisteredShortcuts(JComponent to, JComponent from) {
         for (AnAction anAction : getActions(from)) {
             anAction.registerCustomShortcutSet(anAction.getShortcutSet(), to);
         }
@@ -53,7 +52,7 @@ public class ActionUtil {
      *
      * @param actionId action id
      */
-    public static AnAction copyFrom(@Nonnull AnAction action, @Nonnull String actionId) {
+    public static AnAction copyFrom(AnAction action, String actionId) {
         action.copyFrom(ActionManager.getInstance().getAction(actionId));
         return action;
     }
@@ -64,7 +63,7 @@ public class ActionUtil {
      * @param action   action to merge to
      * @param actionId action id to merge from
      */
-    public static AnAction mergeFrom(@Nonnull AnAction action, @Nonnull String actionId) {
+    public static AnAction mergeFrom(AnAction action, String actionId) {
         //noinspection UnnecessaryLocalVariable
         AnAction a1 = action;
         AnAction a2 = ActionManager.getInstance().getAction(actionId);
@@ -85,7 +84,7 @@ public class ActionUtil {
         return a1;
     }
 
-    public static void registerForEveryKeyboardShortcut(@Nonnull JComponent component, @Nonnull ActionListener action, @Nonnull ShortcutSet shortcuts) {
+    public static void registerForEveryKeyboardShortcut(JComponent component, ActionListener action, ShortcutSet shortcuts) {
         for (Shortcut shortcut : shortcuts.getShortcuts()) {
             if (shortcut instanceof KeyboardShortcut ks) {
                 KeyStroke first = ks.getFirstKeyStroke();

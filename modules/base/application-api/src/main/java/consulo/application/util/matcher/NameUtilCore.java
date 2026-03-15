@@ -4,7 +4,6 @@ package consulo.application.util.matcher;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +15,8 @@ public class NameUtilCore {
    * @param name the identifier to split.
    * @return the array of strings into which the identifier has been split.
    */
-  @Nonnull
-  public static String[] splitNameIntoWords(@Nonnull String name) {
+  
+  public static String[] splitNameIntoWords(String name) {
     String[] underlineDelimited = name.split("_");
     List<String> result = new ArrayList<>();
     for (String word : underlineDelimited) {
@@ -26,7 +25,7 @@ public class NameUtilCore {
     return ArrayUtil.toStringArray(result);
   }
 
-  private static void addAllWords(@Nonnull String text, @Nonnull List<? super String> result) {
+  private static void addAllWords(String text, List<? super String> result) {
     int start = 0;
     while (start < text.length()) {
       int next = nextWord(text, start);
@@ -35,7 +34,7 @@ public class NameUtilCore {
     }
   }
 
-  public static int nextWord(@Nonnull String text, int start) {
+  public static int nextWord(String text, int start) {
     if (!Character.isLetterOrDigit(text.charAt(start))) {
       return start + 1;
     }
@@ -84,8 +83,8 @@ public class NameUtilCore {
     return text.charAt(i) == 'l' && i < text.length() - 1 && text.charAt(i + 1) == 'n' && (text.length() == i + 2 || isWordStart(text, i + 2));
   }
 
-  @Nonnull
-  public static String[] nameToWords(@Nonnull String name) {
+  
+  public static String[] nameToWords(String name) {
     List<String> array = new ArrayList<>();
     int index = 0;
 

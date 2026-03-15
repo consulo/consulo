@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,7 +41,7 @@ public class DesktopAWTRepositoryDialogFactory implements RepositoryDialogFactor
 
   @Override
   @RequiredUIAccess
-  public void showManagePackagesDialogAsync(@Nonnull PackageManagementService service, @Nullable PackageManagementService.Listener listener) {
+  public void showManagePackagesDialogAsync(PackageManagementService service, PackageManagementService.@Nullable Listener listener) {
     ManagePackagesDialog dialog = new ManagePackagesDialog(myProject, service, listener);
     dialog.showAsync();
   }

@@ -13,10 +13,8 @@ import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.InputEvent;
@@ -155,7 +153,7 @@ public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAd
 
     @Override
     @Nullable
-    public Object getData(@Nonnull @NonNls Key dataId) {
+    public Object getData(Key dataId) {
       if (PlatformDataKeys.SELECTED_ITEM == dataId) {
         return myList.getSelectedValue();
       }

@@ -4,8 +4,7 @@ package consulo.language.ast;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +55,7 @@ public class TokenSet {
    *
    * @return the contents of the set.
    */
-  @Nonnull
+  
   public IElementType[] getTypes() {
     IElementType[] types = myTypes;
 
@@ -92,8 +91,8 @@ public class TokenSet {
    * @param types the element types contained in the set.
    * @return the new token set.
    */
-  @Nonnull
-  public static TokenSet create(@Nonnull IElementType... types) {
+  
+  public static TokenSet create(IElementType... types) {
     if (types.length == 0) return EMPTY;
     if (types.length == 1 && types[0] == TokenType.WHITE_SPACE) {
       return WHITE_SPACE;
@@ -101,8 +100,8 @@ public class TokenSet {
     return doCreate(types);
   }
 
-  @Nonnull
-  private static TokenSet doCreate(@Nonnull IElementType... types) {
+  
+  private static TokenSet doCreate(IElementType... types) {
     short min = Short.MAX_VALUE;
     short max = 0;
     for (IElementType type : types) {
@@ -132,8 +131,8 @@ public class TokenSet {
    * @param sets the token sets to unite.
    * @return the new token set.
    */
-  @Nonnull
-  public static TokenSet orSet(@Nonnull TokenSet... sets) {
+  
+  public static TokenSet orSet(TokenSet... sets) {
     if (sets.length == 0) return EMPTY;
 
     short shift = sets[0].myShift;
@@ -160,8 +159,8 @@ public class TokenSet {
    * @param b the second token set to intersect.
    * @return the new token set.
    */
-  @Nonnull
-  public static TokenSet andSet(@Nonnull TokenSet a, @Nonnull TokenSet b) {
+  
+  public static TokenSet andSet(TokenSet a, TokenSet b) {
     TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
     for (int i = 0; i < newSet.myWords.length; i++) {
       int ai = newSet.myShift - a.myShift + i;
@@ -178,8 +177,8 @@ public class TokenSet {
    * @param b the token set to subtract.
    * @return the new token set.
    */
-  @Nonnull
-  public static TokenSet andNot(@Nonnull TokenSet a, @Nonnull TokenSet b) {
+  
+  public static TokenSet andNot(TokenSet a, TokenSet b) {
     TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
     for (int i = 0; i < newSet.myWords.length; i++) {
       int ai = newSet.myShift - a.myShift + i;

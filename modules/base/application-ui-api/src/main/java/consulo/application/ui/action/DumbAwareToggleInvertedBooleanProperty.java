@@ -21,12 +21,11 @@ import consulo.component.util.config.AbstractProperty;
 import consulo.component.util.config.BooleanProperty;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 public class DumbAwareToggleInvertedBooleanProperty extends ToggleInvertedBooleanProperty implements DumbAware {
     public DumbAwareToggleInvertedBooleanProperty(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         Image icon,
         AbstractProperty.AbstractPropertyContainer properties,
         BooleanProperty property

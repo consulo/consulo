@@ -20,8 +20,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.fileTemplate.FileTemplateContributor;
 import consulo.fileTemplate.FileTemplateRegistrator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ public class FileTemplateRegistratorImpl implements FileTemplateRegistrator {
     return impl;
   });
 
-  @Nonnull
+  
   public static FileTemplateRegistratorImpl last() {
     return Application.get().getExtensionPoint(FileTemplateContributor.class).getOrBuildCache(REG_KEY);
   }
@@ -44,11 +43,11 @@ public class FileTemplateRegistratorImpl implements FileTemplateRegistrator {
   private final Map<String, String> myInternalTemplates = new LinkedHashMap<>();
 
   @Override
-  public void registerInternalTemplate(@Nonnull String name, @Nullable String subject) {
+  public void registerInternalTemplate(String name, @Nullable String subject) {
     myInternalTemplates.put(name, subject);
   }
 
-  @Nonnull
+  
   public Map<String, String> getInternalTemplates() {
     return myInternalTemplates;
   }

@@ -21,8 +21,7 @@ import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.*;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,14 +38,14 @@ import java.util.List;
  * @param <T> completion element type.
  */
 public class ValuesCompletionProvider<T> implements TextCompletionProvider {
-  @Nonnull
+ 
   protected final TextCompletionValueDescriptor<T> myDescriptor;
-  @Nonnull
+ 
   private final List<Character> mySeparators;
-  @Nonnull
+ 
   protected final Collection<? extends T> myValues;
   private final boolean myCaseSensitive;
-  @Nonnull
+ 
   private final InsertHandler<LookupElement> myInsertHandler = new CompletionCharInsertHandler();
 
   /**
@@ -57,9 +56,9 @@ public class ValuesCompletionProvider<T> implements TextCompletionProvider {
    * @param values values to show in completion.
    * @param caseSensitive is completion case-sensitive.
    */
-  public ValuesCompletionProvider(@Nonnull TextCompletionValueDescriptor<T> descriptor,
-                                  @Nonnull List<Character> separators,
-                                  @Nonnull Collection<? extends T> values, boolean caseSensitive) {
+  public ValuesCompletionProvider(TextCompletionValueDescriptor<T> descriptor,
+                                  List<Character> separators,
+                                  Collection<? extends T> values, boolean caseSensitive) {
     myDescriptor = descriptor;
     mySeparators = separators;
     myValues = values;
@@ -71,8 +70,8 @@ public class ValuesCompletionProvider<T> implements TextCompletionProvider {
    * @param presentation descriptor for completion values.
    * @param values list of values.
    */
-  public ValuesCompletionProvider(@Nonnull TextCompletionValueDescriptor<T> presentation,
-                                  @Nonnull Collection<? extends T> values) {
+  public ValuesCompletionProvider(TextCompletionValueDescriptor<T> presentation,
+                                  Collection<? extends T> values) {
     this(presentation, Collections.emptyList(), values, false);
   }
 
@@ -84,12 +83,12 @@ public class ValuesCompletionProvider<T> implements TextCompletionProvider {
 
   @Nullable
   @Override
-  public String getPrefix(@Nonnull String text, int offset) {
+  public String getPrefix(String text, int offset) {
     return getPrefix(text, offset, mySeparators);
   }
 
-  @Nonnull
-  protected static String getPrefix(@Nonnull String text, int offset, @Nonnull Collection<Character> separators) {
+ 
+  protected static String getPrefix(String text, int offset, Collection<Character> separators) {
     int index = -1;
     for (char c : separators) {
       index = Math.max(text.lastIndexOf(c, offset - 1), index);
@@ -97,25 +96,24 @@ public class ValuesCompletionProvider<T> implements TextCompletionProvider {
     return text.substring(index + 1, offset);
   }
 
-  @Nonnull
+ 
   @Override
-  public CompletionResultSet applyPrefixMatcher(@Nonnull CompletionResultSet result, @Nonnull String prefix) {
+  public CompletionResultSet applyPrefixMatcher(CompletionResultSet result, String prefix) {
     CompletionResultSet resultWithMatcher = result.withPrefixMatcher(new PlainPrefixMatcher(prefix));
     if (!myCaseSensitive) resultWithMatcher = resultWithMatcher.caseInsensitive();
     return resultWithMatcher;
   }
 
   @Override
-  @Nullable
-  public CharFilter.Result acceptChar(char c) {
+  public CharFilter.@Nullable Result acceptChar(char c) {
     if (!mySeparators.contains(c)) return CharFilter.Result.ADD_TO_PREFIX;
     return CharFilter.Result.HIDE_LOOKUP;
   }
 
   @Override
-  public void fillCompletionVariants(@Nonnull CompletionParameters parameters,
-                                     @Nonnull String prefix,
-                                     @Nonnull CompletionResultSet result) {
+  public void fillCompletionVariants(CompletionParameters parameters,
+                                     String prefix,
+                                     CompletionResultSet result) {
     Collection<? extends T> values = getValues(prefix, result);
     values = ContainerUtil.sorted(values, myDescriptor);
 
@@ -125,8 +123,8 @@ public class ValuesCompletionProvider<T> implements TextCompletionProvider {
     result.stopHere();
   }
 
-  @Nonnull
-  protected LookupElement installInsertHandler(@Nonnull LookupElementBuilder builder) {
+ 
+  protected LookupElement installInsertHandler(LookupElementBuilder builder) {
     InsertHandler<LookupElement> handler = builder.getInsertHandler();
     if (handler == null) return builder.withInsertHandler(myInsertHandler);
     return builder.withInsertHandler(new InsertHandler<LookupElement>() {
@@ -138,8 +136,8 @@ public class ValuesCompletionProvider<T> implements TextCompletionProvider {
     });
   }
 
-  @Nonnull
-  protected Collection<? extends T> getValues(@Nonnull String prefix, @Nonnull CompletionResultSet result) {
+ 
+  protected Collection<? extends T> getValues(String prefix, CompletionResultSet result) {
     return myValues;
   }
 
@@ -151,15 +149,15 @@ public class ValuesCompletionProvider<T> implements TextCompletionProvider {
   }
 
   public static class ValuesCompletionProviderDumbAware<T> extends ValuesCompletionProvider<T> implements DumbAware {
-    public ValuesCompletionProviderDumbAware(@Nonnull TextCompletionValueDescriptor<T> descriptor,
-                                             @Nonnull List<Character> separators,
-                                             @Nonnull Collection<? extends T> values,
+    public ValuesCompletionProviderDumbAware(TextCompletionValueDescriptor<T> descriptor,
+                                             List<Character> separators,
+                                             Collection<? extends T> values,
                                              boolean caseSensitive) {
       super(descriptor, separators, values, caseSensitive);
     }
 
-    public ValuesCompletionProviderDumbAware(@Nonnull TextCompletionValueDescriptor<T> presentation,
-                                             @Nonnull Collection<? extends T> values) {
+    public ValuesCompletionProviderDumbAware(TextCompletionValueDescriptor<T> presentation,
+                                             Collection<? extends T> values) {
       super(presentation, values);
     }
   }

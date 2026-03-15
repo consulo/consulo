@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.event;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -29,20 +28,20 @@ public class VFileMoveEvent extends VFileEvent {
   private final VirtualFile myOldParent;
   private final VirtualFile myNewParent;
 
-  public VFileMoveEvent(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) {
+  public VFileMoveEvent(Object requestor, VirtualFile file, VirtualFile newParent) {
     super(requestor, false);
     myFile = file;
     myNewParent = newParent;
     myOldParent = file.getParent();
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   public VirtualFile getNewParent() {
     return myNewParent;
   }
@@ -56,19 +55,19 @@ public class VFileMoveEvent extends VFileEvent {
     return "VfsEvent[move " + myFile.getName() + " from " + myOldParent + " to " + myNewParent + "]";
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     return computePath();
   }
 
-  @Nonnull
+  
   @Override
   protected String computePath() {
     return myFile.getPath();
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
@@ -101,12 +100,12 @@ public class VFileMoveEvent extends VFileEvent {
     return result;
   }
 
-  @Nonnull
+  
   public String getOldPath() {
     return myOldParent.getPath() + "/" + myFile.getName();
   }
 
-  @Nonnull
+  
   public String getNewPath() {
     return myNewParent.getPath() + "/" + myFile.getName();
   }

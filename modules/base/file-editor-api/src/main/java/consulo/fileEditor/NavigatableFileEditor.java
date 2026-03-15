@@ -18,7 +18,6 @@ package consulo.fileEditor;
 
 import consulo.navigation.Navigatable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * File editor which supports possibility to navigate to {@link Navigatable} element
@@ -33,12 +32,12 @@ public interface NavigatableFileEditor extends FileEditor {
    * @param navigatable
    * @return true if editor can navigate, false otherwise
    */
-  boolean canNavigateTo(@Nonnull Navigatable navigatable);
+  boolean canNavigateTo(Navigatable navigatable);
 
   /**
    * Navigate editor to the given navigatable if {@link #canNavigateTo(Navigatable)} is true
    *
    * @param navigatable navigation target
    */
-  void navigateTo(@Nonnull Navigatable navigatable);
+  void navigateTo(Navigatable navigatable);
 }

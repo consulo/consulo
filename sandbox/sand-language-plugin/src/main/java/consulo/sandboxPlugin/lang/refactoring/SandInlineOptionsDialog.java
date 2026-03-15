@@ -19,7 +19,6 @@ import consulo.language.editor.refactoring.inline.InlineOptionsWithSearchSetting
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -54,25 +53,25 @@ public class SandInlineOptionsDialog extends InlineOptionsWithSearchSettingsDial
 
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getNameLabelText() {
         return LocalizeValue.of("Test");
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getBorderTitle() {
         return LocalizeValue.of("Invocation");
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getInlineAllText() {
         return LocalizeValue.of("Inline All");
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getInlineThisText() {
         return LocalizeValue.of("Inline this");

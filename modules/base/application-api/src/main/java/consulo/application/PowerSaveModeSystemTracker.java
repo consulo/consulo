@@ -18,7 +18,6 @@ package consulo.application;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,5 +33,5 @@ public interface PowerSaveModeSystemTracker {
     void exitPowerSaveMode();
   }
 
-  void register(@Nonnull Notifier notifier);
+  void register(Notifier notifier);
 }

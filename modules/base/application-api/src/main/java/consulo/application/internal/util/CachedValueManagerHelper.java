@@ -17,7 +17,6 @@ package consulo.application.internal.util;
 
 import consulo.application.util.CachedValue;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -29,15 +28,15 @@ import java.util.concurrent.ConcurrentMap;
 public class CachedValueManagerHelper {
     private static final ConcurrentMap<String, Key<CachedValue<?>>> KEY_BY_CLASS = new ConcurrentHashMap<>();
 
-    @Nonnull
-    public static <T> Key<CachedValue<T>> getKeyForClass(@Nonnull Class<?> providerClass) {
+    
+    public static <T> Key<CachedValue<T>> getKeyForClass(Class<?> providerClass) {
         return getKeyForClass(providerClass, KEY_BY_CLASS);
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public static <T> Key<CachedValue<T>> getKeyForClass(
-        @Nonnull Class<?> providerClass,
+        Class<?> providerClass,
         ConcurrentMap<String, Key<CachedValue<?>>> keyByClassMap
     ) {
         String name = providerClass.getName();

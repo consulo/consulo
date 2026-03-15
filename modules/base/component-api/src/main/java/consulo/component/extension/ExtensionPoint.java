@@ -23,8 +23,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -43,12 +42,12 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         BREAK
     }
 
-    @Nonnull
+    
     default String getName() {
         return getClassName();
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     @Deprecated
     @DeprecationInfo("Use #getExtensionList()")
@@ -61,15 +60,15 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return !getExtensionList().isEmpty();
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Prefer safe iteration")
     List<E> getExtensionList();
 
-    @Nonnull
+    
     Class<E> getExtensionClass();
 
-    @Nonnull
+    
     default String getClassName() {
         return getExtensionClass().getName();
     }
@@ -87,7 +86,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     /**
      * Sort extensions depends on @{@link ExtensionImpl#order()} - internal logic
      */
-    @Nonnull
+    
     default List<E> sort(List<E> extensionsList) {
         return extensionsList;
     }
@@ -95,11 +94,11 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     /**
      * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed)
      */
-    @Nonnull
-    <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<E, K> key);
+    
+    <K> K getOrBuildCache(ExtensionPointCacheKey<E, K> key);
 
-    @Nonnull
-    default <V extends E> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {
+    
+    default <V extends E> V findExtensionOrFail(Class<V> instanceOf) {
         V extension = findExtension(instanceOf);
         if (extension == null) {
             throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
@@ -107,7 +106,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return extension;
     }
 
-    default void processWithPluginDescriptor(@Nonnull @InheritCallerContext BiConsumer<? super E, ? super PluginDescriptor> consumer) {
+    default void processWithPluginDescriptor(@InheritCallerContext BiConsumer<? super E, ? super PluginDescriptor> consumer) {
         for (E extension : getExtensionList()) {
             PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());
 
@@ -115,25 +114,25 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         }
     }
 
-    default boolean anyMatchSafe(@Nonnull @InheritCallerContext Predicate<E> predicate) {
+    default boolean anyMatchSafe(@InheritCallerContext Predicate<E> predicate) {
         return findFirstSafe(predicate) != null;
     }
 
-    default boolean allMatchSafe(@Nonnull @InheritCallerContext Predicate<E> predicate) {
+    default boolean allMatchSafe(@InheritCallerContext Predicate<E> predicate) {
         return findFirstSafe(predicate.negate()) == null;
     }
 
-    default boolean noneMatchSafe(@Nonnull @InheritCallerContext Predicate<E> predicate) {
+    default boolean noneMatchSafe(@InheritCallerContext Predicate<E> predicate) {
         return findFirstSafe(predicate) == null;
     }
 
     @Nullable
-    default E findFirstSafe(@Nonnull @InheritCallerContext Predicate<E> predicate) {
+    default E findFirstSafe(@InheritCallerContext Predicate<E> predicate) {
         return computeSafeIfAny(e -> predicate.test(e) ? e : null);
     }
 
     @Nullable
-    default <R> R computeSafeIfAny(@Nonnull @InheritCallerContext Function<? super E, ? extends R> processor) {
+    default <R> R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends R> processor) {
         for (E extension : getExtensionList()) {
             try {
                 R result = processor.apply(extension);
@@ -148,16 +147,16 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return null;
     }
 
-    @Nonnull
-    default <R> R computeSafeIfAny(@Nonnull @InheritCallerContext Function<? super E, ? extends R> processor, @Nonnull R defaultValue) {
+    
+    default <R> R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends R> processor, R defaultValue) {
         R result = computeSafeIfAny(processor);
         return result == null ? defaultValue : result;
     }
 
-    @Nonnull
+    
     default <R, CR extends Collection<? super R>> CR collectMapped(
-        @Nonnull CR results,
-        @Nonnull @InheritCallerContext Function<? super E, ? extends R> processor
+        CR results,
+        @InheritCallerContext Function<? super E, ? extends R> processor
     ) {
         forEach(extension -> {
             R result = processor.apply(extension);
@@ -168,16 +167,16 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return results;
     }
 
-    @Nonnull
-    default <R> List<R> collectMapped(@Nonnull @InheritCallerContext Function<? super E, ? extends R> processor) {
+    
+    default <R> List<R> collectMapped(@InheritCallerContext Function<? super E, ? extends R> processor) {
         return collectMapped(new ArrayList<R>(), processor);
     }
 
-    @Nonnull
+    
     default <K, V, M extends Map<? super K, ? super V>> M collectMapped(
-        @Nonnull M results,
-        @Nonnull @InheritCallerContext Function<? super E, ? extends K> keyMapper,
-        @Nonnull @InheritCallerContext Function<? super E, ? extends V> valueMapper
+        M results,
+        @InheritCallerContext Function<? super E, ? extends K> keyMapper,
+        @InheritCallerContext Function<? super E, ? extends V> valueMapper
     ) {
         forEach(extension -> {
             K key = keyMapper.apply(extension);
@@ -189,19 +188,19 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return results;
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     default <K, V, M extends Map<? super K, ? super V>> M collectMapped(
-        @Nonnull @InheritCallerContext Function<? super E, ? extends K> keyMapper,
-        @Nonnull @InheritCallerContext Function<? super E, ? extends V> valueMapper
+        @InheritCallerContext Function<? super E, ? extends K> keyMapper,
+        @InheritCallerContext Function<? super E, ? extends V> valueMapper
     ) {
         return collectMapped((M) new LinkedHashMap<K, V>(), keyMapper, valueMapper);
     }
 
-    @Nonnull
+    
     default <CE extends Collection<E>> CE collectFiltered(
-        @Nonnull CE results,
-        @Nonnull @InheritCallerContext Predicate<? super E> predicate
+        CE results,
+        @InheritCallerContext Predicate<? super E> predicate
     ) {
         forEach(extension -> {
             if (predicate.test(extension)) {
@@ -211,17 +210,17 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return results;
     }
 
-    @Nonnull
-    default List<E> collectFiltered(@Nonnull @InheritCallerContext Predicate<? super E> predicate) {
+    
+    default List<E> collectFiltered(@InheritCallerContext Predicate<? super E> predicate) {
         return collectFiltered(new ArrayList<>(), predicate);
     }
 
     @Override
-    default void forEach(@Nonnull @InheritCallerContext Consumer<? super E> action) {
+    default void forEach(@InheritCallerContext Consumer<? super E> action) {
         forEachExtensionSafe(action);
     }
 
-    default void forEachExtensionSafe(@Nonnull @InheritCallerContext Consumer<? super E> consumer) {
+    default void forEachExtensionSafe(@InheritCallerContext Consumer<? super E> consumer) {
         processWithPluginDescriptor((value, pluginDescriptor) -> {
             try {
                 consumer.accept(value);
@@ -232,7 +231,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         });
     }
 
-    default void forEachBreakable(@Nonnull @InheritCallerContext Function<? super E, Flow> breakableConsumer) {
+    default void forEachBreakable(@InheritCallerContext Function<? super E, Flow> breakableConsumer) {
         computeSafeIfAny(value -> breakableConsumer.apply(value) != Flow.BREAK ? null : Flow.BREAK);
     }
 

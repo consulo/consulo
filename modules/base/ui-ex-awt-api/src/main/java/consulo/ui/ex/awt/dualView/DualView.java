@@ -33,8 +33,6 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.table.ListTreeTableModelOnColumns;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -76,7 +74,7 @@ public class DualView extends JPanel {
 
     private boolean myZipByHeight;
 
-    public DualView(Object root, DualViewColumnInfo[] columns, @NonNls String columnServiceKey, Project project) {
+    public DualView(Object root, DualViewColumnInfo[] columns, String columnServiceKey, Project project) {
         super(new CardLayout());
 
         myTreeStorage = new Storage.PropertiesComponentStorage(
@@ -262,9 +260,9 @@ public class DualView extends JPanel {
                 return createWrappedRenderer(super.getCellRenderer(row, column));
             }
 
-            @Nonnull
+            
             @Override
-            public Component prepareRenderer(@Nonnull TableCellRenderer renderer, int row, int column) {
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
                 if (c instanceof JComponent && !myFlatView.getCellSelectionEnabled()) {
                     ((JComponent) c).setBorder(null);
@@ -415,7 +413,7 @@ public class DualView extends JPanel {
     public AnAction getExpandAllAction() {
         return new AnAction(UILocalize.treeViewExpandAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall()) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
                 presentation.setVisible(true);
                 presentation.setEnabled(myCurrentView == myTreeView);
@@ -423,7 +421,7 @@ public class DualView extends JPanel {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 expandAll();
             }
         };
@@ -432,7 +430,7 @@ public class DualView extends JPanel {
     public AnAction getCollapseAllAction() {
         return new AnAction(UILocalize.treeViewCollapseAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall()) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
                 presentation.setVisible(true);
                 presentation.setEnabled(myCurrentView == myTreeView);
@@ -440,7 +438,7 @@ public class DualView extends JPanel {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 collapseAll();
             }
         };
@@ -552,7 +550,7 @@ public class DualView extends JPanel {
         myZipByHeight = zipByHeight;
     }
 
-    public void setEmptyText(@Nonnull String text) {
+    public void setEmptyText(String text) {
         myTreeView.getEmptyText().setText(text);
         myFlatView.getEmptyText().setText(text);
     }

@@ -54,9 +54,7 @@ import consulo.undoRedo.util.UndoUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,20 +75,20 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     private final JScrollBar myScrollBar = new JBScrollBar(Adjustable.HORIZONTAL);
     private final DocumentListener myDocumentAdapter = new DocumentListener() {
         @Override
-        public void documentChanged(@Nonnull DocumentEvent event) {
+        public void documentChanged(DocumentEvent event) {
             myPanel.revalidate();
         }
     };
 
-    public LanguageConsoleImpl(@Nonnull Project project, @Nonnull String title, @Nonnull Language language) {
+    public LanguageConsoleImpl(Project project, String title, Language language) {
         this(new Helper(project, new LightVirtualFile(title, language, "")));
     }
 
-    public LanguageConsoleImpl(@Nonnull Project project, @Nonnull String title, @Nonnull VirtualFile virtualFile) {
+    public LanguageConsoleImpl(Project project, String title, VirtualFile virtualFile) {
         this(new Helper(project, virtualFile).setTitle(title));
     }
 
-    public LanguageConsoleImpl(@Nonnull Helper helper) {
+    public LanguageConsoleImpl(Helper helper) {
         super(helper.project, GlobalSearchScope.allScope(helper.project), true, true);
         myHelper = helper;
         EditorFactory editorFactory = EditorFactory.getInstance();
@@ -105,7 +103,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         myScrollBar.putClientProperty(Alignment.class, Alignment.BOTTOM);
     }
 
-    @Nonnull
+    
     @Override
     protected final EditorEx doCreateConsoleEditor() {
         return myHistoryViewer;
@@ -115,7 +113,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     protected final void disposeEditor() {
     }
 
-    @Nonnull
+    
     @Override
     protected JComponent createCenterComponent() {
         initComponents();
@@ -195,13 +193,13 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
 
-    @Nonnull
+    
     public ConsolePromptDecorator getConsolePromptDecorator() {
         return myConsoleExecutionEditor.getConsolePromptDecorator();
     }
 
     @Override
-    public void setPromptAttributes(@Nonnull ConsoleViewContentType textAttributes) {
+    public void setPromptAttributes(ConsoleViewContentType textAttributes) {
         myConsoleExecutionEditor.setPromptAttributes(textAttributes);
     }
 
@@ -221,43 +219,43 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    @Nonnull
+    
     public final PsiFile getFile() {
         return myHelper.getFileSafe();
     }
 
     @Override
-    @Nonnull
+    
     public final VirtualFile getVirtualFile() {
         return myConsoleExecutionEditor.getVirtualFile();
     }
 
     @Override
-    @Nonnull
+    
     public final EditorEx getHistoryViewer() {
         return myHistoryViewer;
     }
 
     @Override
-    @Nonnull
+    
     public final Document getEditorDocument() {
         return myConsoleExecutionEditor.getDocument();
     }
 
     @Override
-    @Nonnull
+    
     public final EditorEx getConsoleEditor() {
         return myConsoleExecutionEditor.getEditor();
     }
 
     @Override
-    @Nonnull
+    
     public String getTitle() {
         return myHelper.title;
     }
 
     @Override
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(String title) {
         myHelper.setTitle(title);
     }
 
@@ -271,12 +269,12 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         new ConsoleHistoryControllerImpl(consoleRootType, historyPersistenceId, this).install();
     }
 
-    public String addToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx editor, boolean preserveMarkup) {
+    public String addToHistory(TextRange textRange, EditorEx editor, boolean preserveMarkup) {
         return addToHistoryInner(textRange, editor, false, preserveMarkup);
     }
 
     @Override
-    @Nonnull
+    
     public String prepareExecuteAction(boolean addToHistory, boolean preserveMarkup, boolean clearInput) {
         EditorEx editor = getCurrentEditor();
         Document document = editor.getDocument();
@@ -295,9 +293,9 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         return text;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    protected String addToHistoryInner(@Nonnull TextRange textRange, @Nonnull EditorEx editor, boolean erase, boolean preserveMarkup) {
+    protected String addToHistoryInner(TextRange textRange, EditorEx editor, boolean erase, boolean preserveMarkup) {
         UIAccess.assertIsUIThread();
 
         String result = addTextRangeToHistory(textRange, editor, preserveMarkup);
@@ -309,7 +307,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         return result;
     }
 
-    public static String printWithHighlighting(@Nonnull LanguageConsoleView console, @Nonnull Editor inputEditor, @Nonnull TextRange textRange) {
+    public static String printWithHighlighting(LanguageConsoleView console, Editor inputEditor, TextRange textRange) {
         String text;
         EditorHighlighter highlighter;
         if (inputEditor instanceof EditorWindow) {
@@ -346,8 +344,8 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    @Nonnull
-    public String addTextRangeToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx inputEditor, boolean preserveMarkup) {
+    
+    public String addTextRangeToHistory(TextRange textRange, EditorEx inputEditor, boolean preserveMarkup) {
         return printWithHighlighting(this, inputEditor, textRange);
 
 
@@ -421,30 +419,30 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
     @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         return super.getData(dataId);
     }
 
     @Override
-    @Nonnull
+    
     public EditorEx getCurrentEditor() {
         return myConsoleExecutionEditor.getCurrentEditor();
     }
 
     @Override
-    @Nonnull
+    
     public Language getLanguage() {
         return getFile().getLanguage();
     }
 
     @Override
-    public void setLanguage(@Nonnull Language language) {
+    public void setLanguage(Language language) {
         myHelper.setLanguage(language);
         myHelper.getFileSafe();
     }
 
     @Override
-    public void setInputText(@Nonnull String query) {
+    public void setInputText(String query) {
         myConsoleExecutionEditor.setInputText(query);
     }
 
@@ -456,7 +454,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         return 2;
     }
 
-    private void addPromptToHistoryImpl(@Nonnull String prompt) {
+    private void addPromptToHistoryImpl(String prompt) {
         Document document = getHistoryViewer().getDocument();
         RangeHighlighter highlighter = this.getHistoryViewer().getMarkupModel().addRangeHighlighter(document.getTextLength(), document.getTextLength(), 0, null, HighlighterTargetArea.EXACT_RANGE);
         print(prompt, myConsoleExecutionEditor.getPromptAttributes());
@@ -469,7 +467,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         String title;
         PsiFile file;
 
-        public Helper(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+        public Helper(Project project, VirtualFile virtualFile) {
             this.project = project;
             this.virtualFile = virtualFile;
             title = virtualFile.getName();
@@ -484,12 +482,12 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             return this;
         }
 
-        @Nonnull
+        
         public PsiFile getFile() {
             return ReadAction.compute(() -> PsiUtilCore.getPsiFile(project, virtualFile));
         }
 
-        @Nonnull
+        
         public Document getDocument() {
             Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
             if (document == null) {
@@ -509,7 +507,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             FileContentUtil.reparseFiles(project, Collections.singletonList(virtualFile), false);
         }
 
-        public void setupEditor(@Nonnull EditorEx editor) {
+        public void setupEditor(EditorEx editor) {
             ConsoleViewUtil.setupConsoleEditor(editor, false, false);
             editor.getContentComponent().setFocusCycleRoot(false);
             editor.setHorizontalScrollbarVisible(true);
@@ -523,13 +521,13 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             DataManager.registerDataProvider(editor.getComponent(), (dataId) -> getEditorData(editor, dataId));
         }
 
-        @Nonnull
+        
         public PsiFile getFileSafe() {
             return file == null || !file.isValid() ? file = getFile() : file;
         }
 
         @Nullable
-        protected Object getEditorData(@Nonnull EditorEx editor, Key dataId) {
+        protected Object getEditorData(EditorEx editor, Key dataId) {
             if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
                 return editor;
             }
@@ -548,7 +546,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         }
 
         @Override
-        public void layoutContainer(@Nonnull Container parent) {
+        public void layoutContainer(Container parent) {
             int componentCount = parent.getComponentCount();
             if (componentCount == 0) {
                 return;

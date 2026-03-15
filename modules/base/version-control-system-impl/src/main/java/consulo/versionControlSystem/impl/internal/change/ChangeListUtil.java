@@ -19,8 +19,7 @@ import com.google.common.primitives.Ints;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,15 +27,15 @@ import java.util.List;
 public class ChangeListUtil {
 
   @Nullable
-  public static LocalChangeList getPredefinedChangeList(@Nonnull String defaultName, @Nonnull ChangeListManager changeListManager) {
+  public static LocalChangeList getPredefinedChangeList(String defaultName, ChangeListManager changeListManager) {
     LocalChangeList sameNamedList = changeListManager.findChangeList(defaultName);
     if (sameNamedList != null) return sameNamedList;
     return tryToMatchWithExistingChangelist(changeListManager, defaultName);
   }
 
   @Nullable
-  private static LocalChangeList tryToMatchWithExistingChangelist(@Nonnull ChangeListManager changeListManager,
-                                                                  @Nonnull String defaultName) {
+  private static LocalChangeList tryToMatchWithExistingChangelist(ChangeListManager changeListManager,
+                                                                  String defaultName) {
     List<LocalChangeList> matched = ContainerUtil.findAll(changeListManager.getChangeListsCopy(),
                                                           list -> defaultName.contains(list.getName().trim()));
 

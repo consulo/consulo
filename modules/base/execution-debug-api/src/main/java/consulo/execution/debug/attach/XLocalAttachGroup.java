@@ -18,7 +18,6 @@ package consulo.execution.debug.attach;
 import consulo.platform.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated Use {@link XAttachProcessPresentationGroup} (will be removed in 2020.1)
@@ -31,7 +30,7 @@ public interface XLocalAttachGroup extends XAttachProcessPresentationGroup {
    */
   //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
   @Deprecated
-  @Nonnull
+  
   XLocalAttachGroup DEFAULT = new XDefaultLocalAttachGroup();
 
   /**
@@ -40,7 +39,7 @@ public interface XLocalAttachGroup extends XAttachProcessPresentationGroup {
   //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
   @Override
   @Deprecated
-  default int compare(@Nonnull Project project, @Nonnull ProcessInfo a, @Nonnull ProcessInfo b, @Nonnull UserDataHolder dataHolder) {
+  default int compare(Project project, ProcessInfo a, ProcessInfo b, UserDataHolder dataHolder) {
     return compare(a, b);
   }
 }

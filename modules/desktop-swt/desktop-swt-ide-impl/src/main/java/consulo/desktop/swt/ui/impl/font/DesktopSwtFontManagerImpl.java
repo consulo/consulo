@@ -20,7 +20,6 @@ import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import org.eclipse.swt.graphics.FontData;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,16 +31,16 @@ import java.util.stream.Collectors;
 public class DesktopSwtFontManagerImpl implements FontManager {
   public static final DesktopSwtFontManagerImpl INSTANCE = new DesktopSwtFontManagerImpl();
 
-  @Nonnull
+  
   @Override
   public Set<String> getAvailableFontNames() {
     FontData[] fontList = DesktopSwtUIAccess.INSTANCE.getDisplay().getFontList(null, true);
     return Arrays.stream(fontList).map(FontData::getName).collect(Collectors.toSet());
   }
 
-  @Nonnull
+  
   @Override
-  public Font createFont(@Nonnull String fontName, int fontSize, int fontStyle) {
+  public Font createFont(String fontName, int fontSize, int fontStyle) {
     return new DesktopSwtFontImpl(fontName, fontSize, fontStyle);
   }
 }

@@ -26,7 +26,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -74,7 +73,7 @@ public class MethodUpDownUtil {
         }
     }
 
-    private static void addStructureViewElements(TreeElement parent, Collection<PsiElement> array, @Nonnull PsiFile file) {
+    private static void addStructureViewElements(TreeElement parent, Collection<PsiElement> array, PsiFile file) {
         for (TreeElement treeElement : parent.getChildren()) {
             Object value = ((StructureViewTreeElement)treeElement).getValue();
             if (value instanceof PsiElement element) {

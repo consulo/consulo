@@ -17,8 +17,7 @@ package consulo.diff.impl.internal.util;
 
 import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.fragment.LineFragment;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +27,10 @@ public class LineFragmentCache {
   private final long myModificationStamp1;
   private final long myModificationStamp2;
 
-  @Nonnull
+  
   private final Map<ComparisonPolicy, PolicyData> myFragments;
 
-  public LineFragmentCache(@Nonnull LineFragmentCache cache) {
+  public LineFragmentCache(LineFragmentCache cache) {
     myModificationStamp1 = cache.myModificationStamp1;
     myModificationStamp2 = cache.myModificationStamp2;
 
@@ -53,25 +52,25 @@ public class LineFragmentCache {
   }
 
   @Nullable
-  public PolicyData getData(@Nonnull ComparisonPolicy policy) {
+  public PolicyData getData(ComparisonPolicy policy) {
     return myFragments.get(policy);
   }
 
-  public void putData(@Nonnull ComparisonPolicy policy, @Nonnull List<LineFragment> fragments, boolean isInnerFragments) {
+  public void putData(ComparisonPolicy policy, List<LineFragment> fragments, boolean isInnerFragments) {
     myFragments.put(policy, new PolicyData(fragments, isInnerFragments));
   }
 
   public static class PolicyData {
-    @Nonnull
+    
     private final List<LineFragment> myFragments;
     private final boolean myInnerFragments;
 
-    public PolicyData(@Nonnull List<LineFragment> fragments, boolean innerFragments) {
+    public PolicyData(List<LineFragment> fragments, boolean innerFragments) {
       myFragments = fragments;
       myInnerFragments = innerFragments;
     }
 
-    @Nonnull
+    
     public List<LineFragment> getFragments() {
       return myFragments;
     }

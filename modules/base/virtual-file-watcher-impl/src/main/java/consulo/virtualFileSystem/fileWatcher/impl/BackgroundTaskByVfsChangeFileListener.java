@@ -26,8 +26,7 @@ import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class BackgroundTaskByVfsChangeFileListener implements AsyncFileListener 
 
   @Nullable
   @Override
-  public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+  public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
     return new ChangeApplier() {
       private List<Runnable> myTasks = new ArrayList<>();
 

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
@@ -32,6 +31,6 @@ public interface BundledQuickListsProvider {
    * @return Array of relative paths without extensions for lists.
    * E.g. : ["/quickLists/myList", "otherList"] for quickLists/myList.xml, otherList.xml
    */
-  @Nonnull
+  
   String[] getBundledListsRelativePaths();
 }

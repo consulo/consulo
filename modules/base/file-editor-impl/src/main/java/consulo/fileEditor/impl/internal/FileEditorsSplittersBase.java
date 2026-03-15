@@ -35,8 +35,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.File;
@@ -57,7 +56,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
     private static final Logger LOG = Logger.getInstance(FileEditorsSplittersBase.class);
 
-    @Nonnull
+    
     protected final Project myProject;
     protected final FileEditorManagerImpl myManager;
     private int myInsideChange;
@@ -69,38 +68,38 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     private final MergingProcessingQueue<VirtualFile, Pair<W, Image>> myIconUpdater;
     private final MergingProcessingQueue<VirtualFile, EditorTablInfo> myFileNameUpdater;
 
-    protected FileEditorsSplittersBase(@Nonnull ApplicationConcurrency applicationConcurrency,
-                                       @Nonnull Project project,
-                                       @Nonnull FileEditorManagerImpl manager) {
+    protected FileEditorsSplittersBase(ApplicationConcurrency applicationConcurrency,
+                                       Project project,
+                                       FileEditorManagerImpl manager) {
         myProject = project;
         myManager = manager;
 
         myIconUpdater = new MergingProcessingQueue<>(applicationConcurrency, project, 200) {
             @Override
-            protected void calculateValue(@Nonnull Project project,
-                                          @Nonnull VirtualFile key,
-                                          @Nonnull Consumer<Pair<W, Image>> consumer) {
+            protected void calculateValue(Project project,
+                                          VirtualFile key,
+                                          Consumer<Pair<W, Image>> consumer) {
                 collectFileIcons(key, consumer);
             }
 
             @Override
-            protected void updateValueInsideUI(@Nonnull Project project,
-                                               @Nonnull VirtualFile key,
-                                               @Nonnull Pair<W, Image> value) {
+            protected void updateValueInsideUI(Project project,
+                                               VirtualFile key,
+                                               Pair<W, Image> value) {
                 value.getFirst().updateFileIcon(key, value.getSecond());
             }
         };
 
         myFileNameUpdater = new MergingProcessingQueue<>(applicationConcurrency, project, 200) {
             @Override
-            protected void calculateValue(@Nonnull Project project, @Nonnull VirtualFile key, @Nonnull Consumer<EditorTablInfo> consumer) {
+            protected void calculateValue(Project project, VirtualFile key, Consumer<EditorTablInfo> consumer) {
                 String title = EditorTabPresentationUtil.getEditorTabTitle(myProject, key);
                 String tooltip = UISettings.getInstance().getShowTabsTooltips() ? getManager().getFileTooltipText(key) : null;
                 consumer.accept(new EditorTablInfo(title, tooltip));
             }
 
             @Override
-            protected void updateValueInsideUI(@Nonnull Project project, @Nonnull VirtualFile key, @Nonnull EditorTablInfo value) {
+            protected void updateValueInsideUI(Project project, VirtualFile key, EditorTablInfo value) {
                 W[] windows = getWindows();
                 for (int i = 0; i != windows.length; ++i) {
                     for (VirtualFile file : windows[i].getFiles()) {
@@ -125,7 +124,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         });
     }
 
-    @Nonnull
+    
     protected abstract W[] createArray(int size);
 
     @RequiredUIAccess
@@ -209,7 +208,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    public void updateFileIconAsync(@Nonnull VirtualFile file) {
+    public void updateFileIconAsync(VirtualFile file) {
         myIconUpdater.queueAdd(file);
     }
 
@@ -227,7 +226,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    public void updateFileColor(@Nonnull VirtualFile file) {
+    public void updateFileColor(VirtualFile file) {
         Collection<W> windows = findWindows(file);
         for (W window : windows) {
             int index = window.findEditorIndex(window.findFileComposite(file));
@@ -238,7 +237,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    public void updateFileBackgroundColor(@Nonnull VirtualFile file) {
+    public void updateFileBackgroundColor(VirtualFile file) {
         W[] windows = getWindows();
         for (int i = 0; i != windows.length; ++i) {
             windows[i].updateFileBackgroundColor(file);
@@ -254,7 +253,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public FileEditorWindow getOrCreateCurrentWindow(VirtualFile file) {
         List<W> windows = findWindows(file);
@@ -386,7 +385,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile[] getOpenFiles() {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (W myWindow : myWindows) {
@@ -404,7 +403,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile[] getSelectedFiles() {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (W window : myWindows) {
@@ -428,7 +427,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public FileEditor[] getSelectedEditors() {
         Set<W> windows = new HashSet<>(myWindows);
@@ -477,8 +476,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     //---------------------------------------------------------
 
     @Override
-    @Nonnull
-    public List<FileEditorWithProviderComposite> findEditorComposites(@Nonnull VirtualFile file) {
+    
+    public List<FileEditorWithProviderComposite> findEditorComposites(VirtualFile file) {
         List<FileEditorWithProviderComposite> res = new ArrayList<>();
         for (FileEditorWindow window : myWindows) {
             FileEditorWithProviderComposite fileComposite = window.findFileComposite(file);
@@ -489,7 +488,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         return res;
     }
 
-    @Nonnull
+    
     protected List<W> findWindows(VirtualFile file) {
         List<W> res = new ArrayList<>();
         for (W window : myWindows) {
@@ -501,7 +500,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    @Nonnull
+    
     public W[] getWindows() {
         return myWindows.toArray(createArray(myWindows.size()));
     }

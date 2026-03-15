@@ -27,8 +27,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows a custom language plugin to control the operation of refactorings for
@@ -40,15 +39,15 @@ import jakarta.annotation.Nullable;
 public abstract class RefactoringSupportProvider implements LanguageExtension {
   private static final ExtensionPointCacheKey<RefactoringSupportProvider, ByLanguageValue<RefactoringSupportProvider>> KEY =
           ExtensionPointCacheKey.create("RefactoringSupportProvider", LanguageOneToOne.build(new RefactoringSupportProvider() {
-            @Nonnull
+            
             @Override
             public Language getLanguage() {
               return Language.ANY;
             }
           }));
 
-  @Nonnull
-  public static RefactoringSupportProvider forLanguage(@Nonnull Language language) {
+  
+  public static RefactoringSupportProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(RefactoringSupportProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -58,7 +57,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @param context refactoring context
    * @return true if refactoring support is available in given context
    */
-  public boolean isAvailable(@Nonnull PsiElement context) {
+  public boolean isAvailable(PsiElement context) {
     return true;
   }
 

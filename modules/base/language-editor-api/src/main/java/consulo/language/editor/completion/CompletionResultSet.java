@@ -8,7 +8,6 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.StandardPatterns;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
@@ -52,9 +51,9 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
    *
    * @see #addAllElements(Iterable)
    */
-  public abstract void addElement(@Nonnull LookupElement element);
+  public abstract void addElement(LookupElement element);
 
-  public void passResult(@Nonnull CompletionResult result) {
+  public void passResult(CompletionResult result) {
     myConsumer.accept(result);
   }
 
@@ -80,7 +79,7 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
    * resulting in varying preselected item in completion and worse user experience. Using {@code addAllElements}
    * instead of {@link #addElement(LookupElement)} helps to avoid that.
    */
-  public void addAllElements(@Nonnull Iterable<? extends LookupElement> elements) {
+  public void addAllElements(Iterable<? extends LookupElement> elements) {
     startBatch();
     int seldomCounter = 0;
     for (LookupElement element : elements) {
@@ -94,31 +93,31 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
   }
 
   @Contract(pure = true)
-  @Nonnull
-  public abstract CompletionResultSet withPrefixMatcher(@Nonnull PrefixMatcher matcher);
+  
+  public abstract CompletionResultSet withPrefixMatcher(PrefixMatcher matcher);
 
   /**
    * Creates a default camel-hump prefix matcher based on given prefix
    */
   @Contract(pure = true)
-  @Nonnull
-  public abstract CompletionResultSet withPrefixMatcher(@Nonnull String prefix);
+  
+  public abstract CompletionResultSet withPrefixMatcher(String prefix);
 
-  @Nonnull
+  
   @Contract(pure = true)
-  public abstract CompletionResultSet withRelevanceSorter(@Nonnull CompletionSorter sorter);
+  public abstract CompletionResultSet withRelevanceSorter(CompletionSorter sorter);
 
-  public abstract void addLookupAdvertisement(@Nonnull String text);
+  public abstract void addLookupAdvertisement(String text);
 
   /**
    * @return A result set with the same prefix, but the lookup strings will be matched case-insensitively. Their lookup strings will
    * remain as they are though, so upon insertion the prefix case will be changed.
    */
   @Contract(pure = true)
-  @Nonnull
+  
   public abstract CompletionResultSet caseInsensitive();
 
-  @Nonnull
+  
   public PrefixMatcher getPrefixMatcher() {
     return myPrefixMatcher;
   }

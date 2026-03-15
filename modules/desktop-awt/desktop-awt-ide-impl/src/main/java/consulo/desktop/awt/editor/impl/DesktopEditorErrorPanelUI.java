@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
@@ -47,13 +46,13 @@ import java.util.Queue;
  */
 public class DesktopEditorErrorPanelUI extends ComponentUI {
   private static class PositionedStripe {
-    @Nonnull
+    
     private ColorValue color;
     private int yEnd;
     private final boolean thin;
     private final int layer;
 
-    private PositionedStripe(@Nonnull ColorValue color, int yEnd, boolean thin, int layer) {
+    private PositionedStripe(ColorValue color, int yEnd, boolean thin, int layer) {
       this.color = color;
       this.yEnd = yEnd;
       this.thin = thin;
@@ -173,7 +172,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     myCachedTrack = null;
   }
 
-  private void repaint(@Nonnull Graphics g, int gutterWidth, @Nonnull ProperTextRange yrange) {
+  private void repaint(Graphics g, int gutterWidth, ProperTextRange yrange) {
     Rectangle clip = new Rectangle(0, yrange.getStartOffset(), gutterWidth, yrange.getLength() + myPanel.getMarkupModel().getMinMarkHeight());
 
     paintBackground(g, clip);
@@ -190,7 +189,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     g.setClip(oldClip);
   }
 
-  private void drawMarkup(@Nonnull Graphics g, int startOffset, int endOffset, @Nonnull MarkupModelEx markup1, @Nonnull MarkupModelEx markup2) {
+  private void drawMarkup(Graphics g, int startOffset, int endOffset, MarkupModelEx markup1, MarkupModelEx markup2) {
     Queue<PositionedStripe> thinEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
     Queue<PositionedStripe> wideEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
     // sorted by layer
@@ -275,7 +274,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     drawStripesEndingBefore(Integer.MAX_VALUE, wideEnds, wideStripes, g, wideYStart[0]);
   }
 
-  private int drawStripesEndingBefore(int ys, @Nonnull Queue<PositionedStripe> ends, @Nonnull List<PositionedStripe> stripes, @Nonnull Graphics g, int yStart) {
+  private int drawStripesEndingBefore(int ys, Queue<PositionedStripe> ends, List<PositionedStripe> stripes, Graphics g, int yStart) {
     while (!ends.isEmpty()) {
       PositionedStripe endingStripe = ends.peek();
       if (endingStripe.yEnd > ys) break;
@@ -293,7 +292,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     return yStart;
   }
 
-  private void drawSpot(@Nonnull Graphics g, boolean thinErrorStripeMark, int yStart, int yEnd, @Nonnull ColorValue color) {
+  private void drawSpot(Graphics g, boolean thinErrorStripeMark, int yStart, int yEnd, ColorValue color) {
     int paintWidth;
     int x;
     if (thinErrorStripeMark) {
@@ -313,7 +312,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     g.fillRect(x, yStart, paintWidth, yEnd - yStart);
   }
 
-  private void paintBackground(Graphics g, @Nonnull Rectangle bounds) {
+  private void paintBackground(Graphics g, Rectangle bounds) {
     g.setColor(UIUtil.getPanelBackground());
     g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 

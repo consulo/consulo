@@ -30,8 +30,7 @@ import consulo.project.ui.util.ProjectUIUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.nio.file.Path;
@@ -62,18 +61,18 @@ public class ProjectUtil {
   }
 
   @Nullable
-  public static String getProjectLocationString(@Nonnull Project project) {
+  public static String getProjectLocationString(Project project) {
     return UserHomeFileUtil.getLocationRelativeToUserHome(project.getBasePath());
   }
 
-  @Nonnull
-  public static String calcRelativeToProjectPath(@Nonnull VirtualFile file, @Nullable Project project, boolean includeFilePath) {
+  
+  public static String calcRelativeToProjectPath(VirtualFile file, @Nullable Project project, boolean includeFilePath) {
     return calcRelativeToProjectPath(file, project, includeFilePath, false, false);
   }
 
-  @Nonnull
+  
   public static String calcRelativeToProjectPath(
-    @Nonnull VirtualFile file,
+    VirtualFile file,
     @Nullable Project project,
     boolean includeFilePath,
     boolean includeUniqueFilePath,
@@ -140,7 +139,7 @@ public class ProjectUtil {
     return ProjectLocator.getInstance().guessProjectForFile(file);
   }
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use ProjectUIUtil#guessCurrentProject")
   public static Project guessCurrentProject(JComponent component) {

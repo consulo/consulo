@@ -27,7 +27,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VFileProperty;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +49,7 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
     String m = "Started loading content";
     LOG.info(m);
@@ -80,7 +79,7 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 }

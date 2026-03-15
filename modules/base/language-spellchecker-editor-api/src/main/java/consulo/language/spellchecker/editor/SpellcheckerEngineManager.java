@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,8 +32,8 @@ public interface SpellcheckerEngineManager {
     @Nullable
     SpellcheckerEngine getActiveEngine();
 
-    @Nonnull
-    default List<String> getSuggestions(@Nonnull Project project, @Nonnull String text) {
+    
+    default List<String> getSuggestions(Project project, String text) {
         SpellcheckerEngine engine = getActiveEngine();
         if (engine == null) {
             return List.of();
@@ -42,17 +41,17 @@ public interface SpellcheckerEngineManager {
         return engine.getSuggestions(project, text);
     }
 
-    default boolean hasProblem(@Nonnull Project project, @Nonnull String word) {
+    default boolean hasProblem(Project project, String word) {
         SpellcheckerEngine engine = getActiveEngine();
         return engine != null && engine.hasProblem(project, word);
     }
 
-    default boolean canSaveUserWords(@Nonnull Project project) {
+    default boolean canSaveUserWords(Project project) {
         SpellcheckerEngine engine = getActiveEngine();
         return engine != null && engine.canSaveUserWords(project);
     }
 
-    default void acceptWordAsCorrect(@Nonnull Project project, @Nonnull String word) {
+    default void acceptWordAsCorrect(Project project, String word) {
         if (!canSaveUserWords(project)) {
             throw new IllegalArgumentException("#canSaveUserWords(Project) return false");
         }

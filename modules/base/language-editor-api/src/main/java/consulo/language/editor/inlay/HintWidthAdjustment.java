@@ -1,8 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.inlay;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the adjustment to inlay hint's width. This supports the scenario when existing hint is replaced with some text (and possibly
@@ -18,7 +17,7 @@ public class HintWidthAdjustment {
     private final String hintTextToMatch;
     private final int adjustmentOffset;
 
-    public HintWidthAdjustment(@Nonnull String editorTextToMatch, @Nullable String hintTextToMatch, int adjustmentOffset) {
+    public HintWidthAdjustment(String editorTextToMatch, @Nullable String hintTextToMatch, int adjustmentOffset) {
         this.editorTextToMatch = editorTextToMatch;
         this.hintTextToMatch = hintTextToMatch;
         this.adjustmentOffset = adjustmentOffset;
@@ -27,7 +26,7 @@ public class HintWidthAdjustment {
     /**
      * Editor text, which width should be matched
      */
-    public @Nonnull String getEditorTextToMatch() {
+    public String getEditorTextToMatch() {
         return editorTextToMatch;
     }
 

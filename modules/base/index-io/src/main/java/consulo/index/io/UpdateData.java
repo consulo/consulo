@@ -20,8 +20,7 @@ import consulo.index.io.forward.KeyValueUpdateProcessor;
 import consulo.index.io.forward.RemovedKeyProcessor;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -33,9 +32,9 @@ public class UpdateData<Key, Value> extends AbstractUpdateData<Key, Value> {
   private final ThrowableRunnable<? extends IOException> myForwardIndexUpdate;
 
   public UpdateData(int inputId,
-                    @Nonnull Map<Key, Value> newData,
-                    @Nonnull ThrowableSupplier<InputDataDiffBuilder<Key, Value>, IOException> currentDataEvaluator,
-                    @Nonnull IndexId<Key, Value> indexId,
+                    Map<Key, Value> newData,
+                    ThrowableSupplier<InputDataDiffBuilder<Key, Value>, IOException> currentDataEvaluator,
+                    IndexId<Key, Value> indexId,
                     @Nullable ThrowableRunnable<? extends IOException> forwardIndexUpdate) {
     super(inputId);
     myNewData = newData;
@@ -45,9 +44,9 @@ public class UpdateData<Key, Value> extends AbstractUpdateData<Key, Value> {
   }
 
   @Override
-  protected boolean iterateKeys(@Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
-                                @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
-                                @Nonnull RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
+  protected boolean iterateKeys(KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
+                                KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
+                                RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
     InputDataDiffBuilder<Key, Value> currentData;
     try {
       currentData = getCurrentDataEvaluator().get();
@@ -63,7 +62,7 @@ public class UpdateData<Key, Value> extends AbstractUpdateData<Key, Value> {
     return myNewData.isEmpty();
   }
 
-  @Nonnull
+  
   protected ThrowableSupplier<InputDataDiffBuilder<Key, Value>, IOException> getCurrentDataEvaluator() {
     return myCurrentDataEvaluator;
   }

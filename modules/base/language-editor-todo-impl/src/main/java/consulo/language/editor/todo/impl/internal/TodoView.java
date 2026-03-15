@@ -40,7 +40,6 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -66,7 +65,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     private final MyVcsListener myVcsListener = new MyVcsListener();
 
     @Inject
-    public TodoView(@Nonnull Project project) {
+    public TodoView(Project project) {
         myProject = project;
 
         state.all.arePackagesShown = true;
@@ -96,7 +95,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     }
 
     @Override
-    public void loadState(@Nonnull State state) {
+    public void loadState(State state) {
         this.state = state;
     }
 
@@ -114,7 +113,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     public void dispose() {
     }
 
-    public void initToolWindow(@Nonnull ToolWindow toolWindow) {
+    public void initToolWindow(ToolWindow toolWindow) {
         // Create panels
         ContentFactory contentFactory = ContentFactory.getInstance();
         Content allTodosContent = contentFactory.createContent(null, LanguageTodoLocalize.titleProject().get(), false);
@@ -196,14 +195,14 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
         myPanels.add(scopeBasedTodos);
     }
 
-    @Nonnull
-    static String getTabNameForChangeList(@Nonnull String changelistName) {
+    
+    static String getTabNameForChangeList(String changelistName) {
         changelistName = changelistName.trim();
         String suffix = "Changelist";
         return StringUtil.endsWithIgnoreCase(changelistName, suffix) ? changelistName : changelistName + " " + suffix;
     }
 
-    @Nonnull
+    
     protected AllTodosTreeBuilder createAllTodoBuilder(JTree tree, Project project) {
         return new AllTodosTreeBuilder(tree, project);
     }
@@ -261,7 +260,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
     private final class MyFileTypeListener implements FileTypeListener {
         @Override
-        public void fileTypesChanged(@Nonnull FileTypeEvent e) {
+        public void fileTypesChanged(FileTypeEvent e) {
             refresh();
         }
     }

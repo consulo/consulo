@@ -17,8 +17,7 @@ package consulo.language.psi.search;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -30,7 +29,7 @@ import java.util.regex.PatternSyntaxException;
  * @since 5.1
  */
 public class IndexPattern {
-  @Nonnull
+  
   private String myPatternString;
   private Pattern myOptimizedIndexingPattern;
   private boolean myCaseSensitive;
@@ -42,13 +41,13 @@ public class IndexPattern {
    * @param patternString the text of the Java regular expression to match.
    * @param caseSensitive whether the regular expression should be case-sensitive.
    */
-  public IndexPattern(@Nonnull String patternString, boolean caseSensitive) {
+  public IndexPattern(String patternString, boolean caseSensitive) {
     myPatternString = patternString;
     myCaseSensitive = caseSensitive;
     compilePattern();
   }
 
-  @Nonnull
+  
   public String getPatternString() {
     return myPatternString;
   }
@@ -67,7 +66,7 @@ public class IndexPattern {
     return myCaseSensitive;
   }
 
-  public void setPatternString(@Nonnull String patternString) {
+  public void setPatternString(String patternString) {
     myPatternString = patternString;
     compilePattern();
   }

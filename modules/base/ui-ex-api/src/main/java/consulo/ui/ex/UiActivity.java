@@ -18,8 +18,7 @@ package consulo.ui.ex;
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +38,7 @@ public class UiActivity implements ComparableObject {
     }
   }
 
-  @Nonnull
+  
   @Override
   public Object[] getEqualityObjects() {
     return new Object[]{myElements};

@@ -23,7 +23,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.versionControlSystem.VcsMappingListener;
 
-import jakarta.annotation.Nonnull;
 
 /**
 * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class InitLogStartupActivity implements PostStartupActivity, DumbAware {
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
 
     MessageBusConnection connection = project.getMessageBus().connect();

@@ -25,8 +25,7 @@ import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +35,10 @@ import static consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiPr
 @ActionImpl(id = "Vcs.Log.HighlightersActionGroup")
 public class HighlightersActionGroup extends ActionGroup {
     private static class EnableHighlighterAction extends BooleanPropertyToggleAction {
-        @Nonnull
+        
         private final VcsLogHighlighterFactory myFactory;
 
-        private EnableHighlighterAction(@Nonnull VcsLogHighlighterFactory factory) {
+        private EnableHighlighterAction(VcsLogHighlighterFactory factory) {
             super(factory.getTitle());
             myFactory = factory;
         }
@@ -54,7 +53,7 @@ public class HighlightersActionGroup extends ActionGroup {
         super(VersionControlSystemLogLocalize.groupHighlightText());
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<AnAction> actions = new ArrayList<>();

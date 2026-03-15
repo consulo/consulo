@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.event;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @TopicAPI(ComponentScope.APPLICATION)
@@ -28,13 +27,13 @@ public interface BulkFileListener {
    */
   class Adapter implements BulkFileListener {
     @Override
-    public void before(@Nonnull List<? extends VFileEvent> events) { }
+    public void before(List<? extends VFileEvent> events) { }
 
     @Override
-    public void after(@Nonnull List<? extends VFileEvent> events) { }
+    public void after(List<? extends VFileEvent> events) { }
   }
 
-  default void before(@Nonnull List<? extends VFileEvent> events) { }
+  default void before(List<? extends VFileEvent> events) { }
 
-  default void after(@Nonnull List<? extends VFileEvent> events) { }
+  default void after(List<? extends VFileEvent> events) { }
 }

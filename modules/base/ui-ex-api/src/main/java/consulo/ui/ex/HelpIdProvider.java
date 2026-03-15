@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface HelpIdProvider {
   @Nullable

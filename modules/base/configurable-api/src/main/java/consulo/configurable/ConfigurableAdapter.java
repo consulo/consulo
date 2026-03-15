@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -29,7 +28,7 @@ import javax.swing.*;
  * @since 06.01.2016
  */
 public class ConfigurableAdapter implements Configurable {
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.empty();
@@ -38,14 +37,14 @@ public class ConfigurableAdapter implements Configurable {
     @RequiredUIAccess
     @Nullable
     @Override
-    public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+    public JComponent createComponent(Disposable parentDisposable) {
         return null;
     }
 
     @RequiredUIAccess
     @Nullable
     @Override
-    public Component createUIComponent(@Nonnull Disposable parentDisposable) {
+    public Component createUIComponent(Disposable parentDisposable) {
         return null;
     }
 

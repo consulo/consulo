@@ -11,7 +11,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.List;
@@ -24,12 +23,12 @@ abstract class IndexedFilesListener implements AsyncFileListener {
     private static final VirtualFile myLog = LocalFileSystem.getInstance().findFileByIoFile(ContainerPathManager.get().getLogPath());
   }
 
-  @Nonnull
+  
   VfsEventsMerger getEventMerger() {
     return myEventMerger;
   }
 
-  protected void buildIndicesForFileRecursively(@Nonnull VirtualFile file, boolean contentChange) {
+  protected void buildIndicesForFileRecursively(VirtualFile file, boolean contentChange) {
     if (file.isDirectory()) {
       ContentIterator iterator = fileOrDir -> {
         myEventMerger.recordFileEvent(fileOrDir, contentChange);
@@ -43,7 +42,7 @@ abstract class IndexedFilesListener implements AsyncFileListener {
     }
   }
 
-  private static boolean invalidateIndicesForFile(@Nonnull VirtualFile file, boolean contentChange, @Nonnull VfsEventsMerger eventMerger) {
+  private static boolean invalidateIndicesForFile(VirtualFile file, boolean contentChange, VfsEventsMerger eventMerger) {
     if (isUnderConfigOrSystem(file)) {
       return false;
     }
@@ -52,25 +51,25 @@ abstract class IndexedFilesListener implements AsyncFileListener {
     return !file.isDirectory() || FileBasedIndexImpl.isMock(file) || ManagingFS.getInstance().wereChildrenAccessed(file);
   }
 
-  protected abstract void iterateIndexableFiles(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator);
+  protected abstract void iterateIndexableFiles(VirtualFile file, ContentIterator iterator);
 
-  void invalidateIndicesRecursively(@Nonnull VirtualFile file, boolean contentChange, @Nonnull VfsEventsMerger eventMerger) {
+  void invalidateIndicesRecursively(VirtualFile file, boolean contentChange, VfsEventsMerger eventMerger) {
     VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
       @Override
-      public boolean visitFile(@Nonnull VirtualFile file) {
+      public boolean visitFile(VirtualFile file) {
         return invalidateIndicesForFile(file, contentChange, eventMerger);
       }
 
       @Override
-      public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
+      public Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
         return file instanceof NewVirtualFile ? ((NewVirtualFile)file).iterInDbChildren() : null;
       }
     });
   }
 
   @Override
-  @Nonnull
-  public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+  
+  public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
     VfsEventsMerger tempMerger = new VfsEventsMerger();
     for (VFileEvent event : events) {
       if (event instanceof VFileContentChangeEvent) {
@@ -106,7 +105,7 @@ abstract class IndexedFilesListener implements AsyncFileListener {
     };
   }
 
-  private void processAfterEvents(@Nonnull List<? extends VFileEvent> events) {
+  private void processAfterEvents(List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       if (event instanceof VFileContentChangeEvent) {
         buildIndicesForFileRecursively(((VFileContentChangeEvent)event).getFile(), true);
@@ -141,7 +140,7 @@ abstract class IndexedFilesListener implements AsyncFileListener {
     }
   }
 
-  private static boolean isUnderConfigOrSystem(@Nonnull VirtualFile file) {
+  private static boolean isUnderConfigOrSystem(VirtualFile file) {
     return ConfigHolder.myConfig != null
         && VirtualFileUtil.isAncestor(ConfigHolder.myConfig, file, false)
         || ConfigHolder.myLog != null && VirtualFileUtil.isAncestor(ConfigHolder.myLog, file, false);

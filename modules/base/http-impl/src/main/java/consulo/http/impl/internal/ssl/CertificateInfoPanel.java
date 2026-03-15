@@ -4,7 +4,6 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +21,7 @@ public class CertificateInfoPanel extends JPanel {
 
     private final CertificateWrapper myCertificateWrapper;
 
-    public CertificateInfoPanel(@Nonnull X509Certificate certificate) {
+    public CertificateInfoPanel(X509Certificate certificate) {
         myCertificateWrapper = new CertificateWrapper(certificate);
         setLayout(new BorderLayout());
 
@@ -54,8 +53,8 @@ public class CertificateInfoPanel extends JPanel {
         add(builder.getPanel(), BorderLayout.NORTH);
     }
 
-    @Nonnull
-    private static String formatHex(@Nonnull String hex) {
+    
+    private static String formatHex(String hex) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < hex.length(); i += 2) {
             // split at 16th byte

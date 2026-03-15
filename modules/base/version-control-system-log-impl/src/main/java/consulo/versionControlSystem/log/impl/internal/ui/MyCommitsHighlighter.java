@@ -19,7 +19,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.impl.internal.VcsLogUserFilterImpl;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -28,20 +27,20 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class MyCommitsHighlighter implements VcsLogHighlighter {
-  @Nonnull
+  
   private final VcsLogData myLogData;
-  @Nonnull
+  
   private final VcsLogUi myLogUi;
   private boolean myShouldHighlightUser = false;
 
-  public MyCommitsHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
+  public MyCommitsHighlighter(VcsLogData logData, VcsLogUi logUi) {
     myLogData = logData;
     myLogUi = logUi;
   }
 
-  @Nonnull
+  
   @Override
-  public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
+  public VcsCommitStyle getStyle(VcsShortCommitDetails details, boolean isSelected) {
     if (!myLogUi.isHighlighterEnabled(MyCommitsHighlighterFactory.ID)) return VcsCommitStyle.DEFAULT;
     if (myShouldHighlightUser) {
       VcsUser currentUser = myLogData.getCurrentUser().get(details.getRoot());
@@ -53,7 +52,7 @@ public class MyCommitsHighlighter implements VcsLogHighlighter {
   }
 
   @Override
-  public void update(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened) {
+  public void update(VcsLogDataPack dataPack, boolean refreshHappened) {
     myShouldHighlightUser = !isSingleUser() && !isFilteredByCurrentUser(dataPack.getFilters());
   }
 
@@ -66,7 +65,7 @@ public class MyCommitsHighlighter implements VcsLogHighlighter {
   }
 
   // returns true if filtered by "me"
-  private static boolean isFilteredByCurrentUser(@Nonnull VcsLogFilterCollection filters) {
+  private static boolean isFilteredByCurrentUser(VcsLogFilterCollection filters) {
     VcsLogUserFilter userFilter = filters.getUserFilter();
     if (userFilter == null) return false;
     Collection<String> filterByName = ((VcsLogUserFilterImpl)userFilter).getUserNamesForPresentation();

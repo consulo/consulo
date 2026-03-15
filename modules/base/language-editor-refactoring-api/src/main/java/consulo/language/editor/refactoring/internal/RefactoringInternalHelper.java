@@ -25,8 +25,7 @@ import consulo.usage.UsageTarget;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -45,13 +44,13 @@ public interface RefactoringInternalHelper {
     runnable.run();
   }
 
-  default boolean isWriteAccessAllowed(@Nonnull VirtualFile file, @Nonnull Project project) {
+  default boolean isWriteAccessAllowed(VirtualFile file, Project project) {
     return true;
   }
 
-  @Nonnull
+  
   UsageTarget createPsiElement2UsageTargetAdapter(PsiElement element);
 
   @Nullable
-  PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, @Nonnull Project project, Map<PsiDirectory, String> relativePathsToCreate);
+  PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, Project project, Map<PsiDirectory, String> relativePathsToCreate);
 }

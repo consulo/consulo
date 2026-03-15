@@ -27,14 +27,13 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
  */
 public class DirectoryUrl extends AbstractUrl {
-  @NonNls private static final String ELEMENT_TYPE = "directory";
+  private static final String ELEMENT_TYPE = "directory";
 
   public DirectoryUrl(String url, String moduleName) {
     super(url, moduleName,ELEMENT_TYPE);

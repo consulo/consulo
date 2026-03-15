@@ -29,7 +29,6 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,14 +72,14 @@ public class ProblemsHolderImpl implements ProblemsHolder {
         }
     }
 
-    @Nonnull
-    public ProblemsHolderImpl(@Nonnull InspectionManager manager, @Nonnull PsiFile file, boolean onTheFly) {
+    
+    public ProblemsHolderImpl(InspectionManager manager, PsiFile file, boolean onTheFly) {
         myManager = manager;
         myFile = file;
         myOnTheFly = onTheFly;
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
     public ProblemBuilder newProblem(LocalizeValue descriptionTemplate) {
@@ -89,7 +88,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
 
     @Override
     @RequiredReadAction
-    public void registerProblem(@Nonnull ProblemDescriptor problemDescriptor) {
+    public void registerProblem(ProblemDescriptor problemDescriptor) {
         PsiElement element = problemDescriptor.getPsiElement();
         if (element != null && !isInPsiFile(element)) {
             ExternallyDefinedPsiElement external = PsiTreeUtil.getParentOfType(element, ExternallyDefinedPsiElement.class, false);
@@ -105,13 +104,13 @@ public class ProblemsHolderImpl implements ProblemsHolder {
         myProblems.add(problemDescriptor);
     }
 
-    private boolean isInPsiFile(@Nonnull PsiElement element) {
+    private boolean isInPsiFile(PsiElement element) {
         PsiFile file = element.getContainingFile();
         return myFile.getViewProvider() == file.getViewProvider();
     }
 
     @RequiredReadAction
-    private void redirectProblem(@Nonnull ProblemDescriptor problem, @Nonnull PsiElement target) {
+    private void redirectProblem(ProblemDescriptor problem, PsiElement target) {
         PsiElement original = problem.getPsiElement();
         VirtualFile vFile = original.getContainingFile().getVirtualFile();
         assert vFile != null;
@@ -129,7 +128,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
 
     @Override
     @RequiredReadAction
-    public void registerProblem(@Nonnull PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType) {
+    public void registerProblem(PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType) {
         newProblem(LocalizeValue.of(descriptionTemplate))
             .rangeByRef(reference)
             .highlightType(highlightType)
@@ -139,7 +138,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
 
     @Override
     @RequiredReadAction
-    public void registerProblem(@Nonnull PsiReference reference) {
+    public void registerProblem(PsiReference reference) {
         newProblem(ProblemsHolder.unresolvedReferenceMessage(reference))
             .rangeByRef(reference)
             .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
@@ -147,7 +146,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
             .create();
     }
 
-    private LocalQuickFix[] collectQuickFixes(@Nonnull PsiReference reference) {
+    private LocalQuickFix[] collectQuickFixes(PsiReference reference) {
         List<LocalQuickFix> quickFixes = new ArrayList<>();
         PsiReferenceLocalQuickFixProvider.EP.forEachExtensionSafe(
             myFile.getProject(),
@@ -156,20 +155,20 @@ public class ProblemsHolderImpl implements ProblemsHolder {
         return quickFixes.toArray(LocalQuickFix.ARRAY_FACTORY);
     }
 
-    @Nonnull
+    
     @Override
     public List<ProblemDescriptor> getResults() {
         return myProblems;
     }
 
-    @Nonnull
+    
     @Override
     public ProblemDescriptor[] getResultsArray() {
         List<ProblemDescriptor> problems = getResults();
         return problems.toArray(new ProblemDescriptor[problems.size()]);
     }
 
-    @Nonnull
+    
     @Override
     public final InspectionManager getManager() {
         return myManager;
@@ -190,13 +189,13 @@ public class ProblemsHolderImpl implements ProblemsHolder {
         return myOnTheFly;
     }
 
-    @Nonnull
+    
     @Override
     public PsiFile getFile() {
         return myFile;
     }
 
-    @Nonnull
+    
     @Override
     public final Project getProject() {
         return myManager.getProject();

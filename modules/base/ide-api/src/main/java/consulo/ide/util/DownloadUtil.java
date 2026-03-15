@@ -8,8 +8,7 @@ import consulo.project.Project;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class DownloadUtil {
      * @throws IOException if an I/O error occurs
      * @return true if no {@code contentChecker} is provided or the provided one returned true
      */
-    public static boolean downloadAtomically(@Nullable ProgressIndicator indicator, @Nonnull String url, @Nonnull File outputFile, @Nonnull File tempFile, @Nullable Predicate<String> contentChecker)
+    public static boolean downloadAtomically(@Nullable ProgressIndicator indicator, String url, File outputFile, File tempFile, @Nullable Predicate<String> contentChecker)
         throws IOException {
         try {
             downloadContentToFile(indicator, url, tempFile);
@@ -72,16 +71,16 @@ public class DownloadUtil {
      * @param outputFile output file
      * @param tempFile   temporary file to download to. This file is deleted on method exit.
      */
-    public static void downloadAtomically(@Nullable ProgressIndicator indicator, @Nonnull String url, @Nonnull File outputFile, @Nonnull File tempFile) throws IOException {
+    public static void downloadAtomically(@Nullable ProgressIndicator indicator, String url, File outputFile, File tempFile) throws IOException {
         downloadAtomically(indicator, url, outputFile, tempFile, null);
     }
 
 
-    @Nonnull
+    
     public static <V> Outcome<V> provideDataWithProgressSynchronously(@Nullable Project project,
-                                                                      @Nonnull String progressTitle,
-                                                                      @Nonnull String actionShortDescription,
-                                                                      @Nonnull Callable<V> supplier,
+                                                                      String progressTitle,
+                                                                      String actionShortDescription,
+                                                                      Callable<V> supplier,
                                                                       @Nullable Supplier<Boolean> tryAgainProvider) {
         int attemptNumber = 1;
         while (true) {
@@ -117,7 +116,7 @@ public class DownloadUtil {
         }
     }
 
-    public static void downloadContentToFile(@Nullable ProgressIndicator progress, @Nonnull String url, @Nonnull File outputFile) throws IOException {
+    public static void downloadContentToFile(@Nullable ProgressIndicator progress, String url, File outputFile) throws IOException {
         boolean parentDirExists = FileUtil.createParentDirs(outputFile);
         if (!parentDirExists) {
             throw new IOException("Parent dir of '" + outputFile.getAbsolutePath() + "' can not be created!");

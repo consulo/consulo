@@ -21,7 +21,6 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.internal.SettingsEntryPointActionProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -40,7 +39,7 @@ public class ServiceAuthSettingsEntryPointProvider implements SettingsEntryPoint
         myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
     }
 
-    @Nonnull
+    
     @Override
     public AnAction getUpdateActionOrGroup() {
         if (myLoginAction == null) {

@@ -24,7 +24,6 @@ import consulo.language.editor.wolfAnalyzer.ProblemScopeHolder;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -39,7 +38,7 @@ public class ProblemScopeHolderImpl implements ProblemScopeHolder {
     private final NamedScope myProblemsScope;
 
     @Inject
-    public ProblemScopeHolderImpl(@Nonnull Project thisProject, @Nonnull Provider<WolfTheProblemSolver> wolfTheProblemSolverProvider) {
+    public ProblemScopeHolderImpl(Project thisProject, Provider<WolfTheProblemSolver> wolfTheProblemSolverProvider) {
         final String text = "file:*//*";
 
         myProblemsScope = new NamedScope(AnalysisScopeLocalize.predefinedScopeProblemsName().get(), new AbstractPackageSet(text) {
@@ -50,7 +49,7 @@ public class ProblemScopeHolderImpl implements ProblemScopeHolder {
         });
     }
 
-    @Nonnull
+    
     @Override
     public NamedScope getProblemsScope() {
         return myProblemsScope;

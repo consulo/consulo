@@ -16,16 +16,15 @@
 package consulo.component.store.internal;
 
 import consulo.component.persist.Storage;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
 public interface StateStorage {
   @Nullable
-  <T> T getState(@Nullable Object component, @Nonnull String componentName, @Nonnull Class<T> stateClass) throws StateStorageException;
+  <T> T getState(@Nullable Object component, String componentName, Class<T> stateClass) throws StateStorageException;
 
-  boolean hasState(@Nullable Object component, @Nonnull String componentName, Class<?> aClass, boolean reloadData);
+  boolean hasState(@Nullable Object component, String componentName, Class<?> aClass, boolean reloadData);
 
   @Nullable
   ExternalizationSession startExternalization();
@@ -33,10 +32,10 @@ public interface StateStorage {
   /**
    * Get changed component names
    */
-  void analyzeExternalChangesAndUpdateIfNeed(@Nonnull Set<String> result);
+  void analyzeExternalChangesAndUpdateIfNeed(Set<String> result);
 
   interface ExternalizationSession {
-    void setState(@Nonnull Object component, @Nonnull String componentName, @Nonnull Object state, @Nullable Storage storageSpec);
+    void setState(Object component, String componentName, Object state, @Nullable Storage storageSpec);
 
     /**
      * return null if nothing to save

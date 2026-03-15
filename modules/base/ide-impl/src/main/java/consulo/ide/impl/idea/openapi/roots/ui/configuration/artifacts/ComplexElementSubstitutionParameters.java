@@ -21,7 +21,6 @@ import consulo.compiler.artifact.element.ComplexPackagingElement;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -47,7 +46,7 @@ public class ComplexElementSubstitutionParameters {
         mySubstituted.clear();
     }
 
-    public boolean shouldSubstitute(@Nonnull ComplexPackagingElement<?> element) {
+    public boolean shouldSubstitute(ComplexPackagingElement<?> element) {
         ComplexPackagingElementType<?> type = (ComplexPackagingElementType<?>) element.getType();
         return myTypesToSubstitute.contains(type) || mySubstituted.contains(element);
     }
@@ -79,7 +78,7 @@ public class ComplexElementSubstitutionParameters {
         mySubstituted.remove(element);
     }
 
-    public boolean isShowContentForType(@Nonnull ComplexPackagingElementType type) {
+    public boolean isShowContentForType(ComplexPackagingElementType type) {
         return myTypesToSubstitute.contains(type);
     }
 

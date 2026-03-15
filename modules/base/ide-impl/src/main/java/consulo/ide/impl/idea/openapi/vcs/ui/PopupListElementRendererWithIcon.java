@@ -11,7 +11,6 @@ import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +23,7 @@ public class PopupListElementRendererWithIcon extends PopupListElementRenderer<O
   }
 
   @Override
-  public boolean isIconAt(@Nonnull Point point) {
+  public boolean isIconAt(Point point) {
     JList list = ((AWTListPopup) myPopup).getList();
     int index = list.locationToIndex(point);
     Rectangle bounds = list.getCellBounds(index, index);

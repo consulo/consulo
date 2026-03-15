@@ -22,9 +22,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +50,7 @@ public abstract class FileTemplateManager {
 
   public static final String PROJECT_NAME_VARIABLE = "PROJECT_NAME";
 
-  public static FileTemplateManager getInstance(@Nonnull Project project) {
+  public static FileTemplateManager getInstance(Project project) {
     return project.getInstance(FileTemplateManager.class).checkInitialized();
   }
 
@@ -72,10 +70,10 @@ public abstract class FileTemplateManager {
     return getInstance(ProjectManager.getInstance().getDefaultProject());
   }
 
-  @Nonnull
+  
   public abstract FileTemplatesScheme getCurrentScheme();
 
-  public abstract void setCurrentScheme(@Nonnull FileTemplatesScheme scheme);
+  public abstract void setCurrentScheme(FileTemplatesScheme scheme);
 
   /**
    * @return Project scheme, or null if manager is created for default project.
@@ -87,88 +85,88 @@ public abstract class FileTemplateManager {
   /**
    * Returns all templates from "Default" category.
    */
-  @Nonnull
+  
   public abstract FileTemplate[] getAllTemplates();
 
-  public abstract FileTemplate getTemplate(@Nonnull @NonNls String templateName);
+  public abstract FileTemplate getTemplate(String templateName);
 
   /**
    * @return a new Properties object filled with predefined properties.
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use #getDefaultVariables()")
   public abstract Properties getDefaultProperties();
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use #getDefaultVariables()")
-  public Properties getDefaultProperties(@Nonnull Project project) {
+  public Properties getDefaultProperties(Project project) {
     Properties properties = getDefaultProperties();
     properties.setProperty(PROJECT_NAME_VARIABLE, project.getName());
     return properties;
   }
 
-  @Nonnull
+  
   public Map<String, Object> getDefaultVariables() {
     Map<String, Object> map = new HashMap<>();
     fillDefaultVariables(map);
     return map;
   }
 
-  public abstract void fillDefaultVariables(@Nonnull Map<String, Object> map);
+  public abstract void fillDefaultVariables(Map<String, Object> map);
 
   /**
    * Creates a new template with specified name, and adds it to the list of default templates.
    *
    * @return created template
    */
-  @Nonnull
-  public abstract FileTemplate addTemplate(@Nonnull @NonNls String name, @Nonnull @NonNls String extension);
+  
+  public abstract FileTemplate addTemplate(String name, String extension);
 
-  public abstract void removeTemplate(@Nonnull FileTemplate template);
+  public abstract void removeTemplate(FileTemplate template);
 
-  @Nonnull
+  
   public abstract Collection<String> getRecentNames();
 
-  public abstract void addRecentName(@Nonnull @NonNls String name);
+  public abstract void addRecentName(String name);
 
-  public abstract FileTemplate getInternalTemplate(@Nonnull @NonNls String templateName);
+  public abstract FileTemplate getInternalTemplate(String templateName);
 
-  public abstract FileTemplate findInternalTemplate(@Nonnull @NonNls String templateName);
+  public abstract FileTemplate findInternalTemplate(String templateName);
 
-  @Nonnull
+  
   public abstract FileTemplate[] getInternalTemplates();
 
-  public abstract FileTemplate getJ2eeTemplate(@Nonnull @NonNls String templateName);
+  public abstract FileTemplate getJ2eeTemplate(String templateName);
 
-  public abstract FileTemplate getCodeTemplate(@Nonnull @NonNls String templateName);
+  public abstract FileTemplate getCodeTemplate(String templateName);
 
-  @Nonnull
+  
   public abstract FileTemplate[] getAllPatterns();
 
-  @Nonnull
+  
   public abstract FileTemplate[] getAllCodeTemplates();
 
-  @Nonnull
+  
   public abstract FileTemplate[] getAllJ2eeTemplates();
 
-  @Nonnull
-  public abstract String internalTemplateToSubject(@Nonnull @NonNls String templateName);
+  
+  public abstract String internalTemplateToSubject(String templateName);
 
   @Deprecated
-  @Nonnull
-  public abstract String localizeInternalTemplateName(@Nonnull FileTemplate template);
+  
+  public abstract String localizeInternalTemplateName(FileTemplate template);
 
-  public abstract FileTemplate getPattern(@Nonnull @NonNls String name);
+  public abstract FileTemplate getPattern(String name);
 
   /**
    * Returns template with default (bundled) text.
    */
-  @Nonnull
-  public abstract FileTemplate getDefaultTemplate(@Nonnull @NonNls String name);
+  
+  public abstract FileTemplate getDefaultTemplate(String name);
 
-  public abstract void setTemplates(@Nonnull String templatesCategory, @Nonnull Collection<FileTemplate> templates);
+  public abstract void setTemplates(String templatesCategory, Collection<FileTemplate> templates);
 
   public abstract void saveAllTemplates();
 }

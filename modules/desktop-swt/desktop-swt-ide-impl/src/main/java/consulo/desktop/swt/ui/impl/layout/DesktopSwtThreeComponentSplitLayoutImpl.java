@@ -26,8 +26,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -58,23 +57,23 @@ public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutCom
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public ThreeComponentSplitLayout setFirstComponent(@Nonnull Component component) {
+  public ThreeComponentSplitLayout setFirstComponent(Component component) {
     addImpl(component, "first");
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public ThreeComponentSplitLayout setSecondComponent(@Nonnull Component component) {
+  public ThreeComponentSplitLayout setSecondComponent(Component component) {
     addImpl(component, "second");
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
     addImpl(component, "center");

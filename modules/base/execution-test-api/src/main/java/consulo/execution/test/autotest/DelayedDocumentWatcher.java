@@ -30,8 +30,7 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -57,9 +56,9 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
     private Disposable myListenerDisposable;
 
     public DelayedDocumentWatcher(
-        @Nonnull Project project,
+        Project project,
         int delayMillis,
-        @Nonnull Consumer<Integer> modificationStampConsumer,
+        Consumer<Integer> modificationStampConsumer,
         @Nullable Predicate<VirtualFile> changedFileFilter
     ) {
         myProject = project;
@@ -71,7 +70,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
         myAlarmRunnable = new MyRunnable();
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
@@ -164,7 +163,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
         }
     }
 
-    private void asyncCheckErrors(@Nonnull Collection<VirtualFile> files, @Nonnull Consumer<Boolean> errorsFoundConsumer) {
+    private void asyncCheckErrors(Collection<VirtualFile> files, Consumer<Boolean> errorsFoundConsumer) {
         Application app = myProject.getApplication();
         app.executeOnPooledThread(() -> {
             boolean errorsFound = app.runReadAction((Supplier<Boolean>)() -> {

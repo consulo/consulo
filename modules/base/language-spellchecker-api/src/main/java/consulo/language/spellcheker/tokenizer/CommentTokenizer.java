@@ -19,12 +19,11 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiComment;
 import consulo.language.spellcheker.tokenizer.splitter.CommentTokenSplitter;
 
-import jakarta.annotation.Nonnull;
 
 public class CommentTokenizer extends Tokenizer<PsiComment> {
     @Override
     @RequiredReadAction
-    public void tokenize(@Nonnull PsiComment element, TokenConsumer consumer) {
+    public void tokenize(PsiComment element, TokenConsumer consumer) {
         // doc-comment chameleon expands as PsiComment inside PsiComment, avoid duplication
         if (element.getParent() instanceof PsiComment) {
             return;

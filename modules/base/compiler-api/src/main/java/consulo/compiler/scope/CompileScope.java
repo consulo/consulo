@@ -22,8 +22,7 @@ import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface describing the current compilation scope.
@@ -40,7 +39,7 @@ public interface CompileScope extends ExportableUserDataHolder {
      * @param fileType the type of the files. Null should be passed if all available files are needed.
      * @return a list of files of given type that belong to this scope.
      */
-    @Nonnull
+    
     VirtualFile[] getFiles(@Nullable FileType fileType);
 
     /**
@@ -57,7 +56,7 @@ public interface CompileScope extends ExportableUserDataHolder {
      *
      * @return a list of modules this scope affects.
      */
-    @Nonnull
+    
     Module[] getAffectedModules();
 
     /**

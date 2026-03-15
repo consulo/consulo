@@ -28,8 +28,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Closeable;
 import java.nio.file.Path;
@@ -142,7 +141,7 @@ public abstract class BasePasswordSafe implements PasswordSafe {
     }
 
     @Override
-    public Credentials get(@Nonnull CredentialAttributes attributes) {
+    public Credentials get(CredentialAttributes attributes) {
         //SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
         Credentials value = getCurrentProvider().get(attributes);
         if ((value == null || StringUtil.isEmptyOrSpaces(value.getPassword()))
@@ -156,7 +155,7 @@ public abstract class BasePasswordSafe implements PasswordSafe {
     }
 
     @Override
-    public void set(@Nonnull CredentialAttributes attributes, Credentials credentials) {
+    public void set(CredentialAttributes attributes, Credentials credentials) {
         //SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
         getCurrentProvider().set(attributes, credentials);
         if (attributes.isPasswordMemoryOnly() && credentials != null && !StringUtil.isEmptyOrSpaces(credentials.getPassword())) {

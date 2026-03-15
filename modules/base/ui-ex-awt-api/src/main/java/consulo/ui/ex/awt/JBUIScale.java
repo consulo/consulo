@@ -23,8 +23,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -41,7 +40,7 @@ public class JBUIScale {
   private static final PropertyChangeSupport PCS = new PropertyChangeSupport(new JBUIScale());
   public static final String USER_SCALE_FACTOR_PROPERTY = "JBUIScale.userScaleFactor";
 
-  @Nonnull
+  
   private static Pair<String, Integer> calcSystemFontData() {
     Font font = UIManager.getFont("Label.font");
     Pair<String, Integer> result = Pair.create(font.getName(), font.getSize());
@@ -151,7 +150,7 @@ public class JBUIScale {
     return scale;
   }
 
-  @Nonnull
+  
   public static Pair<String, Integer> getSystemFontData() {
     return ourSystemFontValue.get();
   }
@@ -170,7 +169,7 @@ public class JBUIScale {
     return Math.round(scale / DISCRETE_SCALE_RESOLUTION) * DISCRETE_SCALE_RESOLUTION;
   }
 
-  @Nonnull
+  
   public static Logger getLogger() {
     return Logger.getInstance(JBUIScale.class);
   }
@@ -281,8 +280,8 @@ public class JBUIScale {
     return sysScale();
   }
 
-  @Nonnull
-  public static Font scale(@Nonnull Font font) {
+  
+  public static Font scale(Font font) {
     return font.deriveFont((float)scaleFontSize(font.getSize()));
   }
 
@@ -312,14 +311,14 @@ public class JBUIScale {
    * Adds property change listener. Supported properties:
    * {@link #USER_SCALE_FACTOR_PROPERTY}
    */
-  public static void addPropertyChangeListener(@Nonnull String propertyName, @Nonnull PropertyChangeListener listener) {
+  public static void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
     PCS.addPropertyChangeListener(propertyName, listener);
   }
 
   /**
    * Removes property change listener
    */
-  public static void removePropertyChangeListener(@Nonnull String propertyName, @Nonnull PropertyChangeListener listener) {
+  public static void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
     PCS.removePropertyChangeListener(propertyName, listener);
   }
 

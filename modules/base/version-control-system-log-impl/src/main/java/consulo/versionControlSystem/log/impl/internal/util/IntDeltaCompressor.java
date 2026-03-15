@@ -16,12 +16,11 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 public class IntDeltaCompressor implements IntList {
 
-  @Nonnull
-  public static IntDeltaCompressor newInstance(@Nonnull IntList deltaList) {
+  
+  public static IntDeltaCompressor newInstance(IntList deltaList) {
     if (deltaList.size() < 0) throw new NegativeArraySizeException("size < 0: " + deltaList.size());
 
     int bytesAfterCompression = ByteArrayUtils.countBytesAfterCompression(deltaList);
@@ -42,15 +41,15 @@ public class IntDeltaCompressor implements IntList {
     return new IntDeltaCompressor(compressedDeltas, startedDeltaIndex, deltaList.size());
   }
 
-  @Nonnull
+  
   private final byte[] myCompressedDeltas;
-  @Nonnull
+  
   private final Flags myStartedDeltaIndex;
 
-  @Nonnull
+  
   private final IntToIntMap myStartIndexMap;
 
-  private IntDeltaCompressor(@Nonnull byte[] compressedDeltas, @Nonnull Flags startedDeltaIndex, int countDeltas) {
+  private IntDeltaCompressor(byte[] compressedDeltas, Flags startedDeltaIndex, int countDeltas) {
     myCompressedDeltas = compressedDeltas;
     myStartedDeltaIndex = startedDeltaIndex;
     myStartIndexMap = PermanentListIntToIntMap.newInstance(startedDeltaIndex, countDeltas);

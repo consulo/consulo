@@ -23,7 +23,6 @@ import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 public class HighlightInfoTypeSeverityByKey implements HighlightInfoType {
     private final TextAttributesKey myAttributesKey;
@@ -35,7 +34,7 @@ public class HighlightInfoTypeSeverityByKey implements HighlightInfoType {
     }
 
     @Override
-    @Nonnull
+    
     public HighlightSeverity getSeverity(PsiElement psiElement) {
         InspectionProfile profile;
         if (psiElement == null) {

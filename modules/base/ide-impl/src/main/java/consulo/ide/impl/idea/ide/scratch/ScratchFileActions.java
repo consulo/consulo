@@ -31,8 +31,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -56,13 +55,13 @@ public class ScratchFileActions {
 
     public static class NewBufferAction extends DumbAwareAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && Registry.intValue("ide.scratch.buffers") > 0);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Project project = e.getRequiredData(Project.KEY);
             ScratchFileCreationHelper.Context context = createContext(e, project);
             context.filePrefix = "buffer";
@@ -75,9 +74,9 @@ public class ScratchFileActions {
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    static ScratchFileCreationHelper.Context createContext(@Nonnull AnActionEvent e, @Nonnull Project project) {
+    static ScratchFileCreationHelper.Context createContext(AnActionEvent e, Project project) {
         PsiFile file = e.getData(PsiFile.KEY);
         Editor editor = e.getData(Editor.KEY);
         if (file == null && editor != null) {
@@ -99,7 +98,7 @@ public class ScratchFileActions {
     }
 
     @RequiredUIAccess
-    static PsiFile doCreateNewScratch(@Nonnull Project project, @Nonnull ScratchFileCreationHelper.Context context) {
+    static PsiFile doCreateNewScratch(Project project, ScratchFileCreationHelper.Context context) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("scratch");
         Language language = Objects.requireNonNull(context.language);
         if (context.fileExtension == null) {
@@ -132,9 +131,9 @@ public class ScratchFileActions {
     }
 
     private static void checkLanguageAndTryToFixText(
-        @Nonnull Project project,
-        @Nonnull ScratchFileCreationHelper.Context context,
-        @Nonnull DataContext dataContext
+        Project project,
+        ScratchFileCreationHelper.Context context,
+        DataContext dataContext
     ) {
         if (context.language == null) {
             return;
@@ -163,7 +162,7 @@ public class ScratchFileActions {
 
     @Nullable
     @RequiredReadAction
-    static Language getLanguageFromCaret(@Nonnull Project project, @Nullable Editor editor, @Nullable PsiFile psiFile) {
+    static Language getLanguageFromCaret(Project project, @Nullable Editor editor, @Nullable PsiFile psiFile) {
         if (editor == null || psiFile == null) {
             return null;
         }
@@ -177,7 +176,7 @@ public class ScratchFileActions {
 
     public static class LanguageAction extends DumbAwareAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             JBIterable<VirtualFile> files = JBIterable.of(e.getData(VirtualFile.KEY_OF_ARRAY));
             if (project == null || files.isEmpty()) {
@@ -196,14 +195,14 @@ public class ScratchFileActions {
             e.getPresentation().setEnabledAndVisible(true);
         }
 
-        @Nonnull
+        
         protected String getLanguageTerm() {
             return "Language";
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Project project = e.getRequiredData(Project.KEY);
             JBIterable<VirtualFile> files = JBIterable.of(e.getData(VirtualFile.KEY_OF_ARRAY)).filter(fileFilter(project));
             if (files.isEmpty()) {
@@ -212,13 +211,13 @@ public class ScratchFileActions {
             actionPerformedImpl(e, project, "Change " + getLanguageTerm(), files);
         }
 
-        @Nonnull
+        
         protected Predicate<VirtualFile> fileFilter(Project project) {
             return file -> !file.isDirectory() && ScratchRootType.getInstance().containsFile(file);
         }
 
-        @Nonnull
-        protected Function<VirtualFile, Language> fileLanguage(@Nonnull Project project) {
+        
+        protected Function<VirtualFile, Language> fileLanguage(Project project) {
             return new Function<>() {
                 ScratchFileService fileService = ScratchFileService.getInstance();
 
@@ -231,10 +230,10 @@ public class ScratchFileActions {
         }
 
         protected void actionPerformedImpl(
-            @Nonnull AnActionEvent e,
-            @Nonnull Project project,
-            @Nonnull String title,
-            @Nonnull JBIterable<? extends VirtualFile> files
+            AnActionEvent e,
+            Project project,
+            String title,
+            JBIterable<? extends VirtualFile> files
         ) {
             ScratchFileService fileService = ScratchFileService.getInstance();
             PerFileMappings<Language> mapping = fileService.getScratchesMapping();

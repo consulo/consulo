@@ -21,8 +21,7 @@ import consulo.util.collection.Iterators;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.archive.ArchiveHandler;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -44,7 +43,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     }
 
     @Override
-    public ArchiveHandler.EntryInfo get(@Nonnull Object key) {
+    public ArchiveHandler.EntryInfo get(Object key) {
         String relativePath = (String) key;
         int index = index(relativePath, entries);
         ArchiveHandler.EntryInfo entry;
@@ -65,7 +64,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
         return entry;
     }
 
-    private static int index(@Nonnull String relativePath, @Nonnull ArchiveHandler.EntryInfo[] entries) {
+    private static int index(String relativePath, ArchiveHandler.EntryInfo[] entries) {
         return (relativePath.hashCode() & 0x7fffffff) % entries.length;
     }
 
@@ -82,11 +81,10 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
         return old;
     }
 
-    @Nullable
-    private static ArchiveHandler.EntryInfo put(
-        @Nonnull String relativePath,
-        @Nonnull ArchiveHandler.EntryInfo value,
-        @Nonnull ArchiveHandler.EntryInfo[] entries
+    private static ArchiveHandler.@Nullable EntryInfo put(
+        String relativePath,
+        ArchiveHandler.EntryInfo value,
+        ArchiveHandler.EntryInfo[] entries
     ) {
         int index = index(relativePath, entries);
         ArchiveHandler.EntryInfo entry;
@@ -104,7 +102,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
         return entry;
     }
 
-    private static boolean isTheOne(@Nonnull ArchiveHandler.EntryInfo entry, @Nonnull CharSequence relativePath) {
+    private static boolean isTheOne(ArchiveHandler.EntryInfo entry, CharSequence relativePath) {
         int endIndex = relativePath.length();
         for (ArchiveHandler.EntryInfo e = entry; e != null; e = e.parent) {
             CharSequence shortName = e.shortName;
@@ -127,7 +125,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
         return endIndex == 0;
     }
 
-    @Nonnull
+   
     private ArchiveHandler.EntryInfo[] rehash() {
         ArchiveHandler.EntryInfo[] newEntries =
             new ArchiveHandler.EntryInfo[entries.length < 1000 ? entries.length * 2 : entries.length * 3 / 2];
@@ -140,8 +138,8 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
         return newEntries;
     }
 
-    @Nonnull
-    private static String getRelativePath(@Nonnull ArchiveHandler.EntryInfo entry) {
+   
+    private static String getRelativePath(ArchiveHandler.EntryInfo entry) {
         StringBuilder result = new StringBuilder(entry.shortName.length() + 10);
         for (ArchiveHandler.EntryInfo e = entry; e != null; e = e.parent) {
             if (result.length() != 0 && e.shortName.length() != 0) {
@@ -152,14 +150,14 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
         return result.reverse().toString();
     }
 
-    private static void appendReversed(@Nonnull StringBuilder builder, @Nonnull CharSequence sequence) {
+    private static void appendReversed(StringBuilder builder, CharSequence sequence) {
         for (int i = sequence.length() - 1; i >= 0; i--) {
             builder.append(sequence.charAt(i));
         }
     }
 
     @Override
-    public ArchiveHandler.EntryInfo remove(@Nonnull Object key) {
+    public ArchiveHandler.EntryInfo remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
@@ -176,7 +174,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
 
     private EntrySet entrySet;
 
-    @Nonnull
+   
     @Override
     public EntrySet entrySet() {
         EntrySet es;
@@ -194,7 +192,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
             ZipEntryMap.this.clear();
         }
 
-        @Nonnull
+       
         @Override
         public final Iterator<Entry<String, ArchiveHandler.EntryInfo>> iterator() {
             return Iterators.mapIterator(
@@ -220,7 +218,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
         }
     }
 
-    @Nonnull
+   
     @Override
     public Collection<ArchiveHandler.EntryInfo> values() {
         return ContainerUtil.filter(entries, Predicates.notNull());

@@ -17,14 +17,13 @@ package consulo.sandboxPlugin.ide.module.extension;
 
 import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.ModuleRootLayer;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 30.08.14
  */
 public class Sand2ModuleExtension extends ModuleExtensionBase<Sand2ModuleExtension> {
-  public Sand2ModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
+  public Sand2ModuleExtension(String id, ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }
 }

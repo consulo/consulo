@@ -18,7 +18,6 @@ package consulo.compiler.artifact;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ import java.util.List;
  */
 public abstract class ParentElementProcessor {
 
-  public abstract boolean process(@Nonnull CompositePackagingElement<?> element, @Nonnull List<Pair<Artifact,CompositePackagingElement<?>>> parents,
-                                  @Nonnull Artifact artifact);
+  public abstract boolean process(CompositePackagingElement<?> element, List<Pair<Artifact,CompositePackagingElement<?>>> parents,
+                                  Artifact artifact);
 
 }

@@ -39,8 +39,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.versionControlSystem.impl.internal.change.FakeRevision;
 import consulo.versionControlSystem.internal.CacheChangeProcessorBridge;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Collections;
@@ -49,20 +48,20 @@ import java.util.List;
 public abstract class CacheChangeProcessor extends DiffRequestProcessor implements CacheChangeProcessorBridge {
     private static final Logger LOG = Logger.getInstance(CacheChangeProcessor.class);
 
-    @Nonnull
+    
     private final SoftHardCacheMap<Change, Pair<Change, DiffRequest>> myRequestCache = new SoftHardCacheMap<>(5, 5);
 
     @Nullable
     private Change myCurrentChange;
 
-    @Nonnull
+    
     private final DiffTaskQueue myQueue = new DiffTaskQueue();
 
-    public CacheChangeProcessor(@Nonnull Project project) {
+    public CacheChangeProcessor(Project project) {
         super(project);
     }
 
-    public CacheChangeProcessor(@Nonnull Project project, @Nonnull String place) {
+    public CacheChangeProcessor(Project project, String place) {
         super(project, place);
     }
 
@@ -70,13 +69,13 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
     // Abstract
     //
 
-    @Nonnull
+    
     protected abstract List<Change> getSelectedChanges();
 
-    @Nonnull
+    
     protected abstract List<Change> getAllChanges();
 
-    protected abstract void selectChange(@Nonnull Change change);
+    protected abstract void selectChange(Change change);
 
     //
     // Update
@@ -150,9 +149,9 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
         return null;
     }
 
-    @Nonnull
+    
     @CalledInBackground
-    private DiffRequest loadRequest(@Nonnull Change change, @Nonnull ProgressIndicator indicator) {
+    private DiffRequest loadRequest(Change change, ProgressIndicator indicator) {
         ChangeDiffRequestProducer presentable = ChangeDiffRequestProducer.create(getProject(), change);
         if (presentable == null) {
             return new ErrorDiffRequest("Can't show diff");
@@ -186,7 +185,7 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
         myRequestCache.clear();
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return super.getProject();
@@ -330,17 +329,17 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
     //
 
     protected class ReloadRequestAction extends DumbAwareAction {
-        @Nonnull
+        
         private final Change myChange;
 
-        public ReloadRequestAction(@Nonnull Change change) {
+        public ReloadRequestAction(Change change) {
             super("Reload", null, PlatformIconGroup.actionsRefresh());
             myChange = change;
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myRequestCache.remove(myChange);
             updateRequest(true);
         }

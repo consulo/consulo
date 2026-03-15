@@ -22,14 +22,13 @@ import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.internal.FileStatusManagerInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
  */
 @ServiceAPI(value = ComponentScope.PROJECT)
 public sealed interface FileStatusManager permits FileStatusManagerInternal {
-    @Nonnull
+    
     public static FileStatusManager getInstance(Project project) {
         return project.getInstance(FileStatusManager.class);
     }
@@ -67,8 +66,8 @@ public sealed interface FileStatusManager permits FileStatusManagerInternal {
      * @see FileStatus#NOT_CHANGED_IMMEDIATE
      * @see FileStatus#NOT_CHANGED_RECURSIVE
      */
-    @Nonnull
-    default FileStatus getRecursiveStatus(@Nonnull VirtualFile file) {
+    
+    default FileStatus getRecursiveStatus(VirtualFile file) {
         FileStatus status = getStatus(file);
         return status != null ? status : FileStatus.NOT_CHANGED;
     }

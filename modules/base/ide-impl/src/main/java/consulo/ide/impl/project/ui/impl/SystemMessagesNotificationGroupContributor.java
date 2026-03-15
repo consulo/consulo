@@ -20,7 +20,6 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 import consulo.project.ui.notification.Notifications;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -30,7 +29,7 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class SystemMessagesNotificationGroupContributor implements NotificationGroupContributor {
   @Override
-  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+  public void contribute(Consumer<NotificationGroup> registrator) {
     registrator.accept(Notifications.SYSTEM_MESSAGES_GROUP);
   }
 }

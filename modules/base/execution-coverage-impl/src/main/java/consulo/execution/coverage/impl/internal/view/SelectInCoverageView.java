@@ -14,7 +14,6 @@ import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.StandardTargetWeights;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -30,7 +29,7 @@ public class SelectInCoverageView implements SelectInTarget {
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return ExecutionCoverageLocalize.coverageViewTitle();

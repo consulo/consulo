@@ -18,8 +18,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,11 +27,11 @@ class LineMarkersUtil {
   private static final Logger LOG = Logger.getInstance(LineMarkersUtil.class);
 
   static boolean processLineMarkers(
-    @Nonnull Project project,
-    @Nonnull Document document,
-    @Nonnull Segment bounds,
+    Project project,
+    Document document,
+    Segment bounds,
     int group, // -1 for all
-    @Nonnull Processor<? super LineMarkerInfo<?>> processor
+    Processor<? super LineMarkerInfo<?>> processor
   ) {
     MarkupModelEx markupModel = DocumentMarkupModel.forDocument(document, project, true);
     return markupModel.processRangeHighlightersOverlappingWith(bounds.getStartOffset(), bounds.getEndOffset(), highlighter -> {
@@ -42,7 +41,7 @@ class LineMarkersUtil {
   }
 
   @RequiredUIAccess
-  static void setLineMarkersToEditor(@Nonnull Project project, @Nonnull Document document, @Nonnull Segment bounds, @Nonnull Collection<? extends LineMarkerInfo<PsiElement>> markers, int group) {
+  static void setLineMarkersToEditor(Project project, Document document, Segment bounds, Collection<? extends LineMarkerInfo<PsiElement>> markers, int group) {
     UIAccess.assertIsUIThread();
 
     MarkupModelEx markupModel = DocumentMarkupModel.forDocument(document, project, true);
@@ -77,8 +76,8 @@ class LineMarkersUtil {
     }
   }
 
-  @Nonnull
-  private static RangeHighlighter createOrReuseLineMarker(@Nonnull LineMarkerInfo<?> info, @Nonnull MarkupModelEx markupModel, @Nullable HighlightersRecycler toReuse) {
+  
+  private static RangeHighlighter createOrReuseLineMarker(LineMarkerInfo<?> info, MarkupModelEx markupModel, @Nullable HighlightersRecycler toReuse) {
     LineMarkerInfo.LineMarkerGutterIconRenderer<?> newRenderer = (LineMarkerInfo.LineMarkerGutterIconRenderer<?>)info.createGutterRenderer();
 
     RangeHighlighter highlighter = toReuse == null ? null : toReuse.pickupHighlighterFromGarbageBin(info.startOffset, info.endOffset, HighlighterLayer.ADDITIONAL_SYNTAX);
@@ -127,7 +126,7 @@ class LineMarkersUtil {
   }
 
   @RequiredUIAccess
-  static void addLineMarkerToEditorIncrementally(@Nonnull Project project, @Nonnull Document document, @Nonnull LineMarkerInfo<?> marker) {
+  static void addLineMarkerToEditorIncrementally(Project project, Document document, LineMarkerInfo<?> marker) {
     UIAccess.assertIsUIThread();
 
     MarkupModelEx markupModel = DocumentMarkupModel.forDocument(document, project, true);
@@ -141,7 +140,7 @@ class LineMarkersUtil {
     }
   }
 
-  private static LineMarkerInfo<?> getLineMarkerInfo(@Nonnull RangeHighlighter highlighter) {
+  private static LineMarkerInfo<?> getLineMarkerInfo(RangeHighlighter highlighter) {
     return highlighter.getUserData(LINE_MARKER_INFO);
   }
 

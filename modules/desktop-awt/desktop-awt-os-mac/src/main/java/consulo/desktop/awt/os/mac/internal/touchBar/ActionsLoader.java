@@ -9,8 +9,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.InputEvent;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ final class ActionsLoader {
         FN_WIDTH = Math.min(FN_WIDTH, 100);
     }
 
-    private static String[] getAutoCloseActions(@Nonnull String toolWindowId) {
+    private static String[] getAutoCloseActions(String toolWindowId) {
         if (toolWindowId.isEmpty()) {
             return null;
         }
@@ -104,7 +103,7 @@ final class ActionsLoader {
         return Pair.create(defaultGroup, customizer);
     }
 
-    static @Nullable Pair<Map<Long, ActionGroup>, Customizer> getToolWindowActionGroup(@Nonnull String toolWindowId) {
+    static @Nullable Pair<Map<Long, ActionGroup>, Customizer> getToolWindowActionGroup(String toolWindowId) {
         if ("Services".equals(toolWindowId)) {
             LOG.debug("Services tool-window will use action-group from debug tool window");
             toolWindowId = "Debug";
@@ -122,7 +121,7 @@ final class ActionsLoader {
         return Pair.create(actions, customizer);
     }
 
-    static @Nullable Map<Long, ActionGroup> getActionGroup(@Nonnull String groupId) {
+    static @Nullable Map<Long, ActionGroup> getActionGroup(String groupId) {
         // 1. build full name of group
         String fullGroupId = groupId.startsWith(IdeActions.GROUP_TOUCHBAR) ? groupId : IdeActions.GROUP_TOUCHBAR + groupId;
 
@@ -189,7 +188,7 @@ final class ActionsLoader {
         return result;
     }
 
-    static @Nonnull Pair<Map<Long, ActionGroup>, Customizer> getFnActionGroup() {
+    static Pair<Map<Long, ActionGroup>, Customizer> getFnActionGroup() {
         DefaultActionGroup result = new DefaultActionGroup(IdeLocalize.actionFnKeysText(), false);
         for (int c = 1; c <= 12; ++c) {
             result.add(new FNKeyAction(c));
@@ -208,7 +207,7 @@ final class ActionsLoader {
         return Pair.create(ret, customizer);
     }
 
-    private static long _str2mask(@Nonnull String modifierId) {
+    private static long _str2mask(String modifierId) {
         if (!modifierId.contains(".")) {
             if (modifierId.equalsIgnoreCase("alt")) {
                 return InputEvent.ALT_DOWN_MASK;
@@ -234,7 +233,7 @@ final class ActionsLoader {
     }
 
     // hardcoded default auto-close actions
-    private static String[] getAutoCloseActionsDefault(@Nonnull String toolWindowId) {
+    private static String[] getAutoCloseActionsDefault(String toolWindowId) {
         if (
             toolWindowId.equals(ToolWindowId.DEBUG) ||
                 toolWindowId.equals(ToolWindowId.RUN) ||

@@ -26,8 +26,7 @@ import consulo.find.FindModel;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -91,7 +90,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
         myOriginalHandler = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_ESCAPE;

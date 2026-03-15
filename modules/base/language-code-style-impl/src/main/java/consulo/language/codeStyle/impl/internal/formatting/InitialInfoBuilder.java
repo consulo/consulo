@@ -10,8 +10,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.LinkedMultiMap;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.Stack;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -46,7 +45,7 @@ public class InitialInfoBuilder {
   private final Stack<InitialInfoBuilderState> myStates = new Stack<>();
 
   private
-  @Nonnull
+  
   WhiteSpace myCurrentWhiteSpace;
   private CompositeBlockWrapper myRootBlockWrapper;
   private LeafBlockWrapper myPreviousBlock;
@@ -59,7 +58,7 @@ public class InitialInfoBuilder {
                              @Nullable FormatTextRanges affectedRanges,
                              CommonCodeStyleSettings.IndentOptions options,
                              int positionOfInterest,
-                             @Nonnull FormattingProgressCallback progressCallback) {
+                             FormattingProgressCallback progressCallback) {
     myModel = model;
     myAffectedRanges = affectedRanges;
     myExtendedAffectedRanges = affectedRanges != null ? affectedRanges.getExtendedRanges() : null;
@@ -69,15 +68,15 @@ public class InitialInfoBuilder {
     myPositionOfInterest = positionOfInterest;
   }
 
-  @Nonnull
-  static InitialInfoBuilder prepareToBuildBlocksSequentially(Block root, FormattingDocumentModel model, FormatProcessor.FormatOptions formatOptions, CommonCodeStyleSettings.IndentOptions options, @Nonnull FormattingProgressCallback progressCallback) {
+  
+  static InitialInfoBuilder prepareToBuildBlocksSequentially(Block root, FormattingDocumentModel model, FormatProcessor.FormatOptions formatOptions, CommonCodeStyleSettings.IndentOptions options, FormattingProgressCallback progressCallback) {
     InitialInfoBuilder builder = new InitialInfoBuilder(root, model, formatOptions.myAffectedRanges, options, formatOptions.myInterestingOffset, progressCallback);
     builder.setCollectAlignmentsInsideFormattingRange(formatOptions.isReformatWithContext());
     builder.buildFrom(root, 0, null, null, null);
     return builder;
   }
 
-  private int getStartOffset(@Nonnull Block rootBlock) {
+  private int getStartOffset(Block rootBlock) {
     int minOffset = rootBlock.getTextRange().getStartOffset();
     if (myAffectedRanges != null) {
       for (FormatTextRange range : myAffectedRanges.getRanges()) {
@@ -195,7 +194,7 @@ public class InitialInfoBuilder {
     return wrappedRootBlock;
   }
 
-  private void doIteration(@Nonnull InitialInfoBuilderState state) {
+  private void doIteration(InitialInfoBuilderState state) {
     Block currentRoot = state.parentBlock;
 
     List<Block> subBlocks = currentRoot.getSubBlocks();
@@ -219,13 +218,13 @@ public class InitialInfoBuilder {
     }
   }
 
-  private void initCurrentWhiteSpace(@Nonnull Block currentRoot, @Nullable Block previousBlock, @Nonnull Block currentBlock) {
+  private void initCurrentWhiteSpace(Block currentRoot, @Nullable Block previousBlock, Block currentBlock) {
     if (previousBlock != null || myCurrentWhiteSpace.isIsFirstWhiteSpace()) {
       myCurrentSpaceProperty = (SpacingImpl)currentRoot.getSpacing(previousBlock, currentBlock);
     }
   }
 
-  private void registerExpandableIndents(@Nonnull Block block, @Nonnull AbstractBlockWrapper wrapper) {
+  private void registerExpandableIndents(Block block, AbstractBlockWrapper wrapper) {
     if (block.getIndent() instanceof ExpandableIndent) {
       ExpandableIndent indent = (ExpandableIndent)block.getIndent();
       myBlocksToForceChildrenIndent.putValue(indent, wrapper);
@@ -312,7 +311,7 @@ public class InitialInfoBuilder {
     return false;
   }
 
-  private boolean isDisabled(@Nonnull TextRange range) {
+  private boolean isDisabled(TextRange range) {
     return myAffectedRanges != null && myAffectedRanges.isInDisabledRange(range);
   }
 

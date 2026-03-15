@@ -26,19 +26,18 @@ import consulo.language.editor.hierarchy.HierarchyProvider;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.usage.*;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UsageContextCallHierarchyPanelProvider implements UsageContextPanelProvider {
-  @Nonnull
+  
   @Override
-  public UsageContextPanel create(@Nonnull UsageView usageView) {
+  public UsageContextPanel create(UsageView usageView) {
     return new UsageContextCallHierarchyPanel(((UsageViewImpl)usageView).getProject(), usageView.getPresentation());
   }
 
   @Override
   @RequiredReadAction
-  public boolean isAvailableFor(@Nonnull UsageView usageView) {
+  public boolean isAvailableFor(UsageView usageView) {
     UsageTarget[] targets = ((UsageViewImpl)usageView).getTargets();
     if (targets.length == 0) return false;
     UsageTarget target = targets[0];
@@ -54,7 +53,7 @@ public class UsageContextCallHierarchyPanelProvider implements UsageContextPanel
     return providerTarget != null;
   }
 
-  @Nonnull
+  
   @Override
   public String getTabTitle() {
     return "Call Hierarchy";

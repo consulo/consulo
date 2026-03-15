@@ -18,8 +18,7 @@ package consulo.language.codeStyle.arrangement.match;
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import consulo.language.codeStyle.arrangement.NameAwareArrangementEntry;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -27,13 +26,13 @@ import jakarta.annotation.Nullable;
  */
 public class ByNameArrangementEntryMatcher extends AbstractRegexpArrangementMatcher {
 
-  public ByNameArrangementEntryMatcher(@Nonnull String pattern) {
+  public ByNameArrangementEntryMatcher(String pattern) {
     super(pattern);
   }
 
   @Nullable
   @Override
-  protected String getTextToMatch(@Nonnull ArrangementEntry entry) {
+  protected String getTextToMatch(ArrangementEntry entry) {
     if (entry instanceof NameAwareArrangementEntry) {
       return ((NameAwareArrangementEntry)entry).getName();
     }

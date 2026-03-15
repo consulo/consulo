@@ -37,8 +37,7 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -51,7 +50,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
         super(text, description, icon);
     }
 
-    protected CreateFileFromTemplateAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected CreateFileFromTemplateAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -62,8 +61,8 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     @Nullable
     public static PsiFile createFileFromTemplate(
         @Nullable String name,
-        @Nonnull FileTemplate template,
-        @Nonnull PsiDirectory dir,
+        FileTemplate template,
+        PsiDirectory dir,
         @Nullable String defaultTemplateProperty,
         boolean openFile
     ) {
@@ -73,11 +72,11 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     @Nullable
     public static PsiFile createFileFromTemplate(
         @Nullable String name,
-        @Nonnull FileTemplate template,
-        @Nonnull PsiDirectory dir,
+        FileTemplate template,
+        PsiDirectory dir,
         @Nullable String defaultTemplateProperty,
         boolean openFile,
-        @Nonnull Map<String, String> liveTemplateDefaultValues
+        Map<String, String> liveTemplateDefaultValues
     ) {
         if (name != null) {
             CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(name, dir);

@@ -17,8 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.JBColor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -120,7 +119,7 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
     }
   }
 
-  public void setText(@Nonnull String... text) {
+  public void setText(String... text) {
     myText.removeAll();
     for (int i = 0; i < text.length; i++) {
       JLabel eachLabel = new JLabel(text[i], SwingConstants.CENTER);

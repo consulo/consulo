@@ -16,7 +16,6 @@
 package consulo.project.ui.view.tree;
 
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * Common view settings for trees like the project view and packages view tree.
@@ -53,8 +52,8 @@ public interface NodeOptions {
      */
     boolean isShowLibraryContents();
 
-    @Nonnull
-    default <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
+    
+    default <T> T getViewOption(KeyWithDefaultValue<T> option) {
         return option.getDefaultValue();
     }
 

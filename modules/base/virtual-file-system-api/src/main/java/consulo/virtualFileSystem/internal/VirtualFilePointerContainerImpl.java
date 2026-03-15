@@ -26,10 +26,8 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -39,15 +37,15 @@ import java.util.function.Predicate;
 public class VirtualFilePointerContainerImpl implements VirtualFilePointerContainer, Disposable {
   private static final Logger LOG = Logger.getInstance(VirtualFilePointerContainerImpl.class);
   private static final int UNINITIALIZED = -1;
-  @Nonnull
+  
   private final ConcurrentList<VirtualFilePointer> myList = Lists.newLockFreeCopyOnWriteList();
-  @Nonnull
+  
   private final ConcurrentList<VirtualFilePointer> myJarDirectories = Lists.newLockFreeCopyOnWriteList();
-  @Nonnull
+  
   private final ConcurrentList<VirtualFilePointer> myJarRecursiveDirectories = Lists.newLockFreeCopyOnWriteList();
-  @Nonnull
+  
   private final VirtualFilePointerManager myVirtualFilePointerManager;
-  @Nonnull
+  
   private final Disposable myParent;
   private final VirtualFilePointerListener myListener;
   private volatile Trinity<String[], VirtualFile[], VirtualFile[]> myCachedThings;
@@ -60,7 +58,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
 
   private final TraceableDisposable myTraceableDisposable;
 
-  public VirtualFilePointerContainerImpl(@Nonnull VirtualFilePointerManager manager, @Nonnull Disposable parentDisposable, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointerContainerImpl(VirtualFilePointerManager manager, Disposable parentDisposable, @Nullable VirtualFilePointerListener listener) {
     myTraceableDisposable = TraceableDisposable.newTraceDisposable(TRACE_CREATION);
     myVirtualFilePointerManager = manager;
     myParent = parentDisposable;
@@ -72,7 +70,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public void readExternal(@Nonnull Element rootChild, @Nonnull String childName, boolean externalizeJarDirectories) throws InvalidDataException {
+  public void readExternal(Element rootChild, String childName, boolean externalizeJarDirectories) throws InvalidDataException {
     List<Element> urls = rootChild.getChildren(childName);
     addAll(ContainerUtil.map(urls, url -> url.getAttributeValue(URL_ATTR)));
     if (externalizeJarDirectories) {
@@ -87,7 +85,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public void writeExternal(@Nonnull Element element, @Nonnull String childElementName, boolean externalizeJarDirectories) {
+  public void writeExternal(Element element, String childElementName, boolean externalizeJarDirectories) {
     for (VirtualFilePointer pointer : myList) {
       String url = pointer.getUrl();
       Element rootPathElement = new Element(childElementName);
@@ -100,7 +98,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     }
   }
 
-  private static void writeJarDirs(@Nonnull List<? extends VirtualFilePointer> myJarDirectories, @Nonnull Element element, boolean recursive) {
+  private static void writeJarDirs(List<? extends VirtualFilePointer> myJarDirectories, Element element, boolean recursive) {
     List<VirtualFilePointer> jarDirectories = new ArrayList<>(myJarDirectories);
     Collections.sort(jarDirectories, Comparator.comparing(VirtualFilePointer::getUrl, String.CASE_INSENSITIVE_ORDER));
     for (VirtualFilePointer pointer : jarDirectories) {
@@ -113,7 +111,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public void moveUp(@Nonnull String url) {
+  public void moveUp(String url) {
     int index = indexOf(url);
     if (index <= 0) return;
     dropCaches();
@@ -121,14 +119,14 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public void moveDown(@Nonnull String url) {
+  public void moveDown(String url) {
     int index = indexOf(url);
     if (index < 0 || index + 1 >= myList.size()) return;
     dropCaches();
     ContainerUtil.swapElements(myList, index, index + 1);
   }
 
-  private int indexOf(@Nonnull String url) {
+  private int indexOf(String url) {
     for (int i = 0; i < myList.size(); i++) {
       VirtualFilePointer pointer = myList.get(i);
       if (url.equals(pointer.getUrl())) {
@@ -147,21 +145,21 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public void add(@Nonnull VirtualFile file) {
+  public void add(VirtualFile file) {
     checkDisposed();
     dropCaches();
     myList.addIfAbsent(create(file));
   }
 
   @Override
-  public void add(@Nonnull String url) {
+  public void add(String url) {
     checkDisposed();
     dropCaches();
     myList.addIfAbsent(create(url));
   }
 
   @Override
-  public void remove(@Nonnull VirtualFilePointer pointer) {
+  public void remove(VirtualFilePointer pointer) {
     checkDisposed();
     dropCaches();
     boolean result = myList.remove(pointer);
@@ -169,14 +167,14 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  @Nonnull
+  
   public List<VirtualFilePointer> getList() {
     checkDisposed();
     return Collections.unmodifiableList(myList);
   }
 
   @Override
-  public void addAll(@Nonnull VirtualFilePointerContainer that) {
+  public void addAll(VirtualFilePointerContainer that) {
     checkDisposed();
     dropCaches();
 
@@ -188,7 +186,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     myJarRecursiveDirectories.addAllAbsent(jarRecursiveDups);
   }
 
-  public void addAll(@Nonnull Collection<String> urls) {
+  public void addAll(Collection<String> urls) {
     // optimization: faster than calling .add() one by one
     myList.addAllAbsent(ContainerUtil.map(urls, url -> create(url)));
   }
@@ -199,7 +197,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  @Nonnull
+  
   public String[] getUrls() {
     if (myTimeStampOfCachedThings == UNINITIALIZED) {
       // optimization: when querying urls, and nothing was cached yet, do not access disk (in cacheThings()) - can be expensive
@@ -208,7 +206,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     return getOrCache().first;
   }
 
-  @Nonnull
+  
   private Trinity<String[], VirtualFile[], VirtualFile[]> getOrCache() {
     checkDisposed();
     long timeStamp = myTimeStampOfCachedThings;
@@ -218,7 +216,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
 
   private static final Trinity<String[], VirtualFile[], VirtualFile[]> EMPTY = Trinity.create(ArrayUtil.EMPTY_STRING_ARRAY, VirtualFile.EMPTY_ARRAY, VirtualFile.EMPTY_ARRAY);
 
-  @Nonnull
+  
   private Trinity<String[], VirtualFile[], VirtualFile[]> cacheThings() {
     Trinity<String[], VirtualFile[], VirtualFile[]> result;
     if (isEmpty()) {
@@ -270,7 +268,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
 
           VirtualFileUtil.visitChildrenRecursively(jarDirectory, new VirtualFileVisitor() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
               FileType type;
               if (!file.isDirectory() && (type = FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence())) instanceof ArchiveFileType) {
                 VirtualFile jarRoot = ((ArchiveFileType)type).getFileSystem().findFileByPath(file.getPath() + URLUtil.JAR_SEPARATOR);
@@ -301,20 +299,20 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile[] getFiles() {
     return getOrCache().second;
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile[] getDirectories() {
     return getOrCache().third;
   }
 
   @Override
   @Nullable
-  public VirtualFilePointer findByUrl(@Nonnull String url) {
+  public VirtualFilePointer findByUrl(String url) {
     checkDisposed();
     for (VirtualFilePointer pointer : ContainerUtil.concat(myList, myJarDirectories, myJarRecursiveDirectories)) {
       if (url.equals(pointer.getUrl())) return pointer;
@@ -348,23 +346,23 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     return myList.hashCode();
   }
 
-  @Nonnull
-  private VirtualFilePointer create(@Nonnull VirtualFile file) {
+  
+  private VirtualFilePointer create(VirtualFile file) {
     return myVirtualFilePointerManager.create(file, myParent, myListener);
   }
 
-  @Nonnull
-  private VirtualFilePointer create(@Nonnull String url) {
+  
+  private VirtualFilePointer create(String url) {
     return myVirtualFilePointerManager.create(url, myParent, myListener);
   }
 
-  @Nonnull
-  private VirtualFilePointer duplicate(@Nonnull VirtualFilePointer virtualFilePointer) {
+  
+  private VirtualFilePointer duplicate(VirtualFilePointer virtualFilePointer) {
     return myVirtualFilePointerManager.duplicate(virtualFilePointer, myParent, myListener);
   }
 
-  @Nonnull
-  @NonNls
+  
+  
   @Override
   public String toString() {
     return "VFPContainer: " +
@@ -374,14 +372,14 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  @Nonnull
-  public VirtualFilePointerContainer clone(@Nonnull Disposable parent) {
+  
+  public VirtualFilePointerContainer clone(Disposable parent) {
     return clone(parent, null);
   }
 
   @Override
-  @Nonnull
-  public VirtualFilePointerContainer clone(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  
+  public VirtualFilePointerContainer clone(Disposable parent, @Nullable VirtualFilePointerListener listener) {
     checkDisposed();
     VirtualFilePointerContainerImpl clone = (VirtualFilePointerContainerImpl)myVirtualFilePointerManager.createContainer(parent, listener);
 
@@ -407,7 +405,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public void addJarDirectory(@Nonnull String directoryUrl, boolean recursively) {
+  public void addJarDirectory(String directoryUrl, boolean recursively) {
     VirtualFilePointer pointer = myVirtualFilePointerManager.createDirectoryPointer(directoryUrl, recursively, myParent, myListener);
     (recursively ? myJarRecursiveDirectories : myJarDirectories).addIfAbsent(pointer);
 
@@ -418,7 +416,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   /**
    * optimization: faster than calling {@link #addJarDirectory(String, boolean)} one by one
    */
-  public void addAllJarDirectories(@Nonnull Collection<String> directoryUrls, boolean recursively) {
+  public void addAllJarDirectories(Collection<String> directoryUrls, boolean recursively) {
     if (directoryUrls.isEmpty()) return;
     List<VirtualFilePointer> pointers = ContainerUtil.map(directoryUrls, url -> myVirtualFilePointerManager.createDirectoryPointer(url, recursively, myParent, myListener));
     (recursively ? myJarRecursiveDirectories : myJarDirectories).addAllAbsent(pointers);
@@ -427,7 +425,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public boolean removeJarDirectory(@Nonnull String directoryUrl) {
+  public boolean removeJarDirectory(String directoryUrl) {
     dropCaches();
     Predicate<VirtualFilePointer> filter = ptr -> FileUtil.pathsEqual(ptr.getUrl(), directoryUrl);
     boolean removed0 = myList.removeIf(filter);
@@ -436,7 +434,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     return removed0 || removed1 || removed2;
   }
 
-  @Nonnull
+  
   @Override
   public List<Pair<String, Boolean>> getJarDirectories() {
     List<Pair<String, Boolean>> jars = ContainerUtil.map(myJarDirectories, ptr -> Pair.create(ptr.getUrl(), false));

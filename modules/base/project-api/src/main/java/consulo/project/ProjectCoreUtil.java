@@ -20,18 +20,17 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author dmitrylomov
  */
 public class ProjectCoreUtil {
-  public static boolean isProjectOrWorkspaceFile(@Nonnull VirtualFile file) {
+  public static boolean isProjectOrWorkspaceFile(VirtualFile file) {
     return isProjectOrWorkspaceFile(file, file.getFileType());
   }
 
-  public static boolean isProjectOrWorkspaceFile(@Nonnull VirtualFile file, @Nullable FileType fileType) {
+  public static boolean isProjectOrWorkspaceFile(VirtualFile file, @Nullable FileType fileType) {
     VirtualFile parent = file.isDirectory() ? file : file.getParent();
     while (parent != null) {
       if (StringUtil.equal(parent.getNameSequence(), Project.DIRECTORY_STORE_FOLDER, Platform.current().fs().isCaseSensitive())) return true;
@@ -40,7 +39,7 @@ public class ProjectCoreUtil {
     return false;
   }
 
-  public static boolean isDirectoryBased(@Nonnull Project project) {
+  public static boolean isDirectoryBased(Project project) {
     if (project.isDefault()) {
       return false;
     }

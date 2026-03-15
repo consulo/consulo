@@ -5,7 +5,6 @@ import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.Inlay;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.impl.internal.WrapElementIterator;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public final class WrapElementMeasuringIterator extends WrapElementIterator {
     private int inlineInlayIndex;
     private int afterLineEndInlayIndex;
 
-    public WrapElementMeasuringIterator(@Nonnull EditorViewImpl view, int startOffset, int endOffset,
+    public WrapElementMeasuringIterator(EditorViewImpl view, int startOffset, int endOffset,
                                         List<Inlay<?>> inlineInlays,
                                         List<Inlay<?>> afterLineEndInlays) {
         super(view.getEditor(), startOffset, endOffset);

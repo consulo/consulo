@@ -24,8 +24,7 @@ import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
@@ -35,13 +34,13 @@ public class WolfPassFactory implements TextEditorHighlightingPassFactory {
   private long myPsiModificationCount;
 
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, new int[]{Pass.LOCAL_INSPECTIONS}, false, Pass.WOLF);
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, final Editor editor) {
     final long psiModificationCount = PsiManager.getInstance(file.getProject()).getModificationTracker().getModificationCount();
     if (psiModificationCount == myPsiModificationCount) {
       return null; //optimization

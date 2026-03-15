@@ -26,7 +26,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -36,12 +35,12 @@ import java.util.List;
 public class SdkOrLibraryWeigher extends ProximityWeigher {
 
   @Override
-  public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
+  public Comparable weigh(PsiElement element, ProximityLocation location) {
     Project project = location.getProject();
     return project == null ? null : isSdkElement(element, project);
   }
 
-  public static boolean isSdkElement(PsiElement element, @Nonnull Project project) {
+  public static boolean isSdkElement(PsiElement element, Project project) {
     VirtualFile file = PsiUtilCore.getVirtualFile(element);
     if (file != null) {
       List<OrderEntry> orderEntries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);

@@ -17,8 +17,7 @@ package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,44 +34,44 @@ public interface MainVcsLogUiProperties extends VcsLogUiProperties {
   VcsLogUiProperty<Boolean> TEXT_FILTER_MATCH_CASE = new VcsLogUiProperty<>("TextFilter.MatchCase");
   VcsLogUiProperty<Boolean> TEXT_FILTER_REGEX = new VcsLogUiProperty<>("TextFilter.Regex");
 
-  void addRecentlyFilteredUserGroup(@Nonnull List<String> usersInGroup);
+  void addRecentlyFilteredUserGroup(List<String> usersInGroup);
 
-  void addRecentlyFilteredBranchGroup(@Nonnull List<String> valuesInGroup);
+  void addRecentlyFilteredBranchGroup(List<String> valuesInGroup);
 
-  @Nonnull
+  
   List<List<String>> getRecentlyFilteredUserGroups();
 
-  @Nonnull
+  
   List<List<String>> getRecentlyFilteredBranchGroups();
 
-  void saveFilterValues(@Nonnull String filterName, @Nullable List<String> values);
+  void saveFilterValues(String filterName, @Nullable List<String> values);
 
   @Nullable
-  List<String> getFilterValues(@Nonnull String filterName);
+  List<String> getFilterValues(String filterName);
 
   @RequiredUIAccess
-  void addChangeListener(@Nonnull VcsLogUiPropertiesListener listener);
+  void addChangeListener(VcsLogUiPropertiesListener listener);
 
   @RequiredUIAccess
-  void removeChangeListener(@Nonnull VcsLogUiPropertiesListener listener);
+  void removeChangeListener(VcsLogUiPropertiesListener listener);
 
   class VcsLogHighlighterProperty extends VcsLogUiProperty<Boolean> {
     private static final Map<String, VcsLogHighlighterProperty> ourProperties = new HashMap<>();
-    @Nonnull
+    
     private final String myId;
 
-    public VcsLogHighlighterProperty(@Nonnull String name) {
+    public VcsLogHighlighterProperty(String name) {
       super("Highlighter." + name);
       myId = name;
     }
 
-    @Nonnull
+    
     public String getId() {
       return myId;
     }
 
-    @Nonnull
-    public static VcsLogHighlighterProperty get(@Nonnull String id) {
+    
+    public static VcsLogHighlighterProperty get(String id) {
       VcsLogHighlighterProperty property = ourProperties.get(id);
       if (property == null) {
         property = new VcsLogHighlighterProperty(id);
@@ -83,6 +82,6 @@ public interface MainVcsLogUiProperties extends VcsLogUiProperties {
   }
 
   interface VcsLogUiPropertiesListener {
-    <T> void onPropertyChanged(@Nonnull VcsLogUiProperty<T> property);
+    <T> void onPropertyChanged(VcsLogUiProperty<T> property);
   }
 }

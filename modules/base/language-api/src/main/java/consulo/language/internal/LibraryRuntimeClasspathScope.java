@@ -32,8 +32,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -90,10 +89,10 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
     return that.myEntries.equals(myEntries);
   }
 
-  private void buildEntries(@Nonnull Module module,
-                            @Nonnull final Set<Module> processedModules,
-                            @Nonnull final Set<Library> processedLibraries,
-                            @Nonnull final Set<Sdk> processedSdk,
+  private void buildEntries(Module module,
+                            final Set<Module> processedModules,
+                            final Set<Library> processedLibraries,
+                            final Set<Sdk> processedSdk,
                             Predicate<OrderEntry> condition) {
     if (!processedModules.add(module)) return;
 
@@ -124,7 +123,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
         return value;
       }
 
-      private void collectScopeFiles(@Nonnull Module module, Set<VirtualFile> set) {
+      private void collectScopeFiles(Module module, Set<VirtualFile> set) {
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
         ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(moduleRootManager);
@@ -157,7 +156,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return myEntries.contains(getFileRoot(file));
   }
 
@@ -176,7 +175,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     VirtualFile r1 = getFileRoot(file1);
     VirtualFile r2 = getFileRoot(file2);
     for (VirtualFile root : myEntries) {
@@ -192,7 +191,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return false;
   }
 

@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,11 +73,11 @@ public class RemoveInvalidElementsDialog extends DialogWrapper {
   }
 
   public static void showDialog(
-    @Nonnull Project project,
-    @Nonnull String title,
+    Project project,
+    String title,
     ConfigurationErrorType type,
-    @Nonnull String invalidElements,
-    @Nonnull List<ConfigurationErrorDescription> errors
+    String invalidElements,
+    List<ConfigurationErrorDescription> errors
   ) {
     if (errors.isEmpty()) {
       return;

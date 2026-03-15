@@ -33,8 +33,7 @@ import org.apache.http.HttpResponse;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -64,7 +63,7 @@ public class TaskUtil {
     // empty
   }
 
-  public static String formatTask(@Nonnull Task task, String format) {
+  public static String formatTask(Task task, String format) {
     return format.replace("{id}", task.getId()).replace("{number}", task.getNumber()).replace("{project}", StringUtil.notNullize(task.getProject())).replace("{summary}", task.getSummary());
   }
 
@@ -89,7 +88,7 @@ public class TaskUtil {
   }
 
   @Nullable
-  public static Date parseDate(@Nonnull String s) {
+  public static Date parseDate(String s) {
     // SimpleDateFormat prior JDK7 doesn't support 'X' specifier for ISO 8601 timezone format.
     // Because some bug trackers and task servers e.g. send dates ending with 'Z' (that stands for UTC),
     // dates should be preprocessed before parsing.
@@ -125,7 +124,7 @@ public class TaskUtil {
     }
   }
 
-  public static String formatDate(@Nonnull Date date) {
+  public static String formatDate(Date date) {
     return DateFormatUtil.getIso8601Format().format(date);
   }
 
@@ -133,7 +132,7 @@ public class TaskUtil {
    * {@link Task#equals(Object)} implementation compares tasks by their unique IDs only.
    * This method should be used when full comparison is necessary.
    */
-  public static boolean tasksEqual(@Nonnull Task t1, @Nonnull Task t2) {
+  public static boolean tasksEqual(Task t1, Task t2) {
     if (!t1.getId().equals(t2.getId())) {
       return false;
     }
@@ -176,7 +175,7 @@ public class TaskUtil {
     return Comparing.equal(t1.getRepository(), t2.getRepository());
   }
 
-  public static boolean tasksEqual(@Nonnull List<? extends Task> tasks1, @Nonnull List<? extends Task> tasks2) {
+  public static boolean tasksEqual(List<? extends Task> tasks1, List<? extends Task> tasks2) {
     if (tasks1.size() != tasks2.size()) {
       return false;
     }
@@ -188,14 +187,14 @@ public class TaskUtil {
     return true;
   }
 
-  public static boolean tasksEqual(@Nonnull Task[] task1, @Nonnull Task[] task2) {
+  public static boolean tasksEqual(Task[] task1, Task[] task2) {
     return tasksEqual(Arrays.asList(task1), Arrays.asList(task2));
   }
 
   /**
    * Print pretty-formatted XML to {@code logger}, if its level is DEBUG or below.
    */
-  public static void prettyFormatXmlToLog(@Nonnull Logger logger, @Nonnull Element element) {
+  public static void prettyFormatXmlToLog(Logger logger, Element element) {
     if (logger.isDebugEnabled()) {
       // alternatively
       //new XMLOutputter(Format.getPrettyFormat()).outputString(root)
@@ -206,7 +205,7 @@ public class TaskUtil {
   /**
    * Parse and print pretty-formatted XML to {@code logger}, if its level is DEBUG or below.
    */
-  public static void prettyFormatXmlToLog(@Nonnull Logger logger, @Nonnull InputStream xml) {
+  public static void prettyFormatXmlToLog(Logger logger, InputStream xml) {
     if (logger.isDebugEnabled()) {
       try {
         logger.debug("\n" + JDOMUtil.createOutputter("\n").outputString(JDOMUtil.loadDocument(xml)));
@@ -220,7 +219,7 @@ public class TaskUtil {
   /**
    * Parse and print pretty-formatted XML to {@code logger}, if its level is DEBUG or below.
    */
-  public static void prettyFormatXmlToLog(@Nonnull Logger logger, @Nonnull String xml) {
+  public static void prettyFormatXmlToLog(Logger logger, String xml) {
     if (logger.isDebugEnabled()) {
       try {
         logger.debug("\n" + JDOMUtil.createOutputter("\n").outputString(JDOMUtil.loadDocument(xml)));
@@ -234,7 +233,7 @@ public class TaskUtil {
   /**
    * Parse and print pretty-formatted Json to {@code logger}, if its level is DEBUG or below.
    */
-  public static void prettyFormatJsonToLog(@Nonnull Logger logger, @Nonnull String json) {
+  public static void prettyFormatJsonToLog(Logger logger, String json) {
     if (logger.isDebugEnabled()) {
       try {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -249,7 +248,7 @@ public class TaskUtil {
   /**
    * Parse and print pretty-formatted Json to {@code logger}, if its level is DEBUG or below.
    */
-  public static void prettyFormatJsonToLog(@Nonnull Logger logger, @Nonnull JsonElement json) {
+  public static void prettyFormatJsonToLog(Logger logger, JsonElement json) {
     if (logger.isDebugEnabled()) {
       try {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -261,7 +260,7 @@ public class TaskUtil {
     }
   }
 
-  public static void prettyFormatResponseToLog(@Nonnull Logger logger, @Nonnull HttpResponse response) {
+  public static void prettyFormatResponseToLog(Logger logger, HttpResponse response) {
     if (logger.isDebugEnabled()) {
       try {
         String content = ResponseUtil.getResponseContentAsString(response);
@@ -288,8 +287,8 @@ public class TaskUtil {
    *
    * @return urlencoded string
    */
-  @Nonnull
-  public static String encodeUrl(@Nonnull String s) {
+  
+  public static String encodeUrl(String s) {
     try {
       return URLEncoder.encode(s, CharsetToolkit.UTF8);
     }
@@ -299,7 +298,7 @@ public class TaskUtil {
   }
 
   @Contract("null, _ -> false")
-  public static boolean isStateSupported(@Nullable TaskRepository repository, @Nonnull TaskState state) {
+  public static boolean isStateSupported(@Nullable TaskRepository repository, TaskState state) {
     if (repository == null || !repository.isSupported(TaskRepository.STATE_UPDATING)) {
       return false;
     }

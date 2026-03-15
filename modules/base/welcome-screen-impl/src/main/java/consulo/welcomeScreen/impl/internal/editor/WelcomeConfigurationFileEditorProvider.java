@@ -23,7 +23,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,27 +30,27 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class WelcomeConfigurationFileEditorProvider implements ConfigurationFileEditorProvider {
-    @Nonnull
+    
     @Override
     public String getId() {
         return "welcome";
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.filetypesAny_type();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Welcome");
     }
 
-    @Nonnull
+    
     @Override
-    public ConfigurationFileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public ConfigurationFileEditor createEditor(Project project, VirtualFile file) {
         return new WelcomeConfigurationFileEditor(project, file);
     }
 }

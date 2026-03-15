@@ -28,7 +28,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -44,7 +43,7 @@ public class GenerateByPatternAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
         if (!point.hasAnyExtensions()) {
             e.getPresentation().setVisible(false);
@@ -62,7 +61,7 @@ public class GenerateByPatternAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         PatternDescriptor[] patterns = new PatternDescriptor[0];
         ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
         for (PatternProvider extension : point.getExtensionList()) {

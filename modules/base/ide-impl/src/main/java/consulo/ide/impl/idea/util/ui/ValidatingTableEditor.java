@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -163,7 +162,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
         }
     }
 
-    @Nonnull
+    
     @Override
     public StatusText getEmptyText() {
         return myTable.getEmptyText();
@@ -204,7 +203,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
         myRemoveButton = new AnActionButton(ApplicationLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 removeSelected();
             }
         };

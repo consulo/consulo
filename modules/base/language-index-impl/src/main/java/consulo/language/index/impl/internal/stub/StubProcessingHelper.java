@@ -5,7 +5,7 @@ import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;

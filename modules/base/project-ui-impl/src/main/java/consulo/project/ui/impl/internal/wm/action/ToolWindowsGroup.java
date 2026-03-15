@@ -24,8 +24,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,7 +64,7 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         Project project = e == null ? null : e.getData(Project.KEY);
@@ -76,7 +75,7 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
         return result.toArray(new AnAction[result.size()]);
     }
 
-    public static List<ActivateToolWindowAction> getToolWindowActions(@Nonnull Project project, boolean shouldSkipHidden) {
+    public static List<ActivateToolWindowAction> getToolWindowActions(Project project, boolean shouldSkipHidden) {
         ActionManager actionManager = ActionManager.getInstance();
         ToolWindowManager manager = ToolWindowManager.getInstance(project);
         List<ActivateToolWindowAction> result = new ArrayList<>();

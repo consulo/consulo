@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 public interface JavaLikeQuoteHandler extends QuoteHandler {
   TokenSet getConcatenatableStringTokenTypes();
@@ -29,7 +28,7 @@ public interface JavaLikeQuoteHandler extends QuoteHandler {
 
   TokenSet getStringTokenTypes();
 
-  boolean isAppropriateElementTypeForLiteral(@Nonnull IElementType tokenType);
+  boolean isAppropriateElementTypeForLiteral(IElementType tokenType);
 
   boolean needParenthesesAroundConcatenation(PsiElement element);
 }

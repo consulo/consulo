@@ -18,7 +18,6 @@ package consulo.fileEditor.impl.internal;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +84,7 @@ public abstract class MergingProcessingQueue<K, V> {
     myUpdateFuture.cancel(false);
   }
 
-  protected abstract void calculateValue(@Nonnull Project project, @Nonnull K key, @Nonnull Consumer<V> consumer);
+  protected abstract void calculateValue(Project project, K key, Consumer<V> consumer);
 
-  protected abstract void updateValueInsideUI(@Nonnull Project project, @Nonnull K key, @Nonnull V value);
+  protected abstract void updateValueInsideUI(Project project, K key, V value);
 }

@@ -35,7 +35,6 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -89,7 +88,7 @@ public class AutoHardWrapHandler {
    * @param dataContext                   current data context
    * @param modificationStampBeforeTyping document modification stamp before the current symbols typing
    */
-  public void wrapLineIfNecessary(@Nonnull Editor editor, @Nonnull DataContext dataContext, long modificationStampBeforeTyping) {
+  public void wrapLineIfNecessary(Editor editor, DataContext dataContext, long modificationStampBeforeTyping) {
     Project project = editor.getProject();
     Document document = editor.getDocument();
     AutoWrapChange change = myAutoWrapChanges.get(document);

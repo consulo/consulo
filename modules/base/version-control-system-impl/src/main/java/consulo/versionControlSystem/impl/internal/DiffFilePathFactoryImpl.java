@@ -20,7 +20,6 @@ import consulo.diff.DiffFilePath;
 import consulo.diff.internal.DiffFilePathFactory;
 import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -39,7 +38,7 @@ public class DiffFilePathFactoryImpl implements DiffFilePathFactory {
   }
 
   @Override
-  public DiffFilePath createFilePath(@Nonnull VirtualFile file) {
+  public DiffFilePath createFilePath(VirtualFile file) {
     return myVcsContextFactory.createFilePathOn(file);
   }
 }

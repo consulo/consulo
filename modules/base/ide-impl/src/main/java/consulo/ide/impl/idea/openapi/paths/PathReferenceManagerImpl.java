@@ -32,8 +32,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -55,8 +54,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
 
   @Override
   @Nullable
-  public PathReference getPathReference(@Nonnull String path,
-                                        @Nonnull PsiElement element,
+  public PathReference getPathReference(String path,
+                                        PsiElement element,
                                         PathReferenceProvider... additionalProviders) {
     PathReference pathReference;
     for (PathReferenceProvider provider : myApplication.getExtensionPoint(PathReferenceProvider.class)) {
@@ -84,7 +83,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
 
   @Override
   @Nullable
-  public PathReference getCustomPathReference(@Nonnull String path, @Nonnull Module module, @Nonnull PsiElement element, PathReferenceProvider... providers) {
+  public PathReference getCustomPathReference(String path, Module module, PsiElement element, PathReferenceProvider... providers) {
     for (PathReferenceProvider provider : providers) {
       PathReference reference = provider.getPathReference(path, element);
       if (reference != null) {
@@ -95,13 +94,13 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @Nonnull
+  
   public PathReferenceProvider getGlobalWebPathReferenceProvider() {
     return myGlobalPathsProvider;
   }
 
   @Override
-  @Nonnull
+  
   public PathReferenceProvider createStaticPathReferenceProvider(boolean relativePathsAllowed) {
     StaticPathReferenceProvider provider = new StaticPathReferenceProvider(null);
     provider.setRelativePathsAllowed(relativePathsAllowed);
@@ -109,8 +108,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @Nonnull
-  public PsiReference[] createReferences(@Nonnull PsiElement psiElement,
+  
+  public PsiReference[] createReferences(PsiElement psiElement,
                                          boolean soft,
                                          boolean endingSlashNotAllowed,
                                          boolean relativePathsAllowed, PathReferenceProvider... additionalProviders) {
@@ -118,8 +117,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @Nonnull
-  public PsiReference[] createReferences(@Nonnull PsiElement psiElement,
+  
+  public PsiReference[] createReferences(PsiElement psiElement,
                                          boolean soft,
                                          boolean endingSlashNotAllowed,
                                          boolean relativePathsAllowed, FileType[] suitableFileTypes, PathReferenceProvider... additionalProviders) {
@@ -150,8 +149,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @Nonnull
-  public PsiReference[] createCustomReferences(@Nonnull PsiElement psiElement, boolean soft, PathReferenceProvider... providers) {
+  
+  public PsiReference[] createCustomReferences(PsiElement psiElement, boolean soft, PathReferenceProvider... providers) {
     List<PsiReference> references = new ArrayList<>();
     for (PathReferenceProvider provider : providers) {
       boolean processed = processProvider(psiElement, provider, references, soft);
@@ -163,8 +162,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @Nonnull
-  public PsiReference[] createReferences(@Nonnull PsiElement psiElement, boolean soft, PathReferenceProvider... additionalProviders) {
+  
+  public PsiReference[] createReferences(PsiElement psiElement, boolean soft, PathReferenceProvider... additionalProviders) {
     return createReferences(psiElement, soft, false, true, null, additionalProviders);
   }
 

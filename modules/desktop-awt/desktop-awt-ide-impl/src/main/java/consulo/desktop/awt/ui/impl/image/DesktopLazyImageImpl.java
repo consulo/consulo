@@ -19,7 +19,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.function.Supplier;
 
@@ -41,7 +40,7 @@ public class DesktopLazyImageImpl extends DesktopBaseLazyImageImpl {
     return ourTracker.getModificationCount();
   }
 
-  @Nonnull
+  
   @Override
   protected Icon calcIcon() {
     return TargetAWT.to(myImageSupplier.get());

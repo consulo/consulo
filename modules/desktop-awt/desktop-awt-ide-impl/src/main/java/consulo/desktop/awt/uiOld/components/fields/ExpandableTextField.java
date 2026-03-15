@@ -4,7 +4,6 @@ package consulo.desktop.awt.uiOld.components.fields;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.desktop.awt.uiOld.Expandable;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,7 +17,7 @@ import static java.util.Collections.singletonList;
 public class ExpandableTextField extends ExtendableTextField implements Expandable {
   private final ExpandableSupport support;
 
-  public ExpandableTextField(@Nonnull Function<? super String, ? extends List<String>> parser, @Nonnull Function<? super List<String>, String> joiner, SupportTextBoxWithExpandActionExtender actionExtender) {
+  public ExpandableTextField(Function<? super String, ? extends List<String>> parser, Function<? super List<String>, String> joiner, SupportTextBoxWithExpandActionExtender actionExtender) {
     Function<? super String, String> onShow = text -> StringUtil.join(parser.apply(text), "\n");
     Function<? super String, String> onHide = text -> joiner.apply(asList(StringUtil.splitByLines(text)));
 
@@ -28,7 +27,7 @@ public class ExpandableTextField extends ExtendableTextField implements Expandab
     setExtensions(createExtensions());
   }
 
-  @Nonnull
+  
   protected List<ExtendableTextComponent.Extension> createExtensions() {
     return singletonList(support.createExpandExtension());
   }

@@ -32,7 +32,6 @@ import consulo.util.concurrent.Promises;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
@@ -56,7 +55,7 @@ final class ServiceTreeView extends ServiceView {
   private boolean mySelected;
   private volatile Promise<?> myUpdateSelectionPromise;
 
-  ServiceTreeView(@Nonnull Project project, @Nonnull ServiceViewModel model, @Nonnull ServiceViewUi ui, @Nonnull ServiceViewState state) {
+  ServiceTreeView(Project project, ServiceViewModel model, ServiceViewUi ui, ServiceViewState state) {
     super(new BorderLayout(), project, model, ui);
 
     myTreeModel = new ServiceViewTreeModel(model);
@@ -101,14 +100,14 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  void saveState(@Nonnull ServiceViewState state) {
+  void saveState(ServiceViewState state) {
     super.saveState(state);
     myUi.saveState(state);
     state.treeState = TreeState.createOn(myTree);
     state.expandedPaths = TreeUtil.collectExpandedPaths(myTree);
   }
 
-  @Nonnull
+  
   @Override
   List<ServiceViewItem> getSelectedItems() {
     int[] rows = myTree.getSelectionRows();
@@ -128,15 +127,15 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  Promise<Void> select(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+  Promise<Void> select(Object service, Class<?> contributorClass) {
     return doSelect(service, contributorClass, false);
   }
 
-  private Promise<Void> selectSafe(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+  private Promise<Void> selectSafe(Object service, Class<?> contributorClass) {
     return doSelect(service, contributorClass, true);
   }
 
-  private Promise<Void> doSelect(@Nonnull Object service, @Nonnull Class<?> contributorClass, boolean safe) {
+  private Promise<Void> doSelect(Object service, Class<?> contributorClass, boolean safe) {
     ServiceViewItem selectedItem = myLastSelection;
     if (selectedItem == null || !selectedItem.getValue().equals(service)) {
       AsyncPromise<Void> result = new AsyncPromise<>();
@@ -159,7 +158,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  Promise<Void> expand(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+  Promise<Void> expand(Object service, Class<?> contributorClass) {
     AsyncPromise<Void> result = new AsyncPromise<>();
     myTreeModel.findPath(service, contributorClass)
                .onError(result::setError)
@@ -174,7 +173,7 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  Promise<Void> extract(@Nonnull Object service, @Nonnull Class<?> contributorClass) {
+  Promise<Void> extract(Object service, Class<?> contributorClass) {
     AsyncPromise<Void> result = new AsyncPromise<>();
     myTreeModel.findPath(service, contributorClass)
                .onError(result::setError)
@@ -374,13 +373,13 @@ final class ServiceTreeView extends ServiceView {
   }
 
   @Override
-  void setAutoScrollToSourceHandler(@Nonnull AutoScrollToSourceHandler autoScrollToSourceHandler) {
+  void setAutoScrollToSourceHandler(AutoScrollToSourceHandler autoScrollToSourceHandler) {
     super.setAutoScrollToSourceHandler(autoScrollToSourceHandler);
     autoScrollToSourceHandler.install(myTree);
   }
 
   @Override
-  List<Object> getChildrenSafe(@Nonnull List<Object> valueSubPath, @Nonnull Class<?> contributorClass) {
+  List<Object> getChildrenSafe(List<Object> valueSubPath, Class<?> contributorClass) {
     Queue<Object> values = new LinkedList<>(valueSubPath);
     Object visibleRoot = values.poll();
     if (visibleRoot == null) return Collections.emptyList();
@@ -517,9 +516,9 @@ final class ServiceTreeView extends ServiceView {
       myPath = new LinkedList<>(Arrays.asList(path.getPath()));
     }
 
-    @Nonnull
+    
     @Override
-    public Action visit(@Nonnull TreePath path) {
+    public Action visit(TreePath path) {
       Object node = path.getLastPathComponent();
       if (node.equals(myPath.peek())) {
         myPath.poll();
@@ -536,9 +535,9 @@ final class ServiceTreeView extends ServiceView {
       myPaths = paths;
     }
 
-    @Nonnull
+    
     @Override
-    public Action visit(@Nonnull TreePath path) {
+    public Action visit(TreePath path) {
       if (path.getParentPath() == null) return Action.CONTINUE;
 
       for (TreePath treePath : myPaths) {

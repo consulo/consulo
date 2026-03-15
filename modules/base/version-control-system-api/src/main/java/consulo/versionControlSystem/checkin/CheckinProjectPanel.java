@@ -22,7 +22,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -94,10 +93,10 @@ public interface CheckinProjectPanel extends Refreshable, CommitMessage {
      * @return the description text.
      * @since 5.1
      */
-    @Nonnull
+    
     @Override
     String getCommitMessage();
 
-    @Nonnull
+    
     LocalizeValue getCommitActionName();
 }

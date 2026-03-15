@@ -26,7 +26,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,19 +41,19 @@ public class EditorPopupHelperImpl implements EditorPopupHelper {
     myPopupFactory = (PopupFactoryImpl)factory;
   }
 
-  @Nonnull
+  
   @Override
-  public RelativePoint guessBestPopupLocation(@Nonnull Editor editor) {
+  public RelativePoint guessBestPopupLocation(Editor editor) {
     return myPopupFactory.guessBestPopupLocation(editor);
   }
 
   @Override
-  public boolean isBestPopupLocationVisible(@Nonnull Editor editor) {
+  public boolean isBestPopupLocationVisible(Editor editor) {
     return myPopupFactory.isBestPopupLocationVisible(editor);
   }
 
   @Override
-  public void showPopupInBestPositionFor(@Nonnull Editor editor, @Nonnull JBPopup popup) {
+  public void showPopupInBestPositionFor(Editor editor, JBPopup popup) {
     ((AbstractPopup)popup).showInBestPositionFor(editor);
   }
 }

@@ -37,7 +37,6 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +71,7 @@ public class RecentLocationsAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(RECENT_LOCATIONS_ACTION_ID);
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -82,7 +81,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         showPopup(project, false);
     }
 
-    public static void showPopup(@Nonnull Project project, boolean showChanged) {
+    public static void showPopup(Project project, boolean showChanged) {
         RecentLocationsDataModel model = new RecentLocationsDataModel(project, new ArrayList<>());
         JBList<RecentLocationItem> list = new JBList<>(JBList.createDefaultListModel(model.getPlaces(showChanged)));
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(
@@ -169,7 +168,7 @@ public class RecentLocationsAction extends DumbAwareAction {
 
         popup.addListener(new JBPopupListener() {
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 model.getEditorsToRelease().forEach(editor -> EditorFactory.getInstance().releaseEditor(editor));
                 model.getProjectConnection().disconnect();
             }
@@ -192,11 +191,11 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
 
     private static void updateItems(
-        @Nonnull RecentLocationsDataModel data,
-        @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
-        @Nonnull JLabel title,
-        @Nonnull JBCheckBox checkBox,
-        @Nonnull JBPopup popup
+        RecentLocationsDataModel data,
+        ListWithFilter<RecentLocationItem> listWithFilter,
+        JLabel title,
+        JBCheckBox checkBox,
+        JBPopup popup
     ) {
         boolean state = checkBox.isSelected();
         updateModel(listWithFilter, data, state);
@@ -207,8 +206,8 @@ public class RecentLocationsAction extends DumbAwareAction {
         popup.pack(false, false);
     }
 
-    @Nonnull
-    public static JBCheckBox createCheckbox(@Nonnull ShortcutSet checkboxShortcutSet, boolean showChanged) {
+    
+    public static JBCheckBox createCheckbox(ShortcutSet checkboxShortcutSet, boolean showChanged) {
         String text = "<html>" +
             IdeLocalize.recentLocationsTitleText() +
             " <font color=\"" + getShortcutHexColor() + "\">" +
@@ -224,15 +223,15 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 
-    static void clearSelectionInEditor(@Nonnull Editor editor) {
+    static void clearSelectionInEditor(Editor editor) {
         editor.getSelectionModel().removeSelection(true);
     }
 
-    private static void showPopup(@Nonnull Project project, @Nonnull JBPopup popup) {
+    private static void showPopup(Project project, JBPopup popup) {
         Point2D savedLocation = DimensionService.getInstance().getLocation(LOCATION_SETTINGS_KEY, project);
         Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
         if (savedLocation != null && recentFocusedWindow != null) {
@@ -244,8 +243,8 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
 
     private static void updateModel(
-        @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
-        @Nonnull RecentLocationsDataModel data,
+        ListWithFilter<RecentLocationItem> listWithFilter,
+        RecentLocationsDataModel data,
         boolean changed
     ) {
         NameFilteringListModel<RecentLocationItem> model =
@@ -259,8 +258,8 @@ public class RecentLocationsAction extends DumbAwareAction {
         listWithFilter.getSpeedSearch().reset();
     }
 
-    @Nonnull
-    private static JPanel createMainPanel(@Nonnull ListWithFilter listWithFilter, @Nonnull CaptionPanel topPanel) {
+    
+    private static JPanel createMainPanel(ListWithFilter listWithFilter, CaptionPanel topPanel) {
         JPanel mainPanel = new JPanel(new BorderLayout());
         UIUtil.putClientProperty(mainPanel, CaptionPanel.KEY, topPanel);
         mainPanel.add(topPanel, BorderLayout.NORTH);
@@ -268,8 +267,8 @@ public class RecentLocationsAction extends DumbAwareAction {
         return mainPanel;
     }
 
-    @Nonnull
-    private static CaptionPanel createHeaderPanel(@Nonnull JLabel title, @Nonnull JComponent checkbox) {
+    
+    private static CaptionPanel createHeaderPanel(JLabel title, JComponent checkbox) {
         CaptionPanel topPanel = new CaptionPanel();
         topPanel.add(title, BorderLayout.WEST);
         topPanel.add(checkbox, BorderLayout.EAST);
@@ -286,7 +285,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         return topPanel;
     }
 
-    @Nonnull
+    
     private static JLabel createTitle(boolean showChanged) {
         JBLabel title = new JBLabel();
         title.setFont(title.getFont().deriveFont(Font.BOLD));
@@ -294,7 +293,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         return title;
     }
 
-    private static void updateTitleText(@Nonnull JLabel title, boolean showChanged) {
+    private static void updateTitleText(JLabel title, boolean showChanged) {
         title.setText(
             showChanged
                 ? IdeLocalize.recentLocationsChangedLocations().get()
@@ -302,7 +301,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         );
     }
 
-    @Nonnull
+    
     private static Function<RecentLocationItem, String> getNamer() {
         return value -> {
             EditorEx editor = value.getEditor();
@@ -311,13 +310,13 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
 
     private static void initSearchActions(
-        @Nonnull Project project,
-        @Nonnull RecentLocationsDataModel data,
-        @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
-        @Nonnull JBList<RecentLocationItem> list,
-        @Nonnull JBCheckBox checkBox,
-        @Nonnull JBPopup popup,
-        @Nonnull SimpleReference<? super Boolean> navigationRef
+        Project project,
+        RecentLocationsDataModel data,
+        ListWithFilter<RecentLocationItem> listWithFilter,
+        JBList<RecentLocationItem> list,
+        JBCheckBox checkBox,
+        JBPopup popup,
+        SimpleReference<? super Boolean> navigationRef
     ) {
         listWithFilter.addMouseListener(new MouseAdapter() {
             @Override
@@ -338,10 +337,10 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
 
     private static void removePlaces(
-        @Nonnull Project project,
-        @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
-        @Nonnull JBList<RecentLocationItem> list,
-        @Nonnull RecentLocationsDataModel data,
+        Project project,
+        ListWithFilter<RecentLocationItem> listWithFilter,
+        JBList<RecentLocationItem> list,
+        RecentLocationsDataModel data,
         boolean showChanged
     ) {
         List<RecentLocationItem> selectedValue = list.getSelectedValuesList();
@@ -373,10 +372,10 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
 
     private static void navigateToSelected(
-        @Nonnull Project project,
-        @Nonnull JBList<RecentLocationItem> list,
-        @Nonnull JBPopup popup,
-        @Nonnull SimpleReference<? super Boolean> navigationRef
+        Project project,
+        JBList<RecentLocationItem> list,
+        JBPopup popup,
+        SimpleReference<? super Boolean> navigationRef
     ) {
         ContainerUtil.reverse(list.getSelectedValuesList())
             .forEach(item -> IdeDocumentHistory.getInstance(project).gotoPlaceInfo(item.getInfo()));

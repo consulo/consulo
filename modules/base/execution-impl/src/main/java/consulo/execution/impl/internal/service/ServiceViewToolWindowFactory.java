@@ -23,7 +23,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,25 +30,25 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ServiceViewToolWindowFactory extends BaseServiceToolWindowFactory {
-    @Nonnull
+    
     @Override
     public String getId() {
         return ToolWindowId.SERVICES;
     }
 
-    @Nonnull
+    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.BOTTOM;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowservices();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return ExecutionLocalize.toolwindowServicesDisplayName();

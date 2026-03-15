@@ -19,8 +19,7 @@ package consulo.language.psi;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -29,7 +28,7 @@ import java.util.Collection;
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class FileContextProvider {
   @Nullable
-  public static FileContextProvider getProvider(@Nonnull PsiFile file) {
+  public static FileContextProvider getProvider(PsiFile file) {
     for (FileContextProvider provider : file.getProject().getExtensionList(FileContextProvider.class)) {
       if (provider.isAvailable(file)) {
         return provider;
@@ -40,7 +39,7 @@ public abstract class FileContextProvider {
 
   protected abstract boolean isAvailable(PsiFile file);
 
-  @Nonnull
+  
   public abstract Collection<PsiFileSystemItem> getContextFolders(PsiFile file);
 
   @Nullable

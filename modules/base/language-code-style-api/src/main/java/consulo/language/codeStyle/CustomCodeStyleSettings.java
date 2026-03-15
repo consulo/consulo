@@ -19,7 +19,6 @@ import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.DifferenceFilter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.Collections;
@@ -32,7 +31,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     private final CodeStyleSettings myContainer;
     private final String myTagName;
 
-    protected CustomCodeStyleSettings(@Nonnull String tagName, CodeStyleSettings container) {
+    protected CustomCodeStyleSettings(String tagName, CodeStyleSettings container) {
         myTagName = tagName;
         myContainer = container;
     }
@@ -41,7 +40,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
         return myContainer;
     }
 
-    @Nonnull
+    
     public final String getTagName() {
         return myTagName;
     }
@@ -49,7 +48,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     /**
      * in case settings save additional top-level tags, list the list of them to prevent serializer to treat such tag as unknown settings.
      */
-    @Nonnull
+    
     public List<String> getKnownTagNames() {
         return Collections.singletonList(getTagName());
     }
@@ -58,7 +57,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
         DefaultJDOMExternalizer.readExternal(this, parentElement.getChild(myTagName));
     }
 
-    public void writeExternal(Element parentElement, @Nonnull CustomCodeStyleSettings parentSettings) throws WriteExternalException {
+    public void writeExternal(Element parentElement, CustomCodeStyleSettings parentSettings) throws WriteExternalException {
         Element childElement = new Element(myTagName);
         DefaultJDOMExternalizer.writeExternal(this, childElement, new DifferenceFilter<>(this, parentSettings));
         if (!childElement.getContent().isEmpty()) {
@@ -80,7 +79,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     /**
      * For compatibility with old code style settings stored in CodeStyleSettings.
      */
-    protected void importLegacySettings(@Nonnull CodeStyleSettings rootSettings) {
+    protected void importLegacySettings(CodeStyleSettings rootSettings) {
     }
 
     /**

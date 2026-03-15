@@ -36,8 +36,7 @@ import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -70,23 +69,23 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
         return super.getBackground();
     }
 
-    @Nonnull
+    
     @Override
-    public EditorNotificationBuilder withText(@Nonnull LocalizeValue text) {
+    public EditorNotificationBuilder withText(LocalizeValue text) {
         setText(text.get());
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public EditorNotificationBuilder withIcon(@Nonnull Image image) {
+    public EditorNotificationBuilder withIcon(Image image) {
         icon(TargetAWT.to(image));
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public EditorNotificationBuilder withType(@Nonnull NotificationType notificationType) {
+    public EditorNotificationBuilder withType(NotificationType notificationType) {
         switch (notificationType) {
             case INFO:
                 myBackgroundKey = EditorColors.NOTIFICATION_INFORMATION_BACKGROUND;
@@ -103,23 +102,23 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull String actionRefId) {
+    public EditorNotificationBuilder withAction(LocalizeValue actionText, String actionRefId) {
         createActionLabel(actionText.get(), actionRefId);
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText,
-                                                @Nonnull LocalizeValue actionTooltipText,
-                                                @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
+    public EditorNotificationBuilder withAction(LocalizeValue actionText,
+                                                LocalizeValue actionTooltipText,
+                                                ComponentEventListener<Component, ComponentEvent<Component>> action) {
         createActionLabel(actionText.get(), action).setToolTipText(StringUtil.nullize(actionTooltipText.get()));
         return this;
     }
 
-    public HyperlinkLabel createActionLabel(String text, @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
+    public HyperlinkLabel createActionLabel(String text, ComponentEventListener<Component, ComponentEvent<Component>> action) {
         HyperlinkLabel label = new HyperlinkLabel(text, JBColor.BLUE, getBackground(), JBColor.BLUE);
         label.setOpaque(false);
 
@@ -137,11 +136,11 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
         return label;
     }
 
-    @Nonnull
+    
     @Override
-    public EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText,
-                                                    @Nonnull Image image,
-                                                    @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
+    public EditorNotificationBuilder withGearAction(LocalizeValue tooltipText,
+                                                    Image image,
+                                                    ComponentEventListener<Component, ComponentEvent<Component>> action) {
         myGearButton.setIcon(image);
         myGearButton.setVisible(true);
         myGearButton.setToolTipText(tooltipText);
@@ -149,7 +148,7 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return this;

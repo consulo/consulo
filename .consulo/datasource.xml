@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <component name="DataSourceManager">
+    <datasource id="565bb34c-5f3a-4a70-b224-71d711510843" name="hub" provider="postgresql">
+      <property-container name="main">
+        <property name="password" value="password" />
+        <property name="port" value="5432" />
+        <property name="database-name" value="hub" />
+        <property name="host" value="localhost" />
+        <property name="login" value="postgres" />
+      </property-container>
+    </datasource>
+  </component>
+</project>

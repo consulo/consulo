@@ -19,40 +19,39 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko
  */
 public interface SelfManagingCommenter<T extends CommenterDataHolder> {
   @Nullable
-  T createLineCommentingState(int startLine, int endLine, @Nonnull Document document, @Nonnull PsiFile file);
+  T createLineCommentingState(int startLine, int endLine, Document document, PsiFile file);
 
   @Nullable
-  T createBlockCommentingState(int selectionStart, int selectionEnd, @Nonnull Document document, @Nonnull PsiFile file);
+  T createBlockCommentingState(int selectionStart, int selectionEnd, Document document, PsiFile file);
 
-  void commentLine(int line, int offset, @Nonnull Document document, @Nonnull T data);
+  void commentLine(int line, int offset, Document document, T data);
 
-  void uncommentLine(int line, int offset, @Nonnull Document document, @Nonnull T data);
+  void uncommentLine(int line, int offset, Document document, T data);
 
-  boolean isLineCommented(int line, int offset, @Nonnull Document document, @Nonnull T data);
-
-  @Nullable
-  String getCommentPrefix(int line, @Nonnull Document document, @Nonnull T data);
+  boolean isLineCommented(int line, int offset, Document document, T data);
 
   @Nullable
-  TextRange getBlockCommentRange(int selectionStart, int selectionEnd, @Nonnull Document document, @Nonnull T data);
+  String getCommentPrefix(int line, Document document, T data);
 
   @Nullable
-  String getBlockCommentPrefix(int selectionStart, @Nonnull Document document, @Nonnull T data);
+  TextRange getBlockCommentRange(int selectionStart, int selectionEnd, Document document, T data);
 
   @Nullable
-  String getBlockCommentSuffix(int selectionEnd, @Nonnull Document document, @Nonnull T data);
+  String getBlockCommentPrefix(int selectionStart, Document document, T data);
+
+  @Nullable
+  String getBlockCommentSuffix(int selectionEnd, Document document, T data);
 
   void uncommentBlockComment(int startOffset, int endOffset, Document document, T data);
 
-  @Nonnull
+  
   TextRange insertBlockComment(int startOffset, int endOffset, Document document, T data);
 
   CommenterDataHolder EMPTY_STATE = new CommenterDataHolder() {

@@ -24,8 +24,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.IdeActions;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -35,7 +34,7 @@ public class TextComponentSelectionModel implements SelectionModel {
   private final JTextComponent myTextComponent;
   private final TextComponentEditor myEditor;
 
-  public TextComponentSelectionModel(@Nonnull JTextComponent textComponent, @Nonnull TextComponentEditor textComponentEditor) {
+  public TextComponentSelectionModel(JTextComponent textComponent, TextComponentEditor textComponentEditor) {
     myTextComponent = textComponent;
     myEditor = textComponentEditor;
   }
@@ -161,18 +160,18 @@ public class TextComponentSelectionModel implements SelectionModel {
   }
 
   @Override
-  public void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
+  public void setBlockSelection(LogicalPosition blockStart, LogicalPosition blockEnd) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  @Nonnull
+  
   public int[] getBlockSelectionStarts() {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  @Nonnull
+  
   public int[] getBlockSelectionEnds() {
     throw new UnsupportedOperationException("Not implemented");
   }

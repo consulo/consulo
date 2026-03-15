@@ -16,8 +16,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,17 +33,17 @@ class TrafficProgressPanel extends JPanel {
 
   private final JLabel statusLabel = new JLabel();
   private final JLabel statusExtraLineLabel = new JLabel();
-  @Nonnull
+  
   private final TrafficLightRenderer myTrafficLightRenderer;
 
   private final JPanel myPassStatuses = new JPanel();
   private final JPanel myEmptyPassStatuses = new NonOpaquePanel();
   private final Wrapper myPassStatusesContainer = new Wrapper();
 
-  @Nonnull
+  
   private final HintHint myHintHint;
 
-  TrafficProgressPanel(@Nonnull TrafficLightRenderer trafficLightRenderer, @Nonnull Editor editor, @Nonnull HintHint hintHint) {
+  TrafficProgressPanel(TrafficLightRenderer trafficLightRenderer, Editor editor, HintHint hintHint) {
     myHintHint = hintHint;
     myTrafficLightRenderer = trafficLightRenderer;
 
@@ -76,7 +75,7 @@ class TrafficProgressPanel extends JPanel {
           HighlightInfoProcessor.getEmpty()
         ) {
           @Override
-          protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
+          protected void collectInformationWithProgress(ProgressIndicator progress) {
           }
 
           @Override
@@ -98,7 +97,7 @@ class TrafficProgressPanel extends JPanel {
     return Math.max(Math.max(Math.max(getLabelMinWidth(statistics), getLabelMinWidth(statusExtraLineLabel)), getLabelMinWidth(statusLabel)), getLabelMinWidth(new JLabel(CodeInsightBundle.message("label.slow.inspections.progress.report.long.line"))));
   }
 
-  private int getLabelMinWidth(@Nonnull JLabel label) {
+  private int getLabelMinWidth(JLabel label) {
     String text = label.getText();
     Icon icon = label.isEnabled() ? label.getIcon() : label.getDisabledIcon();
 
@@ -118,7 +117,7 @@ class TrafficProgressPanel extends JPanel {
 
   private class Separator extends NonOpaquePanel {
     @Override
-    protected void paintComponent(@Nonnull Graphics g) {
+    protected void paintComponent(Graphics g) {
       Insets insets = getInsets();
       if (insets == null) {
         insets = JBUI.emptyInsets();
@@ -127,20 +126,20 @@ class TrafficProgressPanel extends JPanel {
       g.drawLine(insets.left, insets.top, getWidth() - insets.left - insets.right, insets.top);
     }
 
-    @Nonnull
+    
     @Override
     public Dimension getPreferredSize() {
       return new Dimension(1, 1);
     }
 
-    @Nonnull
+    
     @Override
     public Dimension getMinimumSize() {
       return new Dimension(1, 1);
     }
   }
 
-  void updatePanel(@Nonnull TrafficLightRenderer.DaemonCodeAnalyzerStatus status, boolean isFake) {
+  void updatePanel(TrafficLightRenderer.DaemonCodeAnalyzerStatus status, boolean isFake) {
     try {
       boolean needRebuild = myTrafficLightRenderer.updatePanel(status);
       statusLabel.setText(myTrafficLightRenderer.statusLabel);
@@ -200,7 +199,7 @@ class TrafficProgressPanel extends JPanel {
     }
   }
 
-  private void rebuildPassesProgress(@Nonnull TrafficLightRenderer.DaemonCodeAnalyzerStatus status) {
+  private void rebuildPassesProgress(TrafficLightRenderer.DaemonCodeAnalyzerStatus status) {
     myPassStatuses.removeAll();
     myPassStatuses.setLayout(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();

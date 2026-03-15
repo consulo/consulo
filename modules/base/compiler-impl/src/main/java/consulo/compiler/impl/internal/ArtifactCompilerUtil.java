@@ -35,7 +35,6 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -58,7 +57,7 @@ public class ArtifactCompilerUtil {
     private ArtifactCompilerUtil() {
     }
 
-    @Nonnull
+    
     public static Pair<InputStream, Long> getArchiveEntryInputStream(VirtualFile sourceFile, CompileContext context) throws IOException {
         String fullPath = sourceFile.getPath();
         int jarEnd = fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
@@ -93,8 +92,8 @@ public class ArtifactCompilerUtil {
         return new File(FileUtil.toSystemDependentName(fullPath.substring(fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR))));
     }
 
-    @Nonnull
-    public static Set<VirtualFile> getArtifactOutputsContainingSourceFiles(@Nonnull Project project) {
+    
+    public static Set<VirtualFile> getArtifactOutputsContainingSourceFiles(Project project) {
         List<VirtualFile> allOutputs = new ArrayList<>();
         for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
             ContainerUtil.addIfNotNull(allOutputs, artifact.getOutputFile());

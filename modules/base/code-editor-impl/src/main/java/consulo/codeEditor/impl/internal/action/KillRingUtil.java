@@ -21,7 +21,6 @@ import consulo.codeEditor.internal.KillRingTransferable;
 import consulo.document.Document;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * Holds utility methods for {@link KillRingTransferable kill ring}-aware processing.
@@ -37,7 +36,7 @@ public class KillRingUtil {
      * @param start  start offset of the target text region within the given editor (inclusive)
      * @param end    end offset of the target text region within the given editor (exclusive)
      */
-    public static void cut(@Nonnull Editor editor, int start, int end) {
+    public static void cut(Editor editor, int start, int end) {
         copyToKillRing(editor, start, end, true);
         editor.getDocument().deleteString(start, end);
     }
@@ -51,7 +50,7 @@ public class KillRingUtil {
      * @param endOffset   end offset of the target region within the given editor
      * @param cut         flag that identifies if target text region will be cut from the given editor
      */
-    public static void copyToKillRing(@Nonnull Editor editor, int startOffset, int endOffset, boolean cut) {
+    public static void copyToKillRing(Editor editor, int startOffset, int endOffset, boolean cut) {
         Document document = editor.getDocument();
         String s = document.getCharsSequence().subSequence(startOffset, endOffset).toString();
         s = StringUtil.convertLineSeparators(s);

@@ -23,7 +23,6 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 import java.util.Map;
@@ -63,16 +62,16 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
     disposeWithTree();
   }
 
-  @Nonnull
+  
   @Override
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
-  public <T extends PersistentStateComponent<?>> T getOrCopy(@Nonnull ComponentManager componentManager, @Nonnull Class<T> clazz) {
+  public <T extends PersistentStateComponent<?>> T getOrCopy(ComponentManager componentManager, Class<T> clazz) {
     return (T)myStateInstances.computeIfAbsent(new ConfigurableComponentKey(componentManager, clazz), key -> {
       PersistentStateComponent<?> originalInstance = componentManager.getInstance(key.serviceKey());
       Object originalState = originalInstance.getState();
@@ -83,23 +82,23 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
     });
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T get(@Nonnull Class<T> key, @Nonnull Function<Project, T> factory) {
+  public <T> T get(Class<T> key, Function<Project, T> factory) {
     return (T)myInstances.computeIfAbsent(key, it -> factory.apply(myProject));
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
-  public <T extends EventListener> T getListenerMulticaster(@Nonnull Class<T> listenerClass) {
+  public <T extends EventListener> T getListenerMulticaster(Class<T> listenerClass) {
     return (T)myListeners.computeIfAbsent(listenerClass, EventDispatcher::create).getMulticaster();
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T extends EventListener> void addListener(@Nonnull Class<T> listenerClass, @Nonnull T listener) {
+  public <T extends EventListener> void addListener(Class<T> listenerClass, T listener) {
     myListeners.computeIfAbsent(listenerClass, EventDispatcher::create).addListener(listener);
   }
 

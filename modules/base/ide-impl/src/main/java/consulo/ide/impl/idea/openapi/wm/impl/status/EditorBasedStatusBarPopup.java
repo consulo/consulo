@@ -43,8 +43,7 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -62,7 +61,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     // store editor here to avoid expensive and EDT-only getSelectedEditor() retrievals
     private volatile Reference<Editor> myEditor = new WeakReference<>(null);
 
-    public EditorBasedStatusBarPopup(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory, boolean writeableFileRequired) {
+    public EditorBasedStatusBarPopup(Project project, StatusBarWidgetFactory factory, boolean writeableFileRequired) {
         super(project, factory);
         myWriteableFileRequired = writeableFileRequired;
         update = new Alarm(this);
@@ -71,7 +70,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
 
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 update();
                 showPopup(e);
                 return true;
@@ -85,7 +84,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     }
 
     @Override
-    public final void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+    public final void selectionChanged(FileEditorManagerEvent event) {
         if (myProject.getApplication().isUnitTestMode()) {
             return;
         }
@@ -123,12 +122,12 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     }
 
     @Override
-    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileOpened(FileEditorManager source, VirtualFile file) {
         fileChanged(file);
     }
 
     @Override
-    public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileClosed(FileEditorManager source, VirtualFile file) {
         fileChanged(file);
     }
 
@@ -144,13 +143,13 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         super.install(statusBar);
         registerCustomListeners();
         EditorFactory.getInstance().getEventMulticaster().addDocumentListener(
             new DocumentListener() {
                 @Override
-                public void documentChanged(@Nonnull DocumentEvent e) {
+                public void documentChanged(DocumentEvent e) {
                     Document document = e.getDocument();
                     updateForDocument(document);
                 }
@@ -163,7 +162,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
                 .connect(this)
                 .subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
                     @Override
-                    public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+                    public void propertyChanged(VirtualFilePropertyEvent event) {
                         if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
                             updateForFile(event.getFile());
                         }
@@ -197,7 +196,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         }
     }
 
-    private void showPopup(@Nonnull MouseEvent e) {
+    private void showPopup(MouseEvent e) {
         if (!actionEnabled || myPopupState.isRecentlyHidden()) {
             return; // do not show popup
         }
@@ -213,7 +212,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         }
     }
 
-    @Nonnull
+    
     protected DataContext getContext() {
         Editor editor = getEditor();
         DataContext parent = DataManager.getInstance().getDataContext((Component) myStatusBar);
@@ -225,7 +224,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             .put(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return myComponent;
@@ -244,11 +243,11 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         return actionEnabled;
     }
 
-    protected void updateToolTip(@Nonnull WidgetState state) {
+    protected void updateToolTip(WidgetState state) {
         StatusBarWidgetWrapper.setWidgetTooltip(myComponent, state.getToolTip(), state.getShortcutText());
     }
 
-    protected void updateComponent(@Nonnull WidgetState state) {
+    protected void updateComponent(WidgetState state) {
         updateToolTip(state);
 
         ObjectUtil.consumeIfCast(myComponent, TextPanel.WithIconAndArrows.class, textPanel -> {
@@ -329,7 +328,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         );
     }
 
-    protected void afterVisibleUpdate(@Nonnull WidgetState state) {
+    protected void afterVisibleUpdate(WidgetState state) {
     }
 
     protected static class WidgetState {
@@ -349,11 +348,11 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
          */
         public static final WidgetState NO_CHANGE_MAKE_VISIBLE = new WidgetState();
 
-        @Nonnull
+        
         protected final LocalizeValue toolTip;
         protected String shortcutText;
 
-        @Nonnull
+        
         private final LocalizeValue text;
         private final boolean actionEnabled;
         private Image icon;
@@ -362,7 +361,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             this(LocalizeValue.empty(), LocalizeValue.empty(), false);
         }
 
-        public WidgetState(@Nonnull LocalizeValue toolTip, @Nonnull LocalizeValue text, boolean actionEnabled) {
+        public WidgetState(LocalizeValue toolTip, LocalizeValue text, boolean actionEnabled) {
             this.toolTip = toolTip;
             this.text = text;
             this.actionEnabled = actionEnabled;
@@ -390,7 +389,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             return text.get();
         }
 
-        @Nonnull
+        
         public LocalizeValue getToolTip() {
             return toolTip;
         }
@@ -400,7 +399,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         }
     }
 
-    @Nonnull
+    
     protected abstract WidgetState getWidgetState(@Nullable VirtualFile file);
 
     /**
@@ -418,6 +417,6 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     protected void registerCustomListeners() {
     }
 
-    @Nonnull
-    protected abstract StatusBarWidget createInstance(@Nonnull Project project);
+    
+    protected abstract StatusBarWidget createInstance(Project project);
 }

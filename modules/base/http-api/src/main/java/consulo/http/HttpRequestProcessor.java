@@ -15,10 +15,9 @@
  */
 package consulo.http;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
 public interface HttpRequestProcessor<T> {
-    T process(@Nonnull HttpRequest request) throws IOException;
+    T process(HttpRequest request) throws IOException;
 }

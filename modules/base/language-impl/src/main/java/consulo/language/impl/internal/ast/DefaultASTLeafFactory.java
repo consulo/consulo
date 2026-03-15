@@ -27,8 +27,7 @@ import consulo.language.impl.psi.PsiCoreCommentImpl;
 import consulo.language.impl.psi.PsiWhiteSpaceImpl;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.version.LanguageVersion;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 /**
@@ -44,9 +43,9 @@ public class DefaultASTLeafFactory implements ASTLeafFactory {
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
-    public LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text) {
+    public LeafElement createLeaf(IElementType type, LanguageVersion languageVersion, CharSequence text) {
         ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, type.getLanguage());
         if (parserDefinition != null) {
             if (parserDefinition.getCommentTokens(languageVersion).contains(type)) {

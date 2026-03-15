@@ -27,7 +27,6 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.internal.VcsContextWrapper;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -43,7 +42,7 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VcsContext dataContext = VcsContextWrapper.createInstanceOn(e);
         if (myChildren == null) {
             DefaultActionGroup vcsGroupsGroup = (DefaultActionGroup) ActionManager.getInstance().getAction(VcsActionGroup.ID);

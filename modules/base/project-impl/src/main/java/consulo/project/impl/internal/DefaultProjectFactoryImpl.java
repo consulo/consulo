@@ -29,8 +29,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.DefaultProjectFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -51,9 +50,9 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   private boolean myDefaultProjectWasDisposed = false;
 
   @Inject
-  public DefaultProjectFactoryImpl(@Nonnull Application application,
-                                   @Nonnull ProjectManager projectManager,
-                                   @Nonnull ComponentBinding binding) {
+  public DefaultProjectFactoryImpl(Application application,
+                                   ProjectManager projectManager,
+                                   ComponentBinding binding) {
     myDefaultProject = new DefaultProjectImpl(application, projectManager, "", binding);
     myDefaultProject.initNotLazyServices();
     myDefaultProject.setInitialized();
@@ -65,7 +64,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   }
 
   @Override
-  @Nonnull
+  
   public Project getDefaultProject() {
     LOG.assertTrue(!myDefaultProjectWasDisposed, "Default project has been already disposed!");
     return myDefaultProject;

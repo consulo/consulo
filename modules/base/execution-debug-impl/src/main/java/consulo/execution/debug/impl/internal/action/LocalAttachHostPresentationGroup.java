@@ -20,7 +20,6 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.execution.debug.attach.XAttachHost;
 import consulo.execution.debug.attach.XAttachPresentationGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * from kotlin
@@ -34,33 +33,33 @@ public class LocalAttachHostPresentationGroup implements XAttachPresentationGrou
     return Integer.MAX_VALUE;
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupName() {
     return "";
   }
 
-  @Nonnull
+  
   @Override
-  public Image getProcessIcon(@Nonnull Project project, @Nonnull XAttachHost info, @Nonnull UserDataHolder dataHolder) {
+  public Image getProcessIcon(Project project, XAttachHost info, UserDataHolder dataHolder) {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
-  public String getProcessDisplayText(@Nonnull Project project, @Nonnull XAttachHost info, @Nonnull UserDataHolder dataHolder) {
+  public String getProcessDisplayText(Project project, XAttachHost info, UserDataHolder dataHolder) {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
-  public Image getItemIcon(@Nonnull Project project, @Nonnull XAttachHost info, @Nonnull UserDataHolder dataHolder) {
+  public Image getItemIcon(Project project, XAttachHost info, UserDataHolder dataHolder) {
     return Image.empty(16);
   }
 
-  @Nonnull
+  
   @Override
-  public String getItemDisplayText(@Nonnull Project project, @Nonnull XAttachHost info, @Nonnull UserDataHolder dataHolder) {
+  public String getItemDisplayText(Project project, XAttachHost info, UserDataHolder dataHolder) {
     return "Local Host";
   }
 

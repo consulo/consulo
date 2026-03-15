@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.NativeFileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class NativeFileTypeFactory extends FileTypeFactory {
   @Override
-  public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+  public void createFileTypes(FileTypeConsumer consumer) {
     consumer.consume(NativeFileType.INSTANCE, "doc;docx;xls;xlsx;ppt;pptx;mdb;vsd;pdf;hlp;chm;odt");
   }
 }

@@ -45,8 +45,7 @@ import consulo.util.collection.*;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -119,19 +118,19 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         addClickListener(myLayoutComponent);
     }
 
-    private void runOnProgressRelatedChange(@Nonnull Runnable runnable, Disposable parentDisposable) {
+    private void runOnProgressRelatedChange(Runnable runnable, Disposable parentDisposable) {
         synchronized (myOriginals) {
             if (!myDisposed) {
                 MessageBusConnection connection = Application.get().getMessageBus().connect(parentDisposable);
                 connection.subscribe(PowerSaveModeListener.class, () -> UIUtil.invokeLaterIfNeeded(runnable));
                 connection.subscribe(ProgressSuspenderListener.class, new ProgressSuspenderListener() {
                     @Override
-                    public void suspendableProgressAppeared(@Nonnull ProgressSuspender suspender) {
+                    public void suspendableProgressAppeared(ProgressSuspender suspender) {
                         UIUtil.invokeLaterIfNeeded(runnable);
                     }
 
                     @Override
-                    public void suspendedStatusChanged(@Nonnull ProgressSuspender suspender) {
+                    public void suspendedStatusChanged(ProgressSuspender suspender) {
                         UIUtil.invokeLaterIfNeeded(runnable);
                     }
                 });
@@ -171,13 +170,13 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return this;
     }
 
-    @Nonnull
+    
     public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
         synchronized (myOriginals) {
             if (myOriginals.isEmpty()) {
@@ -194,7 +193,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     @RequiredUIAccess
-    public void addProgress(@Nonnull ProgressIndicator original, @Nonnull TaskInfo info) {
+    public void addProgress(ProgressIndicator original, TaskInfo info) {
         synchronized (myOriginals) {
             boolean veryFirst = !hasProgressIndicators();
 
@@ -229,7 +228,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     @RequiredUIAccess
-    private void removeProgress(@Nonnull MyInlineProgressIndicator progress) {
+    private void removeProgress(MyInlineProgressIndicator progress) {
         synchronized (myOriginals) {
             if (!myInline2Original.containsKey(progress)) {
                 return; // already disposed
@@ -265,7 +264,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         Disposer.dispose(progress);
     }
 
-    private ProgressIndicatorEx removeFromMaps(@Nonnull MyInlineProgressIndicator progress) {
+    private ProgressIndicatorEx removeFromMaps(MyInlineProgressIndicator progress) {
         ProgressIndicatorEx original = myInline2Original.get(progress);
 
         myInline2Original.remove(progress);
@@ -335,7 +334,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         repaint();
     }
 
-    @Nonnull
+    
     private String getMultiProgressLinkText() {
         ProgressIndicatorEx latest = getLatestProgress();
         String latestText = latest == null ? null : latest.getText();
@@ -356,7 +355,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     @RequiredUIAccess
-    private void buildInInlineIndicator(@Nonnull MyInlineProgressIndicator inline) {
+    private void buildInInlineIndicator(MyInlineProgressIndicator inline) {
         removeAll();
 
         JRootPane pane = getRootPane();
@@ -413,9 +412,9 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         return () -> SwingUtilities.invokeLater(balloon::hide);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    private MyInlineProgressIndicator createInlineDelegate(@Nonnull TaskInfo info, @Nonnull ProgressIndicatorEx original, boolean compact) {
+    private MyInlineProgressIndicator createInlineDelegate(TaskInfo info, ProgressIndicatorEx original, boolean compact) {
         Collection<MyInlineProgressIndicator> inlines = myOriginal2Inlines.get(original);
         if (inlines != null) {
             for (MyInlineProgressIndicator eachInline : inlines) {
@@ -467,7 +466,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "progress";
@@ -480,7 +479,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
     }
 
     private class MyInlineProgressIndicator extends InlineProgressIndicator {
@@ -491,7 +490,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 ProgressSuspender suspender = getSuspender();
                 if (suspender == null) {
                     LOG.assertTrue(myOriginal == null, "The process is expected to be finished at this point");
@@ -508,7 +507,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
 
                 ProgressSuspender suspender = getSuspender();
@@ -527,7 +526,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         private ProgressIndicatorEx myOriginal;
 
         @RequiredUIAccess
-        MyInlineProgressIndicator(boolean compact, @Nonnull TaskInfo task, @Nonnull ProgressIndicatorEx original) {
+        MyInlineProgressIndicator(boolean compact, TaskInfo task, ProgressIndicatorEx original) {
             super(compact, task);
             myOriginal = original;
             original.addStateDelegate(this);
@@ -542,7 +541,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             runOnProgressRelatedChange(this::queueProgressUpdate, this);
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getTextValue() {
             LocalizeValue textValue = super.getTextValue();
@@ -575,7 +574,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
-        public void finish(@Nonnull TaskInfo task) {
+        public void finish(TaskInfo task) {
             super.finish(task);
             queueRunningUpdate(() -> removeProgress(this));
         }
@@ -601,7 +600,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
-        protected void queueRunningUpdate(@RequiredUIAccess @Nonnull final Runnable update) {
+        protected void queueRunningUpdate(@RequiredUIAccess final Runnable update) {
             myUpdateQueue.queue(new Update(new Object(), false, 0) {
                 @Override
                 public void run() {
@@ -637,7 +636,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
-    @Nonnull
+    
     private Set<InlineProgressIndicator> getCurrentInlineIndicators() {
         synchronized (myOriginals) {
             return myInline2Original.keySet();

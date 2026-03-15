@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -43,7 +42,7 @@ public class IgnoredFilesComponent {
   private final Lock myWriteLock = myLock.writeLock();
   private final Project myProject;
 
-  public IgnoredFilesComponent(@Nonnull Project project, boolean registerListener) {
+  public IgnoredFilesComponent(Project project, boolean registerListener) {
     myProject = project;
     myFilesToIgnore = new LinkedHashSet<>();
     myFilesMap = new HashMap<>();
@@ -51,7 +50,7 @@ public class IgnoredFilesComponent {
     if (registerListener) {
       project.getMessageBus().connect(project).subscribe(BulkFileListener.class, new BulkFileListener() {
         @Override
-        public void after(@Nonnull List<? extends VFileEvent> events) {
+        public void after(List<? extends VFileEvent> events) {
           if (hasSignificantChanges(events)) {
             resetCaches();
           }
@@ -65,7 +64,7 @@ public class IgnoredFilesComponent {
     myDirectoriesManuallyRemovedFromIgnored = new HashSet<>();
   }
 
-  public IgnoredFilesComponent(@Nonnull IgnoredFilesComponent other) {
+  public IgnoredFilesComponent(IgnoredFilesComponent other) {
     myProject = other.myProject;
     myFilesToIgnore = new LinkedHashSet<>(other.myFilesToIgnore);
     myFilesMap = new HashMap<>(other.myFilesMap);
@@ -92,7 +91,7 @@ public class IgnoredFilesComponent {
     myDirectoriesManuallyRemovedFromIgnored.addAll(directories);
   }
 
-  public void addIgnoredDirectoryImplicitly(@Nonnull String path, @Nonnull Project project) {
+  public void addIgnoredDirectoryImplicitly(String path, Project project) {
     myWriteLock.lock();
     try {
       if (myDirectoriesManuallyRemovedFromIgnored.contains(path) || myDirectoriesManuallyRemovedFromIgnored.contains(path + "/")) {
@@ -118,7 +117,7 @@ public class IgnoredFilesComponent {
     }
   }
 
-  private void addIgnoredFiles(@Nonnull IgnoredFileBean[] filesToIgnore) {
+  private void addIgnoredFiles(IgnoredFileBean[] filesToIgnore) {
     for (IgnoredFileBean bean : filesToIgnore) {
       if (IgnoreSettingsType.FILE.equals(bean.getType())) {
         Project project = bean.getProject();
@@ -165,7 +164,7 @@ public class IgnoredFilesComponent {
     }
   }
 
-  @Nonnull
+  
   public IgnoredFileBean[] getFilesToIgnore() {
     myReadLock.lock();
     try {
@@ -188,7 +187,7 @@ public class IgnoredFilesComponent {
     }
   }
 
-  public boolean isIgnoredFile(@Nonnull FilePath filePath) {
+  public boolean isIgnoredFile(FilePath filePath) {
     myReadLock.lock();
     try {
       if (myFilesToIgnore.isEmpty()) return false;

@@ -24,7 +24,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,7 +38,7 @@ public class DesktopTipOfDayManager implements TipOfDayManager {
   private AtomicBoolean myAlreadyShow = new AtomicBoolean();
 
   @Override
-  public void scheduleShow(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
+  public void scheduleShow(UIAccess uiAccess, Project project) {
     if (myAlreadyShow.compareAndSet(false, true)) {
       Future<?> future = AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
         if (project.isDisposed()) {

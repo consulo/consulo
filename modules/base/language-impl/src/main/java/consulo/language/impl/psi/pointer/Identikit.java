@@ -20,8 +20,7 @@ import consulo.language.impl.internal.psi.pointer.IdentikitImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,12 +30,12 @@ public interface Identikit {
   public interface ByType extends Identikit {
   }
   
-  public static ByType fromPsi(@Nonnull PsiElement element, @Nonnull Language fileLanguage) {
+  public static ByType fromPsi(PsiElement element, Language fileLanguage) {
     return IdentikitImpl.fromPsi(element, fileLanguage); 
   }
 
   @Nullable
-  PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset);
+  PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset);
 
   @Nullable
   Language getFileLanguage();

@@ -18,7 +18,6 @@ package consulo.versionControlSystem;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
-import jakarta.annotation.Nonnull;
 
 /**
  * The information about a single problem found during pre-checkin code analysis.
@@ -28,20 +27,20 @@ import jakarta.annotation.Nonnull;
  * @see CodeSmellDetector#showCodeSmellErrors(java.util.List)
  */
 public final class CodeSmellInfo {
-  @Nonnull
+  
   private final Document myDocument;
   private final String myDescription;
   private final TextRange myTextRange;
   private final HighlightSeverity mySeverity;
 
-  public CodeSmellInfo(@Nonnull Document document, String description, TextRange textRange, HighlightSeverity severity) {
+  public CodeSmellInfo(Document document, String description, TextRange textRange, HighlightSeverity severity) {
     myDocument = document;
     myDescription = description;
     myTextRange = textRange;
     mySeverity = severity;
   }
 
-  @Nonnull
+  
   public Document getDocument() {
     return myDocument;
   }

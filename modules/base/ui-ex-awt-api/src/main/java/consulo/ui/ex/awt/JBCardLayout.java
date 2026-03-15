@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.wm.IdeFocusManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,11 +78,11 @@ public class JBCardLayout extends CardLayout {
     }
   }
 
-  public void swipe(@Nonnull Container parent, @Nonnull String name, @Nonnull SwipeDirection direction) {
+  public void swipe(Container parent, String name, SwipeDirection direction) {
     swipe(parent, name, direction, null);
   }
 
-  public void swipe(@Nonnull final Container parent, @Nonnull final String name, @Nonnull SwipeDirection direction, final @Nullable Runnable onDone) {
+  public void swipe(final Container parent, final String name, SwipeDirection direction, final @Nullable Runnable onDone) {
     stopSwipeIfNeed();
     mySwipeFrom = findVisible(parent);
     mySwipeTo = myMap.get(name);

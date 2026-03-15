@@ -17,8 +17,7 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,7 +26,7 @@ import java.util.Map;
 @DeprecationInfo("Almost unused - drop later")
 public interface Queryable {
 
-  void putInfo(@Nonnull Map<String, String> info);
+  void putInfo(Map<String, String> info);
 
   class PrintInfo {
     private final String[] myIdKeys;
@@ -49,7 +48,7 @@ public interface Queryable {
 
   class Util {
     @Nullable
-    public static String print(@Nonnull Queryable ui, @Nullable PrintInfo printInfo, @Nullable Contributor contributor) {
+    public static String print(Queryable ui, @Nullable PrintInfo printInfo, @Nullable Contributor contributor) {
       PrintInfo print = printInfo != null ? printInfo : new PrintInfo();
 
       Map<String, String> map = new LinkedHashMap<>();
@@ -90,13 +89,13 @@ public interface Queryable {
     }
 
     @Nullable
-    public static String print(@Nonnull Queryable ui, @Nullable PrintInfo printInfo) {
+    public static String print(Queryable ui, @Nullable PrintInfo printInfo) {
       return print(ui, printInfo, null);
     }
   }
 
   interface Contributor {
-    void apply(@Nonnull Map<String, String> info);
+    void apply(Map<String, String> info);
   }
 
 }

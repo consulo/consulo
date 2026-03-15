@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log;
 
 import consulo.versionControlSystem.FilePath;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -31,6 +30,6 @@ public interface VcsLogStructureFilter extends VcsLogDetailsFilter {
    * <p>That is: the commit A (made in the given VCS root) modifying file f.txt matches this filter,
    * if this method returns a set which includes a folder containing f.txt, or the file f.txt itself.</p>
    */
-  @Nonnull
+  
   Collection<FilePath> getFiles();
 }

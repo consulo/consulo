@@ -29,8 +29,7 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.internal.ColorPageWeights;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -265,13 +264,13 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
     DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT
   );
 
-  @Nonnull
+  
   @Override
   public SyntaxHighlighter getHighlighter() {
     return new DefaultSyntaxHighlighter();
   }
 
-  @Nonnull
+  
   @Override
   public String getDemoText() {
     return
@@ -321,19 +320,19 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
     return TAG_HIGHLIGHTING_MAP;
   }
 
-  @Nonnull
+  
   @Override
   public AttributesDescriptor[] getAttributeDescriptors() {
     return ArrayUtil.append(ATTRIBUTES_DESCRIPTORS, INLINE_PARAMETER_HINT_DESCRIPTOR);
   }
 
-  @Nonnull
+  
   @Override
   public ColorDescriptor[] getColorDescriptors() {
     return new ColorDescriptor[0];
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return ConfigurableLocalize.optionsLanguageDefaultsDisplayName();

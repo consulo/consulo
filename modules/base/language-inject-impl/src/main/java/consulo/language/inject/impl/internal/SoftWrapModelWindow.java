@@ -4,8 +4,7 @@ package consulo.language.inject.impl.internal;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.SoftWrapChangeListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -25,17 +24,17 @@ class SoftWrapModelWindow implements SoftWrapModelEx {
   }
 
   @Override
-  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     return 0;
   }
 
   @Override
-  public int getMinDrawingWidthInPixels(@Nonnull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidthInPixels(SoftWrapDrawingType drawingType) {
     return 0;
   }
 
   @Override
-  public boolean addSoftWrapChangeListener(@Nonnull SoftWrapChangeListener listener) {
+  public boolean addSoftWrapChangeListener(SoftWrapChangeListener listener) {
     return false;
   }
 
@@ -64,13 +63,13 @@ class SoftWrapModelWindow implements SoftWrapModelEx {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends SoftWrap> getSoftWrapsForRange(int start, int end) {
     return Collections.emptyList();
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends SoftWrap> getSoftWrapsForLine(int documentLine) {
     return Collections.emptyList();
@@ -86,12 +85,12 @@ class SoftWrapModelWindow implements SoftWrapModelEx {
   }
 
   @Override
-  public boolean isInsideSoftWrap(@Nonnull VisualPosition position) {
+  public boolean isInsideSoftWrap(VisualPosition position) {
     return false;
   }
 
   @Override
-  public boolean isInsideOrBeforeSoftWrap(@Nonnull VisualPosition visual) {
+  public boolean isInsideOrBeforeSoftWrap(VisualPosition visual) {
     return false;
   }
 

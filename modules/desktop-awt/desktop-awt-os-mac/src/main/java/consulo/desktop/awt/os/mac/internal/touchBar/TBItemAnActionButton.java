@@ -5,8 +5,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Toggleable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -15,10 +14,10 @@ import java.awt.event.KeyEvent;
 import static java.awt.event.ComponentEvent.COMPONENT_FIRST;
 
 final class TBItemAnActionButton extends TBItemButton {
-    private @Nonnull AnAction myAnAction;
+    private AnAction myAnAction;
     private @Nullable Component myComponent;
 
-    TBItemAnActionButton(@Nullable ItemListener listener, @Nonnull AnAction action, @Nullable TouchBarStats.AnActionStats stats) {
+    TBItemAnActionButton(@Nullable ItemListener listener, AnAction action, TouchBarStats.@Nullable AnActionStats stats) {
         super(listener, stats);
         myAnAction = action;
         setAction(this::_performAction, true);
@@ -37,12 +36,12 @@ final class TBItemAnActionButton extends TBItemButton {
         myComponent = component;
     }
 
-    @Nonnull
+   
     AnAction getAnAction() {
         return myAnAction;
     }
 
-    void setAnAction(@Nonnull AnAction newAction) {
+    void setAnAction(AnAction newAction) {
         myAnAction = newAction;
     }
 

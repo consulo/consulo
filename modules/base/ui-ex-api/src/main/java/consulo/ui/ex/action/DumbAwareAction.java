@@ -20,8 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -30,50 +29,50 @@ import java.util.function.Consumer;
  */
 public abstract class DumbAwareAction extends AnAction implements DumbAware {
 
-    @Nonnull
-    public static DumbAwareAction create(@RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+    
+    public static DumbAwareAction create(@RequiredUIAccess Consumer<? super AnActionEvent> actionPerformed) {
         return new DumbAwareAction() {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 actionPerformed.accept(e);
             }
         };
     }
 
-    @Nonnull
+    
     @Deprecated
     public static DumbAwareAction create(@Nullable String text,
                                          @Nullable Image image,
-                                         @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+                                         @RequiredUIAccess Consumer<? super AnActionEvent> actionPerformed) {
         return new DumbAwareAction(text, null, image) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 actionPerformed.accept(e);
             }
         };
     }
 
-    @Nonnull
+    
     @Deprecated
-    public static DumbAwareAction create(@Nullable String text, @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+    public static DumbAwareAction create(@Nullable String text, @RequiredUIAccess Consumer<? super AnActionEvent> actionPerformed) {
         return new DumbAwareAction(text) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 actionPerformed.accept(e);
             }
         };
     }
 
-    @Nonnull
-    public static DumbAwareAction create(@Nonnull LocalizeValue text,
-                                         @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+    
+    public static DumbAwareAction create(LocalizeValue text,
+                                         @RequiredUIAccess Consumer<? super AnActionEvent> actionPerformed) {
         return new DumbAwareAction(text) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 actionPerformed.accept(e);
             }
         };
@@ -96,15 +95,15 @@ public abstract class DumbAwareAction extends AnAction implements DumbAware {
         super(text, description, icon);
     }
 
-    protected DumbAwareAction(@Nonnull LocalizeValue text) {
+    protected DumbAwareAction(LocalizeValue text) {
         super(text);
     }
 
-    protected DumbAwareAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected DumbAwareAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected DumbAwareAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected DumbAwareAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 }

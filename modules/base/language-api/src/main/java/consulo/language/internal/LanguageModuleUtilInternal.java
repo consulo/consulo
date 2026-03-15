@@ -28,8 +28,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +41,7 @@ import java.util.Set;
 public class LanguageModuleUtilInternal {
   @Nullable
   @RequiredReadAction
-  public static Module findModuleForPsiElement(@Nonnull PsiElement element) {
+  public static Module findModuleForPsiElement(PsiElement element) {
     if (!element.isValid()) return null;
 
     Project project = element.getProject();

@@ -30,8 +30,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Animator;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -109,7 +108,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public Rectangle getVisibleArea() {
@@ -117,7 +116,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         return myEditor.getScrollPane().getViewport().getViewRect();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public Rectangle getVisibleAreaOnScrollingFinished() {
@@ -131,7 +130,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     @Override
     @RequiredUIAccess
-    public void scrollToCaret(@Nonnull ScrollType scrollType) {
+    public void scrollToCaret(ScrollType scrollType) {
         assertIsDispatchThread();
         myEditor.validateSize();
 
@@ -142,8 +141,8 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         });
     }
 
-    @Nonnull
-    private Point stickyPanelAdjust(@Nonnull Point targetLocation, @Nonnull Rectangle viewRect) {
+    
+    private Point stickyPanelAdjust(Point targetLocation, Rectangle viewRect) {
         if (myEditor instanceof RealEditor editor) {
             int height = editor.getStickyLinesPanelHeight();
             if (height > 0) {
@@ -155,13 +154,13 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @RequiredUIAccess
-    private void scrollTo(@Nonnull VisualPosition pos, @Nonnull ScrollType scrollType) {
+    private void scrollTo(VisualPosition pos, ScrollType scrollType) {
         Point targetLocation = myEditor.visualPositionToXY(pos);
         scrollTo(targetLocation, scrollType);
     }
 
     @RequiredUIAccess
-    private void scrollTo(@Nonnull Point targetLocation, @Nonnull ScrollType scrollType) {
+    private void scrollTo(Point targetLocation, ScrollType scrollType) {
         AnimatedScrollingRunnable canceledThread = cancelAnimatedScrolling(false);
         Rectangle viewRect = canceledThread != null ? canceledThread.getTargetVisibleArea() : getVisibleArea();
 
@@ -176,7 +175,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     @Override
     @RequiredUIAccess
-    public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
+    public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
         assertIsDispatchThread();
 
         AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
@@ -189,7 +188,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     @Override
     @RequiredUIAccess
-    public void runActionOnScrollingFinished(@Nonnull Runnable action) {
+    public void runActionOnScrollingFinished(Runnable action) {
         assertIsDispatchThread();
 
         if (myCurrentAnimationRequest != null) {
@@ -543,7 +542,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
             myAnimator.resume();
         }
 
-        @Nonnull
+        
         @RequiredUIAccess
         public Rectangle getTargetVisibleArea() {
             Rectangle viewRect = getVisibleArea();

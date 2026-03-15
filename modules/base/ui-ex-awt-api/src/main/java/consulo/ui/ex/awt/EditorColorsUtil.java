@@ -20,10 +20,8 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Function;
@@ -39,13 +37,13 @@ public class EditorColorsUtil {
    * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
    * depending on the current LAF and current editor color scheme.
    */
-  @Nonnull
+  
   public static EditorColorsScheme getGlobalOrDefaultColorScheme() {
     return getColorSchemeForBackground(null);
   }
 
   @Nullable
-  public static ColorValue getGlobalOrDefaultColor(@Nonnull EditorColorKey colorKey) {
+  public static ColorValue getGlobalOrDefaultColor(EditorColorKey colorKey) {
     return getColorSchemeForBackground(null).getColor(colorKey);
   }
 
@@ -61,19 +59,19 @@ public class EditorColorsUtil {
    * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
    * depending on the current LAF, current editor color scheme and the component background.
    */
-  @Nonnull
+  
   public static EditorColorsScheme getColorSchemeForComponent(@Nullable JComponent component) {
     return getColorSchemeForBackground(component != null ? TargetAWT.from(component.getBackground()) : null);
   }
 
-  @Nonnull
+  
   @Deprecated
-  public static EditorColorKey createColorKey(@NonNls @Nonnull String name, @Nonnull Color defaultColor) {
+  public static EditorColorKey createColorKey(String name, Color defaultColor) {
     return EditorColorKey.createColorKey(name, TargetAWT.from(JBColor.namedColor(name, defaultColor)));
   }
 
   @Nullable
-  public static ColorValue getColor(@Nullable Component component, @Nonnull EditorColorKey key) {
+  public static ColorValue getColor(@Nullable Component component, EditorColorKey key) {
     Function<EditorColorKey, ColorValue> function = UIUtil.getClientProperty(component, EditorColorKey.FUNCTION_KEY);
     ColorValue color = function == null ? null : function.apply(key);
     return color != null ? color : key.getDefaultColorValue();

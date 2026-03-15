@@ -30,7 +30,6 @@ import consulo.externalService.update.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class InstallPluginRestHandler extends JsonGetRequestHandler {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public JsonResponse handle(HttpRequest request) {
         String pluginIdStr = request == null ? null : request.getParameterValue("pluginId");

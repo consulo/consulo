@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.EnumComboBoxModel;
 import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
 import consulo.util.collection.ListWithSelection;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -59,7 +58,7 @@ public class ComboBoxTableCellEditor extends DefaultCellEditor {
     //noinspection unchecked
     comboBox.setRenderer(new ColoredListCellRenderer() {
       @Override
-      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
         setIcon(value instanceof Iconable ? ((Iconable)value).getIcon(Iconable.ICON_FLAG_VISIBILITY) : null);
       }
     });

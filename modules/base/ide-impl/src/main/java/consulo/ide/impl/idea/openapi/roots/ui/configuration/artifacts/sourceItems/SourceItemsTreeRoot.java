@@ -21,7 +21,6 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,7 +35,7 @@ public class SourceItemsTreeRoot extends SourceItemNodeBase {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public Object[] getEqualityObjects() {
     return new Object[]{"root"};
@@ -54,7 +53,7 @@ public class SourceItemsTreeRoot extends SourceItemNodeBase {
     }
 
     @Override
-    public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+    public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
     }
 

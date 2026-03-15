@@ -19,8 +19,7 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Comparator;
 
 /**
@@ -35,24 +34,24 @@ public interface XAttachPresentationGroup<T> extends Comparator<T> {
    */
   int getOrder();
 
-  @Nonnull
+  
   String getGroupName();
 
   /**
    * @deprecated Use {@link #getItemIcon(Project, Object, UserDataHolder)} (will be removed in 2020.1)
    */
   @Deprecated
-  @Nonnull
+  
   //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
-  Image getProcessIcon(@Nonnull Project project, @Nonnull T info, @Nonnull UserDataHolder dataHolder);
+  Image getProcessIcon(Project project, T info, UserDataHolder dataHolder);
 
   /**
    * @param dataHolder you may put your specific data into the holder at previous step in {@link XAttachDebuggerProvider#getAvailableDebuggers}
    *                   and use it for presentation
    * @return an icon to be shown in popup menu for your item, described by info
    */
-  @Nonnull
-  default Image getItemIcon(@Nonnull Project project, @Nonnull T info, @Nonnull UserDataHolder dataHolder) {
+  
+  default Image getItemIcon(Project project, T info, UserDataHolder dataHolder) {
     return getProcessIcon(project, info, dataHolder);
   }
 
@@ -60,17 +59,17 @@ public interface XAttachPresentationGroup<T> extends Comparator<T> {
    * @deprecated Use {@link #getItemDisplayText(Project, Object, UserDataHolder)} (will be removed in 2020.1)
    */
   @Deprecated
-  @Nonnull
+  
   //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
-  String getProcessDisplayText(@Nonnull Project project, @Nonnull T info, @Nonnull UserDataHolder dataHolder);
+  String getProcessDisplayText(Project project, T info, UserDataHolder dataHolder);
 
   /**
    * @param dataHolder you may put your specific data into the holder at previous step in {@link XAttachDebuggerProvider#getAvailableDebuggers}
    *                   and use it for presentation
    * @return a text to be shown on your item, described by info
    */
-  @Nonnull
-  default String getItemDisplayText(@Nonnull Project project, @Nonnull T info, @Nonnull UserDataHolder dataHolder) {
+  
+  default String getItemDisplayText(Project project, T info, UserDataHolder dataHolder) {
     return getProcessDisplayText(project, info, dataHolder);
   }
 
@@ -80,7 +79,7 @@ public interface XAttachPresentationGroup<T> extends Comparator<T> {
    * @return a description of process to be shown in tooltip of your item, described by info
    */
   @Nullable
-  default String getItemDescription(@Nonnull Project project, @Nonnull T info, @Nonnull UserDataHolder dataHolder) {
+  default String getItemDescription(Project project, T info, UserDataHolder dataHolder) {
     return null;
   }
 
@@ -93,7 +92,7 @@ public interface XAttachPresentationGroup<T> extends Comparator<T> {
    */
   @Deprecated
   //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
-  default int compare(@Nonnull Project project, @Nonnull T a, @Nonnull T b, @Nonnull UserDataHolder dataHolder) {
+  default int compare(Project project, T a, T b, UserDataHolder dataHolder) {
     return compare(a, b);
   }
 }

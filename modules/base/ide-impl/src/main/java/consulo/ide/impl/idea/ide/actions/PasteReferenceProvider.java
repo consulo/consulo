@@ -21,8 +21,7 @@ import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.Transferable;
 import java.util.function.Supplier;
@@ -31,7 +30,7 @@ import java.util.function.Supplier;
 public class PasteReferenceProvider implements CustomPasteProvider {
     @Override
     @RequiredUIAccess
-    public void performPaste(@Nonnull DataContext dataContext) {
+    public void performPaste(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         Editor editor = dataContext.getData(Editor.KEY);
         if (project == null || editor == null) {
@@ -52,14 +51,14 @@ public class PasteReferenceProvider implements CustomPasteProvider {
     }
 
     @Override
-    public boolean isPastePossible(@Nonnull DataContext dataContext) {
+    public boolean isPastePossible(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         Editor editor = dataContext.getData(Editor.KEY);
         return project != null && editor != null && getCopiedFqn(dataContext) != null;
     }
 
     @Override
-    public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
+    public boolean isPasteEnabled(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         String fqn = getCopiedFqn(dataContext);
         return project != null && fqn != null && QualifiedNameProviderUtil.qualifiedNameToElement(fqn, project) != null;

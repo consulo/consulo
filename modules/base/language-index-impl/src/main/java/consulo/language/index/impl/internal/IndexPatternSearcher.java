@@ -30,7 +30,6 @@ import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.CharSequenceSubSequence;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -50,8 +49,8 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
     @Override
     @RequiredReadAction
     public void processQuery(
-        @Nonnull IndexPatternSearch.SearchParameters queryParameters,
-        @Nonnull Predicate<? super IndexPatternOccurrence> consumer
+        IndexPatternSearch.SearchParameters queryParameters,
+        Predicate<? super IndexPatternOccurrence> consumer
     ) {
         PsiFile file = queryParameters.getFile();
         VirtualFile virtualFile = file.getVirtualFile();

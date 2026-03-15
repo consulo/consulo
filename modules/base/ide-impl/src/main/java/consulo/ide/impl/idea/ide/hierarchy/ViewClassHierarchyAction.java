@@ -20,7 +20,6 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -42,7 +41,7 @@ public final class ViewClassHierarchyAction extends ChangeViewTypeActionBase {
 
     @Override
     @RequiredUIAccess
-    public final void update(@Nonnull AnActionEvent event) {
+    public final void update(AnActionEvent event) {
         super.update(event);
         TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
         event.getPresentation().setEnabled(browser != null && !browser.isInterface());

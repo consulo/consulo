@@ -10,8 +10,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +27,7 @@ public class EditorScrollingPositionKeeper implements Disposable {
   private int myViewportShift;
   private RangeMarker myTopLeftCornerMarker;
 
-  public EditorScrollingPositionKeeper(@Nonnull Editor editor) {
+  public EditorScrollingPositionKeeper(Editor editor) {
     myEditor = editor;
   }
 
@@ -78,7 +77,7 @@ public class EditorScrollingPositionKeeper implements Disposable {
   /**
    * Performs given operation, restoring editor scrolling position afterwards.
    */
-  public static void perform(@Nullable Editor editor, boolean stopAnimation, @Nonnull Runnable operation) {
+  public static void perform(@Nullable Editor editor, boolean stopAnimation, Runnable operation) {
     if (editor == null) {
       operation.run();
       return;
@@ -97,7 +96,7 @@ public class EditorScrollingPositionKeeper implements Disposable {
   /**
    * Performs given operation, restoring scrolling position in all document's editors afterwards.
    */
-  public static void perform(@Nullable Document document, boolean stopAnimation, @Nonnull Runnable runnable) {
+  public static void perform(@Nullable Document document, boolean stopAnimation, Runnable runnable) {
     EditorScrollingPositionKeeper.ForDocument keeper = new EditorScrollingPositionKeeper.ForDocument(document);
     keeper.savePosition();
     try {

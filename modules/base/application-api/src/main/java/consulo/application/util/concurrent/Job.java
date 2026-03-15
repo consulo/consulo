@@ -15,7 +15,6 @@
  */
 package consulo.application.util.concurrent;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -43,7 +42,7 @@ public interface Job<T> {
     return NULL_JOB;
   }
 
-  @Nonnull
+  
   Job NULL_JOB = new Job() {
     @Override
     public boolean isDone() {

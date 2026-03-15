@@ -19,8 +19,7 @@ package consulo.versionControlSystem;
 import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.root.VcsRootSettings;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -34,15 +33,15 @@ public class VcsDirectoryMapping {
   private String myVcs;
   private VcsRootSettings myRootSettings;
 
-  @Nonnull
-  public static VcsDirectoryMapping createDefault(@Nonnull String vcs) {
+  
+  public static VcsDirectoryMapping createDefault(String vcs) {
     return new VcsDirectoryMapping("", vcs);
   }
 
   public VcsDirectoryMapping() {
   }
 
-  public VcsDirectoryMapping(@Nonnull String directory, String vcs) {
+  public VcsDirectoryMapping(String directory, String vcs) {
     setDirectory(directory);
     myVcs = vcs;
   }
@@ -53,7 +52,7 @@ public class VcsDirectoryMapping {
     myRootSettings = rootSettings;
   }
 
-  @Nonnull
+  
   public String getDirectory() {
     return myDirectory;
   }
@@ -81,7 +80,7 @@ public class VcsDirectoryMapping {
     myVcs = vcs;
   }
 
-  public void setDirectory(@Nonnull String directory) {
+  public void setDirectory(String directory) {
     myDirectory = directory;
     initSystemIndependentPath();
   }

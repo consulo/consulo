@@ -16,11 +16,10 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 public class FullIntList implements IntList {
 
-  public static FullIntList newInstance(@Nonnull IntList delegateList) {
+  public static FullIntList newInstance(IntList delegateList) {
     int[] list = new int[delegateList.size()];
     for (int i = 0; i < list.length; i++) {
       list[i] = delegateList.get(i);

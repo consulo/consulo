@@ -21,8 +21,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -61,7 +60,7 @@ public class TipDialog extends DialogWrapper {
   }
 
   @Override
-  @Nonnull
+  
   protected Action[] createActions() {
     return new Action[]{new PreviousTipAction(), new NextTipAction(), getCancelAction()};
   }

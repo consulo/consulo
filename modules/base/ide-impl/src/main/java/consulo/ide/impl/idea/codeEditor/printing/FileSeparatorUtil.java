@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.LineMarkersPass;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ import java.util.List;
  * @since 2008-01-25
  */
 public class FileSeparatorUtil {
-  @Nonnull
+  
   @RequiredReadAction
   public static List<LineMarkerInfo> getFileSeparators(PsiFile file, Document document) {
     List<LineMarkerInfo> result = new ArrayList<>();
@@ -45,7 +44,7 @@ public class FileSeparatorUtil {
     return result;
   }
 
-  public static int getDisplayLine(@Nonnull LineMarkerInfo lineMarkerInfo, @Nonnull Document document) {
+  public static int getDisplayLine(LineMarkerInfo lineMarkerInfo, Document document) {
     int offset = lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? lineMarkerInfo.startOffset : lineMarkerInfo.endOffset;
     return document.getLineNumber(Math.min(document.getTextLength(), Math.max(0, offset))) +
       (lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? 0 : 1);

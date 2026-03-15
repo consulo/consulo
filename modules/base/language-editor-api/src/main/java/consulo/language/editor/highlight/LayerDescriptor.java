@@ -18,8 +18,7 @@ package consulo.language.editor.highlight;
 
 import consulo.colorScheme.TextAttributesKey;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -29,21 +28,21 @@ public class LayerDescriptor {
   private final String myTokenSeparator;
   private final TextAttributesKey myBackground;
 
-  public LayerDescriptor(@Nonnull SyntaxHighlighter layerHighlighter, @Nonnull String tokenSeparator, @Nullable TextAttributesKey background) {
+  public LayerDescriptor(SyntaxHighlighter layerHighlighter, String tokenSeparator, @Nullable TextAttributesKey background) {
     myBackground = background;
     myLayerHighlighter = layerHighlighter;
     myTokenSeparator = tokenSeparator;
   }
-  public LayerDescriptor(@Nonnull SyntaxHighlighter layerHighlighter, @Nonnull String tokenSeparator) {
+  public LayerDescriptor(SyntaxHighlighter layerHighlighter, String tokenSeparator) {
     this(layerHighlighter, tokenSeparator, null);
   }
 
-  @Nonnull
+  
   public SyntaxHighlighter getLayerHighlighter() {
     return myLayerHighlighter;
   }
 
-  @Nonnull
+  
   public String getTokenSeparator() {
     return myTokenSeparator;
   }

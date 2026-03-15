@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.frame;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,7 +25,7 @@ public abstract class XValueContainer {
    * Note that this method is called from the Event Dispatch thread so it should return quickly. 
    * @param node node in the tree
    */
-  public void computeChildren(@Nonnull XCompositeNode node) {
+  public void computeChildren(XCompositeNode node) {
     node.addChildren(XValueChildrenList.EMPTY, true);
   }
 }

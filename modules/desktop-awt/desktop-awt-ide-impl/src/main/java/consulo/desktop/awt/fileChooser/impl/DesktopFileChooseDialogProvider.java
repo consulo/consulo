@@ -24,8 +24,7 @@ import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -34,21 +33,21 @@ import java.awt.*;
  */
 @ExtensionImpl(id = FileOperateDialogProvider.APPLICATION_ID, order = "last")
 public class DesktopFileChooseDialogProvider implements FileChooseDialogProvider {
-  @Nonnull
+  
   @Override
   public String getId() {
     return APPLICATION_ID;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "application";
   }
 
-  @Nonnull
+  
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     if (parent != null) {
       return new FileChooserDialogImpl(descriptor, parent, (Project)project);
     }
@@ -57,9 +56,9 @@ public class DesktopFileChooseDialogProvider implements FileChooseDialogProvider
     }
   }
 
-  @Nonnull
+  
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     if (parent != null) {
       return new FileChooserDialogImpl(descriptor, parent, (Project)project);
     }

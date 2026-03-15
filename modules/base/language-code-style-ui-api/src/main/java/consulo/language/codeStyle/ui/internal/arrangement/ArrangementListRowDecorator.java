@@ -23,8 +23,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,16 +36,16 @@ import java.util.Set;
  */
 public class ArrangementListRowDecorator extends JPanel implements ArrangementUiComponent {
 
-    @Nonnull
+    
     private final JLabel mySortLabel = new JBLabel(PlatformIconGroup.objectbrowserSorted());
 
-    @Nonnull
+    
     private final ArrangementRuleIndexControl myRowIndexControl;
-    @Nonnull
+    
     private final ArrangementUiComponent myDelegate;
-    @Nonnull
+    
     private final ArrangementMatchingRulesControl myControl;
-    @Nonnull
+    
     private final JToggleButton myEditButton;
 
     @Nullable
@@ -55,8 +54,8 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     private boolean myBeingEdited;
     private boolean myUnderMouse;
 
-    public ArrangementListRowDecorator(@Nonnull ArrangementUiComponent delegate,
-                                       @Nonnull ArrangementMatchingRulesControl control) {
+    public ArrangementListRowDecorator(ArrangementUiComponent delegate,
+                                       ArrangementMatchingRulesControl control) {
         myDelegate = delegate;
         myControl = control;
 
@@ -140,13 +139,13 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         myBeingEdited = beingEdited;
     }
 
-    @Nonnull
+    
     @Override
     public ArrangementMatchCondition getMatchCondition() {
         return myDelegate.getMatchCondition();
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getUiComponent() {
         return this;
@@ -164,7 +163,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     }
 
     @Override
-    public void setData(@Nonnull Object data) {
+    public void setData(Object data) {
         myDelegate.setData(data);
     }
 
@@ -173,7 +172,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     }
 
     @Override
-    public Rectangle onMouseEntered(@Nonnull MouseEvent e) {
+    public Rectangle onMouseEntered(MouseEvent e) {
         setBackground(UIUtil.getDecoratedRowColor());
         myEditButton.setVisible(myControl.getSelectedModelRows().size() <= 1);
         return myDelegate.onMouseEntered(e);
@@ -181,7 +180,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
 
     @Nullable
     @Override
-    public Rectangle onMouseMove(@Nonnull MouseEvent event) {
+    public Rectangle onMouseMove(MouseEvent event) {
         myEditButton.setVisible(myControl.getSelectedModelRows().size() <= 1);
         Rectangle bounds = getButtonScreenBounds();
         if (!myBeingEdited && bounds != null) {
@@ -197,7 +196,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     }
 
     @Override
-    public void onMouseRelease(@Nonnull MouseEvent event) {
+    public void onMouseRelease(MouseEvent event) {
         myEditButton.setVisible(myControl.getSelectedModelRows().size() <= 1);
         Rectangle bounds = getButtonScreenBounds();
         if (bounds != null && bounds.contains(event.getLocationOnScreen())) {
@@ -244,14 +243,14 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         return myDelegate.getToken();
     }
 
-    @Nonnull
+    
     @Override
     public Set<ArrangementSettingsToken> getAvailableTokens() {
         return myDelegate.getAvailableTokens();
     }
 
     @Override
-    public void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
+    public void chooseToken(ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
         myDelegate.chooseToken(data);
     }
 
@@ -271,7 +270,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     }
 
     @Override
-    public void setListener(@Nonnull Listener listener) {
+    public void setListener(Listener listener) {
         myDelegate.setListener(listener);
     }
 

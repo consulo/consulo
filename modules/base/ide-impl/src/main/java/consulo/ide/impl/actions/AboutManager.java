@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

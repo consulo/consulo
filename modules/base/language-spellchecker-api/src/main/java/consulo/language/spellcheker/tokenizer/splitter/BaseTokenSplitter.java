@@ -19,7 +19,6 @@ import consulo.application.util.BombedStringUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
@@ -31,7 +30,7 @@ import java.util.regex.Pattern;
 public abstract class BaseTokenSplitter implements TokenSplitter {
     public static final int MIN_RANGE_LENGTH = 3;
 
-    protected static boolean isAllWordsAreUpperCased(@Nonnull String text, @Nonnull List<TextRange> words) {
+    protected static boolean isAllWordsAreUpperCased(String text, List<TextRange> words) {
         for (TextRange word : words) {
             CharacterIterator it = new StringCharacterIterator(text, word.getStartOffset(), word.getEndOffset(), word.getStartOffset());
             for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
@@ -43,7 +42,7 @@ public abstract class BaseTokenSplitter implements TokenSplitter {
         return true;
     }
 
-    protected static boolean containsShortWord(@Nonnull List<TextRange> words) {
+    protected static boolean containsShortWord(List<TextRange> words) {
         for (TextRange word : words) {
             if (word.getLength() < MIN_RANGE_LENGTH) {
                 return true;
@@ -52,18 +51,18 @@ public abstract class BaseTokenSplitter implements TokenSplitter {
         return false;
     }
 
-    @Nonnull
-    protected static TextRange matcherRange(@Nonnull TextRange range, @Nonnull Matcher matcher) {
+    
+    protected static TextRange matcherRange(TextRange range, Matcher matcher) {
         return subRange(range, matcher.start(), matcher.end());
     }
 
-    @Nonnull
-    protected static TextRange matcherRange(@Nonnull TextRange range, @Nonnull Matcher matcher, int group) {
+    
+    protected static TextRange matcherRange(TextRange range, Matcher matcher, int group) {
         return subRange(range, matcher.start(group), matcher.end(group));
     }
 
-    @Nonnull
-    protected static TextRange subRange(@Nonnull TextRange range, int start, int end) {
+    
+    protected static TextRange subRange(TextRange range, int start, int end) {
         return TextRange.from(range.getStartOffset() + start, end - start);
     }
 
@@ -72,11 +71,11 @@ public abstract class BaseTokenSplitter implements TokenSplitter {
         return l <= MIN_RANGE_LENGTH;
     }
 
-    @Nonnull
+    
     protected static List<TextRange> excludeByPattern(
-        @Nonnull SplitContext context,
+        SplitContext context,
         TextRange range,
-        @Nonnull Pattern toExclude,
+        Pattern toExclude,
         int groupToInclude
     ) {
         List<TextRange> toCheck = new SmartList<>();

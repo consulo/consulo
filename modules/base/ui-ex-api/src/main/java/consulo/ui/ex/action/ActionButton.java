@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -29,7 +28,7 @@ public interface ActionButton extends AnActionHolder, ActionButtonComponent {
 
     boolean isVisible();
 
-    @Nonnull
+    
     Presentation getPresentation();
 
     Rectangle getBounds();

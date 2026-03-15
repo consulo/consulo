@@ -14,7 +14,6 @@ import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -23,13 +22,13 @@ public final class TodoDirNode extends PsiDirectoryNode {
   private final TodoTreeBuilder myBuilder;
 
 
-  public TodoDirNode(Project project, @Nonnull PsiDirectory directory, TodoTreeBuilder builder) {
+  public TodoDirNode(Project project, PsiDirectory directory, TodoTreeBuilder builder) {
     super(project, directory, ViewSettings.DEFAULT);
     myBuilder = builder;
   }
 
   @Override
-  protected void updateImpl(@Nonnull PresentationData data) {
+  protected void updateImpl(PresentationData data) {
     super.updateImpl(data);
     int fileCount = getFileCount(getValue());
     if (getValue() == null || !getValue().isValid() || fileCount == 0) {

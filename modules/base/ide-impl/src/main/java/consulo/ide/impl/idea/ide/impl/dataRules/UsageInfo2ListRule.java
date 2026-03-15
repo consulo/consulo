@@ -23,8 +23,7 @@ import consulo.usage.UsageInfo;
 import consulo.usage.UsageView;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +32,7 @@ import java.util.List;
  */
 @ExtensionImpl
 public class UsageInfo2ListRule implements GetDataRule<List<UsageInfo>> {
-  @Nonnull
+  
   @Override
   public Key<List<UsageInfo>> getKey() {
     return UsageView.USAGE_INFO_LIST_KEY;
@@ -41,7 +40,7 @@ public class UsageInfo2ListRule implements GetDataRule<List<UsageInfo>> {
 
   @Override
   @Nullable
-  public List<UsageInfo> getData(@Nonnull DataProvider dataProvider) {
+  public List<UsageInfo> getData(DataProvider dataProvider) {
     UsageInfo usageInfo = dataProvider.getDataUnchecked(UsageView.USAGE_INFO_KEY);
     if (usageInfo != null) return Collections.singletonList(usageInfo);
     return null;

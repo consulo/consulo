@@ -23,7 +23,6 @@ import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -44,13 +43,13 @@ public class DesktopProgressDialogFactory implements ProgressDialogFactory {
     myApplication = application;
   }
 
-  @Nonnull
+  
   @Override
   public ProgressDialog create(ProgressWindow progressWindow,
                                boolean shouldShowBackground,
                                JComponent parentComponent,
                                ComponentManager project,
-                               @Nonnull LocalizeValue cancelText) {
+                               LocalizeValue cancelText) {
     Component parent = parentComponent;
     if (parent == null && project == null && !myApplication.isHeadlessEnvironment()) {
       parent = JOptionPane.getRootFrame();

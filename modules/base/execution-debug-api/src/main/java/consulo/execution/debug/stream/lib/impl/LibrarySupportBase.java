@@ -10,7 +10,6 @@ import consulo.execution.debug.stream.trace.dsl.Dsl;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.StreamCallType;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,18 +28,18 @@ public abstract class LibrarySupportBase implements LibrarySupport {
     this(EMPTY);
   }
 
-  protected LibrarySupportBase(@Nonnull LibrarySupport compatibleLibrary) {
+  protected LibrarySupportBase(LibrarySupport compatibleLibrary) {
     this.compatibleLibrary = compatibleLibrary;
   }
 
-  @Nonnull
+  
   @Override
-  public final HandlerFactory createHandlerFactory(@Nonnull Dsl dsl) {
+  public final HandlerFactory createHandlerFactory(Dsl dsl) {
     final HandlerFactory compatibleLibraryFactory = compatibleLibrary.createHandlerFactory(dsl);
     return new HandlerFactory() {
-      @Nonnull
+      
       @Override
-      public IntermediateCallHandler getForIntermediate(int number, @Nonnull IntermediateStreamCall call) {
+      public IntermediateCallHandler getForIntermediate(int number, IntermediateStreamCall call) {
         IntermediateOperation operation = mySupportedIntermediateOperations.get(call.getName());
         if (operation != null) {
           return operation.getTraceHandler(number, call, dsl);
@@ -48,9 +47,9 @@ public abstract class LibrarySupportBase implements LibrarySupport {
         return compatibleLibraryFactory.getForIntermediate(number, call);
       }
 
-      @Nonnull
+      
       @Override
-      public TerminatorCallHandler getForTermination(@Nonnull TerminatorStreamCall call, @Nonnull String resultExpression) {
+      public TerminatorCallHandler getForTermination(TerminatorStreamCall call, String resultExpression) {
         TerminalOperation terminalOperation = mySupportedTerminalOperations.get(call.getName());
         if (terminalOperation != null) {
           return terminalOperation.getTraceHandler(call, resultExpression, dsl);
@@ -60,13 +59,13 @@ public abstract class LibrarySupportBase implements LibrarySupport {
     };
   }
 
-  @Nonnull
+  
   @Override
   public final InterpreterFactory getInterpreterFactory() {
     return new InterpreterFactory() {
-      @Nonnull
+      
       @Override
-      public CallTraceInterpreter getInterpreter(@Nonnull String callName, @Nonnull StreamCallType callType) {
+      public CallTraceInterpreter getInterpreter(String callName, StreamCallType callType) {
         Operation operation = findOperation(callName, callType);
         if (operation != null) {
           return operation.getTraceInterpreter();
@@ -76,13 +75,13 @@ public abstract class LibrarySupportBase implements LibrarySupport {
     };
   }
 
-  @Nonnull
+  
   @Override
   public final ResolverFactory getResolverFactory() {
     return new ResolverFactory() {
-      @Nonnull
+      
       @Override
-      public ValuesOrderResolver getResolver(@Nonnull String callName, @Nonnull StreamCallType callType) {
+      public ValuesOrderResolver getResolver(String callName, StreamCallType callType) {
         Operation operation = findOperation(callName, callType);
         if (operation != null) {
           return operation.getValuesOrderResolver();
@@ -92,19 +91,19 @@ public abstract class LibrarySupportBase implements LibrarySupport {
     };
   }
 
-  protected final void addIntermediateOperationsSupport(@Nonnull IntermediateOperation... operations) {
+  protected final void addIntermediateOperationsSupport(IntermediateOperation... operations) {
     for (IntermediateOperation operation : operations) {
       mySupportedIntermediateOperations.put(operation.getName(), operation);
     }
   }
 
-  protected final void addTerminationOperationsSupport(@Nonnull TerminalOperation... operations) {
+  protected final void addTerminationOperationsSupport(TerminalOperation... operations) {
     for (TerminalOperation operation : operations) {
       mySupportedTerminalOperations.put(operation.getName(), operation);
     }
   }
 
-  private Operation findOperation(@Nonnull String name, @Nonnull StreamCallType callType) {
+  private Operation findOperation(String name, StreamCallType callType) {
     switch (callType) {
       case INTERMEDIATE:
         return mySupportedIntermediateOperations.get(name);

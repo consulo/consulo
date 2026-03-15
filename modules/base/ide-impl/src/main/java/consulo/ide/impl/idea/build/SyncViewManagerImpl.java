@@ -10,7 +10,6 @@ import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -30,13 +29,13 @@ public class SyncViewManagerImpl extends AbstractViewManager implements SyncView
         return "Sync";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getViewName() {
         return BuildLocalize.syncViewTitle();
     }
 
-    @Nonnull
+    
     @Override
     public BuildProgress<BuildProgressDescriptor> createBuildProgress() {
         BuildRootProgressImpl progress = new BuildRootProgressImpl();

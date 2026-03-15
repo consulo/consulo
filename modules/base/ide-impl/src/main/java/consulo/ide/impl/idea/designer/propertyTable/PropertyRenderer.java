@@ -17,8 +17,7 @@ package consulo.ide.impl.idea.designer.propertyTable;
 
 import consulo.ide.impl.idea.designer.model.PropertiesContainer;
 import consulo.ide.impl.idea.designer.model.PropertyContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -26,7 +25,7 @@ import javax.swing.*;
  * @author Alexander Lobas
  */
 public interface PropertyRenderer {
-  @Nonnull
+  
   JComponent getComponent(@Nullable PropertiesContainer container,
                           PropertyContext context, @Nullable Object value, boolean selected, boolean hasFocus);
 

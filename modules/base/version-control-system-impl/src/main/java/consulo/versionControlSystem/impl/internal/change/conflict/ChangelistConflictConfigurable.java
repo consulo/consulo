@@ -27,7 +27,6 @@ import consulo.ui.ex.awt.binding.ControlBinder;
 import consulo.util.collection.ArrayUtil;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -120,7 +119,7 @@ public class ChangelistConflictConfigurable extends BindableConfigurable impleme
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "project.propVCSSupport.ChangelistConflict";
   }

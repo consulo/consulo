@@ -23,7 +23,6 @@ import consulo.language.copyright.config.CopyrightProfile;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,15 +30,15 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SandUpdateCopyrightsProvider extends BaseUpdateCopyrightsProvider {
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     return SandFileType.INSTANCE;
   }
 
-  @Nonnull
+  
   @Override
-  public UpdatePsiFileCopyright<CopyrightFileConfig> createInstance(@Nonnull PsiFile file, @Nonnull CopyrightProfile copyrightProfile) {
+  public UpdatePsiFileCopyright<CopyrightFileConfig> createInstance(PsiFile file, CopyrightProfile copyrightProfile) {
     return new UpdatePsiFileCopyright<>(file, copyrightProfile) {
       @Override
       protected void scanFile() {

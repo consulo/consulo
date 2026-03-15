@@ -6,8 +6,7 @@ import consulo.application.util.matcher.Matcher;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,37 +15,37 @@ import java.util.LinkedHashSet;
 public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> extends RunAnythingGroupBase {
     public static final Collection<RunAnythingGroup> MAIN_GROUPS = createCompletionGroups();
 
-    @Nonnull
+    
     private final P myProvider;
-    @Nonnull
+    
     private final LocalizeValue myTitle;
 
-    public RunAnythingCompletionGroup(@Nonnull P provider, @Nonnull LocalizeValue title) {
+    public RunAnythingCompletionGroup(P provider, LocalizeValue title) {
         myProvider = provider;
         myTitle = title;
     }
 
-    @Nonnull
+    
     protected P getProvider() {
         return myProvider;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTitle() {
         return myTitle;
     }
 
-    @Nonnull
+    
     @Override
-    public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Collection<RunAnythingItem> getGroupItems(DataContext dataContext, String pattern) {
         P provider = getProvider();
         return ContainerUtil.map(provider.getValues(dataContext, pattern), value -> provider.getMainListItem(dataContext, value));
     }
 
     @Nullable
     @Override
-    protected Matcher getMatcher(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    protected Matcher getMatcher(DataContext dataContext, String pattern) {
         return getProvider().getMatcher(dataContext, pattern);
     }
 

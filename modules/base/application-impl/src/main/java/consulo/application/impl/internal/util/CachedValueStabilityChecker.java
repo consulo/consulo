@@ -11,8 +11,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
@@ -116,7 +115,7 @@ final class CachedValueStabilityChecker {
         Object o2,
         String key,
         int depth,
-        @Nonnull Class<?> pluginClass
+        Class<?> pluginClass
     ) throws Exception {
         if (depth > 100) {
             complain(
@@ -170,7 +169,7 @@ final class CachedValueStabilityChecker {
         return false;
     }
 
-    @Nonnull
+    
     private static String nonEquivalence(Class<?> objectClass, Field field, @Nullable Object v1, @Nullable Object v2) {
         return "Incorrect CachedValue use: same CV with different captured context, " +
             "this can cause unstable results and invalid PSI access." +
@@ -180,7 +179,7 @@ final class CachedValueStabilityChecker {
             "Either make `equals()` hold for these values, or avoid this dependency, e.g. by extracting CV provider into a static method.";
     }
 
-    private static void complain(String message, String key, @Nonnull Class<?> pluginClass) {
+    private static void complain(String message, String key, Class<?> pluginClass) {
         if (ourReportedKeys.add(key)) {
             // curious why you've gotten this error? Maybe this class' javadoc will help.
             PluginExceptionUtil.logPluginError(LOG, message, null, pluginClass);

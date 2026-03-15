@@ -2,7 +2,6 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -10,9 +9,9 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface NextAwareState extends IntermediateState {
-  @Nonnull
+  
   StreamCall getNextCall();
 
-  @Nonnull
-  List<TraceElement> getNextValues(@Nonnull TraceElement value);
+  
+  List<TraceElement> getNextValues(TraceElement value);
 }

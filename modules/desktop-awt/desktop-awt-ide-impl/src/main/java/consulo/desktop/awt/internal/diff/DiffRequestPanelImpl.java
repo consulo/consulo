@@ -25,16 +25,15 @@ import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 public class DiffRequestPanelImpl implements DiffRequestPanel {
-  @Nonnull
+ 
   private final JPanel myPanel;
-  @Nonnull
+ 
   private final MyDiffRequestProcessor myProcessor;
 
   public DiffRequestPanelImpl(@Nullable Project project, @Nullable Window window) {
@@ -63,11 +62,11 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
 
   @RequiredUIAccess
   @Override
-  public <T> void putContextHints(@Nonnull Key<T> key, @Nullable T value) {
+  public <T> void putContextHints(Key<T> key, @Nullable T value) {
     myProcessor.putContextUserData(key, value);
   }
 
-  @Nonnull
+ 
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -88,7 +87,7 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
     @Nullable
     private final Window myWindow;
 
-    @Nonnull
+   
     private DiffRequest myRequest = NoDiffRequest.INSTANCE;
     @Nullable
     private Object myRequestIdentity = null;
@@ -109,12 +108,12 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
 
     @Override
     @RequiredUIAccess
-    public synchronized void updateRequest(boolean force, @Nullable DiffUserDataKeysEx.ScrollToPolicy scrollToChangePolicy) {
+    public synchronized void updateRequest(boolean force, DiffUserDataKeysEx.@Nullable ScrollToPolicy scrollToChangePolicy) {
       applyRequest(myRequest, force, scrollToChangePolicy);
     }
 
     @Override
-    protected void setWindowTitle(@Nonnull String title) {
+    protected void setWindowTitle(String title) {
       if (myWindow == null) return;
       if (myWindow instanceof JDialog) ((JDialog)myWindow).setTitle(title);
       if (myWindow instanceof JFrame) ((JFrame)myWindow).setTitle(title);

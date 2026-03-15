@@ -64,8 +64,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -104,13 +103,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     @Override
-    public void expire(@Nonnull Notification notification) {
+    public void expire(Notification notification) {
         myApplication.getLastUIAccess().give(() -> EventLog.expireNotification(notification));
     }
 
     @Override
-    @Nonnull
-    public <T extends Notification> T[] getNotificationsOfType(@Nonnull Class<T> clazz, @Nullable Project project) {
+    
+    public <T extends Notification> T[] getNotificationsOfType(Class<T> clazz, @Nullable Project project) {
         List<T> result = new ArrayList<>();
         if (project == null || !project.isDefault() && !project.isDisposed()) {
             for (Notification notification : EventLog.getLogModel(project).getNotifications()) {
@@ -123,7 +122,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return ArrayUtil.toObjectArray(result, clazz);
     }
 
-    public void doNotify(@Nonnull Notification notification, @Nullable Project project) {
+    public void doNotify(Notification notification, @Nullable Project project) {
         NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
         if (!configuration.isRegistered(notification.getGroupId())) {
             LOG.error("NotificationGroup: " + notification.getGroupId() + " is not registered. Please use NotificationGroupContributor");
@@ -150,7 +149,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     @RequiredUIAccess
-    private void showNotification(@Nonnull final Notification notification, @Nullable Project project) {
+    private void showNotification(final Notification notification, @Nullable Project project) {
         Window window = findWindowForBalloon(project);
         if (window == null) {
             UIAccess uiAccess = UIAccess.current();
@@ -227,8 +226,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
     @Nullable
     @RequiredUIAccess
     private Balloon notifyByBalloon(
-        @Nonnull Notification notification,
-        @Nonnull NotificationDisplayType displayType,
+        Notification notification,
+        NotificationDisplayType displayType,
         @Nullable Project project
     ) {
         IdeFrame ideFrame = findIdeFrameForBalloon(project);
@@ -311,14 +310,14 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     @Override
-    @Nonnull
+    
     public Balloon createBalloon(
         @Nullable JComponent windowComponent,
-        @Nonnull Notification notification,
+        Notification notification,
         boolean showCallout,
         boolean hideOnClickOutside,
-        @Nonnull SimpleReference<Object> layoutDataRef,
-        @Nonnull Disposable parentDisposable
+        SimpleReference<Object> layoutDataRef,
+        Disposable parentDisposable
     ) {
         final BalloonLayoutData layoutData = layoutDataRef.isNull() ? new BalloonLayoutData() : (BalloonLayoutData) layoutDataRef.get();
         if (layoutData.groupId == null) {
@@ -654,8 +653,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     @Nullable
     private static JPanel createButtons(
-        @Nonnull Notification notification,
-        @Nonnull final JPanel content,
+        Notification notification,
+        final JPanel content,
         @Nullable HyperlinkListener listener
     ) {
         if (notification instanceof NotificationActionProvider provider) {
@@ -696,8 +695,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return null;
     }
 
-    @Nonnull
-    public static JScrollPane createBalloonScrollPane(@Nonnull Component content, boolean configure) {
+    
+    public static JScrollPane createBalloonScrollPane(Component content, boolean configure) {
         JScrollPane pane = ScrollPaneFactory.createScrollPane(content, true);
         if (configure) {
             configureBalloonScrollPane(pane, FILL_COLOR);
@@ -705,7 +704,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return pane;
     }
 
-    public static void configureBalloonScrollPane(@Nonnull JScrollPane pane, @Nonnull Color fillColor) {
+    public static void configureBalloonScrollPane(JScrollPane pane, Color fillColor) {
         pane.setOpaque(false);
         pane.getViewport().setOpaque(false);
         pane.setBackground(fillColor);
@@ -714,10 +713,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     private static void createActionPanel(
-        @Nonnull Notification notification,
-        @Nonnull JPanel centerPanel,
+        Notification notification,
+        JPanel centerPanel,
         int gap,
-        @Nonnull HoverAdapter hoverAdapter
+        HoverAdapter hoverAdapter
     ) {
         JPanel actionPanel = new NonOpaquePanel(new HorizontalLayout(gap, SwingConstants.CENTER));
         centerPanel.add(BorderLayout.SOUTH, actionPanel);
@@ -771,15 +770,15 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
         private Component myLastComponent;
 
-        public void addComponent(@Nonnull Component component, @Nonnull Function<Component, Rectangle> hover) {
+        public void addComponent(Component component, Function<Component, Rectangle> hover) {
             myComponents.add(Pair.create(component, hover));
         }
 
-        public void addComponent(@Nonnull Component component, @Nonnull Insets hover) {
+        public void addComponent(Component component, Insets hover) {
             myComponents.add(Pair.create(component, hover));
         }
 
-        public void addSource(@Nonnull Component component) {
+        public void addSource(Component component) {
             mySources.add(component);
         }
 
@@ -873,13 +872,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
             }
         }
 
-        @Nonnull
+        
         private static MouseEvent createEvent(MouseEvent e, Component c) {
             return new MouseEvent(c, e.getID(), e.getWhen(), e.getModifiers(), 5, 5, e.getClickCount(), e.isPopupTrigger(), e.getButton());
         }
     }
 
-    private static void createMergeAction(@Nonnull final BalloonLayoutData layoutData, @Nonnull JPanel panel) {
+    private static void createMergeAction(final BalloonLayoutData layoutData, JPanel panel) {
         StringBuilder title = new StringBuilder().append(layoutData.mergeData.count).append(" more");
 
         LinkLabel<BalloonLayoutData> action = new LinkLabel<>(
@@ -987,7 +986,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
             });
         }
 
-        @Nonnull
+        
         @Override
         protected Rectangle getTextBounds() {
             Rectangle bounds = super.getTextBounds();
@@ -997,13 +996,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
     }
 
-    private static void showPopup(@Nonnull LinkLabel link, @Nonnull DefaultActionGroup group) {
+    private static void showPopup(LinkLabel link, DefaultActionGroup group) {
         ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group);
         menu.getComponent().show(link, JBUI.scale(-10), link.getHeight() + JBUI.scale(2));
     }
 
     @Nullable
-    private static Point getCollapsedTextEndLocation(@Nonnull JEditorPane text, @Nonnull BalloonLayoutData layoutData) {
+    private static Point getCollapsedTextEndLocation(JEditorPane text, BalloonLayoutData layoutData) {
         try {
             int end = text.viewToModel(new Point(10, layoutData.twoLineHeight + 5));
             if (end == -1) {
@@ -1022,7 +1021,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return null;
     }
 
-    private static int getFirstLineHeight(@Nonnull JEditorPane text) {
+    private static int getFirstLineHeight(JEditorPane text) {
         try {
             int end = text.getDocument().getLength();
             for (int i = 0; i < end; i++) {
@@ -1092,7 +1091,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
             return layoutSize(Component::getMinimumSize);
         }
 
-        private Dimension layoutSize(@Nonnull Function<Component, Dimension> size) {
+        private Dimension layoutSize(Function<Component, Dimension> size) {
             Dimension titleSize = myTitleComponent == null ? new Dimension() : size.apply(myTitleComponent);
             Dimension centeredSize = myCenteredComponent == null ? new Dimension() : size.apply(myCenteredComponent);
             Dimension actionSize = myActionPanel == null ? new Dimension() : size.apply(myActionPanel);
@@ -1224,14 +1223,14 @@ public class NotificationsManagerImpl extends NotificationsManager {
         private String myTitleTextR;
         private String myTitleTextD;
 
-        public LafHandler(@Nonnull JEditorPane content, @Nonnull String textR, @Nonnull String textD) {
+        public LafHandler(JEditorPane content, String textR, String textD) {
             myContent = content;
             myContentTextR = textR;
             myContentTextD = textD;
             updateContent();
         }
 
-        public void setTitle(@Nonnull JLabel title, @Nonnull String textR, @Nonnull String textD) {
+        public void setTitle(JLabel title, String textR, String textD) {
             myTitle = title;
             myTitleTextR = textR;
             myTitleTextD = textD;
@@ -1258,7 +1257,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     private static class TextCaret extends DefaultCaret implements UIResource {
         private final BalloonLayoutData myLayoutData;
 
-        public TextCaret(@Nonnull BalloonLayoutData layoutData) {
+        public TextCaret(BalloonLayoutData layoutData) {
             myLayoutData = layoutData;
         }
 

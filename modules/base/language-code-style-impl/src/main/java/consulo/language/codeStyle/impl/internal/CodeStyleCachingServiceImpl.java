@@ -11,8 +11,7 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Comparator;
@@ -38,13 +37,13 @@ public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Dis
 
   @Override
   @Nullable
-  public CodeStyleSettings tryGetSettings(@Nonnull PsiFile file) {
+  public CodeStyleSettings tryGetSettings(PsiFile file) {
     CodeStyleCachedValueProvider provider = getOrCreateCachedValueProvider(file);
     return provider != null ? provider.tryGetSettings() : null;
   }
 
   @Override
-  public void scheduleWhenSettingsComputed(@Nonnull PsiFile file, @Nonnull Runnable runnable) {
+  public void scheduleWhenSettingsComputed(PsiFile file, Runnable runnable) {
     CodeStyleCachedValueProvider provider = getOrCreateCachedValueProvider(file);
     if (provider != null) {
       provider.scheduleWhenComputed(runnable);
@@ -55,7 +54,7 @@ public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Dis
   }
 
   @Nullable
-  private CodeStyleCachedValueProvider getOrCreateCachedValueProvider(@Nonnull PsiFile file) {
+  private CodeStyleCachedValueProvider getOrCreateCachedValueProvider(PsiFile file) {
     synchronized (CACHE_LOCK) {
       VirtualFile virtualFile = file.getVirtualFile();
       if (virtualFile != null) {
@@ -84,12 +83,12 @@ public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Dis
 
   @Override
   @Nullable
-  public UserDataHolder getDataHolder(@Nonnull VirtualFile virtualFile) {
+  public UserDataHolder getDataHolder(VirtualFile virtualFile) {
     return getOrCreateFileData(getFileKey(virtualFile));
   }
 
-  @Nonnull
-  private synchronized FileData getOrCreateFileData(@Nonnull String path) {
+  
+  private synchronized FileData getOrCreateFileData(String path) {
     if (myFileDataCache.containsKey(path)) {
       FileData fileData = myFileDataCache.get(path);
       fileData.update();
@@ -107,7 +106,7 @@ public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Dis
     return newData;
   }
 
-  @Nonnull
+  
   private static String getFileKey(VirtualFile file) {
     return file.getUrl();
   }

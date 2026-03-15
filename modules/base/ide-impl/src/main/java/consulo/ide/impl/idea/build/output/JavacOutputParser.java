@@ -14,8 +14,7 @@ import consulo.compiler.CompilerManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
@@ -37,15 +36,15 @@ public class JavacOutputParser implements BuildOutputParser {
         this("java");
     }
 
-    public JavacOutputParser(@Nonnull String... fileExtensions) {
+    public JavacOutputParser(String... fileExtensions) {
         myFileExtensions = fileExtensions;
     }
 
     @Override
     public boolean parse(
-        @Nonnull String line,
-        @Nonnull BuildOutputInstantReader reader,
-        @Nonnull Consumer<? super BuildEvent> messageConsumer
+        String line,
+        BuildOutputInstantReader reader,
+        Consumer<? super BuildEvent> messageConsumer
     ) {
         int colonIndex1 = line.indexOf(COLON);
         if (colonIndex1 == 1) { // drive letter
@@ -233,8 +232,8 @@ public class JavacOutputParser implements BuildOutputParser {
         return line != null && line.length() > 0 && Character.isWhitespace(line.charAt(0));
     }
 
-    @Nonnull
-    private static List<String> convertMessages(@Nonnull List<String> messages) {
+    
+    private static List<String> convertMessages(List<String> messages) {
         if (messages.size() <= 1) {
             return messages;
         }

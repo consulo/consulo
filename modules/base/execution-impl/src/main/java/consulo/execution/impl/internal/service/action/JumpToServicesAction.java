@@ -9,7 +9,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 import static consulo.execution.impl.internal.service.ServiceViewActionProvider.getSelectedView;
 
@@ -21,7 +20,7 @@ public final class JumpToServicesAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     ServiceView selectedView = getSelectedView(e);
     if (selectedView == null) return;
 
@@ -34,7 +33,7 @@ public final class JumpToServicesAction extends DumbAwareAction {
 //  }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setVisible(false);
     ServiceView selectedView = getSelectedView(e);

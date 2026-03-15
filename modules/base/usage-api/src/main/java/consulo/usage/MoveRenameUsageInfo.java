@@ -22,7 +22,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.*;
 import consulo.project.Project;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class MoveRenameUsageInfo extends UsageInfo {
     private SmartPsiElementPointer myReferencedElementPointer = null;

@@ -10,8 +10,7 @@ import consulo.project.Project;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -25,34 +24,34 @@ public interface RunDashboardManager {
   @Deprecated
   Class<RunDashboardListener> DASHBOARD_TOPIC = RunDashboardListener.class;
 
-  static RunDashboardManager getInstance(@Nonnull Project project) {
+  static RunDashboardManager getInstance(Project project) {
     return project.getInstance(RunDashboardManager.class);
   }
 
   ContentManager getDashboardContentManager();
 
-  @Nonnull
+  
   String getToolWindowId();
 
-  @Nonnull
+  
   Image getToolWindowIcon();
 
   void updateDashboard(boolean withStructure);
 
   List<RunDashboardService> getRunConfigurations();
 
-  boolean isShowInDashboard(@Nonnull RunConfiguration runConfiguration);
+  boolean isShowInDashboard(RunConfiguration runConfiguration);
 
-  @Nonnull
+  
   Set<String> getTypes();
 
   void setTypes(Set<String> types);
 
-  @Nonnull
+  
   Predicate<Content> getReuseCondition();
 
   interface RunDashboardService {
-    @Nonnull
+    
     RunnerAndConfigurationSettings getSettings();
 
     @Nullable

@@ -16,8 +16,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -35,14 +34,14 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     private volatile boolean myFinished;
     private volatile ProgressIndicator myIndicator;
 
-    public BackgroundUpdaterTaskBase(@Nullable Project project, @Nonnull LocalizeValue title, @Nullable Comparator<T> comparator) {
+    public BackgroundUpdaterTaskBase(@Nullable Project project, LocalizeValue title, @Nullable Comparator<T> comparator) {
         super(project, title);
         myData = comparator == null ? new ArrayList<>() : new TreeSet<>(comparator);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public BackgroundUpdaterTaskBase(@Nullable Project project, @Nonnull String title, @Nullable Comparator<T> comparator) {
+    public BackgroundUpdaterTaskBase(@Nullable Project project, String title, @Nullable Comparator<T> comparator) {
         this(project, LocalizeValue.of(title), comparator);
     }
 
@@ -52,9 +51,9 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     }
 
     public void init(
-        @Nonnull JBPopup popup,
-        @Nonnull GenericListComponentUpdater<T> updater,
-        @Nonnull SimpleReference<? extends UsageView> usageView
+        JBPopup popup,
+        GenericListComponentUpdater<T> updater,
+        SimpleReference<? extends UsageView> usageView
     ) {
         myPopup = popup;
         myUpdater = updater;
@@ -66,7 +65,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     @Nullable
     protected abstract Usage createUsage(T element);
 
-    protected void replaceModel(@Nonnull List<? extends T> data) {
+    protected void replaceModel(List<? extends T> data) {
         myUpdater.replaceModel(data);
     }
 
@@ -88,7 +87,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
      * @deprecated Use {@link #BackgroundUpdaterTaskBase(Project, String, Comparator)} and {@link #updateComponent(T)} instead
      */
     @Deprecated
-    public boolean updateComponent(@Nonnull T element, @Nullable Comparator comparator) {
+    public boolean updateComponent(T element, @Nullable Comparator comparator) {
         if (tryAppendUsage(element)) {
             return true;
         }
@@ -122,7 +121,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
         return true;
     }
 
-    private boolean tryAppendUsage(@Nonnull T element) {
+    private boolean tryAppendUsage(T element) {
         UsageView view = myUsageView.get();
         if (view != null && !view.isDisposed()) {
             Usage usage = createUsage(element);
@@ -135,7 +134,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
         return false;
     }
 
-    public boolean updateComponent(@Nonnull T element) {
+    public boolean updateComponent(T element) {
         if (tryAppendUsage(element)) {
             return true;
         }
@@ -189,7 +188,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     }
 
     @Override
-    public void run(@Nonnull ProgressIndicator indicator) {
+    public void run(ProgressIndicator indicator) {
         paintBusy(true);
         myIndicator = indicator;
     }

@@ -21,7 +21,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.ILeafElementType;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -32,7 +31,7 @@ public class ForeignLeafType extends TokenWrapper implements ILeafElementType {
     }
 
     @Override
-    @Nonnull
+    
     public ASTNode createLeafNode(CharSequence leafText) {
         return new ForeignLeafPsiElement(this, getValue());
     }

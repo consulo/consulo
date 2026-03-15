@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -91,8 +90,8 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
     return panel;
   }
 
-  @Nonnull
-  private static Image getIcon(@Nonnull InspectionToolWrapper tool) {
+  
+  private static Image getIcon(InspectionToolWrapper tool) {
     Image icon = null;
     Language language = tool.getLanguage();
     if (language != null) {

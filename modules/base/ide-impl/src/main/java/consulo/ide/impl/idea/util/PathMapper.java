@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,16 +26,16 @@ public interface PathMapper {
 
   boolean isEmpty();
 
-  boolean canReplaceLocal(@Nonnull String localPath);
+  boolean canReplaceLocal(String localPath);
 
-  @Nonnull
-  String convertToLocal(@Nonnull String remotePath);
+  
+  String convertToLocal(String remotePath);
 
-  boolean canReplaceRemote(@Nonnull String remotePath);
+  boolean canReplaceRemote(String remotePath);
 
-  @Nonnull
-  String convertToRemote(@Nonnull String localPath);
+  
+  String convertToRemote(String localPath);
 
-  @Nonnull
-  List<String> convertToRemote(@Nonnull Collection<String> paths);
+  
+  List<String> convertToRemote(Collection<String> paths);
 }

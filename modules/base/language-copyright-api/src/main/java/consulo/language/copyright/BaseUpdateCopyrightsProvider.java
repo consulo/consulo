@@ -20,22 +20,21 @@ import consulo.language.copyright.ui.TemplateCommentPanel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 13.02.15
  */
 public abstract class BaseUpdateCopyrightsProvider extends UpdateCopyrightsProvider<CopyrightFileConfig> {
-  @Nonnull
+  
   @Override
   public CopyrightFileConfig createDefaultOptions() {
     return new CopyrightFileConfig();
   }
 
-  @Nonnull
+  
   @Override
-  public TemplateCommentPanel createConfigurable(@Nonnull Project project, @Nonnull TemplateCommentPanel parentPane, @Nonnull FileType fileType) {
+  public TemplateCommentPanel createConfigurable(Project project, TemplateCommentPanel parentPane, FileType fileType) {
     return new TemplateCommentPanel(fileType, parentPane, project);
   }
 }

@@ -20,7 +20,6 @@ import consulo.execution.localize.ExecutionLocalize;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,7 +156,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
   }
 
   @Override
-  @Nonnull
+  
   public MyProcessingResult processLine(String line) {
     String type = LogConsolePreferences.getType(line);
     Key contentType = type != null

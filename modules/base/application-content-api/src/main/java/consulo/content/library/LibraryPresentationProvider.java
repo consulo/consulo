@@ -21,8 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,11 +32,11 @@ import java.util.List;
 public abstract class LibraryPresentationProvider<P extends LibraryProperties> implements LibraryPresentation<P> {
     private final LibraryKind myKind;
 
-    protected LibraryPresentationProvider(@Nonnull LibraryKind kind) {
+    protected LibraryPresentationProvider(LibraryKind kind) {
         myKind = kind;
     }
 
-    @Nonnull
+    
     @Override
     public LibraryKind getKind() {
         return myKind;
@@ -49,11 +48,11 @@ public abstract class LibraryPresentationProvider<P extends LibraryProperties> i
 
     @Nullable
     @Override
-    public String getDescription(@Nonnull P properties) {
+    public String getDescription(P properties) {
         return null;
     }
 
     @Nullable
     @Override
-    public abstract P detect(@Nonnull List<VirtualFile> classesRoots);
+    public abstract P detect(List<VirtualFile> classesRoots);
 }

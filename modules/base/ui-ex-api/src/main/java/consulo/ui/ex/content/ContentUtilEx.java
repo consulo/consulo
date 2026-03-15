@@ -20,8 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -33,18 +32,18 @@ import java.util.function.Predicate;
  */
 public class ContentUtilEx extends ContentsUtil {
 
-  public static void addTabbedContent(@Nonnull ContentManager manager,
-                                      @Nonnull JComponent contentComponent,
-                                      @Nonnull String groupPrefix,
-                                      @Nonnull String tabName,
+  public static void addTabbedContent(ContentManager manager,
+                                      JComponent contentComponent,
+                                      String groupPrefix,
+                                      String tabName,
                                       boolean select) {
     addTabbedContent(manager, contentComponent, groupPrefix, tabName, select, null);
   }
 
-  public static void addTabbedContent(@Nonnull ContentManager manager,
-                                      @Nonnull JComponent contentComponent,
-                                      @Nonnull String groupPrefix,
-                                      @Nonnull String tabName,
+  public static void addTabbedContent(ContentManager manager,
+                                      JComponent contentComponent,
+                                      String groupPrefix,
+                                      String tabName,
                                       boolean select,
                                       @Nullable Disposable childDisposable) {
     if (ApplicationPropertiesComponent.getInstance().getBoolean(TabbedContent.SPLIT_PROPERTY_PREFIX + groupPrefix)) {
@@ -90,9 +89,9 @@ public class ContentUtilEx extends ContentsUtil {
     registerDisposable(tabbedContent, childDisposable, contentComponent);
   }
 
-  private static void registerDisposable(@Nonnull Content content,
+  private static void registerDisposable(Content content,
                                          @Nullable Disposable childDisposable,
-                                         @Nonnull JComponent contentComponent) {
+                                         JComponent contentComponent) {
     if (childDisposable != null) {
       Disposer.register(content, childDisposable);
       assert contentComponent.getClientProperty(DISPOSABLE_KEY) == null;
@@ -108,7 +107,7 @@ public class ContentUtilEx extends ContentsUtil {
   }
 
   @Nullable
-  public static TabbedContent findTabbedContent(@Nonnull ContentManager manager, @Nonnull String groupPrefix) {
+  public static TabbedContent findTabbedContent(ContentManager manager, String groupPrefix) {
     TabbedContent tabbedContent = null;
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContent && content.getTabName().startsWith(getFullPrefix(groupPrefix))) {
@@ -119,18 +118,18 @@ public class ContentUtilEx extends ContentsUtil {
     return tabbedContent;
   }
 
-  public static boolean isContentTab(@Nonnull Content content, @Nonnull String groupPrefix) {
+  public static boolean isContentTab(Content content, String groupPrefix) {
     return (content instanceof TabbedContent && content.getTabName().startsWith(getFullPrefix(groupPrefix))) ||
            groupPrefix.equals(content.getUserData(Content.TAB_GROUP_NAME_KEY));
   }
 
-  @Nonnull
-  public static String getFullName(@Nonnull String groupPrefix, @Nonnull String tabName) {
+  
+  public static String getFullName(String groupPrefix, String tabName) {
     return getFullPrefix(groupPrefix) + tabName;
   }
 
-  @Nonnull
-  private static String getFullPrefix(@Nonnull String groupPrefix) {
+  
+  private static String getFullPrefix(String groupPrefix) {
     return groupPrefix + ": ";
   }
 
@@ -140,7 +139,7 @@ public class ContentUtilEx extends ContentsUtil {
    *
    * @return true if the necessary content was found (and thus selected) among content components of the given ContentManager.
    */
-  public static boolean selectContent(@Nonnull ContentManager manager, @Nonnull JComponent contentComponent, boolean requestFocus) {
+  public static boolean selectContent(ContentManager manager, JComponent contentComponent, boolean requestFocus) {
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContent tabbedContent) {
         boolean found = tabbedContent.findAndSelectContent(contentComponent);
@@ -162,7 +161,7 @@ public class ContentUtilEx extends ContentsUtil {
    * trying to find the first one which matches the given condition.
    */
   @Nullable
-  public static JComponent findContentComponent(@Nonnull ContentManager manager, @Nonnull Predicate<JComponent> condition) {
+  public static JComponent findContentComponent(ContentManager manager, Predicate<JComponent> condition) {
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContent tabbedContent) {
         List<Pair<String, JComponent>> tabs = tabbedContent.getTabs();
@@ -179,7 +178,7 @@ public class ContentUtilEx extends ContentsUtil {
     return null;
   }
 
-  public static int getSelectedTab(@Nonnull TabbedContent content) {
+  public static int getSelectedTab(TabbedContent content) {
     JComponent current = content.getComponent();
     int index = 0;
     for (Pair<String, JComponent> tab : content.getTabs()) {
@@ -192,7 +191,7 @@ public class ContentUtilEx extends ContentsUtil {
   }
 
   @Nullable
-  public static String getTabNameWithoutPrefix(@Nonnull TabbedContent content, @Nonnull String fullTabName) {
+  public static String getTabNameWithoutPrefix(TabbedContent content, String fullTabName) {
     int fullPrefixLength = getFullPrefix(content.getTitlePrefix()).length();
     if (fullTabName.startsWith(content.getTitlePrefix())) {
       return fullTabName.substring(fullPrefixLength);

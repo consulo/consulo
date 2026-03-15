@@ -15,8 +15,7 @@
  */
 package consulo.language.codeStyle.ui.internal.arrangement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 
 /**
@@ -26,7 +25,7 @@ import java.util.Arrays;
 @SuppressWarnings("unchecked")
 public class IntObjectMap<V> {
 
-  @Nonnull
+  
   private Object[] myData;
   private int myMaxUsed = -1;
   private int mySize;
@@ -47,7 +46,7 @@ public class IntObjectMap<V> {
     return (V)myData[key];
   }
 
-  public void set(int key, @Nonnull V value) {
+  public void set(int key, V value) {
     if (key >= myData.length) {
       int newCapacity = myData.length;
       while (newCapacity <= key) {

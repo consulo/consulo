@@ -22,8 +22,7 @@ import consulo.language.editor.inspection.scheme.Tools;
 import consulo.language.Language;
 import consulo.language.editor.annotation.HighlightSeverity;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -85,22 +84,22 @@ public abstract class InspectionsFilter {
     filterChanged();
   }
 
-  public void addLanguage(@Nonnull Language language) {
+  public void addLanguage(Language language) {
     mySuitableLanguages.add(language);
     filterChanged();
   }
 
-  public void addLanguages(@Nonnull Collection<Language> language) {
+  public void addLanguages(Collection<Language> language) {
     mySuitableLanguages.addAll(language);
     filterChanged();
   }
 
-  public void removeLanguage(@Nonnull Language language) {
+  public void removeLanguage(Language language) {
     mySuitableLanguages.remove(language);
     filterChanged();
   }
 
-  @Nonnull
+  
   public Set<Language> getSuitableLanguages() {
     return mySuitableLanguages;
   }

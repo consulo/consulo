@@ -37,8 +37,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +48,7 @@ public class EditorEmptyTextPainter {
 
     private static KeyStroke SHIFT_DEFAULT = KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0);
 
-    public void paintEmptyText(@Nonnull JComponent splitters, @Nonnull Graphics g) {
+    public void paintEmptyText(JComponent splitters, Graphics g) {
         UISettingsUtil.setupAntialiasing(g);
         g.setColor(new JBColor(Gray._80, Gray._160));
         g.setFont(JBUI.Fonts.label(16f));
@@ -70,7 +69,7 @@ public class EditorEmptyTextPainter {
         return 0.375; // fix vertical position @ golden ratio
     }
 
-    protected void advertiseActions(@Nonnull JComponent splitters, @Nonnull UIUtil.TextPainter painter) {
+    protected void advertiseActions(JComponent splitters, UIUtil.TextPainter painter) {
         appendSearchEverywhere(painter);
         appendToolWindow(painter, IdeLocalize.emptyTextProjectView(), ToolWindowId.PROJECT_VIEW, splitters);
         appendAction(painter, IdeLocalize.emptyTextGoToFile(), getActionShortcutText("GotoFile"));
@@ -79,11 +78,11 @@ public class EditorEmptyTextPainter {
         appendDnd(painter);
     }
 
-    protected void appendDnd(@Nonnull UIUtil.TextPainter painter) {
+    protected void appendDnd(UIUtil.TextPainter painter) {
         appendLine(painter, IdeLocalize.emptyTextDropFilesToOpen());
     }
 
-    protected void appendSearchEverywhere(@Nonnull UIUtil.TextPainter painter) {
+    protected void appendSearchEverywhere(UIUtil.TextPainter painter) {
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
         String shortcut;
         
@@ -102,10 +101,10 @@ public class EditorEmptyTextPainter {
     }
 
     protected void appendToolWindow(
-        @Nonnull UIUtil.TextPainter painter,
-        @Nonnull LocalizeValue action,
-        @Nonnull String toolWindowId,
-        @Nonnull JComponent splitters
+        UIUtil.TextPainter painter,
+        LocalizeValue action,
+        String toolWindowId,
+        JComponent splitters
     ) {
         if (!isToolwindowVisible(splitters, toolWindowId)) {
             String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindowId);
@@ -113,23 +112,23 @@ public class EditorEmptyTextPainter {
         }
     }
 
-    protected void appendAction(@Nonnull UIUtil.TextPainter painter, @Nonnull LocalizeValue action, @Nullable String shortcut) {
+    protected void appendAction(UIUtil.TextPainter painter, LocalizeValue action, @Nullable String shortcut) {
         if (StringUtil.isEmpty(shortcut)) {
             return;
         }
         appendLine(painter, LocalizeValue.join(action, LocalizeValue.space(), LocalizeValue.of("<shortcut>" + shortcut + "</shortcut>")));
     }
 
-    protected void appendLine(@Nonnull UIUtil.TextPainter painter, @Nonnull LocalizeValue line) {
+    protected void appendLine(UIUtil.TextPainter painter, LocalizeValue line) {
         painter.appendLine(line);
     }
 
-    @Nonnull
-    protected String getActionShortcutText(@Nonnull String actionId) {
+    
+    protected String getActionShortcutText(String actionId) {
         return KeymapUtil.getFirstKeyboardShortcutText(actionId);
     }
 
-    protected static boolean isToolwindowVisible(@Nonnull JComponent splitters, @Nonnull String toolwindowId) {
+    protected static boolean isToolwindowVisible(JComponent splitters, String toolwindowId) {
         Window frame = SwingUtilities.getWindowAncestor(splitters);
 
         IdeFrame ideFrameIfRoot = IdeFrameUtil.findRootIdeFrame(TargetAWT.from(frame));

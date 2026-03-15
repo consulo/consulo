@@ -17,7 +17,7 @@ package consulo.application.util;
 
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 

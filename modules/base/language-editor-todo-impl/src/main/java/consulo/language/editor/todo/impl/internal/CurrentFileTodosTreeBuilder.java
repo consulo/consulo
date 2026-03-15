@@ -19,7 +19,6 @@ package consulo.language.editor.todo.impl.internal;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -34,7 +33,7 @@ public class CurrentFileTodosTreeBuilder extends TodoTreeBuilder {
   }
 
   @Override
-  @Nonnull
+  
   protected TodoTreeStructure createTreeStructure() {
     return new CurrentFileTodosTreeStructure(myProject);
   }

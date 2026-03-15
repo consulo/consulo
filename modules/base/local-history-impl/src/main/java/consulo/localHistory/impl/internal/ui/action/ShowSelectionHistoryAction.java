@@ -29,8 +29,7 @@ import consulo.versionControlSystem.history.VcsSelection;
 import consulo.versionControlSystem.history.VcsSelectionUtil;
 import consulo.versionControlSystem.internal.VcsContextWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "LocalHistory.ShowSelectionHistory")
 public class ShowSelectionHistoryAction extends ShowHistoryAction {
@@ -48,15 +47,15 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
         new SelectionHistoryDialog(p, gw, f, from, to).show();
     }
 
-    @Nonnull
+    
     @Override
-    protected LocalizeValue getTextValue(@Nonnull AnActionEvent e) {
+    protected LocalizeValue getTextValue(AnActionEvent e) {
         VcsSelection sel = getSelection(e);
         return sel == null ? super.getTextValue(e) : LocalizeValue.ofNullable(sel.getActionName());
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (!e.hasData(Editor.KEY)) {
             e.getPresentation().setVisible(false);
         }
@@ -66,7 +65,7 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, VirtualFile f, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
         return super.isEnabled(vcs, gw, f, e) && !f.isDirectory() && getSelection(e) != null;
     }
 

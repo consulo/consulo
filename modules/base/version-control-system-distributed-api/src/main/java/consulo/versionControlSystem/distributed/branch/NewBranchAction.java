@@ -23,7 +23,6 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
     protected final List<T> myRepositories;
     protected final Project myProject;
 
-    public NewBranchAction(@Nonnull Project project, @Nonnull List<T> repositories) {
+    public NewBranchAction(Project project, List<T> repositories) {
         super(
             DistributedVcsLocalize.actionNewBranchText(),
             DistributedVcsLocalize.actionNewBranchDescription(),
@@ -42,7 +41,7 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (DvcsUtil.anyRepositoryIsFresh(myRepositories)) {
             e.getPresentation().setEnabled(false);
             e.getPresentation().setDescriptionValue(DistributedVcsLocalize.actionNewBranchNoCommitsDescription());
@@ -51,5 +50,5 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
 
     @Override
     @RequiredUIAccess
-    public abstract void actionPerformed(@Nonnull AnActionEvent e);
+    public abstract void actionPerformed(AnActionEvent e);
 }

@@ -38,8 +38,7 @@ import consulo.versionControlSystem.internal.DefaultVcsRootPolicy;
 import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -75,7 +74,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     private final boolean myIsDisabled;
     private final VcsConfiguration myVcsConfiguration;
     private final
-    @Nonnull
+    
     Map<String, VcsRootChecker> myCheckers;
     private JCheckBox myShowChangedRecursively;
     private final VcsLimitHistoryConfigurable myLimitHistory;
@@ -93,15 +92,15 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
             return o1.type.ordinal() - o2.type.ordinal();
         };
 
-        static MapInfo unregistered(@Nonnull VcsDirectoryMapping mapping) {
+        static MapInfo unregistered(VcsDirectoryMapping mapping) {
             return new MapInfo(mapping, Type.UNREGISTERED);
         }
 
-        static MapInfo unregistered(@Nonnull String path, @Nonnull String vcs) {
+        static MapInfo unregistered(String path, String vcs) {
             return new MapInfo(new VcsDirectoryMapping(path, vcs), Type.UNREGISTERED);
         }
 
-        static MapInfo registered(@Nonnull VcsDirectoryMapping mapping, boolean valid) {
+        static MapInfo registered(VcsDirectoryMapping mapping, boolean valid) {
             return new MapInfo(mapping, valid ? Type.NORMAL : Type.INVALID);
         }
 
@@ -119,7 +118,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         private final Type type;
         private final VcsDirectoryMapping mapping;
 
-        private MapInfo(@Nonnull VcsDirectoryMapping mapping, @Nonnull Type type) {
+        private MapInfo(VcsDirectoryMapping mapping, Type type) {
             this.mapping = mapping;
             this.type = type;
         }
@@ -173,13 +172,13 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         }
     }
 
-    @Nonnull
+    
     private static Color getUnregisteredRootBackground() {
         return new JBColor(UIUtil.getLabelBackground(), new Color(0x45494A));
     }
 
-    @Nonnull
-    private static SimpleTextAttributes getAttributes(@Nonnull MapInfo info) {
+    
+    private static SimpleTextAttributes getAttributes(MapInfo info) {
         if (info == MapInfo.SEPARATOR) {
             return new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD | SimpleTextAttributes.STYLE_SMALLER, null);
         }
@@ -381,7 +380,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         myCheckCommitMessageSpelling.setSelected(myVcsConfiguration.CHECK_COMMIT_MESSAGE_SPELLING);
     }
 
-    @Nonnull
+    
     private Collection<VcsRootError> findUnregisteredRoots() {
         return ContainerUtil.filter(
             VcsRootErrorsFinder.getInstance(myProject).find(),
@@ -389,7 +388,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         );
     }
 
-    private boolean isMappingValid(@Nonnull VcsDirectoryMapping mapping) {
+    private boolean isMappingValid(VcsDirectoryMapping mapping) {
         String vcs = mapping.getVcs();
         VcsRootChecker checker = myCheckers.get(vcs);
         return checker == null || (mapping.isDefaultMapping() ? checker.isRoot(myProject.getBasePath()) : checker.isRoot(mapping.getDirectory()));
@@ -436,7 +435,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     }
 
     @Contract(pure = false)
-    private static void sortAndAddSeparatorIfNeeded(@Nonnull List<MapInfo> items) {
+    private static void sortAndAddSeparatorIfNeeded(List<MapInfo> items) {
         boolean hasUnregistered = false;
         boolean hasSeparator = false;
         for (MapInfo item : items) {
@@ -466,7 +465,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         }
     }
 
-    private void setMapping(int row, @Nonnull VcsDirectoryMapping mapping) {
+    private void setMapping(int row, VcsDirectoryMapping mapping) {
         List<MapInfo> items = new ArrayList<>(myModel.getItems());
         items.set(row, MapInfo.registered(mapping, isMappingValid(mapping)));
         Collections.sort(items, MapInfo.COMPARATOR);
@@ -550,7 +549,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         return panelForTable;
     }
 
-    @Nonnull
+    
     private List<MapInfo> getSelectedUnregisteredRoots() {
         return ContainerUtil.filter(myDirectoryMappingTable.getSelection(), info -> info.type == MapInfo.Type.UNREGISTERED);
     }
@@ -567,7 +566,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         return selectedRegisteredRoots.size() == selection.size() || selectedRegisteredRoots.size() == 0;
     }
 
-    @Nonnull
+    
     private List<MapInfo> getSelectedRegisteredRoots() {
         Collection<MapInfo> selection = myDirectoryMappingTable.getSelection();
         return ContainerUtil.filter(selection, info -> info.type == MapInfo.Type.NORMAL || info.type == MapInfo.Type.INVALID);
@@ -616,14 +615,14 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         return myShowChangedRecursively;
     }
 
-    @Nonnull
+    
     private JComponent createShowUnversionedFilesOption() {
         myShowUnversionedFiles =
             new JCheckBox("Show unversioned files in Commit dialog", myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT);
         return myShowUnversionedFiles;
     }
 
-    @Nonnull
+    
     private JComponent createCheckCommitMessageSpelling() {
         myCheckCommitMessageSpelling = new JBCheckBox("Check commit message spelling", myVcsConfiguration.CHECK_COMMIT_MESSAGE_SPELLING);
         return myCheckCommitMessageSpelling;
@@ -674,7 +673,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         return !getModelMappings().equals(myVcsManager.getDirectoryMappings());
     }
 
-    @Nonnull
+    
     private List<VcsDirectoryMapping> getModelMappings() {
         return ContainerUtil.mapNotNull(
             myModel.getItems(),

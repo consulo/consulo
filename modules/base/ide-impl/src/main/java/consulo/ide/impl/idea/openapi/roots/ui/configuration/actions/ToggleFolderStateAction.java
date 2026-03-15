@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntryTreeEdit
 import consulo.module.content.layer.ContentFolder;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -45,7 +44,7 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         VirtualFile[] selectedFiles = getSelectedFiles();
         if (selectedFiles.length == 0) {
             return false;
@@ -57,7 +56,7 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean isSelected) {
+    public void setSelected(AnActionEvent e, boolean isSelected) {
         VirtualFile[] selectedFiles = getSelectedFiles();
         assert selectedFiles.length != 0;
 

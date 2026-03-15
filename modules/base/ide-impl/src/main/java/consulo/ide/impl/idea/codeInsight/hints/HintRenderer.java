@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -59,7 +58,7 @@ public class HintRenderer implements EditorCustomElementRenderer {
     }
 
     @Override
-    public void paint(Inlay<?> inlay, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+    public void paint(Inlay<?> inlay, Graphics g, Rectangle r, TextAttributes textAttributes) {
         Editor editor = inlay.getEditor();
         if (!(editor instanceof RealEditor impl)) {
             return;

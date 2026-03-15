@@ -18,8 +18,7 @@ package consulo.ide.impl.idea.ide.errorTreeView;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -32,7 +31,7 @@ public class NavigatableMessageElement extends ErrorTreeElement {
   private final String myExportText;
   private final String myRendererTextPrefix;
 
-  public NavigatableMessageElement(@Nonnull ErrorTreeElementKind kind,
+  public NavigatableMessageElement(ErrorTreeElementKind kind,
                                    @Nullable GroupingElement parent,
                                    String[] message,
                                    Navigatable navigatable,

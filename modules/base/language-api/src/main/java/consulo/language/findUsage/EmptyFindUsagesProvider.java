@@ -19,8 +19,7 @@ import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The default empty implementation of the {@link FindUsagesProvider} interface.
@@ -28,25 +27,25 @@ import jakarta.annotation.Nullable;
  */
 public class EmptyFindUsagesProvider implements FindUsagesProvider {
   @Override
-  public boolean canFindUsagesFor(@Nonnull PsiElement psiElement) {
+  public boolean canFindUsagesFor(PsiElement psiElement) {
     return false;
   }
 
   @Override
-  @Nonnull
-  public String getType(@Nonnull PsiElement element) {
+  
+  public String getType(PsiElement element) {
     return "";
   }
 
   @Override
-  @Nonnull
-  public String getDescriptiveName(@Nonnull PsiElement element) {
+  
+  public String getDescriptiveName(PsiElement element) {
     return getNodeText(element, true);
   }
 
   @Override
-  @Nonnull
-  public String getNodeText(@Nonnull PsiElement element, boolean useFullName) {
+  
+  public String getNodeText(PsiElement element, boolean useFullName) {
     if (element instanceof PsiNamedElement) {
       String name = ((PsiNamedElement)element).getName();
       if (name != null) {
@@ -56,7 +55,7 @@ public class EmptyFindUsagesProvider implements FindUsagesProvider {
     return "";
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

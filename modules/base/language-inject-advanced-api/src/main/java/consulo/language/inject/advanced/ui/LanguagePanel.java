@@ -29,7 +29,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -57,7 +56,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
             final Set<String> IDs = new HashSet<String>(Arrays.asList(languageIDs));
 
             @Override
-            protected void customizeCellRenderer(@Nonnull JList<? extends String> jList, String s, int i, boolean b, boolean b1) {
+            protected void customizeCellRenderer(JList<? extends String> jList, String s, int i, boolean b, boolean b1) {
                 SimpleTextAttributes attributes = IDs.contains(s) ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.ERROR_ATTRIBUTES;
                 append(s, attributes);
 
@@ -119,7 +118,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
         }
     }
 
-    @Nonnull
+    
     public String getLanguage() {
         return (String) myLanguage.getSelectedItem();
     }

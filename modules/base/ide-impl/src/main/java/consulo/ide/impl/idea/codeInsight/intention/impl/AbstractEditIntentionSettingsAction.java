@@ -9,16 +9,15 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 abstract class AbstractEditIntentionSettingsAction implements SyntheticIntentionAction {
   private static final Logger LOG = Logger.getInstance(AbstractEditIntentionSettingsAction.class);
 
-  @Nonnull
+  
   final LocalizeValue myText;
   private final boolean myEnabled;
 
-  protected AbstractEditIntentionSettingsAction(@Nonnull IntentionAction action) {
+  protected AbstractEditIntentionSettingsAction(IntentionAction action) {
     myText = action.getText();
     // needed for checking errors in user written actions
     //noinspection ConstantConditions
@@ -27,7 +26,7 @@ abstract class AbstractEditIntentionSettingsAction implements SyntheticIntention
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return myEnabled;
   }
 

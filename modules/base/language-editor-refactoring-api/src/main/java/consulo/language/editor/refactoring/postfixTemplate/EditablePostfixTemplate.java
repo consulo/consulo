@@ -21,7 +21,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,40 +35,40 @@ import java.util.function.Function;
  * @see <a href="https://plugins.jetbrains.com/docs/intellij/advanced-postfix-templates.html">Advanced Postfix Templates (IntelliJ Platform Docs)</a>
  */
 public abstract class EditablePostfixTemplate extends PostfixTemplate {
-    @Nonnull
+    
     private final Template myLiveTemplate;
 
     public EditablePostfixTemplate(
-        @Nonnull String templateId,
-        @Nonnull String templateName,
-        @Nonnull Template liveTemplate,
-        @Nonnull String example,
-        @Nonnull PostfixTemplateProvider provider
+        String templateId,
+        String templateName,
+        Template liveTemplate,
+        String example,
+        PostfixTemplateProvider provider
     ) {
         this(templateId, templateName, "." + templateName, liveTemplate, example, provider);
     }
 
     public EditablePostfixTemplate(
-        @Nonnull String templateId,
-        @Nonnull String templateName,
-        @Nonnull String templateKey,
-        @Nonnull Template liveTemplate,
-        @Nonnull String example,
-        @Nonnull PostfixTemplateProvider provider
+        String templateId,
+        String templateName,
+        String templateKey,
+        Template liveTemplate,
+        String example,
+        PostfixTemplateProvider provider
     ) {
         super(templateId, templateName, templateKey, example, provider);
         assert StringUtil.isNotEmpty(liveTemplate.getKey());
         myLiveTemplate = liveTemplate;
     }
 
-    @Nonnull
+    
     public Template getLiveTemplate() {
         return myLiveTemplate;
     }
 
     @Override
     @RequiredUIAccess
-    public final void expand(@Nonnull PsiElement context, @Nonnull Editor editor) {
+    public final void expand(PsiElement context, Editor editor) {
         List<PsiElement> expressions = getExpressions(context, editor.getDocument(), editor.getCaretModel().getOffset());
 
         if (expressions.isEmpty()) {
@@ -112,22 +111,22 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
         return Objects.hash(getKey(), myLiveTemplate);
     }
 
-    protected abstract List<PsiElement> getExpressions(@Nonnull PsiElement context, @Nonnull Document document, int offset);
+    protected abstract List<PsiElement> getExpressions(PsiElement context, Document document, int offset);
 
     @Override
-    public boolean isApplicable(@Nonnull PsiElement context, @Nonnull Document copyDocument, int newOffset) {
+    public boolean isApplicable(PsiElement context, Document copyDocument, int newOffset) {
         return !getExpressions(context, copyDocument, newOffset).isEmpty();
     }
 
-    protected void addTemplateVariables(@Nonnull PsiElement element, @Nonnull Template template) {
+    protected void addTemplateVariables(PsiElement element, Template template) {
     }
 
     /**
      * @param element element to which the template was applied
      * @return an element to remove before inserting the template
      */
-    @Nonnull
-    protected PsiElement getElementToRemove(@Nonnull PsiElement element) {
+    
+    protected PsiElement getElementToRemove(PsiElement element) {
         return element;
     }
 
@@ -138,18 +137,18 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
      * @param element element to which the template was applied
      * @return a range to remove before inserting the template
      */
-    @Nonnull
+    
     @RequiredReadAction
-    protected TextRange getRangeToRemove(@Nonnull PsiElement element) {
+    protected TextRange getRangeToRemove(PsiElement element) {
         return getElementToRemove(element).getTextRange();
     }
 
-    @Nonnull
+    
     protected Function<PsiElement, String> getElementRenderer() {
         return element -> element.getText();
     }
 
-    @Nonnull
+    
     @Override
     public PostfixTemplateProvider getProvider() {
         PostfixTemplateProvider provider = super.getProvider();
@@ -158,7 +157,7 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
     }
 
     @RequiredUIAccess
-    private void prepareAndExpandForChooseExpression(@Nonnull PsiElement element, @Nonnull Editor editor) {
+    private void prepareAndExpandForChooseExpression(PsiElement element, Editor editor) {
         CommandProcessor.getInstance().newCommand()
             .project(element.getProject())
             .name(CodeInsightLocalize.commandExpandPostfixTemplate())
@@ -168,7 +167,7 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
     }
 
     @RequiredReadAction
-    private void expandForChooseExpression(@Nonnull PsiElement element, @Nonnull Editor editor) {
+    private void expandForChooseExpression(PsiElement element, Editor editor) {
         Project project = element.getProject();
         Document document = editor.getDocument();
         TextRange range = getRangeToRemove(element);

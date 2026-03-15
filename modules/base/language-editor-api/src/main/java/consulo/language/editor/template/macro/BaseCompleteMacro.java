@@ -29,7 +29,6 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 public abstract class BaseCompleteMacro extends Macro {
     private final String myName;
@@ -49,13 +48,13 @@ public abstract class BaseCompleteMacro extends Macro {
     }
 
     @Override
-    @Nonnull
+    
     public String getDefaultValue() {
         return "a";
     }
 
     @Override
-    public final Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+    public final Result calculateResult(Expression[] params, ExpressionContext context) {
         return new InvokeActionResult(() -> invokeCompletion(context));
     }
 
@@ -106,7 +105,7 @@ public abstract class BaseCompleteMacro extends Macro {
     private static class MyLookupListener extends LookupAdapter {
         private final ExpressionContext myContext;
 
-        public MyLookupListener(@Nonnull ExpressionContext context) {
+        public MyLookupListener(ExpressionContext context) {
             myContext = context;
         }
 

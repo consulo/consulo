@@ -27,7 +27,7 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max

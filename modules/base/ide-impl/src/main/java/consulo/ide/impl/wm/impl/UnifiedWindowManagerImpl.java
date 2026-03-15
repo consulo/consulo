@@ -20,14 +20,13 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Window;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
 public abstract class UnifiedWindowManagerImpl extends WindowManagerEx {
-  @Nonnull
+  
   public IdeFrame createWelcomeIdeFrame(Window window, Project project) {
     return new UnifiedWelcomeIdeFrame(window, project);
   }

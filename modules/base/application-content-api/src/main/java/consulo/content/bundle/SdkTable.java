@@ -21,8 +21,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +29,7 @@ import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class SdkTable implements BundleHolder {
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use constructor injecting")
   public static SdkTable getInstance() {
@@ -40,10 +39,10 @@ public abstract class SdkTable implements BundleHolder {
   @Nullable
   public abstract Sdk findSdk(String name);
 
-  @Nonnull
+  
   public abstract Sdk[] getAllSdks();
 
-  @Nonnull
+  
   @Override
   public Sdk[] getBundles() {
     return getAllSdks();
@@ -57,7 +56,7 @@ public abstract class SdkTable implements BundleHolder {
   }
 
   @Nullable
-  public Sdk findMostRecentSdk(@Nonnull Predicate<Sdk> condition) {
+  public Sdk findMostRecentSdk(Predicate<Sdk> condition) {
     Sdk found = null;
     for (Sdk each : getAllSdks()) {
       if (!condition.test(each)) continue;
@@ -78,25 +77,25 @@ public abstract class SdkTable implements BundleHolder {
   }
 
   @RequiredWriteAction
-  public abstract void addSdk(@Nonnull Sdk sdk);
+  public abstract void addSdk(Sdk sdk);
 
   @RequiredWriteAction
-  public abstract void removeSdk(@Nonnull Sdk sdk);
+  public abstract void removeSdk(Sdk sdk);
 
   @RequiredWriteAction
-  public abstract void updateSdk(@Nonnull Sdk originalSdk, @Nonnull Sdk modifiedSdk);
+  public abstract void updateSdk(Sdk originalSdk, Sdk modifiedSdk);
 
   public abstract SdkTypeId getDefaultSdkType();
 
   public abstract SdkTypeId getSdkTypeByName(String name);
 
   @Nullable
-  public abstract Sdk findPredefinedSdkByType(@Nonnull SdkTypeId sdkType);
+  public abstract Sdk findPredefinedSdkByType(SdkTypeId sdkType);
 
   /**
    * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Prefer createSdk(Path,String,SdkTypeId)")
   public abstract Sdk createSdk(String name, SdkTypeId sdkType);
@@ -104,6 +103,6 @@ public abstract class SdkTable implements BundleHolder {
   /**
    * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding
    */
-  @Nonnull
-  public abstract Sdk createSdk(@Nonnull Path homePath, @Nonnull String name, @Nonnull SdkTypeId sdkType);
+  
+  public abstract Sdk createSdk(Path homePath, String name, SdkTypeId sdkType);
 }

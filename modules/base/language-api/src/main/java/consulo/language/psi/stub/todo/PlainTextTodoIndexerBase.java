@@ -20,7 +20,6 @@ import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.IndexPatternUtil;
 import consulo.language.psi.stub.OccurrenceConsumer;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,8 +29,8 @@ import java.util.regex.Pattern;
 
 public abstract class PlainTextTodoIndexerBase implements TodoIndexer {
   @Override
-  @Nonnull
-  public Map<TodoIndexEntry, Integer> map(@Nonnull FileContent inputData) {
+  
+  public Map<TodoIndexEntry, Integer> map(FileContent inputData) {
     String chars = inputData.getContentAsText().toString(); // matching strings is faster than HeapCharBuffer
 
     IndexPattern[] indexPatterns = IndexPatternUtil.getIndexPatterns();

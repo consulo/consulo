@@ -20,8 +20,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -44,6 +43,6 @@ public interface ClasspathPanel {
   @Nullable
   OrderEntry getSelectedEntry();
 
-  @Nonnull
-  LibraryTableModifiableModelProvider getModifiableModelProvider(@Nonnull String tableLevel);
+  
+  LibraryTableModifiableModelProvider getModifiableModelProvider(String tableLevel);
 }

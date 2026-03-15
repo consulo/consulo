@@ -27,7 +27,6 @@ import consulo.language.impl.psi.IndentHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -47,13 +46,13 @@ public final class IndentHelperImpl extends IndentHelper {
 
     @Override
     @RequiredReadAction
-    public int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element) {
+    public int getIndent(PsiFile file, ASTNode element) {
         return getIndent(file, element, false);
     }
 
     @Override
     @RequiredReadAction
-    public int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace) {
+    public int getIndent(PsiFile file, ASTNode element, boolean includeNonSpace) {
         Integer computed = myApplication.getExtensionPoint(IndentHelperExtension.class).computeSafeIfAny(e -> {
             if (e.isAvailable(file)) {
                 return e.getIndentInner(file, element, includeNonSpace, 0);
@@ -72,7 +71,7 @@ public final class IndentHelperImpl extends IndentHelper {
         return fillIndent(CodeStyle.getProjectOrDefaultSettings(project).getIndentOptions(fileType), indent);
     }
 
-    public static String fillIndent(@Nonnull CommonCodeStyleSettings.IndentOptions indentOptions, int indent) {
+    public static String fillIndent(CommonCodeStyleSettings.IndentOptions indentOptions, int indent) {
         int indentLevel = (indent + INDENT_FACTOR / 2) / INDENT_FACTOR;
         int spaceCount = indent - indentLevel * INDENT_FACTOR;
         int indentLevelSize = indentLevel * indentOptions.INDENT_SIZE;
@@ -123,11 +122,11 @@ public final class IndentHelperImpl extends IndentHelper {
     }
 
     @Override
-    public int getIndent(@Nonnull PsiFile file, String text, boolean includeNonSpace) {
+    public int getIndent(PsiFile file, String text, boolean includeNonSpace) {
         return getIndent(CodeStyle.getIndentOptions(file), text, includeNonSpace);
     }
 
-    public static int getIndent(@Nonnull CommonCodeStyleSettings.IndentOptions indentOptions, String text, boolean includeNonSpace) {
+    public static int getIndent(CommonCodeStyleSettings.IndentOptions indentOptions, String text, boolean includeNonSpace) {
         int i;
         for (i = text.length() - 1; i >= 0; i--) {
             char c = text.charAt(i);

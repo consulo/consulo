@@ -21,8 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +33,7 @@ public class OrderRootsCache {
   private final Map<CacheKey, VirtualFilePointerContainer> myRoots = new ConcurrentHashMap<>();
   private final Disposable myParentDisposable;
 
-  public OrderRootsCache(@Nonnull Disposable parentDisposable) {
+  public OrderRootsCache(Disposable parentDisposable) {
     myParentDisposable = parentDisposable;
   }
 

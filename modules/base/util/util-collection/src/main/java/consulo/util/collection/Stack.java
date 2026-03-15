@@ -15,6 +15,8 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -56,7 +58,7 @@ public class Stack<T> extends ArrayList<T> {
     return remove(size - 1);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public T tryPop() {
     return isEmpty() ? null : pop();
   }

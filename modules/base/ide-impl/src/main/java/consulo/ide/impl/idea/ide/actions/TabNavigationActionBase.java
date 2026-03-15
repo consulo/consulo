@@ -31,7 +31,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.ContentManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(TabNavigationActionBase.class);
@@ -47,14 +46,14 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     }
     private final Direction myDir;
 
-    TabNavigationActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Direction dir) {
+    TabNavigationActionBase(LocalizeValue text, LocalizeValue description, Direction dir) {
         super(text, description);
         myDir = dir;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
@@ -69,7 +68,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         presentation.setEnabled(false);
@@ -108,7 +107,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
         navigateImpl(dataContext, project, selectedFile, myDir);
     }
 
-    private static void navigateImpl(DataContext dataContext, Project project, VirtualFile selectedFile, @Nonnull Direction dir) {
+    private static void navigateImpl(DataContext dataContext, Project project, VirtualFile selectedFile, Direction dir) {
         FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
         FileEditorWindow currentWindow = dataContext.getData(FileEditorWindow.DATA_KEY);
         if (currentWindow == null) {

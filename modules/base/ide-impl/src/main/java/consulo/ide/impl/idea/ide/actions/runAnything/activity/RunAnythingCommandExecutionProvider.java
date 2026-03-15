@@ -3,14 +3,13 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(order = "last")
 public class RunAnythingCommandExecutionProvider extends RunAnythingCommandProvider {
     @Nullable
     @Override
-    public String findMatchingValue(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public String findMatchingValue(DataContext dataContext, String pattern) {
         return pattern;
     }
 

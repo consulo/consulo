@@ -17,8 +17,7 @@ package consulo.content.library;
 
 import consulo.content.library.ui.LibraryEditor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
 * @author nik
@@ -28,11 +27,11 @@ public abstract class NewLibraryConfiguration {
   private final LibraryType<?> myLibraryType;
   private final LibraryProperties myProperties;
 
-  protected NewLibraryConfiguration(@Nonnull String defaultLibraryName) {
+  protected NewLibraryConfiguration(String defaultLibraryName) {
     this(defaultLibraryName, null, null);
   }
 
-  protected <P extends LibraryProperties> NewLibraryConfiguration(@Nonnull String defaultLibraryName, @Nullable LibraryType<P> libraryType, @Nullable P properties) {
+  protected <P extends LibraryProperties> NewLibraryConfiguration(String defaultLibraryName, @Nullable LibraryType<P> libraryType, @Nullable P properties) {
     myDefaultLibraryName = defaultLibraryName;
     myLibraryType = libraryType;
     myProperties = properties;
@@ -50,5 +49,5 @@ public abstract class NewLibraryConfiguration {
     return myDefaultLibraryName;
   }
 
-  public abstract void addRoots(@Nonnull LibraryEditor editor);
+  public abstract void addRoots(LibraryEditor editor);
 }

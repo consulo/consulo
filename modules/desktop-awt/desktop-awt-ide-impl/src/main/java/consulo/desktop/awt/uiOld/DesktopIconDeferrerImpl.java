@@ -31,7 +31,6 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,14 +59,14 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
     MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
-      public void after(@Nonnull List<? extends VFileEvent> events) {
+      public void after(List<? extends VFileEvent> events) {
         clear();
       }
     });
     connection.subscribe(PsiModificationTrackerListener.class, this::clear);
     connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
-      public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         clear();
       }
     });
@@ -87,16 +86,16 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
   }
 
   @Override
-  public <T> Image defer(Image base, T param, @Nonnull java.util.function.Function<T, Image> evaluator) {
+  public <T> Image defer(Image base, T param, java.util.function.Function<T, Image> evaluator) {
     return deferImpl(base, param, evaluator, false);
   }
 
   @Override
-  public <T> Image deferAutoUpdatable(Image base, T param, @Nonnull java.util.function.Function<T, Image> evaluator) {
+  public <T> Image deferAutoUpdatable(Image base, T param, java.util.function.Function<T, Image> evaluator) {
     return deferImpl(base, param, evaluator, true);
   }
 
-  private <T> Image deferImpl(Image base, T param, @Nonnull java.util.function.Function<T, Image> evaluator, boolean autoUpdatable) {
+  private <T> Image deferImpl(Image base, T param, java.util.function.Function<T, Image> evaluator, boolean autoUpdatable) {
     if (ourEvaluationIsInProgress.get()) {
       return evaluator.apply(param);
     }
@@ -126,7 +125,7 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
     }
   }
 
-  static void evaluateDeferred(@Nonnull Runnable runnable) {
+  static void evaluateDeferred(Runnable runnable) {
     try {
       ourEvaluationIsInProgress.set(Boolean.TRUE);
       runnable.run();

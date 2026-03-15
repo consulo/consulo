@@ -9,7 +9,6 @@ import consulo.application.util.Semaphore;
 import consulo.component.ProcessCanceledException;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -21,7 +20,7 @@ public class ActionUIActionRunner {
      *
      * @see ReadAction#nonBlocking(Runnable)
      */
-    public static <T> T compute(@Nonnull UIAccess uiAccess, @Nonnull Supplier<T> supplier) {
+    public static <T> T compute(UIAccess uiAccess, Supplier<T> supplier) {
         if (UIAccess.isUIThread()) {
             return supplier.get();
         }

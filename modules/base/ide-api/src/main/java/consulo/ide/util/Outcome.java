@@ -1,7 +1,6 @@
 package consulo.ide.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Sergey Simonchik
@@ -31,18 +30,18 @@ public class Outcome<V> {
     return myException;
   }
 
-  @Nonnull
+  
   public static <V> Outcome<V> createAsCancelled() {
     return new Outcome<V>(null, true, null);
   }
 
-  @Nonnull
-  public static <V> Outcome<V> createAsException(@Nonnull Exception ex) {
+  
+  public static <V> Outcome<V> createAsException(Exception ex) {
     return new Outcome<V>(null, false, ex);
   }
 
-  @Nonnull
-  public static <V> Outcome<V> createNormal(@Nonnull V data) {
+  
+  public static <V> Outcome<V> createNormal(V data) {
     return new Outcome<V>(data, false, null);
   }
 

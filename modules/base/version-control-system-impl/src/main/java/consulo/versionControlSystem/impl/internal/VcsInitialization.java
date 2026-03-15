@@ -18,7 +18,6 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -37,14 +36,14 @@ import java.util.function.Predicate;
 public final class VcsInitialization {
     private static final Logger LOG = Logger.getInstance(VcsInitialization.class);
 
-    @Nonnull
+    
     public static VcsInitialization getInstance(Project project) {
         return project.getInstance(VcsInitialization.class);
     }
 
     private final Object myLock = new Object();
 
-    @Nonnull
+    
     private final Project myProject;
 
     private enum Status {
@@ -65,20 +64,20 @@ public final class VcsInitialization {
     private final ProgressIndicator myIndicator = new StandardProgressIndicatorBase();
 
     @Inject
-    VcsInitialization(@Nonnull Project project) {
+    VcsInitialization(Project project) {
         myProject = project;
     }
 
     protected void startInitialization() {
         myFuture = ((ProgressManagerEx) ProgressManager.getInstance()).runProcessWithProgressAsynchronously(new Task.Backgroundable(myProject, VcsLocalize.implVcsInitialization()) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 execute();
             }
         }, myIndicator, null);
     }
 
-    void add(@Nonnull VcsInitObject vcsInitObject, @Nonnull Runnable runnable) {
+    void add(VcsInitObject vcsInitObject, Runnable runnable) {
         if (myProject.isDefault()) {
             return;
         }
@@ -88,7 +87,7 @@ public final class VcsInitialization {
         }
     }
 
-    private boolean scheduleActivity(@Nonnull VcsInitObject vcsInitObject, @Nonnull Runnable runnable) {
+    private boolean scheduleActivity(VcsInitObject vcsInitObject, Runnable runnable) {
         synchronized (myLock) {
             ProxyVcsStartupActivity activity = new ProxyVcsStartupActivity(vcsInitObject, runnable);
             if (isInitActivity(activity)) {
@@ -129,10 +128,10 @@ public final class VcsInitialization {
         }
     }
 
-    private void runInitStep(@Nonnull Status current,
-                             @Nonnull Status next,
-                             @Nonnull Predicate<VcsStartupActivity> extensionFilter,
-                             @Nonnull List<VcsStartupActivity> pendingActivities) {
+    private void runInitStep(Status current,
+                             Status next,
+                             Predicate<VcsStartupActivity> extensionFilter,
+                             List<VcsStartupActivity> pendingActivities) {
         List<VcsStartupActivity> extensionList = myProject.getExtensionList(VcsStartupActivity.class);
         List<VcsStartupActivity> epActivities = ContainerUtil.filter(extensionList, extensionFilter);
 
@@ -149,7 +148,7 @@ public final class VcsInitialization {
         runActivities(activities);
     }
 
-    private void runActivities(@Nonnull List<VcsStartupActivity> activities) {
+    private void runActivities(List<VcsStartupActivity> activities) {
         Future<?> future = myFuture;
         if (future != null && future.isCancelled()) {
             return;
@@ -204,7 +203,7 @@ public final class VcsInitialization {
         }
     }
 
-    private boolean waitFor(@Nonnull Predicate<? super Status> predicate) {
+    private boolean waitFor(Predicate<? super Status> predicate) {
         if (myProject.isDefault()) {
             throw new IllegalArgumentException();
         }
@@ -221,16 +220,16 @@ public final class VcsInitialization {
         return false;
     }
 
-    private static boolean isInitActivity(@Nonnull VcsStartupActivity activity) {
+    private static boolean isInitActivity(VcsStartupActivity activity) {
         return activity.getOrder() < VcsInitObject.AFTER_COMMON.getOrder();
     }
 
     private static final class ProxyVcsStartupActivity implements VcsStartupActivity {
-        @Nonnull
+        
         private final Runnable myRunnable;
         private final int myOrder;
 
-        private ProxyVcsStartupActivity(@Nonnull VcsInitObject vcsInitObject, @Nonnull Runnable runnable) {
+        private ProxyVcsStartupActivity(VcsInitObject vcsInitObject, Runnable runnable) {
             myOrder = vcsInitObject.getOrder();
             myRunnable = runnable;
         }

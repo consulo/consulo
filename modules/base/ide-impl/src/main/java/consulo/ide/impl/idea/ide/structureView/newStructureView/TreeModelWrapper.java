@@ -9,7 +9,6 @@ import consulo.fileEditor.structureView.event.FileEditorPositionListener;
 import consulo.fileEditor.structureView.event.ModelListener;
 import consulo.fileEditor.structureView.tree.*;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,26 +18,26 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
   private final StructureViewModel myModel;
   private final TreeActionsOwner myStructureView;
 
-  public TreeModelWrapper(@Nonnull StructureViewModel model, @Nonnull TreeActionsOwner structureView) {
+  public TreeModelWrapper(StructureViewModel model, TreeActionsOwner structureView) {
     myModel = model;
     myStructureView = structureView;
   }
 
   @Override
-  @Nonnull
+  
   public StructureViewTreeElement getRoot() {
     return myModel.getRoot();
   }
 
   @Override
-  @Nonnull
+  
   public Grouper[] getGroupers() {
     List<Grouper> filtered = filterActive(myModel.getGroupers());
     return filtered.toArray(Grouper.EMPTY_ARRAY);
   }
 
-  @Nonnull
-  private <T extends TreeAction> List<T> filterActive(@Nonnull T[] actions) {
+  
+  private <T extends TreeAction> List<T> filterActive(T[] actions) {
     List<T> filtered = new ArrayList<>();
     for (T action : actions) {
       if (isFiltered(action)) filtered.add(action);
@@ -46,8 +45,8 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
     return filtered;
   }
 
-  @Nonnull
-  private List<NodeProvider> filterProviders(@Nonnull Collection<NodeProvider> actions) {
+  
+  private List<NodeProvider> filterProviders(Collection<NodeProvider> actions) {
     List<NodeProvider> filtered = new ArrayList<>();
     for (NodeProvider action : actions) {
       if (isFiltered(action)) filtered.add(action);
@@ -55,19 +54,19 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
     return filtered;
   }
 
-  private boolean isFiltered(@Nonnull TreeAction action) {
+  private boolean isFiltered(TreeAction action) {
     return action instanceof Sorter && !((Sorter)action).isVisible() || myStructureView.isActionActive(action.getName());
   }
 
   @Override
-  @Nonnull
+  
   public Sorter[] getSorters() {
     List<Sorter> filtered = filterActive(myModel.getSorters());
     return filtered.toArray(Sorter.EMPTY_ARRAY);
   }
 
   @Override
-  @Nonnull
+  
   public Filter[] getFilters() {
     List<Filter> filtered = filterActive(myModel.getFilters());
     return filtered.toArray(Filter.EMPTY_ARRAY);
@@ -78,7 +77,7 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
     return myModel.getCurrentEditorElement();
   }
 
-  @Nonnull
+  
   @Override
   public Collection<NodeProvider> getNodeProviders() {
     if (myModel instanceof ProvidingTreeModel) {
@@ -87,24 +86,24 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
     return Collections.emptyList();
   }
 
-  public static boolean isActive(@Nonnull TreeAction action, @Nonnull TreeActionsOwner actionsOwner) {
+  public static boolean isActive(TreeAction action, TreeActionsOwner actionsOwner) {
     if (shouldRevert(action)) {
       return !actionsOwner.isActionActive(action.getName());
     }
     return action instanceof Sorter && !((Sorter)action).isVisible() || actionsOwner.isActionActive(action.getName());
   }
 
-  public static boolean shouldRevert(@Nonnull TreeAction action) {
+  public static boolean shouldRevert(TreeAction action) {
     return action instanceof Filter && ((Filter)action).isReverted();
   }
 
   @Override
-  public void addEditorPositionListener(@Nonnull FileEditorPositionListener listener) {
+  public void addEditorPositionListener(FileEditorPositionListener listener) {
     myModel.addEditorPositionListener(listener);
   }
 
   @Override
-  public void removeEditorPositionListener(@Nonnull FileEditorPositionListener listener) {
+  public void removeEditorPositionListener(FileEditorPositionListener listener) {
     myModel.removeEditorPositionListener(listener);
   }
 
@@ -119,12 +118,12 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
   }
 
   @Override
-  public void addModelListener(@Nonnull ModelListener modelListener) {
+  public void addModelListener(ModelListener modelListener) {
     myModel.addModelListener(modelListener);
   }
 
   @Override
-  public void removeModelListener(@Nonnull ModelListener modelListener) {
+  public void removeModelListener(ModelListener modelListener) {
     myModel.removeModelListener(modelListener);
   }
 
@@ -133,7 +132,7 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
   }
 
   @Override
-  public boolean isEnabled(@Nonnull NodeProvider provider) {
+  public boolean isEnabled(NodeProvider provider) {
     return myStructureView.isActionActive(provider.getName());
   }
 }

@@ -18,7 +18,6 @@ package consulo.web.internal.ui.image;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,9 +26,9 @@ import jakarta.annotation.Nonnull;
 public class WebIconLibraryManagerImpl extends BaseIconLibraryManager {
   public static final WebIconLibraryManagerImpl ourInstance = new WebIconLibraryManagerImpl();
 
-  @Nonnull
+  
   @Override
-  protected BaseIconLibraryImpl createLibrary(@Nonnull String id) {
+  protected BaseIconLibraryImpl createLibrary(String id) {
     return new WebIconLibrary(id, this);
   }
 }

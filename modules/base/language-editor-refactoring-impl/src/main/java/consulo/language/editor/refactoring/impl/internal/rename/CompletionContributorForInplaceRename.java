@@ -25,7 +25,6 @@ import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.TemplateState;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -36,7 +35,7 @@ public class CompletionContributorForInplaceRename extends CompletionContributor
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
+  public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
     Editor editor = parameters.getEditor();
     TemplateState state = TemplateManager.getInstance(parameters.getOriginalFile().getProject()).getTemplateState(editor);
     if (state != null) {
@@ -46,7 +45,7 @@ public class CompletionContributorForInplaceRename extends CompletionContributor
     }
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

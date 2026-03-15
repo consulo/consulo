@@ -2,12 +2,11 @@
 package consulo.execution.debug.breakpoint;
 
 import consulo.document.Document;
-import jakarta.annotation.Nonnull;
 
 public interface XBreakpointTypeWithDocumentDelegation {
   /*
    * return a custom document which should be used for breakpoint highlighting
    */
-  @Nonnull
-  Document getDocumentForHighlighting(@Nonnull Document document);
+  
+  Document getDocumentForHighlighting(Document document);
 }

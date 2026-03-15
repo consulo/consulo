@@ -21,8 +21,7 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.ContentFolderTypeProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -55,7 +54,7 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
   }
 
   @Override
-  public boolean isInProject(@Nonnull VirtualFile file) {
+  public boolean isInProject(VirtualFile file) {
     return false;
   }
 
@@ -113,7 +112,7 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
   }
 
   @Override
-  public boolean isInLibrarySource(@Nonnull VirtualFile file) {
+  public boolean isInLibrarySource(VirtualFile file) {
     return false;
   }
 
@@ -123,12 +122,12 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
   }
 
   @Override
-  public boolean isExcluded(@Nonnull VirtualFile file) {
+  public boolean isExcluded(VirtualFile file) {
     return isExcluded();
   }
 
   @Override
-  public boolean isInModuleSource(@Nonnull VirtualFile file) {
+  public boolean isInModuleSource(VirtualFile file) {
     return false;
   }
 

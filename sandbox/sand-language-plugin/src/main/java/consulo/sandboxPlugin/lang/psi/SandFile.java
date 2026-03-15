@@ -19,7 +19,6 @@ import consulo.language.impl.psi.PsiFileBase;
 import consulo.language.version.LanguageVersion;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileViewProvider;
-import jakarta.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
@@ -29,11 +28,11 @@ import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
  * @since 19.03.14
  */
 public class SandFile extends PsiFileBase {
-  public SandFile(@Nonnull FileViewProvider viewProvider) {
+  public SandFile(FileViewProvider viewProvider) {
     super(viewProvider, SandLanguage.INSTANCE);
   }
 
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     LanguageVersion languageVersion = getLanguageVersion();

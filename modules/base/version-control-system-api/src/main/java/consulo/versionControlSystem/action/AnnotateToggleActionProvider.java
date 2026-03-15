@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AnnotateToggleActionProvider {
@@ -32,8 +31,8 @@ public interface AnnotateToggleActionProvider {
 
     void perform(AnActionEvent e, boolean selected);
 
-    @Nonnull
-    default LocalizeValue getActionName(@Nonnull AnActionEvent e) {
+    
+    default LocalizeValue getActionName(AnActionEvent e) {
         return ActionLocalize.actionAnnotateText();
     }
 }

@@ -31,7 +31,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "CodeInspection.OnEditor")
 public class CodeInspectionOnEditorAction extends AnAction {
@@ -41,7 +40,7 @@ public class CodeInspectionOnEditorAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = dataContext.getData(Project.KEY);
         if (project == null) {
@@ -66,7 +65,7 @@ public class CodeInspectionOnEditorAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         PsiFile psiFile = e.getData(PsiFile.KEY);
         e.getPresentation().setEnabled(

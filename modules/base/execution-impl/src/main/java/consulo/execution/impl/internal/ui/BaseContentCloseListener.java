@@ -23,8 +23,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -35,7 +34,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
   private Content myContent;
   private final Project myProject;
 
-  public BaseContentCloseListener(@Nonnull Content content, @Nonnull Project project) {
+  public BaseContentCloseListener(Content content, Project project) {
     myContent = content;
     myProject = project;
     ContentManager contentManager = content.getManager();
@@ -50,7 +49,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
 
   @RequiredUIAccess
   @Override
-  public void contentRemoved(@Nonnull ContentManagerEvent event) {
+  public void contentRemoved(ContentManagerEvent event) {
     Content content = event.getContent();
     if (content == myContent) {
       dispose();
@@ -70,11 +69,11 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
     disposeContent(content);
   }
 
-  protected abstract void disposeContent(@Nonnull Content content);
+  protected abstract void disposeContent(Content content);
 
   @RequiredUIAccess
   @Override
-  public void contentRemoveQuery(@Nonnull ContentManagerEvent event) {
+  public void contentRemoveQuery(ContentManagerEvent event) {
     if (event.getContent() == myContent) {
       boolean canClose = closeQuery(myContent, Boolean.TRUE.equals(myProject.getUserData(PROJECT_DISPOSING)));
       if (!canClose) {
@@ -86,7 +85,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
   }
 
   @Override
-  public void projectClosed(@Nonnull Project project) {
+  public void projectClosed(Project project) {
     if (myContent == null || project != myProject) {
       return;
     }
@@ -100,11 +99,11 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
   }
 
   @Override
-  public void projectClosing(@Nonnull Project project) {
+  public void projectClosing(Project project) {
     project.putUserData(PROJECT_DISPOSING, true);
   }
 
-  public boolean canClose(@Nonnull Project project) {
+  public boolean canClose(Project project) {
     if (myContent == null || project != myProject) {
       return true;
     }
@@ -118,7 +117,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
     return canClose;
   }
 
-  protected boolean askUserAndWait(@Nonnull ProcessHandler processHandler, @Nonnull String sessionName, @Nonnull WaitForProcessTask task) {
+  protected boolean askUserAndWait(ProcessHandler processHandler, String sessionName, WaitForProcessTask task) {
     if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
       // This might happens from Application.exit(force=true, ...) call.
       // Do not show any UI, destroy the process silently, do not wait for process termination.
@@ -148,13 +147,13 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
    * @param projectClosing true if the content's project is being closed
    * @return true if the content can be closed, otherwise false
    */
-  protected abstract boolean closeQuery(@Nonnull Content content, boolean projectClosing);
+  protected abstract boolean closeQuery(Content content, boolean projectClosing);
 
   protected abstract static class WaitForProcessTask extends Task.Backgroundable {
     final ProcessHandler myProcessHandler;
     final boolean myModal;
 
-    protected WaitForProcessTask(@Nonnull ProcessHandler processHandler, @Nonnull String processName, boolean modal, @Nullable Project project) {
+    protected WaitForProcessTask(ProcessHandler processHandler, String processName, boolean modal, @Nullable Project project) {
       super(project, ExecutionLocalize.terminatingProcessProgressTitle(processName).get());
       myProcessHandler = processHandler;
       myModal = modal;
@@ -171,7 +170,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
     }
 
     @Override
-    public void run(@Nonnull ProgressIndicator progressIndicator) {
+    public void run(ProgressIndicator progressIndicator) {
       final Semaphore semaphore = new Semaphore();
       semaphore.down();
 

@@ -5,8 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -38,23 +37,23 @@ public interface PsiLanguageInjectionHost extends PsiElement {
    * @param text text of the injected file
    * @return the updated instance
    */
-  PsiLanguageInjectionHost updateText(@Nonnull String text);
+  PsiLanguageInjectionHost updateText(String text);
 
   /**
    * @return {@link LiteralTextEscaper} instance which will be used to convert the content of this host element to the content of injected file
    */
-  @Nonnull
+  
   LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper();
 
 
   @FunctionalInterface
   interface InjectedPsiVisitor {
     @RequiredReadAction
-    void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<Shred> places);
+    void visit(PsiFile injectedPsi, List<Shred> places);
   }
 
   interface Place extends List<Shred> {
-    @Nonnull
+    
     SmartPsiElementPointer<PsiLanguageInjectionHost> getHostPointer();
   }
 
@@ -65,7 +64,7 @@ public interface PsiLanguageInjectionHost extends PsiElement {
     @Nullable
     Segment getHostRangeMarker();
 
-    @Nonnull
+    
     TextRange getRangeInsideHost();
 
     boolean isValid();
@@ -78,13 +77,13 @@ public interface PsiLanguageInjectionHost extends PsiElement {
     /**
      * @return range in decoded PSI
      */
-    @Nonnull
+    
     TextRange getRange();
 
-    @Nonnull
+    
     String getPrefix();
 
-    @Nonnull
+    
     String getSuffix();
   }
 }

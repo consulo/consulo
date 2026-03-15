@@ -26,8 +26,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -40,7 +39,7 @@ public abstract class ModuleRootsProcessor {
     public static final ExtensionPointName<ModuleRootsProcessor> EP_NAME = ExtensionPointName.create(ModuleRootsProcessor.class);
 
     @Nullable
-    public static ModuleRootsProcessor findRootsProcessor(@Nonnull ModuleRootModel moduleRootModel) {
+    public static ModuleRootsProcessor findRootsProcessor(ModuleRootModel moduleRootModel) {
         for (ModuleRootsProcessor moduleRootsProcessor : EP_NAME.getExtensionList()) {
             if (moduleRootsProcessor.canHandle(moduleRootModel)) {
                 return moduleRootsProcessor;
@@ -49,39 +48,39 @@ public abstract class ModuleRootsProcessor {
         return null;
     }
 
-    public abstract boolean canHandle(@Nonnull ModuleRootModel moduleRootModel);
+    public abstract boolean canHandle(ModuleRootModel moduleRootModel);
 
-    public abstract boolean containsFile(@Nonnull ObjectIntMap<VirtualFile> roots, @Nonnull VirtualFile virtualFile);
+    public abstract boolean containsFile(ObjectIntMap<VirtualFile> roots, VirtualFile virtualFile);
 
     public void processFiles(
-        @Nonnull ModuleRootModel moduleRootModel,
-        @Nonnull Predicate<ContentFolderTypeProvider> predicate,
-        @Nonnull Predicate<VirtualFile> processor
+        ModuleRootModel moduleRootModel,
+        Predicate<ContentFolderTypeProvider> predicate,
+        Predicate<VirtualFile> processor
     ) {
         VirtualFile[] files = getFiles(moduleRootModel, predicate);
         ContainerUtil.process(files, processor);
     }
 
     public void processFileUrls(
-        @Nonnull ModuleRootModel moduleRootModel,
-        @Nonnull Predicate<ContentFolderTypeProvider> predicate,
-        @Nonnull Predicate<String> processor
+        ModuleRootModel moduleRootModel,
+        Predicate<ContentFolderTypeProvider> predicate,
+        Predicate<String> processor
     ) {
         String[] files = getUrls(moduleRootModel, predicate);
         ContainerUtil.process(files, processor);
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo(value = "Override #processFiles()")
-    public VirtualFile[] getFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+    public VirtualFile[] getFiles(ModuleRootModel moduleRootModel, Predicate<ContentFolderTypeProvider> predicate) {
         return VirtualFile.EMPTY_ARRAY;
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo(value = "Override #processFileUrls()")
-    public String[] getUrls(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+    public String[] getUrls(ModuleRootModel moduleRootModel, Predicate<ContentFolderTypeProvider> predicate) {
         return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 }

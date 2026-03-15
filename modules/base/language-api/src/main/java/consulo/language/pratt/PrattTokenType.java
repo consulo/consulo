@@ -18,10 +18,8 @@ package consulo.language.pratt;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiBundle;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -29,7 +27,7 @@ import jakarta.annotation.Nullable;
 public class PrattTokenType extends IElementType {
 
 
-  public PrattTokenType(@Nonnull @NonNls String debugName,
+  public PrattTokenType(String debugName,
                         @Nullable Language language) {
     super(debugName, language);
   }

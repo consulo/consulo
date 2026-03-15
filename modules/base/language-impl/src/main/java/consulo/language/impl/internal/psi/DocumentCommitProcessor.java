@@ -21,14 +21,13 @@ import consulo.document.Document;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DocumentCommitProcessor {
-  void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile);
+  void commitSynchronously(Document document, Project project, PsiFile psiFile);
 
-  void commitAsynchronously(@Nonnull Project project,
-                            @Nonnull Document document,
-                            @Nonnull Object reason,
-                            @Nonnull ModalityState modalityState);
+  void commitAsynchronously(Project project,
+                            Document document,
+                            Object reason,
+                            ModalityState modalityState);
 }

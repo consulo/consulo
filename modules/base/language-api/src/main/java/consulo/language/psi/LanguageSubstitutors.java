@@ -25,7 +25,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -35,8 +34,8 @@ public final class LanguageSubstitutors {
   private static final Key<Language> SUBSTITUTED_LANG_KEY = Key.create("SUBSTITUTED_LANG_KEY");
   private static final Key<Boolean> REPARSING_SCHEDULED = Key.create("REPARSING_SCHEDULED");
 
-  @Nonnull
-  public static Language substituteLanguage(@Nonnull Language lang, @Nonnull VirtualFile file, @Nonnull Project project) {
+  
+  public static Language substituteLanguage(Language lang, VirtualFile file, Project project) {
     for (LanguageSubstitutor substitutor : LanguageSubstitutor.forLanguage(lang)) {
       Language language = substitutor.getLanguage(file, project);
       if (language != null) {
@@ -47,9 +46,9 @@ public final class LanguageSubstitutors {
     return lang;
   }
 
-  private static void processLanguageSubstitution(@Nonnull VirtualFile file,
-                                                  @Nonnull Language originalLang,
-                                                  @Nonnull Language substitutedLang) {
+  private static void processLanguageSubstitution(VirtualFile file,
+                                                  Language originalLang,
+                                                  Language substitutedLang) {
     if (file instanceof VirtualFileWindow) {
       // Injected files are created with substituted language, no need to reparse:
       //   com.intellij.psi.impl.source.tree.injected.MultiHostRegistrarImpl#doneInjecting
@@ -79,7 +78,7 @@ public final class LanguageSubstitutors {
     }
   }
 
-  public static void cancelReparsing(@Nonnull VirtualFile file) {
+  public static void cancelReparsing(VirtualFile file) {
     REPARSING_SCHEDULED.set(file, null);
   }
 }

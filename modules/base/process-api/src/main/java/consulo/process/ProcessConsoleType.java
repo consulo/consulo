@@ -19,7 +19,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.process.cmd.GeneralCommandLine;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,11 +49,11 @@ public enum ProcessConsoleType {
 
   private final LocalizeValue myDisplayName;
 
-  ProcessConsoleType(@Nonnull LocalizeValue displayName) {
+  ProcessConsoleType(LocalizeValue displayName) {
     myDisplayName = displayName;
   }
 
-  @Nonnull
+  
   public LocalizeValue getDisplayName() {
     return myDisplayName;
   }
@@ -67,7 +66,7 @@ public enum ProcessConsoleType {
     return true;
   }
 
-  @Nonnull
+  
   public static List<ProcessConsoleType> listSupported() {
     return Arrays.stream(values()).filter(ProcessConsoleType::isAvailable).collect(Collectors.toList());
   }

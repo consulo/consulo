@@ -17,8 +17,7 @@ package consulo.application.util.function;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -53,10 +52,10 @@ public interface Computable <T> extends Supplier<T> {
   abstract class NotNullCachedComputable<T> implements Computable<T> {
     private T myValue;
 
-    @Nonnull
+    
     protected abstract T internalCompute();
 
-    @Nonnull
+    
     @Override
     public final T compute() {
       if (myValue == null) {

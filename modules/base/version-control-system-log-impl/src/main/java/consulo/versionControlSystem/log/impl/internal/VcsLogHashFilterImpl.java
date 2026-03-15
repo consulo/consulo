@@ -16,20 +16,19 @@
 package consulo.versionControlSystem.log.impl.internal;
 
 import consulo.versionControlSystem.log.VcsLogHashFilter;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class VcsLogHashFilterImpl implements VcsLogHashFilter {
 
-  @Nonnull
+  
   private final Collection<String> myHashes;
 
-  public VcsLogHashFilterImpl(@Nonnull Collection<String> hashes) {
+  public VcsLogHashFilterImpl(Collection<String> hashes) {
     myHashes = hashes;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<String> getHashes() {
     return myHashes;

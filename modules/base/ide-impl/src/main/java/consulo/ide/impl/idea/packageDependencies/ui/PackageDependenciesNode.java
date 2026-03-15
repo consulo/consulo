@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import java.util.*;
@@ -49,7 +48,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   protected Project myProject;
   private boolean mySorted;
 
-  public PackageDependenciesNode(@Nonnull Project project) {
+  public PackageDependenciesNode(Project project) {
     myProject = project;
   }
 

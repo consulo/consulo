@@ -5,24 +5,23 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XNamedValue;
 import consulo.execution.debug.frame.XValueContainer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface CollectionTreeBuilder {
-  boolean isSupported(@Nonnull XValueContainer container);
+  boolean isSupported(XValueContainer container);
 
-  @Nonnull
-  XNamedValue createXNamedValue(@Nullable Value value, @Nonnull GenericEvaluationContext evaluationContext);
+  
+  XNamedValue createXNamedValue(@Nullable Value value, GenericEvaluationContext evaluationContext);
 
   /**
    * Is called under `com.intellij.debugger.streams.trace.EvaluationContextWrapper.launchDebuggerCommand`
    */
-  @Nonnull
-  Object getKey(@Nonnull XValueContainer container, @Nonnull Object nullMarker);
+  
+  Object getKey(XValueContainer container, Object nullMarker);
 
-  @Nonnull
-  Object getKey(@Nonnull TraceElement traceElement, @Nonnull Object nullMarker);
+  
+  Object getKey(TraceElement traceElement, Object nullMarker);
 
-  @Nonnull
+  
   XDebuggerEditorsProvider getEditorsProvider();
 }

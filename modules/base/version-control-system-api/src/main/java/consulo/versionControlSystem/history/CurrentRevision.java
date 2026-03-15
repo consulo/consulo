@@ -25,7 +25,7 @@ import consulo.versionControlSystem.RepositoryLocation;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Date;

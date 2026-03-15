@@ -6,7 +6,6 @@ import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public class UnifiedInfoAndProgressPanel implements Disposable {
     myStatusLabel.setText(LocalizeValue.of(text));
   }
 
-  @Nonnull
+  
   public Component getUIComponent() {
     return myLayout;
   }

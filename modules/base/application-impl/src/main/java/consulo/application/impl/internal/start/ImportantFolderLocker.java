@@ -17,7 +17,6 @@ package consulo.application.impl.internal.start;
 
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -31,12 +30,12 @@ public interface ImportantFolderLocker {
     CANNOT_ACTIVATE
   }
 
-  @Nonnull
+  
   default ActivateStatus lock() throws Exception {
     return lock(ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
-  @Nonnull
+  
   ActivateStatus lock(String[] args) throws Exception;
 
   void setExternalInstanceListener(Consumer<CommandLineArgs> argsConsumer);

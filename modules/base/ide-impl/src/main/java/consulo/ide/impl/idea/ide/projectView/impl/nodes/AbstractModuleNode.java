@@ -31,7 +31,6 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,7 +69,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         Module module = getValue();
         if (module == null || module.isDisposed()) {
             return false;
@@ -108,7 +107,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         return ProjectUIViewLocalize.actionOpenModuleSettingsText();

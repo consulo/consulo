@@ -28,13 +28,12 @@ import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ProblemDescriptorBase extends CommonProblemDescriptorBase implements ProblemDescriptor {
     private static final Logger LOG = Logger.getInstance(ProblemDescriptorBase.class);
 
-    @Nonnull
+    
     private final SmartPsiElementPointer myStartSmartPointer;
     @Nullable
     private final SmartPsiElementPointer myEndSmartPointer;
@@ -50,11 +49,11 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
 
     @RequiredReadAction
     public ProblemDescriptorBase(
-        @Nonnull PsiElement startElement,
-        @Nonnull PsiElement endElement,
-        @Nonnull LocalizeValue descriptionTemplate,
+        PsiElement startElement,
+        PsiElement endElement,
+        LocalizeValue descriptionTemplate,
         LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         boolean isAfterEndOfLine,
         @Nullable TextRange rangeInElement,
         boolean tooltip,
@@ -167,7 +166,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
         return myLineNumber;
     }
 
-    @Nonnull
+    
     @Override
     public ProblemHighlightType getHighlightType() {
         return myHighlightType;

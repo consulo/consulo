@@ -18,8 +18,6 @@ package consulo.ui.ex.action;
 
 import consulo.ui.ex.action.Presentation;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 /**
  * A marker interface for the action which could be toggled between "selected" and "not selected" states.
@@ -39,7 +37,7 @@ public interface Toggleable {
    * @return true if "selected", false if "not selected" or the state wasn't set previously.
    */
   @Contract(pure = true)
-  static boolean isSelected(@Nonnull Presentation presentation) {
+  static boolean isSelected(Presentation presentation) {
     Object property = presentation.getClientProperty(SELECTED_PROPERTY);
     if (property != null && !(property instanceof Boolean)) {
       throw new IllegalStateException("Unexpected value for '" + SELECTED_PROPERTY + "': " + property + "; presentation=" + presentation);
@@ -53,7 +51,7 @@ public interface Toggleable {
    * @param presentation presentation to update
    * @param selected     whether the state should be "selected" or "not selected".
    */
-  static void setSelected(@Nonnull Presentation presentation, boolean selected) {
+  static void setSelected(Presentation presentation, boolean selected) {
     presentation.putClientProperty(SELECTED_PROPERTY, selected);
   }
 }

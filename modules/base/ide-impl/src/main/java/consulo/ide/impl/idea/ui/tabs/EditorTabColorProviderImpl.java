@@ -23,8 +23,7 @@ import consulo.language.editor.FileColorManager;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -49,7 +48,7 @@ public class EditorTabColorProviderImpl implements EditorTabColorProvider, DumbA
 
     @Nullable
     @Override
-    public ColorValue getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public ColorValue getProjectViewColor(Project project, VirtualFile file) {
         FileColorManager colorManager = myFileColorManager.get();
         return colorManager.isEnabledForProjectView() ? colorManager.getFileColorValue(file) : null;
     }

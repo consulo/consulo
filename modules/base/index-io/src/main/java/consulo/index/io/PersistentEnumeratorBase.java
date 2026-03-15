@@ -23,8 +23,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.Closeable;
 import java.io.File;
 import java.io.Flushable;
@@ -83,7 +82,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
   abstract static class RecordBufferHandler<T extends PersistentEnumeratorBase> {
     abstract int recordWriteOffset(T enumerator, byte[] buf);
 
-    @Nonnull
+    
     abstract byte[] getRecordBuffer(T enumerator);
 
     abstract void setupRecord(T enumerator, int hashCode, int dataOffset, byte[] buf);
@@ -153,17 +152,17 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
   }
 
   public static class VersionUpdatedException extends CorruptedException {
-    VersionUpdatedException(@Nonnull File file) {
+    VersionUpdatedException(File file) {
       super("PersistentEnumerator storage corrupted " + file.getPath());
     }
   }
 
-  public PersistentEnumeratorBase(@Nonnull File file,
-                                  @Nonnull ResizeableMappedFile storage,
-                                  @Nonnull KeyDescriptor<Data> dataDescriptor,
+  public PersistentEnumeratorBase(File file,
+                                  ResizeableMappedFile storage,
+                                  KeyDescriptor<Data> dataDescriptor,
                                   int initialSize,
-                                  @Nonnull Version version,
-                                  @Nonnull RecordBufferHandler<? extends PersistentEnumeratorBase> recordBufferHandler,
+                                  Version version,
+                                  RecordBufferHandler<? extends PersistentEnumeratorBase> recordBufferHandler,
                                   boolean doCaching) throws IOException {
     myDataDescriptor = dataDescriptor;
     myFile = file;
@@ -258,12 +257,12 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
 
   protected abstract void setupEmptyFile() throws IOException;
 
-  @Nonnull
+  
   final RecordBufferHandler<PersistentEnumeratorBase> getRecordHandler() {
     return myRecordHandler;
   }
 
-  public void setRecordHandler(@Nonnull RecordBufferHandler<PersistentEnumeratorBase> recordHandler) {
+  public void setRecordHandler(RecordBufferHandler<PersistentEnumeratorBase> recordHandler) {
     myRecordHandler = recordHandler;
   }
 
@@ -360,7 +359,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     }
   }
 
-  public boolean processAllDataObject(@Nonnull final Predicate<? super Data> processor, @Nullable final DataFilter filter) throws IOException {
+  public boolean processAllDataObject(final Predicate<? super Data> processor, @Nullable final DataFilter filter) throws IOException {
     return traverseAllRecords(new RecordsProcessor() {
       @Override
       public boolean process(int record) throws IOException {
@@ -373,7 +372,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
 
   }
 
-  @Nonnull
+  
   public Collection<Data> getAllDataObjects(@Nullable DataFilter filter) throws IOException {
     List<Data> values = new ArrayList<>();
     processAllDataObject(data -> {
@@ -449,7 +448,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     return pos;
   }
 
-  public boolean iterateData(@Nonnull Predicate<? super Data> processor) throws IOException {
+  public boolean iterateData(Predicate<? super Data> processor) throws IOException {
     if (myKeyStorage == null) {
       throw new UnsupportedOperationException("Iteration over InlineIntegerKeyDescriptors is not supported");
     }

@@ -5,7 +5,6 @@ import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -33,7 +32,7 @@ public class CachingPainter {
    * Subpixel-antialiased text shouldn't be rendered using this procedure, as the result depends on the target surface's background color,
    * and it cannot be determined when cached image is produced.
    */
-  public static void paint(@Nonnull Graphics2D g, float x, float y, float width, float height, @Nonnull Consumer<Graphics2D> painter, @Nonnull Object key, @Nonnull Object... parameters) {
+  public static void paint(Graphics2D g, float x, float y, float width, float height, Consumer<Graphics2D> painter, Object key, Object... parameters) {
     GraphicsConfiguration config = g.getDeviceConfiguration();
     float scale = JBUI.sysScale(config);
     if ((int)scale != scale) {

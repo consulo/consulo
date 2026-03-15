@@ -28,8 +28,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +42,13 @@ import java.util.StringTokenizer;
 @Deprecated
 @DeprecationInfo("Prefer Build UI")
 public abstract class ProblemsView {
-    @Nonnull
-    public static ProblemsView getInstance(@Nonnull Project project) {
+    
+    public static ProblemsView getInstance(Project project) {
         return project.getInstance(ProblemsView.class);
     }
 
     @RequiredUIAccess
-    public static void showCurrentFileProblems(@Nonnull Project project) {
+    public static void showCurrentFileProblems(Project project) {
         ToolWindow window = getToolWindow(project);
         if (window == null) {
             return; // does not exist
@@ -65,7 +64,7 @@ public abstract class ProblemsView {
             .getToolWindow(ToolWindowId.MESSAGES_WINDOW);
     }
 
-    private static void selectContent(@Nonnull ContentManager manager, int index) {
+    private static void selectContent(ContentManager manager, int index) {
         Content content = manager.getContent(index);
         if (content != null) {
             manager.setSelectedContent(content);
@@ -76,7 +75,7 @@ public abstract class ProblemsView {
 
     public abstract void addMessage(
         int type,
-        @Nonnull String[] text,
+        String[] text,
         @Nullable String groupName,
         @Nullable Navigatable navigatable,
         @Nullable String exportTextPrefix,

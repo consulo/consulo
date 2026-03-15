@@ -20,12 +20,11 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class TemplateManagerEditorFactoryListener implements EditorFactoryListener {
   @Override
-  public void editorReleased(@Nonnull EditorFactoryEvent event) {
+  public void editorReleased(EditorFactoryEvent event) {
     Editor editor = event.getEditor();
     Project project = editor.getProject();
     if (project == null || project.isDisposed() || !project.isOpen()) {

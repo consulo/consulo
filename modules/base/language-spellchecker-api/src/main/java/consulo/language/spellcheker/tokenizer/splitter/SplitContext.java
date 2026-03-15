@@ -17,7 +17,6 @@ package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -28,7 +27,7 @@ import java.util.function.Consumer;
 public sealed interface SplitContext permits BaseSplitContext {
     String getText();
 
-    default String substring(@Nonnull TextRange range) {
+    default String substring(TextRange range) {
         return range.substring(getText());
     }
 
@@ -36,11 +35,11 @@ public sealed interface SplitContext permits BaseSplitContext {
         return StringUtil.isEmpty(getText());
     }
 
-    void addWord(@Nonnull TextRange range);
+    void addWord(TextRange range);
 
     void checkCanceled();
 
-    static SplitContext of(@Nonnull String text, @Nonnull Consumer<TextRange> consumer) {
+    static SplitContext of(String text, Consumer<TextRange> consumer) {
         return new BaseSplitContext(text, consumer);
     }
 }

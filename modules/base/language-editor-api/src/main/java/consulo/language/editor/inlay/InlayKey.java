@@ -16,10 +16,9 @@
 package consulo.language.editor.inlay;
 
 import consulo.language.Language;
-import jakarta.annotation.Nonnull;
 
 public record InlayKey<T, C>(String id) implements AbstractSettingsKey<T>, ContentKey<C> {
-    @Nonnull
+    
     @Override
     public String getFullId(Language language) {
         return language.getID() + "." + id();

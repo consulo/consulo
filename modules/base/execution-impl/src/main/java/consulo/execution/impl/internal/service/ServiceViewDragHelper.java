@@ -25,8 +25,7 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -39,17 +38,17 @@ import java.util.List;
 import static consulo.execution.service.ServiceViewDnDDescriptor.Position.*;
 
 final class ServiceViewDragHelper {
-  static DnDSource createSource(@Nonnull ServiceView serviceView) {
+  static DnDSource createSource(ServiceView serviceView) {
     return new ServiceViewDnDSource(serviceView);
   }
 
-  static DnDTarget createTarget(@Nonnull JTree tree) {
+  static DnDTarget createTarget(JTree tree) {
     return new ServiceViewDnDTarget(tree);
   }
 
-  static void installDnDSupport(@Nonnull Project project,
-                                @Nonnull ToolWindowInternalDecorator decorator,
-                                @Nonnull ContentManager contentManager) {
+  static void installDnDSupport(Project project,
+                                ToolWindowInternalDecorator decorator,
+                                ContentManager contentManager) {
     Content dropTargetContent = createDropTargetContent();
     JComponent awtDecorator = (JComponent)decorator;
     DnDSupport.createBuilder(awtDecorator)
@@ -151,7 +150,7 @@ final class ServiceViewDragHelper {
     private final List<ServiceViewItem> myItems;
     private final ServiceViewContributor myContributor;
 
-    ServiceViewDragBean(@Nonnull ServiceView serviceView, @Nonnull List<ServiceViewItem> items) {
+    ServiceViewDragBean(ServiceView serviceView, List<ServiceViewItem> items) {
       myServiceView = serviceView;
       myItems = ContainerUtil.filter(items, item -> {
         ServiceViewItem parent = item.getParent();
@@ -166,12 +165,12 @@ final class ServiceViewDragHelper {
       myContributor = getTheOnlyRootContributor(myItems);
     }
 
-    @Nonnull
+    
     ServiceView getServiceView() {
       return myServiceView;
     }
 
-    @Nonnull
+    
     List<ServiceViewItem> getItems() {
       return myItems;
     }
@@ -183,7 +182,7 @@ final class ServiceViewDragHelper {
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
       if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)) {
         return ContainerUtil.map2Array(myItems, ServiceViewItem::getValue);
       }
@@ -198,24 +197,24 @@ final class ServiceViewDragHelper {
   private static final class ServiceViewDnDSource implements DnDSource {
     private final ServiceView myServiceView;
 
-    ServiceViewDnDSource(@Nonnull ServiceView serviceView) {
+    ServiceViewDnDSource(ServiceView serviceView) {
       myServiceView = serviceView;
     }
 
     @Override
-    public boolean canStartDragging(DnDAction action, @Nonnull Point dragOrigin) {
+    public boolean canStartDragging(DnDAction action, Point dragOrigin) {
       return !myServiceView.getSelectedItems().isEmpty();
     }
 
     @Override
-    public DnDDragStartBean startDragging(DnDAction action, @Nonnull Point dragOrigin) {
+    public DnDDragStartBean startDragging(DnDAction action, Point dragOrigin) {
       return new DnDDragStartBean(new ServiceViewDragBean(myServiceView, myServiceView.getSelectedItems()));
     }
 
     @Override
     public Pair<Image, Point> createDraggedImage(DnDAction action,
                                                  Point dragOrigin,
-                                                 @Nonnull DnDDragStartBean bean) {
+                                                 DnDDragStartBean bean) {
       ServiceViewDragBean dragBean = (ServiceViewDragBean)bean.getAttachedObject();
       int size = dragBean.getItems().size();
       ItemPresentation presentation = null;
@@ -255,7 +254,7 @@ final class ServiceViewDragHelper {
   private static final class ServiceViewDnDTarget implements DnDTarget {
     private final JTree myTree;
 
-    ServiceViewDnDTarget(@Nonnull JTree tree) {
+    ServiceViewDnDTarget(JTree tree) {
       myTree = tree;
     }
 

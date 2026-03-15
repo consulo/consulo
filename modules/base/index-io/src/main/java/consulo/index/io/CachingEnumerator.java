@@ -18,7 +18,7 @@ package consulo.index.io;
 import consulo.index.io.data.DataEnumerator;
 import consulo.util.collection.SLRUMap;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

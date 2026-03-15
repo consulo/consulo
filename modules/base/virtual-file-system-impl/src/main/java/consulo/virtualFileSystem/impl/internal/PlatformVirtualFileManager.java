@@ -28,32 +28,31 @@ import consulo.virtualFileSystem.RefreshSession;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.BaseVirtualFileManager;
 import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
 public class PlatformVirtualFileManager extends BaseVirtualFileManager {
-    @Nonnull
+    
     private final ManagingFS myManagingFS;
 
     @Inject
-    public PlatformVirtualFileManager(@Nonnull Application application, @Nonnull ManagingFS managingFS) {
+    public PlatformVirtualFileManager(Application application, ManagingFS managingFS) {
         super(application);
         myManagingFS = managingFS;
     }
 
     @Override
-    public Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+    public Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
         return VirtualFileSystemInternalHelper.getInstance().getFileIcon(file, project, flags);
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public Image getFileIconNoDefer(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+    public Image getFileIconNoDefer(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
         return VirtualFileSystemInternalHelper.getInstance().getFileIconNoDefer(file, project, flags);
     }
 
@@ -89,14 +88,14 @@ public class PlatformVirtualFileManager extends BaseVirtualFileManager {
         return myManagingFS.findFileById(id);
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence getVFileName(int nameId) {
         return FileNameCache.getVFileName(nameId);
     }
 
     @Override
-    public int storeName(@Nonnull String name) {
+    public int storeName(String name) {
         return FileNameCache.storeName(name);
     }
 }

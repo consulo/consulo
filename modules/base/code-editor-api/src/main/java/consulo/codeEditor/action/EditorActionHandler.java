@@ -23,8 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.DocCommandGroupId;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface for actions activated by keystrokes in the editor.
@@ -88,7 +87,7 @@ public abstract class EditorActionHandler {
         }
     }
 
-    private void doIfEnabled(@Nonnull Caret hostCaret, @Nullable DataContext context, @Nonnull CaretTask task) {
+    private void doIfEnabled(Caret hostCaret, @Nullable DataContext context, CaretTask task) {
         DataContext caretContext =
             context == null ? null : CodeEditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
         Editor editor = hostCaret.getEditor();
@@ -106,14 +105,14 @@ public abstract class EditorActionHandler {
         }
     }
 
-    static boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
+    static boolean ensureInjectionUpToDate(Caret hostCaret) {
         return CodeEditorInternalHelper.getInstance().ensureInjectionUpToDate(hostCaret);
     }
 
     /**
      * Implementations can override this method to define whether handler is enabled for a specific caret in a given editor.
      */
-    protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
         if (inCheck) {
             return true;
         }
@@ -131,7 +130,7 @@ public abstract class EditorActionHandler {
      * If {@code caret} is {@code null}, checks whether handler is enabled in general (i.e. enabled for at least one caret in editor),
      * if {@code caret} is not {@code null}, checks whether it's enabled for specified caret.
      */
-    public final boolean isEnabled(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+    public final boolean isEnabled(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         //noinspection deprecation
         return caret == null ? isEnabled(editor, dataContext) : isEnabledForCaret(editor, caret, dataContext);
     }
@@ -143,7 +142,7 @@ public abstract class EditorActionHandler {
      * {@link #execute(Editor, Caret, DataContext)}.
      */
     @Deprecated
-    public void execute(@Nonnull Editor editor, @Nullable DataContext dataContext) {
+    public void execute(Editor editor, @Nullable DataContext dataContext) {
         if (inExecution) {
             return;
         }
@@ -164,7 +163,7 @@ public abstract class EditorActionHandler {
      *                    without current context
      * @param dataContext the data context for the action.
      */
-    protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+    protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (inExecution) {
             return;
         }
@@ -178,7 +177,7 @@ public abstract class EditorActionHandler {
         }
     }
 
-    public boolean executeInCommand(@Nonnull Editor editor, DataContext dataContext) {
+    public boolean executeInCommand(Editor editor, DataContext dataContext) {
         return true;
     }
 
@@ -193,7 +192,7 @@ public abstract class EditorActionHandler {
      * @param editor      the editor in which the action is invoked.
      * @param dataContext the data context for the action.
      */
-    public final void execute(@Nonnull Editor editor, @Nullable Caret contextCaret, DataContext dataContext) {
+    public final void execute(Editor editor, @Nullable Caret contextCaret, DataContext dataContext) {
         Editor hostEditor = dataContext == null ? null : dataContext.getData(EditorKeys.HOST_EDITOR);
         if (hostEditor == null) {
             hostEditor = editor;
@@ -225,7 +224,7 @@ public abstract class EditorActionHandler {
         myWorksInInjected = worksInInjected;
     }
 
-    public DocCommandGroupId getCommandGroupId(@Nonnull Editor editor) {
+    public DocCommandGroupId getCommandGroupId(Editor editor) {
         // by default avoid merging two consequential commands, and, in the same time, pass along the Document
         return DocCommandGroupId.noneGroupId(editor.getDocument());
     }
@@ -237,14 +236,14 @@ public abstract class EditorActionHandler {
 
         @Override
         protected abstract void doExecute(
-            @Nonnull Editor editor,
-            @SuppressWarnings("NullableProblems") @Nonnull Caret caret,
+            Editor editor,
+            @SuppressWarnings("NullableProblems") Caret caret,
             DataContext dataContext
         );
     }
 
     @FunctionalInterface
     private interface CaretTask {
-        void perform(@Nonnull Caret caret, @Nullable DataContext dataContext);
+        void perform(Caret caret, @Nullable DataContext dataContext);
     }
 }

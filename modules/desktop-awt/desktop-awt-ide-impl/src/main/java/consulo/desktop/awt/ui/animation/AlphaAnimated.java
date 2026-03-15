@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.ui.animation;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 13/05/2023
  */
 public interface AlphaAnimated {
-  @Nonnull
+  
   AlphaAnimationContext getAlphaContext();
 }

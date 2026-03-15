@@ -3,8 +3,7 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -74,23 +73,23 @@ public final class TouchbarActionCustomizations {
     // Static API
     //
 
-    public static @Nullable TouchbarActionCustomizations getCustomizations(@Nonnull AnAction action) {
+    public static @Nullable TouchbarActionCustomizations getCustomizations(AnAction action) {
         return getClientProperty(action, false);
     }
 
-    public static @Nonnull TouchbarActionCustomizations setShowText(@Nonnull AnAction action, boolean showText) {
+    public static TouchbarActionCustomizations setShowText(AnAction action, boolean showText) {
         return getClientProperty(action, true).setShowText(showText);
     }
 
-    public static @Nonnull TouchbarActionCustomizations setDefault(@Nonnull AnAction action, boolean isDefault) {
+    public static TouchbarActionCustomizations setDefault(AnAction action, boolean isDefault) {
         return getClientProperty(action, true).setDefault(isDefault);
     }
 
-    public static @Nonnull TouchbarActionCustomizations setPrincipal(@Nonnull AnAction action, boolean principal) {
+    public static TouchbarActionCustomizations setPrincipal(AnAction action, boolean principal) {
         return getClientProperty(action, true).setPrincipal(principal);
     }
 
-    public static @Nonnull TouchbarActionCustomizations setComponent(@Nonnull AnAction action, JComponent contextComponent) {
+    public static TouchbarActionCustomizations setComponent(AnAction action, JComponent contextComponent) {
         return getClientProperty(action, true).setComponent(contextComponent);
     }
 
@@ -100,7 +99,7 @@ public final class TouchbarActionCustomizations {
 
     private static final Key<TouchbarActionCustomizations> ACTION_CUSTOMIZATIONS_KEY = Key.create("TouchbarActionCustomizations.key");
 
-    private static @Nullable TouchbarActionCustomizations getClientProperty(@Nonnull AnAction action, boolean forceCreate) {
+    private static @Nullable TouchbarActionCustomizations getClientProperty(AnAction action, boolean forceCreate) {
         TouchbarActionCustomizations result = action.getTemplatePresentation().getClientProperty(ACTION_CUSTOMIZATIONS_KEY);
         if (forceCreate && result == null) {
             action.getTemplatePresentation().putClientProperty(ACTION_CUSTOMIZATIONS_KEY, result = new TouchbarActionCustomizations());

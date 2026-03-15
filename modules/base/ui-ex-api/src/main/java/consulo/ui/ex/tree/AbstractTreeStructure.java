@@ -19,21 +19,20 @@ package consulo.ui.ex.tree;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class AbstractTreeStructure {
-    @Nonnull
+    
     public abstract Object getRootElement();
 
-    @Nonnull
-    public abstract Object[] getChildElements(@Nonnull Object element);
+    
+    public abstract Object[] getChildElements(Object element);
 
     @Nullable
-    public abstract Object getParentElement(@Nonnull Object element);
+    public abstract Object getParentElement(Object element);
 
-    @Nonnull
-    public abstract NodeDescriptor createDescriptor(@Nonnull Object element, @Nullable NodeDescriptor parentDescriptor);
+    
+    public abstract NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor);
 
     public abstract void commit();
 
@@ -46,7 +45,7 @@ public abstract class AbstractTreeStructure {
      * E.g. when you should commit all documents during the {@link #commit()},
      * you can use {@link PsiDocumentManager#asyncCommitDocuments(Project)} to do it asynchronously.
      */
-    @Nonnull
+    
     public ActionCallback asyncCommit() {
         if (hasSomethingToCommit()) {
             commit();
@@ -54,11 +53,11 @@ public abstract class AbstractTreeStructure {
         return ActionCallback.DONE;
     }
 
-    public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+    public boolean isToBuildChildrenInBackground(Object element) {
         return false;
     }
 
-    public boolean isValid(@Nonnull Object element) {
+    public boolean isValid(Object element) {
         return true;
     }
 
@@ -67,8 +66,8 @@ public abstract class AbstractTreeStructure {
      * @return a leaf state for the given element
      * @see LeafState.Supplier#getLeafState()
      */
-    @Nonnull
-    public LeafState getLeafState(@Nonnull Object element) {
+    
+    public LeafState getLeafState(Object element) {
         if (isAlwaysLeaf(element)) {
             return LeafState.ALWAYS;
         }
@@ -79,12 +78,12 @@ public abstract class AbstractTreeStructure {
         return LeafState.DEFAULT;
     }
 
-    public boolean isAlwaysLeaf(@Nonnull Object element) {
+    public boolean isAlwaysLeaf(Object element) {
         return false;
     }
 
-    @Nonnull
-    public AsyncResult<Object> revalidateElement(@Nonnull Object element) {
+    
+    public AsyncResult<Object> revalidateElement(Object element) {
         return AsyncResult.resolved(element);
     }
 }

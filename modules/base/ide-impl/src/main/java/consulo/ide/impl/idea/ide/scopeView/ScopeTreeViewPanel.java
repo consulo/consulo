@@ -90,8 +90,7 @@ import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -133,7 +132,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
                 : null;
         }
     };
-    @Nonnull
+    
     private final Project myProject;
     private FileTreeModelBuilder myBuilder;
 
@@ -166,7 +165,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
         @Override
         @RequiredReadAction
-        public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
+        public void fileStatusChanged(VirtualFile virtualFile) {
             if (!virtualFile.isValid()) {
                 return;
             }
@@ -198,7 +197,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     private MyChangesListListener myChangesListListener = new MyChangesListListener();
     protected AsyncResult<Void> myActionCallback;
 
-    public ScopeTreeViewPanel(@Nonnull Project project) {
+    public ScopeTreeViewPanel(Project project) {
         super(new BorderLayout());
         myApplicationFileColorManager = ApplicationFileColorManager.getInstance();
         myUpdateQueue.setPassThrough(false);  // we don't want passthrough mode, even in unit tests
@@ -294,7 +293,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         new TreeSpeedSearch(myTree);
         myCopyPasteDelegator = new CopyPasteDelegator(myProject, this) {
             @Override
-            @Nonnull
+            
             protected PsiElement[] getSelectedElements() {
                 return getSelectedPsiElements();
             }
@@ -320,7 +319,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         CustomizationUtil.installPopupHandler(myTree, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private PsiElement[] getSelectedPsiElements() {
         TreePath[] treePaths = myTree.getSelectionPaths();
@@ -520,7 +519,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         @Override
         @RequiredUIAccess
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,
@@ -562,7 +561,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
     private class MyPsiTreeChangeAdapter extends PsiTreeChangeAdapter {
         @Override
-        public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+        public void childAdded(PsiTreeChangeEvent event) {
             PsiElement element = event.getParent();
             PsiElement child = event.getChild();
             if (child == null) {
@@ -603,7 +602,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         }
 
         @Override
-        public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent event) {
+        public void beforeChildRemoval(PsiTreeChangeEvent event) {
             PsiElement child = event.getChild();
             if (event.getParent() instanceof PsiDirectory directory
                 && (child instanceof PsiFile file && !isInjected(file) || child instanceof PsiDirectory)) {
@@ -617,7 +616,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         }
 
         @Override
-        public void beforeChildMovement(@Nonnull PsiTreeChangeEvent event) {
+        public void beforeChildMovement(PsiTreeChangeEvent event) {
             if (event.getOldParent() instanceof PsiDirectory oldParentDirectory
                 && event.getChild() instanceof PsiFileSystemItem file
                 && !(file instanceof PsiFile injectedFile && isInjected(injectedFile))) {
@@ -632,7 +631,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         }
 
         @Override
-        public void childMoved(@Nonnull PsiTreeChangeEvent event) {
+        public void childMoved(PsiTreeChangeEvent event) {
             if (event.getNewParent() instanceof PsiDirectory
                 && event.getChild() instanceof PsiFileSystemItem file
                 && !(file instanceof PsiFile injectedFile && isInjected(injectedFile))) {
@@ -655,7 +654,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         }
 
         @Override
-        public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+        public void childrenChanged(PsiTreeChangeEvent event) {
             PsiElement parent = event.getParent();
             PsiFile file = parent.getContainingFile();
             if (file != null) {
@@ -682,7 +681,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         }
 
         @Override
-        public final void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+        public final void propertyChanged(PsiTreeChangeEvent event) {
             String propertyName = event.getPropertyName();
             PsiElement element = event.getElement();
             if (element != null) {
@@ -702,7 +701,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
         @Override
         @RequiredReadAction
-        public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+        public void childReplaced(PsiTreeChangeEvent event) {
             NamedScope scope = getCurrentScope();
             PsiElement element = event.getNewChild();
             PsiFile psiFile = event.getFile();
@@ -759,16 +758,16 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
             }
         }
 
-        private void queueUpdateImmediately(@Nonnull @RequiredReadAction Runnable request) {
+        private void queueUpdateImmediately(@RequiredReadAction Runnable request) {
             queueUpdate(request, true);
         }
 
-        private void queueUpdateAsync(@Nonnull @RequiredReadAction Runnable request) {
+        private void queueUpdateAsync(@RequiredReadAction Runnable request) {
             queueUpdate(request, false);
         }
 
         //expand/collapse state should be restored in actual request if needed
-        private void queueUpdate(@Nonnull @RequiredReadAction Runnable request, boolean updateImmediately) {
+        private void queueUpdate(@RequiredReadAction Runnable request, boolean updateImmediately) {
             @RequiredReadAction
             final Runnable wrapped = () -> {
                 if (myProject.isDisposed()) {
@@ -876,7 +875,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
             return null;
         }
 
-        @Nonnull
+        
         @Override
         public PsiDirectory[] getDirectories() {
             PsiDirectory directory = getDirectory();
@@ -893,14 +892,14 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     private final class MyDeletePSIElementProvider implements DeleteProvider {
         @Override
         @RequiredReadAction
-        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public boolean canDeleteElement(DataContext dataContext) {
             PsiElement[] elements = getSelectedPsiElements();
             return DeleteHandler.shouldEnableDeleteAction(elements);
         }
 
         @Override
         @RequiredUIAccess
-        public void deleteElement(@Nonnull DataContext dataContext) {
+        public void deleteElement(DataContext dataContext) {
             List<PsiElement> allElements = Arrays.asList(getSelectedPsiElements());
             ArrayList<PsiElement> validElements = new ArrayList<>();
             for (PsiElement psiElement : allElements) {
@@ -926,12 +925,12 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
     private class MyProblemListener implements ProblemListener {
         @Override
-        public void problemsAppeared(@Nonnull VirtualFile file) {
+        public void problemsAppeared(VirtualFile file) {
             addNode(file, myProblemScopeHolder.getProblemsScope().getName());
         }
 
         @Override
-        public void problemsDisappeared(@Nonnull VirtualFile file) {
+        public void problemsDisappeared(VirtualFile file) {
             removeNode(file, myProblemScopeHolder.getProblemsScope().getName());
         }
     }

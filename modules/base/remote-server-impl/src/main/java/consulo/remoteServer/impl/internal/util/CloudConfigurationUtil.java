@@ -5,8 +5,7 @@ import consulo.credentialStorage.CredentialAttributes;
 import consulo.credentialStorage.Credentials;
 import consulo.credentialStorage.PasswordSafe;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -25,7 +24,7 @@ public final class CloudConfigurationUtil {
     public static void doSetSafeValue(@Nullable CredentialAttributes credentialAttributes,
                                       @Nullable String credentialUser,
                                       @Nullable String secretValue,
-                                      @Nonnull Consumer<? super String> unsafeSetter) {
+                                      Consumer<? super String> unsafeSetter) {
 
         if (credentialAttributes != null) {
             PasswordSafe.getInstance().set(credentialAttributes, new Credentials(credentialUser, secretValue), false);
@@ -42,7 +41,7 @@ public final class CloudConfigurationUtil {
             .map(Credentials::getPasswordAsString);
     }
 
-    public static String doGetSafeValue(@Nullable CredentialAttributes credentialAttributes, @Nonnull Supplier<String> unsafeGetter) {
+    public static String doGetSafeValue(@Nullable CredentialAttributes credentialAttributes, Supplier<String> unsafeGetter) {
         return doGetSafeValue(credentialAttributes).orElseGet(unsafeGetter);
     }
 

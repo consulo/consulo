@@ -4,8 +4,7 @@ package consulo.codeEditor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.action.ActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -21,7 +20,7 @@ public interface CustomFoldRegionRenderer {
    * {@link CustomFoldRegion#getWidthInPixels()} and the width of {@code targetRegion} parameter passed to renderer's
    * {@link #paint(CustomFoldRegion, Graphics2D, Rectangle2D, TextAttributes)} method.
    */
-  int calcWidthInPixels(@Nonnull CustomFoldRegion region);
+  int calcWidthInPixels(CustomFoldRegion region);
 
   /**
    * This defines vertical size of custom fold region's placeholder. Returned value will define the result of
@@ -29,7 +28,7 @@ public interface CustomFoldRegionRenderer {
    * {@link #paint(CustomFoldRegion, Graphics2D, Rectangle2D, TextAttributes)} method. Minimum possible height currently is equal to
    * {@link Editor#getLineHeight()}, returned values, smaller than that, are automatically adjusted.
    */
-  int calcHeightInPixels(@Nonnull CustomFoldRegion region);
+  int calcHeightInPixels(CustomFoldRegion region);
 
   /**
    * Defines the appearance of custom element.
@@ -40,16 +39,16 @@ public interface CustomFoldRegionRenderer {
    *                       they can differ somewhat due to rounding to whole number of device pixels.
    * @param textAttributes attributes of surrounding text
    */
-  void paint(@Nonnull CustomFoldRegion region,
-             @Nonnull Graphics2D g,
-             @Nonnull Rectangle2D targetRegion,
-             @Nonnull TextAttributes textAttributes);
+  void paint(CustomFoldRegion region,
+             Graphics2D g,
+             Rectangle2D targetRegion,
+             TextAttributes textAttributes);
 
   /**
    * Enables custom fold region to have a custom context menu in editor (displayed on mouse right click).
    */
   @Nullable
-  default ActionGroup getContextMenuGroup(@Nonnull CustomFoldRegion region) {
+  default ActionGroup getContextMenuGroup(CustomFoldRegion region) {
     return null;
   }
 
@@ -60,7 +59,7 @@ public interface CustomFoldRegionRenderer {
    * will correctly update the provider (only) if newly returned instance is not equal to the previously defined one.
    */
   @Nullable
-  default GutterIconRenderer calcGutterIconRenderer(@Nonnull CustomFoldRegion region) {
+  default GutterIconRenderer calcGutterIconRenderer(CustomFoldRegion region) {
     return null;
   }
 }

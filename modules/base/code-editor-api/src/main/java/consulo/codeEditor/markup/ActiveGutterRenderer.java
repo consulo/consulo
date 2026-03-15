@@ -20,8 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.util.SimpleAccessible;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -39,7 +38,7 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
      * @return the tooltip text, or null if no tooltip is required.
      */
     //TODO: rename into getToolTip() after deprecation deletion
-    @Nonnull
+    
     default LocalizeValue getTooltipValue() {
         return LocalizeValue.ofNullable(getTooltipText());
     }
@@ -64,26 +63,26 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
      * @param editor the editor to which the marker belongs.
      * @param e      the mouse event instance.
      */
-    void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e);
+    void doAction(Editor editor, MouseEvent e);
 
     /**
      * @return true if {@link #doAction(Editor, MouseEvent)} should be called
      */
-    default boolean canDoAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
+    default boolean canDoAction(Editor editor, MouseEvent e) {
         return canDoAction(e);
     }
 
-    default boolean canDoAction(@Nonnull MouseEvent e) {
+    default boolean canDoAction(MouseEvent e) {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     default LocalizeValue getAccessibleNameValue() {
         return LocalizeValue.localizeTODO("marker: unknown");
     }
 
-    @Nonnull
+    
     @Override
     default LocalizeValue getAccessibleTooltipValue() {
         return getTooltipValue();
@@ -99,7 +98,7 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
      * @return the new calculated bounds or the preferred bounds or null
      */
     @Nullable
-    default Rectangle calcBounds(@Nonnull Editor editor, int lineNum, @Nonnull Rectangle preferredBounds) {
+    default Rectangle calcBounds(Editor editor, int lineNum, Rectangle preferredBounds) {
         return preferredBounds;
     }
 }

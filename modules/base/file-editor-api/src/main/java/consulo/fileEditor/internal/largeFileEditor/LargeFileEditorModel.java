@@ -17,7 +17,6 @@ package consulo.fileEditor.internal.largeFileEditor;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
 public interface LargeFileEditorModel {
     void setBrokenMode();
 
-    <T> void putUserDataToEditor(@Nonnull Key<T> key, T value);
+    <T> void putUserDataToEditor(Key<T> key, T value);
 
     @RequiredUIAccess
     void showSearchResult(SearchResult searchResult);

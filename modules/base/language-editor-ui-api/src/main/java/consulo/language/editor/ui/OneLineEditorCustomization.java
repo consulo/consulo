@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Kirill Likhodedov
@@ -32,7 +31,7 @@ public class OneLineEditorCustomization extends SimpleEditorCustomization {
   }
 
   @Override
-  public void customize(@Nonnull EditorEx editor) {
+  public void customize(EditorEx editor) {
     editor.setOneLineMode(isEnabled());
   }
 

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.util.io.URLUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface PathMacroProtocolProvider {
-  @Nonnull
+  
   default List<String> getSupportedProtocols() {
     return List.of(URLUtil.FILE_PROTOCOL);
   }

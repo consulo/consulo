@@ -7,7 +7,6 @@ import consulo.util.collection.primitive.ints.IntSets;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -28,7 +27,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
   public CompactVirtualFileSet() {
   }
 
-  public CompactVirtualFileSet(@Nonnull Collection<? extends VirtualFile> files) {
+  public CompactVirtualFileSet(Collection<? extends VirtualFile> files) {
     addAll(files);
   }
 
@@ -49,7 +48,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
   }
 
   @Override
-  public boolean add(@Nonnull VirtualFile file) {
+  public boolean add(VirtualFile file) {
     if (frozen) {
       throw new UnsupportedOperationException();
     }
@@ -109,7 +108,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
     frozen = true;
   }
 
-  public boolean process(@Nonnull Predicate<? super VirtualFile> processor) {
+  public boolean process(Predicate<? super VirtualFile> processor) {
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
     BitSet ids = fileIds;
     if (ids != null) {
@@ -142,7 +141,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
     return (ids == null ? 0 : ids.cardinality()) + (idSet == null ? 0 : idSet.size()) + weirdFiles.size();
   }
 
-  @Nonnull
+  
   @Override
   public Iterator<VirtualFile> iterator() {
     BitSet ids = fileIds;

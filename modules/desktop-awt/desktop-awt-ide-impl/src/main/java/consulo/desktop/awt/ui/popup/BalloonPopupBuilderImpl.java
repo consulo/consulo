@@ -24,8 +24,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,96 +76,96 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
     private boolean myRequestFocus = false;
     private boolean myPointerShiftedToStart;
 
-    public BalloonPopupBuilderImpl(@Nullable Map<Disposable, List<Balloon>> storage, @Nonnull JComponent content) {
+    public BalloonPopupBuilderImpl(@Nullable Map<Disposable, List<Balloon>> storage, JComponent content) {
         myStorage = storage;
         myContent = content;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setHideOnAction(boolean hideOnAction) {
         myHideOnAction = hideOnAction;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setDialogMode(boolean dialogMode) {
         myDialogMode = dialogMode;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public BalloonBuilder setBorderColor(@Nonnull Color color) {
+    public BalloonBuilder setBorderColor(Color color) {
         myBorder = color;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setBorderInsets(@Nullable Insets insets) {
         myBorderInsets = insets;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public BalloonBuilder setFillColor(@Nonnull Color color) {
+    public BalloonBuilder setFillColor(Color color) {
         myFill = color;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setHideOnClickOutside(boolean hide) {
         myHideOnMouseOutside = hide;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setHideOnKeyOutside(boolean hide) {
         myHideOnKeyOutside = hide;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setShowCallout(boolean show) {
         myShowCallout = show;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setFadeoutTime(long fadeoutTime) {
         myFadeoutTime = fadeoutTime;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setBlockClicksThroughBalloon(boolean block) {
         myBlockClicks = block;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setRequestFocus(boolean requestFocus) {
         myRequestFocus = requestFocus;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setPointerSize(Dimension size) {
         myPointerSize = size;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setCornerToPointerDistance(int distance) {
         myCornerToPointerDistance = distance;
@@ -179,49 +178,49 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setAnimationCycle(int time) {
         myAnimationCycle = time;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setHideOnFrameResize(boolean hide) {
         myHideOnFrameResize = hide;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setHideOnLinkClick(boolean hide) {
         myHideOnLinkClick = hide;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setPositionChangeXShift(int positionChangeXShift) {
         myPositionChangeXShift = positionChangeXShift;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setPositionChangeYShift(int positionChangeYShift) {
         myPositionChangeYShift = positionChangeYShift;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setCloseButtonEnabled(boolean enabled) {
         myCloseButtonEnabled = enabled;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setClickHandler(ActionListener listener, boolean closeOnClick) {
         myClickHandler = listener;
@@ -229,51 +228,51 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setCalloutShift(int length) {
         myCalloutShift = length;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setTitle(@Nullable String title) {
         myTitle = title;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setContentInsets(Insets insets) {
         myContentInsets = insets;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setShadow(boolean shadow) {
         myShadow = shadow;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setSmallVariant(boolean smallVariant) {
         mySmallVariant = smallVariant;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BalloonBuilder setLayer(Balloon.Layer layer) {
         myLayer = layer;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public BalloonBuilder setDisposable(@Nonnull Disposable anchor) {
+    public BalloonBuilder setDisposable(Disposable anchor) {
         myAnchor = anchor;
         return this;
     }
@@ -284,7 +283,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public Balloon createBalloon() {
         final BalloonImpl result = new BalloonImpl(

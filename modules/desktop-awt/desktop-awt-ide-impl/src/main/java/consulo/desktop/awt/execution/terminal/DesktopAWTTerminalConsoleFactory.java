@@ -26,7 +26,6 @@ import consulo.execution.terminal.TerminalSession;
 import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -47,7 +46,7 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
     }
 
     @Override
-    @Nonnull
+    
     public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
         JBTerminalSystemSettingsProvider provider = new JBTerminalSystemSettingsProvider(myApplication, settings, parentDisposable);
 
@@ -59,7 +58,7 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
         return widget;
     }
 
-    @Nonnull
+    
     @Override
     public JediTerminalConsole createCustom(Disposable parentDisposable,
                                             BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,

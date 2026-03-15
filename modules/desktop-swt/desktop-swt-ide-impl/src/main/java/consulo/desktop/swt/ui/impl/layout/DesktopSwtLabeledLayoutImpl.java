@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -57,9 +56,9 @@ public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent<Layou
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public LabeledLayout set(@Nonnull Component component) {
+  public LabeledLayout set(Component component) {
     addImpl(component, null);
     return this;
   }

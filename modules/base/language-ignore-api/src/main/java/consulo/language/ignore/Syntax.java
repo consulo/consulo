@@ -15,7 +15,7 @@
  */
 package consulo.language.ignore;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Available syntax list.

@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -44,27 +43,27 @@ public abstract class ArchiveFileType implements FileType {
     });
   }
 
-  @Nonnull
+  
   public abstract String getProtocol();
 
-  @Nonnull
+  
   public ArchiveFileSystem getFileSystem() {
     return myFileSystemLazyValue.get();
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDescription() {
     return FileTypeLocalize.filetypeDescriptionArchiveFiles();
   }
 
   @Override
-  @Nonnull
+  
   public String getDefaultExtension() {
     return "";
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return PlatformIconGroup.filetypesArchive();

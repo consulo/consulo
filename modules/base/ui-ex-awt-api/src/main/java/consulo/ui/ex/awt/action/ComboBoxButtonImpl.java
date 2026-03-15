@@ -22,8 +22,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -53,7 +52,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
         setRenderer(new ColoredListCellRenderer<>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
                 if (myPresentation.isDisabledMnemonic()) {
                     append(myPresentation.getTextValue());
                 } else {
@@ -181,7 +180,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         }
     }
 
-    private void updateTooltipText(@Nonnull LocalizeValue description) {
+    private void updateTooltipText(LocalizeValue description) {
         String tooltip = KeymapUtil.createTooltipText(description.getValue(), myComboBoxAction);
         setToolTipText(!tooltip.isEmpty() ? tooltip : null);
     }
@@ -191,7 +190,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         return uiClassID;
     }
 
-    @Nonnull
+    
     @Override
     public ComboBoxAction getComboBoxAction() {
         return myComboBoxAction;

@@ -19,7 +19,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -43,7 +42,7 @@ public class AdditionalIndexedRootsScope extends GlobalSearchScope {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         return myBaseScope.contains(file) || myFileSet.isInSet(file);
     }
 
@@ -53,12 +52,12 @@ public class AdditionalIndexedRootsScope extends GlobalSearchScope {
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
         return myBaseScope.compare(file1, file2);
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
         return myBaseScope.isSearchInModuleContent(aModule);
     }
 

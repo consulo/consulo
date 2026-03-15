@@ -28,9 +28,7 @@ import consulo.ide.impl.idea.util.ui.*;
 import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -41,13 +39,13 @@ import java.awt.geom.RoundRectangle2D;
  * @author spLeaner
  */
 public class ConfigurationErrorsComponent extends JPanel {
-  @NonNls private static final String FIX_ACTION_NAME = "FIX";
-  @NonNls private static final String NAVIGATE_ACTION_NAME = "NAVIGATE";
+  private static final String FIX_ACTION_NAME = "FIX";
+  private static final String NAVIGATE_ACTION_NAME = "NAVIGATE";
 
   private final JBList myErrorList;
   private final CollectionListModel<ConfigurationError> myModel;
 
-  public ConfigurationErrorsComponent(@Nonnull Project project) {
+  public ConfigurationErrorsComponent(Project project) {
     super(new BorderLayout());
     myModel = new CollectionListModel<ConfigurationError>();
     final JLabel label = new JLabel("<html><body><b>Problems:</b></body></html>");
@@ -55,7 +53,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     add(label, BorderLayout.NORTH);
     project.getMessageBus().connect().subscribe(ConfigurationErrors.class, new ConfigurationErrors() {
       @Override
-      public void addError(@Nonnull ConfigurationError error) {
+      public void addError(ConfigurationError error) {
         int elementIndex = myModel.getElementIndex(error);
         if (elementIndex != -1) {
           return;
@@ -66,7 +64,7 @@ public class ConfigurationErrorsComponent extends JPanel {
       }
 
       @Override
-      public void removeError(@Nonnull ConfigurationError error) {
+      public void removeError(ConfigurationError error) {
         myModel.remove(error);
         label.setVisible(myModel.getSize() != 0);
       }
@@ -102,12 +100,12 @@ public class ConfigurationErrorsComponent extends JPanel {
     private Image myIcon;
     private String myName;
 
-    ToolbarAlikeButton(@Nonnull Image icon, @Nonnull String name) {
+    ToolbarAlikeButton(Image icon, String name) {
       this(icon);
       myName = name;
     }
 
-    ToolbarAlikeButton(@Nonnull Image icon) {
+    ToolbarAlikeButton(Image icon) {
       myIcon = icon;
 
       myBehavior = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
@@ -215,7 +213,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     myErrorList.setToolTipText(null);
   }
 
-  private void onClickFix(@Nonnull ConfigurationError error, JComponent component, MouseEvent e) {
+  private void onClickFix(ConfigurationError error, JComponent component, MouseEvent e) {
     error.fix(component, new RelativePoint(e));
   }
 
@@ -228,7 +226,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     private JPanel myButtonsPanel;
     private JPanel myFixGroup;
 
-    private ErrorListRenderer(@Nonnull JList list) {
+    private ErrorListRenderer(JList list) {
       setLayout(new BorderLayout());
       setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
       setOpaque(false);

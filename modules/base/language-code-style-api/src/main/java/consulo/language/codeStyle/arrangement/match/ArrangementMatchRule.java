@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
-import jakarta.annotation.Nonnull;
 
 /**
  * Container for matching strategies to be used during file entries arrangement. 
@@ -31,29 +30,29 @@ import jakarta.annotation.Nonnull;
  */
 public class ArrangementMatchRule {
 
-  @Nonnull
+  
   public static final ArrangementSettingsToken DEFAULT_ORDER_TYPE = StdArrangementTokens.Order.KEEP;
 
-  @Nonnull
+  
   private final ArrangementEntryMatcher  myMatcher;
-  @Nonnull
+  
   private final ArrangementSettingsToken myOrderType;
 
-  public ArrangementMatchRule(@Nonnull ArrangementEntryMatcher matcher) {
+  public ArrangementMatchRule(ArrangementEntryMatcher matcher) {
     this(matcher, DEFAULT_ORDER_TYPE);
   }
 
-  public ArrangementMatchRule(@Nonnull ArrangementEntryMatcher matcher, @Nonnull ArrangementSettingsToken orderType) {
+  public ArrangementMatchRule(ArrangementEntryMatcher matcher, ArrangementSettingsToken orderType) {
     myMatcher = matcher;
     myOrderType = orderType;
   }
 
-  @Nonnull
+  
   public ArrangementEntryMatcher getMatcher() {
     return myMatcher;
   }
 
-  @Nonnull
+  
   public ArrangementSettingsToken getOrderType() {
     return myOrderType;
   }

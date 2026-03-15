@@ -20,20 +20,19 @@ import consulo.component.util.pointer.Named;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
  * @author nik
  */
 public interface Artifact extends UserDataHolder, Named {
-  @Nonnull
+  
   ArtifactType getArtifactType();
 
   boolean isBuildOnMake();
 
-  @Nonnull
+  
   CompositePackagingElement<?> getRootElement();
 
   @Nullable
@@ -41,7 +40,7 @@ public interface Artifact extends UserDataHolder, Named {
 
   Collection<? extends ArtifactPropertiesProvider> getPropertiesProviders();
 
-  ArtifactProperties<?> getProperties(@Nonnull ArtifactPropertiesProvider propertiesProvider);
+  ArtifactProperties<?> getProperties(ArtifactPropertiesProvider propertiesProvider);
 
   @Nullable
   VirtualFile getOutputFile();

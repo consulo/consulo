@@ -34,8 +34,7 @@ import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -56,7 +55,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
     }
 
     @Override
-    public boolean iterateContent(@Nonnull ContentIterator processor, @Nullable VirtualFileFilter filter) {
+    public boolean iterateContent(ContentIterator processor, @Nullable VirtualFileFilter filter) {
         DirectoryIndex directoryIndex = myDirectoryIndexProvider.get();
 
         Set<VirtualFile> contentRoots = AccessRule.read(() -> {
@@ -95,30 +94,30 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
     }
 
     @Override
-    public boolean isInContent(@Nonnull VirtualFile fileOrDir) {
+    public boolean isInContent(VirtualFile fileOrDir) {
         DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
         return info.isInProject(fileOrDir) && myModule.equals(info.getModule());
     }
 
     @Override
-    public boolean isInSourceContent(@Nonnull VirtualFile fileOrDir) {
+    public boolean isInSourceContent(VirtualFile fileOrDir) {
         DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
         return info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule());
     }
 
     @Override
-    @Nonnull
-    public List<OrderEntry> getOrderEntriesForFile(@Nonnull VirtualFile fileOrDir) {
+    
+    public List<OrderEntry> getOrderEntriesForFile(VirtualFile fileOrDir) {
         return findAllOrderEntriesWithOwnerModule(myModule, Arrays.asList(myDirectoryIndexProvider.get().getOrderEntries(getInfoForFileOrDirectory(fileOrDir))));
     }
 
     @Override
-    public OrderEntry getOrderEntryForFile(@Nonnull VirtualFile fileOrDir) {
+    public OrderEntry getOrderEntryForFile(VirtualFile fileOrDir) {
         return findOrderEntryWithOwnerModule(myModule, Arrays.asList(myDirectoryIndexProvider.get().getOrderEntries(getInfoForFileOrDirectory(fileOrDir))));
     }
 
     @Override
-    public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
+    public boolean isInTestSourceContent(VirtualFile fileOrDir) {
         DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
         return info.isInModuleSource(fileOrDir)
             && myModule.equals(info.getModule())
@@ -127,7 +126,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
 
     @Nullable
     @Override
-    public ContentFolderTypeProvider getContentFolderTypeForFile(@Nonnull VirtualFile fileOrDir) {
+    public ContentFolderTypeProvider getContentFolderTypeForFile(VirtualFile fileOrDir) {
         DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
         if (info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule())) {
             return myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info);
@@ -141,7 +140,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
     }
 
     @Nullable
-    public static OrderEntry findOrderEntryWithOwnerModule(@Nonnull Module ownerModule, @Nonnull List<OrderEntry> orderEntries) {
+    public static OrderEntry findOrderEntryWithOwnerModule(Module ownerModule, List<OrderEntry> orderEntries) {
         if (orderEntries.size() < 10) {
             for (OrderEntry orderEntry : orderEntries) {
                 if (orderEntry.getOwnerModule() == ownerModule) {
@@ -154,8 +153,8 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
         return index < 0 ? null : orderEntries.get(index);
     }
 
-    @Nonnull
-    private static List<OrderEntry> findAllOrderEntriesWithOwnerModule(@Nonnull Module ownerModule, @Nonnull List<OrderEntry> entries) {
+    
+    private static List<OrderEntry> findAllOrderEntriesWithOwnerModule(Module ownerModule, List<OrderEntry> entries) {
         if (entries.isEmpty()) {
             return Collections.emptyList();
         }
@@ -186,25 +185,25 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
             myOwnerModule = ownerModule;
         }
 
-        @Nonnull
+        
         @Override
         public OrderEntryType<?> getType() {
             throw new UnsupportedOperationException();
         }
 
-        @Nonnull
+        
         @Override
-        public VirtualFile[] getFiles(@Nonnull OrderRootType type) {
+        public VirtualFile[] getFiles(OrderRootType type) {
             throw new UnsupportedOperationException();
         }
 
-        @Nonnull
+        
         @Override
-        public String[] getUrls(@Nonnull OrderRootType rootType) {
+        public String[] getUrls(OrderRootType rootType) {
             throw new UnsupportedOperationException();
         }
 
-        @Nonnull
+        
         @Override
         public String getPresentableName() {
             throw new UnsupportedOperationException();
@@ -215,30 +214,30 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
             throw new UnsupportedOperationException();
         }
 
-        @Nonnull
+        
         @Override
         public Module getOwnerModule() {
             return myOwnerModule;
         }
 
-        @Nonnull
+        
         @Override
         public ModuleRootLayer getModuleRootLayer() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public <R> R accept(@Nonnull RootPolicy<R> policy, @Nullable R initialValue) {
+        public <R> R accept(RootPolicy<R> policy, @Nullable R initialValue) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean isEquivalentTo(@Nonnull OrderEntry other) {
+        public boolean isEquivalentTo(OrderEntry other) {
             return false;
         }
 
         @Override
-        public int compareTo(@Nonnull OrderEntry o) {
+        public int compareTo(OrderEntry o) {
             throw new UnsupportedOperationException();
         }
 

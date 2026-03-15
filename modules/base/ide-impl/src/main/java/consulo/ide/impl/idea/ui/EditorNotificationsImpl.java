@@ -39,8 +39,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -84,7 +83,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
-            public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+            public void fileOpened(FileEditorManager source, VirtualFile file) {
                 updateNotifications(file);
             }
         });
@@ -108,7 +107,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
     }
 
     @Override
-    public void updateNotifications(@Nonnull VirtualFile file) {
+    public void updateNotifications(VirtualFile file) {
         myProject.getApplication().getLastUIAccess().giveIfNeed(() -> {
             ProgressIndicator indicator = getCurrentProgress(file);
             if (indicator != null) {
@@ -133,7 +132,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
     }
 
     @Nullable
-    private ReadTask createTask(@Nonnull ProgressIndicator indicator, @Nonnull VirtualFile file) {
+    private ReadTask createTask(ProgressIndicator indicator, VirtualFile file) {
         List<FileEditor> editors = ContainerUtil.filter(
             myFileEditorManager.getAllEditors(file),
             editor -> !(editor instanceof TextEditor textEditor && !AsyncEditorLoader.isEditorLoaded(textEditor.getEditor()))
@@ -161,7 +160,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
             @RequiredReadAction
             @Nullable
             @Override
-            public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
+            public Continuation performInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
                 if (isOutdated()) {
                     return null;
                 }
@@ -189,7 +188,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
             }
 
             @Override
-            public void onCanceled(@Nonnull ProgressIndicator ignored) {
+            public void onCanceled(ProgressIndicator ignored) {
                 if (getCurrentProgress(file) == indicator) {
                     updateNotifications(file);
                 }
@@ -202,8 +201,8 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
     }
 
     private void updateNotification(
-        @Nonnull FileEditor editor,
-        @Nonnull String notificationId,
+        FileEditor editor,
+        String notificationId,
         @Nullable EditorNotificationBuilderEx builder
     ) {
         Key<NotificationInfo> key = myKeyStore.computeIfAbsent(notificationId, Key::create);

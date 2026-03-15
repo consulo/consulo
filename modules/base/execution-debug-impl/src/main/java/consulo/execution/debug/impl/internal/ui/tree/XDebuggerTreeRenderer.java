@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -58,7 +57,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
 
   @Override
   public void customizeCellRenderer(
-    @Nonnull JTree tree,
+    JTree tree,
     Object value,
     boolean selected,
     boolean expanded,
@@ -110,7 +109,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
   }
 
   @Override
-  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
+  public void append(String fragment, SimpleTextAttributes attributes, Object tag) {
     if (tag instanceof XDebuggerTreeNodeHyperlink && ((XDebuggerTreeNodeHyperlink)tag).alwaysOnScreen()) {
       myHaveLink = true;
       myLink.append(fragment, attributes, tag);
@@ -139,7 +138,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     }
   }
 
-  @Nonnull
+  
   @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
@@ -163,7 +162,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
 
     @Override
     public void customizeCellRenderer(
-      @Nonnull JTree tree,
+      JTree tree,
       Object value,
       boolean selected,
       boolean expanded,

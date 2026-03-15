@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.credentialStorage.AuthenticationData;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface AuthDialog {
   @Nullable
-  AuthenticationData show(@Nonnull String title,
+  AuthenticationData show(String title,
                           @Nullable String description,
                           @Nullable String login,
                           @Nullable String password,

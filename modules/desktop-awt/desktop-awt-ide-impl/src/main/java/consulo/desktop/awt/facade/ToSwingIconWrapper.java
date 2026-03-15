@@ -17,13 +17,12 @@ package consulo.desktop.awt.facade;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
 public interface ToSwingIconWrapper {
-  @Nonnull
+  
   javax.swing.Icon toSwingIcon();
 }

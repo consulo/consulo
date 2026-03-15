@@ -18,7 +18,6 @@ package consulo.fileEditor.structureView;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines the implementation of Structure View and the file structure popup for
@@ -38,6 +37,6 @@ public interface StructureViewBuilder {
    * @return the structure view implementation.
    * @see TreeBasedStructureViewBuilder
    */
-  @Nonnull
-  StructureView createStructureView(FileEditor fileEditor, @Nonnull Project project);
+  
+  StructureView createStructureView(FileEditor fileEditor, Project project);
 }

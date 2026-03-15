@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -35,20 +34,20 @@ public abstract class SemService {
   }
 
   @Nullable
-  public <T extends SemElement> T getSemElement(SemKey<T> key, @Nonnull PsiElement psi) {
+  public <T extends SemElement> T getSemElement(SemKey<T> key, PsiElement psi) {
     List<T> list = getSemElements(key, psi);
     if (list.isEmpty()) return null;
     return list.get(0);
   }
 
-  public abstract <T extends SemElement> List<T> getSemElements(SemKey<T> key, @Nonnull PsiElement psi);
+  public abstract <T extends SemElement> List<T> getSemElements(SemKey<T> key, PsiElement psi);
 
   @Nullable
-  public abstract <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, @Nonnull PsiElement psi);
+  public abstract <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, PsiElement psi);
 
-  public abstract <T extends SemElement> void setCachedSemElement(SemKey<T> key, @Nonnull PsiElement psi, @Nullable T semElement);
+  public abstract <T extends SemElement> void setCachedSemElement(SemKey<T> key, PsiElement psi, @Nullable T semElement);
 
-  public abstract void clearCachedSemElements(@Nonnull PsiElement psi);
+  public abstract void clearCachedSemElements(PsiElement psi);
 
   public abstract void clearCache();
 
@@ -56,7 +55,7 @@ public abstract class SemService {
    * Caches won't be cleared on PSI changes inside this action
    * @param change the action
    */
-  public abstract void performAtomicChange(@Nonnull Runnable change);
+  public abstract void performAtomicChange(Runnable change);
 
   public abstract boolean isInsideAtomicChange();
 }

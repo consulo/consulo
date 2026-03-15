@@ -17,7 +17,6 @@ package consulo.desktop.awt.internal.diff.merge;
 
 import consulo.diff.merge.MergeContext;
 import consulo.diff.merge.MergeTool;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class MergeContextEx extends MergeContext {
@@ -25,5 +24,5 @@ public abstract class MergeContextEx extends MergeContext {
      * Destroy active MergeViewer and reopen current MergeRequest in the new one
      */
     @RequiredUIAccess
-    public abstract void reopenWithTool(@Nonnull MergeTool tool);
+    public abstract void reopenWithTool(MergeTool tool);
 }

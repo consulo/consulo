@@ -31,7 +31,6 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ui.ex.RelativePoint;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -52,7 +51,7 @@ public class TooltipController {
     hideCurrentTooltip();
   }
 
-  public void cancelTooltip(@Nonnull TooltipGroup groupId, MouseEvent mouseEvent, boolean forced) {
+  public void cancelTooltip(TooltipGroup groupId, MouseEvent mouseEvent, boolean forced) {
     if (groupId.equals(myCurrentTooltipGroup)) {
       if (!forced && myCurrentTooltip != null && myCurrentTooltip.canControlAutoHide()) return;
 
@@ -60,12 +59,12 @@ public class TooltipController {
     }
   }
 
-  public void showTooltipByMouseMove(@Nonnull Editor editor,
-                                     @Nonnull RelativePoint point,
+  public void showTooltipByMouseMove(Editor editor,
+                                     RelativePoint point,
                                      TooltipRenderer tooltipObject,
                                      boolean alignToRight,
-                                     @Nonnull TooltipGroup group,
-                                     @Nonnull HintHint hintHint) {
+                                     TooltipGroup group,
+                                     HintHint hintHint) {
     LightweightHintImpl currentTooltip = myCurrentTooltip;
     if (currentTooltip == null || !currentTooltip.isVisible()) {
       if (currentTooltip != null) {
@@ -108,31 +107,31 @@ public class TooltipController {
     }
   }
 
-  public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull String text, boolean alignToRight, @Nonnull TooltipGroup group) {
+  public void showTooltip(Editor editor, Point p, String text, boolean alignToRight, TooltipGroup group) {
     TooltipRenderer tooltipRenderer = ((EditorMarkupModel)editor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(text);
     showTooltip(editor, p, tooltipRenderer, alignToRight, group);
   }
 
-  public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull String text, int currentWidth, boolean alignToRight, @Nonnull TooltipGroup group) {
+  public void showTooltip(Editor editor, Point p, String text, int currentWidth, boolean alignToRight, TooltipGroup group) {
     TooltipRenderer tooltipRenderer = ((EditorMarkupModel)editor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(text, currentWidth);
     showTooltip(editor, p, tooltipRenderer, alignToRight, group);
   }
 
-  public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull String text, int currentWidth, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
+  public void showTooltip(Editor editor, Point p, String text, int currentWidth, boolean alignToRight, TooltipGroup group, HintHint hintHint) {
     TooltipRenderer tooltipRenderer = ((EditorMarkupModel)editor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(text, currentWidth);
     showTooltip(editor, p, tooltipRenderer, alignToRight, group, hintHint);
   }
 
-  public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull TooltipRenderer tooltipRenderer, boolean alignToRight, @Nonnull TooltipGroup group) {
+  public void showTooltip(Editor editor, Point p, TooltipRenderer tooltipRenderer, boolean alignToRight, TooltipGroup group) {
     showTooltip(editor, p, tooltipRenderer, alignToRight, group, new HintHint(editor.getContentComponent(), p));
   }
 
-  public void showTooltip(@Nonnull Editor editor,
-                          @Nonnull Point p,
-                          @Nonnull TooltipRenderer tooltipRenderer,
+  public void showTooltip(Editor editor,
+                          Point p,
+                          TooltipRenderer tooltipRenderer,
                           boolean alignToRight,
-                          @Nonnull TooltipGroup group,
-                          @Nonnull HintHint hintInfo) {
+                          TooltipGroup group,
+                          HintHint hintInfo) {
     if (myCurrentTooltip == null || !myCurrentTooltip.isVisible()) {
       myCurrentTooltipObject = null;
     }

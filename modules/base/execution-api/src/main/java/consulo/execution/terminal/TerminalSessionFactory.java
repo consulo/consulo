@@ -18,7 +18,6 @@ package consulo.execution.terminal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -27,6 +26,6 @@ import java.util.function.Supplier;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TerminalSessionFactory {
-  @Nonnull
-  TerminalSession createLocal(@Nonnull String connectorName, @Nonnull String workingDirectory, @Nonnull Supplier<String> shellPathGetter);
+  
+  TerminalSession createLocal(String connectorName, String workingDirectory, Supplier<String> shellPathGetter);
 }

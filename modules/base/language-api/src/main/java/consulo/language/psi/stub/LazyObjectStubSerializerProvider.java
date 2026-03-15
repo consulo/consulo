@@ -3,8 +3,7 @@ package consulo.language.psi.stub;
 
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
@@ -28,7 +27,7 @@ class LazyObjectStubSerializerProvider implements ObjectStubSerializerProvider {
     return myExternalIdPrefix != null;
   }
 
-  @Nonnull
+  
   @Override
   public String getExternalId() {
     // not lazy

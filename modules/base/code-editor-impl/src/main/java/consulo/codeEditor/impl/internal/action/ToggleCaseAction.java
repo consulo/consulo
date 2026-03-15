@@ -23,7 +23,7 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 

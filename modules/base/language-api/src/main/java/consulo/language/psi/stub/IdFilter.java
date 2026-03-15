@@ -29,8 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.BitSet;
 
 public abstract class IdFilter {
@@ -38,15 +37,15 @@ public abstract class IdFilter {
   private static final Key<CachedValue<IdFilter>> INSIDE_PROJECT = Key.create("INSIDE_PROJECT");
   private static final Key<CachedValue<IdFilter>> OUTSIDE_PROJECT = Key.create("OUTSIDE_PROJECT");
 
-  @Nonnull
-  public static IdFilter getProjectIdFilter(@Nonnull Project project, boolean includeNonProjectItems) {
+  
+  public static IdFilter getProjectIdFilter(Project project, boolean includeNonProjectItems) {
     Key<CachedValue<IdFilter>> key = includeNonProjectItems ? OUTSIDE_PROJECT : INSIDE_PROJECT;
     CachedValueProvider<IdFilter> provider =
             () -> CachedValueProvider.Result.create(buildProjectIdFilter(project, includeNonProjectItems), ProjectRootManager.getInstance(project), VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS);
     return CachedValuesManager.getManager(project).getCachedValue(project, key, provider, false);
   }
 
-  @Nonnull
+  
   private static IdFilter buildProjectIdFilter(Project project, boolean includeNonProjectItems) {
     long started = System.currentTimeMillis();
     final BitSet idSet = new BitSet();
@@ -74,7 +73,7 @@ public abstract class IdFilter {
         return id >= 0 && idSet.get(id);
       }
 
-      @Nonnull
+      
       @Override
       public GlobalSearchScope getEffectiveFilteringScope() {
         return includeNonProjectItems ? GlobalSearchScope.allScope(project) : GlobalSearchScope.projectScope(project);

@@ -18,7 +18,6 @@ package consulo.application.impl.internal.progress;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.TaskInfo;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,19 +32,19 @@ public class ProgressBuilderTaskInfo implements TaskInfo {
         myCancelable = cancelable;
     }
 
-    @Nonnull
+    
     @Override
     public String getTitle() {
         return myTitleText.get();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getCancelTextValue() {
         return ApplicationLocalize.taskButtonCancel();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getCancelTooltipTextValue() {
         return ApplicationLocalize.taskButtonCancel();

@@ -23,8 +23,7 @@ import consulo.task.TaskManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -33,21 +32,21 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
     protected BaseTaskAction() {
     }
 
-    protected BaseTaskAction(@Nonnull LocalizeValue text) {
+    protected BaseTaskAction(LocalizeValue text) {
         super(text);
     }
 
-    protected BaseTaskAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected BaseTaskAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         event.getPresentation().setEnabled(event.hasData(Project.KEY));
     }
 
     @Nullable
-    public static TaskManager getTaskManager(@Nonnull AnActionEvent event) {
+    public static TaskManager getTaskManager(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         if (project == null) {
             return null;
@@ -56,7 +55,7 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
     }
 
     @Nullable
-    public static LocalTask getActiveTask(@Nonnull AnActionEvent event) {
+    public static LocalTask getActiveTask(AnActionEvent event) {
         TaskManager manager = getTaskManager(event);
         return manager == null ? null : manager.getActiveTask();
     }

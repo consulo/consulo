@@ -23,8 +23,7 @@ import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.image.WebImageConverter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class WebItemPresentationImpl implements TextItemPresentation {
   private Image myIcon;
   private List<Component> myFragments = new ArrayList<>();
 
-  @Nonnull
+  
   @Override
   public TextItemPresentation withIcon(@Nullable Image image) {
     myIcon = image;
@@ -47,7 +46,7 @@ public class WebItemPresentationImpl implements TextItemPresentation {
   }
 
   @Override
-  public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
+  public void append(LocalizeValue text, TextAttribute textAttribute) {
     Span span = new Span(text.get());
     myFragments.add(span);
 

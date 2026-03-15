@@ -28,8 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,19 +36,19 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class WelcomeFrameManager {
-  @Nonnull
+  
   public static WelcomeFrameManager getInstance() {
     return Application.get().getInstance(WelcomeFrameManager.class);
   }
 
   public static final String DIMENSION_KEY = "WELCOME_SCREEN";
 
-  @Nonnull
+  
   public static Size2D getDefaultWindowSize() {
     return new Size2D(800, 460);
   }
 
-  public static boolean isFromWelcomeFrame(@Nonnull AnActionEvent e) {
+  public static boolean isFromWelcomeFrame(AnActionEvent e) {
     return e.getPlace().equals(ActionPlaces.WELCOME_SCREEN);
   }
 
@@ -112,7 +111,7 @@ public abstract class WelcomeFrameManager {
     }, myApplication.getNoneModalityState());
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   protected abstract IdeFrame createFrame();
 }

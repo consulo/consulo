@@ -39,8 +39,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -91,7 +90,7 @@ public class SelectInEditorManagerImpl implements SelectInEditorManager, Disposa
     });
   }
 
-  private void doSelect(boolean toUseNormalSelection, @Nonnull Editor editor, boolean toSelectLine, TextRange textRange) {
+  private void doSelect(boolean toUseNormalSelection, Editor editor, boolean toSelectLine, TextRange textRange) {
     int startOffset = textRange.getStartOffset();
     int endOffset = textRange.getEndOffset();
     if (toUseNormalSelection) {

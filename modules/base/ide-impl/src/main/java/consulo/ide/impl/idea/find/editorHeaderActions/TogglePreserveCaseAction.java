@@ -21,7 +21,6 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 public class TogglePreserveCaseAction extends EditorSearchToggleAction implements Embeddable {
     public TogglePreserveCaseAction() {
@@ -39,7 +38,7 @@ public class TogglePreserveCaseAction extends EditorSearchToggleAction implement
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
         FindModel findModel = search != null ? search.getFindModel() : null;
         e.getPresentation().setEnabled(findModel != null && !findModel.isRegularExpressions());
@@ -48,12 +47,12 @@ public class TogglePreserveCaseAction extends EditorSearchToggleAction implement
     }
 
     @Override
-    protected boolean isSelected(@Nonnull SearchSession session) {
+    protected boolean isSelected(SearchSession session) {
         return session.getFindModel().isPreserveCase();
     }
 
     @Override
-    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+    protected void setSelected(SearchSession session, boolean selected) {
         session.getFindModel().setPreserveCase(selected);
     }
 }

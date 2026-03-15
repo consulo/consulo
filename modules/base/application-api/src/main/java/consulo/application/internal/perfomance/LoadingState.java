@@ -6,7 +6,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,11 +23,11 @@ public enum LoadingState {
 
   private static boolean CHECK_LOADING_PHASE;
 
-  LoadingState(@Nonnull String displayName) {
+  LoadingState(String displayName) {
     this.displayName = displayName;
   }
 
-  @Nonnull
+  
   static Logger getLogger() {
     return Logger.getInstance(LoadingState.class);
   }

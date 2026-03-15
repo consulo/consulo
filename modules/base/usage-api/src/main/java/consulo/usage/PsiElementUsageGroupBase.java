@@ -28,7 +28,6 @@ import consulo.usage.localize.UsageLocalize;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.status.FileStatus;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -40,19 +39,19 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     private final String myName;
     private final Image myIcon;
 
-    public PsiElementUsageGroupBase(@Nonnull T element, Image icon) {
+    public PsiElementUsageGroupBase(T element, Image icon) {
         myElementPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
         myName = getPresentationName(element);
         myIcon = icon;
     }
 
     @RequiredReadAction
-    public PsiElementUsageGroupBase(@Nonnull T element) {
+    public PsiElementUsageGroupBase(T element) {
         this(element, IconDescriptorUpdaters.getIcon(element, 0));
     }
 
-    @Nonnull
-    private static <T extends PsiElement & NavigationItem> String getPresentationName(@Nonnull T element) {
+    
+    private static <T extends PsiElement & NavigationItem> String getPresentationName(T element) {
         String name = element.getName();
         return name != null ? name : UsageLocalize.usageElementWithoutName().get();
     }
@@ -69,7 +68,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
         return myName;
     }
@@ -112,7 +111,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     }
 
     @Override
-    public int compareTo(@Nonnull UsageGroup o) {
+    public int compareTo(UsageGroup o) {
         String name = o instanceof NamedPresentably namedPresentably ? namedPresentably.getPresentableName() : o.getText(null);
         return myName.compareToIgnoreCase(name);
     }
@@ -154,7 +153,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     }
 
     @Override
-    @Nonnull
+    
     public String getPresentableName() {
         return myName;
     }

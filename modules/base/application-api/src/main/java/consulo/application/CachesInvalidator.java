@@ -18,7 +18,6 @@ package consulo.application;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CachesInvalidator {
@@ -27,7 +26,7 @@ public abstract class CachesInvalidator {
      * When to use: when invalidation will lead to the loss of a potentially valuable to the user information, e.g. Local History.
      * Do not use:  when caches are easily re-buildable and doesn't contain user's data (to avoid unnecessary confusion).
      */
-    @Nonnull
+    
     public abstract LocalizeValue getDescription();
 
     public boolean isEnabledByDefault() {

@@ -24,16 +24,15 @@ import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  * @since 9/18/13
  */
 public class ExternalActionUtil {
-  @Nonnull
-  public static MyInfo getProcessingInfo(@Nonnull DataContext context) {
+  
+  public static MyInfo getProcessingInfo(DataContext context) {
     ExternalProjectPojo externalProject = context.getData(ExternalSystemDataKeys.SELECTED_PROJECT);
     if (externalProject == null) {
       return MyInfo.EMPTY;

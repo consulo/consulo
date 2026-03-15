@@ -31,7 +31,7 @@ import consulo.util.lang.StringHash;
 import consulo.util.lang.StringEscapeUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.*;
 import java.util.*;

@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.tree.table;
 
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.tree.Tree;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;

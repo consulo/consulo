@@ -10,8 +10,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -23,9 +22,9 @@ import java.util.Map;
 public abstract class RunDashboardCustomizer {
   public static final Key<Map<Object, Object>> NODE_LINKS = Key.create("RunDashboardNodeLink");
 
-  public abstract boolean isApplicable(@Nonnull RunnerAndConfigurationSettings settings, @Nullable RunContentDescriptor descriptor);
+  public abstract boolean isApplicable(RunnerAndConfigurationSettings settings, @Nullable RunContentDescriptor descriptor);
 
-  public boolean updatePresentation(@Nonnull PresentationData presentation, @Nonnull RunDashboardRunConfigurationNode node) {
+  public boolean updatePresentation(PresentationData presentation, RunDashboardRunConfigurationNode node) {
     return false;
   }
 
@@ -36,24 +35,24 @@ public abstract class RunDashboardCustomizer {
    * @return node's status. Returned status is used for grouping nodes by status.
    */
   @Nullable
-  public RunDashboardRunConfigurationStatus getStatus(@Nonnull RunDashboardRunConfigurationNode node) {
+  public RunDashboardRunConfigurationStatus getStatus(RunDashboardRunConfigurationNode node) {
     return null;
   }
 
   @Nullable
-  public PsiElement getPsiElement(@Nonnull RunDashboardRunConfigurationNode node) {
+  public PsiElement getPsiElement(RunDashboardRunConfigurationNode node) {
     return null;
   }
 
   @Nullable
-  public Collection<? extends AbstractTreeNode<?>> getChildren(@Nonnull RunDashboardRunConfigurationNode node) {
+  public Collection<? extends AbstractTreeNode<?>> getChildren(RunDashboardRunConfigurationNode node) {
     return null;
   }
 
-  public boolean canDrop(@Nonnull RunDashboardRunConfigurationNode node, @Nonnull DnDEvent event) {
+  public boolean canDrop(RunDashboardRunConfigurationNode node, DnDEvent event) {
     return false;
   }
 
-  public void drop(@Nonnull RunDashboardRunConfigurationNode node, @Nonnull DnDEvent event) {
+  public void drop(RunDashboardRunConfigurationNode node, DnDEvent event) {
   }
 }

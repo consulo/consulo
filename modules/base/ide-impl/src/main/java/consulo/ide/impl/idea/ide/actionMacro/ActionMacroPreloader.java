@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.internal.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -36,7 +35,7 @@ public class ActionMacroPreloader extends PreloadingActivity {
     }
 
     @Override
-    public void preload(@Nonnull ProgressIndicator indicator) {
+    public void preload(ProgressIndicator indicator) {
         // init action macro manager
         myApplication.getInstance(ActionMacroManagerState.class);
     }

@@ -38,8 +38,7 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -55,7 +54,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
     protected final CodeEditorBase myEditor;
 
-    @Nonnull
+    
     protected final CodeEditorCaretModelBase<CodeEditorCaretBase> myCaretModel;
     private boolean isValid = true;
 
@@ -110,7 +109,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
     private int myDocumentUpdateCounter;
 
-    public CodeEditorCaretBase(@Nonnull CodeEditorBase editor, @Nonnull CodeEditorCaretModelBase caretModel) {
+    public CodeEditorCaretBase(CodeEditorBase editor, CodeEditorCaretModelBase caretModel) {
         myEditor = editor;
         myCaretModel = caretModel;
 
@@ -176,7 +175,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         });
     }
 
-    @Nonnull
+    
     @Override
     public CaretModel getCaretModel() {
         return myCaretModel;
@@ -379,13 +378,13 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
     @Override
     @RequiredUIAccess
-    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
+    public void moveToLogicalPosition(LogicalPosition pos) {
         myCaretModel.doWithCaretMerging(() -> moveToLogicalPosition(pos, false, null, false, true));
     }
 
     @RequiredUIAccess
     private CaretEvent doMoveToLogicalPosition(
-        @Nonnull LogicalPosition pos,
+        LogicalPosition pos,
         boolean locateBeforeSoftWrap,
         @Nullable StringBuilder debugBuffer,
         boolean adjustForInlays,
@@ -637,17 +636,17 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
     @Override
     @RequiredUIAccess
-    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
+    public void moveToVisualPosition(VisualPosition pos) {
         moveToVisualPosition(pos, true);
     }
 
     @RequiredUIAccess
-    private void moveToVisualPosition(@Nonnull VisualPosition pos, boolean fireListeners) {
+    private void moveToVisualPosition(VisualPosition pos, boolean fireListeners) {
         myCaretModel.doWithCaretMerging(() -> doMoveToVisualPosition(pos, fireListeners));
     }
 
     @RequiredUIAccess
-    void doMoveToVisualPosition(@Nonnull VisualPosition pos, boolean fireListeners) {
+    void doMoveToVisualPosition(VisualPosition pos, boolean fireListeners) {
         UIAccess.assertIsUIThread();
         checkDisposal();
         validateCallContext();
@@ -722,7 +721,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Nullable
     @RequiredUIAccess
     CaretEvent moveToLogicalPosition(
-        @Nonnull LogicalPosition pos,
+        LogicalPosition pos,
         boolean locateBeforeSoftWrap,
         @Nullable StringBuilder debugBuffer,
         boolean adjustForInlays,
@@ -773,7 +772,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return !myCaretModel.myIsInUpdate && !myReportCaretMoves;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public LogicalPosition getLogicalPosition() {
@@ -782,7 +781,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return myLogicalCaret;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public VisualPosition getVisualPosition() {
@@ -1093,7 +1092,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return getOffset();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public VisualPosition getSelectionStartPosition() {
@@ -1154,7 +1153,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return getOffset();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public VisualPosition getSelectionEndPosition() {
@@ -1266,9 +1265,9 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
     @RequiredUIAccess
     void doSetSelection(
-        @Nonnull VisualPosition startPosition,
+        VisualPosition startPosition,
         int _startOffset,
-        @Nonnull VisualPosition endPosition,
+        VisualPosition endPosition,
         int _endOffset,
         boolean visualPositionAware,
         boolean updateSystemSelection,
@@ -1426,7 +1425,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return caretOffset;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public VisualPosition getLeadSelectionPosition() {
@@ -1556,7 +1555,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @Nonnull
+    
     public CodeEditorBase getEditor() {
         return myEditor;
     }
@@ -1581,7 +1580,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return myEditor.isAtBidiRunBoundary(getVisualPosition());
     }
 
-    @Nonnull
+    
     @Override
     public CaretVisualAttributes getVisualAttributes() {
         CaretVisualAttributes attrs = getUserData(VISUAL_ATTRIBUTES_KEY);
@@ -1589,12 +1588,12 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    public void setVisualAttributes(@Nonnull CaretVisualAttributes attributes) {
+    public void setVisualAttributes(CaretVisualAttributes attributes) {
         putUserData(VISUAL_ATTRIBUTES_KEY, attributes == CaretVisualAttributes.DEFAULT ? null : attributes);
         requestRepaint(myVerticalInfo);
     }
 
-    @Nonnull
+    
     @Override
     public String dumpState() {
         return "{valid: " + isValid +
@@ -1625,7 +1624,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return myRangeMarkerStartPosition;
     }
 
-    private void setRangeMarkerStartPosition(@Nonnull VisualPosition startPosition) {
+    private void setRangeMarkerStartPosition(VisualPosition startPosition) {
         myRangeMarkerStartPosition = startPosition;
     }
 
@@ -1635,7 +1634,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return myRangeMarkerEndPosition;
     }
 
-    private void setRangeMarkerEndPosition(@Nonnull VisualPosition endPosition) {
+    private void setRangeMarkerEndPosition(VisualPosition endPosition) {
         myRangeMarkerEndPosition = endPosition;
     }
 
@@ -1737,7 +1736,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
 
         @Override
-        protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+        protected void changedUpdateImpl(DocumentEvent e) {
             int oldOffset = intervalStart();
             RangeMarkerTree.RMNode<RangeMarkerEx> node = myNode;
             long newRange = isValid() && node != null
@@ -1798,7 +1797,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
 
         @Override
-        protected void onReTarget(@Nonnull DocumentEvent e) {
+        protected void onReTarget(DocumentEvent e) {
             int offset = intervalStart();
             if (DocumentUtil.isInsideSurrogatePair(getDocument(), offset)) {
                 setRange(TextRangeScalarUtil.toScalarRange(offset - 1, offset - 1));
@@ -1834,7 +1833,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
 
         @Override
-        protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+        protected void changedUpdateImpl(DocumentEvent e) {
             super.changedUpdateImpl(e);
             if (isValid()) {
                 alignToSurrogatePairBoundaries();
@@ -1861,7 +1860,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
 
         @Override
-        protected void onReTarget(@Nonnull DocumentEvent e) {
+        protected void onReTarget(DocumentEvent e) {
             alignToSurrogatePairBoundaries();
         }
 

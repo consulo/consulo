@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.ui.internal.arrangement;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,17 +25,17 @@ import java.awt.event.ActionListener;
  */
 public class ArrangementAnimationManager implements ArrangementAnimationPanel.Listener, ActionListener {
 
-  @Nonnull
+  
   private final Timer myTimer = new Timer(ArrangementConstants.ANIMATION_STEPS_TIME_GAP_MILLIS, this);
 
-  @Nonnull
+  
   private final ArrangementAnimationPanel myAnimationPanel;
-  @Nonnull
+  
   private final Callback                  myCallback;
   
   private boolean myFinished;
 
-  public ArrangementAnimationManager(@Nonnull ArrangementAnimationPanel panel, @Nonnull Callback callback) {
+  public ArrangementAnimationManager(ArrangementAnimationPanel panel, Callback callback) {
     myAnimationPanel = panel;
     myCallback = callback;
     myAnimationPanel.setListener(this);

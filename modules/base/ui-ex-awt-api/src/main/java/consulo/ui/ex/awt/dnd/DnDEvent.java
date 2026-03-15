@@ -19,7 +19,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;

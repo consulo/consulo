@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.application.CommonBundle;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;
@@ -30,7 +29,7 @@ import java.util.ResourceBundle;
 public class CodeEditorBundle {
   private static Reference<ResourceBundle> ourBundle;
 
-  @NonNls private static final String BUNDLE = "messages.CodeEditorBundle";
+  private static final String BUNDLE = "messages.CodeEditorBundle";
 
   private CodeEditorBundle() {
   }

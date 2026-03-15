@@ -23,7 +23,6 @@ import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -31,13 +30,13 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class DesktopIndentsPassFactory implements TextEditorHighlightingPassFactory {
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, Registrar.Anchor.BEFORE, Pass.UPDATE_FOLDING, false);
   }
 
   @Override
-  @Nonnull
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     return new DesktopAWTIndentPass(file.getProject(), editor, file);
   }
 }

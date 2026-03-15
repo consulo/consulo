@@ -21,8 +21,7 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.IOUtil;
 import consulo.index.io.StringRef;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,12 +33,12 @@ public class StubInputStream extends DataInputStream {
   private final AbstractStringEnumerator myNameStorage;
   private final byte[] myStringIOBuffer = IOUtil.allocReadWriteUTFBuffer();
 
-  public StubInputStream(@Nonnull InputStream in, @Nonnull AbstractStringEnumerator nameStorage) {
+  public StubInputStream(InputStream in, AbstractStringEnumerator nameStorage) {
     super(in);
     myNameStorage = nameStorage;
   }
 
-  @Nonnull
+  
   public String readUTFFast() throws IOException {
     return IOUtil.readUTFFast(myStringIOBuffer, this);
   }

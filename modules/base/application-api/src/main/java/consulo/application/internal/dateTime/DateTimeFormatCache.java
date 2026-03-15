@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.platform.Platform;
 import consulo.util.lang.SyncDateFormat;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -38,7 +37,7 @@ import java.util.TimeZone;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class DateTimeFormatCache {
-    @Nonnull
+    
     public static DateTimeFormatCache getInstance() {
         return Application.get().getInstance(DateTimeFormatCache.class);
     }

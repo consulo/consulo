@@ -25,8 +25,7 @@ import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
@@ -60,14 +59,14 @@ public class DesktopWindowWrapper extends WindowOverAWTWindow {
 
   @RequiredUIAccess
   @Override
-  public void setTitle(@Nonnull String title) {
+  public void setTitle(String title) {
     JDialog dialog = (JDialog)toAWTWindow();
     dialog.setTitle(title);
   }
 
   @RequiredUIAccess
   @Override
-  public void setContent(@Nonnull Component content) {
+  public void setContent(Component content) {
     JDialog dialog = (JDialog)toAWTWindow();
 
     dialog.setContentPane((java.awt.Container)TargetAWT.to(content));
@@ -75,7 +74,7 @@ public class DesktopWindowWrapper extends WindowOverAWTWindow {
 
   @RequiredUIAccess
   @Override
-  public void setSize(@Nonnull Size2D size) {
+  public void setSize(Size2D size) {
     toAWTWindow().setSize(TargetAWT.to(size));
   }
 }

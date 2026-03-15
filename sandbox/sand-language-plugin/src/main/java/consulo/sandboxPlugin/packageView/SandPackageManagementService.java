@@ -27,8 +27,7 @@ import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +54,11 @@ public class SandPackageManagementService extends PackageManagementServiceEx imp
   }
 
   @Override
-  public void updatePackage(@Nonnull InstalledPackage installedPackage, @Nullable String version, @Nonnull Listener listener) {
+  public void updatePackage(InstalledPackage installedPackage, @Nullable String version, Listener listener) {
 
   }
 
-  @Nonnull
+  
   @Override
   public List<RepoPackage> getAllPackages() throws IOException {
     return List.of();
@@ -75,21 +74,21 @@ public class SandPackageManagementService extends PackageManagementServiceEx imp
 
   }
 
-  @Nonnull
+  
   @Override
   public AsyncResult<List<String>> fetchPackageVersions(String packageName) {
     return AsyncResult.undefined();
   }
 
-  @Nonnull
+  
   @Override
   public AsyncResult<String> fetchPackageDetails(String packageName) {
     return AsyncResult.resolved("Some Description");
   }
 
-  @Nonnull
+  
   @Override
-  public List<RepoPackage> getPackages(@Nonnull String searchQuery, int from, int to) {
+  public List<RepoPackage> getPackages(String searchQuery, int from, int to) {
     if (searchQuery.isEmpty()) {
       return new ArrayList<>(myMap.values());
     }

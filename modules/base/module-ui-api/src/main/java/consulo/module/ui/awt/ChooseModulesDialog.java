@@ -22,8 +22,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -33,19 +32,19 @@ import java.util.List;
  * @since 2006-08-14
  */
 public class ChooseModulesDialog extends ChooseElementsDialog<Module> {
-    public ChooseModulesDialog(Component parent, List<Module> items, @Nonnull LocalizeValue title) {
+    public ChooseModulesDialog(Component parent, List<Module> items, LocalizeValue title) {
         super(parent, items, title, LocalizeValue.empty(), true);
     }
 
-    public ChooseModulesDialog(Component parent, List<Module> items, @Nonnull LocalizeValue title, @Nonnull LocalizeValue description) {
+    public ChooseModulesDialog(Component parent, List<Module> items, LocalizeValue title, LocalizeValue description) {
         super(parent, items, title, description, true);
     }
 
     public ChooseModulesDialog(
         Project project,
         List<? extends Module> items,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue description
+        LocalizeValue title,
+        LocalizeValue description
     ) {
         super(project, items, title, description, true);
     }

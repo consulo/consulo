@@ -36,8 +36,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.io.DataInput;
@@ -66,13 +65,13 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
 
     private final KeyDescriptor<TodoIndexEntry> myKeyDescriptor = new KeyDescriptor<>() {
         @Override
-        public void save(@Nonnull DataOutput out, TodoIndexEntry value) throws IOException {
+        public void save(DataOutput out, TodoIndexEntry value) throws IOException {
             out.writeUTF(value.getPattern());
             out.writeBoolean(value.isCaseSensitive());
         }
 
         @Override
-        public TodoIndexEntry read(@Nonnull DataInput in) throws IOException {
+        public TodoIndexEntry read(DataInput in) throws IOException {
             String pattern = in.readUTF();
             boolean caseSensitive = in.readBoolean();
             return new TodoIndexEntry(pattern, caseSensitive);
@@ -124,7 +123,7 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
         return version;
     }
 
-    public static boolean needsTodoIndex(@Nullable Project project, @Nonnull VirtualFile vFile) {
+    public static boolean needsTodoIndex(@Nullable Project project, VirtualFile vFile) {
         if (!vFile.isInLocalFileSystem()) {
             return false;
         }
@@ -146,31 +145,31 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public ID<TodoIndexEntry, Integer> getName() {
         return NAME;
     }
 
-    @Nonnull
+    
     @Override
     public DataIndexer<TodoIndexEntry, Integer, FileContent> getIndexer() {
         return myIndexer;
     }
 
-    @Nonnull
+    
     @Override
     public KeyDescriptor<TodoIndexEntry> getKeyDescriptor() {
         return myKeyDescriptor;
     }
 
-    @Nonnull
+    
     @Override
     public DataExternalizer<Integer> getValueExternalizer() {
         return myValueExternalizer;
     }
 
-    @Nonnull
+    
     @Override
     public FileBasedIndex.InputFilter getInputFilter() {
         return myInputFilter;

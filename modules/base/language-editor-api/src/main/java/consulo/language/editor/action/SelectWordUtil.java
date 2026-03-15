@@ -28,8 +28,7 @@ import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -44,11 +43,11 @@ public class SelectWordUtil {
 
     public static final CharCondition JAVA_IDENTIFIER_PART_CONDITION = Character::isJavaIdentifierPart;
 
-    public static void addWordSelection(boolean camel, CharSequence editorText, int cursorOffset, @Nonnull List<TextRange> ranges) {
+    public static void addWordSelection(boolean camel, CharSequence editorText, int cursorOffset, List<TextRange> ranges) {
         addWordSelection(camel, editorText, cursorOffset, ranges, JAVA_IDENTIFIER_PART_CONDITION);
     }
 
-    public static void addWordOrLexemeSelection(boolean camel, @Nonnull Editor editor, int cursorOffset, @Nonnull List<TextRange> ranges) {
+    public static void addWordOrLexemeSelection(boolean camel, Editor editor, int cursorOffset, List<TextRange> ranges) {
         addWordOrLexemeSelection(camel, editor, cursorOffset, ranges, JAVA_IDENTIFIER_PART_CONDITION);
     }
 
@@ -56,7 +55,7 @@ public class SelectWordUtil {
         boolean camel,
         CharSequence editorText,
         int cursorOffset,
-        @Nonnull List<TextRange> ranges,
+        List<TextRange> ranges,
         CharCondition isWordPartCondition
     ) {
         TextRange camelRange = camel ? getCamelSelectionRange(editorText, cursorOffset, isWordPartCondition) : null;
@@ -72,9 +71,9 @@ public class SelectWordUtil {
 
     public static void addWordOrLexemeSelection(
         boolean camel,
-        @Nonnull Editor editor,
+        Editor editor,
         int cursorOffset,
-        @Nonnull List<TextRange> ranges,
+        List<TextRange> ranges,
         CharCondition isWordPartCondition
     ) {
         TextRange camelRange = camel
@@ -125,18 +124,18 @@ public class SelectWordUtil {
 
     @Nullable
     public static TextRange getWordOrLexemeSelectionRange(
-        @Nonnull Editor editor,
+        Editor editor,
         int cursorOffset,
-        @Nonnull CharCondition isWordPartCondition
+        CharCondition isWordPartCondition
     ) {
         return getWordOrLexemeSelectionRange(editor, editor.getDocument().getImmutableCharSequence(), cursorOffset, isWordPartCondition);
     }
 
     @Nullable
     public static TextRange getWordSelectionRange(
-        @Nonnull CharSequence editorText,
+        CharSequence editorText,
         int cursorOffset,
-        @Nonnull CharCondition isWordPartCondition
+        CharCondition isWordPartCondition
     ) {
         return getWordOrLexemeSelectionRange(null, editorText, cursorOffset, isWordPartCondition);
     }
@@ -144,9 +143,9 @@ public class SelectWordUtil {
     @Nullable
     private static TextRange getWordOrLexemeSelectionRange(
         @Nullable Editor editor,
-        @Nonnull CharSequence editorText,
+        CharSequence editorText,
         int cursorOffset,
-        @Nonnull CharCondition isWordPartCondition
+        CharCondition isWordPartCondition
     ) {
         int length = editorText.length();
         if (length == 0) {
@@ -230,7 +229,7 @@ public class SelectWordUtil {
     }
 
     private static void processInFile(
-        @Nonnull PsiElement element,
+        PsiElement element,
         Predicate<TextRange> consumer,
         CharSequence text,
         int cursorOffset,
@@ -248,7 +247,7 @@ public class SelectWordUtil {
     }
 
     private static boolean processElement(
-        @Nonnull PsiElement element,
+        PsiElement element,
         Predicate<TextRange> processor,
         CharSequence text,
         int cursorOffset,

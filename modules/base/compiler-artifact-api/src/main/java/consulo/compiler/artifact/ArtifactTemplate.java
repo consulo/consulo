@@ -18,8 +18,7 @@ package consulo.compiler.artifact;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -31,7 +30,7 @@ public abstract class ArtifactTemplate {
    * @deprecated override {@link #createArtifact()} instead
    */
   @Deprecated
-  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
+  public CompositePackagingElement<?> createRootElement(String artifactName) {
     return null;
   }
 
@@ -39,7 +38,7 @@ public abstract class ArtifactTemplate {
    * @deprecated override {@link #createArtifact()} instead
    */
   @Deprecated
-  @Nonnull
+  
   public String suggestArtifactName() {
     return "unnamed";
   }
@@ -50,7 +49,7 @@ public abstract class ArtifactTemplate {
     return new NewArtifactConfiguration(createRootElement(name), name, null);
   }
 
-  public void setUpArtifact(@Nonnull Artifact artifact, @Nonnull NewArtifactConfiguration configuration) {
+  public void setUpArtifact(Artifact artifact, NewArtifactConfiguration configuration) {
   }
 
   public static class NewArtifactConfiguration {

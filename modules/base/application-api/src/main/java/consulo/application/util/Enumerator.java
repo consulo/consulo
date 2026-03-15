@@ -8,8 +8,7 @@ import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Utility class that allows to associate objects with a unique number
@@ -26,7 +25,7 @@ public class Enumerator<T> {
         this(expectNumber, HashingStrategy.canonical());
     }
 
-    public Enumerator(int expectNumber, @Nonnull HashingStrategy<? super T> strategy) {
+    public Enumerator(int expectNumber, HashingStrategy<? super T> strategy) {
         myNumbers =
             strategy == HashingStrategy.canonical() ? new Object2IntOpenHashMap<>(expectNumber) :
                 new Object2IntOpenCustomHashMap<>(expectNumber, new Hash.Strategy<T>() {
@@ -56,8 +55,8 @@ public class Enumerator<T> {
      * @param objects array of objects to be associated
      * @return the mapping of an initial array into associated numbers
      */
-    @Nonnull
-    public int[] enumerate(@Nonnull T[] objects) {
+    
+    public int[] enumerate(T[] objects) {
         return enumerate(objects, 0, 0);
     }
 
@@ -69,8 +68,8 @@ public class Enumerator<T> {
      * @param endCut     a number of excluded objects at the end
      * @return the mapping of an initial array into associated numbers
      */
-    @Nonnull
-    public int[] enumerate(@Nonnull T[] objects, int startShift, int endCut) {
+    
+    public int[] enumerate(T[] objects, int startShift, int endCut) {
         int[] idx = ArrayUtil.newIntArray(objects.length - startShift - endCut);
         for (int i = startShift; i < objects.length - endCut; i++) {
             T object = objects[i];
@@ -119,7 +118,7 @@ public class Enumerator<T> {
     /**
      * Check whether an object was associated with a number
      */
-    public boolean contains(@Nonnull T object) {
+    public boolean contains(T object) {
         return myNumbers.getInt(object) != 0;
     }
 

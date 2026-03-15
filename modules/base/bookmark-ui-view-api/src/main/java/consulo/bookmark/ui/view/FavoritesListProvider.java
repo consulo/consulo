@@ -21,8 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.CommonActionsPanel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Comparator;
@@ -36,12 +35,12 @@ import java.util.Set;
 public interface FavoritesListProvider extends Comparator<FavoritesTreeNodeDescriptor>, Comparable<FavoritesListProvider> {
     String getListName(Project project);
 
-    @Nonnull
-    LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type);
+    
+    LocalizeValue getCustomName(CommonActionsPanel.Buttons type);
 
-    boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects);
+    boolean willHandle(CommonActionsPanel.Buttons type, Project project, Set<Object> selectedObjects);
 
-    void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component);
+    void handle(CommonActionsPanel.Buttons type, Project project, Set<Object> selectedObjects, JComponent component);
 
     int getWeight();
 

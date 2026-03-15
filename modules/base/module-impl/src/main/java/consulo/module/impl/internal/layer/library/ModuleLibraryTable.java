@@ -32,8 +32,7 @@ import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.ConvertingIterator;
 import consulo.util.collection.FilteringIterator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,7 +52,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
     }
 
     @Override
-    @Nonnull
+    
     public Library[] getLibraries() {
         ArrayList<Library> result = new ArrayList<>();
         Iterator<Library> libraryIterator = getLibraryIterator();
@@ -79,7 +78,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
     }
 
     @Override
-    public void removeLibrary(@Nonnull Library library) {
+    public void removeLibrary(Library library) {
         Iterator<OrderEntry> orderIterator = myRootLayer.getOrderIterator();
         while (orderIterator.hasNext()) {
             OrderEntry orderEntry = orderIterator.next();
@@ -93,7 +92,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
     }
 
     @Override
-    @Nonnull
+    
     public Iterator<Library> getLibraryIterator() {
         FilteringIterator<OrderEntry, LibraryOrderEntry> filteringIterator =
             new FilteringIterator<>(myRootLayer.getOrderIterator(), MODULE_LIBRARY_ORDER_ENTRY_FILTER);
@@ -117,7 +116,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
 
     @Override
     @Nullable
-    public Library getLibraryByName(@Nonnull String name) {
+    public Library getLibraryByName(String name) {
         Iterator<Library> libraryIterator = getLibraryIterator();
         while (libraryIterator.hasNext()) {
             Library library = libraryIterator.next();

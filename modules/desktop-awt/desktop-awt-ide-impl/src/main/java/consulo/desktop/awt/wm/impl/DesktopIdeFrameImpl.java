@@ -55,8 +55,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -92,7 +91,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             super.setRootPane(root);
         }
 
-        @Nonnull
+        
         @Override
         public Insets getInsets() {
             if (Platform.current().os().isMac() && isInFullScreen()) {
@@ -136,7 +135,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         }
 
         @Override
-        public void paint(@Nonnull Graphics g) {
+        public void paint(Graphics g) {
             UISettingsUtil.setupAntialiasing(g);
             //noinspection Since15
             super.paint(g);
@@ -351,7 +350,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return myJFrame.getRootPane();
     }
 
-    @Nonnull
+    
     @Override
     public consulo.ui.Window getWindow() {
         return myJFrame.toUIWindow();
@@ -362,7 +361,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myJFrame.addWindowListener(new WindowAdapter() {
             @Override
             @RequiredUIAccess
-            public void windowClosing(@Nonnull WindowEvent e) {
+            public void windowClosing(WindowEvent e) {
                 if (isTemporaryDisposed()) {
                     return;
                 }
@@ -405,7 +404,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
         return (E) myRootPane.findExtension(extensionClass);
     }
 
@@ -460,7 +459,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return myJFrame.getAccessibleContextWithoutInitialization();
     }
 
-    private Object getData(@Nonnull Key<?> dataId) {
+    private Object getData(Key<?> dataId) {
         if (Project.KEY == dataId) {
             if (myProject != null) {
                 return myProject.isInitialized() ? myProject : null;
@@ -550,7 +549,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             (SHOULD_OPEN_IN_FULL_SCREEN.get(project) == Boolean.TRUE || PropertiesComponent.getInstance(project).getBoolean(FULL_SCREEN));
     }
 
-    @Nonnull
+    
     @Override
     public IdeFrameState getFrameState() {
         Window window = TargetAWT.to(getWindow());
@@ -595,7 +594,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myFullScreenListenerDispatcher.addListener(listener, disposable);
     }
 
-    @Nonnull
+    
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
         if (temporaryFixForIdea156004(state)) {

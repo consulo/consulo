@@ -21,8 +21,7 @@ import consulo.colorScheme.EffectType;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -30,7 +29,7 @@ import java.awt.*;
  * @since 12-Feb-22
  */
 public class TextAttributesUtil {
-  public static TextAttributes toTextAttributes(@Nonnull SimpleTextAttributes textAttributes) {
+  public static TextAttributes toTextAttributes(SimpleTextAttributes textAttributes) {
     Color effectColor;
     EffectType effectType;
     if (textAttributes.isWaved()) {
@@ -60,7 +59,7 @@ public class TextAttributesUtil {
     return new TextAttributes(TargetAWT.from(textAttributes.getFgColor()), null, TargetAWT.from(effectColor), effectType, textAttributes.getStyle() & SimpleTextAttributes.FONT_MASK);
   }
 
-  @Nonnull
+  
   public static SimpleTextAttributes fromTextAttributes(@Nullable TextAttributes attributes) {
     if (attributes == null) return SimpleTextAttributes.REGULAR_ATTRIBUTES;
 

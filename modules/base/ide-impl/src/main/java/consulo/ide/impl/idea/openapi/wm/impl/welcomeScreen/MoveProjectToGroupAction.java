@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class MoveProjectToGroupAction extends RecentProjectsWelcomeScreenActionB
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     List<AnAction> elements = getSelectedElements(e);
     for (AnAction element : elements) {
       if (element instanceof ReopenProjectAction) {
@@ -53,7 +52,7 @@ public class MoveProjectToGroupAction extends RecentProjectsWelcomeScreenActionB
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(!hasGroupSelected(e));
   }
 }

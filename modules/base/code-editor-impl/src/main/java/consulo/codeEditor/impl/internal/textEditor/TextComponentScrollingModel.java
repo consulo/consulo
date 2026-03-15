@@ -20,7 +20,6 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -32,24 +31,24 @@ import java.awt.*;
 public class TextComponentScrollingModel implements ScrollingModel {
     private final JTextComponent myTextComponent;
 
-    public TextComponentScrollingModel(@Nonnull JTextComponent textComponent) {
+    public TextComponentScrollingModel(JTextComponent textComponent) {
         myTextComponent = textComponent;
     }
 
-    @Nonnull
+    
     @Override
     public Rectangle getVisibleArea() {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    @Nonnull
+    
     @Override
     public Rectangle getVisibleAreaOnScrollingFinished() {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void scrollToCaret(@Nonnull ScrollType scrollType) {
+    public void scrollToCaret(ScrollType scrollType) {
         int position = myTextComponent.getCaretPosition();
         try {
             Rectangle rectangle = myTextComponent.modelToView(position);
@@ -61,12 +60,12 @@ public class TextComponentScrollingModel implements ScrollingModel {
     }
 
     @Override
-    public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
+    public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void runActionOnScrollingFinished(@Nonnull Runnable action) {
+    public void runActionOnScrollingFinished(Runnable action) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -104,17 +103,17 @@ public class TextComponentScrollingModel implements ScrollingModel {
     }
 
     @Override
-    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
+    public void addVisibleAreaListener(VisibleAreaListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener, @Nonnull Disposable disposable) {
+    public void addVisibleAreaListener(VisibleAreaListener listener, Disposable disposable) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
+    public void removeVisibleAreaListener(VisibleAreaListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 }

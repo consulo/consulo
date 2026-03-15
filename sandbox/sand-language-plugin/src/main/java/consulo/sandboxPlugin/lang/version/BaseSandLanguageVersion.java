@@ -30,8 +30,7 @@ import consulo.language.version.LanguageVersionWithDefinition;
 import consulo.language.version.LanguageVersionWithParsing;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.parser.SandParser;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +42,14 @@ import java.util.List;
 public abstract class BaseSandLanguageVersion extends LanguageVersion implements LanguageVersionWithDefinition, LanguageVersionWithParsing {
 
   private NotNullLazyValue<List<Pair<IElementType, IElementType>>> myValue = new NotNullLazyValue<List<Pair<IElementType, IElementType>>>() {
-    @Nonnull
+    
     @Override
     protected List<Pair<IElementType, IElementType>> compute() {
       return createList();
     }
   };
   private NotNullLazyValue<TokenSet> myHighlightKeywords = new NotNullLazyValue<TokenSet>() {
-    @Nonnull
+    
     @Override
     protected TokenSet compute() {
       List<Pair<IElementType, IElementType>> value = myValue.getValue();
@@ -66,7 +65,7 @@ public abstract class BaseSandLanguageVersion extends LanguageVersion implements
     super(name, name, SandLanguage.INSTANCE);
   }
 
-  @Nonnull
+  
   public TokenSet getHighlightKeywords() {
     return myHighlightKeywords.getValue();
   }
@@ -75,7 +74,7 @@ public abstract class BaseSandLanguageVersion extends LanguageVersion implements
 
   public abstract FileType getFileType();
 
-  @Nonnull
+  
   @Override
   public PsiParser createParser() {
     return new SandParser(myValue.getValue());
@@ -98,7 +97,7 @@ public abstract class BaseSandLanguageVersion extends LanguageVersion implements
   }
 
   @Override
-  public boolean isMyFile(@jakarta.annotation.Nullable Project project, @jakarta.annotation.Nullable VirtualFile virtualFile) {
+  public boolean isMyFile(@Nullable Project project, @Nullable VirtualFile virtualFile) {
     if (virtualFile == null) {
       return false;
     }

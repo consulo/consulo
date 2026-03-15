@@ -31,7 +31,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,7 +44,7 @@ public class DescriptorComposer extends HTMLComposerBase {
     private static final Logger LOG = Logger.getInstance(DescriptorComposer.class);
     private final InspectionToolPresentation myTool;
 
-    public DescriptorComposer(@Nonnull InspectionToolPresentation tool) {
+    public DescriptorComposer(InspectionToolPresentation tool) {
         myTool = tool;
     }
 
@@ -78,7 +77,7 @@ public class DescriptorComposer extends HTMLComposerBase {
         }
     }
 
-    public static String[] quickFixTexts(RefEntity where, @Nonnull InspectionToolPresentation toolPresentation) {
+    public static String[] quickFixTexts(RefEntity where, InspectionToolPresentation toolPresentation) {
         QuickFixAction[] quickFixes = toolPresentation.getQuickFixes(new RefEntity[]{where});
         if (quickFixes == null) {
             return null;
@@ -94,7 +93,7 @@ public class DescriptorComposer extends HTMLComposerBase {
         return ArrayUtil.toStringArray(texts);
     }
 
-    protected void composeAdditionalDescription(@Nonnull StringBuffer buf, @Nonnull RefEntity refEntity) {
+    protected void composeAdditionalDescription(StringBuffer buf, RefEntity refEntity) {
     }
 
     @RequiredReadAction
@@ -156,10 +155,10 @@ public class DescriptorComposer extends HTMLComposerBase {
 
     @RequiredReadAction
     protected void composeDescription(
-        @Nonnull CommonProblemDescriptor description,
+        CommonProblemDescriptor description,
         int i,
-        @Nonnull StringBuffer buf,
-        @Nonnull RefEntity refElement
+        StringBuffer buf,
+        RefEntity refElement
     ) {
         PsiElement expression = description instanceof ProblemDescriptor ? ((ProblemDescriptor) description).getPsiElement() : null;
         StringBuilder anchor = new StringBuilder();

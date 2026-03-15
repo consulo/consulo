@@ -26,15 +26,14 @@ import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLog;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends DumbAwareAction {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
     VcsLog log = e.getRequiredData(VcsLog.KEY);
 
@@ -47,7 +46,7 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     VcsLog log = e.getData(VcsLog.KEY);
     if (project == null || log == null) {
@@ -74,19 +73,19 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
     e.getPresentation().setEnabled(commits.size() == 1 && isEnabled(repository, commit.getHash()));
   }
 
-  protected abstract void actionPerformed(@Nonnull Repo repository, @Nonnull Hash commit);
+  protected abstract void actionPerformed(Repo repository, Hash commit);
 
-  protected boolean isEnabled(@Nonnull Repo repository, @Nonnull Hash commit) {
+  protected boolean isEnabled(Repo repository, Hash commit) {
     return true;
   }
 
-  protected boolean isVisible(@Nonnull Project project, @Nonnull Repo repository, @Nonnull Hash hash) {
+  protected boolean isVisible(Project project, Repo repository, Hash hash) {
     return !getRepositoryManager(project).isExternal(repository);
   }
 
-  @Nonnull
-  protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(@Nonnull Project project);
+  
+  protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(Project project);
 
   @Nullable
-  protected abstract Repo getRepositoryForRoot(@Nonnull Project project, @Nonnull VirtualFile root);
+  protected abstract Repo getRepositoryForRoot(Project project, VirtualFile root);
 }

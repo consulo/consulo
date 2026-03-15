@@ -22,32 +22,31 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 public final class CompilerMessageImpl implements CompilerMessage {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final CompilerMessageCategory myCategory;
     @Nullable
     private Navigatable myNavigatable;
-    @Nonnull
+    
     private final String myMessage;
     @Nullable
     private final VirtualFile myFile;
     private final int myRow;
     private final int myColumn;
 
-    public CompilerMessageImpl(@Nonnull Project project, @Nonnull CompilerMessageCategory category, @Nullable String message) {
+    public CompilerMessageImpl(Project project, CompilerMessageCategory category, @Nullable String message) {
         this(project, category, message, null, -1, -1, null);
     }
 
     public CompilerMessageImpl(
-        @Nonnull Project project,
-        @Nonnull CompilerMessageCategory category,
+        Project project,
+        CompilerMessageCategory category,
         @Nullable String message,
         @Nullable VirtualFile file,
         int row,
@@ -63,13 +62,13 @@ public final class CompilerMessageImpl implements CompilerMessage {
         myFile = file;
     }
 
-    @Nonnull
+    
     @Override
     public CompilerMessageCategory getCategory() {
         return myCategory;
     }
 
-    @Nonnull
+    
     @Override
     public String getMessage() {
         return myMessage;

@@ -22,8 +22,7 @@ import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.function.Function;
 
@@ -54,7 +53,7 @@ public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
   }
 
   @Override
-  @Nonnull
+  
   public JComponent createEditor() {
     return myWrapped.createEditor();
   }

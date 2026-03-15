@@ -28,7 +28,6 @@ import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.impl.internal.ui.awt.TempContentChooser;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.Refreshable;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +52,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
 
         Project project = e.getData(Project.KEY);
@@ -74,7 +73,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
         Refreshable panel = e.getData(CheckinProjectPanel.PANEL_KEY);
         CommitMessage commitMessage = panel instanceof CommitMessage cmtMsgI ? cmtMsgI : e.getData(CommitMessage.KEY);

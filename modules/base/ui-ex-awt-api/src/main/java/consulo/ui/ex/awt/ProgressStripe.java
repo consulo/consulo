@@ -17,19 +17,18 @@ package consulo.ui.ex.awt;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Supplier;
 
 public class ProgressStripe extends JBPanel {
-  @Nonnull
+  
   private final JBPanel myPanel;
   private final Supplier<MyLoadingDecorator> myCreateLoadingDecorator;
   protected MyLoadingDecorator myDecorator;
 
-  public ProgressStripe(@Nonnull JComponent targetComponent, @Nonnull Disposable parent, int startDelayMs) {
+  public ProgressStripe(JComponent targetComponent, Disposable parent, int startDelayMs) {
     super(new BorderLayout());
     myPanel = new JBPanel(new BorderLayout());
     myPanel.setOpaque(false);
@@ -74,12 +73,12 @@ public class ProgressStripe extends JBPanel {
   }
 
   private static class MyLoadingDecorator extends LoadingDecorator {
-    @Nonnull
+    
     private final Disposable myDisposable;
 
-    public MyLoadingDecorator(@Nonnull JComponent component,
-                              @Nonnull JPanel contentPanel,
-                              @Nonnull Disposable disposable,
+    public MyLoadingDecorator(JComponent component,
+                              JPanel contentPanel,
+                              Disposable disposable,
                               int startDelayMs) {
       super(contentPanel, disposable, startDelayMs, false, ProgressStripeIcon.generateIcon(component));
       myDisposable = disposable;

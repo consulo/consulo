@@ -30,8 +30,7 @@ import consulo.virtualFileSystem.pointer.*;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -80,12 +79,12 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     private static class EventDescriptor {
-        @Nonnull
+        
         private final VirtualFilePointerListener myListener;
-        @Nonnull
+        
         private final VirtualFilePointer[] myPointers;
 
-        private EventDescriptor(@Nonnull VirtualFilePointerListener listener, @Nonnull VirtualFilePointer[] pointers) {
+        private EventDescriptor(VirtualFilePointerListener listener, VirtualFilePointer[] pointers) {
             myListener = listener;
             myPointers = pointers;
             if (pointers.length == 0) {
@@ -102,8 +101,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
     }
 
-    @Nonnull
-    private static VirtualFilePointer[] toPointers(@Nonnull Collection<? extends FilePointerPartNode> nodes) {
+    
+    private static VirtualFilePointer[] toPointers(Collection<? extends FilePointerPartNode> nodes) {
         if (nodes.isEmpty()) {
             return VirtualFilePointer.EMPTY_ARRAY;
         }
@@ -115,8 +114,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     @TestOnly
-    @Nonnull
-    synchronized List<VirtualFilePointer> getPointersUnder(@Nonnull VirtualFile parent, @Nonnull String childName) {
+    
+    synchronized List<VirtualFilePointer> getPointersUnder(VirtualFile parent, String childName) {
         assert !StringUtil.isEmptyOrSpaces(childName);
         MultiMap<VirtualFilePointerListener, FilePointerPartNode> nodes = MultiMap.create();
         addRelevantPointers(parent, toNameId(childName), nodes, true, parent.getFileSystem());
@@ -130,9 +129,9 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     private void addRelevantPointers(
         VirtualFile parent,
         int childNameId,
-        @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> out,
+        MultiMap<VirtualFilePointerListener, FilePointerPartNode> out,
         boolean addSubdirectoryPointers,
-        @Nonnull VirtualFileSystem fs
+        VirtualFileSystem fs
     ) {
         if (childNameId <= 0) {
             throw new IllegalArgumentException("invalid argument childNameId: " + childNameId);
@@ -158,14 +157,14 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     @Override
-    @Nonnull
-    public VirtualFilePointer create(@Nonnull String url, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+    
+    public VirtualFilePointer create(String url, Disposable parent, @Nullable VirtualFilePointerListener listener) {
         return create(null, url, parent, listener, false);
     }
 
     @Override
-    @Nonnull
-    public VirtualFilePointer create(@Nonnull VirtualFile file, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+    
+    public VirtualFilePointer create(VirtualFile file, Disposable parent, @Nullable VirtualFilePointerListener listener) {
         return create(file, null, parent, listener, false);
     }
 
@@ -177,11 +176,11 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
      * @param recursive
      * @return
      */
-    @Nonnull
+    
     private VirtualFilePointer create(
         @Nullable VirtualFile file,
         @Nullable String url,
-        @Nonnull Disposable parentDisposable,
+        Disposable parentDisposable,
         @Nullable VirtualFilePointerListener listener,
         boolean recursive
     ) {
@@ -271,12 +270,12 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
     private final Map<String, IdentityVirtualFilePointer> myUrlToIdentity = new HashMap<>(); // guarded by this
 
-    @Nonnull
+    
     private synchronized IdentityVirtualFilePointer getOrCreateIdentity(
-        @Nonnull String url,
+        String url,
         @Nullable VirtualFile found,
         boolean recursive,
-        @Nonnull Disposable parentDisposable
+        Disposable parentDisposable
     ) {
         IdentityVirtualFilePointer pointer = myUrlToIdentity.get(url);
         if (pointer == null) {
@@ -308,8 +307,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     // convert // -> /
     // convert /. ->
     // trim trailing /
-    @Nonnull
-    private static String cleanupPath(@Nonnull String path) {
+    
+    private static String cleanupPath(String path) {
         path = FileUtil.toSystemIndependentName(path);
         path = trimTrailingSeparators(path);
         for (int i = 0; i < path.length(); ) {
@@ -329,8 +328,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     // removes // and //. when we know for sure they are there, starting from 'slashIndex'
-    @Nonnull
-    private static String cleanupTail(@Nonnull String path, int slashIndex) {
+    
+    private static String cleanupTail(String path, int slashIndex) {
         StringBuilder s = new StringBuilder(path.length());
         s.append(path, 0, slashIndex);
         for (int i = slashIndex; i < path.length(); i++) {
@@ -360,22 +359,22 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         return s.toString();
     }
 
-    @Nonnull
-    private static String trimTrailingSeparators(@Nonnull String path) {
+    
+    private static String trimTrailingSeparators(String path) {
         path = StringUtil.trimEnd(path, consulo.virtualFileSystem.archive.ArchiveFileSystem.ARCHIVE_SEPARATOR);
         path = StringUtil.trimTrailing(path, '/');
         return path;
     }
 
-    @Nonnull
+    
     private synchronized VirtualFilePointerImpl getOrCreate(
         VirtualFile file,
         String path,
         String url,
         boolean recursive,
-        @Nonnull Disposable parentDisposable,
+        Disposable parentDisposable,
         @Nullable VirtualFilePointerListener listener,
-        @Nonnull NewVirtualFileSystem fs
+        NewVirtualFileSystem fs
     ) {
         VirtualFilePointerListener nl = ObjectUtil.notNull(listener, NULL_LISTENER);
         Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = myRoots.computeIfAbsent(fs, __ -> new HashMap<>());
@@ -403,10 +402,10 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFilePointer duplicate(
-        @Nonnull VirtualFilePointer pointer,
-        @Nonnull Disposable parent,
+        VirtualFilePointer pointer,
+        Disposable parent,
         @Nullable VirtualFilePointerListener listener
     ) {
         VirtualFile file = pointer.getFile();
@@ -434,22 +433,22 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     @Override
-    @Nonnull
-    public VirtualFilePointerContainer createContainer(@Nonnull Disposable parent) {
+    
+    public VirtualFilePointerContainer createContainer(Disposable parent) {
         return createContainer(parent, null);
     }
 
     @Override
-    @Nonnull
+    
     public synchronized VirtualFilePointerContainer createContainer(
-        @Nonnull Disposable parent,
+        Disposable parent,
         @Nullable VirtualFilePointerListener listener
     ) {
         return registerContainer(parent, new VirtualFilePointerContainerImpl(this, parent, listener));
     }
 
-    @Nonnull
-    private VirtualFilePointerContainer registerContainer(@Nonnull Disposable parent, @Nonnull VirtualFilePointerContainerImpl container) {
+    
+    private VirtualFilePointerContainer registerContainer(Disposable parent, VirtualFilePointerContainerImpl container) {
         synchronized (myContainers) {
             myContainers.add(container);
         }
@@ -474,8 +473,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         return container;
     }
 
-    @Nonnull
-    public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+    
+    public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
         long start = System.currentTimeMillis();
         MultiMap<VirtualFilePointerListener, FilePointerPartNode> toFireEvents = MultiMap.create();
         MultiMap<VirtualFilePointerListener, FilePointerPartNode> toUpdateUrl = MultiMap.create();
@@ -605,11 +604,11 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         };
     }
 
-    private static int toNameId(@Nonnull String name) {
+    private static int toNameId(String name) {
         return FileNameCache.storeName(name);
     }
 
-    private static void collectNodes(@Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> nodes, @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> toUpdateUrl) {
+    private static void collectNodes(MultiMap<VirtualFilePointerListener, FilePointerPartNode> nodes, MultiMap<VirtualFilePointerListener, FilePointerPartNode> toUpdateUrl) {
         for (Map.Entry<VirtualFilePointerListener, Collection<FilePointerPartNode>> entry : nodes.entrySet()) {
             VirtualFilePointerListener listener = entry.getKey();
             Collection<FilePointerPartNode> values = entry.getValue();
@@ -636,10 +635,10 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     private void after(
-        @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> toFireEvents,
-        @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> toUpdateUrls,
-        @Nonnull List<? extends EventDescriptor> eventList,
-        @Nonnull VirtualFilePointer[] allPointers,
+        MultiMap<VirtualFilePointerListener, FilePointerPartNode> toFireEvents,
+        MultiMap<VirtualFilePointerListener, FilePointerPartNode> toUpdateUrls,
+        List<? extends EventDescriptor> eventList,
+        VirtualFilePointer[] allPointers,
         long prepareElapsedMs,
         int eventsSize
     ) {
@@ -720,7 +719,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
     }
 
-    synchronized void removeNodeFrom(@Nonnull VirtualFilePointerImpl pointer) {
+    synchronized void removeNodeFrom(VirtualFilePointerImpl pointer) {
         FilePointerPartNode root = pointer.myNode.remove();
         boolean rootNodeEmpty = root.children.length == 0;
         if (rootNodeEmpty) {
@@ -747,7 +746,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
             new TObjectIntHashMap<>(TObjectHashingStrategy.IDENTITY); // guarded by this
         private final Disposable myParent;
 
-        private DelegatingDisposable(@Nonnull Disposable parent, @Nonnull VirtualFilePointerImpl firstPointer) {
+        private DelegatingDisposable(Disposable parent, VirtualFilePointerImpl firstPointer) {
             myParent = parent;
             //noinspection SynchronizeOnThis
             synchronized (this) {
@@ -755,7 +754,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
             }
         }
 
-        private static void registerDisposable(@Nonnull Disposable parentDisposable, @Nonnull VirtualFilePointerImpl pointer) {
+        private static void registerDisposable(Disposable parentDisposable, VirtualFilePointerImpl pointer) {
             DelegatingDisposable result = ourInstances.get(parentDisposable);
             if (result == null) {
                 DelegatingDisposable newDisposable = new DelegatingDisposable(parentDisposable, pointer);
@@ -768,7 +767,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
             result.increment(pointer);
         }
 
-        synchronized void increment(@Nonnull VirtualFilePointerImpl pointer) {
+        synchronized void increment(VirtualFilePointerImpl pointer) {
             if (!myCounts.increment(pointer)) {
                 myCounts.put(pointer, 1);
             }
@@ -795,9 +794,9 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
     }
 
-    @Nonnull
+    
     @Override
-    public VirtualFilePointer createDirectoryPointer(@Nonnull String url, boolean recursively, @Nonnull Disposable parent, @Nonnull VirtualFilePointerListener listener) {
+    public VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, VirtualFilePointerListener listener) {
         return create(null, url, parent, listener, true);
     }
 
@@ -824,7 +823,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
     // tests need to operate on the deterministic number of pointers, so we clear all of them out of the way during the test execution
     @TestOnly
-    void shelveAllPointersIn(@Nonnull Runnable runnable) {
+    void shelveAllPointersIn(Runnable runnable) {
         Map<VirtualFileSystem, Map<VirtualFilePointerListener, FilePointerPartNode>> shelvedPointers;
         //noinspection SynchronizeOnThis
         synchronized (this) {
@@ -843,7 +842,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
     }
 
-    @Nonnull
+    
     synchronized Collection<VirtualFilePointer> dumpAllPointers() {
         Collection<VirtualFilePointer> result = new HashSet<>();
         for (Map<VirtualFilePointerListener, FilePointerPartNode> myPointers : myRoots.values()) {
@@ -854,7 +853,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         return result;
     }
 
-    private static void dumpPointersRecursivelyTo(@Nonnull FilePointerPartNode node, @Nonnull Collection<? super VirtualFilePointer> result) {
+    private static void dumpPointersRecursivelyTo(FilePointerPartNode node, Collection<? super VirtualFilePointer> result) {
         node.addAllPointersTo(result);
         for (FilePointerPartNode child : node.children) {
             dumpPointersRecursivelyTo(child, result);

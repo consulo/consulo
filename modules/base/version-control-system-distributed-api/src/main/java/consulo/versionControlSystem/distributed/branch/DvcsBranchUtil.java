@@ -20,8 +20,7 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -30,7 +29,7 @@ public class DvcsBranchUtil {
     public static <T extends DvcsBranchInfo> T find(
         @Nullable Collection<T> branches,
         @Nullable Repository repository,
-        @Nonnull String sourceBranch
+        String sourceBranch
     ) {
         if (branches == null) {
             return null;
@@ -40,19 +39,19 @@ public class DvcsBranchUtil {
 
     private static boolean repoAndSourceAreEqual(
         @Nullable Repository repository,
-        @Nonnull String sourceBranch,
-        @Nonnull DvcsBranchInfo targetInfo
+        String sourceBranch,
+        DvcsBranchInfo targetInfo
     ) {
         return getPathFor(repository).equals(targetInfo.repoPath) && StringUtil.equals(targetInfo.sourceName, sourceBranch);
     }
 
-    @Nonnull
+    
     public static String getPathFor(@Nullable Repository repository) {
         return repository == null ? "" : repository.getRoot().getPath();
     }
 
-    @Nonnull
-    public static String shortenBranchName(@Nonnull String fullBranchName) {
+    
+    public static String shortenBranchName(String fullBranchName) {
         // -1, because there are arrows indicating that it is a popup
         int maxLength = DistributedVcsLocalize.branchPopupMaximumBranchLengthSample().get().length() - 1;
         return StringUtil.shortenTextWithEllipsis(fullBranchName, maxLength, 5);

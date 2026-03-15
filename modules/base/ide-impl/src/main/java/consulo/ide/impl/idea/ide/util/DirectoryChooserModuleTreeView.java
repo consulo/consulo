@@ -34,8 +34,7 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.util.*;
@@ -55,7 +54,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
   private final ProjectFileIndex myFileIndex;
   private final Project myProject;
 
-  public DirectoryChooserModuleTreeView(@Nonnull Project project) {
+  public DirectoryChooserModuleTreeView(Project project) {
     myRootNode = new DefaultMutableTreeNode();
     myTree = new Tree(myRootNode);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -207,8 +206,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
   }
 
   @Override
-  @Nullable
-  public DirectoryChooser.ItemWrapper getSelectedItem() {
+  public DirectoryChooser.@Nullable ItemWrapper getSelectedItem() {
     TreePath selectionPath = myTree.getSelectionPath();
     if (selectionPath == null) return null;
     DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();

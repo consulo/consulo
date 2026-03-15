@@ -19,10 +19,9 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.ErrorStripeMarkupModel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.PopupHandler;
-import jakarta.annotation.Nonnull;
 
 public interface EditorMarkupModel extends ErrorStripeMarkupModel {
-  @Nonnull
+  
   Editor getEditor();
 
   void setErrorStripeVisible(boolean val);
@@ -33,11 +32,11 @@ public interface EditorMarkupModel extends ErrorStripeMarkupModel {
   ErrorStripeRenderer getErrorStripeRenderer();
 
   @RequiredUIAccess
-  void setErrorPanelPopupHandler(@Nonnull PopupHandler handler);
+  void setErrorPanelPopupHandler(PopupHandler handler);
 
-  void setErrorStripTooltipRendererProvider(@Nonnull ErrorStripTooltipRendererProvider provider);
+  void setErrorStripTooltipRendererProvider(ErrorStripTooltipRendererProvider provider);
 
-  @Nonnull
+  
   ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider();
 
   void setMinMarkHeight(int minMarkHeight);

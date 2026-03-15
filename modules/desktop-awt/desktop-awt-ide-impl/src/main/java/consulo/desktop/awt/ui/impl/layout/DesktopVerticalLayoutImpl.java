@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -33,9 +32,9 @@ public class DesktopVerticalLayoutImpl extends DesktopLayoutBase<JPanel, LayoutC
         initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(JBUI.scale(vGap)));
     }
 
-    @Nonnull
+    
     @Override
-    public Layout<LayoutConstraint> add(@Nonnull Component component, @Nonnull LayoutConstraint constraint) {
+    public Layout<LayoutConstraint> add(Component component, LayoutConstraint constraint) {
         addImpl(component, null);
         return this;
     }

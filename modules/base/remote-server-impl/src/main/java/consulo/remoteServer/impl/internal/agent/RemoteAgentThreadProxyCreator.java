@@ -5,6 +5,7 @@ import consulo.remoteServer.impl.internal.agent.ChildWrapperCreator;
 import consulo.remoteServer.impl.internal.agent.SequentialTaskExecutor;
 
 import java.lang.reflect.Proxy;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author michael.golubev
@@ -15,7 +16,7 @@ public class RemoteAgentThreadProxyCreator {
   private final ChildWrapperCreator myPreWrapperCreator;
 
   public RemoteAgentThreadProxyCreator(CallerClassLoaderProvider callerClassLoaderProvider,
-                                       @jakarta.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
+                                       @Nullable ChildWrapperCreator preWrapperCreator) {
     myPreWrapperCreator = preWrapperCreator;
     myCallerClassLoaderProvider = callerClassLoaderProvider;
   }

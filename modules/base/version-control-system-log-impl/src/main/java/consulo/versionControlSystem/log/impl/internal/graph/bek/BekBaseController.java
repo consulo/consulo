@@ -18,18 +18,17 @@ package consulo.versionControlSystem.log.impl.internal.graph.bek;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.log.graph.*;
 import consulo.versionControlSystem.log.impl.internal.graph.CascadeController;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class BekBaseController extends CascadeController {
-  @Nonnull
+  
   private final BekIntMap myBekIntMap;
-  @Nonnull
+  
   private final LinearGraph myBekGraph;
 
-  public BekBaseController(@Nonnull PermanentGraphInfo permanentGraphInfo, @Nonnull BekIntMap bekIntMap) {
+  public BekBaseController(PermanentGraphInfo permanentGraphInfo, BekIntMap bekIntMap) {
     super(null, permanentGraphInfo);
     myBekIntMap = bekIntMap;
     myBekGraph = new BekLinearGraph(myBekIntMap, myPermanentGraphInfo.getLinearGraph());
@@ -37,26 +36,26 @@ public class BekBaseController extends CascadeController {
     BekChecker.checkLinearGraph(myBekGraph);
   }
 
-  @Nonnull
+  
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(LinearGraphAnswer delegateAnswer) {
     throw new IllegalStateException();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
-  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(LinearGraphAction action) {
     return null;
   }
 
-  @Nonnull
+  
   public BekIntMap getBekIntMap() {
     return myBekIntMap;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
-  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(GraphElement graphElement) {
     if (graphElement instanceof GraphEdge) {
       Integer upIndex = ((GraphEdge)graphElement).getUpNodeIndex();
       Integer downIndex = ((GraphEdge)graphElement).getDownNodeIndex();
@@ -71,19 +70,19 @@ public class BekBaseController extends CascadeController {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public LinearGraph getCompiledGraph() {
     return myBekGraph;
   }
 
   public static class BekLinearGraph implements LinearGraph {
-    @Nonnull
+    
     private final LinearGraph myLinearGraph;
-    @Nonnull
+    
     private final BekIntMap myBekIntMap;
 
-    public BekLinearGraph(@Nonnull BekIntMap bekIntMap, @Nonnull LinearGraph linearGraph) {
+    public BekLinearGraph(BekIntMap bekIntMap, LinearGraph linearGraph) {
       myLinearGraph = linearGraph;
       myBekIntMap = bekIntMap;
     }
@@ -100,14 +99,14 @@ public class BekBaseController extends CascadeController {
       return myBekIntMap.getBekIndex(nodeId);
     }
 
-    @Nonnull
+    
     @Override
-    public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
+    public List<GraphEdge> getAdjacentEdges(int nodeIndex, EdgeFilter filter) {
       return ContainerUtil.map(myLinearGraph.getAdjacentEdges(myBekIntMap.getUsualIndex(nodeIndex), filter),
                  edge -> new GraphEdge(getNodeIndex(edge.getUpNodeIndex()), getNodeIndex(edge.getDownNodeIndex()), edge.getTargetId(), edge.getType()));
     }
 
-    @Nonnull
+    
     @Override
     public GraphNode getGraphNode(int nodeIndex) {
       assert inRanges(nodeIndex);
@@ -121,7 +120,7 @@ public class BekBaseController extends CascadeController {
       return myBekIntMap.getUsualIndex(nodeIndex);
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public Integer getNodeIndex(int nodeId) {
       if (!inRanges(nodeId)) return null;

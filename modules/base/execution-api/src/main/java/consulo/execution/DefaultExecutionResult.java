@@ -19,7 +19,6 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.action.AnAction;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dyoma
@@ -36,11 +35,11 @@ public class DefaultExecutionResult implements ExecutionResult {
     myActions = AnAction.EMPTY_ARRAY;
   }
 
-  public DefaultExecutionResult(ExecutionConsole console, @Nonnull ProcessHandler processHandler) {
+  public DefaultExecutionResult(ExecutionConsole console, ProcessHandler processHandler) {
     this(console, processHandler, AnAction.EMPTY_ARRAY);
   }
 
-  public DefaultExecutionResult(ExecutionConsole console, @Nonnull ProcessHandler processHandler, AnAction... actions) {
+  public DefaultExecutionResult(ExecutionConsole console, ProcessHandler processHandler, AnAction... actions) {
     myConsole = console;
     myProcessHandler = processHandler;
     myActions = actions;
@@ -56,7 +55,7 @@ public class DefaultExecutionResult implements ExecutionResult {
     return myActions;
   }
 
-  public void setActions(@Nonnull AnAction... actions) {
+  public void setActions(AnAction... actions) {
     myActions = actions;
   }
 

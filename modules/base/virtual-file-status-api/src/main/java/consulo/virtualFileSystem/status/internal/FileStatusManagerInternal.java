@@ -18,8 +18,7 @@ package consulo.virtualFileSystem.status.internal;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,6 +30,6 @@ public non-sealed interface FileStatusManagerInternal extends FileStatusManager 
     @Nullable
     FileStatus getCachedStatus(VirtualFile file);
 
-    @Nonnull
-    FileStatus getDefaultStatus(@Nonnull VirtualFile file);
+    
+    FileStatus getDefaultStatus(VirtualFile file);
 }

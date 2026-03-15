@@ -39,7 +39,6 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNo
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -58,7 +57,7 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
         this(p, gw, f, true);
     }
 
-    protected DirectoryHistoryDialog(@Nonnull Project p, IdeaGateway gw, VirtualFile f, boolean doInit) {
+    protected DirectoryHistoryDialog(Project p, IdeaGateway gw, VirtualFile f, boolean doInit) {
         super(p, gw, f, doInit);
     }
 

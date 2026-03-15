@@ -13,8 +13,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -244,11 +243,11 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return mySteps.get(myCurrentStep);
   }
 
-  public void addStep(@Nonnull T step) {
+  public void addStep(T step) {
     addStep(step, mySteps.size());
   }
 
-  public void addStep(@Nonnull T step, int index) {
+  public void addStep(T step, int index) {
     mySteps.add(index, step);
 
     if (step instanceof StepAdapter stepAdapter) {

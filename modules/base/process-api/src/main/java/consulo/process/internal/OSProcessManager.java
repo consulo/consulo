@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -30,5 +29,5 @@ public abstract class OSProcessManager {
     return Application.get().getInstance(OSProcessManager.class);
   }
 
-  public abstract boolean killProcessTree(@Nonnull Process process);
+  public abstract boolean killProcessTree(Process process);
 }

@@ -26,8 +26,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.BaseHttpFileSystem;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.event.FileDownloadingAdapter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,19 +102,19 @@ class HttpXVirtualFileImpl extends HttpVirtualFile {
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFileSystem getFileSystem() {
         return myFileSystem;
     }
 
-    @Nonnull
+    
     @Override
     public String getPath() {
         return myPath;
     }
 
     @Override
-    @Nonnull
+    
     public String getName() {
         return myName;
     }
@@ -157,7 +156,7 @@ class HttpXVirtualFileImpl extends HttpVirtualFile {
     }
 
     @Override
-    @Nonnull
+    
     public FileType getFileType() {
         if (myFileInfo == null) {
             return super.getFileType();
@@ -186,7 +185,7 @@ class HttpXVirtualFileImpl extends HttpVirtualFile {
     }
 
     @Override
-    @Nonnull
+    
     public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
         if (myFileInfo != null) {
             VirtualFile localFile = myFileInfo.getLocalFile();
@@ -198,7 +197,7 @@ class HttpXVirtualFileImpl extends HttpVirtualFile {
     }
 
     @Override
-    @Nonnull
+    
     public byte[] contentsToByteArray() throws IOException {
         if (myFileInfo == null) {
             throw new UnsupportedOperationException();

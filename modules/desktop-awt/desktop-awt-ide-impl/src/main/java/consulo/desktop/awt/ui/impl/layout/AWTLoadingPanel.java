@@ -21,7 +21,6 @@ import consulo.ui.Component;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -35,7 +34,7 @@ public class AWTLoadingPanel extends JPanel implements FromSwingComponentWrapper
   private final JComponent myInnerComponent;
   private final LoadingDecorator myDecorator;
 
-  public AWTLoadingPanel(@Nonnull Component uiComponent, @Nonnull JComponent inner, @Nonnull Disposable parent) {
+  public AWTLoadingPanel(Component uiComponent, JComponent inner, Disposable parent) {
     super(new BorderLayout());
     myInnerComponent = inner;
     myUIComponent = uiComponent;
@@ -83,7 +82,7 @@ public class AWTLoadingPanel extends JPanel implements FromSwingComponentWrapper
     return getContentPanel().getPreferredSize();
   }
 
-  @Nonnull
+  
   @Override
   public Component toUIComponent() {
     return myUIComponent;

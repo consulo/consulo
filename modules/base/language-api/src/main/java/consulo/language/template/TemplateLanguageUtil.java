@@ -8,8 +8,7 @@ import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -29,22 +28,22 @@ public final class TemplateLanguageUtil {
     }
   }
 
-  public static PsiFile getBaseFile(@Nonnull PsiFile file) {
+  public static PsiFile getBaseFile(PsiFile file) {
     FileViewProvider viewProvider = file.getViewProvider();
     return viewProvider.getPsi(viewProvider.getBaseLanguage());
   }
 
-  public static boolean isInsideTemplateFile(@Nonnull PsiElement element) {
+  public static boolean isInsideTemplateFile(PsiElement element) {
     return element.getContainingFile().getViewProvider() instanceof TemplateLanguageFileViewProvider;
   }
 
-  public static boolean isTemplateDataFile(@Nonnull PsiFile file) {
+  public static boolean isTemplateDataFile(PsiFile file) {
     FileViewProvider viewProvider = file.getViewProvider();
     return viewProvider instanceof TemplateLanguageFileViewProvider && file == viewProvider.getPsi(((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage());
   }
 
   @Nullable
-  public static ASTNode getSameLanguageTreePrev(@Nonnull ASTNode node) {
+  public static ASTNode getSameLanguageTreePrev(ASTNode node) {
     ASTNode current = node.getTreePrev();
     while (current instanceof OuterLanguageElement) {
       current = current.getTreePrev();
@@ -53,7 +52,7 @@ public final class TemplateLanguageUtil {
   }
 
   @Nullable
-  public static ASTNode getSameLanguageTreeNext(@Nonnull ASTNode node) {
+  public static ASTNode getSameLanguageTreeNext(ASTNode node) {
     ASTNode current = node.getTreeNext();
     while (current instanceof OuterLanguageElement) {
       current = current.getTreeNext();
@@ -61,7 +60,7 @@ public final class TemplateLanguageUtil {
     return current;
   }
 
-  public static PsiElement getSameLanguageTreePrev(@Nonnull PsiElement element) {
+  public static PsiElement getSameLanguageTreePrev(PsiElement element) {
     PsiElement current = element.getNextSibling();
     while (current instanceof OuterLanguageElement) {
       current = current.getPrevSibling();
@@ -69,7 +68,7 @@ public final class TemplateLanguageUtil {
     return current;
   }
 
-  public static PsiElement getSameLanguageTreeNext(@Nonnull PsiElement element) {
+  public static PsiElement getSameLanguageTreeNext(PsiElement element) {
     PsiElement current = element.getNextSibling();
     while (current instanceof OuterLanguageElement) {
       current = current.getNextSibling();

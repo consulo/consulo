@@ -18,7 +18,6 @@ package consulo.ui.ex.action;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.util.ActionGroupUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * This group hides itself when there's no enabled and visible child.
@@ -32,12 +31,12 @@ public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAwa
         super();
     }
 
-    public NonTrivialActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+    public NonTrivialActionGroup(LocalizeValue text, boolean popup) {
         super(text, popup);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
     }
 }

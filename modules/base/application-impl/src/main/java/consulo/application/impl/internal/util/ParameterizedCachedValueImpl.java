@@ -21,16 +21,15 @@ import consulo.application.util.ParameterizedCachedValue;
 import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public class ParameterizedCachedValueImpl<T, P> extends CachedValueBase<T> implements ParameterizedCachedValue<T, P> {
-    @Nonnull
+    
     private final Project myProject;
     private final ParameterizedCachedValueProvider<T, P> myProvider;
 
     ParameterizedCachedValueImpl(
-        @Nonnull Project project,
-        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        Project project,
+        ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue,
         CachedValuesFactory factory
     ) {
@@ -45,12 +44,12 @@ public class ParameterizedCachedValueImpl<T, P> extends CachedValueBase<T> imple
     }
 
     @Override
-    public boolean isFromMyProject(@Nonnull Project project) {
+    public boolean isFromMyProject(Project project) {
         return myProject == project;
     }
 
     @Override
-    @Nonnull
+    
     public ParameterizedCachedValueProvider<T, P> getValueProvider() {
         return myProvider;
     }

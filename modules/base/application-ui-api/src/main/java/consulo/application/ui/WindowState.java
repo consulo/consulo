@@ -3,8 +3,7 @@ package consulo.application.ui;
 
 import consulo.ui.Point2D;
 import consulo.ui.Size2D;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -38,7 +37,7 @@ public interface WindowState {
   /**
    * @param window a window to apply this state
    */
-  default void applyTo(@Nonnull Window window) {
+  default void applyTo(Window window) {
     throw new AbstractMethodError("Desktop only: " + getClass());
   }
 }

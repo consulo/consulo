@@ -23,7 +23,6 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
@@ -35,13 +34,13 @@ public class ShowReferringObjectsAction extends XDebuggerTreeActionBase {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(XValueNodeImpl node, AnActionEvent e) {
         return node.getValueContainer().getReferrersProvider() != null;
     }
 
     @Override
     @RequiredUIAccess
-    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+    protected void perform(XValueNodeImpl node, String nodeName, AnActionEvent e) {
         XReferrersProvider referrersProvider = node.getValueContainer().getReferrersProvider();
         if (referrersProvider != null) {
             XDebuggerTree tree = XDebuggerTree.getTree(e.getDataContext());

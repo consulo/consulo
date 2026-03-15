@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
 
 import java.io.Closeable;
 
@@ -34,52 +33,52 @@ public interface LiveTemplateContributor {
         Builder newBuilder(String id,
                            String abbreviation,
                            String value,
-                           @Nonnull LocalizeValue description);
+                           LocalizeValue description);
     }
 
     interface Builder extends Closeable {
-        @Nonnull
+        
         Builder withVariable(String name, String expression, String defaultValue, boolean alwaysStopAt);
 
-        @Nonnull
+        
         Builder withReformat();
 
-        @Nonnull
+        
         Builder withTabShortcut();
 
-        @Nonnull
+        
         Builder withEnterShortcut();
 
-        @Nonnull
+        
         Builder withSpaceShortcut();
 
-        @Nonnull
-        Builder withOption(@Nonnull KeyWithDefaultValue<Boolean> key, boolean value);
+        
+        Builder withOption(KeyWithDefaultValue<Boolean> key, boolean value);
 
-        @Nonnull
+        
         default Builder withContext(Class<? extends TemplateContextType> context) {
             return withContext(context, true);
         }
 
-        @Nonnull
+        
         Builder withContext(Class<? extends TemplateContextType> context, boolean enabled);
 
-        @Nonnull
+        
         default Builder withContextsOf(Class<? extends TemplateContextType> context) {
             return withContextsOf(context, true);
         }
 
-        @Nonnull
+        
         Builder withContextsOf(Class<? extends TemplateContextType> context, boolean enabled);
 
         void close();
     }
 
-    void contribute(@Nonnull Factory factory);
+    void contribute(Factory factory);
 
-    @Nonnull
+    
     String groupId();
 
-    @Nonnull
+    
     LocalizeValue groupName();
 }

@@ -42,9 +42,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
@@ -83,7 +81,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
      * @deprecated use {@link #ListPopupImpl(Project, ListPopupStep)} + {@link #setMaxRowCount(int)}
      */
     @Deprecated
-    public ListPopupImpl(@Nonnull ListPopupStep aStep, int maxRowCount) {
+    public ListPopupImpl(ListPopupStep aStep, int maxRowCount) {
         this(aStep);
         setMaxRowCount(maxRowCount);
     }
@@ -92,24 +90,24 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
      * @deprecated use {@link #ListPopupImpl(Project, ListPopupStep)}
      */
     @Deprecated
-    public ListPopupImpl(@Nonnull ListPopupStep aStep) {
+    public ListPopupImpl(ListPopupStep aStep) {
         this(DataManager.getInstance().getDataContext().getData(Project.KEY), null, aStep, null);
     }
 
-    public ListPopupImpl(@Nullable Project project, @Nonnull ListPopupStep aStep) {
+    public ListPopupImpl(@Nullable Project project, ListPopupStep aStep) {
         this(project, null, aStep, null);
     }
 
     public ListPopupImpl(@Nullable Project project,
                          @Nullable WizardPopup aParent,
-                         @Nonnull ListPopupStep aStep,
+                         ListPopupStep aStep,
                          Object parentValue) {
         this(project, aParent, aStep, parentValue, true);
     }
 
     public ListPopupImpl(@Nullable Project project,
                          @Nullable WizardPopup aParent,
-                         @Nonnull ListPopupStep aStep,
+                         ListPopupStep aStep,
                          Object parentValue,
                          boolean forceHeavyPopup) {
         super(project, aParent, aStep, forceHeavyPopup);
@@ -124,7 +122,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         myMaxRowCount = maxRowCount;
     }
 
-    public void showUnderneathOfLabel(@Nonnull JLabel label) {
+    public void showUnderneathOfLabel(JLabel label) {
         int offset = -UIUtil.getListCellHPadding() - UIUtil.getListViewportPadding().left;
         if (label.getIcon() != null) {
             offset += label.getIcon().getIconWidth() + label.getIconTextGap();
@@ -137,7 +135,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return myListModel;
     }
 
-    @Nonnull
+    
     @Override
     public PopupInlineActionsSupport getPopupInlineActionsSupport() {
         return myInlineActionsSupport.get();
@@ -353,15 +351,15 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return myList;
     }
 
-    @Nonnull
-    protected KeyEvent createKeyEvent(@NotNull ActionEvent e, int keyCode) {
+    
+    protected KeyEvent createKeyEvent(ActionEvent e, int keyCode) {
         return new KeyEvent(myList, KeyEvent.KEY_PRESSED, e.getWhen(), e.getModifiers(), keyCode, KeyEvent.CHAR_UNDEFINED);
     }
 
-    protected void handleLeftKeyPressed(@Nonnull KeyEvent keyEvent) {
+    protected void handleLeftKeyPressed(KeyEvent keyEvent) {
     }
 
-    protected void handleRightKeyPressed(@Nonnull KeyEvent keyEvent) {
+    protected void handleRightKeyPressed(KeyEvent keyEvent) {
         handleSelect(false, keyEvent);
     }
 
@@ -626,7 +624,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     }
 
     @Override
-    public void addSelectionListener(@Nonnull Consumer<Object> selectionListener) {
+    public void addSelectionListener(Consumer<Object> selectionListener) {
         myList.addListSelectionListener(e -> selectionListener.accept(myList.getSelectedValue()));
     }
 
@@ -717,7 +715,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @SuppressWarnings("unchecked")
-        @Nonnull
+        
         private ExtendMode calcExtendMode(int index) {
             ListPopupStep<Object> listStep = getListStep();
             Object selectedValue = myListModel.getElementAt(index);
@@ -946,7 +944,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @Override
-        public Object getData(@Nonnull Key dataId) {
+        public Object getData(Key dataId) {
             if (PlatformDataKeys.SELECTED_ITEM == dataId) {
                 return myList.getSelectedValue();
             }

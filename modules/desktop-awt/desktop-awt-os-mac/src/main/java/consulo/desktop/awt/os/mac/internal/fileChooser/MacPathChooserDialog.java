@@ -38,8 +38,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,12 +72,12 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
         OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
     }
 
-    @Nonnull
+    
     private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
         return descriptor.getTitleValue().orIfEmpty(UILocalize.fileChooserDefaultTitle());
     }
 
-    @Nonnull
+    
     private List<VirtualFile> getChosenFiles(Stream<File> streamOfFiles) {
         List<VirtualFile> virtualFiles = new ArrayList<>();
 
@@ -99,7 +98,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
     @Override
     @RequiredUIAccess
-    public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+    public void choose(@Nullable VirtualFile toSelect, Consumer<List<VirtualFile>> callback) {
         if (toSelect != null && toSelect.getParent() != null) {
 
             String directoryName;
@@ -178,26 +177,26 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public VirtualFile[] choose(@Nullable ComponentManager project, @Nonnull VirtualFile... toSelectFiles) {
+    public VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelectFiles) {
         VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
         choose(toSelect, files -> {
         });
         return virtualFiles;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
-    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelectFiles) {
+    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelectFiles) {
         VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
         return chooseAsync(toSelect);
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
         if (toSelect != null && toSelect.getParent() != null) {

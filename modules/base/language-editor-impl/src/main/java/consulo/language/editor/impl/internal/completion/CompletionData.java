@@ -33,8 +33,7 @@ import consulo.language.psi.path.PsiDynaReference;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 import static consulo.language.pattern.StandardPatterns.character;
@@ -70,7 +69,7 @@ public class CompletionData {
     myCompletionVariants.add(variant);
   }
 
-  public void completeReference(PsiReference reference, Set<LookupElement> set, @Nonnull PsiElement position, PsiFile file) {
+  public void completeReference(PsiReference reference, Set<LookupElement> set, PsiElement position, PsiFile file) {
     CompletionVariant[] variants = findVariants(position, file);
     boolean hasApplicableVariants = false;
     for (CompletionVariant variant : variants) {
@@ -133,7 +132,7 @@ public class CompletionData {
   };
 
   @Nullable
-  public static String getReferencePrefix(@Nonnull PsiElement insertedElement, int offsetInFile) {
+  public static String getReferencePrefix(PsiElement insertedElement, int offsetInFile) {
     try {
       PsiReference ref = insertedElement.getContainingFile().findReferenceAt(offsetInFile);
       if (ref != null) {
@@ -182,7 +181,7 @@ public class CompletionData {
     return findPrefixStatic(insertedElement, offsetInFile, NOT_JAVA_ID);
   }
 
-  public static String findPrefixDefault(PsiElement insertedElement, int offset, @Nonnull ElementPattern trimStart) {
+  public static String findPrefixDefault(PsiElement insertedElement, int offset, ElementPattern trimStart) {
     String substr = insertedElement.getText().substring(0, offset - insertedElement.getTextRange().getStartOffset());
     if (substr.length() == 0 || Character.isWhitespace(substr.charAt(substr.length() - 1))) return "";
 
@@ -193,7 +192,7 @@ public class CompletionData {
     return substr.substring(i).trim();
   }
 
-  public static LookupElement objectToLookupItem(@Nonnull Object object) {
+  public static LookupElement objectToLookupItem(Object object) {
     if (object instanceof LookupElement) return (LookupElement)object;
 
     String s = null;
@@ -227,7 +226,7 @@ public class CompletionData {
   }
 
 
-  protected void addLookupItem(Set<LookupElement> set, TailType tailType, @Nonnull Object completion, CompletionVariant variant) {
+  protected void addLookupItem(Set<LookupElement> set, TailType tailType, Object completion, CompletionVariant variant) {
     LookupElement ret = objectToLookupItem(completion);
     if (ret == null) return;
     if (!(ret instanceof LookupItem)) {

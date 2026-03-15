@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.ui.ex.UIBundle;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +41,12 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
   private final List<String> myInitialCollection;
   @Nullable private final Project myProject;
 
-  public PathsChooserComponent(@Nonnull List<String> collection, @Nonnull PathProcessor processor) {
+  public PathsChooserComponent(List<String> collection, PathProcessor processor) {
     this(collection, processor, null);
   }
 
-  public PathsChooserComponent(@Nonnull List<String> collection,
-                               @Nonnull final PathProcessor processor,
+  public PathsChooserComponent(List<String> collection,
+                               final PathProcessor processor,
                                @Nullable Project project) {
     myList = new JBList();
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -95,7 +94,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
     reset();
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myList.getEmptyText();

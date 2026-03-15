@@ -15,17 +15,16 @@
  */
 package consulo.fileTemplate;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 31-Jul-22
  */
 public interface FileTemplateRegistrator {
-  default void registerInternalTemplate(@Nonnull String name) {
+  default void registerInternalTemplate(String name) {
     registerInternalTemplate(name, null);
   }
 
-  void registerInternalTemplate(@Nonnull String name, @Nullable String subject);
+  void registerInternalTemplate(String name, @Nullable String subject);
 }

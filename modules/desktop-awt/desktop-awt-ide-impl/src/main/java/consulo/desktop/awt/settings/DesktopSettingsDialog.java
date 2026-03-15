@@ -37,8 +37,7 @@ import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -69,7 +68,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
      */
     public DesktopSettingsDialog(Project project,
                                  Function<Project, Configurable[]> configurablesBuilder,
-                                 @Nonnull ConfigurablePreselectStrategy strategy,
+                                 ConfigurablePreselectStrategy strategy,
                                  boolean applicationModalIfPossible,
                                  Consumer<DesktopSettingsDialog> afteLoad
     ) {
@@ -84,7 +83,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
     public DesktopSettingsDialog(Project project,
                                  Function<Project, Configurable[]> configurablesBuilder,
-                                 @Nonnull ConfigurablePreselectStrategy strategy,
+                                 ConfigurablePreselectStrategy strategy,
                                  Consumer<DesktopSettingsDialog> afteLoad) {
         super(project, true);
         myProject = project;
@@ -95,7 +94,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         init();
     }
 
-    @Nonnull
+    
     @Override
     public String getSplitterKey() {
         return OptionsEditor.MAIN_SPLITTER_PROPORTION;
@@ -126,7 +125,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel, () -> myAfteLoad.accept(this));
@@ -239,7 +238,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         super.doCancelAction();
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         myApplyAction = new ApplyAction();
@@ -260,7 +259,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         if (Settings.KEY == dataId) {
             return myEditor;
         }

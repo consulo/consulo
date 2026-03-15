@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -37,7 +36,7 @@ public class MarkObjectAction extends XDebuggerActionBase {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         boolean enabled = false;
         Presentation presentation = e.getPresentation();
@@ -57,7 +56,7 @@ public class MarkObjectAction extends XDebuggerActionBase {
         presentation.setEnabled(enabled);
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

@@ -33,8 +33,7 @@ import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,12 +51,12 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     private String myPreviousMessage;
     @Nullable
     private String myAmendedMessage;
-    @Nonnull
+    
     protected final CheckinProjectPanel myCheckinPanel;
     @Nullable
     private Map<VirtualFile, String> myMessagesForRoots;
 
-    public DvcsCommitAdditionalComponent(@Nonnull Project project, @Nonnull CheckinProjectPanel panel) {
+    public DvcsCommitAdditionalComponent(Project project, CheckinProjectPanel panel) {
         myCheckinPanel = panel;
         myPanel = new JPanel(new GridBagLayout());
         Insets insets = new Insets(2, 2, 2, 2);
@@ -125,7 +124,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     }
 
     @RequiredUIAccess
-    private void loadMessagesInModalTask(@Nonnull Project project) {
+    private void loadMessagesInModalTask(Project project) {
         try {
             myMessagesForRoots = ProgressManager.getInstance().runProcessWithProgressSynchronously(
                 this::getLastCommitMessages,
@@ -144,14 +143,14 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
         }
     }
 
-    private void substituteCommitMessage(@Nonnull String newMessage) {
+    private void substituteCommitMessage(String newMessage) {
         myPreviousMessage = myCheckinPanel.getCommitMessage();
         if (!myPreviousMessage.trim().equals(newMessage.trim())) {
             myCheckinPanel.setCommitMessage(newMessage);
         }
     }
 
-    @Nonnull
+    
     private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
         Map<VirtualFile, String> messagesForRoots = new HashMap<>();
         Collection<VirtualFile> roots = myCheckinPanel.getRoots(); //all committed vcs roots, not only selected
@@ -166,16 +165,16 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
         return messagesForRoots;
     }
 
-    @Nonnull
+    
     private List<FilePath> getSelectedFilePaths() {
         return ContainerUtil.map(myCheckinPanel.getFiles(), (Function<File, FilePath>) file -> new FilePathImpl(file, file.isDirectory()));
     }
 
-    @Nonnull
-    protected abstract Set<VirtualFile> getVcsRoots(@Nonnull Collection<FilePath> files);
+    
+    protected abstract Set<VirtualFile> getVcsRoots(Collection<FilePath> files);
 
     @Nullable
-    protected abstract String getLastCommitMessage(@Nonnull VirtualFile repo) throws VcsException;
+    protected abstract String getLastCommitMessage(VirtualFile repo) throws VcsException;
 
     public boolean isAmend() {
         return myAmend.isSelected();

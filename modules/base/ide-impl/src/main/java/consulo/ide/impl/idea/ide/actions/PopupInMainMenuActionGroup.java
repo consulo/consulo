@@ -23,7 +23,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.NonTrivialActionGroup;
 
-import jakarta.annotation.Nonnull;
 
 // from kotlin
 @ActionImpl(
@@ -40,7 +39,7 @@ public class PopupInMainMenuActionGroup extends NonTrivialActionGroup {
     }
 
     @Override
-    public boolean isPopup(@Nonnull String place) {
+    public boolean isPopup(String place) {
         return ActionPlaces.MAIN_MENU.equals(place);
     }
 }

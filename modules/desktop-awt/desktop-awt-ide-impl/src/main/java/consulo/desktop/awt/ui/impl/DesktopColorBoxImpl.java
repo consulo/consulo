@@ -24,8 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ import jakarta.annotation.Nullable;
  */
 class DesktopColorBoxImpl extends SwingComponentDelegate<DesktopColorBoxImpl.MyColorPanel> implements ColorBox {
     class MyColorPanel extends ColorPanel implements FromSwingComponentWrapper {
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopColorBoxImpl.this;

@@ -32,7 +32,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -98,12 +97,12 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
             AllIcons.Nodes.SortBySeverity
         ) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return GROUP_BY_SEVERITY;
             }
 
             @Override
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 GROUP_BY_SEVERITY = state;
                 updater.run();
             }
@@ -117,12 +116,12 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
             AllIcons.General.Filter
         ) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return FILTER_RESOLVED_ITEMS;
             }
 
             @Override
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 FILTER_RESOLVED_ITEMS = state;
                 updater.run();
             }
@@ -136,12 +135,12 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
             AllIcons.Actions.Diff
         ) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return SHOW_DIFF_WITH_PREVIOUS_RUN;
             }
 
             @Override
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 SHOW_DIFF_WITH_PREVIOUS_RUN = state;
                 if (!SHOW_DIFF_WITH_PREVIOUS_RUN) {
                     SHOW_ONLY_DIFF = false;
@@ -158,12 +157,12 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
             AllIcons.Actions.GroupByPackage
         ) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return SHOW_STRUCTURE;
             }
 
             @Override
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 SHOW_STRUCTURE = state;
                 updater.run();
             }
@@ -177,18 +176,18 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
             PlatformIconGroup.actionsDiff()
         ) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return SHOW_ONLY_DIFF;
             }
 
             @Override
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 SHOW_ONLY_DIFF = state;
                 updater.run();
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 super.update(e);
                 e.getPresentation().setEnabled(SHOW_DIFF_WITH_PREVIOUS_RUN);
             }

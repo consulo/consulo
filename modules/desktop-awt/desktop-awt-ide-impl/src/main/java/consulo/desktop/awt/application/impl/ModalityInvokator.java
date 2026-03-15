@@ -18,7 +18,6 @@ package consulo.desktop.awt.application.impl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -34,7 +33,7 @@ public interface ModalityInvokator {
    */
   AsyncResult<Void> invokeLater(Runnable runnable);
 
-  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull BooleanSupplier expired);
+  AsyncResult<Void> invokeLater(Runnable runnable, BooleanSupplier expired);
 
   /**
    * Causes <i>runnable.run()</i> to be executed asynchronously on the
@@ -44,7 +43,7 @@ public interface ModalityInvokator {
    * @param runnable the runnable to execute.
    * @param state the state in which the runnable will be executed.
    */
-  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull IdeaModalityState state);
+  AsyncResult<Void> invokeLater(Runnable runnable, IdeaModalityState state);
 
-  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull IdeaModalityState state, @Nonnull BooleanSupplier expired);
+  AsyncResult<Void> invokeLater(Runnable runnable, IdeaModalityState state, BooleanSupplier expired);
 }

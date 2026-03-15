@@ -10,7 +10,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -33,7 +32,7 @@ public class HideCoverageInfoAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(false);
         presentation.setVisible(e.isFromActionToolbar());

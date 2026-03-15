@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -42,9 +41,9 @@ public abstract class AbstractTitledSeparatorWithIcon extends JPanel {
   protected final Image myIconOpen;
   protected final JSeparator mySeparator;
 
-  public AbstractTitledSeparatorWithIcon(@Nonnull Image icon,
-                                         @Nonnull Image iconOpen,
-                                         @Nonnull String text) {
+  public AbstractTitledSeparatorWithIcon(Image icon,
+                                         Image iconOpen,
+                                         String text) {
     myIcon = icon;
     myIconOpen = iconOpen;
     setLayout(new GridBagLayout());

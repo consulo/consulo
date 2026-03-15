@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows to customize {@link ExternalSystemNotificationManager external system notifications} shown to end-user by the ide.
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemNotificationExtension {
 
-  @Nonnull
+  
   ProjectSystemId getTargetExternalSystemId();
 
   /**
@@ -42,5 +41,5 @@ public interface ExternalSystemNotificationExtension {
    * @param project          target ide project
    * @param error            error occurred during external system processing
    */
-  void customize(@Nonnull NotificationData notificationData, @Nonnull Project project, @Nullable Throwable error);
+  void customize(NotificationData notificationData, Project project, @Nullable Throwable error);
 }

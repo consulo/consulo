@@ -24,7 +24,6 @@ import consulo.ide.ui.SdkPathEditor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -33,26 +32,26 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class BinariesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
-  @Nonnull
+  
   @Override
   public String getOrderRootTypeId() {
     return "binaries";
   }
 
-  @Nonnull
+  
   @Override
   public SdkPathEditor createPathEditor(Sdk sdk) {
     return new SdkPathEditor(ProjectBundle.message("library.binaries.node"), BinariesOrderRootType.getInstance(),
                              new FileChooserDescriptor(true, true, true, false, true, true), sdk);
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return PlatformIconGroup.filetypesBinary();
   }
 
-  @Nonnull
+  
   @Override
   public String getNodeText() {
     return ProjectBundle.message("library.binaries.node");

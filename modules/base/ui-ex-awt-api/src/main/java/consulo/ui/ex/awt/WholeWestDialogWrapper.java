@@ -24,8 +24,7 @@ import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Couple;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +66,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
         myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
     }
 
-    public WholeWestDialogWrapper(@Nonnull Component parent, boolean canBeParent) {
+    public WholeWestDialogWrapper(Component parent, boolean canBeParent) {
         super(parent, canBeParent);
         myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
     }
@@ -83,7 +82,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
         return new BorderLayout();
     }
 
-    @Nonnull
+    
     public String getSplitterKey() {
         return getClass().getName();
     }
@@ -96,7 +95,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
         return new Size2D(500, 500);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public abstract Couple<JComponent> createSplitterComponents(JPanel rootPanel);
 
@@ -107,7 +106,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
 
     @Override
     @RequiredUIAccess
-    protected void initRootPanel(@Nonnull JPanel rootPanel) {
+    protected void initRootPanel(JPanel rootPanel) {
         JBSplitter splitter = new OnePixelSplitter();
         splitter.setProportion(getSplitterDefaultValue());
         splitter.setSplitterProportionKey(getSplitterKey());

@@ -19,8 +19,7 @@ import consulo.document.Document;
 import consulo.document.DocumentReference;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @see ProjectUndoManager
@@ -29,9 +28,9 @@ import jakarta.annotation.Nullable;
 public interface UndoManager {
   Key<Document> ORIGINAL_DOCUMENT = Key.create("ORIGINAL_DOCUMENT");
 
-  void undoableActionPerformed(@Nonnull UndoableAction action);
+  void undoableActionPerformed(UndoableAction action);
 
-  void nonundoableActionPerformed(@Nonnull DocumentReference ref, boolean isGlobal);
+  void nonundoableActionPerformed(DocumentReference ref, boolean isGlobal);
 
   boolean isUndoInProgress();
 
@@ -64,16 +63,16 @@ public interface UndoManager {
   /**
    * @param editor instanceof FileEditor
    */
-  @Nonnull
+  
   Couple<String> getUndoActionNameAndDescription(Object editor);
 
   /**
    * @param editor instanceof FileEditor
    */
-  @Nonnull
+  
   Couple<String> getRedoActionNameAndDescription(Object editor);
 
-  void invalidateActionsFor(@Nonnull DocumentReference ref);
+  void invalidateActionsFor(DocumentReference ref);
 
   boolean canMergeGroup(Object groupId, Object lastGroupId);
 }

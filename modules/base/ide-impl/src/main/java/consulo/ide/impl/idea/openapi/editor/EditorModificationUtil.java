@@ -23,8 +23,7 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CopyPasteManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -46,23 +45,23 @@ public class EditorModificationUtil {
     editor.getSelectionModel().setBlockSelection(new LogicalPosition(startLine, caretColumn), new LogicalPosition(endLine, caretColumn));
   }
 
-  public static void insertStringAtCaret(Editor editor, @Nonnull String s) {
+  public static void insertStringAtCaret(Editor editor, String s) {
     insertStringAtCaret(editor, s, false, true);
   }
 
-  public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode) {
+  public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode) {
     return insertStringAtCaret(editor, s, toProcessOverwriteMode, s.length());
   }
 
-  public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
+  public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
     return insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, s.length());
   }
 
-  public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, int caretShift) {
+  public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, int caretShift) {
     return insertStringAtCaret(editor, s, toProcessOverwriteMode, true, caretShift);
   }
 
-  public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
+  public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
     return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
   }
 
@@ -91,7 +90,7 @@ public class EditorModificationUtil {
   }
 
   @Nullable
-  public static String getStringContent(@Nonnull Transferable content) {
+  public static String getStringContent(Transferable content) {
     RawText raw = RawText.fromTransferable(content);
     if (raw != null) return raw.rawText;
 
@@ -138,23 +137,23 @@ public class EditorModificationUtil {
     return consulo.codeEditor.util.EditorModificationUtil.calcStringToFillVirtualSpace(editor, afterLineEnd);
   }
 
-  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str) {
+  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str) {
     consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, str.length());
   }
 
-  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str, int caretShift) {
+  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, int caretShift) {
     consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, caretShift);
   }
 
-  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str, boolean toProcessOverwriteMode) {
+  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, boolean toProcessOverwriteMode) {
     consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, toProcessOverwriteMode, str.length());
   }
 
-  public static void moveAllCaretsRelatively(@Nonnull Editor editor, int caretShift) {
+  public static void moveAllCaretsRelatively(Editor editor, int caretShift) {
     consulo.codeEditor.util.EditorModificationUtil.moveAllCaretsRelatively(editor, caretShift);
   }
 
-  public static void moveCaretRelatively(@Nonnull Editor editor, int caretShift) {
+  public static void moveCaretRelatively(Editor editor, int caretShift) {
     consulo.codeEditor.util.EditorModificationUtil.moveCaretRelatively(editor, caretShift);
   }
 
@@ -163,17 +162,17 @@ public class EditorModificationUtil {
    * It scrolls to primary caret in both cases, and, in the former case, avoids performing excessive scrolling in case of large number
    * of carets.
    */
-  public static void scrollToCaret(@Nonnull Editor editor) {
+  public static void scrollToCaret(Editor editor) {
     consulo.codeEditor.util.EditorModificationUtil.scrollToCaret(editor);
   }
 
-  @Nonnull
-  public static List<CaretState> calcBlockSelectionState(@Nonnull Editor editor, @Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
+  
+  public static List<CaretState> calcBlockSelectionState(Editor editor, LogicalPosition blockStart, LogicalPosition blockEnd) {
     return consulo.codeEditor.util.EditorModificationUtil.calcBlockSelectionState(editor, blockStart, blockEnd);
   }
 
   @RequiredUIAccess
-  public static boolean requestWriting(@Nonnull Editor editor) {
+  public static boolean requestWriting(Editor editor) {
     if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
       HintManager.getInstance().showInformationHint(editor, CodeEditorLocalize.editingReadOnlyFileHint());
       return false;

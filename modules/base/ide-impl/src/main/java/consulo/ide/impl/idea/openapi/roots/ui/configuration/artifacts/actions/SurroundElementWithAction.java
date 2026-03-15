@@ -36,7 +36,6 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.PathUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
     LayoutTreeSelection selection = treeComponent.getSelection();
     final CompositePackagingElement<?> parent = selection.getCommonParentElement();
@@ -81,7 +80,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
           return aValue.getIcon();
         }
 
-        @Nonnull
+        
         @Override
         public String getTextFor(CompositePackagingElementType value) {
           return value.getPresentableName().get();

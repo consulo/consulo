@@ -7,7 +7,6 @@ import consulo.fileEditor.internal.largeFileEditor.Position;
 import consulo.fileEditor.internal.largeFileEditor.SearchResult;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -56,7 +55,7 @@ public final class FrameSearcher {
         this.afterFrameEndSymbol = afterFrameEndSymbol;
     }
 
-    public @Nonnull ArrayList<SearchResult> findAllMatchesAtFrame() {
+    public ArrayList<SearchResult> findAllMatchesAtFrame() {
         String frameText;
         boolean isNeedAfterFrameEndSymbol;
         FindResult ijFindResult;

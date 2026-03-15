@@ -19,7 +19,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);
@@ -65,7 +64,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
 
         List<ProjectSystemId> systemIds = getSystemIds(e);
@@ -85,7 +84,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
         }
     }
 
-    private static List<ProjectSystemId> getSystemIds(@Nonnull AnActionEvent e) {
+    private static List<ProjectSystemId> getSystemIds(AnActionEvent e) {
         List<ProjectSystemId> systemIds = new ArrayList<>();
 
         ProjectSystemId externalSystemId = e.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);

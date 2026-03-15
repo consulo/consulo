@@ -23,8 +23,7 @@ import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.internal.DarkThemeCalculator;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -55,7 +54,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
     private static final int IDE_UI_TREE_INDENT = SystemProperties.getIntProperty("ide.ui.tree.indent", -1);
 
-    @Nonnull
+    
     private final Predicate<Integer> myWideSelectionCondition;
     private boolean myWideSelection;
     private boolean myOldRepaintAllRowValue;
@@ -73,7 +72,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
      * @param wideSelectionCondition strategy that determine if wide selection should be used for a target row (it's zero-based index
      *                               is given to the condition as an argument)
      */
-    public WideSelectionTreeUI(boolean wideSelection, @Nonnull Predicate<Integer> wideSelectionCondition) {
+    public WideSelectionTreeUI(boolean wideSelection, Predicate<Integer> wideSelectionCondition) {
         myWideSelection = wideSelection;
         myWideSelectionCondition = wideSelectionCondition;
     }
@@ -103,9 +102,9 @@ public class WideSelectionTreeUI extends BasicTreeUI {
                 }
             }
 
-            @Nonnull
+            
             @Override
-            protected MouseEvent convert(@Nonnull MouseEvent event) {
+            protected MouseEvent convert(MouseEvent event) {
                 if (!event.isConsumed() && SwingUtilities.isLeftMouseButton(event)) {
                     int x = event.getX();
                     int y = event.getY();
@@ -459,7 +458,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     }
 
     @Nullable
-    private static Color getSelectionBackground(@Nonnull JTree tree, boolean checkProperty) {
+    private static Color getSelectionBackground(JTree tree, boolean checkProperty) {
         Object property = tree.getClientProperty(TREE_TABLE_TREE_KEY);
         if (property instanceof JTable table) {
             return table.getSelectionBackground();

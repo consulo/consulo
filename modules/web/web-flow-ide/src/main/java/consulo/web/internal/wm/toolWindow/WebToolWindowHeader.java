@@ -26,7 +26,6 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -48,7 +47,7 @@ public class WebToolWindowHeader {
     myDockLayout.left(titleLayout);
   }
 
-  @Nonnull
+  
   public Component getComponent() {
     return myDockLayout;
   }

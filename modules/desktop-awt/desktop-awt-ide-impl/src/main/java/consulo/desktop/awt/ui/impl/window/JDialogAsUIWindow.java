@@ -20,7 +20,6 @@ import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -39,7 +38,7 @@ public class JDialogAsUIWindow extends JDialog implements FromSwingWindowWrapper
     myWindowOverAWTWindow = new WindowOverAWTWindow(this) {
       @RequiredUIAccess
       @Override
-      public void setTitle(@Nonnull String title) {
+      public void setTitle(String title) {
         JDialogAsUIWindow.this.setTitle(title);
       }
     };
@@ -51,13 +50,13 @@ public class JDialogAsUIWindow extends JDialog implements FromSwingWindowWrapper
     myWindowOverAWTWindow = new WindowOverAWTWindow(this) {
       @RequiredUIAccess
       @Override
-      public void setTitle(@Nonnull String title) {
+      public void setTitle(String title) {
         JDialogAsUIWindow.this.setTitle(title);
       }
     };
   }
 
-  @Nonnull
+  
   @Override
   public Window toUIWindow() {
     return myWindowOverAWTWindow;

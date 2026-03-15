@@ -20,9 +20,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 /**
  * @author VISTALL
@@ -37,26 +35,26 @@ public class ActionMacroWidgetFactory implements StatusBarWidgetFactory {
     myActionMacroManager = actionMacroManager;
   }
 
-  @Nls
-  @Nonnull
+  
+  
   @Override
   public String getDisplayName() {
     return "Action Macro";
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project) {
+  public boolean isAvailable(Project project) {
     return myActionMacroManager.isRecording();
   }
 
-  @Nonnull
+  
   @Override
-  public StatusBarWidget createWidget(@Nonnull Project project) {
+  public StatusBarWidget createWidget(Project project) {
     return new ActionMacroWidget();
   }
 
   @Override
-  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+  public boolean canBeEnabledOn(StatusBar statusBar) {
     return false;
   }
 }

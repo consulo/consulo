@@ -3,8 +3,7 @@ package consulo.component.messagebus;
 
 import consulo.annotation.component.TopicAPI;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Core of IntelliJ IDEA messaging infrastructure. Basic functions:
@@ -38,7 +37,7 @@ public interface MessageBus {
    *
    * @return newly created connection
    */
-  @Nonnull
+  
   MessageBusConnection connect();
 
   /**
@@ -48,8 +47,8 @@ public interface MessageBus {
    * @param parentDisposable target parent disposable to which life cycle newly created connection shall be bound
    * @return newly created connection which life cycle is bound to the given disposable parent
    */
-  @Nonnull
-  MessageBusConnection connect(@Nonnull Disposable parentDisposable);
+  
+  MessageBusConnection connect(Disposable parentDisposable);
 
   /**
    * Allows to retrieve an interface for publishing messages to the target topic.
@@ -110,8 +109,8 @@ public interface MessageBus {
    * @param topicClass target topic
    * @return publisher for target topic
    */
-  @Nonnull
-  <L> L syncPublisher(@Nonnull Class<L> topicClass);
+  
+  <L> L syncPublisher(Class<L> topicClass);
 
   /**
    * Returns true if this bus is disposed.
@@ -122,5 +121,5 @@ public interface MessageBus {
    * @return true when events in the given topic are being dispatched in the current thread,
    * and not all listeners have received the events yet.
    */
-  boolean hasUndeliveredEvents(@Nonnull Class<?> topic);
+  boolean hasUndeliveredEvents(Class<?> topic);
 }

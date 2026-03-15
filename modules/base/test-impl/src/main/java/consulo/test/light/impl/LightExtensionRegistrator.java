@@ -16,13 +16,12 @@
 package consulo.test.light.impl;
 
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-03-12
  */
 public abstract class LightExtensionRegistrator {
-  public void registerServices(@Nonnull InjectingContainerBuilder builder) {
+  public void registerServices(InjectingContainerBuilder builder) {
   }
 }

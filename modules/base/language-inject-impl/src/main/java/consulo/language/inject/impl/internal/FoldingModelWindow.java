@@ -13,8 +13,7 @@ import consulo.document.DocumentWindow;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
     private final DocumentWindow myDocumentWindow;
     private final EditorWindow myEditorWindow;
 
-    FoldingModelWindow(@Nonnull FoldingModelEx delegate, @Nonnull DocumentWindow documentWindow, @Nonnull EditorWindow editorWindow) {
+    FoldingModelWindow(FoldingModelEx delegate, DocumentWindow documentWindow, EditorWindow editorWindow) {
         myDelegate = delegate;
         myDocumentWindow = documentWindow;
         myEditorWindow = editorWindow;
@@ -45,7 +44,7 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
     }
 
     @Override
-    public FoldRegion getFoldingPlaceholderAt(@Nonnull Point p) {
+    public FoldRegion getFoldingPlaceholderAt(Point p) {
         return myDelegate.getFoldingPlaceholderAt(p);
     }
 
@@ -57,17 +56,17 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
     }
 
     @Override
-    public FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText) {
+    public FoldRegion addFoldRegion(int startOffset, int endOffset, String placeholderText) {
         return createFoldRegion(startOffset, endOffset, placeholderText, null, false);
     }
 
     @Override
-    public void removeFoldRegion(@Nonnull FoldRegion region) {
+    public void removeFoldRegion(FoldRegion region) {
         myDelegate.removeFoldRegion((FoldRegion) ((FoldingRegionWindow) region).getDelegate());
     }
 
     @Override
-    @Nonnull
+    
     public FoldRegion[] getAllFoldRegions() {
         FoldRegion[] all = myDelegate.getAllFoldRegions();
         List<FoldRegion> result = new ArrayList<>();
@@ -101,28 +100,28 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
     }
 
     @Nullable
-    private FoldingRegionWindow getWindowRegion(@Nonnull FoldRegion hostRegion) {
+    private FoldingRegionWindow getWindowRegion(FoldRegion hostRegion) {
         FoldingRegionWindow window = hostRegion.getUserData(FOLD_REGION_WINDOW);
         return window != null && window.getEditor() == myEditorWindow ? window : null;
     }
 
     @Override
-    public void runBatchFoldingOperation(@Nonnull Runnable operation) {
+    public void runBatchFoldingOperation(Runnable operation) {
         myDelegate.runBatchFoldingOperation(operation);
     }
 
     @Override
-    public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion) {
+    public void runBatchFoldingOperation(Runnable operation, boolean moveCaretFromCollapsedRegion) {
         myDelegate.runBatchFoldingOperation(operation, moveCaretFromCollapsedRegion);
     }
 
     @Override
-    public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean dontCollapseCaret, boolean moveCaret) {
+    public void runBatchFoldingOperation(Runnable operation, boolean dontCollapseCaret, boolean moveCaret) {
         myDelegate.runBatchFoldingOperation(operation, dontCollapseCaret, moveCaret);
     }
 
     @Override
-    public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation) {
+    public void runBatchFoldingOperationDoNotCollapseCaret(Runnable operation) {
         myDelegate.runBatchFoldingOperationDoNotCollapseCaret(operation);
     }
 
@@ -144,7 +143,7 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
     private static final Key<FoldingRegionWindow> FOLD_REGION_WINDOW = Key.create("FOLD_REGION_WINDOW");
 
     @Override
-    public FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, FoldingGroup group, boolean neverExpands) {
+    public FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, FoldingGroup group, boolean neverExpands) {
         TextRange hostRange = myDocumentWindow.injectedToHost(new TextRange(startOffset, endOffset));
         if (hostRange.getLength() < 2) {
             return null;
@@ -161,7 +160,7 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
     }
 
     @Override
-    public void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable) {
+    public void addListener(FoldingListener listener, Disposable parentDisposable) {
         myDelegate.addListener(listener, parentDisposable);
     }
 
@@ -170,7 +169,7 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
         myDelegate.rebuild();
     }
 
-    @Nonnull
+    
     @Override
     public List<FoldRegion> getGroupedRegions(FoldingGroup group) {
         List<FoldRegion> hostRegions = myDelegate.getGroupedRegions(group);
@@ -189,7 +188,7 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
     }
 
     @Override
-    public boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region) {
+    public boolean hasDocumentRegionChangedFor(FoldRegion region) {
         return false;
     }
 

@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "IncrementalSearch")
 public class IncrementalSearchAction extends AnAction implements DumbAware {
@@ -36,14 +35,14 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor editor = e.getRequiredData(Editor.KEY);
         new IncrementalSearchHandler().invoke(project, editor);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.hasData(Editor.KEY));
     }
 }

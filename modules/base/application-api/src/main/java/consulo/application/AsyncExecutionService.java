@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ui.ModalityState;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.Callable;
 
 /**
@@ -17,16 +16,16 @@ public abstract class AsyncExecutionService {
   //@NotNull
   //protected abstract ExpirableExecutor createExecutor(@NotNull Executor executor);
   //
-  @Nonnull
-  protected abstract AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState);
+  
+  protected abstract AppUIExecutor createUIExecutor(ModalityState modalityState);
 
-  @Nonnull
-  protected abstract AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState);
+  
+  protected abstract AppUIExecutor createWriteThreadExecutor(ModalityState modalityState);
 
-  @Nonnull
-  protected abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation);
+  
+  protected abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(Callable<T> computation);
 
-  @Nonnull
+  
   static AsyncExecutionService getService() {
     return Application.get().getInstance(AsyncExecutionService.class);
   }

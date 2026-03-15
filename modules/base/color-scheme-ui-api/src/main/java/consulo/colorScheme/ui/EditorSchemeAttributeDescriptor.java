@@ -19,10 +19,9 @@ package consulo.colorScheme.ui;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 public interface EditorSchemeAttributeDescriptor {
-  @Nonnull
+  
   LocalizeValue getGroup();
 
   String getType();

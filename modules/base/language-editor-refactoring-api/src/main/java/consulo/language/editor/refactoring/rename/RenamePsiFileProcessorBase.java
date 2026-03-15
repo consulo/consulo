@@ -22,7 +22,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -44,7 +43,7 @@ public abstract class RenamePsiFileProcessorBase extends RenamePsiElementProcess
             : RefactoringSettings.getInstance().RENAME_SEARCH_FOR_REFERENCES_FOR_DIRECTORY;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<PsiReference> findReferences(PsiElement element) {
         if (!getSearchForReferences(element)) {

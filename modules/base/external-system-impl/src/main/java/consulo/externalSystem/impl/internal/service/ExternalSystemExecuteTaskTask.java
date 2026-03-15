@@ -25,8 +25,7 @@ import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,10 +38,10 @@ import java.util.function.Function;
  */
 public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
 
-  @Nonnull
+  
   private static final Function<ExternalTaskPojo, String> MAPPER = ExternalTaskPojo::getName;
 
-  @Nonnull
+  
   private final List<ExternalTaskPojo> myTasksToExecute;
   @Nullable
   private final String myVmOptions;
@@ -51,9 +50,9 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
   @Nullable private final String myDebuggerSetup;
 
   public ExternalSystemExecuteTaskTask(
-    @Nonnull ProjectSystemId externalSystemId,
-    @Nonnull Project project,
-    @Nonnull List<ExternalTaskPojo> tasksToExecute,
+    ProjectSystemId externalSystemId,
+    Project project,
+    List<ExternalTaskPojo> tasksToExecute,
     @Nullable String vmOptions,
     @Nullable String scriptParameters,
     @Nullable String debuggerSetup
@@ -65,8 +64,8 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
     myDebuggerSetup = debuggerSetup;
   }
 
-  @Nonnull
-  private static String getLinkedExternalProjectPath(@Nonnull Collection<ExternalTaskPojo> tasks) throws IllegalArgumentException {
+  
+  private static String getLinkedExternalProjectPath(Collection<ExternalTaskPojo> tasks) throws IllegalArgumentException {
     if (tasks.isEmpty()) {
       throw new IllegalArgumentException("Can't execute external tasks. Reason: given tasks list is empty");
     }

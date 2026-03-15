@@ -25,8 +25,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class PlatformPackageUtil {
@@ -34,7 +33,7 @@ public class PlatformPackageUtil {
   private static final Logger LOG = Logger.getInstance(PlatformPackageUtil.class);
 
   @Nullable
-  private static PsiDirectory getWritableModuleDirectory(@Nonnull Query<VirtualFile> vFiles,
+  private static PsiDirectory getWritableModuleDirectory(Query<VirtualFile> vFiles,
                                                          GlobalSearchScope scope,
                                                          PsiManager manager) {
     for (VirtualFile vFile : vFiles) {

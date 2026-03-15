@@ -5,8 +5,7 @@ import consulo.build.ui.event.BuildEventsNls;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -18,7 +17,7 @@ public class BuildContentDescriptor extends RunContentDescriptor {
 
   public BuildContentDescriptor(@Nullable ExecutionConsole executionConsole,
                                 @Nullable ProcessHandler processHandler,
-                                @Nonnull JComponent component,
+                                JComponent component,
                                 @BuildEventsNls.Title String displayName) {
     super(executionConsole, processHandler, component, displayName);
   }

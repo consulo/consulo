@@ -29,7 +29,6 @@ import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.internal.VersionControlSystemInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author lesya
@@ -59,11 +58,11 @@ public abstract class ShowChangeMarkerAction extends AbstractVcsAction {
     }
 
     @Override
-    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
+    protected boolean forceSyncUpdate(AnActionEvent e) {
         return true;
     }
 
-    public ShowChangeMarkerAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+    public ShowChangeMarkerAction(LocalizeValue text, LocalizeValue description, Image icon) {
         super(text, description, icon);
         myChangeMarkerContext = new ChangeMarkerContext() {
             @Override
@@ -106,7 +105,7 @@ public abstract class ShowChangeMarkerAction extends AbstractVcsAction {
     }
 
     @Override
-    protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
+    protected void update(VcsContext context, Presentation presentation) {
         boolean active = isActive(context);
         presentation.setEnabled(active);
         presentation.setVisible(context.getEditor() != null || ActionPlaces.isToolbarPlace(context.getPlace()));
@@ -114,7 +113,7 @@ public abstract class ShowChangeMarkerAction extends AbstractVcsAction {
 
     @Override
     @RequiredUIAccess
-    protected void actionPerformed(@Nonnull VcsContext context) {
+    protected void actionPerformed(VcsContext context) {
         Editor editor = myChangeMarkerContext.getEditor(context);
         LineStatusTrackerI lineStatusTracker = myChangeMarkerContext.getLineStatusTracker(context);
         VcsRange range = myChangeMarkerContext.getRange(context);

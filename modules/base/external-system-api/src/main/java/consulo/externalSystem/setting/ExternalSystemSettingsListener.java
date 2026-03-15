@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.setting;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 
@@ -36,13 +35,13 @@ public interface ExternalSystemSettingsListener<S extends ExternalProjectSetting
    * @param oldName old project name
    * @param newName new project name
    */
-  void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName);
+  void onProjectRenamed(String oldName, String newName);
 
-  void onProjectsLinked(@Nonnull Collection<S> settings);
+  void onProjectsLinked(Collection<S> settings);
 
-  void onProjectsUnlinked(@Nonnull Set<String> linkedProjectPaths);
+  void onProjectsUnlinked(Set<String> linkedProjectPaths);
 
-  void onUseAutoImportChange(boolean currentValue, @Nonnull String linkedProjectPath);
+  void onUseAutoImportChange(boolean currentValue, String linkedProjectPath);
 
   /**
    * External system settings changes might affect project structure, e.g. switching from one external system version to another

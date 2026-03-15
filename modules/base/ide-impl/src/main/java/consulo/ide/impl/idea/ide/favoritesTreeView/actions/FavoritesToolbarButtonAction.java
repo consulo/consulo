@@ -26,7 +26,6 @@ import consulo.ui.ex.awt.AnActionButton;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -68,7 +67,7 @@ public abstract class FavoritesToolbarButtonAction extends AnActionButton implem
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         setOption(!isOptionEnabled());
         myBuilder.updateFromRootCB();
     }

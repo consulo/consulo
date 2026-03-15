@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Help.Youtube")
 public class OpenYoutubeAction extends DumbAwareAction {
@@ -33,7 +32,7 @@ public class OpenYoutubeAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         BrowserUtil.browse("http://www.youtube.com/user/ConsuloIDE");
     }
 }

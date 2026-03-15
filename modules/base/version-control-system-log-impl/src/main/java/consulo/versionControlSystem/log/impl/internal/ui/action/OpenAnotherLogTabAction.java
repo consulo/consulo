@@ -27,7 +27,6 @@ import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
 import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Log.OpenAnotherTab")
 public class OpenAnotherLogTabAction extends DumbAwareAction {
@@ -40,7 +39,7 @@ public class OpenAnotherLogTabAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null || !Registry.is("vcs.log.open.another.log.visible", false)) {
             e.getPresentation().setEnabledAndVisible(false);
@@ -54,7 +53,7 @@ public class OpenAnotherLogTabAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VcsLogContentProvider.openAnotherLogTab(e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER), e.getRequiredData(Project.KEY));
     }
 }

@@ -17,7 +17,6 @@ package consulo.web.internal.ui;
 
 import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

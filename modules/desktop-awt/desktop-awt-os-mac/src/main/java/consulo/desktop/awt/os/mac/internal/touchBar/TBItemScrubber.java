@@ -6,8 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.util.mac.foundation.ID;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
             int fromPosition = myNativeItemsCount;
             NST.updateScrubberItems(this, fromPosition, newItemsCount, false, true);
 
-            @Nonnull Application app = ApplicationManager.getApplication();
+            Application app = ApplicationManager.getApplication();
             app.executeOnPooledThread(() -> NST.updateScrubberItems(this, fromPosition, newItemsCount, true, false));
 
             myNativeItemsCount += newItemsCount;
@@ -47,7 +46,7 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
         };
     }
 
-    @Nonnull
+    
     List<ItemData> getItems() {
         return myItems;
     }
@@ -98,7 +97,7 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
         ID result = NST.createScrubber(getUid(), myWidth, this, myUpdater, myItems, myNativeItemsCount, myStats);
         NST.enableScrubberItems(result, _getDisabledIndices(), false);
         if (myNativeItemsCount > 0 && result != ID.NIL) {
-            @Nonnull Application app = ApplicationManager.getApplication();
+            Application app = ApplicationManager.getApplication();
             app.executeOnPooledThread(() -> NST.updateScrubberItems(this, 0, myNativeItemsCount, true, false));
         }
         return result;

@@ -17,16 +17,15 @@ package consulo.logging.internal;
 
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-08-10
  */
 public class DefaultLoggerFactoryImpl implements LoggerFactory {
-  @Nonnull
+  
   @Override
-  public Logger getLoggerInstance(@Nonnull String category) {
+  public Logger getLoggerInstance(String category) {
     return new DefaultLogger(category);
   }
 }

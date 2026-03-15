@@ -15,8 +15,7 @@
  */
 package consulo.component.persist.scheme;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class ExternalInfo {
   // we keep it to detect rename
@@ -57,7 +56,7 @@ public final class ExternalInfo {
     myCurrentFileName = currentFileName;
   }
 
-  public void copy(@Nonnull ExternalInfo externalInfo) {
+  public void copy(ExternalInfo externalInfo) {
     myCurrentFileName = externalInfo.myCurrentFileName;
   }
 

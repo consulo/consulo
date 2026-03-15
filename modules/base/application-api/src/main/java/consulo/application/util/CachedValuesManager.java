@@ -9,7 +9,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -25,7 +24,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CachedValuesManager {
-    public static CachedValuesManager getManager(@Nonnull ComponentManager project) {
+    public static CachedValuesManager getManager(ComponentManager project) {
         return project.getInstance(CachedValuesManager.class);
     }
 
@@ -38,27 +37,27 @@ public abstract class CachedValuesManager {
      * @param trackValue if value tracking is required. T should be trackable in this case.
      * @return new CachedValue instance.
      */
-    @Nonnull
-    public abstract <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue);
+    
+    public abstract <T> CachedValue<T> createCachedValue(CachedValueProvider<T> provider, boolean trackValue);
 
-    @Nonnull
+    
     public abstract <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
-        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue
     );
 
     /**
      * Creates a new CachedValue instance with the given provider.
      */
-    @Nonnull
-    public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider) {
+    
+    public <T> CachedValue<T> createCachedValue(CachedValueProvider<T> provider) {
         return createCachedValue(provider, false);
     }
 
     public <T, P> T getParameterizedCachedValue(
-        @Nonnull UserDataHolder dataHolder,
-        @Nonnull Key<ParameterizedCachedValue<T, P>> key,
-        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        UserDataHolder dataHolder,
+        Key<ParameterizedCachedValue<T, P>> key,
+        ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue,
         P parameter
     ) {
@@ -86,7 +85,7 @@ public abstract class CachedValuesManager {
         return value.getValue(parameter);
     }
 
-    protected abstract void trackKeyHolder(@Nonnull UserDataHolder dataHolder, @Nonnull Key<?> key);
+    protected abstract void trackKeyHolder(UserDataHolder dataHolder, Key<?> key);
 
     /**
      * Utility method storing created cached values in a {@link UserDataHolder}.
@@ -101,9 +100,9 @@ public abstract class CachedValuesManager {
      * @return up-to-date value.
      */
     public abstract <T> T getCachedValue(
-        @Nonnull UserDataHolder dataHolder,
-        @Nonnull Key<CachedValue<T>> key,
-        @Nonnull CachedValueProvider<T> provider,
+        UserDataHolder dataHolder,
+        Key<CachedValue<T>> key,
+        CachedValueProvider<T> provider,
         boolean trackValue
     );
 
@@ -115,14 +114,14 @@ public abstract class CachedValuesManager {
      *
      * @return The cached value
      */
-    public <T> T getCachedValue(@Nonnull UserDataHolder dataHolder, @Nonnull CachedValueProvider<T> provider) {
+    public <T> T getCachedValue(UserDataHolder dataHolder, CachedValueProvider<T> provider) {
         return getCachedValue(dataHolder, this.getKeyForClass(provider.getClass()), provider, false);
     }
 
     private final ConcurrentMap<String, Key<CachedValue<?>>> keyForProvider = new ConcurrentHashMap<>();
 
-    @Nonnull
-    public <T> Key<CachedValue<T>> getKeyForClass(@Nonnull Class<?> providerClass) {
+    
+    public <T> Key<CachedValue<T>> getKeyForClass(Class<?> providerClass) {
         return CachedValueManagerHelper.getKeyForClass(providerClass, keyForProvider);
     }
 }

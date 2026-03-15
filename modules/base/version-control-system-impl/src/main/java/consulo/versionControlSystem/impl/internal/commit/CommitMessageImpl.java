@@ -43,7 +43,7 @@ import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.impl.internal.ui.awt.AbstractDataProviderPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

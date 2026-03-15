@@ -20,10 +20,9 @@ import consulo.index.io.IndexStorage;
 import consulo.index.io.StorageException;
 import consulo.language.psi.stub.IdFilter;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 public interface VfsAwareIndexStorage<Key, Value> extends IndexStorage<Key, Value> {
-  boolean processKeys(@Nonnull Predicate<? super Key> processor, SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean processKeys(Predicate<? super Key> processor, SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 }

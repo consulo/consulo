@@ -26,7 +26,6 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -49,9 +48,9 @@ public class VcsSilentChangeVetoer implements SilentChangeVetoer {
         myFileStatusManager = fileStatusManager;
     }
 
-    @Nonnull
+    
     @Override
-    public ThreeState canChangeFileSilently(@Nonnull VirtualFile virtualFile) {
+    public ThreeState canChangeFileSilently(VirtualFile virtualFile) {
         AbstractVcs activeVcs = myProjectLevelVcsManager.get().getVcsFor(virtualFile);
         if (activeVcs == null) {
             return ThreeState.UNSURE;

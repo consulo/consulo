@@ -29,7 +29,6 @@ import consulo.desktop.container.impl.DesktopContainerPathManager;
 import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.internal.FileSystemMediatorOverride;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -43,7 +42,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class DesktopAWTContainerStartupImpl implements ContainerStartup {
     @Override
-    public void run(@Nonnull Map<String, Object> map) {
+    public void run(Map<String, Object> map) {
         StatCollector stat = (StatCollector) map.get(ContainerStartup.STAT_COLLECTOR);
         String[] args = (String[]) map.get(ContainerStartup.ARGS);
 
@@ -80,9 +79,9 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
         new Thread(runnable, "Consulo Main Thread").start();
     }
 
-    @Nonnull
+    
     @Override
-    public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
+    public ContainerPathManager createPathManager(Map<String, Object> args) {
         return new DesktopContainerPathManager();
     }
 

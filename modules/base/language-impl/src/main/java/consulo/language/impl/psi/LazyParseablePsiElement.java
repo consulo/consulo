@@ -40,8 +40,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,12 +50,12 @@ import java.util.List;
 public class LazyParseablePsiElement extends LazyParseableElement implements PsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance(LazyParseablePsiElement.class);
 
-  public LazyParseablePsiElement(@Nonnull IElementType type, @Nullable CharSequence buffer) {
+  public LazyParseablePsiElement(IElementType type, @Nullable CharSequence buffer) {
     super(type, buffer);
     setPsi(this);
   }
 
-  @Nonnull
+  
   @Override
   public LazyParseablePsiElement clone() {
     LazyParseablePsiElement clone = (LazyParseablePsiElement)super.clone();
@@ -65,7 +64,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @Nonnull
+  
   public PsiElement[] getChildren() {
     return getChildrenAsPsiElements((TokenSet)null, PsiElement.ARRAY_FACTORY);
   }
@@ -78,7 +77,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
     return null;
   }
 
-  @Nonnull
+  
   protected <T> T[] findChildrenByClass(Class<T> aClass) {
     List<T> result = new ArrayList<>();
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
@@ -102,7 +101,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
+  public void acceptChildren(PsiElementVisitor visitor) {
     PsiElement child = getFirstChild();
     while (child != null) {
       child.accept(visitor);
@@ -168,23 +167,23 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @Nonnull
+  
   public PsiReference[] getReferences() {
     return SharedPsiElementImplUtil.getReferences(this);
   }
 
   @Override
-  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(PsiElement element) throws IncorrectOperationException {
     return addInnerBefore(element, null);
   }
 
   @Override
-  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     return addInnerBefore(element, anchor);
   }
 
   @Override
-  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     TreeElement treeElement = addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
@@ -193,7 +192,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public final void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+  public final void checkAdd(PsiElement element) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
   }
 
@@ -203,7 +202,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public final PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
+  public final PsiElement addRangeBefore(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
 
@@ -236,17 +235,17 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
     return SharedImplUtil.doReplace(this, this, newElement);
   }
 
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor) { //TODO: remove this method!!
+  public void accept(PsiElementVisitor visitor) { //TODO: remove this method!!
     visitor.visitElement(this);
   }
 
   @Override
-  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place) {
+  public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place) {
     return true;
   }
 
@@ -261,7 +260,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @Nonnull
+  
   public PsiElement getNavigationElement() {
     return this;
   }
@@ -278,14 +277,14 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @Nonnull
+  
   public GlobalSearchScope getResolveScope() {
     assert isValid();
     return ResolveScopeManager.getElementResolveScope(this);
   }
 
   @Override
-  @Nonnull
+  
   public SearchScope getUseScope() {
     return ResolveScopeManager.getElementUseScope(this);
   }
@@ -316,7 +315,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @Nonnull
+  
   public Project getProject() {
     Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
@@ -329,19 +328,19 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @Nonnull
+  
   public Language getLanguage() {
     return getElementType().getLanguage();
   }
 
-  @Nonnull
+  
   @Override
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);
   }
 
   @Override
-  @Nonnull
+  
   public ASTNode getNode() {
     return this;
   }

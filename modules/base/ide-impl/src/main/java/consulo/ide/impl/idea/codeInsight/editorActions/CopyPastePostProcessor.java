@@ -24,7 +24,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
 import java.util.Collections;
@@ -37,10 +36,10 @@ import java.util.List;
 public abstract class CopyPastePostProcessor<T extends TextBlockTransferableData> {
     public static final ExtensionPointName<CopyPastePostProcessor> EP_NAME = ExtensionPointName.create(CopyPastePostProcessor.class);
 
-    @Nonnull
+    
     public abstract List<T> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets);
 
-    @Nonnull
+    
     public List<T> extractTransferableData(Transferable content) {
         return Collections.emptyList();
     }

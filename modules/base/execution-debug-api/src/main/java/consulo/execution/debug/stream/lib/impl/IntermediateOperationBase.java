@@ -9,7 +9,6 @@ import consulo.execution.debug.stream.trace.dsl.Dsl;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
@@ -20,37 +19,37 @@ public abstract class IntermediateOperationBase implements IntermediateOperation
   private final CallTraceInterpreter traceInterpreter;
   private final ValuesOrderResolver valuesOrderResolver;
 
-  protected IntermediateOperationBase(@Nonnull String name,
-                                      @Nonnull IntermediateCallHandlerFactory handlerFactory,
-                                      @Nonnull CallTraceInterpreter traceInterpreter,
-                                      @Nonnull ValuesOrderResolver valuesOrderResolver) {
+  protected IntermediateOperationBase(String name,
+                                      IntermediateCallHandlerFactory handlerFactory,
+                                      CallTraceInterpreter traceInterpreter,
+                                      ValuesOrderResolver valuesOrderResolver) {
     this.name = name;
     this.handlerFactory = handlerFactory;
     this.traceInterpreter = traceInterpreter;
     this.valuesOrderResolver = valuesOrderResolver;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return name;
   }
 
-  @Nonnull
+  
   @Override
   public CallTraceInterpreter getTraceInterpreter() {
     return traceInterpreter;
   }
 
-  @Nonnull
+  
   @Override
   public ValuesOrderResolver getValuesOrderResolver() {
     return valuesOrderResolver;
   }
 
-  @Nonnull
+  
   @Override
-  public IntermediateCallHandler getTraceHandler(int callOrder, @Nonnull IntermediateStreamCall call, @Nonnull Dsl dsl) {
+  public IntermediateCallHandler getTraceHandler(int callOrder, IntermediateStreamCall call, Dsl dsl) {
     return handlerFactory.create(callOrder, call, dsl);
   }
 

@@ -24,8 +24,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,18 +35,18 @@ import java.util.Map;
  */
 public class ArrangementColorsProviderImpl implements ArrangementColorsProvider {
 
-  @Nonnull
+  
   private final Map<ArrangementSettingsToken, TextAttributes> myNormalAttributesCache = new HashMap<>();
-  @Nonnull
+  
   private final Map<ArrangementSettingsToken, TextAttributes> mySelectedAttributesCache = new HashMap<>();
 
-  @Nonnull
+  
   private final TextAttributes myDefaultNormalAttributes = new TextAttributes();
-  @Nonnull
+  
   private final TextAttributes myDefaultSelectedAttributes = new TextAttributes();
-  @Nonnull
+  
   private final Color myDefaultNormalBorderColor;
-  @Nonnull
+  
   private final Color myDefaultSelectedBorderColor;
 
   @Nullable
@@ -74,7 +73,7 @@ public class ArrangementColorsProviderImpl implements ArrangementColorsProvider 
     myDefaultSelectedBorderColor = selectionBorderColor;
   }
 
-  @Nonnull
+  
   @Override
   public Color getBorderColor(boolean selected) {
     Color cached;
@@ -104,9 +103,9 @@ public class ArrangementColorsProviderImpl implements ArrangementColorsProvider 
     return result;
   }
 
-  @Nonnull
+  
   @Override
-  public TextAttributes getTextAttributes(@Nonnull ArrangementSettingsToken token, boolean selected) {
+  public TextAttributes getTextAttributes(ArrangementSettingsToken token, boolean selected) {
     TextAttributes cached;
     if (selected) {
       cached = mySelectedAttributesCache.get(token);

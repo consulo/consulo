@@ -23,8 +23,7 @@ import consulo.language.Language;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ public interface GotoSuperActionHander extends LanguageCodeInsightActionHandler 
   ExtensionPointCacheKey<GotoSuperActionHander, ByLanguageValue<GotoSuperActionHander>> KEY = ExtensionPointCacheKey.create("GotoSuperActionHander", LanguageOneToOne.build());
 
   @Nullable
-  static GotoSuperActionHander forLanguage(@Nonnull Language language) {
+  static GotoSuperActionHander forLanguage(Language language) {
     return Application.get().getExtensionPoint(GotoSuperActionHander.class).getOrBuildCache(KEY).get(language);
   }
 }

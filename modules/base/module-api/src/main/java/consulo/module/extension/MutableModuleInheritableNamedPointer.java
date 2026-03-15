@@ -19,8 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.pointer.Named;
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nullable;
  */
 public interface MutableModuleInheritableNamedPointer<T extends Named> extends ModuleInheritableNamedPointer<T> {
   @RequiredReadAction
-  void set(@Nonnull ModuleInheritableNamedPointer<T> value);
+  void set(ModuleInheritableNamedPointer<T> value);
 
   @RequiredReadAction
   void set(@Nullable String moduleName, @Nullable String name);

@@ -21,7 +21,6 @@ import consulo.index.io.*;
 import consulo.index.io.internal.DebugAssertions;
 import consulo.language.psi.stub.IdFilter;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,7 +33,7 @@ import java.util.function.Predicate;
  */
 public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key, Value> {
   private final Map<Key, ChangeTrackingValueContainer<Value>> myMap = new HashMap<>();
-  @Nonnull
+  
   private final IndexStorage<Key, Value> myBackendStorage;
   private final List<BufferingStateListener> myListeners = Lists.newLockFreeCopyOnWriteList();
   private final ID<?, ?> myIndexId;
@@ -46,16 +45,16 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
     void memoryStorageCleared();
   }
 
-  public MemoryIndexStorage(@Nonnull IndexStorage<Key, Value> backend) {
+  public MemoryIndexStorage(IndexStorage<Key, Value> backend) {
     this(backend, null);
   }
 
-  public MemoryIndexStorage(@Nonnull IndexStorage<Key, Value> backend, ID<?, ?> indexId) {
+  public MemoryIndexStorage(IndexStorage<Key, Value> backend, ID<?, ?> indexId) {
     myBackendStorage = backend;
     myIndexId = indexId;
   }
 
-  public void addBufferingStateListener(@Nonnull BufferingStateListener listener) {
+  public void addBufferingStateListener(BufferingStateListener listener) {
     myListeners.add(listener);
   }
 
@@ -124,7 +123,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  public boolean processKeys(@Nonnull Predicate<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
+  public boolean processKeys(Predicate<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
     Set<Key> stopList = new HashSet<>();
 
     Predicate<Key> decoratingProcessor = key -> {
@@ -161,7 +160,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  public void removeAllValues(@Nonnull Key key, int inputId) throws StorageException {
+  public void removeAllValues(Key key, int inputId) throws StorageException {
     if (myBufferingEnabled) {
       getMemValueContainer(key).removeAssociatedValue(inputId);
       return;
@@ -199,7 +198,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  @Nonnull
+  
   public ValueContainer<Value> read(Key key) throws StorageException {
     ValueContainer<Value> valueContainer = myMap.get(key);
     if (valueContainer != null) {

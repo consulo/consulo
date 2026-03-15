@@ -37,7 +37,6 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,21 +50,21 @@ public class AsyncEditorLoaderImpl implements AsyncEditorLoader {
     private static final ExecutorService ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("AsyncEditorLoader Pool", 2);
     private static final int SYNCHRONOUS_LOADING_WAITING_TIME_MS = 200;
     private static final int DOCUMENT_COMMIT_WAITING_TIME_MS = 5_000;
-    @Nonnull
+    
     private final Editor myEditor;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final TextEditorImpl myTextEditor;
-    @Nonnull
+    
     private final TextEditorComponent myEditorComponent;
-    @Nonnull
+    
     private final TextEditorProviderImpl myProvider;
     private final List<Runnable> myDelayedActions = new ArrayList<>();
     private TextEditorState myDelayedState;
     private final AtomicBoolean myLoadingFinished = new AtomicBoolean();
 
-    public AsyncEditorLoaderImpl(@Nonnull TextEditorImpl textEditor, @Nonnull TextEditorComponent component, @Nonnull TextEditorProviderImpl provider) {
+    public AsyncEditorLoaderImpl(TextEditorImpl textEditor, TextEditorComponent component, TextEditorProviderImpl provider) {
         myProvider = provider;
         myTextEditor = textEditor;
         myProject = textEditor.myProject;
@@ -157,7 +156,7 @@ public class AsyncEditorLoaderImpl implements AsyncEditorLoader {
         return !PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments() && !ApplicationManager.getApplication().isWriteAccessAllowed() && !FileEditorsSplitters.isOpenedInBulk(myTextEditor.myFile);
     }
 
-    private static <T> T resultInTimeOrNull(@Nonnull Future<T> future) {
+    private static <T> T resultInTimeOrNull(Future<T> future) {
         try {
             return future.get(SYNCHRONOUS_LOADING_WAITING_TIME_MS, TimeUnit.MILLISECONDS);
         }
@@ -205,9 +204,9 @@ public class AsyncEditorLoaderImpl implements AsyncEditorLoader {
         EditorNotifications.getInstance(myProject).updateNotifications(myTextEditor.myFile);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public TextEditorState getEditorState(@Nonnull FileEditorStateLevel level) {
+    public TextEditorState getEditorState(FileEditorStateLevel level) {
         UIAccess.assertIsUIThread();
 
         TextEditorState state = myProvider.getStateImpl(myProject, myEditor, level);
@@ -218,7 +217,7 @@ public class AsyncEditorLoaderImpl implements AsyncEditorLoader {
     }
 
     @RequiredUIAccess
-    public void setEditorState(@Nonnull TextEditorState state, boolean exactState) {
+    public void setEditorState(TextEditorState state, boolean exactState) {
         UIAccess.assertIsUIThread();
 
         if (!isDone()) {
@@ -228,7 +227,7 @@ public class AsyncEditorLoaderImpl implements AsyncEditorLoader {
         myProvider.setStateImpl(myProject, myEditor, state);
     }
 
-    public static boolean isEditorLoaded(@Nonnull Editor editor) {
+    public static boolean isEditorLoaded(Editor editor) {
         return editor.getUserData(ASYNC_LOADER) == null;
     }
 }

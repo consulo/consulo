@@ -24,27 +24,26 @@ import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "NextProjectWindow")
 public class NextProjectWindow extends AnAction implements DumbAware {
-    @Nonnull
+    
     private final ActionManager myActionManager;
 
     @Inject
-    public NextProjectWindow(@Nonnull ActionManager actionManager) {
+    public NextProjectWindow(ActionManager actionManager) {
         super(ActionLocalize.actionNextprojectwindowText(), ActionLocalize.actionNextprojectwindowDescription());
         myActionManager = actionManager;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         WindowDressing.getWindowActionGroup(myActionManager).activateNextWindow(e);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(WindowDressing.getWindowActionGroup(myActionManager).isEnabled());
     }
 }

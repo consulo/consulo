@@ -6,13 +6,12 @@ import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface DiffEditorTabFilesManager {
 
-  @Nonnull
-  public static DiffEditorTabFilesManager getInstance(@Nonnull Project project) {
+  
+  public static DiffEditorTabFilesManager getInstance(Project project) {
     return project.getInstance(DiffEditorTabFilesManager.class);
   }
 

@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.wm.StatusBarWidgetsManager;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "StatusBarWidgetsManager", order = "after InitToolWindows")
 public class StatusBarWidgetsManagerActitity implements PostStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         StatusBarWidgetsManager statusBarWidgetsManager = project.getInstance(StatusBarWidgetsManager.class);
 
         statusBarWidgetsManager.updateAllWidgets(uiAccess);

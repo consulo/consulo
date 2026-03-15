@@ -18,7 +18,6 @@ package consulo.language.spellcheker.internal;
 import consulo.document.util.TextRange;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
@@ -38,7 +37,7 @@ public final class SpellcheckerStringUtil {
         return Character.isUpperCase(word.charAt(0)) && lowCase;
     }
 
-    public static boolean isCapitalized(@Nonnull String text, @Nonnull TextRange range) {
+    public static boolean isCapitalized(String text, TextRange range) {
         if (range.isEmpty()) {
             return false;
         }
@@ -52,7 +51,7 @@ public final class SpellcheckerStringUtil {
         return Character.isUpperCase(text.charAt(range.getStartOffset())) && lowCase;
     }
 
-    public static boolean isUpperCased(@Nonnull String text, @Nonnull TextRange range) {
+    public static boolean isUpperCased(String text, TextRange range) {
         if (range.isEmpty()) {
             return false;
         }

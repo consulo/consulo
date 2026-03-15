@@ -18,7 +18,6 @@ package consulo.application.internal;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -38,7 +37,7 @@ public abstract class JobScheduler {
    * </ul>
    * If you need to execute only one task (when it's ready) at a time, you can use {@link AppExecutorUtil#createBoundedScheduledExecutorService(int)}.
    */
-  @Nonnull
+  
   public static ScheduledExecutorService getScheduler() {
     ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
     return concurrency.getScheduledExecutorService();

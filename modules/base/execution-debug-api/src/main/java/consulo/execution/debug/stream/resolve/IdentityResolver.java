@@ -5,7 +5,6 @@ import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.TraceInfo;
 import consulo.execution.debug.stream.wrapper.TraceUtil;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class IdentityResolver implements ValuesOrderResolver {
     private static final Object NULL_MARKER = ObjectUtil.sentinel("IdentityResolver.NULL_MARKER");
 
     @Override
-    public @Nonnull Result resolve(@Nonnull TraceInfo info) {
+    public Result resolve(TraceInfo info) {
         Map<Integer, TraceElement> before = info.getValuesOrderBefore();
         Map<Integer, TraceElement> after = info.getValuesOrderAfter();
 
@@ -55,7 +54,7 @@ public class IdentityResolver implements ValuesOrderResolver {
         return Result.of(direct, reverse);
     }
 
-    private static @Nonnull Object extractKey(@Nonnull TraceElement element) {
+    private static Object extractKey(TraceElement element) {
         Object key = TraceUtil.extractKey(element);
         return key == null ? NULL_MARKER : key;
     }

@@ -4,7 +4,6 @@ package consulo.execution.debug.stream.trace.dsl.impl;
 import consulo.execution.debug.stream.trace.dsl.Convertable;
 import consulo.execution.debug.stream.trace.dsl.Statement;
 import consulo.execution.debug.stream.trace.dsl.StatementFactory;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -16,16 +15,16 @@ import java.util.List;
 public abstract class LineSeparatedCodeBlock extends CodeBlockBase {
   private final String statementSeparator;
 
-  protected LineSeparatedCodeBlock(@Nonnull StatementFactory statementFactory) {
+  protected LineSeparatedCodeBlock(StatementFactory statementFactory) {
     this(statementFactory, "");
   }
 
-  protected LineSeparatedCodeBlock(@Nonnull StatementFactory statementFactory, @Nonnull String statementSeparator) {
+  protected LineSeparatedCodeBlock(StatementFactory statementFactory, String statementSeparator) {
     super(statementFactory);
     this.statementSeparator = statementSeparator;
   }
 
-  @Nonnull
+  
   @Override
   public String toCode(int indent) {
     if (getSize() == 0) {

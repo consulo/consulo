@@ -15,9 +15,8 @@
  */
 package consulo.fileEditor.highlight;
 
-import jakarta.annotation.Nonnull;
 
 public interface BackgroundEditorHighlighter {
-  @Nonnull
+  
   HighlightingPass[] createPassesForEditor();
 }

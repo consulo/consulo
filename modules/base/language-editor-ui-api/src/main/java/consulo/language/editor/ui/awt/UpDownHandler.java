@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -113,12 +112,12 @@ public class UpDownHandler {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       myMover.move(myDirection);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
       LookupEx lookup;
       if (myInput instanceof EditorTextField) {
         lookup = LookupManager.getActiveLookup(((EditorTextField)myInput).getEditor());

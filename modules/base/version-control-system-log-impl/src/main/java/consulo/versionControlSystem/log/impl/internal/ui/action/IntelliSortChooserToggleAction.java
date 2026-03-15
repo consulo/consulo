@@ -30,7 +30,6 @@ import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.BekUtil;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = VcsLogActionPlaces.VCS_LOG_INTELLI_SORT_ACTION)
 public class IntelliSortChooserToggleAction extends ToggleAction implements DumbAware {
@@ -52,7 +51,7 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
         if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
             PermanentGraph.SortType bekSortType = state ? PermanentGraph.SortType.Bek : PermanentGraph.SortType.Normal;
@@ -61,7 +60,7 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
 
         VcsLogUi logUI = e.getData(VcsLogUi.KEY);

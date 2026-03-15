@@ -21,8 +21,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +34,7 @@ public class VcsException extends Exception {
     private Collection<LocalizeValue> myMessages;
     private boolean isWarning = false;
 
-    public VcsException(@Nonnull LocalizeValue message) {
+    public VcsException(LocalizeValue message) {
         super(message.get());
         initMessage(message);
     }
@@ -57,7 +56,7 @@ public class VcsException extends Exception {
         this(throwable, false);
     }
 
-    public VcsException(@Nonnull LocalizeValue message, Throwable cause) {
+    public VcsException(LocalizeValue message, Throwable cause) {
         super(message.get(), cause);
         initMessage(message);
     }
@@ -74,7 +73,7 @@ public class VcsException extends Exception {
         this.isWarning = isWarning;
     }
 
-    public VcsException(@Nonnull List<LocalizeValue> messages) {
+    public VcsException(List<LocalizeValue> messages) {
         myMessages = List.copyOf(messages);
     }
 
@@ -86,7 +85,7 @@ public class VcsException extends Exception {
             .collect(Collectors.toList());
     }
 
-    private void initMessage(@Nonnull LocalizeValue message) {
+    private void initMessage(LocalizeValue message) {
         myMessages = List.of(message);
     }
 

@@ -49,8 +49,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.LocalizeAction;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,27 +69,27 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final MergeContext myContext;
 
-    @Nonnull
+    
     private final List<MergeTool> myAvailableTools;
 
-    @Nonnull
+    
     private final JPanel myPanel;
-    @Nonnull
+    
     private final MyPanel myMainPanel;
-    @Nonnull
+    
     private final Wrapper myContentPanel;
-    @Nonnull
+    
     private final Wrapper myToolbarPanel;
-    @Nonnull
+    
     private final Wrapper myToolbarStatusPanel;
 
-    @Nonnull
+    
     private final MergeRequest myRequest;
 
-    @Nonnull
+    
     private MergeTool.MergeViewer myViewer;
     @Nullable
     private BooleanSupplier myCloseHandler;
@@ -99,7 +98,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     private boolean myConflictResolved = false;
 
     @RequiredUIAccess
-    public MergeRequestProcessor(@Nullable Project project, @Nonnull MergeRequest request) {
+    public MergeRequestProcessor(@Nullable Project project, MergeRequest request) {
         myProject = project;
         myRequest = request;
 
@@ -192,7 +191,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         };
     }
 
-    @Nonnull
+    
     protected DefaultActionGroup collectToolbarActions(@Nullable List<AnAction> viewerActions) {
         DefaultActionGroup group = new DefaultActionGroup();
 
@@ -223,7 +222,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         }
     }
 
-    @Nonnull
+    
     private MergeTool getFittedTool() {
         ExtensionPoint<MergeTool> point = Application.get().getExtensionPoint(MergeTool.class);
         return Objects.requireNonNull(point.findFirstSafe(t -> t.canShow(myContext, myRequest)), "Missed error impl");
@@ -251,7 +250,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     @RequiredUIAccess
-    private void applyRequestResult(@Nonnull MergeResult result) {
+    private void applyRequestResult(MergeResult result) {
         if (myConflictResolved) {
             return;
         }
@@ -265,7 +264,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     @RequiredUIAccess
-    private void reopenWithTool(@Nonnull MergeTool tool) {
+    private void reopenWithTool(MergeTool tool) {
         if (myConflictResolved) {
             LOG.warn("Can't reopen with " + tool + " - conflict already resolved");
             return;
@@ -307,13 +306,13 @@ public abstract class MergeRequestProcessor implements Disposable {
         applyRequestResult(MergeResult.CANCEL);
     }
 
-    protected void setWindowTitle(@Nonnull LocalizeValue title) {
+    protected void setWindowTitle(LocalizeValue title) {
         setWindowTitle(title.get());
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    protected void setWindowTitle(@Nonnull String title) {
+    protected void setWindowTitle(String title) {
         setWindowTitle(LocalizeValue.of(title));
     }
 
@@ -322,11 +321,11 @@ public abstract class MergeRequestProcessor implements Disposable {
     public abstract void closeDialog();
 
     @Nullable
-    public <T> T getContextUserData(@Nonnull Key<T> key) {
+    public <T> T getContextUserData(Key<T> key) {
         return myContext.getUserData(key);
     }
 
-    public <T> void putContextUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putContextUserData(Key<T> key, @Nullable T value) {
         myContext.putUserData(key, value);
     }
 
@@ -334,7 +333,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     // Getters
     //
 
-    @Nonnull
+    
     public JComponent getComponent() {
         return myPanel;
     }
@@ -350,7 +349,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         return myProject;
     }
 
-    @Nonnull
+    
     public MergeContext getContext() {
         return myContext;
     }
@@ -360,7 +359,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         return myConflictResolved || myCloseHandler == null || myCloseHandler.getAsBoolean();
     }
 
-    @Nonnull
+    
     public BottomActions getBottomActions() {
         return myBottomActions != null ? myBottomActions : new BottomActions();
     }
@@ -395,7 +394,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     private static class MyNextDifferenceAction extends NextDifferenceAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
                 e.getPresentation().setEnabled(true);
                 return;
@@ -412,7 +411,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoNext()) {
                 iterable.goNext();
@@ -422,7 +421,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     private static class MyPrevDifferenceAction extends PrevDifferenceAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
                 e.getPresentation().setEnabled(true);
                 return;
@@ -439,7 +438,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoPrev()) {
                 iterable.goPrev();
@@ -458,7 +457,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
         @Nullable
         @Override
-        public Object getData(@Nonnull Key<?> dataId) {
+        public Object getData(Key<?> dataId) {
             Object data;
 
             DataProvider contentProvider =
@@ -531,14 +530,14 @@ public abstract class MergeRequestProcessor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void finishMerge(@Nonnull MergeResult result) {
+        public void finishMerge(MergeResult result) {
             applyRequestResult(result);
             MergeRequestProcessor.this.closeDialog();
         }
 
         @Override
         @RequiredUIAccess
-        public void reopenWithTool(@Nonnull MergeTool tool) {
+        public void reopenWithTool(MergeTool tool) {
             MergeRequestProcessor.this.reopenWithTool(tool);
         }
     }

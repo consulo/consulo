@@ -48,8 +48,7 @@ import consulo.ui.ex.tree.AlphaComparator;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -67,13 +66,13 @@ import java.util.function.Predicate;
 public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> extends DialogWrapper implements TreeChooser<T> {
     private Tree myTree;
     private T mySelectedClass = null;
-    @Nonnull
+    
     private final Project myProject;
     private BaseProjectTreeBuilder myBuilder;
     private TabbedPaneWrapper myTabbedPane;
     private ChooseByNamePanel myGotoByNamePanel;
     private final ProjectAwareSearchScope myScope;
-    @Nonnull
+    
     private final Predicate<T> myClassFilter;
     private final Class<T> myElementClass;
     @Nullable
@@ -95,9 +94,9 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     @RequiredUIAccess
     public AbstractTreeClassChooserDialog(
         String title,
-        @Nonnull Project project,
+        Project project,
         ProjectAwareSearchScope scope,
-        @Nonnull Class<T> elementClass,
+        Class<T> elementClass,
         @Nullable Predicate<T> classFilter,
         @Nullable T initialClass
     ) {
@@ -107,9 +106,9 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     @RequiredUIAccess
     public AbstractTreeClassChooserDialog(
         String title,
-        @Nonnull Project project,
+        Project project,
         ProjectAwareSearchScope scope,
-        @Nonnull Class<T> elementClass,
+        Class<T> elementClass,
         @Nullable Predicate<T> classFilter,
         @Nullable T baseClass,
         @Nullable T initialClass,
@@ -242,9 +241,9 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
                 }
             }
 
-            @Nonnull
+            
             @Override
-            protected Set<Object> filter(@Nonnull Set<Object> elements) {
+            protected Set<Object> filter(Set<Object> elements) {
                 return doFilter(elements);
             }
 
@@ -317,7 +316,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
      * Makes sense only in case of not null base class.
      */
     @Nullable
-    protected TreeClassInheritorsProvider<T> getInheritorsProvider(@Nonnull T baseClass) {
+    protected TreeClassInheritorsProvider<T> getInheritorsProvider(T baseClass) {
         return null;
     }
 
@@ -351,7 +350,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
 
     @Override
     @RequiredUIAccess
-    public void select(@Nonnull T aClass) {
+    public void select(T aClass) {
         selectElementInTree(aClass);
     }
 
@@ -381,7 +380,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     }
 
 
-    protected void selectElementInTree(@Nonnull PsiElement element) {
+    protected void selectElementInTree(PsiElement element) {
         element.getApplication().invokeLater(
             () -> {
                 if (myBuilder == null) {
@@ -436,7 +435,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         return myGotoByNamePanel.getPreferredFocusedComponent();
     }
 
-    @Nonnull
+    
     protected Project getProject() {
         return myProject;
     }
@@ -445,7 +444,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         return myScope;
     }
 
-    @Nonnull
+    
     protected Predicate<T> getFilter() {
         return myClassFilter;
     }
@@ -478,14 +477,14 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
             return myTreeClassChooserDialog;
         }
 
-        public MyGotoClassModel(@Nonnull Project project, AbstractTreeClassChooserDialog<T> treeClassChooserDialog) {
+        public MyGotoClassModel(Project project, AbstractTreeClassChooserDialog<T> treeClassChooserDialog) {
             super(project);
             myTreeClassChooserDialog = treeClassChooserDialog;
         }
 
-        @Nonnull
+        
         @Override
-        public Object[] getElementsByName(@Nonnull String name, FindSymbolParameters parameters, @Nonnull ProgressIndicator canceled) {
+        public Object[] getElementsByName(String name, FindSymbolParameters parameters, ProgressIndicator canceled) {
             String patternName = parameters.getLocalPatternName();
             Collection<T> classes = myTreeClassChooserDialog.getClassesByName(
                 name,
@@ -521,7 +520,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         }
     }
 
-    @Nonnull
+    
     protected abstract Collection<T> getClassesByName(
         String name,
         boolean searchInLibraries,
@@ -535,16 +534,16 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         private boolean myFastMode = true;
 
         public SubclassGotoClassModel(
-            @Nonnull Project project,
-            @Nonnull AbstractTreeClassChooserDialog<T> treeClassChooserDialog,
-            @Nonnull TreeClassInheritorsProvider<T> inheritorsProvider
+            Project project,
+            AbstractTreeClassChooserDialog<T> treeClassChooserDialog,
+            TreeClassInheritorsProvider<T> inheritorsProvider
         ) {
             super(project, treeClassChooserDialog);
             myInheritorsProvider = inheritorsProvider;
             assert myInheritorsProvider.getBaseClass() != null;
         }
 
-        @Nonnull
+        
         @Override
         public String[] getNames(boolean checkBoxState) {
             if (!myFastMode) {

@@ -19,7 +19,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -55,7 +54,7 @@ class VirtualFileDataImpl extends VirtualFileImpl {
     }
 
     @Override
-    @Nonnull
+    
     public OutputStream getOutputStream(final Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
         return VirtualFileUtil.outputStreamAddingBOM(
             new ByteArrayOutputStream() {
@@ -74,7 +73,7 @@ class VirtualFileDataImpl extends VirtualFileImpl {
     }
 
     @Override
-    @Nonnull
+    
     public byte[] contentsToByteArray() throws IOException {
         return myContents;
     }

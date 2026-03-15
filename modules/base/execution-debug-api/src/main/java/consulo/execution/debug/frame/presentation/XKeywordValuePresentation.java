@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.frame.presentation;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,7 +27,7 @@ public class XKeywordValuePresentation extends XValuePresentation {
   }
 
   @Override
-  public void renderValue(@Nonnull XValueTextRenderer renderer) {
+  public void renderValue(XValueTextRenderer renderer) {
     renderer.renderKeywordValue(myValue);
   }
 }

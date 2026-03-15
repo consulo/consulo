@@ -2,11 +2,10 @@
 package consulo.execution.debug.memory.event;
 
 import consulo.execution.debug.memory.MemoryViewManagerState;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
 @FunctionalInterface
 public interface MemoryViewManagerListener extends EventListener {
-    void stateChanged(@Nonnull MemoryViewManagerState state);
+    void stateChanged(MemoryViewManagerState state);
 }

@@ -25,8 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class HomeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -49,7 +48,7 @@ public class HomeHandler extends EditorActionHandler implements ExtensionEditorA
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_LINE_START;

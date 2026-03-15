@@ -21,7 +21,6 @@ import consulo.content.scope.SearchScope;
 import consulo.content.scope.SearchScopeProvider;
 import consulo.language.editor.internal.DefaultSearchScopeProviders;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +36,9 @@ public class ChangeListsSearchScopeProvider implements SearchScopeProvider {
     return "Local Changes";
   }
 
-  @Nonnull
+  
   @Override
-  public List<SearchScope> getSearchScopes(@Nonnull Project project) {
+  public List<SearchScope> getSearchScopes(Project project) {
     List<SearchScope> result = new ArrayList<>();
     CustomScopesProviders.acceptFilteredScopes(ChangeListsScopesProvider.getInstance(project), changeListScope -> {
       result.add(DefaultSearchScopeProviders.wrapNamedScope(project, changeListScope, false));

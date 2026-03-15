@@ -35,8 +35,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -53,7 +52,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
 
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, Editor editor, PsiFile file) {
     if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
 
     LookupManager.getInstance(project).hideActiveLookup();
@@ -197,7 +196,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     return false;
   }
 
-  private static List<CompletionVariant> computeVariants(@Nonnull Editor editor, CamelHumpMatcher matcher, PsiFile file) {
+  private static List<CompletionVariant> computeVariants(Editor editor, CamelHumpMatcher matcher, PsiFile file) {
 
     CharSequence chars = editor.getDocument().getCharsSequence();
 

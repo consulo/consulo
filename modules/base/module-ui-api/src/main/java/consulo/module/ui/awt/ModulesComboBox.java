@@ -23,8 +23,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.SortedComboBoxModel;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -60,20 +59,20 @@ public class ModulesComboBox extends ComboBox<Module> {
     setRenderer(new ModuleListCellRenderer());
   }
 
-  public void allowEmptySelection(@Nonnull String emptySelectionText) {
+  public void allowEmptySelection(String emptySelectionText) {
     myAllowEmptySelection = true;
     myModel.add(null);
     setRenderer(new ModuleListCellRenderer(emptySelectionText));
   }
 
-  public void setModules(@Nonnull Collection<Module> modules) {
+  public void setModules(Collection<Module> modules) {
     myModel.setAll(modules);
     if (myAllowEmptySelection) {
       myModel.add(null);
     }
   }
 
-  public void fillModules(@Nonnull Project project) {
+  public void fillModules(Project project) {
     Module[] allModules = ModuleManager.getInstance(project).getModules();
     setModules(Arrays.asList(allModules));
   }

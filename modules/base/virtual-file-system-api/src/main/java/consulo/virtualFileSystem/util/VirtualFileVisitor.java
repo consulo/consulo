@@ -4,8 +4,7 @@ package consulo.virtualFileSystem.util;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -32,7 +31,7 @@ public abstract class VirtualFileVisitor<T> {
   public static final Option SKIP_ROOT = new Option();
   public static final Option ONE_LEVEL_DEEP = limit(1);
 
-  @Nonnull
+  
   public static Option limit(int maxDepth) {
     return new Option.LimitOption(maxDepth);
   }
@@ -56,13 +55,13 @@ public abstract class VirtualFileVisitor<T> {
   public static final Result CONTINUE = new Result(false, null);
   public static final Result SKIP_CHILDREN = new Result(true, null);
 
-  public static Result skipTo(@Nonnull VirtualFile parentToSkipTo) {
+  public static Result skipTo(VirtualFile parentToSkipTo) {
     return new Result(true, parentToSkipTo);
   }
 
 
   public static class VisitorException extends RuntimeException {
-    public VisitorException(@Nonnull Throwable cause) {
+    public VisitorException(Throwable cause) {
       super(cause);
     }
   }
@@ -76,7 +75,7 @@ public abstract class VirtualFileVisitor<T> {
   private Deque<T> myValueStack;
   private T myValue;
 
-  protected VirtualFileVisitor(@Nonnull Option... options) {
+  protected VirtualFileVisitor(Option... options) {
     for (Option option : options) {
       if (option == NO_FOLLOW_SYMLINKS) {
         myFollowSymLinks = false;
@@ -98,7 +97,7 @@ public abstract class VirtualFileVisitor<T> {
    * @param file a file to visit.
    * @return {@code true} to proceed to file's children, {@code false} to skip to file's next sibling.
    */
-  public boolean visitFile(@Nonnull VirtualFile file) {
+  public boolean visitFile(VirtualFile file) {
     return true;
   }
 
@@ -110,8 +109,8 @@ public abstract class VirtualFileVisitor<T> {
    * {@linkplain #SKIP_CHILDREN} to skip to file's next sibling,<br/>
    * result of {@linkplain #skipTo(VirtualFile)} to skip to given file's next sibling.
    */
-  @Nonnull
-  public Result visitFileEx(@Nonnull VirtualFile file) {
+  
+  public Result visitFileEx(VirtualFile file) {
     return visitFile(file) ? CONTINUE : SKIP_CHILDREN;
   }
 
@@ -121,7 +120,7 @@ public abstract class VirtualFileVisitor<T> {
    *
    * @param file a file whose children were successfully visited.
    */
-  public void afterChildrenVisited(@Nonnull VirtualFile file) {
+  public void afterChildrenVisited(VirtualFile file) {
   }
 
   /**
@@ -132,7 +131,7 @@ public abstract class VirtualFileVisitor<T> {
    * @return children iterable, or null to use {@linkplain VirtualFile#getChildren()}.
    */
   @Nullable
-  public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
+  public Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
     return null;
   }
 
@@ -155,11 +154,11 @@ public abstract class VirtualFileVisitor<T> {
   }
 
 
-  final boolean allowVisitFile(@SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file) {
+  final boolean allowVisitFile(@SuppressWarnings("UnusedParameters") VirtualFile file) {
     return myLevel > 0 || !mySkipRoot;
   }
 
-  final boolean allowVisitChildren(@Nonnull VirtualFile file) {
+  final boolean allowVisitChildren(VirtualFile file) {
     if (!file.is(VFileProperty.SYMLINK)) {
       return true;
     }

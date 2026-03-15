@@ -19,7 +19,6 @@ import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -31,7 +30,7 @@ public abstract class StringStubIndexExtension<Psi extends PsiElement> extends A
   }
 
   @Override
-  @Nonnull
+  
   public KeyDescriptor<String> getKeyDescriptor() {
     return new EnumeratorStringDescriptor();
   }

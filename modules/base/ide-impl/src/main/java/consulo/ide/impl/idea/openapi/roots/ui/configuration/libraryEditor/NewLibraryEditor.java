@@ -16,8 +16,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -65,7 +64,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
   }
 
   @Override
-  public void setType(@Nonnull LibraryType<?> type) {
+  public void setType(LibraryType<?> type) {
     myType = type;
   }
 
@@ -84,9 +83,9 @@ public class NewLibraryEditor extends LibraryEditorBase {
     return myLibraryName;
   }
 
-  @Nonnull
+  
   @Override
-  public String[] getUrls(@Nonnull OrderRootType rootType) {
+  public String[] getUrls(OrderRootType rootType) {
     return pointersToUrls(myRoots.get(rootType));
   }
 
@@ -98,9 +97,9 @@ public class NewLibraryEditor extends LibraryEditorBase {
     return ArrayUtil.toStringArray(urls);
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFile[] getFiles(@Nonnull OrderRootType rootType) {
+  public VirtualFile[] getFiles(OrderRootType rootType) {
     List<VirtualFile> result = new ArrayList<>();
     for (LightFilePointer pointer : myRoots.get(rootType)) {
       VirtualFile file = pointer.getFile();
@@ -121,7 +120,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
     return VirtualFileUtil.toVirtualFileArray(result);
   }
 
-  @Nonnull
+  
   @Override
   public String[] getExcludedRootUrls() {
     return pointersToUrls(myExcludedRoots);
@@ -133,45 +132,45 @@ public class NewLibraryEditor extends LibraryEditorBase {
   }
 
   @Override
-  public void addRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType rootType) {
+  public void addRoot(VirtualFile file, OrderRootType rootType) {
     myRoots.putValue(rootType, new LightFilePointer(file));
   }
 
   @Override
-  public void addRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
+  public void addRoot(String url, OrderRootType rootType) {
     myRoots.putValue(rootType, new LightFilePointer(url));
   }
 
   @Override
-  public void addJarDirectory(@Nonnull VirtualFile file, boolean recursive, @Nonnull OrderRootType rootType) {
+  public void addJarDirectory(VirtualFile file, boolean recursive, OrderRootType rootType) {
     addJarDirectory(file.getUrl(), recursive, rootType);
   }
 
   @Override
-  public void addExcludedRoot(@Nonnull String url) {
+  public void addExcludedRoot(String url) {
     myExcludedRoots.add(new LightFilePointer(url));
   }
 
   @Override
-  public void removeExcludedRoot(@Nonnull String url) {
+  public void removeExcludedRoot(String url) {
     myExcludedRoots.remove(new LightFilePointer(url));
   }
 
   @Override
-  public void addJarDirectory(@Nonnull String url, boolean recursive, @Nonnull OrderRootType rootType) {
+  public void addJarDirectory(String url, boolean recursive, OrderRootType rootType) {
     addRoot(url, rootType);
     (recursive ? myJarDirectoryRecursiveUrls : myJarDirectoryUrls).putValue(rootType, url);
   }
 
   @Override
-  public void removeRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
+  public void removeRoot(String url, OrderRootType rootType) {
     myRoots.remove(rootType, new LightFilePointer(url));
     myExcludedRoots.removeIf(pointer -> !isUnderRoots(pointer.getUrl()));
     myJarDirectoryUrls.remove(rootType, url);
     myJarDirectoryRecursiveUrls.remove(rootType, url);
   }
 
-  private boolean isUnderRoots(@Nonnull String url) {
+  private boolean isUnderRoots(String url) {
     for (LightFilePointer pointer : myRoots.values()) {
       if (VirtualFileUtil.isEqualOrAncestor(pointer.getUrl(), url)) {
         return true;
@@ -186,12 +185,12 @@ public class NewLibraryEditor extends LibraryEditorBase {
   }
 
   @Override
-  public boolean isJarDirectory(@Nonnull String url, @Nonnull OrderRootType rootType) {
+  public boolean isJarDirectory(String url, OrderRootType rootType) {
     return myJarDirectoryUrls.get(rootType).contains(url) || myJarDirectoryRecursiveUrls.get(rootType).contains(url);
   }
 
   @Override
-  public boolean isValid(@Nonnull String url, @Nonnull OrderRootType orderRootType) {
+  public boolean isValid(String url, OrderRootType orderRootType) {
     Collection<LightFilePointer> pointers = myRoots.get(orderRootType);
     for (LightFilePointer pointer : pointers) {
       if (pointer.getUrl().equals(url)) {
@@ -201,13 +200,13 @@ public class NewLibraryEditor extends LibraryEditorBase {
     return false;
   }
 
-  public void applyTo(@Nonnull LibraryEx.ModifiableModelEx model) {
+  public void applyTo(LibraryEx.ModifiableModelEx model) {
     model.setProperties(myProperties);
     exportRoots(model::getUrls, model::isValid, model::removeRoot, model::addRoot, model::addJarDirectory, model::addExcludedRoot);
   }
 
 
-  public void applyTo(@Nonnull LibraryEditorBase editor) {
+  public void applyTo(LibraryEditorBase editor) {
     editor.setProperties(myProperties);
     exportRoots(editor::getUrls, editor::isValid, editor::removeRoot, editor::addRoot, editor::addJarDirectory, editor::addExcludedRoot);
   }
@@ -253,10 +252,10 @@ public class NewLibraryEditor extends LibraryEditorBase {
     }
   }
 
-  private static void collectJarFiles(@Nonnull VirtualFile dir, @Nonnull List<? super VirtualFile> container, final boolean recursively) {
+  private static void collectJarFiles(VirtualFile dir, List<? super VirtualFile> container, final boolean recursively) {
     VirtualFileUtil.visitChildrenRecursively(dir, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT, recursively ? null : VirtualFileVisitor.ONE_LEVEL_DEEP) {
       @Override
-      public boolean visitFile(@Nonnull VirtualFile file) {
+      public boolean visitFile(VirtualFile file) {
         FileType type;
         if (!file.isDirectory() && (type = FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence())) instanceof ArchiveFileType) {
           VirtualFile jarRoot = ((ArchiveFileType)type).getFileSystem().findFileByPath(file.getPath() + URLUtil.JAR_SEPARATOR);

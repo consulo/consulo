@@ -27,8 +27,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.OptionsDialog;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +75,7 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
         return result;
     }
 
-    @Nonnull
+    
     protected abstract LocalizeValue getRealTitle();
 
     protected abstract String getActionNameForDimensions();

@@ -17,7 +17,7 @@ package consulo.application.internal;
 
 import consulo.platform.Platform;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

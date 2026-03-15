@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.util;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -41,6 +41,5 @@ public interface DirectoryChooserView {
 
   int getItemsSize();
 
-  @Nullable
-  DirectoryChooser.ItemWrapper getSelectedItem();
+  DirectoryChooser.@Nullable ItemWrapper getSelectedItem();
 }

@@ -19,8 +19,7 @@ import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 
 /**
@@ -51,8 +50,8 @@ public class UserHomeFileUtil {
     return path;
   }
 
-  @Nonnull
-  public static String expandUserHome(@Nonnull String path) {
+  
+  public static String expandUserHome(String path) {
     if (path.startsWith("~/") || path.startsWith("~\\")) {
       path = Platform.current().user().homePath() + path.substring(1);
     }

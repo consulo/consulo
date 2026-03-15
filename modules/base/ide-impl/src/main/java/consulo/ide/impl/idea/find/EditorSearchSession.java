@@ -43,8 +43,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +63,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     private final Editor myEditor;
     private final LivePreviewController myLivePreviewController;
     private final SearchResults mySearchResults;
-    @Nonnull
+    
     private final FindModel myFindModel;
     private final SearchReplaceComponent myComponent;
     private RangeMarker myStartSessionSelectionMarker;
@@ -82,11 +81,11 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     );
     private final Disposable myDisposable = Disposable.newDisposable(EditorSearchSession.class.getName());
 
-    public EditorSearchSession(@Nonnull Editor editor, Project project) {
+    public EditorSearchSession(Editor editor, Project project) {
         this(editor, project, createDefaultFindModel(project, editor));
     }
 
-    public EditorSearchSession(@Nonnull final Editor editor, Project project, @Nonnull FindModel findModel) {
+    public EditorSearchSession(final Editor editor, Project project, FindModel findModel) {
         assert !editor.isDisposed();
 
         myClickToHighlightLabel.setVisible(false);
@@ -180,7 +179,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {
             @Override
-            public void editorReleased(@Nonnull EditorFactoryEvent event) {
+            public void editorReleased(EditorFactoryEvent event) {
                 if (event.getEditor() == myEditor) {
                     Disposer.dispose(myDisposable);
                     myLivePreviewController.dispose();
@@ -195,13 +194,13 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         //FindUtil.triggerUsedOptionsStats(FIND_TYPE, findModel);
     }
 
-    @Nonnull
+    
     protected AnAction[] createPrimarySearchActions() {
         return new AnAction[]{new StatusTextAction(), new PrevOccurrenceAction(), new NextOccurrenceAction(), new FindAllAction(), AnSeparator.create(), new AddOccurrenceAction(),
             new RemoveOccurrenceAction(), new SelectAllAction(), AnSeparator.create()};
     }
 
-    @Nonnull
+    
     protected AnAction[] createSecondarySearchActions() {
         return new AnAction[]{new ToggleAnywhereAction(), new ToggleInCommentsAction(), new ToggleInLiteralsOnlyAction(), new ToggleExceptCommentsAction(), new ToggleExceptLiteralsAction(),
             new ToggleExceptCommentsAndLiteralsAction()};
@@ -229,9 +228,9 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         return searchReplaceComponent != null ? searchReplaceComponent.getDataUnchecked(SESSION_KEY) : null;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public static CompletableFuture<EditorSearchSession> start(@Nonnull Editor editor, @Nullable Project project) {
+    public static CompletableFuture<EditorSearchSession> start(Editor editor, @Nullable Project project) {
         EditorSearchSession session = new EditorSearchSession(editor, project);
 
         UIAccess uiAccess = UIAccess.current();
@@ -241,9 +240,9 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         }, uiAccess);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public static CompletableFuture<EditorSearchSession> start(@Nonnull Editor editor, @Nonnull FindModel findModel, @Nullable Project project) {
+    public static CompletableFuture<EditorSearchSession> start(Editor editor, FindModel findModel, @Nullable Project project) {
         EditorSearchSession session = new EditorSearchSession(editor, project, findModel);
 
         UIAccess uiAccess = UIAccess.current();
@@ -253,7 +252,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         }, uiAccess);
     }
 
-    @Nonnull
+    
     @Override
     public SearchReplaceComponent getComponent() {
         return myComponent;
@@ -263,7 +262,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         return myComponent.getProject();
     }
 
-    @Nonnull
+    
     private static FindModel createDefaultFindModel(Project project, Editor editor) {
         FindModel findModel = new FindModel();
         findModel.copyFrom(FindManager.getInstance(project).getFindInFileModel());
@@ -280,7 +279,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
     @Override
     @Nullable
-    public Object getData(@Nonnull Key dataId) {
+    public Object getData(Key dataId) {
         if (SearchSession.KEY == dataId) {
             return this;
         }
@@ -297,7 +296,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     }
 
     @Override
-    public void searchResultsUpdated(@Nonnull SearchResults sr) {
+    public void searchResultsUpdated(SearchResults sr) {
         if (sr.getFindModel() == null) {
             return;
         }
@@ -365,7 +364,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         myFindModel.setMultiline(myComponent.isMultiline());
     }
 
-    @Nonnull
+    
     @Override
     public FindModel getFindModel() {
         return myFindModel;
@@ -403,7 +402,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         myComponent.updateEmptyText(this::getEmptyText);
     }
 
-    @Nonnull
+    
     private String getEmptyText() {
         if (myFindModel.isGlobal() || !myFindModel.getStringToFind().isEmpty()) {
             return "";
@@ -450,7 +449,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     }
 
     @Override
-    public void selectionChanged(@Nonnull SelectionEvent e) {
+    public void selectionChanged(SelectionEvent e) {
         saveInitialSelection();
         updateEmptyText();
     }
@@ -579,7 +578,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         myComponent.resetUndoRedoActions();
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public CompletableFuture<?> prepareAsync() {
         return myComponent.prepareAsync();
@@ -589,14 +588,14 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         private final String myTitle;
         private final char myMnemonic;
 
-        ButtonAction(@Nonnull String title, char mnemonic) {
+        ButtonAction(String title, char mnemonic) {
             myTitle = title;
             myMnemonic = mnemonic;
         }
 
-        @Nonnull
+        
         @Override
-        public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+        public JComponent createCustomComponent(Presentation presentation, String place) {
             JButton button = new JButton(myTitle) {
                 @Override
                 public Dimension getPreferredSize() {
@@ -613,7 +612,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
         @RequiredUIAccess
         @Override
-        public final void update(@Nonnull AnActionEvent e) {
+        public final void update(AnActionEvent e) {
             JButton button = (JButton) e.getPresentation().getClientProperty(COMPONENT_KEY);
             if (button != null) {
                 update(button);
@@ -622,7 +621,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
         @RequiredUIAccess
         @Override
-        public final void actionPerformed(@Nonnull AnActionEvent e) {
+        public final void actionPerformed(AnActionEvent e) {
             onClick();
         }
 
@@ -631,7 +630,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
             onClick();
         }
 
-        protected abstract void update(@Nonnull JButton button);
+        protected abstract void update(JButton button);
 
         protected abstract void onClick();
     }
@@ -642,7 +641,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         }
 
         @Override
-        protected void update(@Nonnull JButton button) {
+        protected void update(JButton button) {
             button.setEnabled(mySearchResults.hasMatches());
         }
 
@@ -659,7 +658,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         }
 
         @Override
-        protected void update(@Nonnull JButton button) {
+        protected void update(JButton button) {
             button.setEnabled(mySearchResults.hasMatches());
         }
 
@@ -676,7 +675,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         }
 
         @Override
-        protected void update(@Nonnull JButton button) {
+        protected void update(JButton button) {
             FindResult cursor = mySearchResults.getCursor();
             button.setEnabled(cursor != null);
             button.setText(

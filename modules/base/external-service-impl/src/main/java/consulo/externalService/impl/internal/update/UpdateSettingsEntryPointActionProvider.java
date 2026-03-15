@@ -26,8 +26,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.SettingsEntryPointActionProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -51,7 +50,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
 
             presentation.setEnabledAndVisible(true);
@@ -74,7 +73,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Application application = Application.get();
             application.restart();
             ((UpdateSettingsEx) myUpdateSettings).setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
@@ -93,11 +92,11 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
         myUpdateSettingsProvider = updateSettingsProvider;
     }
 
-    @Nonnull
+    
     @Override
     public ActionGroup getUpdateActionOrGroup() {
         return new DumbAwareActionGroup() {
-            @Nonnull
+            
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 AnAction action = createAction();

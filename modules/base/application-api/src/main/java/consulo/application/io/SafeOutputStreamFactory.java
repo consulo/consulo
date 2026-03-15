@@ -17,7 +17,6 @@ package consulo.application.io;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -28,19 +27,19 @@ import java.nio.file.Path;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SafeOutputStreamFactory {
-    @Nonnull
-    default SafeOutputStream create(@Nonnull File target) {
+    
+    default SafeOutputStream create(File target) {
         return create(target.toPath());
     }
 
-    @Nonnull
-    default SafeOutputStream create(@Nonnull File target, @Nonnull String backupExt) {
+    
+    default SafeOutputStream create(File target, String backupExt) {
         return create(target.toPath(), backupExt);
     }
 
-    @Nonnull
-    SafeOutputStream create(@Nonnull Path target);
+    
+    SafeOutputStream create(Path target);
 
-    @Nonnull
-    SafeOutputStream create(@Nonnull Path target, @Nonnull String backupExt);
+    
+    SafeOutputStream create(Path target, String backupExt);
 }

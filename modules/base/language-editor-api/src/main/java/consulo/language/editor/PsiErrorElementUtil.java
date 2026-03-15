@@ -27,7 +27,6 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -38,7 +37,7 @@ public class PsiErrorElementUtil {
     private PsiErrorElementUtil() {
     }
 
-    public static boolean hasErrors(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+    public static boolean hasErrors(Project project, VirtualFile virtualFile) {
         return Application.get().runReadAction((Supplier<Boolean>)() -> {
             if (project.isDisposed() || !virtualFile.isValid()) {
                 return false;
@@ -49,7 +48,7 @@ public class PsiErrorElementUtil {
         });
     }
 
-    private static boolean hasErrors(@Nonnull PsiFile psiFile) {
+    private static boolean hasErrors(PsiFile psiFile) {
         CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(psiFile.getProject());
         return cachedValuesManager.getCachedValue(psiFile,
             CONTAINS_ERROR_ELEMENT,
@@ -62,7 +61,7 @@ public class PsiErrorElementUtil {
     }
 
     @RequiredReadAction
-    private static boolean hasErrorElements(@Nonnull PsiElement element) {
+    private static boolean hasErrorElements(PsiElement element) {
         if (element instanceof PsiErrorElement errorElement) {
             for (HighlightErrorFilter errorFilter : HighlightErrorFilter.EP_NAME.getExtensionList(element.getProject())) {
                 if (!errorFilter.shouldHighlightErrorElement(errorElement)) {

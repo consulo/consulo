@@ -31,8 +31,7 @@ import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author spleaner
@@ -43,7 +42,7 @@ public abstract class StatementUpDownMover {
 
   public static class MoveInfo {
     /** Source line range */
-    @Nonnull
+    
     public LineRange toMove;
 
     /**
@@ -68,21 +67,21 @@ public abstract class StatementUpDownMover {
     }
   }
 
-  public abstract boolean checkAvailable(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull MoveInfo info, boolean down);
+  public abstract boolean checkAvailable(Editor editor, PsiFile file, MoveInfo info, boolean down);
 
-  public void beforeMove(@Nonnull Editor editor, @Nonnull MoveInfo info, boolean down) {
+  public void beforeMove(Editor editor, MoveInfo info, boolean down) {
   }
 
-  public void afterMove(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull MoveInfo info, boolean down) {
+  public void afterMove(Editor editor, PsiFile file, MoveInfo info, boolean down) {
   }
 
-  public static int getLineStartSafeOffset(@Nonnull Document document, int line) {
+  public static int getLineStartSafeOffset(Document document, int line) {
     if (line == document.getLineCount()) return document.getTextLength();
     return document.getLineStartOffset(line);
   }
 
-  @Nonnull
-  protected static LineRange getLineRangeFromSelection(@Nonnull Editor editor) {
+  
+  protected static LineRange getLineRangeFromSelection(Editor editor) {
     int startLine;
     int endLine;
     SelectionModel selectionModel = editor.getSelectionModel();
@@ -102,7 +101,7 @@ public abstract class StatementUpDownMover {
   }
 
   @Nullable
-  protected static Pair<PsiElement, PsiElement> getElementRange(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull LineRange range) {
+  protected static Pair<PsiElement, PsiElement> getElementRange(Editor editor, PsiFile file, LineRange range) {
     int startOffset = editor.logicalPositionToOffset(new LogicalPosition(range.startLine, 0));
     PsiElement startingElement = firstNonWhiteElement(startOffset, file, true);
     if (startingElement == null) return null;
@@ -121,7 +120,7 @@ public abstract class StatementUpDownMover {
   }
 
   @Nullable
-  protected static PsiElement firstNonWhiteElement(int offset, @Nonnull PsiFile file, boolean lookRight) {
+  protected static PsiElement firstNonWhiteElement(int offset, PsiFile file, boolean lookRight) {
     ASTNode leafElement = file.getNode().findLeafElementAt(offset);
     return leafElement == null ? null : firstNonWhiteElement(leafElement.getPsi(), lookRight);
   }

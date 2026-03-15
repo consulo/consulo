@@ -16,8 +16,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class SingleEntryIndexForwardIndexAccessor<V> implements ForwardIndexAcce
   private static final Logger LOG = Logger.getInstance(SingleEntryIndexForwardIndexAccessor.class);
   private final ID<Integer, V> myIndexId;
   private final VolatileNotNullLazyValue<UpdatableIndex<Integer, V, ?>> myIndex = new VolatileNotNullLazyValue<UpdatableIndex<Integer, V, ?>>() {
-    @Nonnull
+    
     @Override
     protected UpdatableIndex<Integer, V, ?> compute() {
       return ((FileBasedIndexImpl)FileBasedIndex.getInstance()).getIndex(myIndexId);
@@ -39,7 +38,7 @@ public class SingleEntryIndexForwardIndexAccessor<V> implements ForwardIndexAcce
     myIndexId = (ID<Integer, V>)extension.getName();
   }
 
-  @Nonnull
+  
   @Override
   public InputDataDiffBuilder<Integer, V> getDiffBuilder(int inputId, @Nullable ByteArraySequence sequence) throws IOException {
     Ref<Map<Integer, V>> dataRef = Ref.create();
@@ -62,7 +61,7 @@ public class SingleEntryIndexForwardIndexAccessor<V> implements ForwardIndexAcce
 
   @Nullable
   @Override
-  public ByteArraySequence serializeIndexedData(@Nonnull InputData<Integer, V> data) {
+  public ByteArraySequence serializeIndexedData(InputData<Integer, V> data) {
     return null;
   }
 
@@ -72,7 +71,7 @@ public class SingleEntryIndexForwardIndexAccessor<V> implements ForwardIndexAcce
     @Nullable
     private final V myCurrentValue;
 
-    public SingleValueDiffBuilder(int inputId, @Nonnull Map<Integer, V> currentData) {
+    public SingleValueDiffBuilder(int inputId, Map<Integer, V> currentData) {
       this(inputId, !currentData.isEmpty(), ContainerUtil.getFirstItem(currentData.values()));
     }
 
@@ -84,10 +83,10 @@ public class SingleEntryIndexForwardIndexAccessor<V> implements ForwardIndexAcce
     }
 
     @Override
-    public boolean differentiate(@Nonnull Map<Integer, V> newData,
-                                 @Nonnull KeyValueUpdateProcessor<? super Integer, ? super V> addProcessor,
-                                 @Nonnull KeyValueUpdateProcessor<? super Integer, ? super V> updateProcessor,
-                                 @Nonnull RemovedKeyProcessor<? super Integer> removeProcessor) throws StorageException {
+    public boolean differentiate(Map<Integer, V> newData,
+                                 KeyValueUpdateProcessor<? super Integer, ? super V> addProcessor,
+                                 KeyValueUpdateProcessor<? super Integer, ? super V> updateProcessor,
+                                 RemovedKeyProcessor<? super Integer> removeProcessor) throws StorageException {
       boolean newValueExists = !newData.isEmpty();
       V newValue = ContainerUtil.getFirstItem(newData.values());
       if (myContainsValue) {

@@ -19,7 +19,6 @@ package consulo.language.editor.refactoring.classMember;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
@@ -39,12 +38,12 @@ public abstract class AbstractUsesDependencyMemberInfoModel<T extends Navigatabl
   }
 
   @Override
-  public int checkForProblems(@Nonnull M memberInfo) {
+  public int checkForProblems(M memberInfo) {
     int problem = super.checkForProblems(memberInfo);
     return doCheck(memberInfo, problem);
   }
 
-  protected abstract int doCheck(@Nonnull M memberInfo, int problem);
+  protected abstract int doCheck(M memberInfo, int problem);
 
   public void setSuperClass(C superClass) {
     setMemberDependencyGraph(new UsesMemberDependencyGraph<T, C, M>(myClass, superClass, false));

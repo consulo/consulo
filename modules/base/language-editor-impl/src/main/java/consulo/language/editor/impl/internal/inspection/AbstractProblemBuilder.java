@@ -22,7 +22,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -46,61 +46,61 @@ public abstract class AbstractProblemBuilder implements ProblemBuilder {
         myDescriptionTemplate = descriptionTemplate;
     }
 
-    @Nonnull
+    
     @Override
-    public AbstractProblemBuilder range(@Nonnull PsiElement element, @Nullable TextRange rangeInElement) {
+    public AbstractProblemBuilder range(PsiElement element, @Nullable TextRange rangeInElement) {
         myStartElement = myEndElement = element;
         myRangeInElement = rangeInElement;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public AbstractProblemBuilder range(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+    public AbstractProblemBuilder range(PsiElement startElement, PsiElement endElement) {
         myStartElement = startElement;
         myEndElement = endElement;
         myRangeInElement = null;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public AbstractProblemBuilder highlightType(@Nonnull ProblemHighlightType highlightType) {
+    public AbstractProblemBuilder highlightType(ProblemHighlightType highlightType) {
         myHighlightType = highlightType;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public AbstractProblemBuilder afterEndOfLine() {
         myIsAfterEndOfLine = true;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public AbstractProblemBuilder onTheFly() {
         myOnTheFly = true;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public AbstractProblemBuilder showTooltip(boolean showTooltip) {
         myShowTooltip = showTooltip;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemBuilder withFix(@Nonnull LocalQuickFix fix) {
+    public ProblemBuilder withFix(LocalQuickFix fix) {
         nonNullLocalQuickFixes().add(fix);
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemBuilder withFixes(@Nonnull Collection<? extends LocalQuickFix> localQuickFixes) {
+    public ProblemBuilder withFixes(Collection<? extends LocalQuickFix> localQuickFixes) {
         nonNullLocalQuickFixes().addAll(localQuickFixes);
         return this;
     }

@@ -38,8 +38,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,7 @@ public class DaemonTooltipActionProvider implements TooltipActionProvider {
     @Nullable
     @Override
     @RequiredReadAction
-    public TooltipAction getTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
+    public TooltipAction getTooltipAction(HighlightInfo info, Editor editor, PsiFile psiFile) {
         IntentionAction intention = extractMostPriorityFixFromHighlightInfo((HighlightInfoImpl) info, editor, psiFile);
 
         if (intention == null) {

@@ -5,8 +5,7 @@ import consulo.ui.ex.awt.WindowWrapper.Mode;
 import consulo.disposer.Disposer;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,9 +14,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class WindowWrapperBuilder {
-  @Nonnull
+  
   private final Mode myMode;
-  @Nonnull
+  
   private final JComponent myComponent;
   @Nullable
   private Project myProject;
@@ -31,48 +30,48 @@ public class WindowWrapperBuilder {
   private String myDimensionServiceKey;
   @Nullable private Runnable myOnShowCallback;
 
-  public WindowWrapperBuilder(@Nonnull Mode mode, @Nonnull JComponent component) {
+  public WindowWrapperBuilder(Mode mode, JComponent component) {
     myMode = mode;
     myComponent = component;
   }
 
-  @Nonnull
+  
   public WindowWrapperBuilder setProject(@Nullable Project project) {
     myProject = project;
     return this;
   }
 
-  @Nonnull
+  
   public WindowWrapperBuilder setParent(@Nullable Component parent) {
     myParent = parent;
     return this;
   }
 
-  @Nonnull
+  
   public WindowWrapperBuilder setTitle(@Nullable String title) {
     myTitle = title;
     return this;
   }
 
-  @Nonnull
+  
   public WindowWrapperBuilder setPreferredFocusedComponent(@Nullable JComponent preferredFocusedComponent) {
     myPreferredFocusedComponent = preferredFocusedComponent;
     return this;
   }
 
-  @Nonnull
+  
   public WindowWrapperBuilder setDimensionServiceKey(@Nullable String dimensionServiceKey) {
     myDimensionServiceKey = dimensionServiceKey;
     return this;
   }
 
-  @Nonnull
-  public WindowWrapperBuilder setOnShowCallback(@Nonnull Runnable callback) {
+  
+  public WindowWrapperBuilder setOnShowCallback(Runnable callback) {
     myOnShowCallback = callback;
     return this;
   }
 
-  @Nonnull
+  
   public WindowWrapper build() {
     switch (myMode) {
       case FRAME:
@@ -88,15 +87,15 @@ public class WindowWrapperBuilder {
   private static class DialogWindowWrapper implements WindowWrapper {
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final JComponent myComponent;
-    @Nonnull
+    
     private final Mode myMode;
 
-    @Nonnull
+    
     private final DialogWrapper myDialog;
 
-    public DialogWindowWrapper(@Nonnull WindowWrapperBuilder builder) {
+    public DialogWindowWrapper(WindowWrapperBuilder builder) {
       myProject = builder.myProject;
       myComponent = builder.myComponent;
       myMode = builder.myMode;
@@ -149,19 +148,19 @@ public class WindowWrapperBuilder {
       return myProject;
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
       return myComponent;
     }
 
-    @Nonnull
+    
     @Override
     public Mode getMode() {
       return myMode;
     }
 
-    @Nonnull
+    
     @Override
     public Window getWindow() {
       return myDialog.getWindow();
@@ -182,7 +181,7 @@ public class WindowWrapperBuilder {
     }
 
     private static class MyDialogWrapper extends DialogWrapper {
-      @Nonnull
+      
       private final JComponent myComponent;
       @Nullable
       private final String myDimensionServiceKey;
@@ -190,7 +189,7 @@ public class WindowWrapperBuilder {
       private final JComponent myPreferredFocusedComponent;
 
       public MyDialogWrapper(@Nullable Project project,
-                             @Nonnull JComponent component,
+                             JComponent component,
                              @Nullable String dimensionServiceKey,
                              @Nullable JComponent preferredFocusedComponent) {
         super(project, true);
@@ -199,8 +198,8 @@ public class WindowWrapperBuilder {
         myPreferredFocusedComponent = preferredFocusedComponent;
       }
 
-      public MyDialogWrapper(@Nonnull Component parent,
-                             @Nonnull JComponent component,
+      public MyDialogWrapper(Component parent,
+                             JComponent component,
                              @Nullable String dimensionServiceKey,
                              @Nullable JComponent preferredFocusedComponent) {
         super(parent, true);
@@ -221,7 +220,7 @@ public class WindowWrapperBuilder {
       }
 
       // it is information dialog - no need to OK or Cancel. Close the dialog by clicking the cross button or pressing Esc.
-      @Nonnull
+      
       @Override
       protected Action[] createActions() {
         return new Action[0];
@@ -249,17 +248,17 @@ public class WindowWrapperBuilder {
 
   private static class FrameWindowWrapper implements WindowWrapper {
     @Nullable private final Project myProject;
-    @Nonnull
+    
     private final JComponent myComponent;
-    @Nonnull
+    
     private final Mode myMode;
     @Nullable
     private final Runnable myOnShowCallback;
 
-    @Nonnull
+    
     private final FrameWrapper myFrame;
 
-    public FrameWindowWrapper(@Nonnull WindowWrapperBuilder builder) {
+    public FrameWindowWrapper(WindowWrapperBuilder builder) {
       myProject = builder.myProject;
       myComponent = builder.myComponent;
       myMode = builder.myMode;
@@ -288,19 +287,19 @@ public class WindowWrapperBuilder {
       return myProject;
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
       return myComponent;
     }
 
-    @Nonnull
+    
     @Override
     public Mode getMode() {
       return myMode;
     }
 
-    @Nonnull
+    
     @Override
     public Window getWindow() {
       return myFrame.getFrame();

@@ -17,7 +17,6 @@ package consulo.content.library;
 
 import consulo.content.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,22 +26,22 @@ public class OrderRoot {
   private final OrderRootType myType;
   private final boolean myJarDirectory;
 
-  public OrderRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType type) {
+  public OrderRoot(VirtualFile file, OrderRootType type) {
     this(file, type, false);
   }
 
-  public OrderRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType type, boolean jarDirectory) {
+  public OrderRoot(VirtualFile file, OrderRootType type, boolean jarDirectory) {
     myFile = file;
     myType = type;
     myJarDirectory = jarDirectory;
   }
 
-  @Nonnull
+  
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   public OrderRootType getType() {
     return myType;
   }

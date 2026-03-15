@@ -3,8 +3,7 @@ package consulo.execution.coverage;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman.Chernyatchik
@@ -17,8 +16,8 @@ public interface CoverageAnnotator {
      */
     @Nullable
     String getDirCoverageInformationString(
-        @Nonnull PsiDirectory directory, @Nonnull CoverageSuitesBundle currentSuite,
-        @Nonnull CoverageDataManager manager
+        PsiDirectory directory, CoverageSuitesBundle currentSuite,
+        CoverageDataManager manager
     );
 
     /**
@@ -28,11 +27,11 @@ public interface CoverageAnnotator {
      */
     @Nullable
     String getFileCoverageInformationString(
-        @Nonnull PsiFile file, @Nonnull CoverageSuitesBundle currentSuite,
-        @Nonnull CoverageDataManager manager
+        PsiFile file, CoverageSuitesBundle currentSuite,
+        CoverageDataManager manager
     );
 
     void onSuiteChosen(@Nullable CoverageSuitesBundle newSuite);
 
-    void renewCoverageData(@Nonnull CoverageSuitesBundle suite, @Nonnull CoverageDataManager dataManager);
+    void renewCoverageData(CoverageSuitesBundle suite, CoverageDataManager dataManager);
 }

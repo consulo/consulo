@@ -18,38 +18,37 @@ package consulo.externalService.impl.internal.update;
 import consulo.container.plugin.PluginId;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2021-11-23
  */
 public class PluginDownloadFailedException extends Exception {
-    @Nonnull
+    
     private final PluginId myPluginId;
-    @Nonnull
+    
     private final String myPluginName;
-    @Nonnull
+    
     private final LocalizeValue myMessage;
 
-    public PluginDownloadFailedException(@Nonnull PluginId pluginId, @Nonnull String pluginName, @Nonnull LocalizeValue message) {
+    public PluginDownloadFailedException(PluginId pluginId, String pluginName, LocalizeValue message) {
         super(message.get());
         myPluginId = pluginId;
         myPluginName = pluginName;
         myMessage = message;
     }
 
-    @Nonnull
+    
     public LocalizeValue getLocalizeMessage() {
         return myMessage;
     }
 
-    @Nonnull
+    
     public PluginId getPluginId() {
         return myPluginId;
     }
 
-    @Nonnull
+    
     public String getPluginName() {
         return myPluginName;
     }

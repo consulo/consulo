@@ -21,7 +21,6 @@ import consulo.util.xml.serializer.SmartSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 public class CopyrightProfile implements Comparable<CopyrightProfile> {
   public static final String DEFAULT_COPYRIGHT_NOTICE = EntityUtil.encode("Copyright (c) $today.year. Lorem ipsum dolor sit amet, consectetur adipiscing elit. \n" +
@@ -35,7 +34,7 @@ public class CopyrightProfile implements Comparable<CopyrightProfile> {
   private String notice = DEFAULT_COPYRIGHT_NOTICE;
   private String keyword = EntityUtil.encode("Copyright");
   private String allowReplaceKeyword = "";
-  @Nonnull
+  
   protected String myName;
 
   //read external
@@ -43,7 +42,7 @@ public class CopyrightProfile implements Comparable<CopyrightProfile> {
     this("");
   }
 
-  public void copyFrom(@Nonnull CopyrightProfile profile) {
+  public void copyFrom(CopyrightProfile profile) {
     Element config = new Element("config");
     profile.writeExternal(config);
     readExternal(config);
@@ -57,17 +56,17 @@ public class CopyrightProfile implements Comparable<CopyrightProfile> {
     ourSerializer.writeExternal(this, element);
   }
 
-  public CopyrightProfile(@Nonnull String profileName) {
+  public CopyrightProfile(String profileName) {
     myName = profileName;
   }
 
-  @Nonnull
+  
   @OptionTag("myName")
   public String getName() {
     return myName;
   }
 
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
@@ -106,7 +105,7 @@ public class CopyrightProfile implements Comparable<CopyrightProfile> {
   }
 
   @Override
-  public int compareTo(@Nonnull CopyrightProfile o) {
+  public int compareTo(CopyrightProfile o) {
     return getName().compareToIgnoreCase(o.getName());
   }
 }

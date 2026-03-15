@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +43,7 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
   private UsageView myCurrentUsageView;
   protected final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-  public UsagesPanel(@Nonnull Project project) {
+  public UsagesPanel(Project project) {
     super(new BorderLayout());
     myProject = project;
   }
@@ -65,7 +64,7 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
     }
   }
 
-  protected void showUsages(@Nonnull PsiElement[] primaryElements, @Nonnull UsageInfo[] usageInfos) {
+  protected void showUsages(PsiElement[] primaryElements, UsageInfo[] usageInfos) {
     if (myCurrentUsageView != null) {
       Disposer.dispose(myCurrentUsageView);
     }
@@ -117,7 +116,7 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
 
   @Override
   @Nullable
-  public Object getData(@Nonnull Key dataId) {
+  public Object getData(Key dataId) {
     return HelpManager.HELP_ID == dataId ? "ideaInterface.find" : null;
   }
 }

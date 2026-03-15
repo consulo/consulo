@@ -27,8 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Maps;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -198,7 +197,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
     }
 
 
-    public final Component getFocusedComponent(@Nonnull Window window) {
+    public final Component getFocusedComponent(Window window) {
         synchronized (myLock) {
             WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
             if (info == null) { // it means that we don't manage this window, so just return standard focus owner
@@ -235,9 +234,8 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
     /**
      * @param project may be null (for example, if no projects are opened)
      */
-    @Nullable
     @RequiredUIAccess
-    public final consulo.ui.Window suggestParentWindow(@Nullable Project project) {
+    public final consulo.ui.@Nullable Window suggestParentWindow(@Nullable Project project) {
         synchronized (myLock) {
             Window window = getFocusedWindowForProject(project);
             if (window == null) {

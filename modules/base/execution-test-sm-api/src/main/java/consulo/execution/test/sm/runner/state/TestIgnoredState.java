@@ -21,7 +21,7 @@ import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik

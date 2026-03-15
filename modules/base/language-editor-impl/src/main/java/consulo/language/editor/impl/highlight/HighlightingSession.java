@@ -20,19 +20,18 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 public interface HighlightingSession {
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   PsiFile getPsiFile();
 
-  @Nonnull
+  
   Document getDocument();
 
-  @Nonnull
+  
   ProgressIndicator getProgressIndicator();
 
   EditorColorsScheme getColorsScheme();

@@ -21,7 +21,6 @@ import consulo.annotation.component.ActionRef;
 import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.ui.VcsShowToolWindowTabAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Show.Log", parents = @ActionParentRef(@ActionRef(id = "Vcs.Show.Toolwindow.Tab")))
 public class VcsShowLogAction extends VcsShowToolWindowTabAction {
@@ -29,7 +28,7 @@ public class VcsShowLogAction extends VcsShowToolWindowTabAction {
         super(VersionControlSystemLogLocalize.actionShowLogText());
     }
 
-    @Nonnull
+    
     @Override
     protected String getTabName() {
         return VcsLogContentProvider.TAB_NAME;

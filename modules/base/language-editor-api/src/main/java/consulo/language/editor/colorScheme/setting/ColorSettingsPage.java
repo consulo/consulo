@@ -21,8 +21,7 @@ import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.language.editor.highlight.SyntaxHighlighter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public interface ColorSettingsPage extends ColorAndFontDescriptors {
      *
      * @return the syntax highlighter instance.
      */
-    @Nonnull
+    
     SyntaxHighlighter getHighlighter();
 
     /**
@@ -49,7 +48,7 @@ public interface ColorSettingsPage extends ColorAndFontDescriptors {
      *
      * @return the text to show in the preview pane.
      */
-    @Nonnull
+    
     String getDemoText();
 
     /**

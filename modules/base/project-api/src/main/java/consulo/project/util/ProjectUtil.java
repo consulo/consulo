@@ -24,8 +24,7 @@ import consulo.util.io.PathKt;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -37,7 +36,7 @@ import java.util.Locale;
  * @since 17-Sep-22
  */
 public class ProjectUtil {
-    public static boolean isSameProject(@Nullable String projectFilePath, @Nonnull Project project) {
+    public static boolean isSameProject(@Nullable String projectFilePath, Project project) {
         if (projectFilePath == null) {
             return false;
         }
@@ -87,11 +86,11 @@ public class ProjectUtil {
     }
 
     @Nullable
-    public static String getProjectLocationString(@Nonnull Project project) {
+    public static String getProjectLocationString(Project project) {
         return UserHomeFileUtil.getLocationRelativeToUserHome(project.getBasePath());
     }
 
-    @Nonnull
+    
     public static Path getProjectsDirectory() {
         String lastProjectLocation = RecentProjectsManager.getInstance().getLastProjectCreationLocation();
         if (lastProjectLocation != null) {

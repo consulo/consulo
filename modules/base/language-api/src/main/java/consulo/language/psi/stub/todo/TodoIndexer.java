@@ -24,8 +24,7 @@ import consulo.index.io.DataIndexer;
 import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -45,6 +44,6 @@ public interface TodoIndexer extends DataIndexer<TodoIndexEntry, Integer, FileCo
         return map.get(fileType);
     }
 
-    @Nonnull
+    
     FileType getFileType();
 }

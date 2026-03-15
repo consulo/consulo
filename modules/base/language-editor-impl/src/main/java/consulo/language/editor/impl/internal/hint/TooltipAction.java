@@ -3,8 +3,7 @@ package consulo.language.editor.impl.internal.hint;
 
 import consulo.codeEditor.Editor;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.InputEvent;
 
@@ -13,10 +12,10 @@ import java.awt.event.InputEvent;
  */
 public interface TooltipAction {
 
-  @Nonnull
+  
   LocalizeValue getText();
 
-  void execute(@Nonnull Editor editor, @Nullable InputEvent event);
+  void execute(Editor editor, @Nullable InputEvent event);
 
-  void showAllActions(@Nonnull Editor editor);
+  void showAllActions(Editor editor);
 }

@@ -40,7 +40,6 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,7 +67,7 @@ public class AddToFavoritesAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
 
         Collection<AbstractTreeNode> nodesToAdd = getNodesToAdd(dataContext, true);
@@ -107,12 +106,12 @@ public class AddToFavoritesAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(canCreateNodes(e));
     }
 
     @RequiredReadAction
-    public static boolean canCreateNodes(@Nonnull AnActionEvent e) {
+    public static boolean canCreateNodes(AnActionEvent e) {
         if (!e.hasData(Project.KEY)) {
             return false;
         }
@@ -143,7 +142,7 @@ public class AddToFavoritesAction extends AnAction {
         return elements;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static Collection<AbstractTreeNode> createNodes(
         Project project,

@@ -48,8 +48,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Collections;
@@ -68,19 +67,19 @@ public class CodeCompletionHandlerBase {
      */
     public static final Key<Boolean> DIRECT_INSERTION = Key.create("CodeCompletionHandlerBase.directInsertion");
 
-    @Nonnull
+    
     final CompletionType completionType;
     final boolean invokedExplicitly;
     final boolean synchronous;
     final boolean autopopup;
     private static int ourAutoInsertItemTimeout = 2000;
 
-    public static CodeCompletionHandlerBase createHandler(@Nonnull CompletionType completionType) {
+    public static CodeCompletionHandlerBase createHandler(CompletionType completionType) {
         return createHandler(completionType, true, false, true);
     }
 
     public static CodeCompletionHandlerBase createHandler(
-        @Nonnull CompletionType completionType,
+        CompletionType completionType,
         boolean invokedExplicitly,
         boolean autopopup,
         boolean synchronous
@@ -94,12 +93,12 @@ public class CodeCompletionHandlerBase {
         return baseCodeCompletionAction.createHandler(completionType, invokedExplicitly, autopopup, synchronous);
     }
 
-    public CodeCompletionHandlerBase(@Nonnull CompletionType completionType) {
+    public CodeCompletionHandlerBase(CompletionType completionType) {
         this(completionType, true, false, true);
     }
 
     public CodeCompletionHandlerBase(
-        @Nonnull CompletionType completionType,
+        CompletionType completionType,
         boolean invokedExplicitly,
         boolean autopopup,
         boolean synchronous
@@ -123,18 +122,18 @@ public class CodeCompletionHandlerBase {
     }
 
     @RequiredUIAccess
-    public final void invokeCompletion(@Nonnull Project project, @Nonnull Editor editor, int time) {
+    public final void invokeCompletion(Project project, Editor editor, int time) {
         invokeCompletion(project, editor, time, false);
     }
 
     @RequiredUIAccess
-    public final void invokeCompletion(@Nonnull Project project, @Nonnull Editor editor, int time, boolean hasModifiers) {
+    public final void invokeCompletion(Project project, Editor editor, int time, boolean hasModifiers) {
         clearCaretMarkers(editor);
         invokeCompletion(project, editor, time, hasModifiers, editor.getCaretModel().getPrimaryCaret());
     }
 
     @RequiredUIAccess
-    private void invokeCompletion(@Nonnull Project project, @Nonnull Editor editor, int time, boolean hasModifiers, @Nonnull Caret caret) {
+    private void invokeCompletion(Project project, Editor editor, int time, boolean hasModifiers, Caret caret) {
         markCaretAsProcessed(caret);
 
         if (invokedExplicitly) {
@@ -221,7 +220,7 @@ public class CodeCompletionHandlerBase {
         }
     }
 
-    @Nonnull
+    
     private LookupEx obtainLookup(Editor editor, Project project) {
         CompletionAssertions.checkEditorValid(editor);
         LookupEx existing = LookupManager.getActiveLookup(editor);
@@ -403,9 +402,9 @@ public class CodeCompletionHandlerBase {
     }
 
     private AutoCompletionDecision shouldAutoComplete(
-        @Nonnull CompletionProgressIndicator indicator,
-        @Nonnull List<LookupElement> items,
-        @Nonnull CompletionParameters parameters
+        CompletionProgressIndicator indicator,
+        List<LookupElement> items,
+        CompletionParameters parameters
     ) {
         if (!invokedExplicitly) {
             return AutoCompletionDecision.SHOW_LOOKUP;
@@ -526,7 +525,7 @@ public class CodeCompletionHandlerBase {
 
     protected void lookupItemSelected(
         CompletionProgressIndicator indicator,
-        @Nonnull LookupElement item,
+        LookupElement item,
         char completionChar,
         List<LookupElement> items
     ) {
@@ -616,10 +615,10 @@ public class CodeCompletionHandlerBase {
     }
 
     private static OffsetsInFile findInjectedOffsetsIfAny(
-        @Nonnull Caret caret,
+        Caret caret,
         boolean wasInjected,
-        @Nonnull OffsetsInFile topLevelOffsets,
-        @Nonnull Editor hostEditor
+        OffsetsInFile topLevelOffsets,
+        Editor hostEditor
     ) {
         if (!wasInjected) {
             return topLevelOffsets;
@@ -721,7 +720,7 @@ public class CodeCompletionHandlerBase {
         return context;
     }
 
-    @Nonnull
+    
     private static WatchingInsertionContext createInsertionContext(
         @Nullable Lookup lookup,
         LookupElement item,
@@ -834,17 +833,17 @@ public class CodeCompletionHandlerBase {
         };
     }
 
-    private static void clearCaretMarkers(@Nonnull Editor editor) {
+    private static void clearCaretMarkers(Editor editor) {
         for (Caret caret : editor.getCaretModel().getAllCarets()) {
             caret.putUserData(CARET_PROCESSED, null);
         }
     }
 
-    private static void markCaretAsProcessed(@Nonnull Caret caret) {
+    private static void markCaretAsProcessed(Caret caret) {
         caret.putUserData(CARET_PROCESSED, Boolean.TRUE);
     }
 
-    private static Caret getNextCaretToProcess(@Nonnull Editor editor) {
+    private static Caret getNextCaretToProcess(Editor editor) {
         for (Caret caret : editor.getCaretModel().getAllCarets()) {
             if (caret.getUserData(CARET_PROCESSED) == null) {
                 return caret;
@@ -854,7 +853,7 @@ public class CodeCompletionHandlerBase {
     }
 
     @Nullable
-    private <T> T withTimeout(long maxDurationMillis, @Nonnull Supplier<T> task) {
+    private <T> T withTimeout(long maxDurationMillis, Supplier<T> task) {
         if (isTestingMode()) {
             return task.get();
         }

@@ -37,7 +37,6 @@ import consulo.ui.style.StandardColors;
 import consulo.ui.util.FormBuilder;
 import consulo.ui.ex.wizard.WizardStep;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.function.Consumer;
 
@@ -47,20 +46,20 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("sand2");
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.ClassInitializer;
   }
 
   @Override
-  public boolean canImport(@Nonnull File fileOrDirectory) {
+  public boolean canImport(File fileOrDirectory) {
     return new File(fileOrDirectory, "sand2.txt").exists();
   }
 
@@ -70,11 +69,11 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
   }
 
   @Override
-  public void buildSteps(@Nonnull Consumer<WizardStep<ModuleImportContext>> consumer, @Nonnull ModuleImportContext context) {
+  public void buildSteps(Consumer<WizardStep<ModuleImportContext>> consumer, ModuleImportContext context) {
     consumer.accept(new UnifiedProjectOrModuleNameStep<ModuleImportContext>(context) {
       @RequiredUIAccess
       @Override
-      protected void extend(@Nonnull FormBuilder builder, Disposable uiDisposable) {
+      protected void extend(FormBuilder builder, Disposable uiDisposable) {
         builder.addLabeled(LocalizeValue.localizeTODO("Test"), ColorBox.create(StandardColors.RED));
 
         builder.addBottom(ListBox.create("Test1", "Test2"));
@@ -83,9 +82,9 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
 
     consumer.accept(new WizardStep<ModuleImportContext>() {
       @RequiredUIAccess
-      @Nonnull
+      
       @Override
-      public Component getComponent(@Nonnull ModuleImportContext context, @Nonnull Disposable uiDisposable) {
+      public Component getComponent(ModuleImportContext context, Disposable uiDisposable) {
         return LabeledLayout.create(LocalizeValue.localizeTODO("Some Text"), TextBox.create("Test Value"));
       }
     });
@@ -93,7 +92,7 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
 
   @RequiredReadAction
   @Override
-  public void process(@Nonnull ModuleImportContext context, @Nonnull Project project, @Nonnull ModifiableModuleModel model, @Nonnull Consumer<Module> newModuleConsumer) {
+  public void process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
 
   }
 }

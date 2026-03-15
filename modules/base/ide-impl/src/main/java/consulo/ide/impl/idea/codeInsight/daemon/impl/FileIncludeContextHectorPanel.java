@@ -25,7 +25,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

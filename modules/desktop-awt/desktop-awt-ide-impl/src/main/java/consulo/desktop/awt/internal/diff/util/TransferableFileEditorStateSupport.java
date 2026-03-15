@@ -32,8 +32,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -41,22 +40,22 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class TransferableFileEditorStateSupport {
-    @Nonnull
+    
     private static final Key<Map<String, Map<String, String>>> TRANSFERABLE_FILE_EDITOR_STATE =
         Key.create("Diff.TransferableFileEditorState");
 
     private static final Predicate<BinaryEditorHolder> IS_SUPPORTED = holder -> getEditorState(holder.getEditor()) != null;
 
-    @Nonnull
+    
     private final DiffSettingsHolder.DiffSettings mySettings;
-    @Nonnull
+    
     private final List<BinaryEditorHolder> myHolders;
     private final boolean mySupported;
 
     public TransferableFileEditorStateSupport(
-        @Nonnull DiffSettingsHolder.DiffSettings settings,
-        @Nonnull List<BinaryEditorHolder> holders,
-        @Nonnull Disposable disposable
+        DiffSettingsHolder.DiffSettings settings,
+        List<BinaryEditorHolder> holders,
+        Disposable disposable
     ) {
         mySettings = settings;
         myHolders = holders;
@@ -76,7 +75,7 @@ public class TransferableFileEditorStateSupport {
         mySettings.setSyncBinaryEditorSettings(enabled);
     }
 
-    public void processContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
+    public void processContextHints(DiffRequest request, DiffContext context) {
         if (!isEnabled()) {
             return;
         }
@@ -90,7 +89,7 @@ public class TransferableFileEditorStateSupport {
         }
     }
 
-    public void updateContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
+    public void updateContextHints(DiffRequest request, DiffContext context) {
         if (!isEnabled()) {
             return;
         }
@@ -108,15 +107,15 @@ public class TransferableFileEditorStateSupport {
         }
     }
 
-    @Nonnull
+    
     public AnAction createToggleAction() {
         return new ToggleSynchronousEditorStatesAction(this);
     }
 
     private static void readContextData(
-        @Nonnull DiffContext context,
-        @Nonnull FileEditor editor,
-        @Nonnull TransferableFileEditorState state
+        DiffContext context,
+        FileEditor editor,
+        TransferableFileEditorState state
     ) {
         Map<String, Map<String, String>> map = context.getUserData(TRANSFERABLE_FILE_EDITOR_STATE);
         Map<String, String> options = map != null ? map.get(state.getEditorId()) : null;
@@ -128,7 +127,7 @@ public class TransferableFileEditorStateSupport {
         editor.setState(state);
     }
 
-    private static void writeContextData(@Nonnull DiffContext context, @Nonnull TransferableFileEditorState state) {
+    private static void writeContextData(DiffContext context, TransferableFileEditorState state) {
         Map<String, Map<String, String>> map = context.getUserData(TRANSFERABLE_FILE_EDITOR_STATE);
         if (map == null) {
             map = new HashMap<>();
@@ -139,22 +138,22 @@ public class TransferableFileEditorStateSupport {
     }
 
     @Nullable
-    private static TransferableFileEditorState getEditorState(@Nonnull FileEditor editor) {
+    private static TransferableFileEditorState getEditorState(FileEditor editor) {
         FileEditorState state = editor.getState(FileEditorStateLevel.FULL);
         return state instanceof TransferableFileEditorState transferableFileEditorState ? transferableFileEditorState : null;
     }
 
     private class MySynchronizer implements PropertyChangeListener {
-        @Nonnull
+        
         private final List<? extends FileEditor> myEditors;
 
         private boolean myDuringUpdate = false;
 
-        public MySynchronizer(@Nonnull List<BinaryEditorHolder> editors) {
+        public MySynchronizer(List<BinaryEditorHolder> editors) {
             myEditors = ContainerUtil.map(editors, BinaryEditorHolder::getEditor);
         }
 
-        public void install(@Nonnull Disposable disposable) {
+        public void install(Disposable disposable) {
             if (myEditors.size() < 2) {
                 return;
             }
@@ -194,7 +193,7 @@ public class TransferableFileEditorStateSupport {
             }
         }
 
-        private void updateEditor(@Nonnull FileEditor editor, @Nonnull String id, @Nonnull Map<String, String> options) {
+        private void updateEditor(FileEditor editor, String id, Map<String, String> options) {
             try {
                 myDuringUpdate = true;
                 TransferableFileEditorState state = getEditorState(editor);
@@ -210,10 +209,10 @@ public class TransferableFileEditorStateSupport {
     }
 
     private class ToggleSynchronousEditorStatesAction extends ToggleActionButton implements DumbAware {
-        @Nonnull
+        
         private final TransferableFileEditorStateSupport mySupport;
 
-        public ToggleSynchronousEditorStatesAction(@Nonnull TransferableFileEditorStateSupport support) {
+        public ToggleSynchronousEditorStatesAction(TransferableFileEditorStateSupport support) {
             super("Synchronize Editors Settings", PlatformIconGroup.actionsSyncpanels());
             mySupport = support;
         }

@@ -17,14 +17,13 @@ package consulo.execution.configuration.ui;
 
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
 
 public interface CompositeSettingsBuilder<Settings> {
-  @Nonnull
+  
   Collection<SettingsEditor<Settings>> getEditors();
 
-  @Nonnull
-  JComponent createCompoundEditor(@Nonnull Disposable disposable);
+  
+  JComponent createCompoundEditor(Disposable disposable);
 }

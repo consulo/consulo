@@ -19,7 +19,6 @@ import consulo.annotation.component.ActionImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsShowToolWindowTabAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Show.Local.Changes")
 public class VcsShowLocalChangesAction extends VcsShowToolWindowTabAction {
@@ -27,7 +26,7 @@ public class VcsShowLocalChangesAction extends VcsShowToolWindowTabAction {
         super(VcsLocalize.actionShowLocalChangesText());
     }
 
-    @Nonnull
+    
     @Override
     protected String getTabName() {
         return ChangesViewContentManager.LOCAL_CHANGES;

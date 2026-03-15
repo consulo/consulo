@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,37 +34,37 @@ import jakarta.annotation.Nullable;
 public interface ProjectStructureSelector {
   Key<ProjectStructureSelector> KEY = Key.create("project.structure.editor");
 
-  @Nonnull
+  
   @RequiredUIAccess
   AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus);
 
-  @Nonnull
+  
   @RequiredUIAccess
-  AsyncResult<Void> select(@Nonnull Sdk sdk, boolean requestFocus);
+  AsyncResult<Void> select(Sdk sdk, boolean requestFocus);
 
-  @Nonnull
+  
   @RequiredUIAccess
-  default AsyncResult<Void> select(@Nonnull Module module, boolean requestFocus) {
+  default AsyncResult<Void> select(Module module, boolean requestFocus) {
     return select(module.getName(), null, requestFocus);
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   AsyncResult<Void> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus);
 
-  @Nonnull
+  
   @RequiredUIAccess
-  AsyncResult<Void> select(@Nonnull LibraryOrderEntry libraryOrderEntry, boolean requestFocus);
+  AsyncResult<Void> select(LibraryOrderEntry libraryOrderEntry, boolean requestFocus);
 
-  @Nonnull
+  
   @RequiredUIAccess
-  AsyncResult<Void> selectOrderEntry(@Nonnull Module module, @Nullable OrderEntry orderEntry);
+  AsyncResult<Void> selectOrderEntry(Module module, @Nullable OrderEntry orderEntry);
 
-  @Nonnull
+  
   @RequiredUIAccess
-  AsyncResult<Void> selectProjectOrGlobalLibrary(@Nonnull Library library, boolean requestFocus);
+  AsyncResult<Void> selectProjectOrGlobalLibrary(Library library, boolean requestFocus);
 
-  @Nonnull
+  
   @RequiredUIAccess
   AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus);
 }

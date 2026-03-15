@@ -28,7 +28,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -37,10 +36,10 @@ import java.util.*;
  */
 @ExtensionImpl
 public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public List<? extends GotoRelatedItem> getItems(@Nonnull PsiElement context) {
+    public List<? extends GotoRelatedItem> getItems(PsiElement context) {
         List<PsiElement> parents = new ArrayList<>();
         PsiElement current = context;
         Set<Language> languages = new HashSet<>();

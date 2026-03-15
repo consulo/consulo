@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.tab.TabInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Map;
@@ -34,7 +33,7 @@ import java.util.Map;
  * @author Dennis.Ushakov
  */
 public class JBRunnerTabs extends JBEditorTabs {
-  public JBRunnerTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @Nonnull Disposable parent) {
+  public JBRunnerTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, Disposable parent) {
     super(project, actionManager, focusManager, parent);
   }
 

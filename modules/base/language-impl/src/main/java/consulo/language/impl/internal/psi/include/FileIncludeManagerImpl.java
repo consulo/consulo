@@ -27,8 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -117,8 +116,8 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
         }
     }
 
-    @Nonnull
-    private static Collection<String> getPossibleIncludeNames(@Nonnull PsiFile context, @Nonnull String originalName) {
+    
+    private static Collection<String> getPossibleIncludeNames(PsiFile context, String originalName) {
         Collection<String> names = new HashSet<>();
         names.add(originalName);
         for (FileIncludeProvider provider : FileIncludeProvider.EP_NAME.getExtensionList()) {
@@ -146,13 +145,13 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
 
     @Override
     @RequiredReadAction
-    public VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
+    public VirtualFile[] getIncludedFiles(VirtualFile file, boolean compileTimeOnly) {
         return getIncludedFiles(file, compileTimeOnly, false);
     }
 
     @Override
     @RequiredReadAction
-    public VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly, boolean recursively) {
+    public VirtualFile[] getIncludedFiles(VirtualFile file, boolean compileTimeOnly, boolean recursively) {
         if (file instanceof VirtualFileWithId) {
             return myIncludedHolder.getAllFiles(file, compileTimeOnly, recursively);
         }
@@ -163,17 +162,17 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
 
     @Override
     @RequiredReadAction
-    public VirtualFile[] getIncludingFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
+    public VirtualFile[] getIncludingFiles(VirtualFile file, boolean compileTimeOnly) {
         return myIncludingHolder.getAllFiles(file, compileTimeOnly, false);
     }
 
     @Override
-    public PsiFileSystemItem resolveFileInclude(@Nonnull FileIncludeInfo info, @Nonnull PsiFile context) {
+    public PsiFileSystemItem resolveFileInclude(FileIncludeInfo info, PsiFile context) {
         return doResolve(info, context);
     }
 
     @Nullable
-    private PsiFileSystemItem doResolve(@Nonnull FileIncludeInfo info, @Nonnull PsiFile context) {
+    private PsiFileSystemItem doResolve(FileIncludeInfo info, PsiFile context) {
         if (info instanceof FileIncludeInfoImpl fileIncludeInfo) {
             String id = fileIncludeInfo.providerId;
             FileIncludeProvider provider = id == null ? null : myProviderMap.get(id);
@@ -217,9 +216,9 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
             RUNTIME_KEY = Key.create(runtimeKey);
         }
 
-        @Nonnull
+        
         @RequiredReadAction
-        private VirtualFile[] getAllFiles(@Nonnull VirtualFile file, boolean compileTimeOnly, boolean recursively) {
+        private VirtualFile[] getAllFiles(VirtualFile file, boolean compileTimeOnly, boolean recursively) {
             if (recursively) {
                 Set<VirtualFile> result = new HashSet<>();
                 getAllFilesRecursively(file, compileTimeOnly, result);
@@ -229,7 +228,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
         }
 
         @RequiredReadAction
-        private void getAllFilesRecursively(@Nonnull VirtualFile file, boolean compileTimeOnly, Set<? super VirtualFile> result) {
+        private void getAllFilesRecursively(VirtualFile file, boolean compileTimeOnly, Set<? super VirtualFile> result) {
             if (!result.add(file)) {
                 return;
             }
@@ -242,7 +241,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
         }
 
         @RequiredReadAction
-        private VirtualFile[] getFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
+        private VirtualFile[] getFiles(VirtualFile file, boolean compileTimeOnly) {
             PsiFile psiFile = myPsiManager.findFile(file);
             if (psiFile == null) {
                 return VirtualFile.EMPTY_ARRAY;

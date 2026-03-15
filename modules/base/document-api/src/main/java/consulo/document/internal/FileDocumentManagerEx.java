@@ -20,7 +20,6 @@ import consulo.document.FileDocumentManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ public interface FileDocumentManagerEx extends FileDocumentManager {
     Key<Object> NOT_RELOADABLE_DOCUMENT_KEY = new Key<>("NOT_RELOADABLE_DOCUMENT_KEY");
     Key<Document> HARD_REF_TO_DOCUMENT_KEY = Key.create("HARD_REF_TO_DOCUMENT_KEY");
 
-    void registerDocument(@Nonnull Document document, @Nonnull VirtualFile virtualFile);
+    void registerDocument(Document document, VirtualFile virtualFile);
 
     @Override
     @RequiredUIAccess

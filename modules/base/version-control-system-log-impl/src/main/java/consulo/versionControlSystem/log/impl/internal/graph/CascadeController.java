@@ -20,22 +20,21 @@ import consulo.versionControlSystem.log.graph.PermanentGraphInfo;
 import consulo.versionControlSystem.log.graph.PrintElementWithGraphElement;
 import consulo.versionControlSystem.log.graph.LinearGraphController;
 import consulo.versionControlSystem.log.graph.LinearGraphUtils;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class CascadeController implements LinearGraphController {
   @Nullable private final CascadeController myDelegateController;
-  @Nonnull
+  
   protected final PermanentGraphInfo myPermanentGraphInfo;
 
-  protected CascadeController(@Nullable CascadeController delegateController, @Nonnull PermanentGraphInfo permanentGraphInfo) {
+  protected CascadeController(@Nullable CascadeController delegateController, PermanentGraphInfo permanentGraphInfo) {
     myDelegateController = delegateController;
     myPermanentGraphInfo = permanentGraphInfo;
   }
 
-  @Nonnull
+  
   @Override
-  public LinearGraphAnswer performLinearGraphAction(@Nonnull LinearGraphAction action) {
+  public LinearGraphAnswer performLinearGraphAction(LinearGraphAction action) {
     LinearGraphAnswer answer = performAction(action);
     if (answer == null && myDelegateController != null) {
       answer = myDelegateController.performLinearGraphAction(
@@ -55,25 +54,25 @@ public abstract class CascadeController implements LinearGraphController {
   }
 
   @Nullable
-  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(GraphElement graphElement) {
     return graphElement;
   }
 
-  @Nonnull
+  
   protected CascadeController getDelegateController() {
     assert myDelegateController != null;
     return myDelegateController;
   }
 
-  @Nonnull
+  
   public PermanentGraphInfo getPermanentGraphInfo() {
     return myPermanentGraphInfo;
   }
 
-  @Nonnull
-  protected abstract LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer);
+  
+  protected abstract LinearGraphAnswer delegateGraphChanged(LinearGraphAnswer delegateAnswer);
 
   // null mean that this action must be performed by delegateGraphController
   @Nullable
-  protected abstract LinearGraphAnswer performAction(@Nonnull LinearGraphAction action);
+  protected abstract LinearGraphAnswer performAction(LinearGraphAction action);
 }
