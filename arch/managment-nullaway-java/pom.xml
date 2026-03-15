@@ -35,17 +35,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>consulo.maven</groupId>
-                <artifactId>notnull-maven-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>production</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
