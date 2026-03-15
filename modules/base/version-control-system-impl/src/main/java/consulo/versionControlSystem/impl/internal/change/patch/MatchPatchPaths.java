@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.impl.internal.change.patch;
 
-import consulo.application.util.function.Computable;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -38,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static consulo.versionControlSystem.impl.internal.change.patch.AutoMatchStrategy.processStipUp;
 
@@ -202,7 +202,7 @@ public class MatchPatchPaths {
         String fileName
     ) {
         Collection<VirtualFile> files = myProject.getApplication()
-            .runReadAction((Computable<Collection<VirtualFile>>) () -> directoryDetector.findFiles(fileName));
+            .runReadAction((Supplier<Collection<VirtualFile>>) () -> directoryDetector.findFiles(fileName));
         File shelfResourcesDirectory = ShelveChangesManagerImpl.getInstance(myProject).getShelfResourcesDirectory();
         return ContainerUtil.filter(files, file -> !FileUtil.isAncestor(shelfResourcesDirectory, VirtualFileUtil.virtualToIoFile(file), false));
     }

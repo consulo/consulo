@@ -220,7 +220,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
             }
 
             @Override
-            public void set(Charset value) {
+            public void accept(Charset value) {
                 myPropsCharset = value;
             }
         });

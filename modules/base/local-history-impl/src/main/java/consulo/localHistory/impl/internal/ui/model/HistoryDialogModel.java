@@ -16,8 +16,10 @@
 
 package consulo.localHistory.impl.internal.ui.model;
 
-import consulo.application.util.function.Computable;
-import consulo.localHistory.impl.internal.*;
+import consulo.localHistory.impl.internal.IdeaGateway;
+import consulo.localHistory.impl.internal.LocalHistoryFacade;
+import consulo.localHistory.impl.internal.Reverter;
+import consulo.localHistory.impl.internal.RevisionsCollector;
 import consulo.localHistory.impl.internal.revision.Difference;
 import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.tree.Entry;
@@ -38,6 +40,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class HistoryDialogModel {
   protected final Project myProject;
@@ -79,7 +82,7 @@ public abstract class HistoryDialogModel {
   }
 
   protected Pair<Revision, List<RevisionItem>> calcRevisionsCache() {
-    return myProject.getApplication().runReadAction((Computable<Pair<Revision,List<RevisionItem>>>)()-> {
+    return myProject.getApplication().runReadAction((Supplier<Pair<Revision,List<RevisionItem>>>)()-> {
       myGateway.registerUnsavedDocuments(myVcs);
       String path = myFile.getPath();
       RootEntry root = myGateway.createTransientRootEntry();

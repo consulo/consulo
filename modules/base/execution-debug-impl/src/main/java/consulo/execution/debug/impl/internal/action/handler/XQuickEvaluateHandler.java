@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.util.TextRange;
@@ -60,20 +59,18 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
     }
 
     @Override
-    public AbstractValueHint createValueHint(final Project project, final Editor editor, final Point point, final ValueHintType type) {
-        final XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
+    public AbstractValueHint createValueHint(Project project, Editor editor, Point point, ValueHintType type) {
+        XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
         if (session == null) {
             return null;
         }
 
-        final XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
+        XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
         if (evaluator == null) {
             return null;
         }
 
-        return PsiDocumentManager.getInstance(project).commitAndRunReadAction(new Computable<XValueHint>() {
-            @Override
-            public XValueHint compute() {
+        return PsiDocumentManager.getInstance(project).commitAndRunReadAction(() -> {
                 int offset = AbstractValueHint.calculateOffset(editor, point);
                 ExpressionInfo expressionInfo = getExpressionInfo(evaluator, project, type, editor, offset);
                 if (expressionInfo == null) {
@@ -88,7 +85,6 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
                 }
 
                 return new XValueHint(project, editor, point, type, expressionInfo, evaluator, session);
-            }
         });
     }
 

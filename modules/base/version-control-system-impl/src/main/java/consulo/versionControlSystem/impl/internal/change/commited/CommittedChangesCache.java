@@ -20,8 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
@@ -616,19 +616,15 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
       changeList.getChanges();
     }
     final Ref<IOException> ref = new Ref<>();
-    List<CommittedChangeList> savedChanges =
-      ApplicationManager.getApplication().runReadAction(new Computable<List<CommittedChangeList>>() {
-        @Override
-        public List<CommittedChangeList> compute() {
-          try {
-            return cacheFile.writeChanges(newChanges);    // skip duplicates;
-          }
-          catch (IOException e) {
-            ref.set(e);
-            return null;
-          }
-        }
-      });
+    List<CommittedChangeList> savedChanges = ReadAction.compute(() -> {
+      try {
+        return cacheFile.writeChanges(newChanges);    // skip duplicates;
+      }
+      catch (IOException e) {
+        ref.set(e);
+        return null;
+      }
+    });
     if (!ref.isNull()) {
       throw ref.get();
     }

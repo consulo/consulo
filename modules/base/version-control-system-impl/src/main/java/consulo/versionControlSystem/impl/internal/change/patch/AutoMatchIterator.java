@@ -15,12 +15,9 @@
  */
 package consulo.versionControlSystem.impl.internal.change.patch;
 
-import consulo.application.ApplicationManager;
-import consulo.versionControlSystem.change.patch.TextFilePatch;
+import consulo.application.ReadAction;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
-import consulo.versionControlSystem.impl.internal.change.patch.AutoMatchStrategy;
-import consulo.versionControlSystem.impl.internal.change.patch.TextFilePatchInProgress;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
@@ -49,12 +46,8 @@ public class AutoMatchIterator {
         creations.add(patch);
         continue;
       }
-      final String fileName = patch.getBeforeFileName();
-      Collection<VirtualFile> files = ApplicationManager.getApplication().runReadAction(new Computable<Collection<VirtualFile>>() {
-        public Collection<VirtualFile> compute() {
-          return directoryDetector.findFiles(fileName);
-        }
-      });
+      String fileName = patch.getBeforeFileName();
+      Collection<VirtualFile> files = ReadAction.compute(() -> directoryDetector.findFiles(fileName));
       for (AutoMatchStrategy strategy : myStrategies) {
         strategy.acceptPatch(patch, files);
       }

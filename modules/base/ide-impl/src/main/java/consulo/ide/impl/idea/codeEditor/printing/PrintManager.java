@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.SelectionModel;
@@ -240,7 +239,7 @@ class PrintManager {
   }
 
   public static TextPainter initTextPainter(PsiFile psiFile, Editor editor) {
-    return Application.get().runReadAction((Computable<TextPainter>) () -> doInitTextPainter(psiFile, editor));
+    return ReadAction.compute(() -> doInitTextPainter(psiFile, editor));
   }
 
   private static TextPainter doInitTextPainter(PsiFile psiFile, Editor editor) {

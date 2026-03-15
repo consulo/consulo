@@ -16,18 +16,16 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiManager;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
@@ -46,27 +44,15 @@ public class DirectoryUrl extends AbstractUrl {
   }
 
   @Override
-  public Object[] createPath(final Project project) {
+  public Object[] createPath(Project project) {
     if (moduleName != null) {
-      Module module = ApplicationManager.getApplication().runReadAction(new Computable<Module>() {
-        @Nullable
-        @Override
-        public Module compute() {
-          return ModuleManager.getInstance(project).findModuleByName(moduleName);
-        }
-      });
+      Module module = ReadAction.compute(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
       if (module == null) return null;
     }
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
-    final VirtualFile file = virtualFileManager.findFileByUrl(url);
+    VirtualFile file = virtualFileManager.findFileByUrl(url);
     if (file == null) return null;
-    PsiDirectory directory = ApplicationManager.getApplication().runReadAction(new Computable<PsiDirectory>() {
-      @Nullable
-      @Override
-      public PsiDirectory compute() {
-        return PsiManager.getInstance(project).findDirectory(file);
-      }
-    });
+    PsiDirectory directory = ReadAction.compute(() -> PsiManager.getInstance(project).findDirectory(file));
     if (directory == null) return null;
     return new Object[]{directory};
   }

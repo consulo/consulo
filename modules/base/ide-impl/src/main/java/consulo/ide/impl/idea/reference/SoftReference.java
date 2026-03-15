@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.reference;
 
-import consulo.ide.impl.idea.openapi.util.Getter;
-
 import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
+import java.util.function.Supplier;
 
 /**
  * The class is necessary to debug memory allocations via soft references. All IDEA classes should use this SoftReference
@@ -30,7 +29,7 @@ import java.lang.ref.ReferenceQueue;
  */
 @SuppressWarnings("ClassNameSameAsAncestorName")
 @Deprecated
-public class SoftReference<T> extends consulo.util.lang.ref.SoftReference<T> implements Getter<T> {
+public class SoftReference<T> extends consulo.util.lang.ref.SoftReference<T> implements Supplier<T> {
   public SoftReference(T referent) {
     super(referent);
   }
@@ -45,7 +44,7 @@ public class SoftReference<T> extends consulo.util.lang.ref.SoftReference<T> imp
   }
 
   @Nullable
-  public static <T> T deref(@Nullable Getter<T> ref) {
+  public static <T> T deref(@Nullable Supplier<T> ref) {
     return consulo.util.lang.ref.SoftReference.deref(ref);
   }
 }

@@ -7,7 +7,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.SequentialTask;
-import consulo.application.util.function.Computable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import static consulo.language.codeStyle.impl.internal.formatting.FormatProcessor.FormatOptions;
 
@@ -628,10 +628,10 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
 
     @Nullable
-    public <T> T runWithFormattingDisabled(Computable<T> runnable) {
+    public <T> T runWithFormattingDisabled(Supplier<T> runnable) {
         disableFormatting();
         try {
-            return runnable.compute();
+            return runnable.get();
         }
         finally {
             enableFormatting();

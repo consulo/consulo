@@ -15,8 +15,7 @@
  */
 package consulo.versionControlSystem.history;
 
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
+import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.awt.Messages;
@@ -57,12 +56,7 @@ public class CurrentRevision implements VcsFileRevision {
   @Override
   public byte[] getContent() throws IOException, VcsException {
     try {
-      Document document = ApplicationManager.getApplication().runReadAction(new Computable<Document>() {
-        @Override
-        public Document compute() {
-          return FileDocumentManager.getInstance().getDocument(myFile);
-        }
-      });
+      Document document = ReadAction.compute(() -> FileDocumentManager.getInstance().getDocument(myFile));
       if (document != null) {
         return document.getText().getBytes(myFile.getCharset().name());
       }

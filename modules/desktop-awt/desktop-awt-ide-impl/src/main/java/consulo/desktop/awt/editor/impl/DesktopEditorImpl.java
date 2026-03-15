@@ -9,7 +9,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Dumpable;
 import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -138,6 +137,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public final class DesktopEditorImpl extends CodeEditorBase
     implements RealEditorWithEditorView, DesktopAWTEditor, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
@@ -2902,7 +2902,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return execute(() -> myDelegate.getSelectedText(attributes));
         }
 
-        private static <T> T execute(Computable<T> computable) {
+        private static <T> T execute(Supplier<T> computable) {
             return UIUtil.invokeAndWaitIfNeeded(computable);
         }
     }

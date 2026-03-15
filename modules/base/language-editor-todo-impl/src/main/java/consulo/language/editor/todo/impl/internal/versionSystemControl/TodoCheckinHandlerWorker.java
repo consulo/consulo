@@ -16,9 +16,9 @@
 package consulo.language.editor.todo.impl.internal.versionSystemControl;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.application.util.function.Computable;
 import consulo.diff.old.*;
 import consulo.document.util.TextRange;
 import consulo.language.editor.todo.TodoFilter;
@@ -106,25 +106,14 @@ public class TodoCheckinHandlerWorker {
             myPsiFile = null;
 
             if (afterFile.isValid()) {
-                myPsiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
-                    @Override
-                    public PsiFile compute() {
-                        return myPsiManager.findFile(afterFile);
-                    }
-                });
+                myPsiFile = ReadAction.compute(() -> myPsiManager.findFile(afterFile));
             }
             if (myPsiFile == null) {
                 mySkipped.add(Pair.create(change.getAfterRevision().getFile(), ourInvalidFile));
                 continue;
             }
 
-            myNewTodoItems = new ArrayList<TodoItem>(Arrays.asList(
-                ApplicationManager.getApplication().runReadAction(new Computable<TodoItem[]>() {
-                    @Override
-                    public TodoItem[] compute() {
-                        return mySearchHelper.findTodoItems(myPsiFile);
-                    }
-                })));
+            myNewTodoItems = new ArrayList<>(Arrays.asList(ReadAction.compute(() -> mySearchHelper.findTodoItems(myPsiFile))));
             applyFilterAndRemoveDuplicates(myNewTodoItems, myTodoFilter);
             if (change.getBeforeRevision() == null) {
                 // take just all todos

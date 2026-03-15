@@ -15,14 +15,14 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
-
+import consulo.project.ui.notification.NotificationType;
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author Alexander Lobas
@@ -56,7 +56,7 @@ public class BalloonLayoutData {
   public Runnable doLayout;
 
   public boolean showSettingButton = true;
-  public Computable<Boolean> showActions;
+  public Supplier<Boolean> showActions;
 
   public Project project;
 

@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.util.StringSearcher;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributesKey;
@@ -40,7 +38,6 @@ import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ui.ex.awt.ReplacePromptDialog;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -70,6 +67,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.ReplacePromptDialog;
 import consulo.usage.SyntaxHighlighterOverEditorHighlighter;
 import consulo.usage.UsageViewManager;
 import consulo.usage.util.ChunkExtractor;
@@ -611,7 +609,7 @@ public class FindManagerImpl extends FindManager {
                 Set<Language> relevantLanguages;
                 if (lang != null) {
                     Language finalLang = lang;
-                    relevantLanguages = Application.get().runReadAction((Computable<Set<Language>>)() -> {
+                    relevantLanguages = ReadAction.compute(() -> {
                         Set<Language> result = new HashSet<>();
 
                         FileViewProvider viewProvider = PsiManager.getInstance(myProject).findViewProvider(file);
