@@ -46,6 +46,7 @@ public class Disposer {
     return ourInternal.isDisposed(disposable);
   }
 
+  @Nullable
   public static Throwable getDisposalTrace(Disposable disposable) {
     return ourInternal.getDisposalTrace(disposable);
   }

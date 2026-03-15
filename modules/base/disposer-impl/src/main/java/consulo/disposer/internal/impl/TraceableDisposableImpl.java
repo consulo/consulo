@@ -19,14 +19,14 @@ import consulo.disposer.TraceableDisposable;
 import consulo.disposer.internal.impl.objectTree.ThrowableInterner;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Traces creation and disposal by storing corresponding stacktraces.
@@ -34,7 +34,9 @@ import java.util.List;
  * In kill() it saves disposal stacktrace
  */
 public class TraceableDisposableImpl implements TraceableDisposable {
+  @Nullable
   private final Throwable CREATE_TRACE;
+  @Nullable
   private Throwable KILL_TRACE;
 
   public TraceableDisposableImpl(boolean debug) {
@@ -49,7 +51,7 @@ public class TraceableDisposableImpl implements TraceableDisposable {
   }
 
   @Override
-  public void killExceptionally(@Nonnull Throwable throwable) {
+  public void killExceptionally(Throwable throwable) {
     if (CREATE_TRACE != null) {
       KILL_TRACE = throwable;
     }
@@ -59,7 +61,7 @@ public class TraceableDisposableImpl implements TraceableDisposable {
    * Call when object is not disposed while it should
    */
   @Override
-  public void throwObjectNotDisposedError(@Nonnull String msg) {
+  public void throwObjectNotDisposedError(String msg) {
     throw new ObjectNotDisposedException(msg);
   }
 
@@ -73,7 +75,7 @@ public class TraceableDisposableImpl implements TraceableDisposable {
     @SuppressWarnings("HardCodedStringLiteral")
     @Override
     public void printStackTrace(PrintWriter s) {
-      List<StackTraceElement> stack = new ArrayList<StackTraceElement>(Arrays.asList(CREATE_TRACE.getStackTrace()));
+      List<StackTraceElement> stack = new ArrayList<>(Arrays.asList(Objects.requireNonNull(CREATE_TRACE).getStackTrace()));
       stack.remove(0); // this line is useless it stack
       s.write(ObjectNotDisposedException.class.getCanonicalName() + ": See stack trace responsible for creation of unreleased object below \n\tat " + StringUtil.join(stack, "\n\tat "));
     }
@@ -88,12 +90,12 @@ public class TraceableDisposableImpl implements TraceableDisposable {
   }
 
   private abstract class AbstractDisposalException extends RuntimeException {
-    protected AbstractDisposalException(String message) {
+    protected AbstractDisposalException(@Nullable String message) {
       super(message);
     }
 
     @Override
-    public void printStackTrace(@Nonnull PrintStream s) {
+    public void printStackTrace(PrintStream s) {
       //noinspection IOResourceOpenedButNotSafelyClosed
       PrintWriter writer = new PrintWriter(s);
       printStackTrace(writer);
@@ -123,7 +125,6 @@ public class TraceableDisposableImpl implements TraceableDisposable {
   }
 
   @Override
-  @Nonnull
   public String getStackTrace() {
     StringWriter out = new StringWriter();
     new DisposalException("").printStackTrace(new PrintWriter(out));

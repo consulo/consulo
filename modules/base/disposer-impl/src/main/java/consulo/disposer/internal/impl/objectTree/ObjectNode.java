@@ -5,8 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +16,13 @@ final class ObjectNode {
 
   private final ObjectTree myTree;
 
-  private ObjectNode myParent; // guarded by myTree.treeLock
+  private @Nullable ObjectNode myParent; // guarded by myTree.treeLock
   private final Disposable myObject;
 
-  private List<ObjectNode> myChildren; // guarded by myTree.treeLock
-  private final Throwable myTrace;
+  private @Nullable List<ObjectNode> myChildren; // guarded by myTree.treeLock
+  private final @Nullable Throwable myTrace;
 
-  ObjectNode(@Nonnull ObjectTree tree, @Nullable ObjectNode parentNode, @Nonnull Disposable object) {
+  ObjectNode(ObjectTree tree, @Nullable ObjectNode parentNode, Disposable object) {
     myTree = tree;
     myParent = parentNode;
     myObject = object;
@@ -31,7 +30,7 @@ final class ObjectNode {
     myTrace = parentNode == null && Disposer.isDebugMode() ? ThrowableInterner.intern(new Throwable()) : null;
   }
 
-  void addChild(@Nonnull ObjectNode child) {
+  void addChild(ObjectNode child) {
     List<ObjectNode> children = myChildren;
     if (children == null) {
       myChildren = new ArrayList<>(List.of(child));
@@ -42,7 +41,7 @@ final class ObjectNode {
     child.myParent = this;
   }
 
-  void removeChild(@Nonnull ObjectNode child) {
+  void removeChild(ObjectNode child) {
     List<ObjectNode> children = myChildren;
     if (children != null) {
       // optimisation: iterate backwards
@@ -57,13 +56,13 @@ final class ObjectNode {
     child.myParent = null;
   }
 
-  ObjectNode getParent() {
+  @Nullable ObjectNode getParent() {
     synchronized (myTree.treeLock) {
       return myParent;
     }
   }
 
-  void execute(@Nonnull List<? super Throwable> exceptions) {
+  void execute(List<? super Throwable> exceptions) {
     ObjectTree.executeActionWithRecursiveGuard(this, myTree.getNodesInExecution(), each -> {
       if (myTree.getDisposalInfo(myObject) != null) return; // already disposed. may happen when someone does `register(obj, ()->Disposer.dispose(t));` abomination
       try {
@@ -116,7 +115,6 @@ final class ObjectNode {
     }
   }
 
-  @Nonnull
   Disposable getObject() {
     return myObject;
   }
@@ -126,11 +124,11 @@ final class ObjectNode {
     return "Node: " + myObject;
   }
 
-  Throwable getTrace() {
+  @Nullable Throwable getTrace() {
     return myTrace;
   }
 
-  void assertNoReferencesKept(@Nonnull Disposable aDisposable) {
+  void assertNoReferencesKept(Disposable aDisposable) {
     assert getObject() != aDisposable;
     if (myChildren != null) {
       for (ObjectNode node : myChildren) {
@@ -139,7 +137,7 @@ final class ObjectNode {
     }
   }
 
-  <D extends Disposable> D findChildEqualTo(@Nonnull D object) {
+  <D extends Disposable> @Nullable D findChildEqualTo(D object) {
     List<ObjectNode> children = myChildren;
     if (children != null) {
       for (ObjectNode node : children) {

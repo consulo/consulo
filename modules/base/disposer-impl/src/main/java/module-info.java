@@ -1,7 +1,9 @@
+import org.jspecify.annotations.NullMarked;
 /**
  * @author VISTALL
  * @since 04/02/2022
  */
+@NullMarked
 module consulo.disposer.impl {
   requires transitive consulo.disposer.api;
   requires transitive consulo.util.lang;

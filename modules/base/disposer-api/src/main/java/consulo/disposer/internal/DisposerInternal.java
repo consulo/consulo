@@ -39,8 +39,10 @@ public abstract class DisposerInternal {
 
   public abstract TraceableDisposable newTraceDisposable(boolean debug);
 
+  @Nullable
   public abstract Disposable get(String key);
 
+  @Nullable
   public abstract Throwable getDisposalTrace(Disposable disposable);
 
   public abstract boolean isDebugMode();

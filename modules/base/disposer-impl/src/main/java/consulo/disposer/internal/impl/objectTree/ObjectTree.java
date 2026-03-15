@@ -8,9 +8,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ControlFlowException;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public final class ObjectTree {
 
   final Object treeLock = new Object();
 
-  private ObjectNode getNode(@Nonnull Disposable object) {
+  private @Nullable ObjectNode getNode(Disposable object) {
     return myObject2NodeMap.get(object);
   }
 
@@ -39,7 +38,7 @@ public final class ObjectTree {
    * @param object
    * @param node null means remove
    */
-  void putNode(@Nonnull Disposable object, @Nullable ObjectNode node) {
+  void putNode(Disposable object, @Nullable ObjectNode node) {
     if (node == null) {
       myObject2NodeMap.remove(object);
     }
@@ -48,12 +47,11 @@ public final class ObjectTree {
     }
   }
 
-  @Nonnull
   public final List<ObjectNode> getNodesInExecution() {
     return myExecutedNodes;
   }
 
-  public final void register(@Nonnull Disposable parent, @Nonnull Disposable child) {
+  public final void register(Disposable parent, Disposable child) {
     if (parent == child) throw new IllegalArgumentException("Cannot register to itself: " + parent);
     synchronized (treeLock) {
       Object wasDisposed = getDisposalInfo(parent);
@@ -88,13 +86,13 @@ public final class ObjectTree {
     }
   }
 
-  public Object getDisposalInfo(@Nonnull Disposable object) {
+  public @Nullable Object getDisposalInfo(Disposable object) {
     synchronized (treeLock) {
       return myDisposedObjects.get(object);
     }
   }
 
-  private static void checkWasNotAddedAlready(@Nonnull ObjectNode childNode, @Nonnull ObjectNode parentNode) {
+  private static void checkWasNotAddedAlready(ObjectNode childNode, ObjectNode parentNode) {
     for (ObjectNode node = childNode; node != null; node = node.getParent()) {
       if (node == parentNode) {
         throw new IllegalArgumentException("'" + childNode.getObject() + "' was already added as a child of '" + parentNode.getObject() + "'");
@@ -102,8 +100,7 @@ public final class ObjectTree {
     }
   }
 
-  @Nonnull
-  private ObjectNode createNodeFor(@Nonnull Disposable object, @Nullable ObjectNode parentNode) {
+  private ObjectNode createNodeFor(Disposable object, @Nullable ObjectNode parentNode) {
     ObjectNode newNode = new ObjectNode(this, parentNode, object);
     if (parentNode == null) {
       myRootObjects.add(object);
@@ -112,7 +109,7 @@ public final class ObjectTree {
     return newNode;
   }
 
-  public final void executeAll(@Nonnull Disposable object, boolean processUnregistered) {
+  public final void executeAll(Disposable object, boolean processUnregistered) {
     ObjectNode node;
     synchronized (treeLock) {
       node = getNode(object);
@@ -147,7 +144,7 @@ public final class ObjectTree {
     }
   }
 
-  private static void handleExceptions(@Nonnull List<? extends Throwable> exceptions) {
+  private static void handleExceptions(List<? extends Throwable> exceptions) {
     if (!exceptions.isEmpty()) {
       for (Throwable exception : exceptions) {
         if (!(exception instanceof ControlFlowException)) {
@@ -162,7 +159,7 @@ public final class ObjectTree {
     }
   }
 
-  public boolean isDisposing(@Nonnull Disposable disposable) {
+  public boolean isDisposing(Disposable disposable) {
     List<ObjectNode> guard = getNodesInExecution();
     //noinspection SynchronizationOnLocalVariableOrMethodParameter
     synchronized (guard) {
@@ -173,7 +170,7 @@ public final class ObjectTree {
     return false;
   }
 
-  static <T> void executeActionWithRecursiveGuard(@Nonnull T object, @Nonnull List<T> recursiveGuard, @Nonnull Consumer<? super T> action) {
+  static <T> void executeActionWithRecursiveGuard(T object, List<T> recursiveGuard, Consumer<? super T> action) {
     //noinspection SynchronizationOnLocalVariableOrMethodParameter
     synchronized (recursiveGuard) {
       if (ArrayUtil.indexOf(recursiveGuard, object, ContainerUtil.identityStrategy()) != -1) return;
@@ -193,11 +190,11 @@ public final class ObjectTree {
     }
   }
 
-  private void executeUnregistered(@Nonnull Disposable disposable) {
+  private void executeUnregistered(Disposable disposable) {
     executeActionWithRecursiveGuard(disposable, myExecutedUnregisteredObjects, Disposable::dispose);
   }
 
-  public void assertNoReferenceKeptInTree(@Nonnull Disposable disposable) {
+  public void assertNoReferenceKeptInTree(Disposable disposable) {
     synchronized (treeLock) {
       for (Map.Entry<Disposable, ObjectNode> entry : myObject2NodeMap.entrySet()) {
         Disposable key = entry.getKey();
@@ -208,7 +205,7 @@ public final class ObjectTree {
     }
   }
 
-  void removeRootObject(@Nonnull Disposable object) {
+  void removeRootObject(Disposable object) {
     myRootObjects.remove(object);
   }
 
@@ -232,12 +229,11 @@ public final class ObjectTree {
     }
   }
 
-  @Nonnull
   private static Logger getLogger() {
     return Logger.getInstance(ObjectTree.class);
   }
 
-  void rememberDisposedTrace(@Nonnull Disposable object) {
+  void rememberDisposedTrace(Disposable object) {
     synchronized (treeLock) {
       Throwable trace = ourTopmostDisposeTrace.get();
       myDisposedObjects.put(object, trace != null ? trace : Boolean.TRUE);
@@ -245,7 +241,7 @@ public final class ObjectTree {
   }
 
   @Nullable
-  public <D extends Disposable> D findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull D object) {
+  public <D extends Disposable> D findRegisteredObject(Disposable parentDisposable, D object) {
     synchronized (treeLock) {
       ObjectNode parentNode = getNode(parentDisposable);
       if (parentNode == null) return null;
@@ -253,7 +249,7 @@ public final class ObjectTree {
     }
   }
 
-  public boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+  public boolean tryRegister(Disposable parent, Disposable child) {
     synchronized (treeLock) {
       if (isDisposed(parent)) {
         return false;
@@ -263,7 +259,7 @@ public final class ObjectTree {
     }
   }
 
-  public boolean isDisposed(@Nonnull Disposable object) {
+  public boolean isDisposed(Disposable object) {
     synchronized (treeLock) {
       return myDisposedObjects.get(object) != null;
     }

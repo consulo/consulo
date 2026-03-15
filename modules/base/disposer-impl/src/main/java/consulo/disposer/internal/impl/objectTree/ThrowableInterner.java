@@ -6,7 +6,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.interner.Interner;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
@@ -25,7 +25,9 @@ import java.util.function.Function;
 public class ThrowableInterner {
   private static final Interner<Throwable> ourTraceInterner = Interner.createWeakInterner(new HashingStrategy<Throwable>() {
     @Override
-    public int hashCode(Throwable throwable) {
+    public int hashCode(@Nullable Throwable throwable) {
+      Objects.requireNonNull(throwable);
+
       String message = throwable.getMessage();
       if (message != null) {
         return message.hashCode();
@@ -39,7 +41,7 @@ public class ThrowableInterner {
     }
 
     @Override
-    public boolean equals(Throwable o1, Throwable o2) {
+    public boolean equals(@Nullable Throwable o1, @Nullable Throwable o2) {
       if (o1 == o2) return true;
       if (o1 == null || o2 == null) return false;
 
@@ -55,14 +57,13 @@ public class ThrowableInterner {
     }
   });
 
-  private static Function<Throwable, Object> ourBacktraceAccess = ThrowableHacking.getBacktraceAccess();
+  private static @Nullable Function<Throwable, Object> ourBacktraceAccess = ThrowableHacking.getBacktraceAccess();
 
-  private static Object[] getBacktrace(@Nonnull Throwable throwable) {
+  private static Object @Nullable [] getBacktrace(Throwable throwable) {
     return ourBacktraceAccess == null ? null : (Object[])ourBacktraceAccess.apply(throwable);
   }
 
-  @Nonnull
-  public static Throwable intern(@Nonnull Throwable throwable) {
+  public static Throwable intern(Throwable throwable) {
     return getBacktrace(throwable) == null ? throwable : ourTraceInterner.intern(throwable);
   }
 }

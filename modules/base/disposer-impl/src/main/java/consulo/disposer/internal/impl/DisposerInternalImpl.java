@@ -25,8 +25,7 @@ import consulo.disposer.util.DisposableList;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 public class DisposerInternalImpl extends DisposerInternal {
@@ -46,12 +45,10 @@ public class DisposerInternalImpl extends DisposerInternal {
 
   private static boolean ourDebugMode;
 
-  @Nonnull
   public static Disposable newDisposable() {
     return newDisposable(null);
   }
 
-  @Nonnull
   public static Disposable newDisposable(@Nullable final String debugName) {
     return new Disposable() {
       @Override
@@ -65,12 +62,12 @@ public class DisposerInternalImpl extends DisposerInternal {
     };
   }
 
-  public void register(@Nonnull Disposable parent, @Nonnull Disposable child) {
+  public void register(Disposable parent, Disposable child) {
     register(parent, child, null);
   }
 
   @Override
-  public void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable String key) {
+  public void register(Disposable parent, Disposable child, @Nullable String key) {
     DisposerChecker.checkRegister(parent, child);
 
     myTree.register(parent, child);
@@ -85,31 +82,33 @@ public class DisposerInternalImpl extends DisposerInternal {
   }
 
   @Override
-  public boolean isDisposed(@Nonnull Disposable disposable) {
+  public boolean isDisposed(Disposable disposable) {
     return myTree.isDisposed(disposable);
   }
 
   @Override
-  public boolean isDisposing(@Nonnull Disposable disposable) {
+  public boolean isDisposing(Disposable disposable) {
     return myTree.isDisposing(disposable);
   }
 
   @Override
-  public Disposable get(@Nonnull String key) {
+  @Nullable
+  public Disposable get(String key) {
     return myKeyDisposables.get(key);
   }
 
   @Override
-  public Throwable getDisposalTrace(@Nonnull Disposable disposable) {
+  @Nullable
+  public Throwable getDisposalTrace(Disposable disposable) {
     return ObjectUtil.tryCast(getTree().getDisposalInfo(disposable), Throwable.class);
   }
 
-  public void dispose(@Nonnull Disposable disposable) {
+  public void dispose(Disposable disposable) {
     dispose(disposable, true);
   }
 
   @Override
-  public void dispose(@Nonnull Disposable disposable, boolean processUnregistered) {
+  public void dispose(Disposable disposable, boolean processUnregistered) {
     myTree.executeAll(disposable, processUnregistered);
   }
 
@@ -118,7 +117,6 @@ public class DisposerInternalImpl extends DisposerInternal {
     return new TraceableDisposableImpl(debug);
   }
 
-  @Nonnull
   public ObjectTree getTree() {
     return myTree;
   }
@@ -157,18 +155,17 @@ public class DisposerInternalImpl extends DisposerInternal {
    */
   @Override
   @Nullable
-  public <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object) {
+  public <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object) {
     return myTree.findRegisteredObject(parentDisposable, object);
   }
 
-  @Nonnull
   @Override
   public <T> DisposableList<T> createList() {
     return new DisposableWrapperList<>();
   }
 
   @Override
-  public boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+  public boolean tryRegister(Disposable parent, Disposable child) {
     DisposerChecker.checkRegister(parent, child);
 
     return myTree.tryRegister(parent, child);
