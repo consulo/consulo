@@ -16,8 +16,8 @@
 package consulo.hacking.java.base;
 
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.function.Function;
 
@@ -28,6 +28,7 @@ import java.util.function.Function;
 public final class ThrowableHacking {
   private static final Logger LOG = Logger.getInstance(ThrowableHacking.class);
 
+  @Nullable
   private static Field ourBacktraceField;
 
   static {
@@ -41,15 +42,15 @@ public final class ThrowableHacking {
     }
   }
 
-  @Nullable
-  public static Function<Throwable, Object> getBacktraceAccess() {
-    if(ourBacktraceField == null) {
+  public static @Nullable Function<Throwable, @Nullable Object> getBacktraceAccess() {
+    Field backField = ourBacktraceField;
+    if(backField == null) {
       return null;
     }
 
     return t -> {
       try {
-        return ourBacktraceField.get(t);
+        return backField.get(t);
       }
       catch (IllegalAccessException e) {
         LOG.warn(e);

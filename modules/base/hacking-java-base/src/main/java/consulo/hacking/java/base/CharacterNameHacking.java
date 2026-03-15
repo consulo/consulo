@@ -15,6 +15,8 @@
  */
 package consulo.hacking.java.base;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +28,7 @@ import java.util.function.Consumer;
  */
 public class CharacterNameHacking {
   @SuppressWarnings("unchecked")
+  @Nullable
   private static Method getMethod(Class clazz, String name, Class... params) {
     try {
       Method method = clazz.getDeclaredMethod(name, params);
@@ -38,6 +41,7 @@ public class CharacterNameHacking {
   }
 
   @SuppressWarnings("unchecked")
+  @Nullable
   private static Field getField(Class clazz, String name) {
     try {
       Field declaredField = clazz.getDeclaredField(name);
@@ -72,7 +76,7 @@ public class CharacterNameHacking {
     }
   }
 
-  public static int getCodePoint(String name) {
+  public static int getCodePoint(@Nullable String name) {
     if (name == null) {
       return -1;
     }
