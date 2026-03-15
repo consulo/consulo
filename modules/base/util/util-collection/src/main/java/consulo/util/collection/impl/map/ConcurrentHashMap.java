@@ -943,6 +943,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   @Nullable
   public V get(Object key) {
+    Objects.requireNonNull(key);
     Node<K, V>[] tab;
     Node<K, V> e, p;
     int n, eh;
@@ -1027,7 +1028,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       int n, i, fh;
       if (tab == null || (n = tab.length) == 0) tab = initTable();
       else if ((f = tabAt(Objects.requireNonNull(tab), i = (n - 1) & hash)) == null) {
-        if (casTabAt(tab, i, null, new Node<K, V>(hash, key, value, hashingStrategy))) break;                   // no lock when adding to empty bin
+        if (casTabAt(tab, i, null, new Node<K, V>(hash, key, value, hashingStrategy))) break; // no lock when adding to empty bin
       }
       else if ((fh = f.hash) == MOVED) tab = helpTransfer(tab, f);
       else {
@@ -1050,15 +1051,19 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
                 }
               }
             }
-            else if (f instanceof TreeBin) {
-              Node<K, V> p;
+            else if (f instanceof TreeBin<K, V> tb) {
+              Node<K, V> p = tb.putTreeVal(hash, key, value);
               binCount = 2;
-              if ((p = ((TreeBin<K, V>)f).putTreeVal(hash, key, value)) != null) {
+              if (p != null) {
                 oldVal = p.val;
-                if (!onlyIfAbsent) p.val = value;
+                if (!onlyIfAbsent) {
+                  p.val = value;
+                }
               }
             }
-            else if (f instanceof ReservationNode) throw new IllegalStateException("Recursive update");
+            else if (f instanceof ReservationNode) {
+              throw new IllegalStateException("Recursive update");
+            }
           }
         }
         if (binCount != 0) {
@@ -1096,6 +1101,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   @Nullable
   public V remove(Object key) {
+    Objects.requireNonNull(key);
     return replaceNode(key, null, null);
   }
 
@@ -1274,8 +1280,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   public int hashCode() {
     int h = 0;
-    Node<K, V>[] t;
-    if ((t = table) != null) {
+    Node<K, V>[] t = table;
+    if (t != null) {
       Traverser<K, V> it = new Traverser<K, V>(t, t.length, 0, t.length);
       for (Node<K, V> p; (p = it.advance()) != null; )
         h += hash(Objects.requireNonNull(p.key)) ^ Objects.hashCode(p.val);
