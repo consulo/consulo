@@ -82,12 +82,12 @@ public class FileUtil extends FileUtilRt {
 
     @Nullable
     public static String getRelativePath(File base, File file) {
-        return FileUtilRt.getRelativePath(base, file);
+        return consulo.util.io.FileUtil.getRelativePath(base, file);
     }
 
     @Nullable
     public static String getRelativePath(String basePath, String filePath, char separator) {
-        return FileUtilRt.getRelativePath(basePath, filePath, separator);
+        return consulo.util.io.FileUtil.getRelativePath(basePath, filePath, separator);
     }
 
     @Nullable
@@ -97,7 +97,7 @@ public class FileUtil extends FileUtilRt {
         char separator,
         boolean caseSensitive
     ) {
-        return FileUtilRt.getRelativePath(basePath, filePath, separator, caseSensitive);
+        return consulo.util.io.FileUtil.getRelativePath(basePath, filePath, separator, caseSensitive);
     }
 
     public static boolean isAbsolute(String path) {
@@ -243,7 +243,7 @@ public class FileUtil extends FileUtilRt {
 
     @Nullable
     public static File getParentFile(File file) {
-        return FileUtilRt.getParentFile(file);
+        return consulo.util.io.FileUtil.getParentFile(file);
     }
 
     
@@ -363,19 +363,19 @@ public class FileUtil extends FileUtilRt {
     }
 
     public static boolean createParentDirs(File file) {
-        return FileUtilRt.createParentDirs(file);
+        return consulo.util.io.FileUtil.createParentDirs(file);
     }
 
     public static boolean createDirectory(File path) {
-        return FileUtilRt.createDirectory(path);
+        return consulo.util.io.FileUtil.createDirectory(path);
     }
 
     public static boolean createIfDoesntExist(File file) {
-        return FileUtilRt.createIfNotExists(file);
+        return consulo.util.io.FileUtil.createIfNotExists(file);
     }
 
     public static boolean ensureCanCreateFile(File file) {
-        return FileUtilRt.ensureCanCreateFile(file);
+        return consulo.util.io.FileUtil.ensureCanCreateFile(file);
     }
 
     public static void copy(File fromFile, File toFile) throws IOException {
@@ -531,7 +531,7 @@ public class FileUtil extends FileUtilRt {
 
     
     public static String getNameWithoutExtension(String name) {
-        return FileUtilRt.getNameWithoutExtension(name);
+        return consulo.util.io.FileUtil.getNameWithoutExtension(name);
     }
 
     public static String createSequentFileName(File aParentFolder, String aFilePrefix, String aExtension) {
@@ -551,12 +551,12 @@ public class FileUtil extends FileUtilRt {
 
     
     public static String toSystemDependentName(String aFileName) {
-        return FileUtilRt.toSystemDependentName(aFileName);
+        return consulo.util.io.FileUtil.toSystemDependentName(aFileName);
     }
 
     
     public static String toSystemIndependentName(String aFileName) {
-        return FileUtilRt.toSystemIndependentName(aFileName);
+        return consulo.util.io.FileUtil.toSystemIndependentName(aFileName);
     }
 
     /**
@@ -798,16 +798,16 @@ public class FileUtil extends FileUtilRt {
     /**
      * This method returns extension converted to lower case, this may not be correct for case-sensitive FS.
      * Use {@link #getCaseSensitiveExtension(String)} instead to get the unchanged extension.
-     * If you need to check whether a file has a specified extension use {@link FileUtilRt#extensionEquals(String, String)}
+     * If you need to check whether a file has a specified extension use {@link consulo.util.io.FileUtil#extensionEquals(String, String)}
      */
     
     public static String getExtension(String fileName) {
-        return FileUtilRt.getExtension(fileName).toLowerCase(Locale.ROOT);
+        return consulo.util.io.FileUtil.getExtension(fileName).toLowerCase(Locale.ROOT);
     }
 
     
     public static String getCaseSensitiveExtension(String fileName) {
-        return FileUtilRt.getExtension(fileName);
+        return consulo.util.io.FileUtil.getExtension(fileName);
     }
 
     
@@ -1208,32 +1208,32 @@ public class FileUtil extends FileUtilRt {
 
     
     public static File createTempFile(String prefix, @Nullable String suffix) throws IOException {
-        return FileUtilRt.createTempFile(prefix, suffix);
+        return consulo.util.io.FileUtil.createTempFile(prefix, suffix);
     }
 
     
     public static File createTempFile(String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
-        return FileUtilRt.createTempFile(prefix, suffix, deleteOnExit);
+        return consulo.util.io.FileUtil.createTempFile(prefix, suffix, deleteOnExit);
     }
 
     
     public static File createTempFile(File dir, String prefix, @Nullable String suffix) throws IOException {
-        return FileUtilRt.createTempFile(dir, prefix, suffix);
+        return consulo.util.io.FileUtil.createTempFile(dir, prefix, suffix);
     }
 
     
     public static File createTempFile(File dir, String prefix, @Nullable String suffix, boolean create) throws IOException {
-        return FileUtilRt.createTempFile(dir, prefix, suffix, create);
+        return consulo.util.io.FileUtil.createTempFile(dir, prefix, suffix, create);
     }
 
     
     public static File createTempFile(File dir, String prefix, @Nullable String suffix, boolean create, boolean deleteOnExit) throws IOException {
-        return FileUtilRt.createTempFile(dir, prefix, suffix, create, deleteOnExit);
+        return consulo.util.io.FileUtil.createTempFile(dir, prefix, suffix, create, deleteOnExit);
     }
 
     
     public static String getTempDirectory() {
-        return FileUtilRt.getTempDirectory();
+        return consulo.util.io.FileUtil.getTempDirectory();
     }
 
     @TestOnly
@@ -1298,22 +1298,22 @@ public class FileUtil extends FileUtilRt {
 
     
     public static List<String> loadLines(File file) throws IOException {
-        return FileUtilRt.loadLines(file);
+        return consulo.util.io.FileUtil.loadLines(file);
     }
 
     
     public static List<String> loadLines(File file, @Nullable String encoding) throws IOException {
-        return FileUtilRt.loadLines(file, encoding);
+        return consulo.util.io.FileUtil.loadLines(file, encoding);
     }
 
     
     public static List<String> loadLines(String path) throws IOException {
-        return FileUtilRt.loadLines(path);
+        return consulo.util.io.FileUtil.loadLines(path);
     }
 
     
     public static List<String> loadLines(String path, @Nullable String encoding) throws IOException {
-        return FileUtilRt.loadLines(path, encoding);
+        return consulo.util.io.FileUtil.loadLines(path, encoding);
     }
 
     
