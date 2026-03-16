@@ -16,6 +16,7 @@
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.impl.map.base.ConcurrentRefMapTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -25,12 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * @author UNV
  * @since 2026-03-15
  */
-public class ConcurrentSoftHashMapTest extends ConcurrentRefHashMapTestBase {
-    @Override
-    protected boolean nullKeysProhibited() {
-        return false;
-    }
-
+public class ConcurrentSoftHashMapTest extends ConcurrentRefMapTestBase {
     /**
      * Returns a new empty map.
      */

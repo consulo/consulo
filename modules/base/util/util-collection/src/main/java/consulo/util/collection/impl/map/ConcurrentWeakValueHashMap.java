@@ -1,23 +1,8 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.util.collection.impl.map;
 
-import consulo.util.collection.ContainerUtil;
-
+import consulo.util.collection.Maps;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -26,10 +11,10 @@ import java.lang.ref.WeakReference;
  * Concurrent strong key:K -> weak value:V map
  * Null keys are NOT allowed
  * Null values are NOT allowed
- * Use {@link ContainerUtil#createConcurrentWeakValueMap()} to create this
+ * To create, use {@link Maps#newConcurrentWeakValueHashMap()}
  */
 public final class ConcurrentWeakValueHashMap<K, V> extends ConcurrentRefValueHashMap<K, V> {
-  private static class MyWeakReference<K, V> extends WeakReference<V> implements ValueReference<K, V> {
+  private static final class MyWeakReference<K, V> extends WeakReference<V> implements ValueReference<K, V> {
     private final K key;
 
     private MyWeakReference(K key, V referent, ReferenceQueue<V> q) {
@@ -44,20 +29,24 @@ public final class ConcurrentWeakValueHashMap<K, V> extends ConcurrentRefValueHa
 
     // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
     // otherwise it's just canonical equals on referents for replace(K,V,V) to work
-    public final boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(@Nullable Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
 
-      @SuppressWarnings("unchecked") ValueReference<K, V> that = (ValueReference)o;
+      @SuppressWarnings("unchecked") ValueReference<K, V> that = (ValueReference<K, V>)o;
 
       V v = get();
       V thatV = that.get();
-      return key.equals(that.getKey()) && v != null && thatV != null && v.equals(thatV);
+      return key.equals(that.getKey()) && v != null && v.equals(thatV);
     }
   }
 
   @Override
-  public ValueReference<K, V> createValueReference(K key, V value) {
+  ValueReference<K, V> createValueReference(K key, V value) {
     return new MyWeakReference<>(key, value, myQueue);
   }
 }

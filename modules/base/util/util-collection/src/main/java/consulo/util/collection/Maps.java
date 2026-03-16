@@ -88,22 +88,22 @@ public final class Maps {
 
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentHashMap() {
-        return new java.util.concurrent.ConcurrentHashMap<K, V>();
+        return new java.util.concurrent.ConcurrentHashMap<>();
     }
 
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakValueHashMap() {
-        return new ConcurrentWeakValueHashMap<K, V>();
+        return new ConcurrentWeakValueHashMap<>();
     }
 
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftValueHashMap() {
-        return new ConcurrentSoftValueHashMap<K, V>();
+        return new ConcurrentSoftValueHashMap<>();
     }
 
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap(HashingStrategy<K> hashingStrategy) {
-        return new consulo.util.collection.impl.map.ConcurrentWeakHashMap<K, V>(hashingStrategy);
+        return new ConcurrentWeakHashMap<>(hashingStrategy);
     }
 
     /**
@@ -113,7 +113,7 @@ public final class Maps {
      */
     @Contract(value = " -> new", pure = true)
     public static <K, V> Map<K, V> newWeakValueHashMap() {
-        return new WeakValueHashMap<K, V>(HashingStrategy.<K>canonical());
+        return new WeakValueHashMap<>(HashingStrategy.<K>canonical());
     }
 
     /**
@@ -138,7 +138,7 @@ public final class Maps {
 
     @Contract(value = " -> new", pure = true)
     public static <K, V> Map<K, V> newWeakKeyWeakValueHashMap() {
-        return new WeakKeyWeakValueHashMap<K, V>(true);
+        return new WeakKeyWeakValueHashMap<>(true);
     }
 
     /**
@@ -148,26 +148,26 @@ public final class Maps {
      */
     @Contract(value = " -> new", pure = true)
     public static <K, V> Map<K, V> newSoftValueHashMap() {
-        return new SoftValueHashMap<K, V>(HashingStrategy.canonical());
+        return new SoftValueHashMap<>(HashingStrategy.canonical());
     }
 
     public static <K, V> Map<K, V> newWeakKeySoftValueHashMap() {
-        return new WeakKeySoftValueHashMap<K, V>();
+        return new WeakKeySoftValueHashMap<>();
     }
 
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftHashMap() {
-        return new ConcurrentSoftHashMap<K, V>();
+        return new ConcurrentSoftHashMap<>();
     }
 
     @Contract(value = " -> new", pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap() {
-        return new ConcurrentWeakHashMap<K, V>(0.75f);
+        return new ConcurrentWeakHashMap<>(0.75f);
     }
 
     @Contract(value = " -> new", pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakIdentityMap() {
-        return new consulo.util.collection.impl.map.ConcurrentWeakHashMap<K, V>(HashingStrategy.<K>identity());
+        return new ConcurrentWeakHashMap<>(HashingStrategy.<K>identity());
     }
 
     @Contract(pure = true)
@@ -177,7 +177,7 @@ public final class Maps {
 
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeyWeakValueHashMap(HashingStrategy<K> strategy) {
-        return new ConcurrentWeakKeyWeakValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(), strategy);
+        return new ConcurrentWeakKeyWeakValueHashMap<>(100, 0.75f, Runtime.getRuntime().availableProcessors(), strategy);
     }
 
     @Contract(pure = true)
@@ -187,12 +187,7 @@ public final class Maps {
         int concurrencyLevel,
         HashingStrategy<K> hashingStrategy
     ) {
-        return new consulo.util.collection.impl.map.ConcurrentSoftHashMap<K, V>(
-            initialCapacity,
-            loadFactor,
-            concurrencyLevel,
-            hashingStrategy
-        );
+        return new ConcurrentSoftHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
 
     @Contract(pure = true)
@@ -202,12 +197,7 @@ public final class Maps {
         int concurrencyLevel,
         HashingStrategy<K> hashingStrategy
     ) {
-        return new consulo.util.collection.impl.map.ConcurrentWeakHashMap<K, V>(
-            initialCapacity,
-            loadFactor,
-            concurrencyLevel,
-            hashingStrategy
-        );
+        return new ConcurrentWeakHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
 
     @Contract(pure = true)
@@ -216,7 +206,7 @@ public final class Maps {
             100,
             0.75f,
             Runtime.getRuntime().availableProcessors(),
-            ContainerUtil.<K>canonicalStrategy()
+            HashingStrategy.canonical()
         );
     }
 
@@ -227,7 +217,7 @@ public final class Maps {
         int concurrencyLevel,
         HashingStrategy<K> hashingStrategy
     ) {
-        return new ConcurrentWeakKeySoftValueHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+        return new ConcurrentWeakKeySoftValueHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
 
     @Contract(pure = true)
@@ -257,7 +247,7 @@ public final class Maps {
 
     @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftKeySoftValueHashMap() {
-        return new ConcurrentSoftKeySoftValueHashMap<K, V>(
+        return new ConcurrentSoftKeySoftValueHashMap<>(
             100,
             0.75f,
             Runtime.getRuntime().availableProcessors(),
@@ -272,12 +262,7 @@ public final class Maps {
         int concurrencyLevel,
         HashingStrategy<K> hashingStrategy
     ) {
-        return new consulo.util.collection.impl.map.ConcurrentSoftKeySoftValueHashMap<K, V>(
-            initialCapacity,
-            loadFactor,
-            concurrencyLevel,
-            hashingStrategy
-        );
+        return new ConcurrentSoftKeySoftValueHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
 
     /**
@@ -316,7 +301,7 @@ public final class Maps {
 
     @Contract(pure = true)
     public static <A, B> Map<B, A> reverseMap(Map<A, B> map) {
-        Map<B, A> result = new HashMap<B, A>();
+        Map<B, A> result = new HashMap<>();
         for (Map.Entry<A, B> entry : map.entrySet()) {
             result.put(entry.getValue(), entry.getKey());
         }

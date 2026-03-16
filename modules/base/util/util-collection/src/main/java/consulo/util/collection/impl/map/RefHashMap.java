@@ -16,7 +16,6 @@
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
-import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
@@ -177,7 +176,9 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
   @Nullable
   @Override
   public V get(Object key) {
-    if (key == null) return null;
+    if (key == null) {
+      return null;
+    }
     //noinspection unchecked
     myHardKeyInstance.set((K)key);
     V result = myMap.get(myHardKeyInstance);
@@ -238,11 +239,13 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (!(o instanceof Entry)) return false;
-      //noinspection unchecked
+    public boolean equals(@Nullable Object o) {
+      if (!(o instanceof Entry)) {
+        return false;
+      }
+      @SuppressWarnings("unchecked")
       Entry<K, V> e = (Entry)o;
-      return keyEqual(key, e.getKey(), myStrategy) && Comparing.equal(getValue(), e.getValue());
+      return keyEqual(key, e.getKey(), myStrategy) && Objects.equals(getValue(), e.getValue());
     }
 
     @Override
@@ -312,9 +315,11 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     @Override
     public boolean remove(Object o) {
       processQueue();
-      if (!(o instanceof Entry)) return false;
-      //noinspection unchecked
-      Entry<K, V> e = (Entry<K, V>)o;
+      if (!(o instanceof Entry)) {
+        return false;
+      }
+      @SuppressWarnings("unchecked")
+      Entry<K, V> e = (Entry<K, V>) o;
       V ev = e.getValue();
 
       // optimization: do not recreate the key
@@ -342,7 +347,6 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return h;
     }
   }
-
 
   @Override
   public Set<Entry<K, V>> entrySet() {
