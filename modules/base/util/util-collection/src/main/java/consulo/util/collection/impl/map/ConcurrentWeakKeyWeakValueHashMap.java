@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 /**
  * Concurrent map with weak keys and weak values.
@@ -21,7 +22,7 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
     private volatile KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
 
     private WeakValue(V value, ReferenceQueue<? super V> queue) {
-      super(value, queue);
+      super(Objects.requireNonNull(value), queue);
     }
 
     // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)

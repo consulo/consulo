@@ -1101,7 +1101,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   @Nullable
   public V remove(Object key) {
-    Objects.requireNonNull(key);
     return replaceNode(key, null, null);
   }
 
@@ -1112,7 +1111,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   @Nullable
   final V replaceNode(Object key, @Nullable V value, @Nullable Object cv) {
-    int hash = hash((K)key);
+    int hash = hash(Objects.requireNonNull((K) key));
     for (Node<K, V>[] tab = table; ; ) {
       Node<K, V> f;
       int n, i, fh;
@@ -1393,9 +1392,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws NullPointerException if the specified key is null
    */
   public boolean remove(Object key, Object value) {
-    Objects.requireNonNull(key);
-    Objects.requireNonNull(value);
-    return value != null && replaceNode(key, null, value) != null;
+    return replaceNode(key, null, Objects.requireNonNull(value)) != null;
   }
 
   /**
@@ -1404,10 +1401,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws NullPointerException if any of the arguments are null
    */
   public boolean replace(K key, V oldValue, V newValue) {
-    Objects.requireNonNull(key);
-    Objects.requireNonNull(oldValue);
-    Objects.requireNonNull(newValue);
-    return replaceNode(key, newValue, oldValue) != null;
+    return replaceNode(key, Objects.requireNonNull(newValue), Objects.requireNonNull(oldValue)) != null;
   }
 
   /**

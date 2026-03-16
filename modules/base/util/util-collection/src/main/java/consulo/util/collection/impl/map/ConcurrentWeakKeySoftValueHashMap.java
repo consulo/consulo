@@ -64,7 +64,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     private final ValueReference<K, V> myValueReference;
 
     WeakKey(K k, ValueReference<K, V> valueReference, HashingStrategy<? super K> strategy, ReferenceQueue<? super K> queue) {
-      super(k, queue);
+      super(Objects.requireNonNull(k), queue);
       myValueReference = valueReference;
       myHash = strategy.hashCode(k);
       myStrategy = strategy;
@@ -106,7 +106,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     volatile KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
 
     private SoftValue(V value, ReferenceQueue<? super V> queue) {
-      super(value, queue);
+      super(Objects.requireNonNull(value), queue);
     }
 
     // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
@@ -213,7 +213,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
 
   private HardKey<K, V> createHardKey(Object o) {
     @SuppressWarnings("unchecked")
-    K key = (K) o;
+    K key = Objects.requireNonNull((K) o);
     @SuppressWarnings("unchecked")
     HardKey<K, V> hardKey = (HardKey<K, V>) HARD_KEY.get();
     hardKey.set(key, myHashingStrategy.hashCode(key));
@@ -225,7 +225,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public V get(Object key) {
-    HardKey<K, V> hardKey = createHardKey(Objects.requireNonNull(key));
+    HardKey<K, V> hardKey = createHardKey(key);
     try {
       ValueReference<K, V> valueReference = myMap.get(hardKey);
       return valueReference == null ? null : valueReference.get();
@@ -248,7 +248,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public V remove(Object key) {
-    HardKey<K, V> hardKey = createHardKey(Objects.requireNonNull(key));
+    HardKey<K, V> hardKey = createHardKey(key);
     try {
       ValueReference<K, V> valueReference = myMap.remove(hardKey);
       return valueReference == null ? null : valueReference.get();
@@ -269,8 +269,6 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public V put(K key, V value) {
-    Objects.requireNonNull(key);
-    Objects.requireNonNull(value);
     KeyReference<K, V> keyReference = createKeyReference(key, value);
     ValueReference<K, V> valueReference = keyReference.getValueReference();
     ValueReference<K, V> prevValReference = myMap.put(keyReference, valueReference);
@@ -326,7 +324,6 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public boolean remove(Object key, Object value) {
-    Objects.requireNonNull(key);
     Objects.requireNonNull(value);
     HardKey<K, V> hardKey = createHardKey(key);
     try {
@@ -343,8 +340,6 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public V putIfAbsent(K key, V value) {
-    Objects.requireNonNull(key);
-    Objects.requireNonNull(value);
     KeyReference<K, V> keyRef = createKeyReference(key, value);
     ValueReference<K, V> newRef = keyRef.getValueReference();
     V prev;
@@ -374,9 +369,6 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public boolean replace(K key, V oldValue, V newValue) {
-    Objects.requireNonNull(key);
-    Objects.requireNonNull(oldValue);
-    Objects.requireNonNull(newValue);
     HardKey<K, V> oldKeyReference = createHardKey(key);
     ValueReference<K, V> oldValueReference;
     try {
@@ -398,8 +390,6 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public V replace(K key, V value) {
-    Objects.requireNonNull(key);
-    Objects.requireNonNull(value);
     HardKey<K, V> keyReference = createHardKey(key);
     try {
       ValueReference<K, V> valueReference = createValueReference(value, myValueQueue);

@@ -7,6 +7,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
+import java.util.Objects;
 
 /**
  * Concurrent map with soft keys and soft values.
@@ -21,7 +22,7 @@ public class ConcurrentSoftKeySoftValueHashMap<K, V> extends ConcurrentWeakKeySo
     private final ValueReference<K, V> myValueReference;
 
     SoftKey(K k, ValueReference<K, V> valueReference, HashingStrategy<? super K> strategy, ReferenceQueue<? super K> queue) {
-      super(k, queue);
+      super(Objects.requireNonNull(k), queue);
       myValueReference = valueReference;
       myHash = strategy.hashCode(k);
       myStrategy = strategy;
