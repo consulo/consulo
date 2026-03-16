@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.ModalityHelper;
 import consulo.ide.impl.idea.ui.PopupBorder;
@@ -41,6 +40,7 @@ import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowManagerEx;
+import consulo.project.ui.util.ProjectUIUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.WindowManager;
@@ -348,7 +348,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
             if (pinCallback != null) {
                 Image icon = ToolWindowManagerEx
-                    .getInstanceEx(myProject != null ? myProject : ProjectUtil.guessCurrentProject((JComponent) myOwner))
+                    .getInstanceEx(myProject != null ? myProject : ProjectUIUtil.guessCurrentProject((JComponent) myOwner))
                     .getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
 
                 rightActions.add(new PinToToolWindowAction(pinCallback::test, icon, this));
